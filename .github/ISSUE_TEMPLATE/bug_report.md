@@ -1,6 +1,7 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: If you've found a bug with the code or workshop information, please use this
+  temple
 
 ---
 
