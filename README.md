@@ -4,4 +4,5 @@ Elpis is a pipeline of tools which language documentation workers with minimal c
 
 The code is currently over at https://github.com/CoEDL/kaldi-helpers but will be moving here soon.
 
+## Summer School 2018 workshop
 Please check the [wiki](https://github.com/CoEDL/elpis/wiki) pages for workshop steps.
