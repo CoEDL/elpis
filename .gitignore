@@ -1,0 +1,9 @@
+# Python
+venv/
+*.pyc
+__pycache__/
+*.egg-info/
+
+# Node
+package-lock.json
+node_modules/
