@@ -10,26 +10,27 @@ needless technical complexity.
 
 Currently, the major component of Elpis is [kaldi_helpers](https://github.com/CoEDL/kaldi_helpers), a collection of 
 Python and shell scripts designed to prepare data for use with Kaldi and convert between the various time-aligned 
-transcription formats.
+transcription formats that linguists work with.
 
 ![Elpis Pathway](./docs/img/elpis-pipeline.svg)
 
 ## How Does It Work?
 
-Elpis uses [Docker](https://www.docker.com/), specifically an [Ubuntu Linux](https://www.ubuntu.com/) image to install
+Elpis uses [Docker](https://www.docker.com/), specifically an [Ubuntu Linux](https://www.ubuntu.com/) image, to install
 Kaldi and its (many) dependencies. It also installs [kaldi_helpers](https://github.com/CoEDL/kaldi_helpers) and the 
 [Task](https://taskfile.org/#/) task runner. We have defined a number of tasks which automate many common workflows like
-data preparation, model creation and inferring transcriptions for new files. You can read about these tasks: 
-[here](https://github.com/CoEDL/elpis/wiki/tasks).
+data preparation, model creation and inferring transcriptions for new files. You can read about these tasks and how to 
+use them [here](https://github.com/CoEDL/elpis/wiki/tasks).
 
 ## How Do I Use It?
 
-Please check the [wiki](https://github.com/CoEDL/elpis/wiki/Elpis-Step-By-Step-Guide) pages for usage instructions.
+Please check the [wiki](https://github.com/CoEDL/elpis/wiki/Elpis-Step-By-Step-Guide) pages for a step-by-step guide to
+using Elpis on your data.
 
 ## Why Is It Called Elpis?
 
-Elpis was the ancient Greek goddess of hope. For us Elpis represents our hope that one day no-one will have to suffer 
-the trauma of interacting directly with the [Kaldi codebase](https://github.com/kaldi-asr/kaldi).
+Elpis was the ancient Greek goddess of hope. For us Elpis represents our hope that one day everyone will have access to 
+the power of ASR without having to interact directly with the [Kaldi codebase](https://github.com/kaldi-asr/kaldi).
 
 ## I'm An Academic, How Do I Cite This?
 
