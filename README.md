@@ -25,13 +25,17 @@ use them [here](https://github.com/CoEDL/elpis/wiki/tasks).
 ## How Do I Use It?
 
 Please check the [wiki](https://github.com/CoEDL/elpis/wiki/Elpis-Step-By-Step-Guide) pages for a step-by-step guide to
-using Elpis on your data.
+using Elpis on your data. If you're comfortable using Docker and are aware of the types of data required, you can also 
+consult our more concise 
+[advanced guide](https://github.com/CoEDL/elpis/wiki/Inferring-Transcriptions-for-New-Audio-Data-(Advanced)).
 
 ## Why Is It Called Elpis?
 
 Elpis was the ancient Greek goddess of hope. For us Elpis represents our hope that one day everyone will have access to 
 the power of ASR without having to interact directly with the [Kaldi codebase](https://github.com/kaldi-asr/kaldi).
-We've also backronymed it to stand for "Endangered Language Pipeline and Inference System".
+We've also backronymed it to stand for "Endangered Language Pipeline and Inference System," as much of our motivation 
+for this project derives from our desire to assist in documentation and revitalisation efforts for the world's many
+endangered languages - including many in Australia, where most of Elpis' development has occurred.
 
 ## I'm An Academic, How Do I Cite This?
 
