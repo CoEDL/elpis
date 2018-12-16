@@ -1,4 +1,4 @@
-# Elpis (Automatic Transcription for Linguists)
+# Elpis (Automatic Transcription for Linguists) <img src="docs/img/elpis.png" align="right" width="300px"/>
 
 ## What is Elpis?
 
