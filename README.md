@@ -1,4 +1,4 @@
-# Elpis (Automatic Transcription for Linguists) <img src="docs/img/elpis.png" align="right" width="300px"/>
+# Elpis (Automatic Transcription for Linguists) <img src="docs/img/elpis.png" align="right" width="250px"/>
 
 ## What is Elpis?
 
@@ -31,6 +31,7 @@ using Elpis on your data.
 
 Elpis was the ancient Greek goddess of hope. For us Elpis represents our hope that one day everyone will have access to 
 the power of ASR without having to interact directly with the [Kaldi codebase](https://github.com/kaldi-asr/kaldi).
+We've also backronymed it to stand for "Endangered Language Pipeline and Inference System".
 
 ## I'm An Academic, How Do I Cite This?
 
