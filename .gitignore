@@ -7,3 +7,6 @@ __pycache__/
 # Node
 package-lock.json
 node_modules/
+
+# VS Code
+.vscode/
