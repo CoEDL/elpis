@@ -1,4 +1,4 @@
-# Elpis (Automatic Transcription for Linguists) <img src="docs/img/elpis.png" align="right" width="250px"/>
+# Elpis (Accelerated Transcription for Linguists) <img src="docs/img/elpis.png" align="right" width="250px"/>
 
 ## What is Elpis?
 
@@ -31,7 +31,7 @@ consult our more concise
 
 ## Why Is It Called Elpis?
 
-Elpis was the ancient Greek goddess of hope. For us Elpis represents our hope that one day everyone will have access to 
+Elpis is the Greek goddess of hope. For us Elpis represents our hope that one day everyone will have access to 
 the power of ASR without having to interact directly with the [Kaldi codebase](https://github.com/kaldi-asr/kaldi).
 We've also backronymed it to stand for "Endangered Language Pipeline and Inference System," as much of our motivation 
 for this project derives from our desire to assist in documentation and revitalisation efforts for the world's many
