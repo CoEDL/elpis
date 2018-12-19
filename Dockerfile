@@ -118,6 +118,8 @@ RUN cd /kaldi-helpers && python3.6 setup.py install
 RUN cd /tmp && git clone https://github.com/CoEDL/toy-corpora.git && \
     mv toy-corpora/* /kaldi-helpers/resources/corpora/
 
+RUN cd /tmp && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
 WORKDIR /kaldi-helpers
 
 # Add random number generator to skip Docker building cache
