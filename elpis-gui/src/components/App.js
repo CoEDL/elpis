@@ -3,7 +3,7 @@ import './App.css';
 import {
   StepWelcome,
   StepBuildPronunciationDictionary,
-  StepDataPreperation,
+  StepDataPreparation,
   StepNaming,
   StepAddData,
   StepNewTranscription,
@@ -40,16 +40,17 @@ class App extends Component {
 
   makeStepAddData() {
     return (<StepAddData 
+    toStepDataPreparation={() => this.setState({step: this.makeStepDataPreparation()})}
     goBack={() => this.setState({step: this.makeStepNaming()})}
     />);
   }
 
-  makeStepBuildPronunciationDictionary() {
-    return (<StepBuildPronunciationDictionary />);
+  makeStepDataPreparation() {
+    return (<StepDataPreparation />);
   }
 
-  makeStepDataPreperation() {
-    return (<StepDataPreperation />);
+  makeStepBuildPronunciationDictionary() {
+    return (<StepBuildPronunciationDictionary />);
   }
 
   makeStepNewTranscription() {
