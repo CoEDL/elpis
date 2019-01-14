@@ -7,7 +7,7 @@ export default class StepWelcome extends Component {
     // }
     render() {
         return <div>
-            <Button onClick={() => {}}>Build Model</Button>
+            <Button onClick={() => this.props.toStepNaming()}>Build Model</Button>
         </div>;
     }
 }
