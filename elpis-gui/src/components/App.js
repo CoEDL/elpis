@@ -18,13 +18,13 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      step: this.makeStepWelcome(),
+      step: this.makeStepWelcome()
     };
   }
 
   stepProps = {
     toStepWelcome: () => this.setState({step: this.makeStepWelcome()}),
-    toStepBuildPronunciationDictionary: () => this.setState({step: this.makeStepBuildPronunciationDictionary()}),
+    toStepBuildDictionary: () => this.setState({step: this.makeStepBuildPronunciationDictionary()}),
     toStepDataPreparation: () => this.setState({step: this.makeStepDataPreparation()}),
     toStepNaming: () => this.setState({step: this.makeStepNaming()}),
     toStepAddData: () => this.setState({step: this.makeStepAddData()}),
@@ -56,18 +56,17 @@ class App extends Component {
     />);
   }
 
-  makeStepBuildPronunciationDictionary() {
-    return (<StepBuildPronunciationDictionary
-      {... this.stepProps}
-      goBack={()=>{}} // no back here
-    />);
-  }
-
   makeStepDataPreparation() {
     return (<StepDataPreparation
       {... this.stepProps}
-      toStepBuildDictionary={() => this.setState({step: this.makeStepBuildPronunciationDictionary()})}
       goBack={() => this.setState({step: this.makeStepAddData()})}
+    />);
+  }
+
+  makeStepBuildPronunciationDictionary() {
+    return (<StepBuildPronunciationDictionary
+      {... this.stepProps}
+      goBack={() => this.setState({step: this.makeStepDataPreparation()})}
     />);
   }
 
