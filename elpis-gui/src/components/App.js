@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import './App.css';
 import {
   StepWelcome,
+  StepBuildPronunciationDictionary,
+  StepDataPreperation,
   StepNaming,
+  StepAddData,
+  StepNewTranscription,
+  StepTrainingSuccess,
+  StepTranscriptionResults,
+  StepModelSettings,
+  StepTrainingModel,
 } from './steps/index';
 import PageContainer from './PageContainer';
 
@@ -15,13 +23,50 @@ class App extends Component {
   }
 
   makeStepWelcome() {
-    return <StepWelcome toStepNaming={() => {
-      this.setState({step: this.makeStepNaming()});
-    }}/>;
+    return (<StepWelcome
+      toStepNaming={() => this.setState({step: this.makeStepNaming()})}
+      toStepNewTranscription={() => this.setState({step: this.makeStepNewTranscription()})}
+      goBack={()=>{}} // no back here
+    />);
   }
 
   makeStepNaming() {
-    return <StepNaming />;
+    return (<StepNaming
+      toStepAddData={() => this.setState({step: this.makeStepAddData()})}
+      goBack={() => this.setState({step: this.makeStepWelcome()})}
+    />);
+  }
+
+  makeStepBuildPronunciationDictionary() {
+    return (<StepBuildPronunciationDictionary />);
+  }
+
+  makeStepDataPreperation() {
+    return (<StepDataPreperation />);
+  }
+
+  makeStepAddData() {
+    return (<StepAddData />);
+  }
+
+  makeStepNewTranscription() {
+    return (<StepNewTranscription />);
+  }
+
+  makeStepTrainingSuccess() {
+    return (<StepTrainingSuccess />);
+  }
+
+  makeStepTranscriptionResults() {
+    return (<StepTranscriptionResults />);
+  }
+
+  makeStepModelSettings() {
+    return (<StepModelSettings />);
+  }
+
+  makeStepTrainingModel() {
+    return (<StepTrainingModel />);
   }
 
   render() {

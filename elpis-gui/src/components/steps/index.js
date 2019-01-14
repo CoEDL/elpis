@@ -3,4 +3,8 @@ export { default as StepBuildPronunciationDictionary } from './StepBuildPronunci
 export { default as StepDataPreperation } from './StepDataPreperation';
 export { default as StepNaming } from './StepNaming';
 export { default as StepAddData } from './StepAddData';
-
+export { default as StepNewTranscription } from './StepNewTranscription'
+export { default as StepTrainingSuccess } from './StepTrainingSuccess'
+export { default as StepTranscriptionResults } from './StepTranscriptionResults'
+export { default as StepModelSettings } from './StepModelSettings'
+export { default as StepTrainingModel } from './StepTrainingModel'
