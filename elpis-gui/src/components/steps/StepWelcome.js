@@ -3,15 +3,6 @@ import { Grid, Button, Header, Container, Segment, } from 'semantic-ui-react';
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
 
 export default class StepWelcome extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
-    // render() {
-    //     return <div>
-    //         <Button onClick={() => this.props.toStepNaming()}>Build Model</Button>
-    //     </div>;
-    // }
-
     render() {
         return (
             <div>
@@ -22,7 +13,7 @@ export default class StepWelcome extends Component {
     
                     <Grid.Row centered>
                         <Segment>
-                            <Button>Build New Model</Button>
+                            <Button onClick={() => this.props.toStepNaming()}>Build New Model</Button>
                             <Button>New Transcription</Button>
                         </Segment>
                     </Grid.Row>
