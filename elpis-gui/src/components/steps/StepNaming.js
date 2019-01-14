@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
-import { Grid, GridColumn, Placeholder } from 'semantic-ui-react';
+import { Grid, Header, Segment, Icon, Form, Button } from 'semantic-ui-react';
 
 export default class StepNaming extends Component {
     // constructor(props) {
@@ -8,21 +8,34 @@ export default class StepNaming extends Component {
     // }
     render() {
         return(
-            <Grid>
-                <Grid.Column width={4}>
-                    <AccordionFluid title={'Step 1'}/>
-                    <AccordionFluid title={'Step 2'}/>
-                    <AccordionFluid title={'Step 3'}/>
-                </Grid.Column>
+            <div>
+                <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
 
-                <Grid.Column width={12}>
-                    <Placeholder>
-                        <Placeholder.Header image>
-                            <Placeholder.Line />
-                        </Placeholder.Header>
-                    </Placeholder>
-                </Grid.Column>
-            </Grid>
+                <Segment>
+                    <Grid centered>
+                            <Grid.Column width={6}>
+                                <AccordionFluid title={'Step 1'}/>
+                                <AccordionFluid title={'Step 2'}/>
+                                <AccordionFluid title={'Step 3'}/>
+                            </Grid.Column>
+
+                            <Grid.Column width={10}>
+                                <Header as='h2' icon>
+                                    <Icon name='setting' />
+                                    Build a new model
+                                </Header>
+
+                                <Form>
+                                    <Form.Field>
+                                        <input placeholder='Project Name'/>
+                                    </Form.Field>
+                                    <Button type='submit'>GO</Button>
+                                </Form>
+                            </Grid.Column>
+                       
+                    </Grid>  
+                </Segment>
+            </div>
         )
     }
 }
