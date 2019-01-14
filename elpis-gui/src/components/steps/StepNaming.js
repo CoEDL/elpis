@@ -20,11 +20,8 @@ export default class StepNaming extends Component {
                             </Grid.Column>
 
                             <Grid.Column width={10}>
-                                <Header as='h2' icon>
-                                    <Icon name='setting' />
-                                    Build a new model
-                                </Header>
-
+                                <Header as='h1' text> <Icon name='setting' /> Build a new model </Header>
+                            
                                 <Form>
                                     <Form.Field>
                                         <input placeholder='Project Name'/>
