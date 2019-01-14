@@ -19,7 +19,7 @@ class App extends Component {
     super(props);
     this.state = {
       // step: this.makeStepWelcome(),
-      step: this.makeStepAddData()
+      step: this.makeStepDataPreparation()
     };
   }
 
@@ -46,7 +46,10 @@ class App extends Component {
   }
 
   makeStepDataPreparation() {
-    return (<StepDataPreparation />);
+    return (<StepDataPreparation 
+    toStepBuildDictionary={() => this.setState({step: this.makeStepBuildPronunciationDictionary()})}
+    goBack={() => this.setState({step: this.makeStepAddData()})}
+    />);
   }
 
   makeStepBuildPronunciationDictionary() {
