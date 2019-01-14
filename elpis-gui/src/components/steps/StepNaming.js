@@ -29,12 +29,13 @@ export default class StepNaming extends Component {
                                     <Form.Field>
                                         <input placeholder='Project Name'/>
                                     </Form.Field>
-                                    <Button type='submit'>GO</Button>
+                                    <Button type='submit' onClick={()=> {this.props.toStepAddData()}}>GO</Button>
                                 </Form>
                             </Grid.Column>
                        
                     </Grid>  
                 </Segment>
+                <Button onClick={()=>{this.props.goBack()}}>Back</Button>
             </div>
         )
     }

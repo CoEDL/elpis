@@ -42,7 +42,7 @@ export default class StepWelcome extends Component {
                     </Grid.Row>
     
                 </Grid>
-                <Button onClick={this.props.goBack()}>Back</Button>
+                <Button onClick={() => {this.props.goBack()}}>Back</Button>
             </div>
         );
       }
