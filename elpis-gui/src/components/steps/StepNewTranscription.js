@@ -14,7 +14,7 @@ export default class StepNewTranscription extends Component {
                             <Grid.Column width={6}>
                                 <AccordionFluid title={'Step 1'}/>
                                 <AccordionFluid title={'Step 2'}/>
-                                <AccordionFluid title={'Step 3'}/>
+                                <AccordionFluid title={'Step 3'} active/>
                             </Grid.Column>
 
                             <Grid.Column width={10}>

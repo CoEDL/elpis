@@ -11,7 +11,7 @@ export default class StepDataPreperation extends Component {
                     <Segment>
                         <Grid centered>
                                 <Grid.Column width={6}>
-                                    <AccordionFluid title={'Step 1'}/>
+                                    <AccordionFluid title={'Step 1'} active/>
                                     <AccordionFluid title={'Step 2'}/>
                                     <AccordionFluid title={'Step 3'}/>
                                 </Grid.Column>

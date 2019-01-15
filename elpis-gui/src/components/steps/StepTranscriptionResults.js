@@ -13,7 +13,7 @@ export default class StepTranscriptionResults extends Component {
                         <Grid.Column width={5}>
                             <AccordionFluid title={'Step 1'}/>
                             <AccordionFluid title={'Step 2'}/>
-                            <AccordionFluid title={'Step 3'}/>
+                            <AccordionFluid title={'Step 3'} active/>
                         </Grid.Column>
                         <Grid.Column width={11}>
                             <Header as='h1' text='true'> <Icon name='schlix' /> Transcribed new audio - Results </Header>

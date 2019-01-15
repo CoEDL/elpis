@@ -13,7 +13,7 @@ export default class StepTrainingSuccess extends Component {
                     <Grid centered>
                             <Grid.Column width={5}>
                                 <AccordionFluid title={'Step 1'}/>
-                                <AccordionFluid title={'Step 2'} />
+                                <AccordionFluid title={'Step 2'} active/>
                                 <AccordionFluid title={'Step 3'}/>
                             </Grid.Column>
 
