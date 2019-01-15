@@ -2,7 +2,12 @@ import React, { Component } from 'react'
 import { Accordion, Icon } from 'semantic-ui-react'
 
 export default class AccordionExampleFluid extends Component {
-  state = { activeIndex: null }
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeIndex: (props.active!==undefined) ? 0 : -1,
+    }
+  }
 
   handleClick = (e, titleProps) => {
     const { index } = titleProps

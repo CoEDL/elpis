@@ -31,7 +31,7 @@ export default class StepWelcome extends Component {
                     </Grid.Row>
     
                     <Grid.Row centered>
-                            <AccordionFluid title={'Step 1'}/>
+                            <AccordionFluid title={'Step 1'} active/>
                     </Grid.Row>
     
                     <Grid.Row centered>
