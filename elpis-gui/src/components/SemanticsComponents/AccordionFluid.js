@@ -14,7 +14,8 @@ export default class AccordionExampleFluid extends Component {
 
   render() {
     const { activeIndex } = this.state
-
+    console.log( this.state.activeIndex);
+    
     return (
       <Accordion styled>
         <Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}>
