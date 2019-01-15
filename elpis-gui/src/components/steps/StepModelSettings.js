@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
-import { Grid, Header, Segment, Icon, Form, Button, label } from 'semantic-ui-react';
+import { Grid, Header, Segment, Icon, Form, Button } from 'semantic-ui-react';
 
 export default class StepModelSettings extends Component {
     

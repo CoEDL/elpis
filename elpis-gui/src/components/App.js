@@ -19,7 +19,7 @@ class App extends Component {
     super(props);
     this.state = {
       // step: this.makeStepWelcome()
-      step: this.makeStepModelSettings()
+      step: this.makeStepTrainingModel()
     };
   }
 
