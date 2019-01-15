@@ -20,11 +20,11 @@ export default class StepNaming extends Component {
                             </Grid.Column>
 
                             <Grid.Column width={10}>
-                                <Header as='h1' text> <Icon name='setting' /> Build a new model </Header>
+                                <Header as='h1' text="true"> <Icon name='setting' /> Build a new model </Header>
                             
                                 <Form>
                                     <Form.Field>
-                                        <input placeholder='Project Name'/>
+                                        <input type='text' placeholder='Project Name'/>
                                     </Form.Field>
                                     <Button type='submit' onClick={()=> {this.props.toStepAddData()}}>GO</Button>
                                 </Form>

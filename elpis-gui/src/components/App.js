@@ -18,7 +18,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      step: this.makeStepWelcome()
+      // step: this.makeStepWelcome()
+      step: this.makeStepModelSettings()
     };
   }
 
@@ -70,6 +71,20 @@ class App extends Component {
     />);
   }
 
+  makeStepModelSettings() {
+    return (<StepModelSettings
+      {... this.stepProps}
+      goBack={()=> this.setState({step: this.makeStepBuildPronunciationDictionary()})} // no back here
+    />);
+  }
+
+  makeStepTrainingModel() {
+    return (<StepTrainingModel
+      {... this.stepProps}
+      goBack={()=> this.setState({step: this.makeStepModelSettings()})} // no back here
+    />);
+  }
+
   makeStepNewTranscription() {
     return (<StepNewTranscription
       {... this.stepProps}
@@ -91,19 +106,9 @@ class App extends Component {
     />);
   }
 
-  makeStepModelSettings() {
-    return (<StepModelSettings
-      {... this.stepProps}
-      goBack={()=>{}} // no back here
-    />);
-  }
+  
 
-  makeStepTrainingModel() {
-    return (<StepTrainingModel
-      {... this.stepProps}
-      goBack={()=>{}} // no back here
-    />);
-  }
+  
 
   render() {
     return (
