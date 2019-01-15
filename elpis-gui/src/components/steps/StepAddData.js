@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
 import { Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
 
@@ -66,14 +67,11 @@ export default class StepAddData extends Component {
                                             </List.Item>
                                         </List>
                                     </Grid.Column>
-                                </Grid>
-                                
-                                <Button type='submit' onClick={()=> {this.props.toStepDataPreparation()}}>Next:process this data</Button>
+                                </Grid>    
+                                <Button type='submit' as={Link} to="/data-preparation">Next: process this data</Button>
                             </Grid.Column>
-                       
                     </Grid>  
                 </Segment>
-                <Button onClick={()=>{this.props.goBack()}}>Back</Button>
             </div>
         );
     }

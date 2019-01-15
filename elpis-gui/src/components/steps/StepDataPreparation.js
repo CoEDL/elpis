@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
 import { Grid, Header, Segment, Icon, List, Button} from 'semantic-ui-react';
 
 export default class StepDataPreperation extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
     render() {
         return (
                 <div>
                     <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
-    
                     <Segment>
                         <Grid centered>
                                 <Grid.Column width={6}>
@@ -18,13 +15,10 @@ export default class StepDataPreperation extends Component {
                                     <AccordionFluid title={'Step 2'}/>
                                     <AccordionFluid title={'Step 3'}/>
                                 </Grid.Column>
-    
                                 <Grid.Column width={10}>
                                     <Header as='h1' text textAlign='center'>  <Icon name='train' />Data prepatation success, Overview of training corpus</Header>
                                     <p>Banner Message: text has been cleaned and normalised OK</p>   
-                                    <p>Describe what has just happened for the novice user to better understand</p>   
-    
-                                    
+                                    <p>Describe what has just happened for the novice user to better understand</p>
                                    <Grid>
                                         <Grid.Column width={5}>
                                         <Header as='h1' text> Wordlist</Header>
@@ -40,10 +34,9 @@ export default class StepDataPreperation extends Component {
                                                 </List.Item>
                                             </List>
                                         </Grid.Column>
-                                    
                                         <Grid.Column width={5}> 
-                                        <Header as='h1' text> Frequency</Header>
-                                        <List>
+                                            <Header as='h1' text> Frequency</Header>
+                                            <List>
                                                 <List.Item>
                                                     <List.Content>21</List.Content>
                                                 </List.Item>
@@ -56,14 +49,10 @@ export default class StepDataPreperation extends Component {
                                             </List>
                                         </Grid.Column>
                                     </Grid>
-                                    
-                                    
-                                    <Button type='submit' onClick={()=> {this.props.toStepBuildDictionary()}}>Next:build letter to sound</Button>
+                                    <Button type='submit' as={Link} to="/build-pronunciation-dictionary">Next: build letter to sound</Button>
                                 </Grid.Column>
-                           
                         </Grid>  
                     </Segment>
-                    <Button onClick={()=>{this.props.goBack()}}>Back</Button>
                 </div>
         );
     }

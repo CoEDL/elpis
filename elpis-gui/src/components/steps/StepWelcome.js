@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import { Grid, Button, Header, Container, Segment, } from 'semantic-ui-react';
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
 
@@ -13,8 +14,8 @@ export default class StepWelcome extends Component {
     
                     <Grid.Row centered>
                         <Segment>
-                            <Button onClick={() => this.props.toStepNaming()}>Build New Model</Button>
-                            <Button>New Transcription</Button>
+                            <Button as={Link} to="/naming">Build New Model</Button>
+                            <Button as={Link} to="/new-transcription">New Transcription</Button>
                         </Segment>
                     </Grid.Row>
     
@@ -42,7 +43,6 @@ export default class StepWelcome extends Component {
                     </Grid.Row>
     
                 </Grid>
-                <Button onClick={() => {this.props.goBack()}}>Back</Button>
             </div>
         );
       }
