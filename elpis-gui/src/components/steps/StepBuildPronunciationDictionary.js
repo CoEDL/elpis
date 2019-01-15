@@ -48,7 +48,7 @@ export default class StepBuildPronunciationDictionary extends Component {
                                             </div>
                                         </Grid.Column>
                                     </Grid>
-                                    <Button type='submit'  as={Link} to="/model-settings">Next: model settings</Button>
+                                    <Button type='submit' as={Link} to="/model-settings">Next: model settings</Button>
                                 </Grid.Column>
                         </Grid>  
                     </Segment>
