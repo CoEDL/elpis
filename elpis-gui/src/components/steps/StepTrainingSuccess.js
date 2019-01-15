@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
-import { Grid, Header, Segment, Icon, Form, Button, Table } from 'semantic-ui-react';
+import { Grid, Header, Segment, Icon, Button, Table } from 'semantic-ui-react';
 
 export default class StepTrainingSuccess extends Component {
     render() {
