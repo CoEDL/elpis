@@ -58,7 +58,7 @@ export default class StepTrainingModel extends Component {
                             <Card.Content header='Logs' />
                             <Card.Content description= 'gory output from Kaldi - but not interactive' />
                         </Card>
-                        <Button as={Link} to="/training-success">Next:model trained OK</Button>
+                        <Button as={Link} to="/training-success">Next: model trained OK</Button>
                         </Grid.Column>
                     </Grid>  
                 </Segment>

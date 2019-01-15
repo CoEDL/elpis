@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
 import { Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
 
@@ -55,12 +56,11 @@ export default class StepNewTranscription extends Component {
                                     </Grid.Column>
                                 </Grid>
                                 
-                                <Button type='submit' onClick={()=> {this.props.toStepTranscriptionResults()}}>Go</Button>
+                                <Button type='submit' as={Link} to="/transcription-results">Go</Button>
                             </Grid.Column>
                        
                     </Grid>  
                 </Segment>
-                <Button onClick={()=>{this.props.goBack()}}>Back</Button>
             </div>
         );
     }

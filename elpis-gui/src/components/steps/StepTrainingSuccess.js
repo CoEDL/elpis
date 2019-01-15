@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
 import { Grid, Header, Segment, Icon, Form, Button, Table } from 'semantic-ui-react';
 
@@ -60,12 +61,11 @@ export default class StepTrainingSuccess extends Component {
                                 </Table>
 
                                 <Button onClick={()=>{}}>Download a bundle of the model, settings and information about training data</Button>
-                                <Button onClick={()=>{this.props.toStepNewTranscription()}}>Use the model to transcribe new audio</Button>
+                                <Button as={Link} to="/new-transcription">Use the model to transcribe new audio</Button>
                             </Grid.Column>
                        
                     </Grid>  
                 </Segment>
-                <Button onClick={()=>{this.props.goBack()}}>Back</Button>
             </div>
         );
     }
