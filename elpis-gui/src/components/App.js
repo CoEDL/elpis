@@ -19,7 +19,7 @@ class App extends Component {
     super(props);
     this.state = {
       // step: this.makeStepWelcome()
-      step: this.makeStepTrainingModel()
+      step: this.makeStepTrainingSuccess()
     };
   }
 
@@ -85,6 +85,13 @@ class App extends Component {
     />);
   }
 
+  makeStepTrainingSuccess() {
+    return (<StepTrainingSuccess
+      {... this.stepProps}
+      goBack={()=> this.setState({step: this.makeStepTrainingModel()})} // no back here
+    />);
+  }
+  
   makeStepNewTranscription() {
     return (<StepNewTranscription
       {... this.stepProps}
@@ -92,12 +99,7 @@ class App extends Component {
     />);
   }
 
-  makeStepTrainingSuccess() {
-    return (<StepTrainingSuccess
-      {... this.stepProps}
-      goBack={()=>{}} // no back here
-    />);
-  }
+  
 
   makeStepTranscriptionResults() {
     return (<StepTranscriptionResults
