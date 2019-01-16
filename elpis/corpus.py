@@ -1,14 +1,33 @@
-from flask import Blueprint, request, Response
+import os
+from pathlib import Path
+from flask import Blueprint, redirect, request, url_for
+from werkzeug.utils import secure_filename
 
 
+UPLOAD_FOLDER = Path('/path/to/the/uploads')
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 bp = Blueprint("corpus", __name__, url_prefix="/corpus")
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @bp.route("/wav", methods=("GET", "POST"))
 def wav():
     if request.method == "POST":
         # Process incoming wav file
-        return 200
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
     elif request.method == "GET":
         # Return a list of all wav files
         return 200
