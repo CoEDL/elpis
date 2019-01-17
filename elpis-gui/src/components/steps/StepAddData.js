@@ -68,7 +68,8 @@ export default class StepAddData extends Component {
                                         </List>
                                     </Grid.Column>
                                 </Grid>    
-                                <Button type='submit' as={Link} to="/data-preparation">Next: process this data</Button>
+                                <Button type='submit' as={Link} to="/data-preparation">Next: process this data (Data input success)</Button>
+                                <Button type='submit' as={Link} to="/data-preparation-error">Next: Fix this error (Data input Error)</Button>
                             </Grid.Column>
                     </Grid>  
                 </Segment>
