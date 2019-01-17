@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import AccordionFluid from '../SemanticsComponents/AccordionFluid'
-import { Grid, Header, Segment, Icon, Button, Table } from 'semantic-ui-react';
+import { Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
 
 export default class StepTrainingSuccess extends Component {
+
+    state = { open: false }
+
+    open = () => this.setState({ open: true })
+    close = () => this.setState({ open: false })
+
     render() {
+        const { open } = this.state
         return (
             <div>
                 <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
@@ -60,7 +67,27 @@ export default class StepTrainingSuccess extends Component {
                                     </Table.Body>
                                 </Table>
 
-                                <Button onClick={()=>{}}>Download a bundle of the model, settings and information about training data</Button>
+
+                                <Modal 
+                                trigger={<Button>Download a bundle of the model, settings and information about training data</Button>} 
+                                basic size='small'
+                                open={open}
+                                onOpen={this.open}
+                                onClose={this.close}
+                                >
+                                        <Header icon='archive' content='Your files and settings are being compiled' />
+                                        <Modal.Content>
+                                        <p>
+                                            Click Save on your browser's download dialog
+                                        </p>
+                                        </Modal.Content>
+                                        <Modal.Actions>
+                                        <Button color='green' inverted onClick={this.close}>
+                                            <Icon name='checkmark' /> Ok
+                                        </Button>
+                                        </Modal.Actions>
+                                </Modal>
+                                
                                 <Button as={Link} to="/new-transcription">Use the model to transcribe new audio</Button>
                             </Grid.Column>
                        
