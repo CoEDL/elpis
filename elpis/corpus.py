@@ -3,13 +3,15 @@ from pathlib import Path
 from flask import Blueprint, redirect, request, url_for
 from werkzeug.utils import secure_filename
 
-
-UPLOAD_FOLDER = Path('/path/to/the/uploads')
+ELPIS_ROOT_DIR = os.getcwd()
+UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "uploaded_files")
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 bp = Blueprint("corpus", __name__, url_prefix="/corpus")
 
 
 def allowed_file(filename):
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
