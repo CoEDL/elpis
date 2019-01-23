@@ -23,14 +23,12 @@ def create_app(test_config=None):
         SECRET_KEY='dev'
     )
     app.register_blueprint(corpus.bp)
-    # app.register_blueprint(corpus.bp)
 
     @app.route('/')
     @app.route('/index.html')
     def index():
         with open(f"{GUI_PUBLIC_DIR}/index.html", "r") as fin:
             content = fin.read()
-            print(content)
             return content
     
     @app.route('/favicon.ico')

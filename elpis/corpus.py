@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from flask import Blueprint, redirect, request, url_for
+from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
 
 ELPIS_ROOT_DIR = os.getcwd()
@@ -15,24 +15,34 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def do():
+    pass
 
 @bp.route("/wav", methods=("GET", "POST"))
 def wav():
     if request.method == "POST":
         # Process incoming wav file
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+        # file = request.files['file']
+        uploaded_files = request.files.getlist("file[]")
+        for file in uploaded_files:
+            # if user does not select file, browser also
+            # submit an empty part without filename
+
+            if file.filename == '':
+                continue
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(UPLOAD_FOLDER, filename))
+                # return redirect(url_for('corpus.wav',
+                                        # filename=filename))
+        return escape(repr(uploaded_files))
     elif request.method == "GET":
         # Return a list of all wav files
-        return 200
+        return '''<form method="POST" enctype="multipart/form-data" action="/corpus/wav">
+  <input type="file" name="file[]" multiple="">
+  <input type="submit" value="add">
+</form>'''
 
 
 @bp.route("/elan", methods=("GET", "POST"))
