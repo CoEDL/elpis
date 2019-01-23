@@ -42,5 +42,9 @@ endangered languages - including many in Australia, where most of Elpis' develop
 This software is the product of academic research funded by the Australian Research Council 
 [Centre of Excellence for the Dynamics of Language](http://www.dynamicsoflanguage.edu.au/). If you use the software 
 or code in an academic setting, please be sure to cite it appropriately as follows:
-> Foley, B., Arnold, J., Coto-Solano, R., Durantin, G., Ellison, T.M., van Esch, D., Heath, S., Kratochvíl, F., Maxwell-Smith, Z., Nash, D. and Olsson, O., 2018. Building Speech Recognition Systems for Language Documentation: The CoEDL Endangered Language Pipeline and Inference System (ELPIS).
 
+> Foley, B., Arnold, J., Coto-Solano, R., Durantin, G., Ellison, T. M., van Esch, D., Heath, S., Kratochvíl, F.,
+Maxwell-Smith, Z., Nash, D., Olsson, O., Richards, M., San, N., Stoakes, H., Thieberger, N. & Wiles,
+J. (2018). Building Speech Recognition Systems for Language Documentation: The CoEDL Endangered
+Language Pipeline and Inference System (Elpis). In S. S. Agrawal (Ed.), *The 6th Intl. Workshop on Spoken
+Language Technologies for Under-Resourced Languages (SLTU)* (pp. 200–204). Available on https://www.isca-speech.org/archive/SLTU_2018/pdfs/Ben.pdf.
