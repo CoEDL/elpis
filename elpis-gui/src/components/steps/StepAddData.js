@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import AccordionFluid from '../Semantics Components/AccordionFluid'
 import { Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
+import FileUpload from '../Fileupload Components/FIleUpload'
+
 
 export default class StepAddData extends Component {
     // constructor(props) {
@@ -24,12 +26,15 @@ export default class StepAddData extends Component {
                                 <Header as='h1' text> <Icon name='book' />Add Data</Header>
                                 <p>Some description and information about file formats, naming requirements etc.</p>   
 
-                                <Segment placeholder>
+                                {/* <Segment placeholder>
                                     <Header icon>
                                     <Icon name='file audio outline' />
                                     Drag and drop audio and transcription files here
                                     </Header>
                                     <Button primary>Add Document</Button>
+                                </Segment> */}
+                                <Segment>
+                                    <FileUpload />
                                 </Segment>
 
                                 <Header as='h1' text> Transcription and Audio Files</Header>

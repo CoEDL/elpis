@@ -12,3 +12,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.dropzone {
+  padding: 3em;
+  background-color: yellow;
+}
+.dropzone_active {
+  background-color: orange;
+}

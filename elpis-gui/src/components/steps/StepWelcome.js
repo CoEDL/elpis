@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Button, Header, Container, Segment, } from 'semantic-ui-react';
 import AccordionFluid from '../Semantics Components/AccordionFluid';
-import FileUpload from '../Fileupload Components/FIleUpload'
 
 export default class StepWelcome extends Component {
     render() {
@@ -12,8 +11,9 @@ export default class StepWelcome extends Component {
                     <Grid.Row centered>
                         <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
                     </Grid.Row>
-    
+
                     <Grid.Row centered>
+                        
                         <Segment>
                             <Button as={Link} to="/naming">Build New Model</Button>
                             <Button as={Link} to="/new-transcription">New Transcription</Button>
