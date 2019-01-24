@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Button, Header, Container, Segment, } from 'semantic-ui-react';
-import AccordionFluid from '../SemanticsComponents/AccordionFluid';
+import AccordionFluid from '../Semantics Components/AccordionFluid';
 import FileUpload from '../Fileupload Components/FIleUpload'
 
 export default class StepWelcome extends Component {
