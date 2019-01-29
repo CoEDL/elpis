@@ -36,6 +36,10 @@ const rootReducer = (state = initialState, action) => {
 
     case 'UPDATE_MY_NAME':
       return {...state, myName: action.myName}
+    
+    
+    case 'SET_MODEL_NAME':
+      return {...state, model: {...state.model, name: action.name}}
 
 
     default:
