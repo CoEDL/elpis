@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import AccordionFluid from '../SemanticsComponents/AccordionFluid'
+import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { Grid, Header, Segment, Icon, Card, Button } from 'semantic-ui-react';
 
 export default class StepTranscriptionResults extends Component {
@@ -11,9 +11,7 @@ export default class StepTranscriptionResults extends Component {
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={5}>
-                            <AccordionFluid title={'Step 1'}/>
-                            <AccordionFluid title={'Step 2'}/>
-                            <AccordionFluid title={'Step 3'}/>
+                            <StepInformer instructions={NewModelInstructions} />
                         </Grid.Column>
                         <Grid.Column width={11}>
                             <Header as='h1' text='true'> <Icon name='schlix' /> Transcribed new audio - Results </Header>

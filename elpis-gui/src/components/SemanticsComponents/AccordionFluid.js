@@ -5,7 +5,7 @@ export default class AccordionExampleFluid extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeIndex: (props.active!==undefined) ? 0 : -1,
+      activeIndex: (props.active!==undefined && props.active!==false) ? 0 : -1,
     }
   }
 
@@ -19,19 +19,18 @@ export default class AccordionExampleFluid extends Component {
 
   render() {
     const { activeIndex } = this.state
+    const { iconName } = this.props;
     console.log( this.state.activeIndex);
     
     return (
       <Accordion styled>
         <Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}>
-          <Icon name='dropdown' />
+          <Icon name={iconName} />
           {this.props.title}
+          <Icon name='dropdown' />
         </Accordion.Title>
         <Accordion.Content active={activeIndex === 0}>
-          <p>
-            A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can
-            be found as a welcome guest in many households across the world.
-          </p>
+          {this.props.children}
         </Accordion.Content>
       </Accordion>
     )

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Button, Header, Container, Segment, } from 'semantic-ui-react';
-import AccordionFluid from '../SemanticsComponents/AccordionFluid'
+import StepInformer, { NewModelInstructions } from '../StepInformer';
 
 export default class StepWelcome extends Component {
     render() {
@@ -31,15 +31,7 @@ export default class StepWelcome extends Component {
                     </Grid.Row>
     
                     <Grid.Row centered>
-                            <AccordionFluid title={'Step 1'} active/>
-                    </Grid.Row>
-    
-                    <Grid.Row centered>
-                        <AccordionFluid title={'Step 2'}/>
-                    </Grid.Row>
-    
-                    <Grid.Row centered>
-                        <AccordionFluid title={'Step 3'}/>
+                        <StepInformer instructions={NewModelInstructions} />
                     </Grid.Row>
     
                 </Grid>

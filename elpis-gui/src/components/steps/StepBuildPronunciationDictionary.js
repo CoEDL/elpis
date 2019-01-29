@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import AccordionFluid from '../SemanticsComponents/AccordionFluid'
 import { Grid, Header, Segment, Icon, List, Button } from 'semantic-ui-react';
+import StepInformer, { NewModelInstructions } from '../StepInformer';
 
 export default class StepBuildPronunciationDictionary extends Component {
     render() {
@@ -11,9 +11,7 @@ export default class StepBuildPronunciationDictionary extends Component {
                     <Segment>
                         <Grid centered>
                                 <Grid.Column width={6}>
-                                    <AccordionFluid title={'Step 1'}/>
-                                    <AccordionFluid title={'Step 2'}/>
-                                    <AccordionFluid title={'Step 3'}/>
+                                    <StepInformer instructions={NewModelInstructions} />
                                 </Grid.Column>
                                 <Grid.Column width={10}>
                                     <Header as='h1' text textAlign='center'>  <Icon name='train' />Build the pronunciation dictionary</Header>
