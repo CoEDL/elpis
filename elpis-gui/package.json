@@ -15,7 +15,9 @@
     "semantic-ui-react": "^0.84.0",
     "superagent": "^4.1.0",
     "redux": "^4.0.1",
-    "redux-persist": "^5.10.0"
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0",
+    "redux-devtools-extension": "^2.13.7"
   },
   "scripts": {
     "start": "react-scripts start",
