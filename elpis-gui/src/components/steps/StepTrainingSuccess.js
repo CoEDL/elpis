@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import StepInformer, { NewModelInstructions } from '../StepInformer';
-import { Grid, Header, Segment, Icon, Button, Table } from 'semantic-ui-react';
-import AccordionFluid from '../SemanticsComponents/AccordionFluid';
+import { Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
+import AccordionFluid from '../Semantics Components/AccordionFluid';
 
 export default class StepTrainingSuccess extends Component {
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
+import FileUpload from '../Fileupload Components/FIleUpload';
 
 export default class StepAddData extends Component {
     // constructor(props) {
