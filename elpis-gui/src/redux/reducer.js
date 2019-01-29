@@ -1,14 +1,14 @@
 const initialState={
   foo: 'bar',
   incrementingThing: 0,
-  myName: '',
+  myName: 'ben',
   // above will need to be removed.
   // Below is the state the front end is aware of.
   model: {
     name: null,
     audioFiles: [],
     transcriptionFiles: [],
-    additionalTextFiles: [],
+    additionalTextFiles: ['file1.txt'],
     pronunciationDictionary: {},
     settings: {},
     date: null
@@ -21,6 +21,8 @@ const initialState={
     date: null
   }
 }
+
+let newFileList = []
 
 const rootReducer = (state = initialState, action) => {
 
@@ -64,14 +66,19 @@ const rootReducer = (state = initialState, action) => {
       }
 
     case 'ADD_ADDITIONAL_TEXT_FILE':
-      newFileList = state.model.additionalTextFiles.slice();
-      newFileList.push(action.filename);
+      // newFileList = state.model.additionalTextFiles.slice();
+      // newFileList.push(action.filename);
+
+      newFileList = [...state.model.additionalTextFiles, action.filename ]
+
+      console.log("reducer got file", action, newFileList)
       return {
+        ...state,
         model: {
-          additionalTextFiles: newFileList,
-          ...state.model
-        },
-        ...state
+          ...state.model,
+          additionalTextFiles: newFileList
+        }
+        
       }
 
 

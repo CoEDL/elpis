@@ -19,5 +19,6 @@ export const addAudioFile = filename => {
   return { type: 'ADD_AUDIO_FILE', filename };
 }
 export const addAdditionalTextFile = filename => {
+  console.log("added text file", filename)
   return { type: 'ADD_ADDITIONAL_TEXT_FILE', filename };
 }

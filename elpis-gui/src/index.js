@@ -6,14 +6,13 @@ import * as serviceWorker from './serviceWorker';
 
 
 import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
-import { store, persistor } from './redux/store'
+// import { PersistGate } from 'redux-persist/integration/react'
+import store from './redux/store'
 
 ReactDOM.render(
     <Provider store={store}>
-      <PersistGate loading={"loading"} persistor={persistor}>
-        <App />
-      </PersistGate>
+    {/* TODO add persistent things back */}
+      <App />
     </Provider>,
     document.getElementById('root')
   );
@@ -22,3 +21,4 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
+

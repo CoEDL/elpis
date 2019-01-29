@@ -25,6 +25,17 @@ class FileUpload extends Component {
         // });
 
         const fileNames = acceptedFiles.map(f => f.name);
+        fileNames.map(filename => {
+            if (filename.endsWith('.wav')) {
+                this.props.addAudioFile(filename);
+            } else if (filename.endsWith('.eaf') || filename.endsWith('.TextGrid')) {
+                this.props.addTranscriptionFile(filename);
+            } else if (filename.endsWith('.txt')) {
+                this.props.addAdditionalTextFile(filename);
+            } else {
+                // TODO tell the user that they can't put this type of file here
+            }
+        });
         //console.log(fileNames);
         // this.setState({ ...this.state, files: acceptedFiles, fileNames: fileNames  });
     };
@@ -34,9 +45,10 @@ class FileUpload extends Component {
 
         return(
             <div className="App">
+            {this.props.myName}
                     <p>Audio files: {this.props.audioFiles}</p>
                     <p>Transcription files: {this.props.transcriptionFiles}</p>
-                    <p>Audio files: {this.props.audioFiles}</p>
+                    <p>Additional Text files: {this.props.additionalTextFiles}</p>
                     <Dropzone className="dropzone"  onDrop={this.onDrop} getDataTransferItems={evt => fromEvent(evt)}>
                         {({ getRootProps, getInputProps, isDragActive }) => {
                             return (
@@ -71,6 +83,7 @@ class FileUpload extends Component {
 
 const mapStateToProps = state => {
     return {
+        myName: state.myName,
         audioFiles: state.model.audioFiles,
         transcriptionFiles: state.model.transcriptionFiles,
         additionalTextFiles: state.model.additionalTextFiles,
