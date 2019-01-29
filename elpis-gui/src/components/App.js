@@ -12,6 +12,8 @@ import {
   StepTranscriptionResults,
   StepModelSettings,
   StepTrainingModel,
+  StepDataPreparationError,
+  StepTrainingError
 } from './steps/index';
 import PageContainer from './PageContainer';
 
@@ -38,6 +40,8 @@ class App extends Component {
             <Route path="/transcription-results" component={StepTranscriptionResults} />
             <Route path="/model-settings" component={StepModelSettings} />
             <Route path="/training-model" component={StepTrainingModel} />
+            <Route path="/data-preparation-error" component={StepDataPreparationError} />
+            <Route path="/training-error" component={StepTrainingError} />
           </PageContainer>
         </Router>
       </div>

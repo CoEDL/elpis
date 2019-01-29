@@ -22,12 +22,15 @@ export default class StepAddData extends Component {
                                 <Header as='h1' text> <Icon name='book' />Add Data</Header>
                                 <p>Some description and information about file formats, naming requirements etc.</p>   
 
-                                <Segment placeholder>
+                                {/* <Segment placeholder>
                                     <Header icon>
                                     <Icon name='file audio outline' />
                                     Drag and drop audio and transcription files here
                                     </Header>
                                     <Button primary>Add Document</Button>
+                                </Segment> */}
+                                <Segment>
+                                    <FileUpload />
                                 </Segment>
 
                                 <Header as='h1' text> Transcription and Audio Files</Header>
@@ -66,7 +69,8 @@ export default class StepAddData extends Component {
                                         </List>
                                     </Grid.Column>
                                 </Grid>    
-                                <Button type='submit' as={Link} to="/data-preparation">Next: process this data</Button>
+                                <Button type='submit' as={Link} to="/data-preparation">Next: process this data (Data input success)</Button>
+                                <Button type='submit' as={Link} to="/data-preparation-error">Next: Fix this error (Data input Error)</Button>
                             </Grid.Column>
                     </Grid>  
                 </Segment>
