@@ -20,7 +20,7 @@ export default class StepAddData extends Component {
                             </Grid.Column>
 
                             <Grid.Column width={10}>
-                                <Header as='h1' text> <Icon name='book' />Add Data</Header>
+                                <Header as='h1'> <Icon name='book' />Add Data</Header>
                                 <p>Some description and information about file formats, naming requirements etc.</p>   
 
                                 {/* <Segment placeholder>
@@ -34,7 +34,7 @@ export default class StepAddData extends Component {
                                     <FileUpload />
                                 </Segment>
 
-                                <Header as='h1' text> Transcription and Audio Files</Header>
+                                <Header as='h1'> Transcription and Audio Files</Header>
                                <Grid>
                                     <Grid.Column width={5}>
                                         <List>

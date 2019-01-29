@@ -19,7 +19,7 @@ export default class StepDataPreperation extends Component {
                                     <p>Describe what has just happened for the novice user to better understand</p>
                                    <Grid>
                                         <Grid.Column width={5}>
-                                        <Header as='h1' text> Wordlist</Header>
+                                        <Header as='h1' > Wordlist</Header>
                                             <List>
                                                 <List.Item>
                                                     <List.Content>a</List.Content>
@@ -33,7 +33,7 @@ export default class StepDataPreperation extends Component {
                                             </List>
                                         </Grid.Column>
                                         <Grid.Column width={5}> 
-                                            <Header as='h1' text> Frequency</Header>
+                                            <Header as='h1' > Frequency</Header>
                                             <List>
                                                 <List.Item>
                                                     <List.Content>21</List.Content>

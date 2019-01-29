@@ -22,7 +22,7 @@ export default class StepWelcome extends Component {
     
                     <Grid.Row centered>
                         <Segment> 
-                            <Container text>
+                            <Container >
                                 <Header as='h2'>Instructional Video/Lorum</Header>
                                 <p>
                                     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Pariatur reprehenderit voluptas recusandae iusto deleniti eaque sunt, consectetur, rerum, dicta laboriosam porro molestias optio officiis minus nemo ex qui! Quas, velit.

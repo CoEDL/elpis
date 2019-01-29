@@ -11,19 +11,19 @@ export default class FileUpload extends Component {
     }
 
     onDrop = (acceptedFiles, rejectedFiles) => {
-        console.log(acceptedFiles);
+        console.log("file dropped:", acceptedFiles);
         
         
-        acceptedFiles.forEach(file => {
-            //console.log(file)
-            request
-            .post('http://127.0.0.1:5000/corpus/wav')
-            .attach(file.name, file.path);
-        });
+        // acceptedFiles.forEach(file => {
+        //     //console.log(file)
+        //     request
+        //     .post('http://127.0.0.1:5000/corpus/wav')
+        //     .attach(file.name, file.path);
+        // });
 
         const fileNames = acceptedFiles.map(f => f.name);
         //console.log(fileNames);
-        this.setState({ ...this.state, files: acceptedFiles, fileNames: fileNames  });
+        // this.setState({ ...this.state, files: acceptedFiles, fileNames: fileNames  });
     };
 
     render(){

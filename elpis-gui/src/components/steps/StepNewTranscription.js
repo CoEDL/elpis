@@ -16,7 +16,7 @@ export default class StepNewTranscription extends Component {
                             </Grid.Column>
 
                             <Grid.Column width={10}>
-                                <Header as='h1' text> <Icon name='computer' />Transcribe some audio with an exisiting model</Header>  
+                                <Header as='h1' > <Icon name='computer' />Transcribe some audio with an exisiting model</Header>  
 
                                 <Segment placeholder>
                                     <Header icon>
@@ -26,7 +26,7 @@ export default class StepNewTranscription extends Component {
                                     <Button primary>Add Document</Button>
                                 </Segment>
 
-                                <Header as='h1' text> Choose a model</Header>
+                                <Header as='h1' > Choose a model</Header>
                                <Grid>
                                     <Grid.Column>
                                         <List>
