@@ -4,7 +4,10 @@ import Dropzone from "react-dropzone";
 import {fromEvent} from "file-selector";
 import request from "superagent";
 
-export default class FileUpload extends Component {
+import { addAudioFile, addTranscriptionFile, addAdditionalTextFile } from '../../redux/actions';
+import { connect } from 'react-redux';
+
+class FileUpload extends Component {
     state={
         files:[],
         fileNames:[]
@@ -31,6 +34,9 @@ export default class FileUpload extends Component {
 
         return(
             <div className="App">
+                    <p>Audio files: {this.props.audioFiles}</p>
+                    <p>Transcription files: {this.props.transcriptionFiles}</p>
+                    <p>Audio files: {this.props.audioFiles}</p>
                     <Dropzone className="dropzone"  onDrop={this.onDrop} getDataTransferItems={evt => fromEvent(evt)}>
                         {({ getRootProps, getInputProps, isDragActive }) => {
                             return (
@@ -62,3 +68,25 @@ export default class FileUpload extends Component {
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        audioFiles: state.model.audioFiles,
+        transcriptionFiles: state.model.transcriptionFiles,
+        additionalTextFiles: state.model.additionalTextFiles,
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    addTranscriptionFile: filename => {
+        dispatch(addTranscriptionFile(filename));
+    },
+    addAudioFile: filename => {
+        dispatch(addAudioFile(filename));
+    },
+    addAdditionalTextFile: filename => {
+        dispatch(addAdditionalTextFile(filename));
+    },
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(FileUpload);

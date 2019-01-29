@@ -8,7 +8,7 @@ const initialState={
     name: null,
     audioFiles: [],
     transcriptionFiles: [],
-    additionalWordFiles: [],
+    additionalTextFiles: [],
     pronunciationDictionary: {},
     settings: {},
     date: null
@@ -40,6 +40,39 @@ const rootReducer = (state = initialState, action) => {
     
     case 'SET_MODEL_NAME':
       return {...state, model: {...state.model, name: action.name}}
+
+    case 'ADD_TRANSCRIPTION_FILE':
+      newFileList = state.model.transcriptionFiles.slice();
+      newFileList.push(action.filename);
+      return {
+        model: {
+          transcriptionFiles: newFileList,
+          ...state.model
+        },
+        ...state
+      }
+
+    case 'ADD_AUDIO_FILE':
+      newFileList = state.model.audioFiles.slice();
+      newFileList.push(action.filename);
+      return {
+        model: {
+          audioFiles: newFileList,
+          ...state.model
+        },
+        ...state
+      }
+
+    case 'ADD_ADDITIONAL_TEXT_FILE':
+      newFileList = state.model.additionalTextFiles.slice();
+      newFileList.push(action.filename);
+      return {
+        model: {
+          additionalTextFiles: newFileList,
+          ...state.model
+        },
+        ...state
+      }
 
 
     default:
