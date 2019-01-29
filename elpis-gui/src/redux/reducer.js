@@ -1,7 +1,25 @@
 const initialState={
   foo: 'bar',
   incrementingThing: 0,
-  myName: ''
+  myName: '',
+  // above will need to be removed.
+  // Below is the state the front end is aware of.
+  model: {
+    name: null,
+    audioFiles: [],
+    transcriptionFiles: [],
+    additionalWordFiles: [],
+    pronunciationDictionary: {},
+    settings: {},
+    date: null
+  },
+  transcription: {
+    name: null,
+    modelName: null,
+    results: {},
+    audioFiles: [],
+    date: null
+  }
 }
 
 const rootReducer = (state = initialState, action) => {
