@@ -23,6 +23,7 @@ class Model(object):
             list of *wav* files containing the audio the transcription was
             developed from.
         transcription_files:
+            elan files that match to the wav files
         additional:
     
     Files from `audio_files`, `transcription_files`, and `additional` must
