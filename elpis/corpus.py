@@ -5,6 +5,9 @@ from werkzeug.utils import secure_filename
 
 ELPIS_ROOT_DIR = os.getcwd()
 UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "uploaded_files")
+AUDIO_UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "uploaded_files")
+TRANSCRIPTION_UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "uploaded_files")
+TEXT_UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "uploaded_files")
 ALLOWED_EXTENSIONS = {'wav', 'eaf', 'trs', 'wordlist'}
 bp = Blueprint("corpus", __name__, url_prefix="/corpus")
 
@@ -21,9 +24,9 @@ def do():
 
 
 """ 
-Process incoming file
+Save incoming file to disk
 """
-def route_file_post():
+def save_file(folder_type):
     # file = request.files['file']
     uploaded_files = request.files.getlist("file[]")
     for file in uploaded_files:
@@ -34,7 +37,7 @@ def route_file_post():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            file.save(os.path.join(folder_type, filename))
             # return redirect(url_for('corpus.wav',
                                     # filename=filename))
     return escape(repr(uploaded_files))
@@ -57,7 +60,7 @@ def wav():
     if request.method == "POST":
         # Process incoming wav file
         # file = request.files['file']
-        route_post()
+        save_file(AUDIO_UPLOAD_FOLDER)
         return 200
     elif request.method == "GET":
         # Return a list of all wav files
@@ -70,7 +73,7 @@ def wav():
 def elan():
     if request.method == "POST":
         # Process incoming elan file
-        route_file_post()
+        save_file(TRANSCRIPTION_UPLOAD_FOLDER)
         return 200
     elif request.method == "GET":
         # Return a list of all elan files
@@ -82,7 +85,7 @@ def elan():
 def trs():
     if request.method == "POST":
         # Process incoming trs file
-        route_file_post()
+        save_file(TRANSCRIPTION_UPLOAD_FOLDER)
         return 200
     elif request.method == "GET":
         # Return a list of all trs files
@@ -94,7 +97,7 @@ def trs():
 def wordlist():
     if request.method == "POST":
         # Process incoming wordlist file
-        route_file_post()
+        save_file(TRANSCRIPTION_UPLOAD_FOLDER)
         return 200
     elif request.method == "GET":
         # Return current list of words
