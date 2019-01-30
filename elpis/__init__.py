@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, redirect
 from . import corpus
 from .state import load_existing_models
 
@@ -30,8 +30,13 @@ def create_app(test_config=None):
     )
     app.register_blueprint(corpus.bp)
 
+
+    @app.route('/index.html')
+    def index_file():
+        """Redirects to '/' for React."""
+        return redirect('/')
+
     @app.route('/', defaults={'path':''})
-    @app.route('/index.html', defaults={'path':''})
     @app.route("/<path:path>")
     def index(path):
         print('in index with:', path)
