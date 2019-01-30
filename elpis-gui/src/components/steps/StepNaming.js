@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Header, Segment, Icon, Form, Button } from 'semantic-ui-react';
+import { Grid, Header, Segment, Icon, Form, Button, Divider, Label } from 'semantic-ui-react';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { setModelName } from '../../redux/actions';
 import { connect } from 'react-redux';
@@ -18,6 +18,7 @@ class StepNaming extends Component {
     }
 
     render() {
+        const {modelName, modelList} = this.props;
         return(
             <div>
                 <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
@@ -29,12 +30,21 @@ class StepNaming extends Component {
                         <Grid.Column width={10}>
                             <Header as='h1' text="true"> <Icon name='setting' /> Build a new model </Header>
                             <Form>
-                                <p>{this.props.modelName}</p>
                                 <Form.Field>
-                                    <input type='text' placeholder='Project Name' onChange={this.handleChangeModelName}/>
+                                    <input
+                                        type='text'
+                                        placeholder='Project Name'
+                                        onChange={this.handleChangeModelName}
+                                        value={modelName}
+                                    />
+                                    {modelList.indexOf(modelName) > -1 ? (<Label basic color='red' pointing>
+                                        Model name already exists
+                                    </Label>):(<div/>)}
                                 </Form.Field>
-                                <Button type='submit' as={Link} to="/add-data">GO</Button>
+                                <Button type='submit' as={Link} to="/add-data" disabled={modelList.indexOf(modelName) > -1 || modelName===""}>GO</Button>
                             </Form>
+                            <Divider />
+                            {modelList}
                         </Grid.Column>
                     </Grid>  
                 </Segment>
@@ -46,6 +56,7 @@ class StepNaming extends Component {
 const mapStateToProps = state => {
     return {
       modelName: state.model.name,
+      modelList: state.modelList,
     }
   }
   const mapDispatchToProps = dispatch => ({
