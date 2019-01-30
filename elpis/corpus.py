@@ -66,99 +66,78 @@ def get_file(file_location, filename):
     #-- filename exists
 
 
-
+def get_and_set(folder_dir, *filename)
+    if request.method == "POST":
+        # Process incoming wav file
+        save_file(folder_dir)
+        return 200
+    elif request.method == "GET":
+        if not filename:
+            # Return a list of all elan files
+            get_file_names(folder_dir)
+            return 200
+        else
+            # Return specific file from list
+            get_file(folder_dir, filename)
+   
+    # if request.method == "POST":
+    #     # Process incoming wav file
+    #     save_file(Model.audio_files)
+    #     return 200
+    # elif request.method == "GET":
+    #     if not filename:
+    #         # Return a list of all elan files
+    #         get_file_names(Model.audio_files)
+    #         return 200
+    #     else
+    #         # Return specific file from list
+    #         get_file(Model.audio_files, filename)
 
 """
 Audio Files
 """
 @bp.route("/wav", methods=("GET", "POST"))
-def wav(Model, filename = ''):
-    if request.method == "POST":
-        # Process incoming wav file
-        # file = request.files['file']
-        save_file(Model._PATH_AUDIO)
-        return 200
-    elif request.method == "GET":
-        if not filename:
-            # Return a list of all elan files
-            get_file_names(Model._PATH_AUDIO)
-            return 200
-        else
-            # Return specific file from list
-            get_file(Model._PATH_TRANSCRIPTION, filename)
+def wav(Model, *filename):
+    if not filename: 
+        get_and_set(Model.audio_files) 
+    else: get_and_set(Model.audio_files, filename)
+   
         
 
 """
 Transcriptions
 """
 @bp.route("/elan", methods=("GET", "POST"))
-def elan(Model, filename = ''):
-    if request.method == "POST":
-        # Process incoming elan file
-        save_file(Model._PATH_TRANSCRIPTION)
-        return 200
-    elif request.method == "GET":
-        if not filename:
-            # Return a list of all elan files
-            get_file_names(Model._PATH_AUDIO)
-            return 200
-        else
-            # Return specific file from list
-            get_file(Model._PATH_TRANSCRIPTION, filename)
+def elan(Model, *filename):
+    if not filename:
+        get_and_set(Model.transcription_files)
+    else: get_and_set(Model.transcription_files, filename)
         
 
 
 @bp.route("/trs", methods=("GET", "POST"))
-def trs(Model, filename = ''):
-    if request.method == "POST":
-        # Process incoming trs file
-        save_file(Model._PATH_TRANSCRIPTION)
-        return 200
-    elif request.method == "GET":
-        if not filename:
-            # Return a list of all elan files
-            get_file_names(Model._PATH_AUDIO)
-            return 200
-        else
-            # Return specific file from list
-            get_file(Model._PATH_TRANSCRIPTION, filename)
+def trs(Model, *filename):
+    if not filename:
+        get_and_set(Model.transcription_files)
+    else: get_and_set(Model.transcription_files, filename)
 
 
 @bp.route("/wordlist", methods=("GET", "POST"))
-def wordlist(Model):
-    if request.method == "POST":
-        # Process incoming wordlist file
-        save_file(Model._PATH_TRANSCRIPTION)
-        TRANSCRIPTION_UPLOAD_FOLDER)
-        return 200
-    elif request.method == "GET":
-        if not filename:
-            # Return a list of all elan files
-            get_file_names(Model._PATH_AUDIO)
-            return 200
-        else
-            # Return specific file from list
-            get_file(Model._PATH_TRANSCRIPTION, filename)
-
+def wordlist(Model, *filename):
+    if not filename:
+        get_and_set(Model.transcription_files)
+    else: get_and_set(Model.transcription_files, filename)
+    
 
 """
 Additional Text
 """
 @bp.route("/txt", methods=("GET", "POST"))
-def wordlist(Model):
-    if request.method == "POST":
-        # Process incoming wordlist file
-        save_file(Model._PATH_ADDITIONAL_TEXT)
-        TRANSCRIPTION_UPLOAD_FOLDER)
-        return 200
-    elif request.method == "GET":
-        if not filename:
-            # Return a list of all elan files
-            get_file_names(Model._PATH_AUDIO)
-            return 200
-        else
-            # Return specific file from list
-            get_file(Model._PATH_TRANSCRIPTION, filename)
+def wordlist(Model, *filename):
+    if not filename:
+        get_and_set(Model.additional_text_files)
+    else: get_and_set(Model.additional_text_files, filename)
+
 
 """
 Pronunciation
