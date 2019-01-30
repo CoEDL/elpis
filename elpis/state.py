@@ -18,6 +18,7 @@ class Model(object):
             list of *wav* files containing the audio the transcription was
             developed from.
         transcription_files:
+            elan files that match to the wav files
         additional:
     
     Files from `audio_files`, `transcription_files`, and `additional` must
@@ -36,6 +37,8 @@ class Model(object):
         self.audio_files: List[str] = []
         self.transcription_files: List[str] = []
         self.additional: List[str] = []
+        #check that audio and transcript filenames match up
+
 
 class Transcription(object):
     def __init__(self):
@@ -43,3 +46,9 @@ class Transcription(object):
     @property
     def name():
         pass
+
+class audio
+
+class transcript
+
+class additional 
