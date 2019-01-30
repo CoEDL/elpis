@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
 
 ELPIS_ROOT_DIR = os.getcwd()
-UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "uploaded_files")
+UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "Uploaded_files")
 ALLOWED_EXTENSIONS = {'wav', 'eaf', 'trs', 'wordlist'}
 bp = Blueprint("corpus", __name__, url_prefix="/corpus")
 
@@ -21,9 +21,9 @@ def do():
 
 
 """ 
-Process incoming file
+Save incoming file to disk
 """
-def route_file_post():
+def save_file(folder_type):
     # file = request.files['file']
     uploaded_files = request.files.getlist("file[]")
     for file in uploaded_files:
@@ -34,7 +34,7 @@ def route_file_post():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            file.save(os.path.join(folder_type, filename))
             # return redirect(url_for('corpus.wav',
                                     # filename=filename))
     return escape(repr(uploaded_files))
@@ -44,8 +44,8 @@ def route_file_post():
 """
 Return a list of all files of filetype
 """
-def route_file_get(filetype):
-    return '''<form method="POST" enctype="multipart/form-data" action="/corpus/">''' + filetype + '''
+def get_files(file_location):
+    return '''<form method="POST" enctype="multipart/form-data" action="/corpus/">''' + file_location + '''
                 <input type="file" name="file[]" multiple="">
                     <input type="submit" value="add">
                     </form>'''
@@ -53,50 +53,51 @@ def route_file_get(filetype):
 
 
 @bp.route("/wav", methods=("GET", "POST"))
-def wav():
+def wav(Model):
     if request.method == "POST":
         # Process incoming wav file
         # file = request.files['file']
-        route_post()
+        save_file(Model._PATH_AUDIO)
         return 200
     elif request.method == "GET":
         # Return a list of all wav files
-        route_get('''wav''')
+        get_files(Mode._PATH_AUDIO)
         return 200
         
 
 
 @bp.route("/elan", methods=("GET", "POST"))
-def elan():
+def elan(Model):
     if request.method == "POST":
         # Process incoming elan file
-        route_file_post()
+        save_file(Model._PATH_TRANSCRIPTION)
         return 200
     elif request.method == "GET":
         # Return a list of all elan files
-        route_file_get(eaf)
+        get_files(Model._PATH_TRANSCRIPTION)
         return 200
 
 
 @bp.route("/trs", methods=("GET", "POST"))
-def trs():
+def trs(Model):
     if request.method == "POST":
         # Process incoming trs file
-        route_file_post()
+        save_file(Model._PATH_TRANSCRIPTION)
         return 200
     elif request.method == "GET":
         # Return a list of all trs files
-        route_file_get(trs)
+        get_files(Model._PATH_TRANSCRIPTION)
         return 200
 
 
 @bp.route("/wordlist", methods=("GET", "POST"))
-def wordlist():
+def wordlist(Model):
     if request.method == "POST":
         # Process incoming wordlist file
-        route_file_post()
+        save_file(Model._PATH_TRANSCRIPTION)
+        TRANSCRIPTION_UPLOAD_FOLDER)
         return 200
     elif request.method == "GET":
         # Return current list of words
-        route_file_get(wordlist)
+        get_files(Model._PATH_TRANSCRIPTION)
         return 200
