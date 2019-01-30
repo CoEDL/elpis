@@ -1,16 +1,17 @@
 const initialState={
-  foo: 'bar',
-  incrementingThing: 0,
-  myName: 'ben',
-  // above will need to be removed.
   // Below is the state the front end is aware of.
   model: {
     name: null,
     audioFiles: [],
     transcriptionFiles: [],
     additionalTextFiles: ['file1.txt'],
-    pronunciationDictionary: {},
-    settings: {},
+    pronunciationFile: null,
+    settings: {
+      frequency: null,
+      mfcc: null,
+      ngram: null,
+      beam: null,
+    },
     date: null
   },
   transcription: {
@@ -19,7 +20,14 @@ const initialState={
     results: {},
     audioFiles: [],
     date: null
-  }
+  },
+  modelList: [
+    "model1",
+    "model2",
+    "model3",
+    "model4",
+    "model5",
+  ],
 }
 
 let newFileList = []
@@ -27,18 +35,6 @@ let newFileList = []
 const rootReducer = (state = initialState, action) => {
 
   switch(action.type) {
-
-    case 'CHANGE_FOO':
-      const newValue = action.foo
-      return {...state, foo: newValue}
-
-    case 'INCREMENT_SOMETHING':
-      const i = state.incrementingThing + 1
-      return {...state, incrementingThing: i}
-
-    case 'UPDATE_MY_NAME':
-      return {...state, myName: action.myName}
-    
     
     case 'SET_MODEL_NAME':
       return {...state, model: {...state.model, name: action.name}}
