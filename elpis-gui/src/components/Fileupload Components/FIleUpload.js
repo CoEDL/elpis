@@ -4,7 +4,7 @@ import Dropzone from "react-dropzone";
 import {fromEvent} from "file-selector";
 import request from "superagent";
 
-import { addAudioFile, addTranscriptionFile, addAdditionalTextFile } from '../../redux/actions';
+// import { addAudioFile, addTranscriptionFile, addAdditionalTextFile } from '../../redux/apiModelActions';
 import { connect } from 'react-redux';
 
 class FileUpload extends Component {
@@ -27,11 +27,11 @@ class FileUpload extends Component {
         const fileNames = acceptedFiles.map(f => f.name);
         fileNames.map(filename => {
             if (filename.endsWith('.wav')) {
-                this.props.addAudioFile(filename);
+                // this.props.addAudioFile(filename);
             } else if (filename.endsWith('.eaf') || filename.endsWith('.TextGrid')) {
-                this.props.addTranscriptionFile(filename);
+                // this.props.addTranscriptionFile(filename);
             } else if (filename.endsWith('.txt')) {
-                this.props.addAdditionalTextFile(filename);
+                // this.props.addAdditionalTextFile(filename);
             } else {
                 // TODO tell the user that they can't put this type of file here
             }
@@ -83,23 +83,23 @@ class FileUpload extends Component {
 
 const mapStateToProps = state => {
     return {
-        myName: state.myName,
-        audioFiles: state.model.audioFiles,
-        transcriptionFiles: state.model.transcriptionFiles,
-        additionalTextFiles: state.model.additionalTextFiles,
+        // myName: state.myName,
+        // audioFiles: state.model.audioFiles,
+        // transcriptionFiles: state.model.transcriptionFiles,
+        // additionalTextFiles: state.model.additionalTextFiles,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    addTranscriptionFile: filename => {
-        dispatch(addTranscriptionFile(filename));
-    },
-    addAudioFile: filename => {
-        dispatch(addAudioFile(filename));
-    },
-    addAdditionalTextFile: filename => {
-        dispatch(addAdditionalTextFile(filename));
-    },
+    // addTranscriptionFile: filename => {
+    //     dispatch(addTranscriptionFile(filename));
+    // },
+    // addAudioFile: filename => {
+    //     dispatch(addAudioFile(filename));
+    // },
+    // addAdditionalTextFile: filename => {
+    //     dispatch(addAdditionalTextFile(filename));
+    // },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FileUpload);

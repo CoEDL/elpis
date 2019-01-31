@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Header, Segment, Icon, Form, Button, Divider, Label } from 'semantic-ui-react';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
-// import { setModelName } from '../../redux/actions';
+import { updateModelName } from '../../redux/actions';
 import { connect } from 'react-redux';
 
 class StepNaming extends Component {
     
     handleChangeModelName = (event) => {
         // TODO check for errors in the naming process
-        // const { setModelName } = this.props;
-        // setModelName(event.target.value);
+        const { updateModelName } = this.props;
+        updateModelName({name: event.target.value});
         // TODO goto next step
         // TODO verify on the go if this is a valid name or not
         // TODO enable/disable depending on the above comment.
@@ -18,7 +18,7 @@ class StepNaming extends Component {
     }
 
     render() {
-        // const {modelName, modelList} = this.props;
+        const {modelName} = this.props;
         return(
             <div>
                 <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
@@ -35,7 +35,7 @@ class StepNaming extends Component {
                                         type='text'
                                         placeholder='Project Name'
                                         onChange={this.handleChangeModelName}
-                                        // value={modelName}
+                                        value={modelName}
                                     />
                                     {/* {modelList.indexOf(modelName) > -1 ? (<Label basic color='red' pointing>
                                         Model name already exists
@@ -54,16 +54,15 @@ class StepNaming extends Component {
     }
 }
 
-// const mapStateToProps = state => {
-//     return {
-//       modelName: state.model.name,
-//       modelList: state.modelList,
-//     }
-//   }
-//   const mapDispatchToProps = dispatch => ({
-//     setModelName: name => {
-//       dispatch(setModelName(name))
-//     },
-//   })
-// export default connect(mapStateToProps, mapDispatchToProps)(StepNaming);
-export default StepNaming;
+const mapStateToProps = state => {
+    return {
+        modelName: state.apiModelReducer.name,
+    }
+  }
+  const mapDispatchToProps = dispatch => ({
+    updateModelName: name => {
+      dispatch(updateModelName(name))
+    },
+  })
+export default connect(mapStateToProps, mapDispatchToProps)(StepNaming);
+// export default StepNaming;
