@@ -77,7 +77,7 @@ Audio Files
 """
 @bp.route("/wav", methods=("GET", "POST"))
 def wav(Model, *filename):
-   if request.method == "POST":
+    if request.method == "POST":
         # Process incoming wav file
         state.add_audio_files(filename) 
         return 200
@@ -86,7 +86,7 @@ def wav(Model, *filename):
             # Return a list of all elan files
             state.audio_files()
             return 200
-        else
+        else:
             # Return specific file from list
             state.get_audio_file(filename)
         
@@ -96,7 +96,7 @@ Transcriptions
 """
 @bp.route("/elan", methods=("GET", "POST"))
 def elan(Model, *filename):
-   if request.method == "POST":
+    if request.method == "POST":
         # Process incoming wav file
         state.add_transcription_files(filename) 
         return 200
@@ -105,7 +105,7 @@ def elan(Model, *filename):
             # Return a list of all elan files
             state.transcription_files()
             return 200
-        else
+        else:
             # Return specific file from list
             state.get_transcription_file(filename)
         
@@ -113,7 +113,7 @@ def elan(Model, *filename):
 
 @bp.route("/trs", methods=("GET", "POST"))
 def trs(Model, *filename):
-   if request.method == "POST":
+    if request.method == "POST":
         # Process incoming wav file
         state.add_transcription_files(filename) 
         return 200
@@ -122,14 +122,14 @@ def trs(Model, *filename):
             # Return a list of all elan files
             state.transcription_files()
             return 200
-        else
+        else:
             # Return specific file from list
             state.get_transcription_file(filename)
 
 
 @bp.route("/wordlist", methods=("GET", "POST"))
 def wordlist(Model, *filename):
-   if request.method == "POST":
+    if request.method == "POST":
         # Process incoming wav file
         state.add_transcription_files(filename) 
         return 200
@@ -138,7 +138,7 @@ def wordlist(Model, *filename):
             # Return a list of all elan files
             state.transcription_files()
             return 200
-        else
+        else:
             # Return specific file from list
             state.get_transcription_file(filename)
     
@@ -147,8 +147,8 @@ def wordlist(Model, *filename):
 Additional Text
 """
 @bp.route("/txt", methods=("GET", "POST"))
-def wordlist(Model, *filename):
-   if request.method == "POST":
+def text(Model, *filename):
+    if request.method == "POST":
         # Process incoming wav file
         state.add_additional_text_files(filename) 
         return 200
@@ -157,7 +157,7 @@ def wordlist(Model, *filename):
             # Return a list of all elan files
             state.additional_text_files()
             return 200
-        else
+        else:
             # Return specific file from list
             state.get_additional_text_file(filename)
 

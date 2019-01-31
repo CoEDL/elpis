@@ -6,10 +6,6 @@ def filter_filenames(filenames: List[str]) -> List[str]:
     return [x.split('/')[-1] for x in filenames]
 
 
-## somewhere in the code ... 
-state = State()
-## back to reality ...
-
 
 class State(object):
     def __init__(self):
@@ -58,10 +54,10 @@ class Model(object):
 
         self._name: str = None
         self._date: str = None
-        self._audio_frequency: int = None
-        self._mfcc_stuff: int = None
-        self._n-gram: int = None
-        self._beam: int = None
+        #self._audio_frequency: int = 0
+        #self._mfcc_stuff: int = 0
+        #self._n-gram: int = 0
+        #self._beam: int = 0
     
     @property
     def name(self) -> str:
@@ -122,6 +118,18 @@ class Model(object):
     def add_additional_text_file(filename: str, content: str):
         with open(f'{self._PATH_ADDITIONAL_TEXT}/{filename}', 'w') as fout:
             fout.write(content)
+
+    def get_audio_file():
+        return None
+
+    def get_transcription_file():
+        return None
+
+    def get_additional_text_file():
+        return None
+
+    def get_pronunciation_file():
+        return None
 
 
 class Transcription(object):
