@@ -21,7 +21,10 @@ def do():
 
 
 """ 
-Save incoming file to disk
+POST functions:
+"""
+"""
+- Save incoming file to disk
 """
 def save_file(folder_type):
     # file = request.files['file']
@@ -42,62 +45,103 @@ def save_file(folder_type):
 
 
 """
-Return a list of all files of filetype
+GET functions:
 """
-def get_files(file_location):
+"""
+- Return a list of all files of filetype
+"""
+def get_file_names(file_location):
     return '''<form method="POST" enctype="multipart/form-data" action="/corpus/">''' + file_location + '''
                 <input type="file" name="file[]" multiple="">
                     <input type="submit" value="add">
                     </form>'''
 
+"""
+- Return speified file
+"""
+def get_file(file_location, filename):
+    pass
+    #Check that 
+    #--filename is not an illegal argument 
+    #-- filename exists
 
 
-@bp.route("/wav", methods=("GET", "POST"))
-def wav(Model):
+def get_and_set(folder_dir, *filename)
     if request.method == "POST":
         # Process incoming wav file
-        # file = request.files['file']
-        save_file(Model._PATH_AUDIO)
+        save_file(folder_dir)
         return 200
     elif request.method == "GET":
-        # Return a list of all wav files
-        get_files(Mode._PATH_AUDIO)
-        return 200
+        if not filename:
+            # Return a list of all elan files
+            get_file_names(folder_dir)
+            return 200
+        else
+            # Return specific file from list
+            get_file(folder_dir, filename)
+   
+    # if request.method == "POST":
+    #     # Process incoming wav file
+    #     save_file(Model.audio_files)
+    #     return 200
+    # elif request.method == "GET":
+    #     if not filename:
+    #         # Return a list of all elan files
+    #         get_file_names(Model.audio_files)
+    #         return 200
+    #     else
+    #         # Return specific file from list
+    #         get_file(Model.audio_files, filename)
+
+"""
+Audio Files
+"""
+@bp.route("/wav", methods=("GET", "POST"))
+def wav(Model, *filename):
+    if not filename: 
+        get_and_set(Model.audio_files) 
+    else: get_and_set(Model.audio_files, filename)
+   
+        
+
+"""
+Transcriptions
+"""
+@bp.route("/elan", methods=("GET", "POST"))
+def elan(Model, *filename):
+    if not filename:
+        get_and_set(Model.transcription_files)
+    else: get_and_set(Model.transcription_files, filename)
         
 
 
-@bp.route("/elan", methods=("GET", "POST"))
-def elan(Model):
-    if request.method == "POST":
-        # Process incoming elan file
-        save_file(Model._PATH_TRANSCRIPTION)
-        return 200
-    elif request.method == "GET":
-        # Return a list of all elan files
-        get_files(Model._PATH_TRANSCRIPTION)
-        return 200
-
-
 @bp.route("/trs", methods=("GET", "POST"))
-def trs(Model):
-    if request.method == "POST":
-        # Process incoming trs file
-        save_file(Model._PATH_TRANSCRIPTION)
-        return 200
-    elif request.method == "GET":
-        # Return a list of all trs files
-        get_files(Model._PATH_TRANSCRIPTION)
-        return 200
+def trs(Model, *filename):
+    if not filename:
+        get_and_set(Model.transcription_files)
+    else: get_and_set(Model.transcription_files, filename)
 
 
 @bp.route("/wordlist", methods=("GET", "POST"))
-def wordlist(Model):
-    if request.method == "POST":
-        # Process incoming wordlist file
-        save_file(Model._PATH_TRANSCRIPTION)
-        TRANSCRIPTION_UPLOAD_FOLDER)
-        return 200
-    elif request.method == "GET":
-        # Return current list of words
-        get_files(Model._PATH_TRANSCRIPTION)
-        return 200
+def wordlist(Model, *filename):
+    if not filename:
+        get_and_set(Model.transcription_files)
+    else: get_and_set(Model.transcription_files, filename)
+    
+
+"""
+Additional Text
+"""
+@bp.route("/txt", methods=("GET", "POST"))
+def wordlist(Model, *filename):
+    if not filename:
+        get_and_set(Model.additional_text_files)
+    else: get_and_set(Model.additional_text_files, filename)
+
+
+"""
+Pronunciation
+"""
+#What filetype is this?
+
+
