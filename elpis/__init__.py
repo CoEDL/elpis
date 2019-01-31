@@ -2,7 +2,6 @@ import os
 
 from flask import Flask, redirect
 from . import corpus
-from .state import load_existing_models
 
 # Setup paths
 ELPIS_ROOT_DIR = os.getcwd()
@@ -12,8 +11,6 @@ GUI_STATIC_DIR = os.path.join(GUI_ROOT_DIR, "js")
 MODELS_DIR = os.path.join(ELPIS_ROOT_DIR, 'models')
 
 def create_app(test_config=None):
-    print(os.getcwd())
-    print(load_existing_models())
     if not os.path.exists(MODELS_DIR):
         print('making the dir!')
         os.mkdir(MODELS_DIR)
