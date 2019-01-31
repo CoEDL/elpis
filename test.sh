@@ -4,8 +4,8 @@
 set -e
 
 # Test python project
-source venv/bin/activate
-export PYTHONPATH=`pwd`/..
+# source venv/bin/activate
+# export PYTHONPATH=`pwd`/..
 pytest
 
 # Test React and Javascript code

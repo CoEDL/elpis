@@ -7,7 +7,7 @@ def filter_filenames(filenames: List[str]) -> List[str]:
 
 
 ## somewhere in the code ... 
-state = State()
+
 ## back to reality ...
 
 
@@ -60,7 +60,7 @@ class Model(object):
         self._date: str = None
         self._audio_frequency: int = None
         self._mfcc_stuff: int = None
-        self._n-gram: int = None
+        self._n_gram: int = None
         self._beam: int = None
     
     @property

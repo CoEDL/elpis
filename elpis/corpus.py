@@ -66,7 +66,7 @@ def get_file(file_location, filename):
     #-- filename exists
 
 
-def get_and_set(folder_dir, *filename)
+def get_and_set(folder_dir, *filename):
     if request.method == "POST":
         # Process incoming wav file
         save_file(folder_dir)
@@ -76,7 +76,7 @@ def get_and_set(folder_dir, *filename)
             # Return a list of all elan files
             get_file_names(folder_dir)
             return 200
-        else
+        else:
             # Return specific file from list
             get_file(folder_dir, filename)
    
@@ -129,14 +129,14 @@ def wordlist(Model, *filename):
     else: get_and_set(Model.transcription_files, filename)
     
 
-"""
-Additional Text
-"""
-@bp.route("/txt", methods=("GET", "POST"))
-def wordlist(Model, *filename):
-    if not filename:
-        get_and_set(Model.additional_text_files)
-    else: get_and_set(Model.additional_text_files, filename)
+# """
+# Additional Text
+# """
+# @bp.route("/txt", methods=("GET", "POST"))
+# def wordlist(Model, *filename):
+#     if not filename:
+#         get_and_set(Model.additional_text_files)
+#     else: get_and_set(Model.additional_text_files, filename)
 
 
 """
