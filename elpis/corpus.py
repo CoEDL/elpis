@@ -127,6 +127,20 @@ def wordlist(Model, *filename):
     if not filename:
         get_and_set(Model.transcription_files)
     else: get_and_set(Model.transcription_files, filename)
+
+@bp.route("/name", methods=("GET", "POST"))
+def name_test():
+    if request.method == "GET":
+        pass
+    elif request.method == "POST":
+        with open('name_file', 'w') as fout:
+            fout.write(request.json['name'])
+        with open('name_file', 'r') as fin:
+            return '{"name": "' + fin.read() + '"}'
+        return ''
+    else:
+        return "Error"
+
     
 
 # """
