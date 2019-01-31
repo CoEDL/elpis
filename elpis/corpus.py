@@ -73,7 +73,7 @@ def get_file(file_location, filename):
 
 
 """
-Audio Files
+Audio File Routes
 """
 @bp.route("/wav", methods=("GET", "POST"))
 def wav(Model, *filename):
@@ -92,7 +92,7 @@ def wav(Model, *filename):
         
 
 """
-Transcriptions
+Transcription Routes
 """
 @bp.route("/elan", methods=("GET", "POST"))
 def elan(Model, *filename):
@@ -144,9 +144,9 @@ def wordlist(Model, *filename):
     
 
 """
-Additional Text
+Additional Text Route
 """
-@bp.route("/txt", methods=("GET", "POST"))
+@bp.route("/additionaltxt", methods=("GET", "POST"))
 def text(Model, *filename):
     if request.method == "POST":
         # Process incoming wav file
@@ -163,8 +163,36 @@ def text(Model, *filename):
 
 
 """
-Pronunciation
+Pronunciation Route
 """
-#What filetype is this?
+@bp.route("/pronunciation", methods=("GET", "POST"))
+def text(Model, *filename):
+    if request.method == "POST":
+        # Process incoming wav file
+        state.add_additional_text_files(filename) 
+        return 200
+    elif request.method == "GET":
+        if not filename:
+            # Return a list of all elan files
+            state.additional_text_files()
+            return 200
+        else:
+            # Return specific file from list
+            state.get_additional_text_file(filename)
+
+
+
+"""
+Settings Route
+"""
+@bp.route("/settings", methods=("GET", "POST"))
+    if request.method == "POST":
+            # Add settings for model
+            state.add_settings(Settings) 
+            return 200
+        elif request.method == "GET":
+            # Returns all model settings
+            state.settings.get_settings()
+            return 200
 
 
