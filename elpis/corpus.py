@@ -3,6 +3,7 @@ from pathlib import Path
 from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
 
+
 ELPIS_ROOT_DIR = os.getcwd()
 UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "Uploaded_files")
 ALLOWED_EXTENSIONS = {'wav', 'eaf', 'trs', 'wordlist'}
@@ -38,6 +39,8 @@ def save_file(folder_type):
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(folder_type, filename))
+            #######Should we just be using Model.add_audio_file here instead?
+            #Model.add_audio_file
             # return redirect(url_for('corpus.wav',
                                     # filename=filename))
     return escape(repr(uploaded_files))
@@ -51,10 +54,12 @@ GET functions:
 - Return a list of all files of filetype
 """
 def get_file_names(file_location):
+    ########Should we be using the model.audio_files functions here?
     return '''<form method="POST" enctype="multipart/form-data" action="/corpus/">''' + file_location + '''
                 <input type="file" name="file[]" multiple="">
                     <input type="submit" value="add">
                     </form>'''
+    
 
 """
 - Return speified file
@@ -62,46 +67,28 @@ def get_file_names(file_location):
 def get_file(file_location, filename):
     pass
     #Check that 
-    #--filename is not an illegal argument 
+    #-- filename is not an illegal argument 
     #-- filename exists
 
 
-def get_and_set(folder_dir, *filename)
-    if request.method == "POST":
-        # Process incoming wav file
-        save_file(folder_dir)
-        return 200
-    elif request.method == "GET":
-        if not filename:
-            # Return a list of all elan files
-            get_file_names(folder_dir)
-            return 200
-        else
-            # Return specific file from list
-            get_file(folder_dir, filename)
-   
-    # if request.method == "POST":
-    #     # Process incoming wav file
-    #     save_file(Model.audio_files)
-    #     return 200
-    # elif request.method == "GET":
-    #     if not filename:
-    #         # Return a list of all elan files
-    #         get_file_names(Model.audio_files)
-    #         return 200
-    #     else
-    #         # Return specific file from list
-    #         get_file(Model.audio_files, filename)
 
 """
 Audio Files
 """
 @bp.route("/wav", methods=("GET", "POST"))
 def wav(Model, *filename):
-    if not filename: 
-        get_and_set(Model.audio_files) 
-    else: get_and_set(Model.audio_files, filename)
-   
+   if request.method == "POST":
+        # Process incoming wav file
+        state.add_audio_files(filename) 
+        return 200
+    elif request.method == "GET":
+        if not filename:
+            # Return a list of all elan files
+            state.audio_files()
+            return 200
+        else
+            # Return specific file from list
+            state.get_audio_file(filename)
         
 
 """
@@ -109,24 +96,51 @@ Transcriptions
 """
 @bp.route("/elan", methods=("GET", "POST"))
 def elan(Model, *filename):
-    if not filename:
-        get_and_set(Model.transcription_files)
-    else: get_and_set(Model.transcription_files, filename)
+   if request.method == "POST":
+        # Process incoming wav file
+        state.add_transcription_files(filename) 
+        return 200
+    elif request.method == "GET":
+        if not filename:
+            # Return a list of all elan files
+            state.transcription_files()
+            return 200
+        else
+            # Return specific file from list
+            state.get_transcription_file(filename)
         
 
 
 @bp.route("/trs", methods=("GET", "POST"))
 def trs(Model, *filename):
-    if not filename:
-        get_and_set(Model.transcription_files)
-    else: get_and_set(Model.transcription_files, filename)
+   if request.method == "POST":
+        # Process incoming wav file
+        state.add_transcription_files(filename) 
+        return 200
+    elif request.method == "GET":
+        if not filename:
+            # Return a list of all elan files
+            state.transcription_files()
+            return 200
+        else
+            # Return specific file from list
+            state.get_transcription_file(filename)
 
 
 @bp.route("/wordlist", methods=("GET", "POST"))
 def wordlist(Model, *filename):
-    if not filename:
-        get_and_set(Model.transcription_files)
-    else: get_and_set(Model.transcription_files, filename)
+   if request.method == "POST":
+        # Process incoming wav file
+        state.add_transcription_files(filename) 
+        return 200
+    elif request.method == "GET":
+        if not filename:
+            # Return a list of all elan files
+            state.transcription_files()
+            return 200
+        else
+            # Return specific file from list
+            state.get_transcription_file(filename)
     
 
 """
@@ -134,9 +148,18 @@ Additional Text
 """
 @bp.route("/txt", methods=("GET", "POST"))
 def wordlist(Model, *filename):
-    if not filename:
-        get_and_set(Model.additional_text_files)
-    else: get_and_set(Model.additional_text_files, filename)
+   if request.method == "POST":
+        # Process incoming wav file
+        state.add_additional_text_files(filename) 
+        return 200
+    elif request.method == "GET":
+        if not filename:
+            # Return a list of all elan files
+            state.additional_text_files()
+            return 200
+        else
+            # Return specific file from list
+            state.get_additional_text_file(filename)
 
 
 """
