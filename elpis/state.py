@@ -12,6 +12,66 @@ class State(object):
         super()
 
 
+class Settings(object):
+    def __init__(self):
+        super()
+        #Model Settings
+        self._audio_frequency = 44100
+        self._mfcc = 22050
+        self._ngram = 3
+        self._beam = 10
+    
+    """
+    How do I make sure SETS are called before GETS
+    """
+
+    # "Audio"
+    # @property
+    # def set_audio_frequency(frequency):
+    #     self._audio_frequency = frequency
+    
+    # def get_audio_frequency():
+    #     return self._audio_frequency
+    
+    # "MFCC"
+    # @property
+    # def set_mfcc(mfcc):
+    #     self._mfcc = mfcc
+    
+    # def get_audio_frequency():
+    #     return self._mfcc
+
+    # "N-Gram"
+    # @property
+    # def set_ngram(ngram):
+    #     self._ngram = ngram
+    
+    # def get_ngram():
+    #     return self._ngram
+
+    # "Beam"
+    # @property
+    # def set_beam(beam):
+    #     self._beam = beam
+    
+    # def get_beam():
+    #     return self._beam
+
+    "Settings"
+    def set_settings(settings):
+        self._audio_frequency = settings[0]
+        self._mfcc = settings[1]
+        self._ngram = settings[2]
+        self._beam = settings[3]
+
+    def get_settings():
+        return [
+            self._audio_frequency, 
+            self._mfcc,
+            self._ngram,
+            self._beam
+        ]
+        
 
 class Model(object):
     """
@@ -52,12 +112,11 @@ class Model(object):
             os.mkdir(self._PATH_ADDITIONAL_TEXT)
             os.mkdir(self._PATH_PRONUNCIATION)
 
+        #Model
         self._name: str = None
         self._date: str = None
-        #self._audio_frequency: int = 0
-        #self._mfcc_stuff: int = 0
-        #self._n-gram: int = 0
-        #self._beam: int = 0
+        
+        
     
     @property
     def name(self) -> str:
@@ -70,8 +129,6 @@ class Model(object):
         with open(f'{self._location}/name', 'w') as fin:
             fin.write(value)
             self._name = value
-    
-
     
     @property
     def audio_files(self):
@@ -131,6 +188,9 @@ class Model(object):
     def get_pronunciation_file():
         return None
 
+    
+
+    
 
 class Transcription(object):
     def __init__(self):
