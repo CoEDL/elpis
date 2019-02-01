@@ -1,0 +1,6 @@
+{
+    "welcome": {
+        "title": "Elpis",
+        "intro": "This is fun. {{passInSomething}}"
+    }
+}

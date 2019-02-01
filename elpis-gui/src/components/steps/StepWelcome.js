@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 import { Grid, Button, Header, Container, Segment, } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
+import { translate } from 'react-i18next';
 
-export default class StepWelcome extends Component {
+class StepWelcome extends Component {
+
     render() {
+        const { t } = this.props
+
         return (
             <div>
                 <Grid centered row={6}>
@@ -14,7 +18,6 @@ export default class StepWelcome extends Component {
                     </Grid.Row>
 
                     <Grid.Row centered>
-
                         <Segment>
                             <Button as={Link} to="/naming">Build New Model</Button>
                             <Button as={Link} to="/new-transcription">New Transcription</Button>
@@ -26,9 +29,7 @@ export default class StepWelcome extends Component {
                             <Container >
                                 <Segment>
                                     <Header as='h2'>Instructional Video</Header>
-                                    <p>
-                                        Friendly welcome message :-)
-                                    </p>
+                                    <p>{t('welcome.intro', {passInSomething:"memememe"})}</p>
                                 </Segment>
                             </Container>
 
@@ -43,3 +44,6 @@ export default class StepWelcome extends Component {
         );
       }
 }
+
+// translate uses a namespace
+export default translate('common')(StepWelcome)
