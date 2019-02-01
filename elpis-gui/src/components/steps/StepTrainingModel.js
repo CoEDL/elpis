@@ -14,7 +14,7 @@ export default class StepTrainingModel extends Component {
 
         return (
             <div>
-                <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
+                <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={5}>
@@ -59,7 +59,7 @@ export default class StepTrainingModel extends Component {
                         <Button as={Link} to="/training-success">Next: model trained OK</Button>
                         <Button as={Link} to="/training-error" icon> <Icon name='warning sign'/> Next: model trained Error</Button>
                         </Grid.Column>
-                    </Grid>  
+                    </Grid>
                 </Segment>
             </div>
         );

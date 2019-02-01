@@ -11,7 +11,8 @@ export default class StepAddData extends Component {
     render() {
         return (
             <div>
-                <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
+                <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
+
 
                 <Segment>
                     <Grid centered>
@@ -21,7 +22,7 @@ export default class StepAddData extends Component {
 
                             <Grid.Column width={10}>
                                 <Header as='h1'> <Icon name='book' />Add Data</Header>
-                                <p>Some description and information about file formats, naming requirements etc.</p>   
+                                <p>Some description and information about file formats, naming requirements etc.</p>
 
                                 {/* <Segment placeholder>
                                     <Header icon>
@@ -53,7 +54,7 @@ export default class StepAddData extends Component {
                                         </List>
                                     </Grid.Column>
 
-                                    <Grid.Column width={5}> 
+                                    <Grid.Column width={5}>
                                     <List>
                                             <List.Item>
                                                 <List.Icon name='check square'/>
@@ -69,11 +70,11 @@ export default class StepAddData extends Component {
                                             </List.Item>
                                         </List>
                                     </Grid.Column>
-                                </Grid>    
+                                </Grid>
                                 <Button type='submit' as={Link} to="/data-preparation">Next: process this data (Data input success)</Button>
                                 <Button type='submit' as={Link} to="/data-preparation-error">Next: Fix this error (Data input Error)</Button>
                             </Grid.Column>
-                    </Grid>  
+                    </Grid>
                 </Segment>
             </div>
         );

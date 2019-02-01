@@ -20,3 +20,10 @@ code {
 .dropzone_active {
   background-color: orange;
 }
+
+.logo {
+  height: 50px !important;
+  width: auto !important;
+  margin: 1rem 0 0 1rem !important;
+  display: block;
+}

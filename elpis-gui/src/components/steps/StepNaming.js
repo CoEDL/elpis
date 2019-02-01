@@ -6,7 +6,7 @@ import { updateModelName } from '../../redux/actions';
 import { connect } from 'react-redux';
 
 class StepNaming extends Component {
-    
+
     handleChangeModelName = (event) => {
         // TODO check for errors in the naming process
         const { updateModelName } = this.props;
@@ -21,7 +21,7 @@ class StepNaming extends Component {
         const {modelName} = this.props;
         return(
             <div>
-                <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
+                <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={6}>
@@ -47,7 +47,7 @@ class StepNaming extends Component {
                             <Divider />
                             {/* {modelList} */}
                         </Grid.Column>
-                    </Grid>  
+                    </Grid>
                 </Segment>
             </div>
         )

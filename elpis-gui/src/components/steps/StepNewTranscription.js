@@ -7,8 +7,7 @@ export default class StepNewTranscription extends Component {
     render() {
         return (
             <div>
-                <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
-
+                <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
                 <Segment>
                     <Grid centered>
                             <Grid.Column width={6}>
@@ -16,7 +15,7 @@ export default class StepNewTranscription extends Component {
                             </Grid.Column>
 
                             <Grid.Column width={10}>
-                                <Header as='h1' > <Icon name='computer' />Transcribe some audio with an exisiting model</Header>  
+                                <Header as='h1' > <Icon name='computer' />Transcribe some audio with an exisiting model</Header>
 
                                 <Segment placeholder>
                                     <Header icon>
@@ -53,11 +52,11 @@ export default class StepNewTranscription extends Component {
                                         </List>
                                     </Grid.Column>
                                 </Grid>
-                                
+
                                 <Button type='submit' as={Link} to="/transcription-results">Go</Button>
                             </Grid.Column>
-                       
-                    </Grid>  
+
+                    </Grid>
                 </Segment>
             </div>
         );

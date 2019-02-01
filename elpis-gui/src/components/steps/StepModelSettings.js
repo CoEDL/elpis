@@ -4,11 +4,11 @@ import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { Grid, Header, Segment, Icon, Form, Button } from 'semantic-ui-react';
 
 export default class StepModelSettings extends Component {
-    
+
     render() {
         return (
             <div>
-                <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
+                <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={6}>
@@ -36,7 +36,7 @@ export default class StepModelSettings extends Component {
                                 <Button type='submit' as={Link} to="/training-model">Next: train model</Button>
                             </Form>
                         </Grid.Column>
-                    </Grid>  
+                    </Grid>
                 </Segment>
             </div>
         );

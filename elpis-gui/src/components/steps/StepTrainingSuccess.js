@@ -15,8 +15,7 @@ export default class StepTrainingSuccess extends Component {
         const { open } = this.state
         return (
             <div>
-                <Header as='h1'>ELPIS LOGO (ACCELERATE TRANSCRIPTION)</Header>
-
+                <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
                 <Segment>
                     <Grid centered>
                             <Grid.Column width={5}>
@@ -25,7 +24,7 @@ export default class StepTrainingSuccess extends Component {
 
                             <Grid.Column width={11}>
                                 <Header as='h1' text='true'> <Icon name='graduation cap' /> Trained Model Success </Header>
-                            
+
                                 <Table celled padded>
                                     <Table.Body>
                                         <Table.Row>
@@ -67,8 +66,8 @@ export default class StepTrainingSuccess extends Component {
                                 </Table>
 
 
-                                <Modal 
-                                trigger={<Button>Download a bundle of the model, settings and information about training data</Button>} 
+                                <Modal
+                                trigger={<Button>Download a bundle of the model, settings and information about training data</Button>}
                                 basic size='small'
                                 open={open}
                                 onOpen={this.open}
@@ -86,11 +85,11 @@ export default class StepTrainingSuccess extends Component {
                                         </Button>
                                         </Modal.Actions>
                                 </Modal>
-                                
+
                                 <Button as={Link} to="/new-transcription">Use the model to transcribe new audio</Button>
                             </Grid.Column>
-                       
-                    </Grid>  
+
+                    </Grid>
                 </Segment>
             </div>
         );
