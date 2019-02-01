@@ -1,8 +1,6 @@
 import axios from 'axios'
 
-// Use beeceptor to test API endpoints
-// const baseUrl = 'https://elpis.free.beeceptor.com'
-const baseUrl = 'http://127.0.0.1:5000'
+const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://127.0.0.1:5000'
 
 const getApi = (url, successFunction) => {
   return dispatch => {
