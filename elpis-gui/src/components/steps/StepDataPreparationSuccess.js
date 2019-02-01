@@ -14,7 +14,8 @@ export default class StepDataPreperation extends Component {
                                     <StepInformer instructions={NewModelInstructions} />
                                 </Grid.Column>
                                 <Grid.Column width={10}>
-                                    <Header as='h1' text textAlign='center'>  <Icon name='train' />Data preparation success, Overview of training corpus</Header>
+                                    <Header as='h1'><Icon name='train' />Data preparation success</Header>
+                                    <h2>Overview of training corpus</h2>
                                     <p>Banner Message: text has been cleaned and normalised OK</p>
                                     <p>Describe what has just happened for the novice user to better understand</p>
                                    <Grid>

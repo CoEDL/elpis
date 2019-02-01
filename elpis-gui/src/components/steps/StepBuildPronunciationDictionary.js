@@ -19,7 +19,7 @@ export default class StepBuildPronunciationDictionary extends Component {
                                     <StepInformer instructions={NewModelInstructions} />
                                 </Grid.Column>
                                 <Grid.Column width={10}>
-                                    <Header as='h1' textAlign='center'>  <Icon name='train' />Build the pronunciation dictionary</Header>
+                                    <Header as='h1'>  <Icon name='train' />Build the pronunciation dictionary</Header>
                                     <Header as="h3">Pronunciation file:</Header>
                                     <Divider />
 
@@ -46,7 +46,7 @@ export default class StepBuildPronunciationDictionary extends Component {
                                     <Button onClick={()=>{}}>Upload dictionary</Button>
                                     <Button type='submit' as={Link} to="/model-settings">Next: model settings</Button>
                                 </Grid.Column>
-                        </Grid>  
+                        </Grid>
                     </Segment>
                 </div>
         );
