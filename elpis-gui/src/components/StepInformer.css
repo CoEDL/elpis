@@ -2,7 +2,7 @@
 .stepList .item {position: relative;}
 
 .stepDone,
-.substepDone {background-color:#C4D6B0; }
+.substepDone {background-color:#E0C6EE; }
 
 .stepDoing {}
-.substepDoing {background-color:#4EAD75; font-weight: bold}
+.substepDoing {background-color:#D3A0F0; font-weight: bold}

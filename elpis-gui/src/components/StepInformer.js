@@ -50,8 +50,8 @@ class StepInformer extends Component {
                             disabled: !step.enabled
                         })
 
-                        const done  = "#C4D6B0";
-                        const doing = "#4EAD75";
+                        const done  = "#E0C6EE";
+                        const doing = "#D3A0F0";
                         const todo  = "#ccc";
 
                         return (
