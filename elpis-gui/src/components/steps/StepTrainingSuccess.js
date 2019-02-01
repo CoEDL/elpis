@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
-import AccordionFluid from '../Semantics Components/AccordionFluid';
+import AccordionFluid from '../SemanticsComponents/AccordionFluid';
 
 export default class StepTrainingSuccess extends Component {
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Header, Segment, Icon, Button} from 'semantic-ui-react';
 import StepBranding from './StepBranding';
-import AccordionFluid from '../Semantics Components/AccordionFluid'
+import AccordionFluid from '../SemanticsComponents/AccordionFluid'
 
 export default class StepDataPreparationError extends Component{
     render(){
