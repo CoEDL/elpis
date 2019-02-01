@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Header, Segment, Icon, Form, Button, Divider, Label } from 'semantic-ui-react';
+import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { updateModelName } from '../../redux/actions';
 import { connect } from 'react-redux';
@@ -21,7 +22,7 @@ class StepNaming extends Component {
         const {modelName} = this.props;
         return(
             <div>
-                <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
+                <StepBranding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={6}>

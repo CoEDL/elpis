@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Button, Header, Container, Segment, } from 'semantic-ui-react';
+import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 
 export default class StepWelcome extends Component {
@@ -9,7 +10,7 @@ export default class StepWelcome extends Component {
             <div>
                 <Grid centered row={6}>
                     <Grid.Row centered>
-                        <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
+                        <StepBranding />
                     </Grid.Row>
 
                     <Grid.Row centered>
@@ -24,9 +25,9 @@ export default class StepWelcome extends Component {
 
                             <Container >
                                 <Segment>
-                                    <Header as='h2'>Instructional Video/Lorum</Header>
+                                    <Header as='h2'>Instructional Video</Header>
                                     <p>
-                                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Pariatur reprehenderit voluptas recusandae iusto deleniti eaque sunt, consectetur, rerum, dicta laboriosam porro molestias optio officiis minus nemo ex qui! Quas, velit.
+                                        Friendly welcome message :-)
                                     </p>
                                 </Segment>
                             </Container>

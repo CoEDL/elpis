@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
+import StepBranding from './StepBranding';
+import StepInformer, { NewModelInstructions } from '../StepInformer';
 
 export default class StepTrainingModel extends Component {
     render() {
@@ -14,7 +15,7 @@ export default class StepTrainingModel extends Component {
 
         return (
             <div>
-                <Header as='h1'><img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" /></Header>
+                <StepBranding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={5}>
