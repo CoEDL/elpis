@@ -1,143 +1,146 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { List, Icon, Accordion } from 'semantic-ui-react';
+import { List, Icon, Accordion, Step } from 'semantic-ui-react';
 import Indicator from '../components/Indicator';
+import { connect } from 'react-redux'
+import { setStepDoing, setCurrentStepDone, enableNextStep } from '../redux/actions'
+import classNames from 'classnames'
+import './StepInformer.css'
 
 /**
- * Instructions for building the steps navigation menu when the user wants to build a model.
+ * Steps navigation menu
  */
-export const NewModelInstructions = [
-    {
-        name: "Step 1",
-        path: "/naming",
-        icon: "wrench",
-        substeps: [
-            { name: "Build a new model", path: "/naming"},
-            { name: "Add data", path: "/add-data"},
-            { name: "Data prepatation", path: "/data-preparation"},
-            { name: "Pronunciation dictionary", path: "/build-pronunciation-dictionary"},
-        ]
-    },
-    {
-        name: "Step 2",
-        path: "/model-settings",
-        icon: "lemon",
-        substeps: [
-            { name: "Model settings", path: "/model-settings"},
-            { name: "Training model", path: "/training-model"},
-            { name: "Trained Model Success", path: "/training-success"},
-        ]
-    },
-    {
-        name: "Step 3",
-        path: "/new-transcription",
-        icon: "microphone",
-        substeps: [
-            { name: "Choose model", path: "/new-transcription"},
-            { name: "Input data", path: "/input-data"},
-            { name: "Transcribe", path: "/transcribe"},
-        ]
-    }
-];
+
+// change to use redux state instead
+export const NewModelInstructions = [];
 
 
 class StepInformer extends Component {
-    constructor(props) {
-        super(props);
-        const { instructions } = props;
-        this.state = {
-            // Only the first step is open at the beginning.
-            openSteps: Array(instructions.length).fill(false).map((_, i) => i === 0 ).slice(),
-        };
 
+    handleStepSelect = (step, i, j) => {
+        const { setCurrentStepDone, enableNextStep, history } = this.props
+
+        // Temporarily set 'enabled' property of the next step
+        // This should be set by main page buttons
+        // in response to tasks being completed, not by nav
+        enableNextStep(step)
+
+        // Set done status for the active step
+        // This should be set by main page buttons
+        // in response to tasks being completed, not by nav
+        setCurrentStepDone()
+
+        // Go to new page
+        history.push(step.path)
     }
 
-    toggleStep(i) {
-        let openSteps = this.state.openSteps.slice();
-        openSteps[i] = !openSteps[i];
-        this.setState({ openSteps: openSteps});
+    componentDidMount = () => {
+        // identify which step is currently being done
+        const { match, setStepDoing } = this.props
+        const params = match.url.split('/')
+        setStepDoing(params)
     }
+
 
     render() {
-        const { instructions, location } = this.props;
-        const done = "green";
-        const doing = "blue";
-        const todo = "#ccc";
-
-        // index of the current step overall
-        let stepPaths = [];
-        instructions.forEach(step => {
-            stepPaths = stepPaths.concat(step.substeps.map(substep => substep.path));
-        });
-        let target_idx = stepPaths.findIndex(step => step === location.pathname);
-
-        // Build the components from the instruction and step (location/route) the process is up to.
-        let mainSteps = [];
-        instructions.forEach((step, i) => {
-            let subSteps = [];
-            step.substeps.forEach( (substep, j) => {
-                let idx = stepPaths.findIndex(step => step === substep.path);
-
-                // Build the indicator component
-                let indicator = (<Indicator
-                    // Determine the colour status of the step.
-                    color={idx < target_idx ? done : (idx === target_idx ? doing : todo)}
-                    // if this is the first substep in the step, then cap it.
-                    cap={j===0}
-                    // if this is the last substep in the step, then cup it.
-                    cup={j===step.substeps.length-1}
-                />);
-
-                // Build the list item
-                if (location.pathname === substep.path) {
-                    subSteps.push(
-                        <List.Item key={j} style={{position: "relative"}}>
-                            {indicator}
-                            {/*
-                                paddingLeft to move the text out of the indicators way.
-                                Also, since this is the current step, the padding is less
-                                to tell the user this step is different to the others (current).
-                             */}
-                            <div style={{paddingLeft: "1.4em"}}>{substep.name}</div>
-                        </List.Item>
-                    );
-                } else {
-                    subSteps.push(
-                        <List.Item
-                            key={j}
-                            as={Link}
-                            to={substep.path}
-                            style={{position: "relative"}}
-                        >{indicator}<div style={{paddingLeft: "1.8em"}}>{substep.name}</div></List.Item>
-                    );
-                }
-            });
-
-            // Build the main step component
-            mainSteps.push(
-                <div key={i}>
-                    {/* TODO: make active more user friendly */}
-                    <Accordion.Title active>
-                        <div>
-                            <Icon name={step.icon} style={{display:'inline'}}/>
-                            <div style={{display:'inline'}}>{step.name}</div>
-                            <Icon name='dropdown' />
-                        </div>
-                    </Accordion.Title>
-                    {/* TODO: make active more user friendly */}
-                    <Accordion.Content active>
-                        <List>{subSteps}</List>
-                    </Accordion.Content>
-                </div>
-            );
-        });
+        const { steps } = this.props
 
         return (
             <Accordion styled>
-                {mainSteps}
+                {
+                    // for each step (pass down the index too,
+                    // we'll use that when we call the action to update redux state)
+                    steps.map((step, i) => {
+
+                        // step classes - use 'disabled' rather than 'enabled' cause it might have magic power
+                        const stepClassNames = classNames({
+                            stepDone: step.done,
+                            stepDoing: step.doing,
+                            disabled: !step.enabled
+                        })
+
+                        const done = "yellow";
+                        const doing = "yellowgreen";
+                        const todo = "#ccc";
+
+                        return (
+                            <div key={ step.title }>
+                                <Accordion.Title className={ stepClassNames } active={ step.enabled || step.doing } onClick={ () => this.handleStepSelect(step, i, 0) }>
+                                    { step.title }
+                                </Accordion.Title>
+                                <Accordion.Content active={ step.enabled || step.doing }>
+                                    <List className="stepList">
+                                        {
+                                            // for each substep (pass in the step index and the substep index)
+                                            // we'll use these to target the selected substep in redux
+                                            step.substeps.map((substep, j) => {
+                                                const color = (substep.doing) ? doing : (substep.done) ? done : todo
+                                                // Build the indicator component
+                                                let indicator = (<Indicator
+                                                    // Determine the colour status of the step.
+                                                    color={ color }
+                                                    // if this is the first substep in the step, then cap it.
+                                                    cap={ j === 0 }
+                                                    // if this is the last substep in the step, then cup it.
+                                                    cup={ j === step.substeps.length - 1 }
+                                                />);
+
+
+                                                // substep classes
+                                                const substepClassNames = classNames({
+                                                    substepDone: substep.done,
+                                                    substepDoing: substep.doing,
+                                                    disabled: !substep.enabled
+                                                })
+
+                                                return (
+                                                    <List.Item className={ substepClassNames }
+                                                        onClick={ () => this.handleStepSelect(substep, i, j) }
+                                                        key={ substep.title }>
+
+                                                        { indicator }
+
+                                                        <div style={ { paddingLeft: "1.4em" } }>{ substep.title }</div>
+
+                                                    </List.Item>
+                                                )
+                                            }
+                                            )
+                                        }
+                                    </List>
+                                </Accordion.Content>
+                            </div>
+                        )
+                    })
+                }
             </Accordion>
-        );
+        )
     }
 }
 
-export default withRouter(props => <StepInformer {...props}/>);
+const mapStateToProps = (state, ownProps) => {
+    return {
+        steps: state.stepReducer.steps,
+        ownProps: ownProps
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    setStepDoing: urlParams => {
+        dispatch(setStepDoing(urlParams))
+    },
+    setCurrentStepDone: () => {
+        dispatch(setCurrentStepDone())
+    },
+    enableNextStep: (step) => {
+        dispatch(enableNextStep(step))
+    }
+})
+
+
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(StepInformer)
+)

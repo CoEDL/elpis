@@ -30,6 +30,8 @@ const postApi = (url, postData, successFunction) => {
   }
 }
 
+const errorHandler = {}
+
 var successHandler = {
     updateModelName:                response => ({ type: 'UPDATE_MODEL_NAME', response }),
     updateModelDate:                response => ({ type: 'UPDATE_MODEL_DATE', response }),
@@ -69,3 +71,11 @@ export const updateModelPronunciationFile = postData => {
   const url = baseUrl + '/pronunciation';
   return postApi(url, postData, 'updateModelPronunciationFile');
 }
+
+
+
+
+// just sets the 'doing' property of the current step
+export const setStepDoing = (urlParams) => ({ type: 'SET_STEP_DOING', urlParams })
+export const setCurrentStepDone = () => ({ type: 'SET_CURRENT_STEP_DONE' })
+export const enableNextStep = (step) => ({ type: 'ENABLE_NEXT_STEP', step })
