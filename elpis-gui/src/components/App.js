@@ -31,17 +31,19 @@ class App extends Component {
         <Router>
           <PageContainer>
             <Route exact path="/" component={StepWelcome} />
-            <Route path="/build-pronunciation-dictionary" component={StepBuildPronunciationDictionary} />
-            <Route path="/data-preparation" component={StepDataPreparation} />
             <Route path="/naming" component={StepNaming} />
             <Route path="/add-data" component={StepAddData} />
-            <Route path="/new-transcription" component={StepNewTranscription} />
-            <Route path="/training-success" component={StepTrainingSuccess} />
-            <Route path="/transcription-results" component={StepTranscriptionResults} />
+            <Route path="/data-preparation" component={StepDataPreparation} />
+            <Route path="/data-preparation-error" component={StepDataPreparationError} />
+            <Route path="/build-pronunciation-dictionary" component={StepBuildPronunciationDictionary} />
+
             <Route path="/model-settings" component={StepModelSettings} />
             <Route path="/training-model" component={StepTrainingModel} />
-            <Route path="/data-preparation-error" component={StepDataPreparationError} />
             <Route path="/training-error" component={StepTrainingError} />
+            <Route path="/training-success" component={StepTrainingSuccess} />
+
+            <Route path="/new-transcription" component={StepNewTranscription} />
+            <Route path="/transcription-results" component={StepTranscriptionResults} />
           </PageContainer>
         </Router>
       </div>

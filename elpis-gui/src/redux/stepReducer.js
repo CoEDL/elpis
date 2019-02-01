@@ -35,8 +35,7 @@ const initialStepModelState = {
             done: false, doing: false, enabled: false,
             substeps: [
                 { done: false, doing: false, enabled: false, title: "Choose model", path: "/new-transcription" },
-                { done: false, doing: false, enabled: false, title: "Input data", path: "/input-data" },
-                { done: false, doing: false, enabled: false, title: "Transcribe", path: "/transcribe" },
+                { done: false, doing: false, enabled: false, title: "Transcribe", path: "/transcription-results" },
             ]
         }
     ]
@@ -117,7 +116,7 @@ const stepReducer = (state = initialStepModelState, action) => {
                 return step
             })
 
-            if (rememberToEnableTheNextStep) {
+            if (rememberToEnableTheNextStep && newSteps[currentIndex[0]+1]) {
                 newSteps[currentIndex[0]+1].enabled = true
                 newSteps[currentIndex[0]+1].substeps[0].enabled = true
             }
