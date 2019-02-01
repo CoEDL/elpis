@@ -50,8 +50,6 @@ const stepReducer = (state = initialStepModelState, action) => {
         // Set the 'doing' status by matching URL
         case 'SET_CURRENT_STEP':
             let rememberToEnableTheNextStep = false
-            let enabledStepIndex = null
-            console.log('.......')
             // Track down which is the current substep by matching path to URL
             state.steps.forEach((step, i) => {
                 step.substeps.forEach((substep, j) => {
@@ -60,12 +58,9 @@ const stepReducer = (state = initialStepModelState, action) => {
                     }
                 })
             })
-            console.log('current index', currentIndex)
 
             newSteps = state.steps.map((step, i) => {
-
                 step.substeps.map((substep, j) => {
-                    console.log(i, j, currentIndex[1])
                     // reset all
                     substep.done = false
                     substep.doing = false
