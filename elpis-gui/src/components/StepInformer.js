@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { List, Icon, Accordion, Step } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
+import { List, Accordion } from 'semantic-ui-react';
 import Indicator from '../components/Indicator';
 import { connect } from 'react-redux'
-import { setStepDoing, setCurrentStepDone, enableNextStep } from '../redux/actions'
+import { setCurrentStep } from '../redux/actions'
 import classNames from 'classnames'
 import './StepInformer.css'
 
@@ -12,33 +12,24 @@ import './StepInformer.css'
  */
 
 // change to use redux state instead
+// TODO remove imports of NewModelInstructions in other components
 export const NewModelInstructions = [];
 
 
 class StepInformer extends Component {
 
     handleStepSelect = (step, i, j) => {
-        const { setCurrentStepDone, enableNextStep, history } = this.props
-
-        // Temporarily set 'enabled' property of the next step
-        // This should be set by main page buttons
-        // in response to tasks being completed, not by nav
-        enableNextStep(step)
-
-        // Set done status for the active step
-        // This should be set by main page buttons
-        // in response to tasks being completed, not by nav
-        setCurrentStepDone()
-
+        const { history } = this.props
         // Go to new page
         history.push(step.path)
     }
 
     componentDidMount = () => {
         // identify which step is currently being done
-        const { match, setStepDoing } = this.props
-        const params = match.url.split('/')
-        setStepDoing(params)
+        const { match, setCurrentStep } = this.props
+        const urlParams = match.url.split('/')
+        console.log(urlParams)
+        setCurrentStep(urlParams)
     }
 
 
@@ -126,14 +117,8 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    setStepDoing: urlParams => {
-        dispatch(setStepDoing(urlParams))
-    },
-    setCurrentStepDone: () => {
-        dispatch(setCurrentStepDone())
-    },
-    enableNextStep: (step) => {
-        dispatch(enableNextStep(step))
+    setCurrentStep: (urlParams) => {
+        dispatch(setCurrentStep(urlParams))
     }
 })
 

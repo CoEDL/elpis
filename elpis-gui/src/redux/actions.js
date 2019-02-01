@@ -73,9 +73,4 @@ export const updateModelPronunciationFile = postData => {
 }
 
 
-
-
-// just sets the 'doing' property of the current step
-export const setStepDoing = (urlParams) => ({ type: 'SET_STEP_DOING', urlParams })
-export const setCurrentStepDone = () => ({ type: 'SET_CURRENT_STEP_DONE' })
-export const enableNextStep = (step) => ({ type: 'ENABLE_NEXT_STEP', step })
+export const setCurrentStep = (urlParams) => ({ type: 'SET_CURRENT_STEP', urlParams })
