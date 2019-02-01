@@ -25,14 +25,12 @@ class StepWelcome extends Component {
                     </Grid.Row>
 
                     <Grid.Row centered>
-
-                            <Container >
-                                <Segment>
-                                    <Header as='h2'>Instructional Video</Header>
-                                    <p>{t('welcome.intro', {passInSomething:"memememe"})}</p>
-                                </Segment>
-                            </Container>
-
+                        <Container>
+                            <Segment>
+                                <Header as='h2'>Instructional Video</Header>
+                                <p>{t('welcome.intro', {passInSomething:"memememe"})}</p>
+                            </Segment>
+                        </Container>
                     </Grid.Row>
 
                     <Grid.Row centered>
