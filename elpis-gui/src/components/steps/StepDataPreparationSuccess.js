@@ -14,8 +14,8 @@ export default class StepDataPreperation extends Component {
                                     <StepInformer instructions={NewModelInstructions} />
                                 </Grid.Column>
                                 <Grid.Column width={10}>
-                                    <Header as='h1' text textAlign='center'>  <Icon name='train' />Data prepatation success, Overview of training corpus</Header>
-                                    <p>Banner Message: text has been cleaned and normalised OK</p>   
+                                    <Header as='h1' text textAlign='center'>  <Icon name='train' />Data preparation success, Overview of training corpus</Header>
+                                    <p>Banner Message: text has been cleaned and normalised OK</p>
                                     <p>Describe what has just happened for the novice user to better understand</p>
                                    <Grid>
                                         <Grid.Column width={5}>
@@ -32,7 +32,7 @@ export default class StepDataPreperation extends Component {
                                                 </List.Item>
                                             </List>
                                         </Grid.Column>
-                                        <Grid.Column width={5}> 
+                                        <Grid.Column width={5}>
                                             <Header as='h1' > Frequency</Header>
                                             <List>
                                                 <List.Item>
@@ -49,7 +49,7 @@ export default class StepDataPreperation extends Component {
                                     </Grid>
                                     <Button type='submit' as={Link} to="/build-pronunciation-dictionary">Next: build letter to sound</Button>
                                 </Grid.Column>
-                        </Grid>  
+                        </Grid>
                     </Segment>
                 </div>
         );
