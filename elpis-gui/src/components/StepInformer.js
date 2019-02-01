@@ -50,9 +50,9 @@ class StepInformer extends Component {
                             disabled: !step.enabled
                         })
 
-                        const done = "yellow";
-                        const doing = "yellowgreen";
-                        const todo = "#ccc";
+                        const done  = "#C4D6B0";
+                        const doing = "#4EAD75";
+                        const todo  = "#ccc";
 
                         return (
                             <div key={ step.title }>
