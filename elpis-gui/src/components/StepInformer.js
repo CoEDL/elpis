@@ -28,7 +28,6 @@ class StepInformer extends Component {
         // identify which step is currently being done
         const { match, setCurrentStep } = this.props
         const urlParams = match.url.split('/')
-        console.log(urlParams)
         setCurrentStep(urlParams)
     }
 
