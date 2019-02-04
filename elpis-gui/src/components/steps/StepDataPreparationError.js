@@ -1,32 +1,41 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Icon, Button} from 'semantic-ui-react';
+import { Grid, Header, Segment, Icon, Button } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
-import AccordionFluid from '../SemanticsComponents/AccordionFluid'
+import StepInformer, { NewModelInstructions } from '../StepInformer';
+import { translate } from 'react-i18next';
 
-export default class StepDataPreparationError extends Component{
-    render(){
+class StepDataPreparationError extends Component {
+    render() {
+        const { t } = this.props;
         return (
             <div>
-                    <StepBranding />
-                    <Segment>
-                        <Grid centered>
-                                <Grid.Column width={6}>
-                                    <AccordionFluid title={'Step 1'} active/>
-                                    <AccordionFluid title={'Step 2'}/>
-                                    <AccordionFluid title={'Step 3'}/>
-                                </Grid.Column>
-                                <Grid.Column width={10}>
-                                    <Header as='h1' text textAlign='center'>  <Icon name='warning' />Data preparation error</Header>
-                                    <p>Banner Message: errors were found when cleaning(processing) your data</p>
-                                    <p>Novice readable description of what just happened</p>
-                                    <p>Show the errors and information about how to fix the error</p>
+                <StepBranding />
+                <Segment>
+                    <Grid centered>
+                        <Grid.Column width={ 6 }>
+                            <StepInformer instructions={ NewModelInstructions } />
+                        </Grid.Column>
 
-                                    <Button type='submit' as={Link} to="/add-data">Back to add data</Button>
-                                </Grid.Column>
-                        </Grid>
-                    </Segment>
-                </div>
+                        <Grid.Column width={ 10 }>
+                            <Header as='h1'>
+                                <Icon name='warning' />
+                                { t('dataPreparationError.title') }
+                            </Header>
+
+                            <p>Banner Message: errors were found when cleaning(processing) your data</p>
+                            <p>Novice readable description of what just happened</p>
+                            <p>Show the errors and information about how to fix the error</p>
+
+                            <Button type='submit' as={ Link } to="/add-data">
+                                { t('dataPreparationError.backButton') }
+                            </Button>
+
+                        </Grid.Column>
+                    </Grid>
+                </Segment>
+            </div>
         );
     }
 }
+export default translate('common')(StepDataPreparationError)
