@@ -31,6 +31,20 @@ def name():
 def date():
     return ''
 
+@bp.route("/transcription-files")
+def transcription_files():
+    # setup the path
+    path = os.path.join(CURRENT_MODEL_DIR, 'data')
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    # handle incoming data
+    if request.method == 'POST':
+        print(f'Trans_files req: {request.json}')
+
+    # return state update
+    return f'{os.listdir(path)}'
+
 @bp.route("/audio")
 def audio():
     return ''
