@@ -1,7 +1,9 @@
 {
     "welcome": {
-        "title": "Elpis",
-        "intro": "This is fun. {{passInSomething}}"
+        "title": "+ Elpis",
+        "intro": "+ This is fun. {{passInSomething}}",
+        "newModelButton": "+ Build New Model",
+        "newTranscriptionButton": "+ New Transcription"
     },
     "naming": {
         "title": "+ Name the model",
