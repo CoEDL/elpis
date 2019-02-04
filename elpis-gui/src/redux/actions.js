@@ -2,6 +2,8 @@ import axios from 'axios'
 
 const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://127.0.0.1:5000'
 
+console.log('process.env.REACT_APP_BASEURL', process.env.REACT_APP_BASEURL)
+
 const getApi = (url, successFunction) => {
   return dispatch => {
     axios.get(url)
@@ -28,7 +30,10 @@ const postApi = (url, postData, successFunction) => {
   }
 }
 
-const errorHandler = {}
+
+export const errorHandler = (error) => {
+  return { type: 'ERROR', error }
+}
 
 var successHandler = {
     updateModelName:                response => ({ type: 'UPDATE_MODEL_NAME', response }),
@@ -36,12 +41,12 @@ var successHandler = {
     updateModelSettings:            response => ({ type: 'UPDATE_MODEL_SETTINGS', response }),
     updateModelTranscriptionFiles:  response => ({ type: 'UPDATE_MODEL_TRANSCRIPTION_FILES', response }),
     updateModelAdditionalWordFiles: response => ({ type: 'UPDATE_MODEL_ADDITIONAL_WORD_FILES', response }),
-    updateModelPronunciationFile:   response => ({ type: 'UPDATE_MODEL_PRONUNCIATION_FILE', response }),
-
+    updateModelPronunciationFile:   response => ({ type: 'UPDATE_MODEL_PRONUNCIATION_FILE', response })
 }
 
 export const updateModelName = postData => {
   const url = baseUrl + '/corpus/name';
+  console.log(postData)
   return postApi(url, postData, 'updateModelName');
 }
 
