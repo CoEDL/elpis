@@ -55,27 +55,6 @@ def transcription_files():
     # return state update
     return f'{os.listdir(path)}'
 
-@bp.route("/audio")
-def audio():
-    if request.method == "POST":
-         audio.append()
-
-@bp.route("/transcription")
-def transcription():
-    return ''
-
-@bp.route("/additionalWords")
-def additionalWord():
-    file_path = os.path.join(CURRENT_MODEL_DIR, 'additionalWords.txt')
-    if request.method == 'POST':
-        # update the state name
-        with open(file_path, 'w') as fout:
-            fout.write(request.json['additionalWords'])
-    
-    # return the state
-    with open(file_path, 'r') as fin:
-        return f'{{ "additionalWords": "{fin.read()}" }}'
-
 @bp.route("/pronunciation")
 def pronunciation():
     file_path = os.path.join(CURRENT_MODEL_DIR, 'pronunciation.txt')
