@@ -48,7 +48,15 @@ const model = (state = initialModelState, action) => {
             transcriptionFiles.sort()
             additionalTextFiles.sort()
 
-            console.log(audioFiles, transcriptionFiles, additionalTextFiles)
+            // decide whether to add to existing, or overwrite
+            console.log('audioFiles before', state.filesOverwrite, audioFiles, state.audioFiles)
+            // combine received filenames with existing set if filesOverwrite is true
+            if (state.filesOverwrite === false && state.audioFiles.length > 0) audioFiles = [...audioFiles, ...state.audioFiles]
+            console.log('audioFiles after', audioFiles)
+            // remove duplicates
+            audioFiles = [...(new Set(audioFiles))];
+
+            // console.log(audioFiles, transcriptionFiles, additionalTextFiles)
 
             return {
                 ...state,
