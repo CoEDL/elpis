@@ -41,7 +41,7 @@ def date():
     with open(file_path, 'r') as fin:
         return f'{{ "date": "{fin.read()}" }}'
 
-@bp.route("/transcription-files")
+@bp.route("/transcription-files", methods=['GET', 'POST'])
 def transcription_files():
     # setup the path
     path = os.path.join(CURRENT_MODEL_DIR, 'data')
