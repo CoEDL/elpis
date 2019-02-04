@@ -4,17 +4,18 @@ import { Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semant
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
+import { connect } from 'react-redux';
 
 class StepModelTraining extends Component {
     render() {
-        const { t } = this.props;
+        const { t, settings } = this.props;
 
         // TODO: display as list rather than runon line
         const settingDescription = [
-            t('model-settings.audio-label') + 'XXX',
-            t('model-settings.mfcc-label') + 'XXX',
-            t('model-settings.n-gram-label') + 'XXX',
-            t('model-settings.beam-label') + 'XXX'
+            t('modelSettings.audioLabel') + settings.frequency,
+            t('modelSettings.mfccLabel')  + settings.mfcc,
+            t('modelSettings.nGramLabel') + settings.ngram,
+            t('modelSettings.beamLabel')  + settings.beam
         ].join(' ~ ');
 
         return (
@@ -88,4 +89,10 @@ class StepModelTraining extends Component {
         );
     }
 }
-export default translate('common')(StepModelTraining)
+
+const mapStateToProps = state => {
+    return {
+        settings: state.model.settings
+    }
+}
+export default connect(mapStateToProps)(translate('common')(StepModelTraining));
