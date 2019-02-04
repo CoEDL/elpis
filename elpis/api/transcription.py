@@ -1,4 +1,4 @@
-bp_api = Blueprint("transcriptions", __name__, url_prefix="/api/transcriptions")
+bp = Blueprint("transcriptions", __name__, url_prefix="/transcriptions")
 'Is this needed?'
 #bp.register_blueprint(comp.bp)
 

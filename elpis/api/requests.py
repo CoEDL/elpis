@@ -30,6 +30,7 @@ def save_file(folder_type):
 """
 GET functions:
 """
+
 """
 - Return a list of all files of filetype
 """
