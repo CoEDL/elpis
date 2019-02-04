@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 ELPIS_ROOT_DIR = os.getcwd()
 UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "Uploaded_files")
 ALLOWED_EXTENSIONS = {'wav', 'eaf', 'trs', 'wordlist'}
-bp_api = Blueprint("settings", __name__, url_prefix="/api/settings")
+bp = Blueprint("settings", __name__, url_prefix="/settings")
 
 
 """
