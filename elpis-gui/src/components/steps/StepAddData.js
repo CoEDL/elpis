@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
+import { Checkbox, Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import FileUpload from '../FileuploadComponents/FileUpload';
 import { translate } from 'react-i18next';
 import { connect } from 'react-redux';
+import { setFilesOverwrite } from '../../redux/actions';
 
 class StepAddData extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
+
+    handleFilesOverwriteToggle = () => {
+        this.props.setFilesOverwrite()
+    }
     render() {
 
-        const { t, audioFiles, transcriptionFiles, additionalTextFiles } = this.props;
+        const { t, audioFiles, transcriptionFiles, additionalTextFiles, filesOverwrite } = this.props;
         const audioFileList = audioFiles.map(file => (
             <List.Item key={ file }>
                 <List.Content>{ file }</List.Content>
@@ -30,6 +32,8 @@ class StepAddData extends Component {
             </List.Item>
         ))
 
+        console.log('filesOverwrite', filesOverwrite)
+
         return (
             <div>
                 <StepBranding />
@@ -43,9 +47,19 @@ class StepAddData extends Component {
                             <Header as='h1'>
                                 { t('addData.title') }
                             </Header>
+
                             <p>
                                 { t('addData.description') }
                             </p>
+
+                            <Segment>
+                                <Checkbox
+                                    toggle
+                                    onChange={this.handleFilesOverwriteToggle}
+                                    defaultChecked={filesOverwrite}
+                                    label='overwrite files'
+                                    />
+                            </Segment>
 
                             <Segment>
                                 <FileUpload />
@@ -54,6 +68,7 @@ class StepAddData extends Component {
                             <Header as='h1'>
                                 { t('addData.filesHeader') }
                             </Header>
+
                             <Grid columns={ 3 }>
                                 <Grid.Column>
                                     <List>
@@ -96,8 +111,15 @@ const mapStateToProps = state => {
     return {
         audioFiles: state.model.audioFiles,
         transcriptionFiles: state.model.transcriptionFiles,
-        additionalTextFiles: state.model.additionalTextFiles
+        additionalTextFiles: state.model.additionalTextFiles,
+        filesOverwrite: state.model.filesOverwrite
     }
 }
 
-export default connect(mapStateToProps)(translate('common')(StepAddData));
+const mapDispatchToProps = dispatch => ({
+    setFilesOverwrite: () => {
+        dispatch(setFilesOverwrite());
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepAddData));

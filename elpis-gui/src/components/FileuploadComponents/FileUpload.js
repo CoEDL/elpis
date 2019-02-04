@@ -10,7 +10,12 @@ class FileUpload extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
         console.log("files dropped:", acceptedFiles);
+
         var formData = new FormData();
+        // backend will need to know whether to add to existing files
+        // or wipe existing and use only these
+        // we'll also need to update redux state on this basis
+        formData.append('filesOverwrite', this.props.filesOverwrite);
         acceptedFiles.forEach(file => {
             console.log(file)
             formData.append('file', file);
@@ -23,6 +28,7 @@ class FileUpload extends Component {
 
         return (
             <div className="FileUpload">
+
                 <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                     { ({ getRootProps, getInputProps, isDragActive }) => {
                         return (
@@ -50,7 +56,7 @@ class FileUpload extends Component {
 
 const mapStateToProps = state => {
     return {
-        // myName: state.model.myName,
+        filesOverwrite: state.model.filesOverwrite
     }
 }
 

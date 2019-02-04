@@ -10,7 +10,8 @@ const initialModelState = {
         ngram: 1,
         beam: 10
     },
-    date: null
+    date: null,
+    filesOverwrite: false
 }
 
 function getFileExtension(filename) {
@@ -61,6 +62,13 @@ const model = (state = initialModelState, action) => {
             return {
                 ...state,
                 pronunciationFile
+            }
+
+        case 'SET_FILES_OVERWRITE':
+            console.log(state.filesOverwrite)
+            return {
+                ...state,
+                filesOverwrite: ! state.filesOverwrite
             }
         default:
             return state;
