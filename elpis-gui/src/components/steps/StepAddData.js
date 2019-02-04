@@ -57,7 +57,7 @@ class StepAddData extends Component {
                                     toggle
                                     onChange={this.handleFilesOverwriteToggle}
                                     defaultChecked={filesOverwrite}
-                                    label='overwrite files'
+                                    label={t('addData.filesOverwriteLabel') }
                                     />
                             </Segment>
 

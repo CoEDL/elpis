@@ -13,6 +13,7 @@
         "title": "+ Add data",
         "description": "+ Some description and information about file formats, naming requirements etc.",
         "filesHeader": "+ Transcription and Audio Files",
+        "filesOverwriteLabel": "+ Overwrite files?",
         "nextButton": "+ Next: process this data",
         "nextButtonError": "+ Next: (simulate a data input error)"
     },
