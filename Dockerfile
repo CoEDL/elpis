@@ -112,7 +112,7 @@ RUN apt-get clean autoclean
 
 # Elpis
 WORKDIR /
-RUN git clone https://github.com/CoEDL/elpis.git && git submodule update --init --recursive
+RUN git clone https://github.com/CoEDL/elpis.git && cd elpis && git submodule update --init --recursive
 
 # Get Kaldi-Helpers and install it
 RUN cd /tmp && git clone https://github.com/CoEDL/kaldi-helpers.git /kaldi-helpers
