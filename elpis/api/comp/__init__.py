@@ -1,4 +1,5 @@
 from ...blueprint import Blueprint
+
 bp = Blueprint("comp", __name__, url_prefix="/comp")
 
 @bp.route("/")

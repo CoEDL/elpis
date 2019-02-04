@@ -14,7 +14,6 @@ MODELS_DIR = os.path.join(ELPIS_ROOT_DIR, 'models')
 
 def create_app(test_config=None):
     if not os.path.exists(MODELS_DIR):
-        print('making the dir!')
         os.mkdir(MODELS_DIR)
 
     # Setup static resources
