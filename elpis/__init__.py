@@ -1,8 +1,9 @@
 import os
 
-from flask import Flask, redirect
+from flask import redirect
 from . import corpus
-from .state.state import load_existing_models
+from . import api
+from .app import Flask
 
 # Setup paths
 ELPIS_ROOT_DIR = os.getcwd()
@@ -12,10 +13,7 @@ GUI_STATIC_DIR = os.path.join(GUI_ROOT_DIR, "js")
 MODELS_DIR = os.path.join(ELPIS_ROOT_DIR, 'models')
 
 def create_app(test_config=None):
-    print(os.getcwd())
-    print(load_existing_models())
     if not os.path.exists(MODELS_DIR):
-        print('making the dir!')
         os.mkdir(MODELS_DIR)
 
     # Setup static resources
@@ -29,6 +27,8 @@ def create_app(test_config=None):
         SECRET_KEY='dev'
     )
     app.register_blueprint(corpus.bp)
+    app.register_blueprint(api.bp)
+    print(app.url_map)
 
 
     @app.route('/index.html')

@@ -1,5 +1,20 @@
-bp_api = Blueprint("api/model", __name__, url_prefix="/api/model")
+import os
+from pathlib import Path
+from flask import Blueprint, redirect, request, url_for, escape
+from werkzeug.utils import secure_filename
 
+
+ELPIS_ROOT_DIR = os.getcwd()
+UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "Uploaded_files")
+ALLOWED_EXTENSIONS = {'wav', 'eaf', 'trs', 'wordlist'}
+bp_api = Blueprint("model", __name__, url_prefix="/api/model")
+
+
+def allowed_file(filenAPIame):
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 """
 Audio File Routes
