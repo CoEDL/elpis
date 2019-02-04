@@ -4,6 +4,7 @@ from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
 from ..blueprint import Blueprint
 from . import comp
+from ..paths import CURRENT_MODEL_DIR
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 bp.register_blueprint(comp.bp)
@@ -13,9 +14,18 @@ bp.register_blueprint(comp.bp)
 def new():
     return '{"status": "new model created"}'
 
-@bp.route("/name")
+@bp.route("/name", methods=['GET', 'POST'])
 def name():
-    return ''
+    file_path = os.path.join(CURRENT_MODEL_DIR, 'name.txt')
+
+    if request.method == 'POST':
+        # update the state name
+        with open(file_path, 'w') as fout:
+            fout.write(request.json['name'])
+    
+    # return the state
+    with open(file_path, 'r') as fin:
+        return f'{{ "name": "{fin.read()}" }}'
     
 @bp.route("/date")
 def date():
