@@ -38,7 +38,6 @@ class StepNaming extends Component {
                             <Form>
                                 <Form.Field>
                                     <input
-                                        type='text'
                                         placeholder='Project Name'
                                         onChange={ this.handleChangeModelName }
                                         value={ modelName }
