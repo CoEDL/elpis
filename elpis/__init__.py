@@ -1,7 +1,9 @@
 import os
 
-from flask import Flask, redirect
+from flask import redirect
 from . import corpus
+from . import api
+from .app import Flask
 
 # Setup paths
 ELPIS_ROOT_DIR = os.getcwd()
@@ -26,6 +28,8 @@ def create_app(test_config=None):
         SECRET_KEY='dev'
     )
     app.register_blueprint(corpus.bp)
+    app.register_blueprint(api.bp)
+    print(app.url_map)
 
 
     @app.route('/index.html')
