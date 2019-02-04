@@ -58,6 +58,7 @@ def transcription_files():
         # the request includes this filesOverwrite property
         # use this to determine whether received files are
         # appended to input data or overwrite input data
+        # watch out for duplicate files if not overwriting!
 
         filesOverwrite = request.form["filesOverwrite"]
         print('filesOverwrite:', filesOverwrite)
