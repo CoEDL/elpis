@@ -50,7 +50,9 @@ def transcription_files():
 
     # handle incoming data
     if request.method == 'POST':
-        print(f'Trans_files req: {request.json}')
+        # print(f'Trans_files req: {request.json}')
+        print(f'request.form: {request.form}')
+        print(f'request.args: {request.args}')
 
     # return state update
     return f'{os.listdir(path)}'
