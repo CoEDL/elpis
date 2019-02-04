@@ -24,7 +24,7 @@ const initialStepModelState = {
             done: false, doing: false, enabled: false,
             substeps: [
                 { done: false, doing: false, enabled: false, title: "Model settings", path: "/model-settings" },
-                { done: false, doing: false, enabled: false, title: "Model Training", path: "/training-model" },
+                { done: false, doing: false, enabled: false, title: "Model Training", path: "/model-training" },
                 { done: false, doing: false, enabled: false, title: "Trained Model Success", path: "/training-success" },
             ]
         },
@@ -74,7 +74,7 @@ const stepReducer = (state = initialStepModelState, action) => {
                     let isCurrentSubStep = (j === currentIndex[1]) ? true : false
                     let isNextSubStep    = (j === currentIndex[1] + 1) ? true : false
                     let isLastSubStep    = (j === step.substeps.length - 1) ? true : false
-                    let isFutureSubStep  = (j > currentIndex[1]) ? true : false
+                    // let isFutureSubStep  = (j > currentIndex[1]) ? true : false
 
                     // previous
                     if (isPastStep || (isCurrentStep && isPastSubStep)) {

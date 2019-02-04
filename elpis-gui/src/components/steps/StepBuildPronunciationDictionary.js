@@ -4,52 +4,71 @@ import { Grid, Header, Segment, Icon, Divider, Button } from 'semantic-ui-react'
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import Dropzone from "react-dropzone";
-import {fromEvent} from "file-selector";
+import { fromEvent } from "file-selector";
+import { translate } from 'react-i18next';
 
-export default class StepBuildPronunciationDictionary extends Component {
+class StepBuildPronunciationDictionary extends Component {
     onDrop = (acceptedFiles, rejectedFiles) => {
         console.log("acceptedFiles:", acceptedFiles);
     }
     render() {
+        const { t } = this.props;
         return (
             <div>
-                    <StepBranding />
-                    <Segment>
-                        <Grid centered>
-                                <Grid.Column width={6}>
-                                    <StepInformer instructions={NewModelInstructions} />
-                                </Grid.Column>
-                                <Grid.Column width={10}>
-                                    <Header as='h1'>  <Icon name='train' />Build the pronunciation dictionary</Header>
-                                    <Header as="h3">Pronunciation file:</Header>
-                                    <Divider />
+                <StepBranding />
+                <Segment>
+                    <Grid centered>
+                        <Grid.Column width={ 6 }>
+                            <StepInformer instructions={ NewModelInstructions } />
+                        </Grid.Column>
+                        <Grid.Column width={ 10 }>
+                            <Header as='h1'>
+                                { t('buildPron.title') }
+                            </Header>
 
-                                    <Dropzone onDrop={this.onDrop} getDataTransferItems={evt => fromEvent(evt)}>
-                                        {/* <Segment raised style={{fontFamily: '"Lucida Console", Monaco, monospace'}}>
-                                        here is some font
-                                        </Segment> */}
-                                        {({ getRootProps, getInputProps, isDragActive }) => {
-                                            if (isDragActive) {
-                                                return (<Segment {...getRootProps()} placeholder>
-                                                    <input {...getInputProps()} />
-                                                    <Header icon>
-                                                        <Icon name='file outline' />
-                                                        Drop new pronunciation file here
-                                                    </Header>
-                                                </Segment>);
-                                            } else {
-                                                return (<Segment {...getRootProps()} raised style={{fontFamily: '"Lucida Console", Monaco, monospace'}}>
-                                                    here here
-                                                </Segment>);
-                                            }
-                                        }}
-                                    </Dropzone>
-                                    <Button onClick={()=>{}}>Upload dictionary</Button>
-                                    <Button type='submit' as={Link} to="/model-settings">Next: model settings</Button>
-                                </Grid.Column>
-                        </Grid>
-                    </Segment>
-                </div>
+                            <Header as="h3">
+                                { t('buildPron.header') }
+                            </Header>
+
+                            <Divider />
+
+                            <Dropzone onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
+                                { ({ getRootProps, getInputProps, isDragActive }) => {
+                                    if (isDragActive) {
+                                        return (
+                                            <Segment { ...getRootProps() } placeholder>
+                                                <input { ...getInputProps() } />
+                                                <Header icon>
+                                                    <Icon name='file outline' />
+                                                    { t('buildPron.dropHereHeader') }
+                                                </Header>
+                                            </Segment>
+                                        );
+                                    } else {
+                                        return (
+                                            <Segment { ...getRootProps() } raised style={ { fontFamily: '"Lucida Console", Monaco, monospace' } }>
+                                                { t('buildPron.dropHereHint') }
+                                            </Segment>
+                                        );
+                                    }
+                                } }
+                            </Dropzone>
+
+                            <Button onClick={ () => { } }>
+                                { t('buildPron.uploadButton') }
+                            </Button>
+
+                            <Divider />
+
+                            <Button type='submit' as={ Link } to="/model-settings">
+                                { t('buildPron.nextButton') }
+                            </Button>
+
+                        </Grid.Column>
+                    </Grid>
+                </Segment>
+            </div>
         );
     }
 }
+export default translate('common')(StepBuildPronunciationDictionary)

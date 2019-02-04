@@ -2,5 +2,93 @@
     "welcome": {
         "title": "Elpis",
         "intro": "This is fun. {{passInSomething}}"
+    },
+    "naming": {
+        "title": "+ Name the model",
+        "next-button": "+ Go"
+    },
+    "addData": {
+        "title": "+ Add data",
+        "description": "+ Some description and information about file formats, naming requirements etc.",
+        "dragHeader": "+ Transcription and Audio Files",
+        "nextButton": "+ Next: process this data",
+        "nextButtonError": "+ Next: Fi+ this error (simulate a data input error)"
+    },
+    "fileUpload" : {
+        "audioLabel": "+ Audio files:",
+        "transcriptionLabel": "+ Transcription files:",
+        "additionalLabel": "+ Additional Text files:",
+        "dropFilesHeader": "+ Drop files here..",
+        "dropFilesHint": "+ Drop individual files or a folder containing your file here"
+    },
+    "dataPreparation": {
+        "title": "+ Data preparation success",
+        "header": "+ Overview of training corpus",
+        "bannerMessage": "+ Banner Message: text has been cleaned and normalised OK",
+        "bannerMessageDetailed": "+ Describe what has just happened for the novice user to better understand",
+        "wordlistHeader": "+ Wordlist",
+        "frequencyHeader": "+ Frequency",
+        "nextButton": "+ Next: build letter to sound"
+    },
+    "dataPreparationError": {
+        "title": "+ Data preparation error",
+        "backButton": "+ Back to add data"
+    },
+    "buildPron": {
+        "title": "+ Build the pronunciation dictionary",
+        "header": "+ Pronunciation file",
+        "dropHereHeader": "+ Drop new pronunciation file here",
+        "dropHereHint": "+ here here",
+        "uploadButton": "+ Upload dictionary",
+        "nextButton": "+ Next: model settings"
+    },
+    "modelSettings" : {
+        "title": "+ Model settings",
+        "audioLabel": "+ Audio Frequency",
+        "mfccLabel": "+ MFCC stuff",
+        "nGramLabel": "+ n-gram",
+        "beamLabel": "+ Beam size",
+        "nextButton": "+ Next: train model"
+    },
+    "trainingModel": {
+        "title": "+ Training the Model",
+        "trainingHeader": "+ The model is being trained",
+        "settingsHeader": "+ Settings",
+        "preparingAcousticHeader": "+ Preparing acoustic data",
+        "featuresExtractionHeader": "+ Features extraction",
+        "preparingLanguageDataHeader": "+ Preparing language data",
+        "logsHeader": "+ Logs",
+        "nextButton": "+ Next: model trained OK",
+        "nextButtonError": "+ Next: model trained Error"
+    },
+    "trainingModelSuccess": {
+        "title": "+ Trained Model Success",
+        "downloadButton": "+ Download a bundle of the model, settings and information about training data",
+        "downloadModalHeader": "+ Your files and settings are being compiled",
+        "downloadModalContent": "+ Click Save on your browser's download dialog",
+        "downloadOkButton": "+ OK",
+        "newTranscribeButton": "+ Use the model to transcribe new audio"
+    },
+    "trainingModelError": {
+        "title": "+ Error occured while training the model",
+        "errorLogHeader": "+ Error Log",
+        "contactButton": "+ Contact a Tech-person",
+        "backButton": "+ Go back to model settings"
+    },
+    "newTranscription": {
+        "title": "+ Transcribe some audio with an exisiting model",
+        "dropHint": "+ Drag and drop audio and transcription files here",
+        "addAudioButton": "+ Add Audio",
+        "chooseModelHeader": "+ Choose a model",
+        "nextButton": "+ Go"
+    },
+    "newTranscriptionResults": {
+        "title": "+ Transcribed new audio - Results",
+        "usingModel": "+ using model {{modelName}}",
+        "usingAudio": "+ for audio {{audioName}}",
+        "errorLogHeader": "+ Error Log",
+        "resultsHeader": "+ Transcription as text",
+        "downloadElanButton": "+ Download ELAN file here",
+        "downloadPraatButton": "+ Download TextGrid PRAAT file here"
     }
 }
