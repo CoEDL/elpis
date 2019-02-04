@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, redirect
 from . import corpus
-from .state import load_existing_models
+from .state.state import load_existing_models
 
 # Setup paths
 ELPIS_ROOT_DIR = os.getcwd()
