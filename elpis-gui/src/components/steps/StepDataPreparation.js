@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Icon, List, Button} from 'semantic-ui-react';
+import { Grid, Header, Segment, List, Button} from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
+import { translate } from 'react-i18next';
 
-export default class StepDataPreperation extends Component {
+class StepDataPreparation extends Component {
     render() {
+        const { t } = this.props;
         return (
                 <div>
                     <StepBranding />
@@ -15,13 +17,13 @@ export default class StepDataPreperation extends Component {
                                     <StepInformer instructions={NewModelInstructions} />
                                 </Grid.Column>
                                 <Grid.Column width={10}>
-                                    <Header as='h1'><Icon name='train' />Data preparation success</Header>
-                                    <h2>Overview of training corpus</h2>
-                                    <p>Banner Message: text has been cleaned and normalised OK</p>
-                                    <p>Describe what has just happened for the novice user to better understand</p>
+                                    <Header as='h1'>{t('dataPreparation.title')}</Header>
+                                    <h2>{t('dataPreparation.header')}</h2>
+                                    <p>{t('dataPreparation.bannerMessage')}</p>
+                                    <p>{t('dataPreparation.bannerMessageDetailed')}</p>
                                    <Grid>
                                         <Grid.Column width={5}>
-                                        <Header as='h1' > Wordlist</Header>
+                                        <Header as='h1'>{t('dataPreparation.wordlistHeader')}</Header>
                                             <List>
                                                 <List.Item>
                                                     <List.Content>a</List.Content>
@@ -35,7 +37,7 @@ export default class StepDataPreperation extends Component {
                                             </List>
                                         </Grid.Column>
                                         <Grid.Column width={5}>
-                                            <Header as='h1' > Frequency</Header>
+                                            <Header as='h1'>{t('dataPreparation.frequencyHeader')}</Header>
                                             <List>
                                                 <List.Item>
                                                     <List.Content>21</List.Content>
@@ -49,7 +51,7 @@ export default class StepDataPreperation extends Component {
                                             </List>
                                         </Grid.Column>
                                     </Grid>
-                                    <Button type='submit' as={Link} to="/build-pronunciation-dictionary">Next: build letter to sound</Button>
+                                    <Button type='submit' as={Link} to="/build-pronunciation-dictionary">{t('dataPreparation.nextButton')}</Button>
                                 </Grid.Column>
                         </Grid>
                     </Segment>
@@ -57,3 +59,4 @@ export default class StepDataPreperation extends Component {
         );
     }
 }
+export default translate('common')(StepDataPreparation)

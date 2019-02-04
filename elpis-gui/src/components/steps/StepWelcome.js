@@ -19,8 +19,12 @@ class StepWelcome extends Component {
 
                     <Grid.Row centered>
                         <Segment>
-                            <Button as={Link} to="/naming">Build New Model</Button>
-                            <Button as={Link} to="/new-transcription">New Transcription</Button>
+                            <Button as={Link} to="/naming">
+                                {t('welcome.newModelButton')}
+                            </Button>
+                            <Button as={Link} to="/new-transcription">
+                                {t('welcome.newTranscriptionButton')}
+                            </Button>
                         </Segment>
                     </Grid.Row>
 

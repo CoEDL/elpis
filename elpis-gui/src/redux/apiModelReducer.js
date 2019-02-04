@@ -1,5 +1,5 @@
 const initialModelState = {
-    name: null,
+    name: "",
     audioFiles: [],
     transcriptionFiles: [],
     additionalTextFiles: ['file1.txt'],

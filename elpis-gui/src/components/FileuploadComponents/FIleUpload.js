@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import {fromEvent} from "file-selector";
-import request from "superagent";
+import { translate } from 'react-i18next';
+// import request from "superagent";
 
 // import { addAudioFile, addTranscriptionFile, addAdditionalTextFile } from '../../redux/apiModelActions';
 import { connect } from 'react-redux';
@@ -15,8 +16,8 @@ class FileUpload extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
         console.log("file dropped:", acceptedFiles);
-        
-        
+
+
         // acceptedFiles.forEach(file => {
         //     //console.log(file)
         //     request
@@ -25,7 +26,7 @@ class FileUpload extends Component {
         // });
 
         const fileNames = acceptedFiles.map(f => f.name);
-        fileNames.map(filename => {
+        fileNames.forEach(filename => {
             if (filename.endsWith('.wav')) {
                 // this.props.addAudioFile(filename);
             } else if (filename.endsWith('.eaf') || filename.endsWith('.TextGrid')) {
@@ -42,14 +43,16 @@ class FileUpload extends Component {
 
     render(){
         const fileNameList = (this.state.fileNames) ? (this.state.fileNames.map((f) => <li key={f}>{f}</li>)) : ''
+        const { t } = this.props;
 
         return(
             <div className="App">
             {this.props.myName}
-                    <p>Audio files: {this.props.audioFiles}</p>
-                    <p>Transcription files: {this.props.transcriptionFiles}</p>
-                    <p>Additional Text files: {this.props.additionalTextFiles}</p>
-                    <Dropzone className="dropzone"  onDrop={this.onDrop} getDataTransferItems={evt => fromEvent(evt)}>
+                    <p>{t('fileUpload.audioLabel')} {this.props.audioFiles}</p>
+                    <p>{t('fileUpload.transcriptionLabel')} {this.props.transcriptionFiles}</p>
+                    <p>{t('fileUpload.additionalLabel')} {this.props.additionalTextFiles}</p>
+
+                    <Dropzone className="dropzone" onDrop={this.onDrop} getDataTransferItems={evt => fromEvent(evt)}>
                         {({ getRootProps, getInputProps, isDragActive }) => {
                             return (
                                 <div
@@ -58,17 +61,17 @@ class FileUpload extends Component {
                                         "dropzone_active": isDragActive
                                     })}
                                 >
-                                
+
                                     <input {...getInputProps()} />
-                                
+
                                         {isDragActive ? (
-                                            <p>Drop files here...</p>
+                                            <p>{t('fileUpload.dropFilesHeader')} </p>
                                         ) : (
                                             <p>
-                                                Drop individual files or a folder containing your file here
+                                                {t('fileUpload.dropFilesHint')}
                                             </p>
                                         )}
-                            
+
                             </div>
                         );
                     }}
@@ -76,7 +79,7 @@ class FileUpload extends Component {
 
                     <ul>{fileNameList}</ul>
             </div>
-                
+
         );
     }
 }
@@ -102,4 +105,4 @@ const mapDispatchToProps = dispatch => ({
     // },
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(FileUpload);
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(FileUpload));
