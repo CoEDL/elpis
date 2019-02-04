@@ -41,7 +41,7 @@ var successHandler = {
 }
 
 export const updateModelName = postData => {
-  const url = baseUrl + '/corpus/name';
+  const url = baseUrl + '/api/model/name';
   return postApi(url, postData, 'updateModelName');
 }
 
