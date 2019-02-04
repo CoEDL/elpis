@@ -1,7 +1,6 @@
 import os
 
 from flask import redirect
-from . import corpus
 from . import api
 from .app import Flask
 
@@ -19,7 +18,6 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
-    app.register_blueprint(corpus.bp)
     app.register_blueprint(api.bp)
     print(app.url_map)
 
