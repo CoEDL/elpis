@@ -15,18 +15,18 @@ class StepAddData extends Component {
 
         const { t, audioFiles, transcriptionFiles, additionalTextFiles } = this.props;
         const audioFileList = audioFiles.map(file => (
-            <List.Item key={file}>
-                <List.Content>{file}</List.Content>
+            <List.Item key={ file }>
+                <List.Content>{ file }</List.Content>
             </List.Item>
         ))
         const transcriptionFilesList = transcriptionFiles.map(file => (
-            <List.Item key={file}>
-                <List.Content>{file}</List.Content>
+            <List.Item key={ file }>
+                <List.Content>{ file }</List.Content>
             </List.Item>
         ))
         const additionalTextFilesList = additionalTextFiles.map(file => (
-            <List.Item key={file}>
-                <List.Content>{file}</List.Content>
+            <List.Item key={ file }>
+                <List.Content>{ file }</List.Content>
             </List.Item>
         ))
 
@@ -54,16 +54,22 @@ class StepAddData extends Component {
                             <Header as='h1'>
                                 { t('addData.filesHeader') }
                             </Header>
-                            <Grid>
-                                <Grid.Column width={ 5 }>
+                            <Grid columns={ 3 }>
+                                <Grid.Column>
                                     <List>
                                         { audioFileList }
                                     </List>
                                 </Grid.Column>
 
-                                <Grid.Column width={ 5 }>
+                                <Grid.Column>
                                     <List>
                                         { transcriptionFilesList }
+                                    </List>
+                                </Grid.Column>
+
+                                <Grid.Column>
+                                    <List>
+                                        { additionalTextFilesList }
                                     </List>
                                 </Grid.Column>
                             </Grid>
