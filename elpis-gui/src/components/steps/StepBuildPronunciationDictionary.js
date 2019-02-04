@@ -6,13 +6,26 @@ import StepInformer, { NewModelInstructions } from '../StepInformer';
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
 import { translate } from 'react-i18next';
+import { updateModelPronunciationFile } from '../../redux/actions';
+import { connect } from 'react-redux';
+import classNames from "classnames";
 
 class StepBuildPronunciationDictionary extends Component {
+
     onDrop = (acceptedFiles, rejectedFiles) => {
-        console.log("acceptedFiles:", acceptedFiles);
+        console.log("files dropped:", acceptedFiles);
+        var formData = new FormData();
+        formData.append('file', acceptedFiles[0]);
+        this.props.updateModelPronunciationFile(formData);
     }
+
     render() {
-        const { t } = this.props;
+        const { t, pronunciationFile } = this.props;
+
+        const pronFile = pronunciationFile ?
+            pronunciationFile + ' uploaded OK'
+            : null
+
         return (
             <div>
                 <StepBranding />
@@ -26,37 +39,36 @@ class StepBuildPronunciationDictionary extends Component {
                                 { t('buildPron.title') }
                             </Header>
 
-                            <Header as="h3">
-                                { t('buildPron.header') }
-                            </Header>
+                            <p>
+                                { t('buildPron.description') }
+                            </p>
 
                             <Divider />
 
-                            <Dropzone onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
+                            <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({ getRootProps, getInputProps, isDragActive }) => {
-                                    if (isDragActive) {
-                                        return (
-                                            <Segment { ...getRootProps() } placeholder>
-                                                <input { ...getInputProps() } />
-                                                <Header icon>
-                                                    <Icon name='file outline' />
-                                                    { t('buildPron.dropHereHeader') }
-                                                </Header>
-                                            </Segment>
-                                        );
-                                    } else {
-                                        return (
-                                            <Segment { ...getRootProps() } raised style={ { fontFamily: '"Lucida Console", Monaco, monospace' } }>
-                                                { t('buildPron.dropHereHint') }
-                                            </Segment>
-                                        );
-                                    }
+                                    return (
+                                        <div
+                                            { ...getRootProps() }
+                                            className={ classNames("dropzone", {
+                                                "dropzone_active": isDragActive
+                                            }) }
+                                        >
+                                            <input { ...getInputProps() } />
+
+                                            {
+                                                isDragActive ? (
+                                                    <p>{ t('buildPron.dropFilesHintDragActive') } </p>
+                                                ) : (<p>{ t('buildPron.dropFilesHint') }</p>)
+                                            }
+                                        </div>
+                                    );
                                 } }
                             </Dropzone>
 
-                            <Button onClick={ () => { } }>
-                                { t('buildPron.uploadButton') }
-                            </Button>
+                            <p>
+                                { pronFile }
+                            </p>
 
                             <Divider />
 
@@ -71,4 +83,17 @@ class StepBuildPronunciationDictionary extends Component {
         );
     }
 }
-export default translate('common')(StepBuildPronunciationDictionary)
+
+const mapStateToProps = state => {
+    return {
+        pronunciationFile: state.model.pronunciationFile,
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    updateModelPronunciationFile: postData => {
+        dispatch(updateModelPronunciationFile(postData));
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepBuildPronunciationDictionary));

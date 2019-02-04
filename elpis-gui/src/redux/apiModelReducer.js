@@ -3,7 +3,7 @@ const initialModelState = {
     audioFiles: [],
     transcriptionFiles: [],
     additionalTextFiles: [],
-    pronunciationFile: null,
+    pronunciationFile: '',
     settings: {
         frequency: null,
         mfcc: null,
@@ -58,8 +58,10 @@ const model = (state = initialModelState, action) => {
                 ...state
             }
         case 'UPDATE_MODEL_PRONUNCIATION_FILE':
+            let pronunciationFile = action.response.data
             return {
-                ...state
+                ...state,
+                pronunciationFile
             }
         default:
             return state;

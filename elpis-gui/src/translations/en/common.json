@@ -20,8 +20,8 @@
         "audioLabel": "+ Audio files:",
         "transcriptionLabel": "+ Transcription files:",
         "additionalLabel": "+ Additional Text files:",
-        "dropFilesHeader": "+ Drop files here..",
-        "dropFilesHint": "+ Drop individual files or a folder containing your file here"
+        "dropFilesHint": "+ Drop individual files or a folder containing your file here",
+        "dropFilesHintDragActive": "+ Drop files here.."
     },
     "dataPreparation": {
         "title": "+ Data preparation success",
@@ -39,8 +39,9 @@
     "buildPron": {
         "title": "+ Build the pronunciation dictionary",
         "header": "+ Pronunciation file",
-        "dropHereHeader": "+ Drop new pronunciation file here",
-        "dropHereHint": "+ here here",
+        "description": "+ Letter to sound files are fun.",
+        "dropFilesHint": "+ Drop letter to sound file here",
+        "dropFilesHintDragActive": "+ Here here..",
         "uploadButton": "+ Upload dictionary",
         "nextButton": "+ Next: model settings"
     },

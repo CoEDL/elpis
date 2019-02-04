@@ -2,8 +2,6 @@ import axios from 'axios'
 
 const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://127.0.0.1:5000'
 
-console.log('process.env.REACT_APP_BASEURL', process.env.REACT_APP_BASEURL)
-
 const getApi = (url, successFunction) => {
     return dispatch => {
         axios.get(url)
@@ -42,13 +40,12 @@ var successHandler = {
     updateModelDate: response => ({ type: 'UPDATE_MODEL_DATE', response }),
     updateModelSettings: response => ({ type: 'UPDATE_MODEL_SETTINGS', response }),
     updateModelTranscriptionFiles: response => ({ type: 'UPDATE_MODEL_TRANSCRIPTION_FILES', response }),
-    updateModelAdditionalWordFiles: response => ({ type: 'UPDATE_MODEL_ADDITIONAL_WORD_FILES', response }),
+    // updateModelAdditionalWordFiles: response => ({ type: 'UPDATE_MODEL_ADDITIONAL_WORD_FILES', response }),
     updateModelPronunciationFile: response => ({ type: 'UPDATE_MODEL_PRONUNCIATION_FILE', response })
 }
 
 export const updateModelName = postData => {
     const url = baseUrl + '/api/model/name';
-    console.log(postData)
     return postApi(url, postData, 'updateModelName');
 }
 
@@ -68,14 +65,15 @@ export const updateModelTranscriptionFiles = postData => {
     return postApi(url, postData, 'updateModelTranscriptionFiles', headers);
 }
 
-export const updateModelAdditionalWordFiles = postData => {
-    const url = baseUrl + '/additional_words';
-    return postApi(url, postData, 'updateModelAdditionalWordFiles');
-}
+// export const updateModelAdditionalWordFiles = postData => {
+//     const url = baseUrl + '/additional_words';
+//     return postApi(url, postData, 'updateModelAdditionalWordFiles');
+// }
 
 export const updateModelPronunciationFile = postData => {
-    const url = baseUrl + '/pronunciation';
-    return postApi(url, postData, 'updateModelPronunciationFile');
+    const url = baseUrl + '/api/model/pronunciation';
+    const headers = {headers: {'content-type': 'multipart/form-data'}}
+    return postApi(url, postData, 'updateModelPronunciationFile', headers);
 }
 
 

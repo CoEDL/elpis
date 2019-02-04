@@ -3,9 +3,6 @@ import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
 import { translate } from 'react-i18next';
-// import request from "superagent";
-import axios from 'axios'
-
 import { updateModelTranscriptionFiles } from '../../redux/actions';
 import { connect } from 'react-redux';
 
@@ -19,16 +16,13 @@ class FileUpload extends Component {
             formData.append('file', file);
         })
         this.props.updateModelTranscriptionFiles(formData);
-
     };
-
-
 
     render() {
         const { t } = this.props;
 
         return (
-            <div className="App">
+            <div className="FileUpload">
                 <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                     { ({ getRootProps, getInputProps, isDragActive }) => {
                         return (
@@ -38,17 +32,13 @@ class FileUpload extends Component {
                                     "dropzone_active": isDragActive
                                 }) }
                             >
-
                                 <input { ...getInputProps() } />
 
-                                { isDragActive ? (
-                                    <p>{ t('fileUpload.dropFilesHeader') } </p>
-                                ) : (
-                                        <p>
-                                            { t('fileUpload.dropFilesHint') }
-                                        </p>
-                                    ) }
-
+                                {
+                                    isDragActive ? (
+                                        <p>{ t('fileUpload.dropFilesHintDragActive') } </p>
+                                    ) : (<p>{ t('fileUpload.dropFilesHint') }</p>)
+                                }
                             </div>
                         );
                     } }
@@ -65,8 +55,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    updateModelTranscriptionFiles: data => {
-        dispatch(updateModelTranscriptionFiles(data));
+    updateModelTranscriptionFiles: postData => {
+        dispatch(updateModelTranscriptionFiles(postData));
     }
 })
 
