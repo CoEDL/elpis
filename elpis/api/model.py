@@ -3,7 +3,20 @@ from pathlib import Path
 from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
 
+'''New Code'''
+from ..blueprint import Blueprint
+from . import comp
 
+bp = Blueprint("model", __name__, url_prefix="/model")
+bp.register_blueprint(comp.bp)
+
+
+@bp.route("/new")
+def new():
+    return '{"status": "new model created"}'
+
+
+'''Old Code'''
 ELPIS_ROOT_DIR = os.getcwd()
 UPLOAD_FOLDER = os.path.join(ELPIS_ROOT_DIR, "Uploaded_files")
 ALLOWED_EXTENSIONS = {'wav', 'eaf', 'trs', 'wordlist'}
