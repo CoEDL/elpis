@@ -110,6 +110,10 @@ RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/
 # Clean up package manager
 RUN apt-get clean autoclean
 
+# Elpis
+WORKDIR /
+RUN git clone https://github.com/CoEDL/elpis.git && git submodule update --init --recursive
+
 # Get Kaldi-Helpers and install it
 RUN cd /tmp && git clone https://github.com/CoEDL/kaldi-helpers.git /kaldi-helpers
 RUN cd /kaldi-helpers && python3.6 setup.py install
@@ -125,3 +129,5 @@ WORKDIR /kaldi-helpers
 # Add random number generator to skip Docker building cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 RUN git pull
+
+EXPOSE 5000
