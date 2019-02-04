@@ -19,6 +19,7 @@ def new():
 
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
+    print(request.json['name'])
     file_path = os.path.join(CURRENT_MODEL_DIR, 'name.txt')
     if request.method == 'POST':
         # update the state name
@@ -58,17 +59,23 @@ def transcription_files():
             file_names.append(file.filename)
     return jsonify(file_names)
 
-@bp.route("/pronunciation")
+@bp.route("/pronunciation", methods=['POST'])
 def pronunciation():
     file_path = os.path.join(CURRENT_MODEL_DIR, 'pronunciation.txt')
+
+    # handle incoming data
     if request.method == 'POST':
+        file = request.files['file']
+        print(f'file name: {file.filename}')
+
         # update the state name
-        with open(file_path, 'w') as fout:
-            fout.write(request.json['pronunciation'])
+        # with open(file_path, 'w') as fout:
+        #     fout.write(request.json['pronunciation'])
 
     # return the state
-    with open(file_path, 'r') as fin:
-        return f'{{ "pronunciation": "{fin.read()}" }}'
+#     with open(file_path, 'r') as fin:
+#         return f'{{ "pronunciation": "{fin.read()}" }}'
+        return file.filename
 
 @bp.route("/settings")
 def settings():
