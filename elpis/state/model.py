@@ -5,19 +5,29 @@ class Model(object):
     Properties:
         name:
             A unique name for the model.
+        date:
+            Date model was created
         audio_files:
             list of *wav* files containing the audio the transcription was
             developed from.
         transcription_files:
             elan files that match to the wav files
-        additional:
+        additional text files:
+            ...
+        pronunication file:
+            Maps pronunciations to characters/sets of characters
     
-    Files from `audio_files`, `transcription_files`, and `additional` must
-    exist on the server before being added to the variables.
+    Requirements:
+        Files from: 
+                `audio_files`, 
+                `transcription_files`, 
+                `additional_text` and 
+                'pronunciation'
+            must exist on the server before being added to the variables.
 
-    `audio_files` and `transcription_files` must have paired names.
-            
+        The `audio_files` and `transcription_files` must have paired names.       
     """
+
     def __init__(self, location: str):
         """ Create the model state.
 
@@ -25,6 +35,7 @@ class Model(object):
         """
         super()
 
+        "File Dir."
         self._location = location
         self._PATH_AUDIO = os.path.join(location, 'audio')
         self._PATH_TRANSCRIPTION = os.path.join(location, 'transcription')
@@ -37,12 +48,16 @@ class Model(object):
             os.mkdir(self._PATH_ADDITIONAL_TEXT)
             os.mkdir(self._PATH_PRONUNCIATION)
 
-        #Model
+        "Model Parameters"
         self._name: str = None
         self._date: str = None
         self._settings = Settings()
+        self._transcriptions = []
+    
         
-        
+    """
+    Name
+    """ 
     @property
     def name(self) -> str:
         if self._name is None:
@@ -55,7 +70,9 @@ class Model(object):
             fin.write(value)
             self._name = value
     
-    "Date"
+    """
+    Date
+    """
     @property
     def date(self) -> str:
         if self._date is None:
@@ -67,19 +84,11 @@ class Model(object):
         with open(f'{self._location}/date', 'w') as fin:
             fin.write(value)
             self._date = value
-    
-    "Pronunciation"
-    @property
-    def pronunciation(self):
-        with open(self._PATH_PRONUNCIATION, 'rb') as fin:
-            return fin.read().decode('utf-16')
 
-    @pronunciation.setter
-    def pronunciation(self, content: bytes):
-        with open(self._PATH_PRONUNCIATION, 'wb') as fout:
-            return out.write(content)
 
-    "Get List of Filenames"
+    """
+    Get List of Filenames
+    """
     @property
     def audio_files(self):
         return os.listdir(self._PATH_AUDIO)
@@ -92,7 +101,10 @@ class Model(object):
     def additional_text_files(self):
         return os.listdir(self._PATH_ADDITIONAL_TEXT)
 
-    "Set Files to Model"
+
+    """
+    Set Files to Model
+    """
     def add_audio_file(filename: str, content: bytes):
         with open(f'{self._PATH_AUDIO}/{filename}', 'wb') as fout:
             fout.write(content)
@@ -105,7 +117,14 @@ class Model(object):
         with open(f'{self._PATH_ADDITIONAL_TEXT}/{filename}', 'w') as fout:
             fout.write(content)
 
-    "Get Files from Model"
+    @pronunciation.setter
+    def pronunciation(self, content: bytes):
+        with open(self._PATH_PRONUNCIATION, 'wb') as fout:
+            return out.write(content)
+
+    """
+    Get Files from Model
+    """
     def get_audio_file():
         return None
 
@@ -117,3 +136,8 @@ class Model(object):
 
     def get_pronunciation_file():
         return None
+    
+    @property
+    def pronunciation(self):
+        with open(self._PATH_PRONUNCIATION, 'rb') as fin:
+            return fin.read().decode('utf-16')
