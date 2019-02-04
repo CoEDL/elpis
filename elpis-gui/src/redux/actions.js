@@ -20,8 +20,8 @@ const getApi = (url, successFunction) => {
 }
 
 
-const postApi = (url, postData, successFunction) => {
-    const config = {headers: {'content-type': 'multipart/form-data'}}
+const postApi = (url, postData, successFunction, config=null) => {
+
     return dispatch => {
         axios.post(url, postData, config)
             .then((response) => {
@@ -48,6 +48,7 @@ var successHandler = {
 
 export const updateModelName = postData => {
     const url = baseUrl + '/api/model/name';
+    console.log(postData)
     return postApi(url, postData, 'updateModelName');
 }
 
@@ -63,7 +64,8 @@ export const updateModelSettings = postData => {
 
 export const updateModelTranscriptionFiles = postData => {
     const url = baseUrl + '/api/model/transcription-files';
-    return postApi(url, postData, 'updateModelTranscriptionFiles');
+    const headers = {headers: {'content-type': 'multipart/form-data'}}
+    return postApi(url, postData, 'updateModelTranscriptionFiles', headers);
 }
 
 export const updateModelAdditionalWordFiles = postData => {
