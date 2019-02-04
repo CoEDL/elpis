@@ -17,9 +17,7 @@ const getApi = (url, successFunction) => {
     }
 }
 
-
 const postApi = (url, postData, successFunction, config=null) => {
-
     return dispatch => {
         axios.post(url, postData, config)
             .then((response) => {
@@ -54,26 +52,22 @@ export const updateModelDate = postData => {
     return postApi(url, postData, 'updateModelDate');
 }
 
-export const updateModelSettings = postData => {
-    const url = baseUrl + '/settings';
-    return postApi(url, postData, 'updateModelSettings');
-}
-
 export const updateModelTranscriptionFiles = postData => {
     const url = baseUrl + '/api/model/transcription-files';
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'updateModelTranscriptionFiles', headers);
 }
 
-// export const updateModelAdditionalWordFiles = postData => {
-//     const url = baseUrl + '/additional_words';
-//     return postApi(url, postData, 'updateModelAdditionalWordFiles');
-// }
-
 export const updateModelPronunciationFile = postData => {
     const url = baseUrl + '/api/model/pronunciation';
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'updateModelPronunciationFile', headers);
+}
+
+export const updateModelSettings = postData => {
+    const url = baseUrl + '/api/model/settings';
+    console.log('postData', postData)
+    return postApi(url, postData, 'updateModelSettings');
 }
 
 

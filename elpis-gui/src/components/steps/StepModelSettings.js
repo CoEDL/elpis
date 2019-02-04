@@ -4,11 +4,41 @@ import { Grid, Header, Segment, Form, Button } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
+import { connect } from 'react-redux';
+import { updateModelSettings } from '../../redux/actions';
 
 class StepModelSettings extends Component {
-
+    state = {
+        settings: {
+            audio: null,
+            mfcc: null,
+            nGram: null,
+            beam: null
+        }
+    }
+    handleAudioSetting = (e) => {
+        const { settings, updateModelSettings } = this.props;
+        const newSettings = {...settings, frequency:e.target.value}
+        console.log(newSettings)
+        updateModelSettings({settings:newSettings})
+    }
+    handleMfccSetting = (e) => {
+        const { settings, updateModelSettings } = this.props;
+        const newSettings = {...settings, mfcc:e.target.value}
+        updateModelSettings({settings:newSettings})
+    }
+    handleNgramSetting = (e) => {
+        const { settings, updateModelSettings } = this.props;
+        const newSettings = {...settings, ngram:e.target.value}
+        updateModelSettings({settings:newSettings})
+    }
+    handleBeamSetting = (e) => {
+        const { settings, updateModelSettings } = this.props;
+        const newSettings = {...settings, beam:e.target.value}
+        updateModelSettings({settings:newSettings})
+    }
     render() {
-        const { t } = this.props;
+        const { t, settings } = this.props;
         return (
             <div>
                 <StepBranding />
@@ -17,7 +47,9 @@ class StepModelSettings extends Component {
                         <Grid.Column width={ 6 }>
                             <StepInformer instructions={ NewModelInstructions } />
                         </Grid.Column>
+
                         <Grid.Column width={ 10 }>
+
                             <Header as='h1' text='true'>
                                 { t('modelSettings.title') }
                             </Header>
@@ -25,28 +57,29 @@ class StepModelSettings extends Component {
                             <Form>
                                 <Form.Field>
                                     <label>{ t('modelSettings.audioLabel') }</label>
-                                    <input type='text' placeholder='44100' />
+                                    <input type='text' placeholder={ settings.frequency } onChange={ this.handleAudioSetting } />
                                 </Form.Field>
 
                                 <Form.Field>
                                     <label>{ t('modelSettings.mfccLabel') }</label>
-                                    <input type='text' placeholder='22050' />
+                                    <input type='text' placeholder={ settings.mfcc } onChange={ this.handleMfccSetting } />
                                 </Form.Field>
 
                                 <Form.Field>
                                     <label>{ t('modelSettings.nGramLabel') }</label>
-                                    <input type='text' placeholder='3' />
+                                    <input type='text' placeholder={ settings.ngram } onChange={ this.handleNgramSetting } />
                                 </Form.Field>
 
                                 <Form.Field>
                                     <label>{ t('modelSettings.beamLabel') }</label>
-                                    <input type='text' placeholder='10' />
+                                    <input type='text' placeholder={ settings.beam } onChange={ this.handleBeamSetting } />
                                 </Form.Field>
 
-                                <Button type='submit' as={ Link } to="/training-model">
-                                    { t('modelSettings.nextButton') }
-                                </Button>
                             </Form>
+
+                            <Button as={ Link } to="/model-training">
+                                { t('modelSettings.nextButton') }
+                            </Button>
 
                         </Grid.Column>
                     </Grid>
@@ -55,4 +88,17 @@ class StepModelSettings extends Component {
         );
     }
 }
-export default translate('common')(StepModelSettings)
+
+const mapStateToProps = state => {
+    return {
+        settings: state.model.settings
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    updateModelSettings: postData => {
+        dispatch(updateModelSettings(postData));
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepModelSettings));

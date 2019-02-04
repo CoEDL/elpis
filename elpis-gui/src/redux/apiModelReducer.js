@@ -5,10 +5,10 @@ const initialModelState = {
     additionalTextFiles: [],
     pronunciationFile: '',
     settings: {
-        frequency: null,
-        mfcc: null,
-        ngram: null,
-        beam: null,
+        frequency: 44100,
+        mfcc: 22050,
+        ngram: 1,
+        beam: 10
     },
     date: null
 }
@@ -29,8 +29,11 @@ const model = (state = initialModelState, action) => {
                 ...state
             }
         case 'UPDATE_MODEL_SETTINGS':
+            console.log('UPDATE_MODEL_SETTINGS', action)
+
             return {
-                ...state
+                ...state,
+                settings: action.response.data
             }
         case 'UPDATE_MODEL_TRANSCRIPTION_FILES':
             console.log('reducer UPDATE_MODEL_TRANSCRIPTION_FILES', action)
@@ -53,10 +56,6 @@ const model = (state = initialModelState, action) => {
                 additionalTextFiles
             }
 
-        case 'UPDATE_MODEL_ADDITIONAL_WORD_FILES':
-            return {
-                ...state
-            }
         case 'UPDATE_MODEL_PRONUNCIATION_FILE':
             let pronunciationFile = action.response.data
             return {
