@@ -15,9 +15,14 @@ node_modules/
 .idea/
 
 # Server
-uploaded_files/
 models/
+transcriptions/
+current_model/
+current_transcription/
+
+#testing
 name_file
+uploaded_files/
 
 # mac files
 .DS_Store

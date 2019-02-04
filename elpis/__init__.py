@@ -5,16 +5,9 @@ from . import corpus
 from . import api
 from .app import Flask
 
-# Setup paths
-ELPIS_ROOT_DIR = os.getcwd()
-GUI_ROOT_DIR = os.path.join(ELPIS_ROOT_DIR, "elpis-gui/build")
-GUI_PUBLIC_DIR = GUI_ROOT_DIR
-GUI_STATIC_DIR = os.path.join(GUI_ROOT_DIR, "js")
-MODELS_DIR = os.path.join(ELPIS_ROOT_DIR, 'models')
+from .paths import GUI_STATIC_DIR, GUI_PUBLIC_DIR
 
 def create_app(test_config=None):
-    if not os.path.exists(MODELS_DIR):
-        os.mkdir(MODELS_DIR)
 
     # Setup static resources
     # create and configure the app
