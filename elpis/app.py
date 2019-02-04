@@ -8,8 +8,11 @@ class Flask(FlaskBase):
         super().__init__(*args, **kwargs)
     def register_blueprint(self, blueprint, **options):
         print(f'@ Flask.register_blueprint(blueprint={blueprint})')
-        if isinstance(blueprint, Blueprint):
-            print("! not doing anything at the moment")
-            blueprint.prepare_routes()
-        super().register_blueprint(blueprint, **options)
+        if not isinstance(blueprint, Blueprint):
+            super().register_blueprint(blueprint, **options)
+            return
+        # Deal with custom Blueprint objects
+        blueprint.app = self
+        blueprint.prepare_routes()
+        blueprint.register_app( lambda bp: super(Flask, self).register_blueprint(bp), self )
 
