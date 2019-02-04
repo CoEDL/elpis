@@ -8,6 +8,21 @@ __pycache__/
 package-lock.json
 node_modules/
 
+# Editors
+.vscode/
 *.xml
 *.iml
 .idea/
+
+# Server
+models/
+transcriptions/
+current_model/
+current_transcription/
+
+#testing
+name_file
+uploaded_files/
+
+# mac files
+.DS_Store
