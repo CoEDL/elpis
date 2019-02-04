@@ -69,7 +69,7 @@ class StepNaming extends Component {
 
 const mapStateToProps = state => {
     return {
-        modelName: state.apiModelReducer.name
+        modelName: state.model.name
     }
 }
 const mapDispatchToProps = dispatch => ({
