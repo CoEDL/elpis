@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from flask import Blueprint, redirect, request, url_for, escape
+from flask import Blueprint, redirect, request, url_for, escape, jsonify
 from werkzeug.utils import secure_filename
 from ..blueprint import Blueprint
 from . import comp
@@ -24,11 +24,11 @@ def name():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['name'])
-    
+
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "name": "{fin.read()}" }}'
-    
+
 @bp.route("/date")
 def date():
     file_path = os.path.join(CURRENT_MODEL_DIR, 'date.txt')
@@ -36,7 +36,7 @@ def date():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['date'])
-    
+
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "date": "{fin.read()}" }}'
@@ -50,12 +50,13 @@ def transcription_files():
 
     # handle incoming data
     if request.method == 'POST':
-        # print(f'Trans_files req: {request.json}')
-        print(f'request.form: {request.form}')
-        print(f'request.args: {request.args}')
-
-    # return state update
-    return f'{os.listdir(path)}'
+        uploaded_files = request.files.getlist("file")
+        file_names = []
+        for file in uploaded_files :
+            print(f'file: {file}')
+            print(f'file name: {file.filename}')
+            file_names.append(file.filename)
+    return jsonify(file_names)
 
 @bp.route("/pronunciation")
 def pronunciation():
@@ -64,7 +65,7 @@ def pronunciation():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['pronunciation'])
-    
+
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "pronunciation": "{fin.read()}" }}'
@@ -76,7 +77,7 @@ def settings():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['settings'])
-    
+
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "settings": "{fin.read()}" }}'
