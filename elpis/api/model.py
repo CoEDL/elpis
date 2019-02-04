@@ -2,8 +2,6 @@ import os
 from pathlib import Path
 from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
-
-'''New Code'''
 from ..blueprint import Blueprint
 from . import comp
 
@@ -19,3 +17,28 @@ def new():
 def name():
     return ''
     
+@bp.route("/date")
+def date():
+    return ''
+
+@bp.route("/audio")
+def audio():
+    return ''
+
+@bp.route("/transcription")
+def transcription():
+    return ''
+
+@bp.route("/additionalWords")
+def additionalWord():
+    return ''
+
+@bp.route("/pronunciation")
+def pronunciation():
+    return ''
+
+@bp.route("/settings")
+def settings():
+    return ''
+
+
