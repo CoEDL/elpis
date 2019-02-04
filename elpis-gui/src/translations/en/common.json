@@ -12,7 +12,7 @@
     "addData": {
         "title": "+ Add data",
         "description": "+ Some description and information about file formats, naming requirements etc.",
-        "dragHeader": "+ Transcription and Audio Files",
+        "filesHeader": "+ Transcription and Audio Files",
         "nextButton": "+ Next: process this data",
         "nextButtonError": "+ Next: Fi+ this error (simulate a data input error)"
     },

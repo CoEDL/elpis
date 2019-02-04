@@ -110,7 +110,7 @@ class StepInformer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        steps: state.stepReducer.steps,
+        steps: state.steps.steps,
         ownProps: ownProps
     }
 }

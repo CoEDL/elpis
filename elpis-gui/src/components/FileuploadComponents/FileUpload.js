@@ -4,42 +4,30 @@ import Dropzone from "react-dropzone";
 import {fromEvent} from "file-selector";
 import { translate } from 'react-i18next';
 // import request from "superagent";
+import axios from 'axios'
 
-// import { addAudioFile, addTranscriptionFile, addAdditionalTextFile } from '../../redux/apiModelActions';
+import { updateModelTranscriptionFiles } from '../../redux/actions';
 import { connect } from 'react-redux';
 
 class FileUpload extends Component {
     state={
         files:[],
-        fileNames:[]
-    }
+        fileNames:[],
+        file:null
+      }
 
     onDrop = (acceptedFiles, rejectedFiles) => {
-        console.log("file dropped:", acceptedFiles);
+        console.log("files dropped:", acceptedFiles);
+        var formData = new FormData();
+        acceptedFiles.forEach(file => {
+            console.log(file)
+            formData.append('file', file);
+        })
+        this.props.updateModelTranscriptionFiles(formData);
 
-
-        // acceptedFiles.forEach(file => {
-        //     //console.log(file)
-        //     request
-        //     .post('http://127.0.0.1:5000/corpus/wav')
-        //     .attach(file.name, file.path);
-        // });
-
-        const fileNames = acceptedFiles.map(f => f.name);
-        fileNames.forEach(filename => {
-            if (filename.endsWith('.wav')) {
-                // this.props.addAudioFile(filename);
-            } else if (filename.endsWith('.eaf') || filename.endsWith('.TextGrid')) {
-                // this.props.addTranscriptionFile(filename);
-            } else if (filename.endsWith('.txt')) {
-                // this.props.addAdditionalTextFile(filename);
-            } else {
-                // TODO tell the user that they can't put this type of file here
-            }
-        });
-        //console.log(fileNames);
-        // this.setState({ ...this.state, files: acceptedFiles, fileNames: fileNames  });
     };
+
+
 
     render(){
         const fileNameList = (this.state.fileNames) ? (this.state.fileNames.map((f) => <li key={f}>{f}</li>)) : ''
@@ -94,11 +82,11 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+    updateModelTranscriptionFiles: data => {
+        dispatch(updateModelTranscriptionFiles(data));
+    }
     // addTranscriptionFile: filename => {
     //     dispatch(addTranscriptionFile(filename));
-    // },
-    // addAudioFile: filename => {
-    //     dispatch(addAudioFile(filename));
     // },
     // addAdditionalTextFile: filename => {
     //     dispatch(addAdditionalTextFile(filename));

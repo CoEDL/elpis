@@ -41,7 +41,7 @@ const initialStepModelState = {
     ]
 }
 
-const stepReducer = (state = initialStepModelState, action) => {
+const steps = (state = initialStepModelState, action) => {
     let newSteps = []
     let currentIndex = []
 
@@ -122,4 +122,4 @@ const stepReducer = (state = initialStepModelState, action) => {
             return state
     }
 }
-export default stepReducer;
+export default steps;
