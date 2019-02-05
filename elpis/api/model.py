@@ -5,6 +5,10 @@ from werkzeug.utils import secure_filename
 from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
+import subprocess
+from ..kaldi_helpers import run_settings_task_demo
+
+#from..kaldi_helpers import task_run_demo
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -27,6 +31,8 @@ def name():
             fout.write(request.json['name'])
             fout.close()
 
+        #result = subprocess.run(["ls -la"], stdout=subprocess.PIPE)
+        #print(result.stdout)
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "name": "{fin.read()}" }}'
@@ -40,7 +46,6 @@ def date():
         with open(file_path, 'w') as fout:
             fout.write(request.json['date'])
             fout.close()
-
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "date": "{fin.read()}" }}'
@@ -99,8 +104,9 @@ Settings Route
 @bp.route("/settings", methods=("GET", "POST"))
 def settings():
     file_path = os.path.join(CURRENT_MODEL_DIR, 'settings.txt')
-
     if request.method == "POST":
+        
+        run_settings_task_demo()
         # write settings to file
         print(f'settings: {request.json["settings"]}')
         with open(file_path, 'w') as fout:
