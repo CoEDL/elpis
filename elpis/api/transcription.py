@@ -11,6 +11,12 @@ bp = Blueprint("transcriptions", __name__, url_prefix="/transcriptions")
 bp.register_blueprint(comp.bp)
 
 
+@bp.route("/new", methods=['POST'])
+def new():
+    # assuming that this would only be a POST?
+    #this.models = state.Model()
+    return '{"status": "new model created"}'
+
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
     print(request.json['name'])

@@ -6,6 +6,7 @@ from ..blueprint import Blueprint
 from . import comp
 from ..paths import CURRENT_MODEL_DIR
 import json
+#from..kaldi_helpers import task_run_demo
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 bp.register_blueprint(comp.bp)
@@ -26,6 +27,7 @@ def name():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['name'])
+            
 
     # return the state
     with open(file_path, 'r') as fin:
