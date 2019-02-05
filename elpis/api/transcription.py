@@ -11,7 +11,7 @@ bp = Blueprint("transcriptions", __name__, url_prefix="/transcriptions")
 bp.register_blueprint(comp.bp)
 
 
-@bp.route("/name")
+@bp.route("/name", methods=['GET', 'POST'])
 def name():
     print(request.json['name'])
     file_path = os.path.join(CURRENT_MODEL_DIR, 'name.txt')
@@ -24,7 +24,8 @@ def name():
     with open(file_path, 'r') as fin:
         return f'{{ "name": "{fin.read()}" }}'
 
-@bp.route("/date")
+
+@bp.route("/date", methods=['GET', 'POST'])
 def date():
     file_path = os.path.join(CURRENT_MODEL_DIR, 'date.txt')
     if request.method == 'POST':
@@ -36,7 +37,8 @@ def date():
     with open(file_path, 'r') as fin:
         return f'{{ "date": "{fin.read()}" }}'
 
-@bp.route("/usedModelName")
+
+@bp.route("/usedModelName", methods=['GET', 'POST'])
 def usedModelName():
     file_path = os.path.join(CURRENT_MODEL_DIR, 'usedModelName.txt')
     if request.method == 'POST':
@@ -48,7 +50,7 @@ def usedModelName():
     with open(file_path, 'r') as fin:
         return f'{{ "usedModelName": "{fin.read()}" }}'
 
-@bp.route("/results")
+@bp.route("/results", methods=['GET', 'POST'])
 def results():
     file_path = os.path.join(CURRENT_MODEL_DIR, 'results.txt')
     if request.method == 'POST':
@@ -60,7 +62,7 @@ def results():
     with open(file_path, 'r') as fin:
         return f'{{ "results": "{fin.read()}" }}'
 
-@bp.route("/audio")
+@bp.route("/audio", methods=['GET', 'POST'])
 def audio():
     # setup the path
     path = os.path.join(CURRENT_MODEL_DIR, 'data')

@@ -69,6 +69,10 @@ def transcription_files():
             print(f'file: {file}')
             print(f'file name: {file.filename}')
             file_names.append(file.filename)
+             # update the state name
+            with open(file_path, 'w') as fout:
+                fout.write(request.json['transcription'])
+
 
     # return just the received file names
     # and let the GUI append or overwrite
@@ -84,6 +88,9 @@ def pronunciation():
     if request.method == 'POST':
         file = request.files['file']
         print(f'file name: {file.filename}')
+         # update the state name
+        with open(file_path, 'w') as fout:
+            fout.write(request.json['pronunciation'])
 
     #     update the state name
     #     with open(file_path, 'w') as fout:
