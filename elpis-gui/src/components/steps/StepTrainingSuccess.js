@@ -30,43 +30,41 @@ class StepTrainingSuccess extends Component {
                                 { t('trainingModelSuccess.title') }
                             </Header>
 
-                            <Table celled padded>
+                            <p>
+                                { t('trainingModelSuccess.description') }
+                            </p>
+
+                            <Table celled padded sortable>
+                                <Table.Header>
+                                    <Table.HeaderCell>sort by Date</Table.HeaderCell>
+                                    <Table.HeaderCell>Name</Table.HeaderCell>
+                                    <Table.HeaderCell>WER</Table.HeaderCell>
+                                </Table.Header>
                                 <Table.Body>
                                     <Table.Row>
-                                        <Table.Cell>
-                                            <AccordionFluid title={ 'English-Indonesian 1-gram  WER:6 INS:2 SUB:1 DEL:3' } />
-                                        </Table.Cell>
+                                        <Table.Cell>2019 Jan 20</Table.Cell>
+                                        <Table.Cell>Abui 1-gram</Table.Cell>
+                                        <Table.Cell>WER:6 INS:2 SUB:1 DEL:3</Table.Cell>
                                     </Table.Row>
 
                                     <Table.Row>
-                                        <Table.Cell>
-                                            <AccordionFluid active title={ 'The one that just finished  WER:12 INS:3 SUB:X DEL:X' } />
-                                        </Table.Cell>
+                                        <Table.Cell>2019 Jan 18</Table.Cell>
+                                        <Table.Cell>The one that just finished</Table.Cell>
+                                        <Table.Cell>WER:12 INS:3 SUB:X DEL:X</Table.Cell>
                                     </Table.Row>
 
                                     <Table.Row>
-                                        <Table.Cell>
-                                            <AccordionFluid title={ 'English-Indonesian 3-gram  WER:X INS:X SUB:X DEL:X' } />
-                                        </Table.Cell>
+                                        <Table.Cell>2018 Dec 31</Table.Cell>
+                                        <Table.Cell>Abui 3-gram</Table.Cell>
+                                        <Table.Cell>WER:X INS:X SUB:X DEL:X</Table.Cell>
                                     </Table.Row>
 
                                     <Table.Row>
-                                        <Table.Cell>
-                                            <AccordionFluid title={ 'English-Indonesian 5-gram with Indonesian 12s  WER:X INS:X SUB:X DEL:X' } />
-                                        </Table.Cell>
+                                        <Table.Cell>2018 Nov 8</Table.Cell>
+                                        <Table.Cell>Abui 5-gram</Table.Cell>
+                                        <Table.Cell>WER:X INS:X SUB:X DEL:X</Table.Cell>
                                     </Table.Row>
 
-                                    <Table.Row>
-                                        <Table.Cell>
-                                            <AccordionFluid title={ 'Indonesian 1-gram  WER:X INS:X SUB:X DEL:X' } />
-                                        </Table.Cell>
-                                    </Table.Row>
-
-                                    <Table.Row>
-                                        <Table.Cell>
-                                            <AccordionFluid title={ 'Everything 3-gram with Indonesian 12s WER:X INS:X SUB:X DEL:X' } />
-                                        </Table.Cell>
-                                    </Table.Row>
                                 </Table.Body>
                             </Table>
 

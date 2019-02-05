@@ -67,6 +67,7 @@
     },
     "trainingModelSuccess": {
         "title": "Trained Model Success",
+        "description": "List of models that have been run here.",
         "downloadButton": "Download a bundle of the model, settings and information about training data",
         "downloadModalHeader": "Your files and settings are being compiled",
         "downloadModalContent": "Click Save on your browser's download dialog",
