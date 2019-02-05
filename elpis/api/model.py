@@ -3,18 +3,17 @@ from pathlib import Path
 from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
 from ..blueprint import Blueprint
-from . import comp
 from ..paths import CURRENT_MODEL_DIR
 import json
 
 bp = Blueprint("model", __name__, url_prefix="/model")
-bp.register_blueprint(comp.bp)
 
 
 @bp.route("/new", methods=['POST'])
 def new():
     # assuming that this would only be a POST?
     # this.models = state.Model()
+    # TODO
     return '{"status": "new model created"}'
 
 
