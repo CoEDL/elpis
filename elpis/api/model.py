@@ -81,14 +81,13 @@ def transcription_files():
 
 @bp.route("/pronunciation", methods=['POST'])
 def pronunciation():
-    file_path = os.path.join(CURRENT_MODEL_DIR, 'pronunciation.txt')
-
     # handle incoming data
     if request.method == 'POST':
         file = request.files['file']
+        file_path = os.path.join(CURRENT_MODEL_DIR, file.filename)
         print(f'file name: {file.filename}')
-         # update the state name
-        with open(file_path, 'w') as fout:
+
+        with open(file_path, 'wb') as fout:
             fout.write(file.read())
             fout.close()
 
