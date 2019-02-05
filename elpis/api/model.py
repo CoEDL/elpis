@@ -25,6 +25,7 @@ def name():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['name'])
+            fout.close()
 
     # return the state
     with open(file_path, 'r') as fin:
@@ -38,6 +39,7 @@ def date():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['date'])
+            fout.close()
 
     # return the state
     with open(file_path, 'r') as fin:
@@ -65,8 +67,10 @@ def transcription_files():
         uploaded_files = request.files.getlist("file")
         file_names = []
         for file in uploaded_files:
-            print(f'file: {file}')
-            print(f'file name: {file.filename}')
+            file_path = os.path.join(path, file.filename)
+            with open(file_path, 'wb') as fout:
+                fout.write(file.read())
+                fout.close()
             file_names.append(file.filename)
 
     # return just the received file names
@@ -85,15 +89,8 @@ def pronunciation():
         print(f'file name: {file.filename}')
          # update the state name
         with open(file_path, 'w') as fout:
-            fout.write(request.json['pronunciation'])
-
-    #     update the state name
-    #     with open(file_path, 'w') as fout:
-    #         fout.write(request.json['pronunciation'])
-
-    # return the state
-    # with open(file_path, 'r') as fin:
-    #     return f'{{ "pronunciation": "{fin.read()}" }}'
+            fout.write(file.read())
+            fout.close()
 
     return file.filename
 
