@@ -22,6 +22,13 @@ function getFileExtension(filename) {
 
 const model = (state = initialModelState, action) => {
     switch (action.type) {
+
+        case 'NEW_MODEL':
+            // get an id back from response?
+            // for now do nothing
+            return {
+                ...state
+            }
         case 'UPDATE_MODEL_NAME':
             return {
                 ...state, name: action.response.data.name

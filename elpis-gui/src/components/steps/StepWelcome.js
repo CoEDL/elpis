@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Grid, Button, Header, Container, Segment, } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
+import { newModel } from '../../redux/actions';
+import { connect } from 'react-redux';
 
 class StepWelcome extends Component {
+
+    handleNewModel = () => {
+        this.props.newModel();
+        this.props.history.push('/naming')
+    }
 
     render() {
         const { t } = this.props
@@ -19,7 +26,7 @@ class StepWelcome extends Component {
 
                     <Grid.Row centered>
                         <Segment>
-                            <Button as={Link} to="/naming">
+                            <Button onClick={this.handleNewModel}>
                                 {t('welcome.newModelButton')}
                             </Button>
                             <Button as={Link} to="/new-transcription">
@@ -47,5 +54,18 @@ class StepWelcome extends Component {
       }
 }
 
-// translate uses a namespace
-export default translate('common')(StepWelcome)
+
+const mapDispatchToProps = dispatch => ({
+    newModel: () => {
+        dispatch(newModel());
+    }
+})
+
+export default withRouter(
+    connect(
+        null,
+        mapDispatchToProps
+    )(
+        translate('common')(StepWelcome)
+    )
+);

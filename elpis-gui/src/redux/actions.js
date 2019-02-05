@@ -36,6 +36,7 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
+    newModel: response => ({ type: 'NEW_MODEL', response }),
     updateModelName: response => ({ type: 'UPDATE_MODEL_NAME', response }),
     updateModelDate: response => ({ type: 'UPDATE_MODEL_DATE', response }),
     updateModelSettings: response => ({ type: 'UPDATE_MODEL_SETTINGS', response }),
@@ -43,6 +44,11 @@ var successHandler = {
     // updateModelAdditionalWordFiles: response => ({ type: 'UPDATE_MODEL_ADDITIONAL_WORD_FILES', response }),
     updateModelPronunciationFile: response => ({ type: 'UPDATE_MODEL_PRONUNCIATION_FILE', response }),
     updateNewTranscriptionFile: response => ({ type: 'UPDATE_NEW_TRANSCRIPTION_FILE', response })
+}
+
+export const newModel = () => {
+    const url = baseUrl + '/api/model/new';
+    return postApi(url, null, 'newModel');
 }
 
 export const updateModelName = postData => {
@@ -67,13 +73,14 @@ export const updateModelPronunciationFile = postData => {
     return postApi(url, postData, 'updateModelPronunciationFile', headers);
 }
 
+// TODO: use /api/settings/settings
 export const updateModelSettings = postData => {
     const url = baseUrl + '/api/model/settings';
     console.log('postData', postData)
     return postApi(url, postData, 'updateModelSettings');
 }
 
-
+// TODO: use /api/transcription/new
 export const updateNewTranscriptionFile = postData => {
     // console.log('action got updateNewTranscriptionFile')
     // const url = "http://httpbin.org/post"
