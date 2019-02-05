@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
+import Dropzone from "react-dropzone";
+import { fromEvent } from "file-selector";
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
+import { updateNewTranscriptionFile } from '../../redux/actions';
+import { connect } from 'react-redux';
+import classNames from "classnames";
 
 class StepNewTranscription extends Component {
+
+    onDrop = (acceptedFiles, rejectedFiles) => {
+        console.log("files dropped:", acceptedFiles);
+        var formData = new FormData();
+        formData.append('file', acceptedFiles[0]);
+        this.props.updateNewTranscriptionFile(formData);
+    }
+
     render() {
         const { t } = this.props;
         return (
@@ -22,13 +35,30 @@ class StepNewTranscription extends Component {
                                 { t('newTranscription.title') }
                             </Header>
 
-                            <Segment placeholder>
-                                <Header icon>
-                                    <Icon name='file audio outline' />
-                                    { t('newTranscription.dropHint') }
-                                </Header>
-                                <Button primary>{ t('newTranscription.addAudioButton') }</Button>
-                            </Segment>
+
+                            <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
+                                { ({ getRootProps, getInputProps, isDragActive }) => {
+                                    return (
+                                        <div
+                                            { ...getRootProps() }
+                                            className={ classNames("dropzone", {
+                                                "dropzone_active": isDragActive
+                                            }) }
+                                        >
+                                            <input { ...getInputProps() } />
+
+                                            {
+                                                isDragActive ? (
+                                                    <p>{ t('newTranscription.dropFilesHintDragActive') } </p>
+                                                ) : (<p>{ t('newTranscription.dropFilesHint') }</p>)
+                                            }
+                                        </div>
+                                    );
+                                } }
+                            </Dropzone>
+
+                            newTranscriptionFile: {this.props.newTranscriptionFile}
+
 
                             <Header as='h1' type="text">{ t('newTranscription.chooseModelHeader') }</Header>
                             <Grid>
@@ -70,4 +100,17 @@ class StepNewTranscription extends Component {
         );
     }
 }
-export default translate('common')(StepNewTranscription)
+
+const mapStateToProps = state => {
+    return {
+        newTranscriptionFile: state.model.newTranscriptionFile
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    updateNewTranscriptionFile: postData => {
+        dispatch(updateNewTranscriptionFile(postData));
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepNewTranscription));

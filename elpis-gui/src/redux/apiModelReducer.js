@@ -11,7 +11,8 @@ const initialModelState = {
         beam: 10
     },
     date: null,
-    filesOverwrite: false
+    filesOverwrite: false,
+    newTranscriptionFile: ''
 }
 
 function getFileExtension(filename) {
@@ -70,6 +71,15 @@ const model = (state = initialModelState, action) => {
             return {
                 ...state,
                 pronunciationFile
+            }
+
+        case 'UPDATE_NEW_TRANSCRIPTION_FILE':
+            console.log("reducer got", action)
+            // TODO: will we put this into separate reducer ??
+            let newTranscriptionFile = action.response.data
+            return {
+                ...state,
+                newTranscriptionFile
             }
 
         case 'SET_FILES_OVERWRITE':

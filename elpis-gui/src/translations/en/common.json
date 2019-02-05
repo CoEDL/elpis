@@ -81,7 +81,8 @@
     },
     "newTranscription": {
         "title": "+ Transcribe some audio with an exisiting model",
-        "dropHint": "+ Drag and drop audio and transcription files here",
+        "dropFilesHint": "+ Drop audio file here",
+        "dropFilesHintDragActive": "+ Here here..",
         "addAudioButton": "+ Add Audio",
         "chooseModelHeader": "+ Choose a model",
         "nextButton": "+ Go"

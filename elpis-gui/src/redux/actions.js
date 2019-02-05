@@ -21,8 +21,10 @@ const postApi = (url, postData, successFunction, config=null) => {
     return dispatch => {
         axios.post(url, postData, config)
             .then((response) => {
+                console.log('success')
                 dispatch(successHandler[successFunction](response))
             }).catch((error) => {
+                console.log('error')
                 dispatch(errorHandler(error))
             })
     }
@@ -39,7 +41,8 @@ var successHandler = {
     updateModelSettings: response => ({ type: 'UPDATE_MODEL_SETTINGS', response }),
     updateModelTranscriptionFiles: response => ({ type: 'UPDATE_MODEL_TRANSCRIPTION_FILES', response }),
     // updateModelAdditionalWordFiles: response => ({ type: 'UPDATE_MODEL_ADDITIONAL_WORD_FILES', response }),
-    updateModelPronunciationFile: response => ({ type: 'UPDATE_MODEL_PRONUNCIATION_FILE', response })
+    updateModelPronunciationFile: response => ({ type: 'UPDATE_MODEL_PRONUNCIATION_FILE', response }),
+    updateNewTranscriptionFile: response => ({ type: 'UPDATE_NEW_TRANSCRIPTION_FILE', response })
 }
 
 export const updateModelName = postData => {
@@ -70,6 +73,14 @@ export const updateModelSettings = postData => {
     return postApi(url, postData, 'updateModelSettings');
 }
 
+
+export const updateNewTranscriptionFile = postData => {
+    // console.log('action got updateNewTranscriptionFile')
+    // const url = "http://httpbin.org/post"
+    const url = baseUrl + '/api/model/new-transcription/audio';
+    const headers = {headers: {'content-type': 'multipart/form-data'}}
+    return postApi(url, postData, 'updateNewTranscriptionFile', headers);
+}
 
 
 export const setCurrentStep = (urlParams) => ({ type: 'SET_CURRENT_STEP', urlParams })
