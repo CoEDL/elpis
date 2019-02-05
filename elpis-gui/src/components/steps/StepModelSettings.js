@@ -8,14 +8,6 @@ import { connect } from 'react-redux';
 import { updateModelSettings } from '../../redux/actions';
 
 class StepModelSettings extends Component {
-    state = {
-        settings: {
-            audio: null,
-            mfcc: null,
-            nGram: null,
-            beam: null
-        }
-    }
     handleAudioSetting = (e) => {
         const { settings, updateModelSettings } = this.props;
         const newSettings = {...settings, frequency:e.target.value}
