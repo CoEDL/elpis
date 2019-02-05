@@ -113,8 +113,6 @@ def settings():
 
     elif request.method == "GET":
         with open(file_path, 'r') as fin:
-            data = fin.read()
-            print(data)
-
+            data = json.load(fin)
         # state.settings.get_settings()
-        return '{"settings": "1"}'
+        return json.dumps(data)
