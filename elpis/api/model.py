@@ -97,12 +97,24 @@ def pronunciation():
 Settings Route
 """
 @bp.route("/settings", methods=("GET", "POST"))
-def settings(Model):
+def settings():
+    file_path = os.path.join(CURRENT_MODEL_DIR, 'settings.txt')
+
     if request.method == "POST":
-            # Add settings for model
-            state.add_settings(Settings)
-            return 200
+        # write settings to file
+        print(f'settings: {request.json["settings"]}')
+        with open(file_path, 'w') as fout:
+            fout.write(json.dumps(request.json['settings']))
+            fout.close()
+
+        # Add settings for model
+        # state.add_settings(Settings)
+        return json.dumps(request.json['settings'])
+
     elif request.method == "GET":
-        # Returns all model settings
-        state.settings.get_settings()
-        return 200
+        with open(file_path, 'r') as fin:
+            data = fin.read()
+            print(data)
+
+        # state.settings.get_settings()
+        return '{"settings": "1"}'
