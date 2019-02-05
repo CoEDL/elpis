@@ -3,19 +3,18 @@ from pathlib import Path
 from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
 from ..blueprint import Blueprint
-from . import comp
 from ..paths import CURRENT_MODEL_DIR
 import json
 #from..kaldi_helpers import task_run_demo
 
 bp = Blueprint("model", __name__, url_prefix="/model")
-bp.register_blueprint(comp.bp)
 
 
 @bp.route("/new", methods=['POST'])
 def new():
     # assuming that this would only be a POST?
     # this.models = state.Model()
+    # TODO
     return '{"status": "new model created"}'
 
 
@@ -27,8 +26,7 @@ def name():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['name'])
-            
-
+            fout.close()
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "name": "{fin.read()}" }}'
@@ -41,7 +39,7 @@ def date():
         # update the state name
         with open(file_path, 'w') as fout:
             fout.write(request.json['date'])
-
+            fout.close()
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "date": "{fin.read()}" }}'
@@ -68,8 +66,10 @@ def transcription_files():
         uploaded_files = request.files.getlist("file")
         file_names = []
         for file in uploaded_files:
-            print(f'file: {file}')
-            print(f'file name: {file.filename}')
+            file_path = os.path.join(path, file.filename)
+            with open(file_path, 'wb') as fout:
+                fout.write(file.read())
+                fout.close()
             file_names.append(file.filename)
 
     # return just the received file names
@@ -80,23 +80,15 @@ def transcription_files():
 
 @bp.route("/pronunciation", methods=['POST'])
 def pronunciation():
-    file_path = os.path.join(CURRENT_MODEL_DIR, 'pronunciation.txt')
-
     # handle incoming data
     if request.method == 'POST':
         file = request.files['file']
+        file_path = os.path.join(CURRENT_MODEL_DIR, file.filename)
         print(f'file name: {file.filename}')
-         # update the state name
-        with open(file_path, 'w') as fout:
-            fout.write(request.json['pronunciation'])
 
-    #     update the state name
-    #     with open(file_path, 'w') as fout:
-    #         fout.write(request.json['pronunciation'])
-
-    # return the state
-    # with open(file_path, 'r') as fin:
-    #     return f'{{ "pronunciation": "{fin.read()}" }}'
+        with open(file_path, 'wb') as fout:
+            fout.write(file.read())
+            fout.close()
 
     return file.filename
 
@@ -104,12 +96,22 @@ def pronunciation():
 Settings Route
 """
 @bp.route("/settings", methods=("GET", "POST"))
-def settings(Model):
+def settings():
+    file_path = os.path.join(CURRENT_MODEL_DIR, 'settings.txt')
+
     if request.method == "POST":
-            # Add settings for model
-            state.add_settings(Settings)
-            return 200
+        # write settings to file
+        print(f'settings: {request.json["settings"]}')
+        with open(file_path, 'w') as fout:
+            fout.write(json.dumps(request.json['settings']))
+            fout.close()
+
+        # Add settings for model
+        # state.add_settings(Settings)
+        return json.dumps(request.json['settings'])
+
     elif request.method == "GET":
-        # Returns all model settings
-        state.settings.get_settings()
-        return 200
+        with open(file_path, 'r') as fin:
+            data = json.load(fin)
+        # state.settings.get_settings()
+        return json.dumps(data)

@@ -3,12 +3,10 @@ from pathlib import Path
 from flask import Blueprint, redirect, request, url_for, escape
 from werkzeug.utils import secure_filename
 from ..blueprint import Blueprint
-from . import comp
 from ..paths import CURRENT_MODEL_DIR
 import json
 
-bp = Blueprint("transcriptions", __name__, url_prefix="/transcriptions")
-bp.register_blueprint(comp.bp)
+bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 
 
 @bp.route("/new", methods=['POST'])
