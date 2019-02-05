@@ -39,27 +39,27 @@ class StepModelTraining extends Component {
                                 </Message.Content>
                             </Message>
 
-                            <Card>
+                            <Card fluid>
                                 <Card.Content header={ t('trainingModel.settingsHeader') } />
                                 <Card.Content description={ settingDescription } />
                             </Card>
 
                             <Step.Group size='mini'>
-                                <Step>
+                                <Step active>
                                     <Icon name='info' size='tiny' />
                                     <Step.Content>
                                         <Step.Title>{ t('trainingModel.preparingAcousticHeader') }</Step.Title>
                                     </Step.Content>
                                 </Step>
 
-                                <Step active>
+                                <Step>
                                     <Icon name='info' size='tiny' />
                                     <Step.Content>
                                         <Step.Title>{ t('trainingModel.featuresExtractionHeader') }</Step.Title>
                                     </Step.Content>
                                 </Step>
 
-                                <Step disabled>
+                                <Step>
                                     <Icon name='info' size='tiny' />
                                     <Step.Content>
                                         <Step.Title>{ t('trainingModel.preparingLanguageDataHeader') }</Step.Title>
@@ -68,7 +68,7 @@ class StepModelTraining extends Component {
 
                             </Step.Group>
 
-                            <Card>
+                            <Card fluid>
                                 <Card.Content header={ t('trainingModel.logsHeader') } />
                                 <Card.Content description='gory output from Kaldi - but not interactive' />
                             </Card>
