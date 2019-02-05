@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
+import { Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
@@ -72,6 +72,8 @@ class StepModelTraining extends Component {
                                 <Card.Content header={ t('trainingModel.logsHeader') } />
                                 <Card.Content description='gory output from Kaldi - but not interactive' />
                             </Card>
+
+                            <Divider />
 
                             <Button as={ Link } to="/training-success">
                                 { t('trainingModel.nextButton') }

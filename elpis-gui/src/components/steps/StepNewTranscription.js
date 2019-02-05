@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
+import { Divider, Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
 import StepBranding from './StepBranding';
@@ -87,6 +87,8 @@ class StepNewTranscription extends Component {
                                     </List>
                                 </Grid.Column>
                             </Grid>
+
+                            <Divider />
 
                             <Button type='submit' as={ Link } to="/transcription-results">
                                 { t('newTranscription.nextButton') }

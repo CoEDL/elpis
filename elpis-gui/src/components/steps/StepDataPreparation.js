@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, List, Button} from 'semantic-ui-react';
+import { Divider, Grid, Header, Segment, List, Button} from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
@@ -51,6 +51,7 @@ class StepDataPreparation extends Component {
                                             </List>
                                         </Grid.Column>
                                     </Grid>
+                                    <Divider />
                                     <Button type='submit' as={Link} to="/build-pronunciation-dictionary">{t('dataPreparation.nextButton')}</Button>
                                 </Grid.Column>
                         </Grid>

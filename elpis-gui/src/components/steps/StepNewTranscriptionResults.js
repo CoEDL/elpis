@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Card, Button } from 'semantic-ui-react';
+import { Divider, Grid, Header, Segment, Card, Button } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
@@ -29,15 +29,17 @@ class StepNewTranscriptionResults extends Component {
                             <p>{ t('newTranscriptionResults.usingModel', { modelName }) } </p>
                             <p>{ t('newTranscriptionResults.usingAudio', { audioName }) } </p>
 
-                            <Card>
+                            <Card fluid>
                                 <Card.Content header={ t('newTranscriptionResults.errorLogHeader') } />
                                 <Card.Content description='Were there any errors? Just output the log, nothing fancy' />
                             </Card>
 
-                            <Card>
+                            <Card fluid>
                                 <Card.Content header={ t('newTranscriptionResults.resultsHeader') } />
                                 <Card.Content description='Blah Blah Blah Blah Blah' />
                             </Card>
+
+                            <Divider />
 
                             <Button as={ Link } to="/">
                                 { t('newTranscriptionResults.downloadElanButton') }

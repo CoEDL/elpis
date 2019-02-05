@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
+import { Divider, Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import AccordionFluid from '../SemanticsComponents/AccordionFluid';
@@ -40,7 +40,7 @@ class StepTrainingSuccess extends Component {
 
                                     <Table.Row>
                                         <Table.Cell>
-                                            <AccordionFluid title={ 'The one that just finished  WER:12 INS:3 SUB:X DEL:X' } />
+                                            <AccordionFluid active title={ 'The one that just finished  WER:12 INS:3 SUB:X DEL:X' } />
                                         </Table.Cell>
                                     </Table.Row>
 
@@ -70,6 +70,7 @@ class StepTrainingSuccess extends Component {
                                 </Table.Body>
                             </Table>
 
+                            <Divider />
 
                             <Modal
                                 trigger={ <Button>{ t('trainingModelSuccess.downloadButton') }</Button> }
@@ -91,6 +92,8 @@ class StepTrainingSuccess extends Component {
                                     </Button>
                                 </Modal.Actions>
                             </Modal>
+
+                            <Divider />
 
                             <Button as={ Link } to="/new-transcription">
                                 { t('trainingModelSuccess.newTranscribeButton') }

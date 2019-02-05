@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Form, Button } from 'semantic-ui-react';
+import { Divider, Grid, Header, Segment, Form, Button } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
@@ -68,6 +68,8 @@ class StepModelSettings extends Component {
                                 </Form.Field>
 
                             </Form>
+
+                            <Divider />
 
                             <Button as={ Link } to="/model-training">
                                 { t('modelSettings.nextButton') }
