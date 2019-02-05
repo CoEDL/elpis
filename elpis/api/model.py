@@ -14,7 +14,7 @@ bp.register_blueprint(comp.bp)
 @bp.route("/new", methods=['POST'])
 def new():
     # assuming that this would only be a POST?
-    this.models = state.Model()
+    # this.models = state.Model()
     return '{"status": "new model created"}'
 
 
