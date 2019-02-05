@@ -21,22 +21,22 @@ class StepDataPreparation extends Component {
                                     <h2>{t('dataPreparation.header')}</h2>
                                     <p>{t('dataPreparation.bannerMessage')}</p>
                                     <p>{t('dataPreparation.bannerMessageDetailed')}</p>
-                                   <Grid>
-                                        <Grid.Column width={5}>
+                                   <Grid columns={2}>
+                                        <Grid.Column>
                                         <Header as='h1'>{t('dataPreparation.wordlistHeader')}</Header>
                                             <List>
                                                 <List.Item>
-                                                    <List.Content>a</List.Content>
+                                                    <List.Content>amakaang</List.Content>
                                                 </List.Item>
                                                 <List.Item>
-                                                    <List.Content>alphabet</List.Content>
+                                                    <List.Content>kaai</List.Content>
                                                 </List.Item>
                                                 <List.Item>
-                                                    <List.Content>Am</List.Content>
+                                                    <List.Content>muila</List.Content>
                                                 </List.Item>
                                             </List>
                                         </Grid.Column>
-                                        <Grid.Column width={5}>
+                                        <Grid.Column>
                                             <Header as='h1'>{t('dataPreparation.frequencyHeader')}</Header>
                                             <List>
                                                 <List.Item>
