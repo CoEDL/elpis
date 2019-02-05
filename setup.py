@@ -27,7 +27,7 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='elpis',
-    version='0.90',
+    version='0.91',
     packages=find_packages(),
     url='https://github.com/CoEDL/elpis',
     install_requires=requirements,

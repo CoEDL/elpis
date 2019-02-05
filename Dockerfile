@@ -135,6 +135,8 @@ WORKDIR /kaldi-helpers
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 RUN git pull
 
-RUN export LC_ALL=C.UTF-8 && LANG=C.UTF-8
+RUN echo "export LC_ALL=C.UTF-8" >> ~/.bashrc
+RUN echo "export LANG=C.UTF-8" >> ~/.bashrc
 
-EXPOSE 5000
+EXPOSE 5000:5000
+EXPOSE
