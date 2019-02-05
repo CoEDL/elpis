@@ -63,29 +63,19 @@ def results():
 @bp.route("/audio", methods=['GET', 'POST'])
 def audio():
     # setup the path
-    path = os.path.join(CURRENT_MODEL_DIR, 'data')
+    path = os.path.join(CURRENT_MODEL_DIR, 'current_transcription')
     if not os.path.exists(path):
         os.mkdir(path)
 
     # handle incoming data
     if request.method == 'POST':
 
-        # the request includes this filesOverwrite property
-        # use this to determine whether received files are
-        # appended to input data or overwrite input data
-        # watch out for duplicate files if not overwriting!
+        file = request.files['file']
+        file_path = os.path.join(CURRENT_MODEL_DIR, file.filename)
+        print(f'file name: {file.filename}')
 
-        filesOverwrite = request.form["filesOverwrite"]
-        print('filesOverwrite:', filesOverwrite)
+        with open(file_path, 'wb') as fout:
+            fout.write(file.read())
+            fout.close()
 
-        uploaded_files = request.files.getlist("file")
-        file_names = []
-        for file in uploaded_files:
-            print(f'file: {file}')
-            print(f'file name: {file.filename}')
-            file_names.append(file.filename)
-
-    # return just the received file names
-    # and let the GUI append or overwrite
-    # or else, send back the filenames of all input files
-    return json.dumps(file_names)
+    return file.filename
