@@ -84,7 +84,7 @@ export const updateModelSettings = postData => {
 export const updateNewTranscriptionFile = postData => {
     // console.log('action got updateNewTranscriptionFile')
     // const url = "http://httpbin.org/post"
-    const url = baseUrl + '/api/model/new-transcription/audio';
+    const url = baseUrl + '/api/transcription/audio';
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'updateNewTranscriptionFile', headers);
 }
