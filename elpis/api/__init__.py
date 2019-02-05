@@ -12,7 +12,7 @@ from flask import Flask,redirect, url_for
 
 @bp.route("/re")
 def re():
-    return redirect(url_for('elpis.api.model.new'))
+    return redirect(url_for('elpis.api.transcription.name'))
 
 @bp.route("/em")
 def em():
