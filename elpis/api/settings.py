@@ -17,7 +17,7 @@ Settings Route
 def settings(Model):
     if request.method == "POST":
             # Add settings for model
-            state.add_settings(Settings) 
+            state.add_settings(Settings)
             return 200
     elif request.method == "GET":
         # Returns all model settings

@@ -11,7 +11,7 @@ bp = Blueprint("model", __name__, url_prefix="/model")
 bp.register_blueprint(comp.bp)
 
 
-@bp.route("/new")
+@bp.route("/new", methods=['POST'])
 def new():
     # assuming that this would only be a POST?
     this.models = state.Model()
@@ -95,19 +95,14 @@ def pronunciation():
 
     return file.filename
 
-@bp.route("/settings", methods=['GET', 'POST'])
-def settings():
-    file_path = os.path.join(CURRENT_MODEL_DIR, 'settings.txt')
+
+
+@bp.route("/new-transcription/audio", methods=['POST'])
+def newTranscriptionAudio():
+    # handle incoming data
     if request.method == 'POST':
-        settings = request.json['settings']
-        print('settings', settings)
+        file = request.files['file']
+        print(f'file name: {file.filename}')
 
-    #     update the state name
-    #     with open(file_path, 'w') as fout:
-    #         fout.write(setting)
+    return file.filename
 
-    # return the state
-    # with open(file_path, 'r') as fin:
-    #     return f'{fin.read()}'
-
-    return json.dumps(settings)
