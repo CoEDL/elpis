@@ -12,10 +12,10 @@ class StepModelTraining extends Component {
 
         // TODO: display as list rather than runon line
         const settingDescription = [
-            t('modelSettings.audioLabel') + settings.frequency,
-            t('modelSettings.mfccLabel')  + settings.mfcc,
-            t('modelSettings.nGramLabel') + settings.ngram,
-            t('modelSettings.beamLabel')  + settings.beam
+            t('modelSettings.audioLabel') + ' ' + settings.frequency,
+            t('modelSettings.mfccLabel')  + ' ' + settings.mfcc,
+            t('modelSettings.nGramLabel') + ' ' + settings.ngram,
+            t('modelSettings.beamLabel')  + ' ' + settings.beam
         ].join(' ~ ');
 
         return (
