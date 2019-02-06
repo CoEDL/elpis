@@ -89,14 +89,17 @@ def pronunciation():
     # handle incoming data
     if request.method == 'POST':
         file = request.files['file']
-        file_path = os.path.join(CURRENT_MODEL_DIR, file.filename)
+        # file_path = os.path.join(CURRENT_MODEL_DIR, file.filename)
+        # TODO: remove ^
+        file_path = os.path.join(CURRENT_MODEL_DIR, "letter_to_sound.txt")
         print(f'file name: {file.filename}')
 
         with open(file_path, 'wb') as fout:
             fout.write(file.read())
             fout.close()
 
-    return file.filename
+    with open(file_path, 'rb') as fin:
+        return fin.read()
 
 """
 Settings Route
