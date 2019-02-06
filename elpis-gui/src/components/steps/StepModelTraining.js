@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
+import { Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 class StepModelTraining extends Component {
     render() {
-        const { t, settings } = this.props;
+        const { t, settings, apiWaiting } = this.props;
 
         // TODO: display as list rather than runon line
         const settingDescription = [
@@ -20,6 +20,10 @@ class StepModelTraining extends Component {
 
         return (
             <div>
+<Dimmer active={apiWaiting.status}>
+<Loader size="massive"  content={"waiting for response from " + apiWaiting.message} />
+</Dimmer>
+
                 <StepBranding />
                 <Segment>
                     <Grid centered>
@@ -94,7 +98,8 @@ class StepModelTraining extends Component {
 
 const mapStateToProps = state => {
     return {
-        settings: state.model.settings
+        settings: state.model.settings,
+        apiWaiting: state.model.apiWaiting
     }
 }
 export default connect(mapStateToProps)(translate('common')(StepModelTraining));

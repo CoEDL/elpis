@@ -12,7 +12,8 @@ const initialModelState = {
     },
     date: null,
     filesOverwrite: false,
-    newTranscriptionFile: ''
+    newTranscriptionFile: '',
+    apiWaiting: {status: false, message: 'something'}
 }
 
 function getFileExtension(filename) {
