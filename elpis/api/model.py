@@ -7,6 +7,7 @@ from ..paths import CURRENT_MODEL_DIR
 import json
 import subprocess
 from ..kaldi_helpers import run_settings_task_demo
+import subprocess
 
 #from..kaldi_helpers import task_run_demo
 
@@ -125,3 +126,12 @@ def settings():
             data = json.load(fin)
         # state.settings.get_settings()
         return json.dumps(data)
+
+bp_kaldi = Blueprint("kaldi", __name__, url_prefix="/kaldi")
+
+@bp_kaldi.route('/pronunciation')
+def run_elan():
+    subprocess.run(['rm', '-rf', '/kaldi-helpers/working_dir/input/infer'], check=True)
+    subprocess.run(['mkdir', '-p', '/kaldi-helpers/working_dir/input'], check=True) # ready demo
+    subprocess.run(['task', '_run-elan'], check=True)
+    return 'oh'
