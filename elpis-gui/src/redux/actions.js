@@ -93,3 +93,5 @@ export const updateNewTranscriptionFile = postData => {
 export const setCurrentStep = (urlParams) => ({ type: 'SET_CURRENT_STEP', urlParams })
 
 export const setFilesOverwrite = (status) => ({ type: 'SET_FILES_OVERWRITE', status })
+
+export const triggerApiWaiting = (message) => ({ type: 'TRIGGER_API_WAITING', message })

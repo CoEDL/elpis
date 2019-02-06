@@ -24,11 +24,18 @@ function getFileExtension(filename) {
 const model = (state = initialModelState, action) => {
     switch (action.type) {
 
+        case 'TRIGGER_API_WAITING':
+            return {
+                ...state,
+                apiWaiting: {status: true, message: action.message}
+            }
+
         case 'NEW_MODEL':
             // get an id back from response?
             // for now do nothing
             return {
-                ...state
+                ...state,
+                apiWaiting: {...state.apiWaiting, status: false}
             }
         case 'UPDATE_MODEL_NAME':
             return {

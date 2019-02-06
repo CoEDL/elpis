@@ -5,12 +5,16 @@ import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
 import { translate } from 'react-i18next';
 import { connect } from 'react-redux';
+import { triggerApiWaiting } from '../../redux/actions';
 
 class StepModelTraining extends Component {
+    componentDidMount = () => {
+        // this.props.triggerApiWaiting('now training')
+    }
     render() {
         const { t, settings, apiWaiting } = this.props;
 
-        // TODO: display as list rather than runon line
+        // TODO: display as list rather than run-on line
         const settingDescription = [
             t('modelSettings.audioLabel') + ' ' + settings.frequency,
             t('modelSettings.mfccLabel')  + ' ' + settings.mfcc,
@@ -18,11 +22,12 @@ class StepModelTraining extends Component {
             t('modelSettings.beamLabel')  + ' ' + settings.beam
         ].join(' ~ ');
 
+
         return (
             <div>
-<Dimmer active={apiWaiting.status}>
-<Loader size="massive"  content={"waiting for response from " + apiWaiting.message} />
-</Dimmer>
+                <Dimmer active={apiWaiting.status}>
+                    <Loader size="massive"  content={apiWaiting.message} />
+                </Dimmer>
 
                 <StepBranding />
                 <Segment>
@@ -102,4 +107,9 @@ const mapStateToProps = state => {
         apiWaiting: state.model.apiWaiting
     }
 }
-export default connect(mapStateToProps)(translate('common')(StepModelTraining));
+const mapDispatchToProps = dispatch => ({
+    triggerApiWaiting: message => {
+        dispatch(triggerApiWaiting(message))
+    }
+})
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepModelTraining));
