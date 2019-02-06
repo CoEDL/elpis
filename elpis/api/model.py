@@ -135,3 +135,6 @@ def run_elan():
     subprocess.run(['mkdir', '-p', '/kaldi-helpers/working_dir/input'], check=True) # ready demo
     subprocess.run(['task', '_run-elan'], check=True)
     return 'oh'
+
+
+bp.register_blueprint(bp_kaldi)
