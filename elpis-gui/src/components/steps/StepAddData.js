@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Checkbox, Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
 import StepInformer, { NewModelInstructions } from '../StepInformer';
@@ -7,12 +7,19 @@ import FileUpload from '../FileuploadComponents/FileUpload';
 import { translate } from 'react-i18next';
 import { connect } from 'react-redux';
 import { setFilesOverwrite } from '../../redux/actions';
+import { triggerApiWaiting } from '../../redux/actions';
 
 class StepAddData extends Component {
 
     handleFilesOverwriteToggle = () => {
         this.props.setFilesOverwrite()
     }
+
+    handleNextButton = () => {
+        this.props.triggerApiWaiting('data preparation')
+        this.props.history.push('/data-preparation')
+    }
+
     render() {
 
         const { t, audioFiles, transcriptionFiles, additionalTextFiles, filesOverwrite } = this.props;
@@ -90,7 +97,7 @@ class StepAddData extends Component {
                             </Grid>
 
                             <Grid container>
-                                <Button type='submit' as={ Link } to="/data-preparation">
+                                <Button type='submit' onClick={this.handleNextButton}>
                                     { t('addData.nextButton') }
                                 </Button>
                                 <Button type='submit' as={ Link } to="/data-preparation-error" icon>
@@ -122,4 +129,11 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepAddData));
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(
+        translate('common')(StepAddData)
+    )
+);
