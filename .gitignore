@@ -19,10 +19,12 @@ models/
 transcriptions/
 current_model/
 current_transcription/
+log.txt
 
 #testing
 name_file
 uploaded_files/
+abui_toy_corpus/
 
 # mac files
 .DS_Store
