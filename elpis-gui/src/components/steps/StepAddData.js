@@ -126,6 +126,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     setFilesOverwrite: () => {
         dispatch(setFilesOverwrite());
+    },
+    triggerApiWaiting: message => {
+        dispatch(triggerApiWaiting(message));
     }
 })
 
