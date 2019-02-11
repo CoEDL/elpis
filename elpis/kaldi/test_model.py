@@ -5,6 +5,10 @@ import hashlib
 from .. import paths
 from . import model, KaldiError
 
+##############################################################################
+#                              Utility functions                             #
+##############################################################################
+
 def _clear_models_dir():
     # empty the models directory
     if os.path.exists(paths.MODELS_DIR):
@@ -17,6 +21,11 @@ def _clear_model_dir():
         shutil.rmtree(paths.CURRENT_MODEL_DIR)
     os.mkdir(paths.CURRENT_MODEL_DIR)
 
+def _clear_kaldi_model_dir():
+    if os.path.exists(paths.kaldi_helpers.INPUT_PATH):
+        shutil.rmtree(paths.kaldi_helpers.INPUT_PATH)
+    os.mkdir(paths.kaldi_helpers.INPUT_PATH)
+
 def _touch(path):
     contents = ''
     if os.path.exists(path):
@@ -25,10 +34,30 @@ def _touch(path):
     with open(path, 'w') as fout:
         fout.write(contents)
 
+##############################################################################
+#                           Let the testing begin!                           #
+##############################################################################
+
+def test__sync_to_kaldi():
+    _clear_model_dir()
+    _clear_kaldi_model_dir()
+    _touch(f'{paths.CURRENT_MODEL_DIR}/sync')
+    assert not os.path.exists(f'{paths.kaldi_helpers.INPUT_PATH}/sync')
+    model._sync_to_kaldi()
+    assert os.path.exists(f'{paths.kaldi_helpers.INPUT_PATH}/sync')
+
+def test__sync_to_local():
+    _clear_model_dir()
+    _clear_kaldi_model_dir()
+    _touch(f'{paths.kaldi_helpers.INPUT_PATH}/sync')
+    assert not os.path.exists(f'{paths.CURRENT_MODEL_DIR}/sync')
+    model._sync_to_local()
+    assert os.path.exists(f'{paths.CURRENT_MODEL_DIR}/sync')
+
 def test__get_status_no_dir():
     # remove model dir
-    if os.path.exists(paths.MODELS_DIR):
-        shutil.rmtree(paths.MODELS_DIR)
+    if os.path.exists(paths.CURRENT_MODEL_DIR):
+        shutil.rmtree(paths.CURRENT_MODEL_DIR)
     assert model._get_status(paths.CURRENT_MODEL_DIR) == 'No Model'
 
 def test__get_status_empty_dir():
@@ -118,4 +147,35 @@ def test_new_invalid_name():
     with pytest.raises(KaldiError) as error:
         model.new('')
     assert 'invalid model name: \'\'' == str(error.value)
+
+def test_new_with_sync():
+    _clear_model_dir()
+    _clear_kaldi_model_dir()
+    model.new('nildocaafiat')
+    namefile = f'{paths.kaldi_helpers.INPUT_PATH}/name.txt'
+    assert os.path.exists(namefile)
+    with open(namefile, 'r') as fin:
+        assert fin.read() == 'nildocaafiat'
+
+def test_get_name():
+    _clear_model_dir()
+    _clear_kaldi_model_dir()
+    model.new('nildocaafiat')
+    assert model.get_name() == 'nildocaafiat'
+
+def test_get_date():
+    _clear_model_dir()
+    _clear_kaldi_model_dir()
+    model.new('nildocaafiat')
+    assert model.get_date() > 1
+
+def test_get_hash():
+    _clear_model_dir()
+    _clear_kaldi_model_dir()
+    model.new('nildocaafiat')
+    allowed_chars = set('abcdefABCDEF0123456789')
+    assert set(model.get_hash()).issubset(allowed_chars)
+
+
+
 

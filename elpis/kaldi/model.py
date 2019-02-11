@@ -7,12 +7,23 @@ from typing import List
 from . import step, KaldiError
 from .. import paths
 
+# When synchronizing between the local model (current_model/) and the kaldi
+# location (/kaldi-helpers/working_dir/input), be sure to use the correct
+# sync_to_* function. Functions that make changes should only do so in either
+# the local location or the kaldi location but not both. That way changes can
+# be guarantee to carry to the other location cleanly. If modifications are
+# made in the local location, then use _sync_to_kaldi, and vise versa.
 def _sync_to_kaldi():
     """Copy files from local model to kaldi helpers"""
-    pass
+    if os.path.exists(paths.kaldi_helpers.INPUT_PATH):
+        shutil.rmtree(paths.kaldi_helpers.INPUT_PATH)
+    shutil.copytree(paths.CURRENT_MODEL_DIR, paths.kaldi_helpers.INPUT_PATH)
 
 def _sync_to_local():
     """Copy files from kaldi helpers to local model"""
+    if os.path.exists(paths.CURRENT_MODEL_DIR):
+        shutil.rmtree(paths.CURRENT_MODEL_DIR)
+    shutil.copytree(paths.kaldi_helpers.INPUT_PATH, paths.CURRENT_MODEL_DIR)
     pass
 
 def get_list() -> List[str]:
@@ -56,6 +67,12 @@ def get_info_of(name):
     # TODO: unimplemented
     return {}
 
+def _check_name(name):
+    if name in get_list():
+        raise KaldiError(f'model already exists with the name: \'{name}\'')
+    if name == '':
+        raise KaldiError('invalid model name: \'\'')
+
 @step()
 def new(name):
     """
@@ -74,10 +91,7 @@ def new(name):
     :raise KaldiError: if there is an attempts to create a model that already
     exists or if the name is invalid.
     """
-    if name in get_list():
-        raise KaldiError(f'model already exists with the name: \'{name}\'')
-    if name == '':
-        raise KaldiError('invalid model name: \'\'')
+    _check_name(name)
     if os.path.exists(paths.CURRENT_MODEL_DIR):
         shutil.rmtree(paths.CURRENT_MODEL_DIR)
     os.mkdir(paths.CURRENT_MODEL_DIR)
@@ -90,16 +104,33 @@ def new(name):
     with open(f'{paths.CURRENT_MODEL_DIR}/hash.txt', 'w') as fout:
         hashname = hashlib.md5(bytes(str(date), 'utf-8')).hexdigest()
         fout.write(hashname)
-    # TODO sync to the kaldi helpers directory
+    _sync_to_kaldi()
 
 def get_name():
-    # TODO: unimplemented
+    if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/name.txt'):
+        with open(f'{paths.CURRENT_MODEL_DIR}/name.txt', 'r') as fin:
+            return fin.read()
     return None
 
+def change_name(name):
+    if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/name.txt'):
+        _check_name(name)
+        with open(f'{paths.CURRENT_MODEL_DIR}/name.txt', 'w') as fout:
+            fout.write(name)
+    else:
+        raise KaldiError('Need to create a model before changing the name')
+
+
 def get_date():
+    if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/date.txt'):
+        with open(f'{paths.CURRENT_MODEL_DIR}/date.txt', 'r') as fin:
+            return float(fin.read())
     return None
 
 def get_hash():
+    if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/hash.txt'):
+        with open(f'{paths.CURRENT_MODEL_DIR}/hash.txt', 'r') as fin:
+            return fin.read()
     return None
 
 @step(deps=[new])

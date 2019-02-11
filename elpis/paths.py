@@ -18,3 +18,20 @@ for directory in [
 ]:
     if not os.path.exists(directory):
         os.mkdir(directory)
+
+class kaldi_helpers:
+    KALDI_ROOT = "/kaldi"
+    HELPERS_PATH = "/kaldi-helpers"
+    KALDI_TEMPLATES = "/kaldi-helpers/resources/kaldi_templates"
+    INPUT_SCRIPTS_PATH = "kaldi_helpers/input_scripts"
+    OUTPUT_SCRIPTS_PATH = "kaldi_helpers/output_scripts"
+    INFERENCE_SCRIPTS_PATH = "kaldi_helpers/inference_scripts"
+    INPUT_PATH = "/kaldi-helpers/working_dir/input"
+    KALDI_OUTPUT_PATH = "working_dir/input/output"
+    WORKING_OUTPUT_PATH = "working_dir/output"
+    CORPUS_PATH = "working_dir/input/data"
+    INFER_PATH = "working_dir/input/infer"
+    CLEANED_FILTERED_DATA = "cleaned_filtered.json"
+    LETTER_TO_SOUND_PATH = "working_dir/input/config/letter_to_sound.txt"
+    SILENCE_PHONES_PATH = "working_dir/input/config/silence_phones.txt"
+    OPTIONAL_SILENCE_PHONES_PATH = "working_dir/input/config/optional_silence.txt"
