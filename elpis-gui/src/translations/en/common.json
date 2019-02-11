@@ -3,7 +3,8 @@
         "title": "Elpis",
         "intro": "This is fun. {{passInSomething}}",
         "newModelButton": "Build New Model",
-        "newTranscriptionButton": "New Transcription"
+        "newTranscriptionButton": "New Transcription",
+        "stepPlaceholder": "step descriptions"
     },
     "naming": {
         "title": "Name the model",
