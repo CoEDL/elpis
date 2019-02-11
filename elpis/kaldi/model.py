@@ -46,7 +46,7 @@ def _get_status(directory):
             )
     if no_model(): return 'No Model'
     elif not complete_model(): return 'Incomplete Model'
-    else: return 'Untrained model'
+    else: return 'Untrained Model'
 
 def get_status():
     # TODO: unimplemented
