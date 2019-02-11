@@ -17,6 +17,64 @@ def _clear_model_dir():
         shutil.rmtree(paths.CURRENT_MODEL_DIR)
     os.mkdir(paths.CURRENT_MODEL_DIR)
 
+def _touch(path):
+    contents = ''
+    if os.path.exists(path):
+        with open(path, 'r') as fin:
+            contents = fin.read()
+    with open(path, 'w') as fout:
+        fout.write(contents)
+
+def test__get_status_no_dir():
+    # remove model dir
+    if os.path.exists(paths.MODELS_DIR):
+        shutil.rmtree(paths.MODELS_DIR)
+    assert model._get_status(paths.CURRENT_MODEL_DIR) == 'No Model'
+
+def test__get_status_empty_dir():
+    # empty model dir
+    _clear_model_dir()
+    assert model._get_status(paths.CURRENT_MODEL_DIR) == 'No Model'
+
+def test__get_status_after_new_model():
+    _clear_model_dir()
+    _touch(f'{paths.CURRENT_MODEL_DIR}/name.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/date.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/hash.txt')
+    assert model._get_status(paths.CURRENT_MODEL_DIR) == 'Incomplete Model'
+
+def test__get_status_after_add_data():
+    _clear_model_dir()
+    _touch(f'{paths.CURRENT_MODEL_DIR}/name.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/date.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/hash.txt')
+    os.mkdir(f'{paths.CURRENT_MODEL_DIR}/data')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/data/f1.eaf')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/data/f1.wav')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/data/f2.eaf')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/data/f2.wav')
+    assert model._get_status(paths.CURRENT_MODEL_DIR) == 'Incomplete Model'
+
+def test__get_status_after_load_pron_dict():
+    _clear_model_dir()
+    _touch(f'{paths.CURRENT_MODEL_DIR}/name.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/date.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/hash.txt')
+    os.mkdir(f'{paths.CURRENT_MODEL_DIR}/data')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/data/f1.eaf')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/data/f1.wav')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/data/f2.eaf')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/data/f2.wav')
+    os.mkdir(f'{paths.CURRENT_MODEL_DIR}/config')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/config/letter_to_sound.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/config/optional_silence.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/config/silence_phones.txt')
+    assert model._get_status(paths.CURRENT_MODEL_DIR) == 'Untrained Model'
+
+def test__get_status_after_load_pron_dict_and_get_word_list():
+    # TODO same as test__get_status_after_load_pron_dict but with the word list tiles as well -> 'Untrained Model'
+    pass
+
 def test_get_list():
     _clear_models_dir()
     # add stub models
@@ -60,3 +118,4 @@ def test_new_invalid_name():
     with pytest.raises(KaldiError) as error:
         model.new('')
     assert 'invalid model name: \'\'' == str(error.value)
+

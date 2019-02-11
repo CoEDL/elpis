@@ -7,6 +7,14 @@ from typing import List
 from . import step, KaldiError
 from .. import paths
 
+def _sync_to_kaldi():
+    """Copy files from local model to kaldi helpers"""
+    pass
+
+def _sync_to_local():
+    """Copy files from kaldi helpers to local model"""
+    pass
+
 def get_list() -> List[str]:
     """Returns the list of model names that have been saved. Models are saved
     in the paths.MODELS_DIR directory.
@@ -17,9 +25,32 @@ def get_list() -> List[str]:
             names.append(fin.read())
     return names
 
+def _get_status(directory):
+    def no_model():
+        return not os.path.exists(directory) or (
+            len(os.listdir(directory)) == 0
+        )
+    def complete_model():
+        return sorted(os.listdir(directory)) == sorted([
+                'data',
+                'config',
+                'name.txt',
+                'date.txt',
+                'hash.txt',
+            ]) and (
+                len(os.listdir(f'{directory}/data')) != 0 and sorted([
+                    'letter_to_sound.txt',
+                    'optional_silence.txt',
+                    'silence_phones.txt'
+                ]) == sorted(os.listdir(f'{directory}/config'))
+            )
+    if no_model(): return 'No Model'
+    elif not complete_model(): return 'Incomplete Model'
+    else: return 'Untrained model'
+
 def get_status():
     # TODO: unimplemented
-    return 'No Model'
+    return None
 
 def get_info_of(name):
     # TODO: unimplemented
@@ -59,6 +90,7 @@ def new(name):
     with open(f'{paths.CURRENT_MODEL_DIR}/hash.txt', 'w') as fout:
         hashname = hashlib.md5(bytes(str(date), 'utf-8')).hexdigest()
         fout.write(hashname)
+    # TODO sync to the kaldi helpers directory
 
 def get_name():
     # TODO: unimplemented
