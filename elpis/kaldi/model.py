@@ -1,6 +1,9 @@
 import os
 import hashlib
+import time
+import shutil
 from typing import List
+
 from . import step, KaldiError
 from .. import paths
 
@@ -34,23 +37,37 @@ def new(name):
     The filesystem state after running this command is:
     current_model/
         name.txt
+        date.txt
+        hash.txt
     
     :raise KaldiError: if there is an attempts to create a model that already
     exists or if the name is invalid.
     """
-    print('about to rock your world')
     if name in get_list():
         raise KaldiError(f'model already exists with the name: \'{name}\'')
     if name == '':
         raise KaldiError('invalid model name: \'\'')
-    directory = hashlib.md5(bytes(name, 'utf-8')).hexdigest()
-    os.mkdir(f'{paths.MODELS_DIR}/{directory}')
-    with open(f'{paths.MODELS_DIR}/{directory}/name.txt', 'w') as fout:
+    if os.path.exists(paths.CURRENT_MODEL_DIR):
+        shutil.rmtree(paths.CURRENT_MODEL_DIR)
+    os.mkdir(paths.CURRENT_MODEL_DIR)
+    # write state files
+    date = time.time()
+    with open(f'{paths.CURRENT_MODEL_DIR}/name.txt', 'w') as fout:
         fout.write(name)
-    print("did it")
+    with open(f'{paths.CURRENT_MODEL_DIR}/date.txt', 'w') as fout:
+        fout.write(str(date))
+    with open(f'{paths.CURRENT_MODEL_DIR}/hash.txt', 'w') as fout:
+        hashname = hashlib.md5(bytes(str(date), 'utf-8')).hexdigest()
+        fout.write(hashname)
 
 def get_name():
     # TODO: unimplemented
+    return None
+
+def get_date():
+    return None
+
+def get_hash():
     return None
 
 @step(deps=[new])
