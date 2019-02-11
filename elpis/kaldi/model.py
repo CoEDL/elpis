@@ -2,7 +2,7 @@ import os
 import hashlib
 import time
 import shutil
-from typing import List
+from typing import List, Tuple
 
 from . import step, KaldiError
 from .. import paths
@@ -36,12 +36,12 @@ def get_list() -> List[str]:
             names.append(fin.read())
     return names
 
-def _get_status(directory):
-    def no_model():
+def _get_status(directory) -> str:
+    def no_model() -> bool:
         return not os.path.exists(directory) or (
             len(os.listdir(directory)) == 0
         )
-    def complete_model():
+    def complete_model() -> bool:
         return sorted(os.listdir(directory)) == sorted([
                 'data',
                 'config',
@@ -106,7 +106,7 @@ def new(name):
         fout.write(hashname)
     _sync_to_kaldi()
 
-def get_name():
+def get_name() -> str:
     if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/name.txt'):
         with open(f'{paths.CURRENT_MODEL_DIR}/name.txt', 'r') as fin:
             return fin.read()
@@ -117,36 +117,47 @@ def change_name(name):
         _check_name(name)
         with open(f'{paths.CURRENT_MODEL_DIR}/name.txt', 'w') as fout:
             fout.write(name)
+        # Below I am breaking the rule about only making changes to one
+        # location, then running a sync function, however, syncing may take
+        # too long if we are updating the name everytime the user types. So
+        # just here I break the rule ;)
+        with open(f'{paths.kaldi_helpers.INPUT_PATH}/name.txt', 'w') as fout:
+            fout.write(name)
     else:
         raise KaldiError('Need to create a model before changing the name')
 
 
-def get_date():
+def get_date() -> float:
     if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/date.txt'):
         with open(f'{paths.CURRENT_MODEL_DIR}/date.txt', 'r') as fin:
             return float(fin.read())
     return None
 
-def get_hash():
+def get_hash() -> str:
     if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/hash.txt'):
         with open(f'{paths.CURRENT_MODEL_DIR}/hash.txt', 'r') as fin:
             return fin.read()
     return None
 
+File = Tuple[str, str]
+FilePair = Tuple[File, File]
+
 @step(deps=[new])
-def load_transcription_files(file_pairs, overwrite=False):
+def load_transcription_files(file_pairs: List[FilePair]):
     """
     :param file_pairs: is a list of paired tuples of tuples... file_pairs is
     a list of (FILE, FILE), while FILE is a tuple representing a file by
     (filename, filecontent).
-    :param overwrite: if true, and a file already exists, then it'll be
-    overwritten, otherwise, it will just be skipped.
-    :raise KaldiError: if file names in the pair don't match.
     """
-    # TODO: unimplemented
-    return None
+    if not os.path.exists(f'{paths.CURRENT_MODEL_DIR}/data'):
+        os.mkdir(f'{paths.CURRENT_MODEL_DIR}/data')
+    for pair in file_pairs:
+        for filename, filecontent in pair:
+            with open(f'{paths.CURRENT_MODEL_DIR}/data/{filename}', 'wb') as fout:
+                fout.write(filecontent)
+    _sync_to_kaldi()
 
-def get_transcription_files():
+def get_transcription_files() -> List[str]:
     """
     Get a list of files 
     """

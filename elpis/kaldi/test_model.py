@@ -176,6 +176,20 @@ def test_get_hash():
     allowed_chars = set('abcdefABCDEF0123456789')
     assert set(model.get_hash()).issubset(allowed_chars)
 
-
+def test_load_transcription_files():
+    _clear_model_dir()
+    os.mkdir(f'{paths.CURRENT_MODEL_DIR}/data')
+    model.load_transcription_files([
+        (('f1.eaf', b'a'), ('f1.wav', b'b')),
+        (('f2.eaf', b'c'), ('f2.wav', b'd'))
+    ])
+    with open(f'{paths.CURRENT_MODEL_DIR}/data/f1.eaf', 'rb') as f1e:
+        assert f1e.read() == b'a'
+    with open(f'{paths.CURRENT_MODEL_DIR}/data/f1.wav', 'rb') as f1w:
+        assert f1w.read() == b'b'
+    with open(f'{paths.CURRENT_MODEL_DIR}/data/f2.eaf', 'rb') as f2e:
+        assert f2e.read() == b'c'
+    with open(f'{paths.CURRENT_MODEL_DIR}/data/f2.wav', 'rb') as f2w:
+        assert f2w.read() == b'd'
 
 
