@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Header, Segment, Form, Button } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
-import StepInformer, { NewModelInstructions } from '../StepInformer';
+import StepInformer from '../StepInformer';
 import { updateModelName } from '../../redux/actions';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
@@ -27,7 +27,7 @@ class StepNaming extends Component {
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={ 6 }>
-                            <StepInformer instructions={ NewModelInstructions } />
+                            <StepInformer />
                         </Grid.Column>
 
                         <Grid.Column width={ 10 }>

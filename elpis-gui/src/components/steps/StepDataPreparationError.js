@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Header, Segment, Icon, Button } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
-import StepInformer, { NewModelInstructions } from '../StepInformer';
+import StepInformer from '../StepInformer';
 import { translate } from 'react-i18next';
 
 class StepDataPreparationError extends Component {
@@ -14,7 +14,7 @@ class StepDataPreparationError extends Component {
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={ 6 }>
-                            <StepInformer instructions={ NewModelInstructions } />
+                            <StepInformer />
                         </Grid.Column>
 
                         <Grid.Column width={ 10 }>

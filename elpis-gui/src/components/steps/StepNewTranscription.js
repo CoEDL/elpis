@@ -4,7 +4,7 @@ import { Divider, Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
 import StepBranding from './StepBranding';
-import StepInformer, { NewModelInstructions } from '../StepInformer';
+import StepInformer from '../StepInformer';
 import { translate } from 'react-i18next';
 import { updateNewTranscriptionFile } from '../../redux/actions';
 import { connect } from 'react-redux';
@@ -27,7 +27,7 @@ class StepNewTranscription extends Component {
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={ 6 }>
-                            <StepInformer instructions={ NewModelInstructions } />
+                            <StepInformer />
                         </Grid.Column>
 
                         <Grid.Column width={ 10 }>

@@ -11,10 +11,6 @@ import './StepInformer.css'
  * Steps navigation menu
  */
 
-// change to use redux state instead
-// TODO remove imports of NewModelInstructions in other components
-export const NewModelInstructions = [];
-
 
 class StepInformer extends Component {
 

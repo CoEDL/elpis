@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
 import StepBranding from './StepBranding';
-import StepInformer, { NewModelInstructions } from '../StepInformer';
+import StepInformer from '../StepInformer';
 import AccordionFluid from '../SemanticsComponents/AccordionFluid';
 import { translate } from 'react-i18next';
 
@@ -22,7 +22,7 @@ class StepTrainingSuccess extends Component {
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={ 5 }>
-                            <StepInformer instructions={ NewModelInstructions } />
+                            <StepInformer />
                         </Grid.Column>
 
                         <Grid.Column width={ 11 }>
