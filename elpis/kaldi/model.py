@@ -1,4 +1,18 @@
-from . import step
+import os
+import hashlib
+from typing import List
+from . import step, KaldiError
+from .. import paths
+
+def get_list() -> List[str]:
+    """Returns the list of model names that have been saved. Models are saved
+    in the paths.MODELS_DIR directory.
+    """
+    names = []
+    for model_dir in os.listdir(paths.MODELS_DIR):
+        with open(f'{paths.MODELS_DIR}/{model_dir}/name.txt', 'r') as fin:
+            names.append(fin.read())
+    return names
 
 def get_status():
     # TODO: unimplemented
@@ -8,10 +22,32 @@ def get_info_of(name):
     # TODO: unimplemented
     return {}
 
-@step
+@step()
 def new(name):
-    # TODO: unimplemented
-    return None
+    """
+    Clears the current model and creates a new model.
+
+    Before running this command, the current_model/ directory could be in any
+    state. On running this command, the contents is deleted so that a new 
+    model can take its place.
+
+    The filesystem state after running this command is:
+    current_model/
+        name.txt
+    
+    :raise KaldiError: if there is an attempts to create a model that already
+    exists or if the name is invalid.
+    """
+    print('about to rock your world')
+    if name in get_list():
+        raise KaldiError(f'model already exists with the name: \'{name}\'')
+    if name == '':
+        raise KaldiError('invalid model name: \'\'')
+    directory = hashlib.md5(bytes(name, 'utf-8')).hexdigest()
+    os.mkdir(f'{paths.MODELS_DIR}/{directory}')
+    with open(f'{paths.MODELS_DIR}/{directory}/name.txt', 'w') as fout:
+        fout.write(name)
+    print("did it")
 
 def get_name():
     # TODO: unimplemented
@@ -74,10 +110,6 @@ def load(name):
     return None
 
 def save():
-    # TODO: unimplemented
-    return None
-
-def get_list():
     # TODO: unimplemented
     return None
 

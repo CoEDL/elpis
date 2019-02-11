@@ -1,7 +1,10 @@
 class KaldiError(Exception):
-    def __init__(self, message, human_message):
+    def __init__(self, message, human_message=None):
         super().__init__(message)
-        self.human_message = human_message
+        if human_message == None:
+            self.human_message = message
+        else:
+            self.human_message = human_message
 
 class Bridge(object):
     """
@@ -20,7 +23,6 @@ def step(deps=[]):
     `step` has a few properties to keep track of which functions have run:
      * `functions` is a list of registered funtions.
      * `reset()` resets the step progression
-     * `running_step` is the funtion (step) that is running
 
     :param deps: List of dependent steps (list of dependent functions).
     """
@@ -33,24 +35,21 @@ def step(deps=[]):
             step.functions = []
             def reset():
                 for func in step.functions:
-                    func.has_run = False
+                    func.has_ran = False
             step.reset = reset
-            step.running_step = None
             # end init code
 
         # general code body below
         # TODO error if function already registered?
         def wrapper(*agrs, **kwargs):
             # TODO: This is not thread safe. Relies on the server running in development mode (one thread at a time)
-            if step.running_step is not None:
-                raise KaldiError(f'The {step.running_step} step is still running', 'Another step is still running')
-            step.running_step = wrapper
             result = f(*agrs, **kwargs)
-            wrapper.has_run = True
-            step.running_step = None
+            wrapper.has_ran = True
             return result
         wrapper.deps = deps
-        wrapper.has_run = False
+        wrapper.has_ran = False
+        wrapper.__doc__ = f.__doc__
+        wrapper.f = f
         step.functions.append(wrapper)
         return wrapper
     return decorator
