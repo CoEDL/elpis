@@ -1,10 +1,11 @@
-import os
 import hashlib
+import json
+import os
 import time
 import shutil
 from typing import List, Tuple
 
-from . import step, KaldiError
+from . import step, KaldiError, task
 from .. import paths
 
 # When synchronizing between the local model (current_model/) and the kaldi
@@ -48,6 +49,7 @@ def _get_status(directory) -> str:
                 'name.txt',
                 'date.txt',
                 'hash.txt',
+                'wordlist.json',
             ]) and (
                 len(os.listdir(f'{directory}/data')) != 0 and sorted([
                     'letter_to_sound.txt',
@@ -158,18 +160,36 @@ def load_transcription_files(file_pairs: List[FilePair]):
     _sync_to_kaldi()
 
 def get_transcription_files() -> List[str]:
-    """
-    Get a list of files 
-    """
-    # TODO: unimplemented
-    return None
+    return [ name for name in os.listdir(f'{paths.CURRENT_MODEL_DIR}/data')]
 
 @step(deps=[load_transcription_files])
 def generate_word_list():
-    # TODO: unimplemented
-    return ''
+    # only steps 1 and 2 of _run-elan
+    p = task('clean-output-folder tmp-makedir make-kaldi-subfolders')
+    p = task('elan-to-json')
+    _sync_to_local()
+    wordlist = {}
+    path = f'{paths.kaldi_helpers.INPUT_PATH}/output/tmp/dirty.json'
+    with open(path, 'r') as fin:
+        dirty = json.load(fin)
+    for transcription in dirty:
+        words = transcription['transcript'].split()
+        for word in words:
+            if word in wordlist:
+                wordlist[word] += 1
+            else:
+                wordlist[word] = 1
+    with open(f'{paths.CURRENT_MODEL_DIR}/wordlist.json', 'w') as fout:
+        json.dump(wordlist, fout)
+    _sync_to_kaldi()
 
-@step(deps=[load_transcription_files])
+def get_wordlist() -> str:
+    if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/wordlist.json'):
+    with open(f'{paths.CURRENT_MODEL_DIR}/wordlist.json', 'r') as fin:
+        return fin.read()
+    return None
+
+@step(deps=[generate_word_list])
 def load_pronunciation_dictionary(filecontent):
     # TODO: unimplemented
     return ''

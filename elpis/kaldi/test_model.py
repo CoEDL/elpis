@@ -89,6 +89,7 @@ def test__get_status_after_load_pron_dict():
     _touch(f'{paths.CURRENT_MODEL_DIR}/name.txt')
     _touch(f'{paths.CURRENT_MODEL_DIR}/date.txt')
     _touch(f'{paths.CURRENT_MODEL_DIR}/hash.txt')
+    _touch(f'{paths.CURRENT_MODEL_DIR}/wordlist.json')
     os.mkdir(f'{paths.CURRENT_MODEL_DIR}/data')
     _touch(f'{paths.CURRENT_MODEL_DIR}/data/f1.eaf')
     _touch(f'{paths.CURRENT_MODEL_DIR}/data/f1.wav')
@@ -131,7 +132,6 @@ def test_new():
     assert os.path.exists(f'{paths.CURRENT_MODEL_DIR}/date.txt')
     assert os.path.exists(f'{paths.CURRENT_MODEL_DIR}/hash.txt')
     
-
 def test_new_model_already_exists():
     _clear_models_dir()
     _clear_model_dir()
@@ -192,4 +192,11 @@ def test_load_transcription_files():
     with open(f'{paths.CURRENT_MODEL_DIR}/data/f2.wav', 'rb') as f2w:
         assert f2w.read() == b'd'
 
-
+def test_generate_word_list():
+    _clear_kaldi_model_dir()
+    _clear_model_dir()
+    model.new('arctic')
+    shutil.copytree(f'{paths.ELPIS_ROOT_DIR}/abui_toy_corpus/data', f'{paths.CURRENT_MODEL_DIR}/data')
+    model._sync_to_kaldi()
+    model.generate_word_list()
+    assert os.path.exists(f'{paths.CURRENT_MODEL_DIR}/wordlist.json')
