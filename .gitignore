@@ -1,5 +1,6 @@
 # Python
 venv/
+venv_test/
 *.pyc
 __pycache__/
 *.egg-info/
