@@ -120,3 +120,6 @@ def test_generate_word_list():
     model.sync_to_kaldi()
     model.generate_word_list()
     assert os.path.exists(f'{path_working}/wordlist.json')
+
+def test_load_pronunciation_dictionary():
+    pass
