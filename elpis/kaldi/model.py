@@ -8,6 +8,18 @@ from typing import List, Tuple
 from . import step, KaldiError, task
 from .. import paths
 
+# stubs for the syntax highlighter
+def new(name): return
+def save(): return
+def load(): return
+def sync_to_kaldi(): return
+def sync_to_working(): return
+def get_name(): return
+def change_name(name): return
+def get_date(): return
+def get_hash(): return
+def get_list(): return
+
 # When synchronizing between the local model (current_model/) and the kaldi
 # location (/kaldi-helpers/working_dir/input), be sure to use the correct
 # sync_to_* function. Functions that make changes should only do so in either
@@ -141,6 +153,7 @@ def get_hash() -> str:
             return fin.read()
     return None
 
+# File is (filename, contents)
 File = Tuple[str, str]
 FilePair = Tuple[File, File]
 
@@ -165,8 +178,8 @@ def get_transcription_files() -> List[str]:
 @step(deps=[load_transcription_files])
 def generate_word_list():
     # only steps 1 and 2 of _run-elan
-    p = task('clean-output-folder tmp-makedir make-kaldi-subfolders')
-    p = task('elan-to-json')
+    task('clean-output-folder tmp-makedir make-kaldi-subfolders')
+    task('elan-to-json')
     _sync_to_local()
     wordlist = {}
     path = f'{paths.kaldi_helpers.INPUT_PATH}/output/tmp/dirty.json'
@@ -185,8 +198,8 @@ def generate_word_list():
 
 def get_wordlist() -> str:
     if os.path.exists(f'{paths.CURRENT_MODEL_DIR}/wordlist.json'):
-    with open(f'{paths.CURRENT_MODEL_DIR}/wordlist.json', 'r') as fin:
-        return fin.read()
+        with open(f'{paths.CURRENT_MODEL_DIR}/wordlist.json', 'r') as fin:
+            return fin.read()
     return None
 
 @step(deps=[generate_word_list])

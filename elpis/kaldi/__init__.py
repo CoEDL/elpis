@@ -1,5 +1,6 @@
 import os
 import shlex
+import shutil
 import subprocess
 from .. import paths
 
@@ -11,13 +12,9 @@ class KaldiError(Exception):
         else:
             self.human_message = human_message
 
-class Bridge(object):
-    """
-    Hide code under the hood of the kaldi interface here.
-    """
-    @classmethod
-    def sync_model(cls):
-        pass
+class StepDependencyError(KaldiError):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 def step(deps=[]):
     """
@@ -83,3 +80,4 @@ def run_to_log(cmd: str, **kwargs) -> str:
 
 def task(name):
     return run_to_log(f'task {name}')
+
