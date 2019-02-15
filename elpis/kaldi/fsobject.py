@@ -3,7 +3,8 @@ import os
 import shutil
 import time
 from typing import List
-from . import KaldiError, run_to_log
+from .errors import KaldiError
+from .util import run_to_log
 
 
 class FileSystemObject(object):

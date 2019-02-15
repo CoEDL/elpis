@@ -5,8 +5,9 @@ import time
 import shutil
 from typing import List, Tuple
 
-from . import step, KaldiError, task
 from .. import paths
+from .errors import KaldiError
+from .util import task
 from .fsobject import FileSystemObject
 
 class Model(FileSystemObject):
@@ -45,48 +46,53 @@ class Model(FileSystemObject):
         # TODO: unimplemented
         return {}
 
-    def load_transcription_files(self, file_pairs: List[FilePair]):
-        """
-        :param file_pairs: is a list of paired tuples of tuples... file_pairs is
-        a list of (FILE, FILE), while FILE is a tuple representing a file by
-        (filename, filecontent).
-        """
-        if not os.path.exists(f'{self._working_path}/data'):
-            os.mkdir(f'{self._working_path}/data')
-        for pair in file_pairs:
-            for filename, filecontent in pair:
-                with open(f'{self._working_path}/data/{filename}', 'wb') as fout:
-                    fout.write(filecontent)
-        self.sync_to_kaldi()
+    def set_data_bundle(self, db_name: str):
 
-    def get_transcription_files(self) -> List[str]:
-        return [ name for name in os.listdir(f'{self._working_path}/data')]
+        # TODO: unimplemented
+        pass
 
-    def generate_word_list(self):
-        # only steps 1 and 2 of _run-elan
-        task('clean-output-folder tmp-makedir make-kaldi-subfolders')
-        task('elan-to-json')
-        self.sync_to_working()
-        wordlist = {}
-        path = f'{self._kaldi_path}/output/tmp/dirty.json'
-        with open(path, 'r') as fin:
-            dirty = json.load(fin)
-        for transcription in dirty:
-            words = transcription['transcript'].split()
-            for word in words:
-                if word in wordlist:
-                    wordlist[word] += 1
-                else:
-                    wordlist[word] = 1
-        with open(f'{self._working_path}/wordlist.json', 'w') as fout:
-            json.dump(wordlist, fout)
-        self.sync_to_kaldi()
+    # def load_transcription_files(self, file_pairs: List[FilePair]):
+    #     """
+    #     :param file_pairs: is a list of paired tuples of tuples... file_pairs is
+    #     a list of (FILE, FILE), while FILE is a tuple representing a file by
+    #     (filename, filecontent).
+    #     """
+    #     if not os.path.exists(f'{self._working_path}/data'):
+    #         os.mkdir(f'{self._working_path}/data')
+    #     for pair in file_pairs:
+    #         for filename, filecontent in pair:
+    #             with open(f'{self._working_path}/data/{filename}', 'wb') as fout:
+    #                 fout.write(filecontent)
+    #     self.sync_to_kaldi()
 
-    def get_wordlist(self) -> str:
-        if os.path.exists(f'{self._working_path}/wordlist.json'):
-            with open(f'{self._working_path}/wordlist.json', 'r') as fin:
-                return fin.read()
-        return None
+    # def get_transcription_files(self) -> List[str]:
+        # return [ name for name in os.listdir(f'{self._working_path}/data')]
+
+    # def generate_word_list(self):
+    #     # only steps 1 and 2 of _run-elan
+    #     task('clean-output-folder tmp-makedir make-kaldi-subfolders')
+    #     task('elan-to-json')
+    #     self.sync_to_working()
+    #     wordlist = {}
+    #     path = f'{self._kaldi_path}/output/tmp/dirty.json'
+    #     with open(path, 'r') as fin:
+    #         dirty = json.load(fin)
+    #     for transcription in dirty:
+    #         words = transcription['transcript'].split()
+    #         for word in words:
+    #             if word in wordlist:
+    #                 wordlist[word] += 1
+    #             else:
+    #                 wordlist[word] = 1
+    #     with open(f'{self._working_path}/wordlist.json', 'w') as fout:
+    #         json.dump(wordlist, fout)
+    #     self.sync_to_kaldi()
+
+    # def get_wordlist(self) -> str:
+    #     if os.path.exists(f'{self._working_path}/wordlist.json'):
+    #         with open(f'{self._working_path}/wordlist.json', 'r') as fin:
+    #             return fin.read()
+    #     return None
 
     def load_pronunciation_dictionary(filecontent):
         # TODO: unimplemented
