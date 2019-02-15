@@ -34,7 +34,7 @@ def _touch(path):
     with open(path, 'w') as fout:
         fout.write(contents)
 
-obj = FileSystemObject('obj', path_working, path_save, path_kaldi)
+obj = FileSystemObject('obj', path_working, path_save, path_kaldi, exclude='data')
 
 ##############################################################################
 #                           Let the testing begin!                           #
@@ -127,3 +127,19 @@ def test_get_hash():
     obj.new('nildocaafiat')
     allowed_chars = set('abcdefABCDEF0123456789')
     assert set(obj.get_hash()).issubset(allowed_chars)
+
+def test_sync_with_exclude():
+    _clear_working_dir()
+    _clear_kaldi_dir()
+    os.mkdir(f'{path_working}/data')
+    _touch(f'{path_working}/data/d1')
+    _touch(f'{path_working}/data/d2')
+    _touch(f'{path_working}/data/d_who')
+    _touch(f'{path_working}/data/d_you')
+    _touch(f'{path_working}/cat')
+    _touch(f'{path_working}/in')
+    _touch(f'{path_working}/a')
+    _touch(f'{path_working}/hat')
+    obj.sync_to_kaldi()
+    assert not os.path.exists(f'{path_kaldi}/data')
+    assert os.path.exists(f'{path_kaldi}/cat')

@@ -3,7 +3,7 @@ import os
 import shutil
 import time
 from typing import List
-from . import KaldiError
+from . import KaldiError, run_to_log
 
 
 class FileSystemObject(object):
@@ -12,12 +12,14 @@ class FileSystemObject(object):
     directory and kaldi.
     """
 
-    def __init__(self, description: str, working_path: str, save_path: str, kaldi_path) -> str:
+    def __init__(self, description: str, working_path: str, save_path: str, kaldi_path: str,
+        exclude=None) -> str:
         super().__init__()
         self.type = description
         self._save_path = save_path
         self._working_path = working_path
         self._kaldi_path = kaldi_path
+        self._exclude = exclude
 
     def new(self, name: str):
         """
@@ -115,10 +117,7 @@ class FileSystemObject(object):
         """
         src = f'{self._working_path}/{self.get_hash()}'
         dst = f'{self._save_path}/{self.get_hash()}'
-        if os.path.exists(dst):
-            shutil.rmtree(dst)
-        os.mkdir(dst)
-        shutil.copytree(src, dst)
+        self._copy_to(src, dst)
 
     def load(self, name: str):
         """
@@ -128,26 +127,42 @@ class FileSystemObject(object):
         hash = self._get_hash_from_name(name)
         src = f'{self._save_path}/{hash}'
         dst = f'{self._working_path}/{hash}'
-        if os.path.exists(dst):
-            shutil.rmtree(dst)
-        os.mkdir(dst)
-        shutil.copytree(src, dst)
+        self._copy_to(src, dst)
 
     def sync_to_kaldi(self):
         """
         Copies contents of working directory into the kaldi directory.
         """
-        if os.path.exists(self._kaldi_path):
-            shutil.rmtree(self._kaldi_path)
-        shutil.copytree(self._working_path, self._kaldi_path)
+        self._copy_to(self._working_path, self._kaldi_path)
 
     def sync_to_working(self):
         """
         Copies contents of kaldi directory into the working directory.
         """
-        if os.path.exists(self._working_path):
-            shutil.rmtree(self._working_path)
-        shutil.copytree(self._kaldi_path, self._working_path)
+        self._copy_to(self._kaldi_path, self._working_path)
+
+    def _copy_to(self, src, dst):
+        # make abs paths for bash command
+        src = os.path.abspath(src)
+        dst = os.path.abspath(dst)
+        # clear the destination
+        if os.path.exists(dst):
+            shutil.rmtree(dst)
+        # copy to destination
+        if self._exclude is not None:
+            os.mkdir(dst)
+            for fs_obj in os.listdir(src):
+                if fs_obj == self._exclude:
+                    continue
+                if os.path.isdir(fs_obj):
+                    shutil.copytree(f'{src}/{fs_obj}', f'{dst}/{fs_obj}')
+                else:
+                    shutil.copy(f'{src}/{fs_obj}', f'{dst}/{fs_obj}')
+            # cmd = f"""bash -c 'cd {src}; cp -R `ls -A | grep -v "{self._exclude}"` {dst}'"""
+            # run_to_log(cmd)
+        else:
+            shutil.copytree(src, dst)
+
 
     def _get_helper(self, attr: str) -> str:
         """

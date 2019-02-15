@@ -70,7 +70,7 @@ def run_to_log(cmd: str, **kwargs) -> str:
         kwargs['cwd'] = '/kaldi-helpers'
     process = subprocess.run(
         args,
-        # check=True,
+        check=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         **kwargs
