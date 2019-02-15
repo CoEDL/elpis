@@ -1,55 +1,51 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
-import StepBranding from './StepBranding';
-import StepInformer from '../StepInformer';
-import { translate } from 'react-i18next';
 import { connect } from 'react-redux';
-import { triggerApiWaiting } from '../../redux/actions';
+import { translate } from 'react-i18next';
+import { triggerApiWaiting } from 'redux/actions';
+import Branding from 'components/Steps/Shared/Branding';
+import Informer from 'components/Steps/Shared/Informer';
 
-class StepModelTraining extends Component {
+class ModelTraining extends Component {
     componentDidMount = () => {
-        // this.props.triggerApiWaiting('now training')
+        this.props.triggerApiWaiting('now training')
     }
     render() {
         const { t, settings, apiWaiting } = this.props;
 
         // TODO: display as list rather than run-on line
         const settingDescription = [
-            t('modelSettings.audioLabel') + ' ' + settings.frequency,
-            t('modelSettings.mfccLabel')  + ' ' + settings.mfcc,
-            t('modelSettings.nGramLabel') + ' ' + settings.ngram,
-            t('modelSettings.beamLabel')  + ' ' + settings.beam
+            t('model.settings.audioLabel') + ' ' + settings.frequency,
+            t('model.settings.mfccLabel')  + ' ' + settings.mfcc,
+            t('model.settings.nGramLabel') + ' ' + settings.ngram,
+            t('model.settings.beamLabel')  + ' ' + settings.beam
         ].join(' ~ ');
 
 
         return (
             <div>
-                <Dimmer active={apiWaiting.status}>
-                    <Loader size="massive"  content={apiWaiting.message} />
-                </Dimmer>
-
-                <StepBranding />
+                <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 5 }>
-                            <StepInformer />
+                        <Grid.Column width={ 4 }>
+                            <Informer />
                         </Grid.Column>
 
-                        <Grid.Column width={ 11 }>
+                        <Grid.Column width={ 12 }>
                             <Header as='h1' text='true'>
-                                { t('trainingModel.title') }
+                                { t('model.training.title') }
                             </Header>
 
                             <Message icon>
                                 <Icon name='circle notched' loading />
                                 <Message.Content>
-                                    <Message.Header>{ t('trainingModel.trainingHeader') }</Message.Header>
+                                    <Message.Header>{ t('model.training.trainingHeader') }</Message.Header>
                                 </Message.Content>
                             </Message>
 
                             <Card fluid>
-                                <Card.Content header={ t('trainingModel.settingsHeader') } />
+                                <Card.Content header={ t('model.training.settingsHeader') } />
                                 <Card.Content description={ settingDescription } />
                             </Card>
 
@@ -57,45 +53,51 @@ class StepModelTraining extends Component {
                                 <Step active>
                                     <Icon name='info' size='tiny' />
                                     <Step.Content>
-                                        <Step.Title>{ t('trainingModel.preparingAcousticHeader') }</Step.Title>
+                                        <Step.Title>{ t('model.training.preparingAcousticHeader') }</Step.Title>
                                     </Step.Content>
                                 </Step>
 
                                 <Step>
                                     <Icon name='info' size='tiny' />
                                     <Step.Content>
-                                        <Step.Title>{ t('trainingModel.featuresExtractionHeader') }</Step.Title>
+                                        <Step.Title>{ t('model.training.featuresExtractionHeader') }</Step.Title>
                                     </Step.Content>
                                 </Step>
 
                                 <Step>
                                     <Icon name='info' size='tiny' />
                                     <Step.Content>
-                                        <Step.Title>{ t('trainingModel.preparingLanguageDataHeader') }</Step.Title>
+                                        <Step.Title>{ t('model.training.preparingLanguageDataHeader') }</Step.Title>
                                     </Step.Content>
                                 </Step>
 
                             </Step.Group>
 
                             <Card fluid>
-                                <Card.Content header={ t('trainingModel.logsHeader') } />
+                                <Card.Content header={ t('model.training.logsHeader') } />
                                 <Card.Content description='gory output from Kaldi - but not interactive' />
                             </Card>
 
                             <Divider />
 
-                            <Button as={ Link } to="/training-success">
-                                { t('trainingModel.nextButton') }
+                            <Button as={ Link } to="/model/training/results">
+                                { t('model.training.nextButton') }
                             </Button>
 
-                            <Button as={ Link } to="/training-error" icon>
+                            <Button as={ Link } to="/model/training/error" icon>
                                 <Icon name='warning sign' />
-                                { t('trainingModel.nextButtonError') }
+                                { t('model.training.nextButtonError') }
                             </Button>
 
                         </Grid.Column>
                     </Grid>
                 </Segment>
+
+                {/* temporarily disable with 'false &&' */}
+                <Dimmer active={ false && apiWaiting.status }>
+                    <Loader size="massive"  content={apiWaiting.message} />
+                </Dimmer>
+
             </div>
         );
     }
@@ -112,4 +114,4 @@ const mapDispatchToProps = dispatch => ({
         dispatch(triggerApiWaiting(message))
     }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepModelTraining));
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelTraining));

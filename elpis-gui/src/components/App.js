@@ -2,19 +2,23 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import './App.css';
 import {
-    StepWelcome,
-    StepNaming,
-    StepAddData,
-    StepDataPreparation,
-    StepDataPreparationError,
-    StepBuildPronunciationDictionary,
-    StepModelSettings,
-    StepModelTraining,
-    StepTrainingSuccess,
-    StepTrainingError,
-    StepNewTranscription,
-    StepNewTranscriptionResults
-} from './steps/index';
+    Welcome,
+    DataBundleList,
+    DataBundleNew,
+    DataBundleAddFiles,
+    DataBundlePreparation,
+    DataBundlePreparationError,
+    ModelList,
+    ModelNew,
+    ModelPronunciationDictionary,
+    ModelLexicon,
+    ModelSettings,
+    ModelTraining,
+    ModelTrainingResults,
+    ModelTrainingError,
+    NewTranscription,
+    NewTranscriptionResults
+} from './Steps/index';
 import PageContainer from './PageContainer';
 
 
@@ -24,21 +28,25 @@ class App extends Component {
             <div className="App">
                 <Router>
                     <PageContainer>
-                        <Route exact path="/" component={ StepWelcome } />
+                        <Route exact path="/" component={ Welcome } />
 
-                        <Route path="/naming" component={ StepNaming } />
-                        <Route path="/add-data" component={ StepAddData } />
-                        <Route path="/data-preparation" component={ StepDataPreparation } />
-                        <Route path="/data-preparation-error" component={ StepDataPreparationError } />
-                        <Route path="/build-pronunciation-dictionary" component={ StepBuildPronunciationDictionary } />
+                        <Route exact path="/data-bundles" component={ DataBundleList } />
+                        <Route path="/data-bundle/new" component={ DataBundleNew } />
+                        <Route path="/data-bundle/files" component={ DataBundleAddFiles } />
+                        <Route exact path="/data-bundle/clean" component={ DataBundlePreparation } />
+                        <Route path="/data-bundle/preparation/error" component={ DataBundlePreparationError } />
 
-                        <Route path="/model-settings" component={ StepModelSettings } />
-                        <Route path="/model-training" component={ StepModelTraining } />
-                        <Route path="/training-success" component={ StepTrainingSuccess } />
-                        <Route path="/training-error" component={ StepTrainingError } />
+                        <Route exact path="/models" component={ ModelList } />
+                        <Route path="/model/new" component={ ModelNew } />
+                        <Route path="/model/pronunciation" component={ ModelPronunciationDictionary } />
+                        <Route path="/model/lexicon" component={ ModelLexicon } />
+                        <Route path="/model/settings" component={ ModelSettings } />
+                        <Route exact path="/model/training" component={ ModelTraining } />
+                        <Route exact path="/model/training/results" component={ ModelTrainingResults } />
+                        <Route exact path="/model/training/error" component={ ModelTrainingError } />
 
-                        <Route path="/new-transcription" component={ StepNewTranscription } />
-                        <Route path="/transcription-results" component={ StepNewTranscriptionResults } />
+                        <Route path="/transcription/new" component={ NewTranscription } />
+                        <Route path="/transcription/results" component={ NewTranscriptionResults } />
                     </PageContainer>
                 </Router>
             </div>

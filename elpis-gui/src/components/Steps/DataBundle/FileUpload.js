@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
 import { translate } from 'react-i18next';
-import { updateModelTranscriptionFiles } from '../../redux/actions';
+import { dataBundleFiles } from 'redux/actions';
 import { connect } from 'react-redux';
 
 class FileUpload extends Component {
@@ -15,12 +15,12 @@ class FileUpload extends Component {
         // backend will need to know whether to add to existing files
         // or wipe existing and use only these
         // we'll also need to update redux state on this basis
-        formData.append('filesOverwrite', this.props.filesOverwrite);
+        formData.append('replaceFiles', this.props.replaceFiles);
         acceptedFiles.forEach(file => {
             console.log(file)
             formData.append('file', file);
         })
-        this.props.updateModelTranscriptionFiles(formData);
+        this.props.dataBundleFiles(formData);
     };
 
     render() {
@@ -42,8 +42,8 @@ class FileUpload extends Component {
 
                                 {
                                     isDragActive ? (
-                                        <p>{ t('fileUpload.dropFilesHintDragActive') } </p>
-                                    ) : (<p>{ t('fileUpload.dropFilesHint') }</p>)
+                                        <p>{ t('dataBundle.fileUpload.dropFilesHintDragActive') } </p>
+                                    ) : (<p>{ t('dataBundle.fileUpload.dropFilesHint') }</p>)
                                 }
                             </div>
                         );
@@ -56,13 +56,13 @@ class FileUpload extends Component {
 
 const mapStateToProps = state => {
     return {
-        filesOverwrite: state.model.filesOverwrite
+        replaceFiles: state.model.replaceFiles
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    updateModelTranscriptionFiles: postData => {
-        dispatch(updateModelTranscriptionFiles(postData));
+    dataBundleFiles: postData => {
+        dispatch(dataBundleFiles(postData));
     }
 })
 

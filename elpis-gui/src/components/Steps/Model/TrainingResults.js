@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
-import StepBranding from './StepBranding';
-import StepInformer from '../StepInformer';
-import AccordionFluid from '../SemanticsComponents/AccordionFluid';
 import { translate } from 'react-i18next';
+import Branding from 'components/Steps/Shared/Branding';
+import Informer from 'components/Steps/Shared/Informer';
 
-class StepTrainingSuccess extends Component {
+class ModelTrainingResults extends Component {
 
     state = { open: false }
 
@@ -18,27 +17,29 @@ class StepTrainingSuccess extends Component {
         const { t } = this.props;
         return (
             <div>
-                <StepBranding />
+                <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 5 }>
-                            <StepInformer />
+                        <Grid.Column width={ 4 }>
+                            <Informer />
                         </Grid.Column>
 
-                        <Grid.Column width={ 11 }>
+                        <Grid.Column width={ 12 }>
                             <Header as='h1' text='true'>
-                                { t('trainingModelSuccess.title') }
+                                { t('model.trainingResults.title') }
                             </Header>
 
                             <p>
-                                { t('trainingModelSuccess.description') }
+                                { t('model.trainingResults.description') }
                             </p>
 
                             <Table celled padded sortable>
                                 <Table.Header>
-                                    <Table.HeaderCell>sort by Date</Table.HeaderCell>
-                                    <Table.HeaderCell>Name</Table.HeaderCell>
-                                    <Table.HeaderCell>WER</Table.HeaderCell>
+                                    <Table.Row>
+                                        <Table.HeaderCell>sort by Date</Table.HeaderCell>
+                                        <Table.HeaderCell>Name</Table.HeaderCell>
+                                        <Table.HeaderCell>WER</Table.HeaderCell>
+                                    </Table.Row>
                                 </Table.Header>
                                 <Table.Body>
                                     <Table.Row>
@@ -71,30 +72,30 @@ class StepTrainingSuccess extends Component {
                             <Divider />
 
                             <Modal
-                                trigger={ <Button>{ t('trainingModelSuccess.downloadButton') }</Button> }
+                                trigger={ <Button>{ t('model.trainingResults.downloadButton') }</Button> }
                                 basic size='small'
                                 open={ open }
                                 onOpen={ this.open }
                                 onClose={ this.close }
                             >
-                                <Header icon='archive' content={ t('trainingModelSuccess.downloadModalHeader') } />
+                                <Header icon='archive' content={ t('model.trainingResults.downloadModalHeader') } />
                                 <Modal.Content>
                                     <p>
-                                        { t('trainingModelSuccess.downloadModalContent') }
+                                        { t('model.trainingResults.downloadModalContent') }
                                     </p>
                                 </Modal.Content>
                                 <Modal.Actions>
                                     <Button color='green' inverted onClick={ this.close }>
                                         <Icon name='checkmark' />
-                                        { t('trainingModelSuccess.downloadOkButton') }
+                                        { t('model.trainingResults.downloadOkButton') }
                                     </Button>
                                 </Modal.Actions>
                             </Modal>
 
                             <Divider />
 
-                            <Button as={ Link } to="/new-transcription">
-                                { t('trainingModelSuccess.newTranscribeButton') }
+                            <Button as={ Link } to="/transcription/new">
+                                { t('model.trainingResults.newTranscribeButton') }
                             </Button>
                         </Grid.Column>
 
@@ -104,4 +105,4 @@ class StepTrainingSuccess extends Component {
         );
     }
 }
-export default translate('common')(StepTrainingSuccess)
+export default translate('common')(ModelTrainingResults)

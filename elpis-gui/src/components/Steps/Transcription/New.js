@@ -1,38 +1,38 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { translate } from 'react-i18next';
+import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
-import StepBranding from './StepBranding';
-import StepInformer from '../StepInformer';
-import { translate } from 'react-i18next';
-import { updateNewTranscriptionFile } from '../../redux/actions';
-import { connect } from 'react-redux';
-import classNames from "classnames";
+import { transcriptionNew } from 'redux/actions';
+import Branding from 'components/Steps/Shared/Branding';
+import Informer from 'components/Steps/Shared/Informer';
 
-class StepNewTranscription extends Component {
+class NewTranscription extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
         console.log("files dropped:", acceptedFiles);
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
-        this.props.updateNewTranscriptionFile(formData);
+        this.props.transcriptionNew(formData);
     }
 
     render() {
         const { t } = this.props;
         return (
             <div>
-                <StepBranding />
+                <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 6 }>
-                            <StepInformer />
+                        <Grid.Column width={ 4 }>
+                            <Informer />
                         </Grid.Column>
 
-                        <Grid.Column width={ 10 }>
+                        <Grid.Column width={ 12 }>
                             <Header as='h1' text="true">
-                                { t('newTranscription.title') }
+                                { t('transcription.new.title') }
                             </Header>
 
 
@@ -49,8 +49,8 @@ class StepNewTranscription extends Component {
 
                                             {
                                                 isDragActive ? (
-                                                    <p>{ t('newTranscription.dropFilesHintDragActive') } </p>
-                                                ) : (<p>{ t('newTranscription.dropFilesHint') }</p>)
+                                                    <p>{ t('transcription.new.dropFilesHintDragActive') } </p>
+                                                ) : (<p>{ t('transcription.new.dropFilesHint') }</p>)
                                             }
                                         </div>
                                     );
@@ -60,7 +60,7 @@ class StepNewTranscription extends Component {
                             newTranscriptionFile: {this.props.newTranscriptionFile}
 
 
-                            <Header as='h1' type="text">{ t('newTranscription.chooseModelHeader') }</Header>
+                            <Header as='h1' type="text">{ t('transcription.new.chooseModelHeader') }</Header>
                             <Grid>
                                 <Grid.Column>
                                     <List>
@@ -78,7 +78,7 @@ class StepNewTranscription extends Component {
                                         </List.Item>
                                         <List.Item>
                                             <List.Icon name='square outline' />
-                                            <List.Content>Indoesian 1-gram</List.Content>
+                                            <List.Content>Indonesian 1-gram</List.Content>
                                         </List.Item>
                                         <List.Item>
                                             <List.Icon name='square outline' />
@@ -90,8 +90,8 @@ class StepNewTranscription extends Component {
 
                             <Divider />
 
-                            <Button type='submit' as={ Link } to="/transcription-results">
-                                { t('newTranscription.nextButton') }
+                            <Button type='submit' as={ Link } to="/transcription/results">
+                                { t('transcription.new.nextButton') }
                             </Button>
 
                         </Grid.Column>
@@ -110,9 +110,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    updateNewTranscriptionFile: postData => {
-        dispatch(updateNewTranscriptionFile(postData));
+    transcriptionNew: postData => {
+        dispatch(transcriptionNew(postData));
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepNewTranscription));
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewTranscription));

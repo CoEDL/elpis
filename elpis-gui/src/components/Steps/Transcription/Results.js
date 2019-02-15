@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, Card, Button } from 'semantic-ui-react';
-import StepBranding from './StepBranding';
-import StepInformer from '../StepInformer';
 import { translate } from 'react-i18next';
+import Branding from 'components/Steps/Shared/Branding';
+import Informer from 'components/Steps/Shared/Informer';
 
-class StepNewTranscriptionResults extends Component {
+class NewTranscriptionResults extends Component {
     render() {
         const { t } = this.props;
         // TODO get this from redux?
@@ -14,39 +14,39 @@ class StepNewTranscriptionResults extends Component {
 
         return (
             <div>
-                <StepBranding />
+                <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 5 }>
-                            <StepInformer />
+                        <Grid.Column width={ 4 }>
+                            <Informer />
                         </Grid.Column>
 
-                        <Grid.Column width={ 11 }>
+                        <Grid.Column width={ 12 }>
                             <Header as='h1' text='true'>
-                                { t('newTranscriptionResults.title') }
+                                { t('transcription.results.title') }
                             </Header>
 
-                            <p>{ t('newTranscriptionResults.usingModel', { modelName }) } </p>
-                            <p>{ t('newTranscriptionResults.usingAudio', { audioName }) } </p>
+                            <p>{ t('transcription.results.usingModel', { modelName }) } </p>
+                            <p>{ t('transcription.results.usingAudio', { audioName }) } </p>
 
                             <Card fluid>
-                                <Card.Content header={ t('newTranscriptionResults.errorLogHeader') } />
+                                <Card.Content header={ t('transcription.results.errorLogHeader') } />
                                 <Card.Content description='Were there any errors? Just output the log, nothing fancy' />
                             </Card>
 
                             <Card fluid>
-                                <Card.Content header={ t('newTranscriptionResults.resultsHeader') } />
+                                <Card.Content header={ t('transcription.results.resultsHeader') } />
                                 <Card.Content description='Blah Blah Blah Blah Blah' />
                             </Card>
 
                             <Divider />
 
                             <Button as={ Link } to="/">
-                                { t('newTranscriptionResults.downloadElanButton') }
+                                { t('transcription.results.downloadElanButton') }
                             </Button>
 
                             <Button as={ Link } to="/">
-                                { t('newTranscriptionResults.downloadPraatButton') }
+                                { t('transcription.results.downloadPraatButton') }
                             </Button>
 
                         </Grid.Column>
@@ -56,4 +56,4 @@ class StepNewTranscriptionResults extends Component {
         );
     }
 }
-export default translate('common')(StepNewTranscriptionResults)
+export default translate('common')(NewTranscriptionResults)

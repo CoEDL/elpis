@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
 import { Checkbox, Grid, Header, Segment, Icon, List, Button, } from 'semantic-ui-react';
-import StepBranding from './StepBranding';
-import StepInformer from '../StepInformer';
-import FileUpload from '../FileuploadComponents/FileUpload';
-import { translate } from 'react-i18next';
 import { connect } from 'react-redux';
-import { setFilesOverwrite } from '../../redux/actions';
-import { triggerApiWaiting } from '../../redux/actions';
+import { translate } from 'react-i18next';
+import { replaceFiles, triggerApiWaiting } from 'redux/actions';
+import Branding from 'components/Steps/Shared/Branding';
+import Informer from 'components/Steps/Shared/Informer';
+import FileUpload from './FileUpload';
 
-class StepAddData extends Component {
+class DataBundleAddFiles extends Component {
 
-    handleFilesOverwriteToggle = () => {
-        this.props.setFilesOverwrite()
+    handleFilesReplaceToggle = () => {
+        this.props.replaceFiles()
     }
 
     handleNextButton = () => {
         this.props.triggerApiWaiting('data preparation')
-        this.props.history.push('/data-preparation')
+        this.props.history.push('/data-bundle/preparation')
     }
 
     render() {
 
-        const { t, audioFiles, transcriptionFiles, additionalTextFiles, filesOverwrite } = this.props;
+        const { t, audioFiles, transcriptionFiles, additionalTextFiles, replace } = this.props;
+
         const audioFileList = audioFiles.map(file => (
             <List.Item key={ file }>
                 <List.Content>{ file }</List.Content>
@@ -39,33 +39,31 @@ class StepAddData extends Component {
             </List.Item>
         ))
 
-        console.log('filesOverwrite', filesOverwrite)
-
         return (
             <div>
-                <StepBranding />
+                <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 6 }>
-                            <StepInformer />
+                        <Grid.Column width={ 4 }>
+                            <Informer />
                         </Grid.Column>
 
-                        <Grid.Column width={ 10 }>
+                        <Grid.Column width={ 12 }>
                             <Header as='h1'>
-                                { t('addData.title') }
+                                { t('dataBundle.addFiles.title') }
                             </Header>
 
                             <p>
-                                { t('addData.description') }
+                                { t('dataBundle.addFiles.description') }
                             </p>
 
                             <Segment>
                                 <Checkbox
                                     toggle
-                                    onChange={this.handleFilesOverwriteToggle}
-                                    defaultChecked={filesOverwrite}
-                                    label={t('addData.filesOverwriteLabel') }
-                                    />
+                                    onChange={ this.handleFilesReplaceToggle }
+                                    defaultChecked={ replace }
+                                    label={ t('dataBundle.addFiles.filesReplaceLabel') }
+                                />
                             </Segment>
 
                             <Segment>
@@ -73,7 +71,7 @@ class StepAddData extends Component {
                             </Segment>
 
                             <Header as='h1'>
-                                { t('addData.filesHeader') }
+                                { t('dataBundle.addFiles.filesHeader') }
                             </Header>
 
                             <Grid columns={ 3 }>
@@ -97,12 +95,12 @@ class StepAddData extends Component {
                             </Grid>
 
                             <Grid container>
-                                <Button type='submit' onClick={this.handleNextButton}>
-                                    { t('addData.nextButton') }
+                                <Button type='submit' onClick={ this.handleNextButton }>
+                                    { t('dataBundle.addFiles.nextButton') }
                                 </Button>
-                                <Button type='submit' as={ Link } to="/data-preparation-error" icon>
+                                <Button type='submit' as={ Link } to="/data-bundle/preparation/error" icon>
                                     <Icon name='warning sign' />
-                                    { t('addData.nextButtonError') }
+                                    { t('dataBundle.addFiles.nextButtonError') }
                                 </Button>
                             </Grid>
                         </Grid.Column>
@@ -116,16 +114,16 @@ class StepAddData extends Component {
 
 const mapStateToProps = state => {
     return {
-        audioFiles: state.model.audioFiles,
-        transcriptionFiles: state.model.transcriptionFiles,
-        additionalTextFiles: state.model.additionalTextFiles,
-        filesOverwrite: state.model.filesOverwrite
+        audioFiles: state.dataBundle.audioFiles,
+        transcriptionFiles: state.dataBundle.transcriptionFiles,
+        additionalTextFiles: state.dataBundle.additionalTextFiles,
+        replace: state.dataBundle.replaceFiles
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    setFilesOverwrite: () => {
-        dispatch(setFilesOverwrite());
+    replaceFiles: () => {
+        dispatch(replaceFiles());
     },
     triggerApiWaiting: message => {
         dispatch(triggerApiWaiting(message));
@@ -137,6 +135,6 @@ export default withRouter(
         mapStateToProps,
         mapDispatchToProps
     )(
-        translate('common')(StepAddData)
+        translate('common')(DataBundleAddFiles)
     )
 );

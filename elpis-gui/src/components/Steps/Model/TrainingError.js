@@ -1,42 +1,38 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Grid, Header, Segment, Icon, Card, Button } from 'semantic-ui-react';
-import StepBranding from './StepBranding';
-import StepInformer from '../StepInformer';
 import { translate } from 'react-i18next';
+import Branding from 'components/Steps/Shared/Branding';
+import Informer from 'components/Steps/Shared/Informer';
 
-class StepTrainingError extends Component {
+class ModelTrainingError extends Component {
     render() {
         const { t } = this.props;
         return (
             <div>
-                <StepBranding />
+                <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 5 }>
-                            <StepInformer />
+                        <Grid.Column width={ 4 }>
+                            <Informer />
                         </Grid.Column>
 
-                        <Grid.Column width={ 11 }>
+                        <Grid.Column width={ 12 }>
                             <Header as='h1' text='true'>
                                 <Icon name='warning' />
-                                { t('trainingModelError.title') }
+                                { t('model.trainingError.title') }
                             </Header>
                             <p>We ran into a problem when training the model</p>
                             <p>Please click the button below to connect you to a tech person on slack</p>
                             <p>An error file detailing the log showing below will be sent as an attachment to the technical team on slack</p>
 
                             <Card>
-                                <Card.Content header={ t('trainingModelError.errorLogHeader') } />
+                                <Card.Content header={ t('model.trainingError.errorLogHeader') } />
                                 <Card.Content description='Error logs spited out while training model' />
                             </Card>
 
                             <Button href="https:slack.com/" target="_blank">
-                                { t('trainingModelError.contactButton') }
-                            </Button>
-
-                            <Button as={ Link } to="/model-settings" >
-                                { t('trainingModelError.backButton') }
+                                { t('model.trainingError.contactButton') }
                             </Button>
 
                         </Grid.Column>
@@ -46,4 +42,4 @@ class StepTrainingError extends Component {
         );
     }
 }
-export default translate('common')(StepTrainingError)
+export default translate('common')(ModelTrainingError)

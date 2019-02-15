@@ -22,13 +22,17 @@
 
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import model from './apiModelReducer';
+import dataBundle from './dataBundleReducer';
+import model from './modelReducer';
+import transcription from './transcriptionReducer';
 import steps from './stepReducer';
 import thunk from 'redux-thunk';
 
 const rootReducer = combineReducers({
+    dataBundle,
     model,
-    steps,
+    transcription,
+    steps
 });
 
 const store = createStore(rootReducer,
