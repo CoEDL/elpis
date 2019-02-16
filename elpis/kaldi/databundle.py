@@ -7,8 +7,8 @@ class status:
     UNPROCESSED = 'unprocessed'
 
 class DataBundle(FileSystemObject):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, kaldi, description: str, working_path: str, save_path: str, kaldi_path: str, *args, **kwargs):
+        super().__init__(kaldi, description, working_path, save_path, kaldi_path, *args, **kwargs)
     
     def add(self, fp, name=None):
         if name == None:

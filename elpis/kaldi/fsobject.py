@@ -13,9 +13,10 @@ class FileSystemObject(object):
     directory and kaldi.
     """
 
-    def __init__(self, description: str, working_path: str, save_path: str, kaldi_path: str,
+    def __init__(self, kaldi, description: str, working_path: str, save_path: str, kaldi_path: str,
         exclude=None) -> str:
         super().__init__()
+        self.kaldi = kaldi
         self.type = description
         self._save_path = save_path
         self._working_path = working_path

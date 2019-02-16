@@ -73,29 +73,4 @@ def test__get_status_after_load_pron_dict_and_get_word_list(model):
 def test_load_pronunciation_dictionary(model):
     pass
 
-@ctx
-def test_attaching_empty_data_bundle(model):
-    db = DataBundle('db', f'{ctx.path_working}/data', ctx.path_save, ctx.path_kaldi)
-    db.new('test db')
-    model.new('test model')
-    with pytest.raises(KaldiError) as error:
-        model.set_data_bundle('test db')
-    assert f'data bundle \'test db\' has no data files' == str(error.value)
-
-@ctx
-def test_attaching_data_bundle(model):
-    # setup data bundle
-    path_toy = os.path.join(paths.ELPIS_ROOT_DIR, 'abui_toy_corpus', 'data')
-    db = DataBundle('db', f'{ctx.path_working}/data', ctx.path_save, ctx.path_kaldi)
-    db.new('test db')
-    with open(f'{path_toy}/1_1_1.eaf', 'rb') as fin: db.add(fin)
-    with open(f'{path_toy}/1_1_1.wav', 'rb') as fin: db.add(fin)
-
-    # create and add data bundle to model
-    model.new('test model ')
-    model.set_data_bundle('test db')
-
-    assert os.path.exists(f'{ctx.path_kaldi}/data')
-    assert not os.path.exists(f'{ctx.path_working}/data')
-    assert os.path.exists(f'{ctx.path_working}/data_bundle_hash.txt')
     

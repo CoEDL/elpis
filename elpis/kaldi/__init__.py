@@ -1,11 +1,4 @@
-import os
-import shlex
-import shutil
-import subprocess
-from .. import paths
+from .interface import KaldiInterface
 
-
-
-
-
-
+def create_interface() -> KaldiInterface:
+    return KaldiInterface()

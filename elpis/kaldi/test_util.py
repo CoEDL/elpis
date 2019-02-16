@@ -28,7 +28,7 @@ class Context(object):
 
     def __call__(self, f):
         def wrapper():
-            obj = self.object_type(self.object_name, self.path_working, self.path_save, self.path_kaldi, **self._kwargs)
+            obj = self.object_type(None, self.object_name, self.path_working, self.path_save, self.path_kaldi, **self._kwargs)
             self.clear_dir(self.path_working)
             self.clear_dir(self.path_save)
             self.clear_dir(self.path_kaldi)

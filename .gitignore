@@ -16,10 +16,7 @@ node_modules/
 .idea/
 
 # Server
-models/
-transcriptions/
-current_model/
-current_transcription/
+user_data/
 log.txt
 
 #testing

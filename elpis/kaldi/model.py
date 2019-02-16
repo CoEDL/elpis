@@ -15,8 +15,8 @@ class Model(FileSystemObject):
     File = Tuple[str, str]
     FilePair = Tuple[File, File]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, kaldi, description: str, working_path: str, save_path: str, kaldi_path: str, *args, **kwargs):
+        super().__init__(kaldi, description, working_path, save_path, kaldi_path, *args, **kwargs)
 
     def get_status(self, directory) -> str:
         def no_model() -> bool:
@@ -47,6 +47,11 @@ class Model(FileSystemObject):
         return {}
 
     def set_data_bundle(self, db_name: str):
+        self.kaldi.data_bundle.load(db_name)
+        with open(f'{self._working_path}/data_bundle_hash.txt', 'r') as fout:
+            fout.write(self.kaldi.data_bundle.get_hash())
+        self.sync_to_kaldi()
+        self.kaldi.data_bundle.sync_to_kaldi()
 
         # TODO: unimplemented
         pass
