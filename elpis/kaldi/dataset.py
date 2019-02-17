@@ -130,6 +130,7 @@ class Dataset(object):
             # Clean up tmp folders
             for d in temporary_directories:
                 os.rmdir(d)
-        temporary_directory_path.rmdir()
         # p = run(f"cd {self.resampled_path}; tar cf {self.path}/media.tar `find . | grep '\.wav'`")
         # print(p.stdout.decode('utf-8'))
+
+    # TODO: additional text

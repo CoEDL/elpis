@@ -5,6 +5,8 @@ from pathlib import Path
 from appdirs import user_data_dir
 from .dataset import Dataset
 from .session import Session
+from .model import Model
+from .transcription import Transcription
 
 class KaldiInterface(object):
     def __init__(self, path:Path=None, name:str=None):
@@ -69,3 +71,17 @@ class KaldiInterface(object):
         return
     def list_datasets(self):
         return
+    
+    def new_model(self, mname):
+        m = Model(self.models_path, mname, self.session)
+        self._edit_interface_config('models', {
+            mname: m.hash
+        })
+        return m
+    
+    def new_transcription(self, tname, model):
+        t = Transcription(self.transcriptions_path, tname, self.session, model)
+        self._edit_interface_config('transcriptions', {
+            tname: t.hash
+        })
+        return t
