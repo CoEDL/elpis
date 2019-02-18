@@ -16,5 +16,6 @@ m.set_pronunciation_path('/elpis/abui_toy_corpus/config/letter_to_sound.txt')
 m.train()
 
 t = kaldi.new_transcription('tx', m)
-t.transcribe('/elpis/abui_toy_corpus/data/1_1_1.wav')
-print(t.results())
+# t.transcribe('/elpis/abui_toy_corpus/data/1_1_1.wav')
+t.transcribe_align('/elpis/abui_toy_corpus/data/1_1_1.wav')
+print(t.elan().decode('utf-8'))
