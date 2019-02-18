@@ -132,5 +132,3 @@ class Dataset(object):
                 os.rmdir(d)
         # p = run(f"cd {self.resampled_path}; tar cf {self.path}/media.tar `find . | grep '\.wav'`")
         # print(p.stdout.decode('utf-8'))
-
-    # TODO: additional text

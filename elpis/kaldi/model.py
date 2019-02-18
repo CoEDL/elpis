@@ -187,7 +187,7 @@ class Model(object):
         ######################################################################
 
         # task _test-train
-        # p = run(f"cd {local_kaldi_path}; ./run.sh")
+        p = run(f"cd {local_kaldi_path}; ./run.sh")
         print(p.stdout)
         print('double done.')
 
