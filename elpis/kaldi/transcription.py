@@ -43,17 +43,18 @@ class Transcription(object):
             fout.write(generator)
         run(f'chmod +x {generator_file_path}')
         run(f'{generator_file_path}')
-        shutil.copytree(f'{self.path}', f"{self.model.path.joinpath('kaldi', 'data', 'infer')}")
+        kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
+        kaldi_test_path = self.model.path.joinpath('kaldi', 'data', 'test')
+        kaldi_path = self.model.path.joinpath('kaldi')
+        shutil.copytree(f'{self.path}', f"{kaldi_infer_path}")
         shutil.copy(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
         p = subprocess.run('sh /kaldi-helpers/kaldi_helpers/inference_scripts/gmm-decode.sh'.split(), cwd=f'{self.model.path.joinpath("kaldi")}')
+        cmd = f"cp {kaldi_infer_path}/one-best-hypothesis.txt {self.path}/ && "
+        cmd += f"infer_audio_filename=$(head -n 1 {kaldi_test_path}/wav.scp | awk '{{print $2}}' |  cut -c 3- ) && "
+        cmd += f"cp \"{kaldi_path}/$infer_audio_filename\" {self.path}"
+        run(cmd)
 
-        # _transcribe:
-        #     - python3.6 {{ .HELPERS_PATH }}/{{ .INPUT_SCRIPTS_PATH }}/resample_audio.py -c {{ .INFER_PATH }}
-        #     - sh {{ .HELPERS_PATH }}/{{ .INFERENCE_SCRIPTS_PATH }}/generate-infer-files.sh
-        #     - rm -rf {{ .KALDI_OUTPUT_PATH }}/kaldi/data/infer
-        #     - cp -R working_dir/input/infer {{ .KALDI_OUTPUT_PATH }}/kaldi/data/infer
-        #     - cp working_dir/input/infer/audio.wav {{ .KALDI_OUTPUT_PATH }}/kaldi/audio.wav
-        #     - task infer
-        #     - task copy-infer-results
+    def transcribe_algin(self, audio):
+        pass
     def results(self):
         return "no results yet"
