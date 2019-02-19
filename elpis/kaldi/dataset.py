@@ -1,29 +1,27 @@
 import time
 import os
 import json
-from . import hasher
-from .command import run
+
 from pathlib import Path
 from typing import List
-from .session import Session
 from io import BufferedIOBase
+
+from . import hasher
+from .command import run
+from .logger import Logger
+from .fsobject import FSObject
+
 from kaldi_helpers.input_scripts import process_eaf, clean_json_data, process_item
 
-class Dataset(object):
-    @classmethod
-    def load(cls, basepath: Path):
-        # TODO: unimplemented
-        pass
 
-    def __init__(self, basepath:Path, name:str, sesson: Session):
-        super().__init__()
-        self.name: str = name
-        self.hash: str = hasher.new()
+class Dataset(FSObject):
+
+    def __init__(self, **kwargs):
+        self._config_file = 'dataset.json'
+        super().__init__(**kwargs)
         self.files: List[Path] = []
 
         # paths
-        self.path: Path = basepath.joinpath(self.hash)
-        self.path.mkdir(parents=True, exist_ok=True)
         self.data_path: Path = self.path.joinpath('original')
         self.data_path.mkdir(parents=True, exist_ok=True)
         self.elan_json_path: Path = self.path.joinpath('elan.json')
@@ -32,29 +30,12 @@ class Dataset(object):
 
         # additional attributes
         self.has_been_processed = False
-        self.session = sesson
         self.tier = 'Phrase'
 
         # config
-        self.config_path = self.path.joinpath('dataset.json')
-        """
-        {
-            name: str,
-            hash: hash,
-            files: [Path],
-            path: str,
-            session: hash,
-        }
-        """
-        config = {
-            'name': name,
-            'hash': self.hash,
-            'files': [],
-            'has_been_processed': False,
-            'session': self. session.hash,
-            'tier': self.tier
-        }
-        self._write_config(config)
+        self.config['tier'] = 'Phrase'
+        self.config['has_been_processed'] = False
+        self.config['files'] = []
 
     def add(self, audio_file: Path, transc_file: Path):
         audio_path = Path(audio_file)
@@ -78,18 +59,8 @@ class Dataset(object):
             ftout.write(transc_fp.read())
         self.files.append(a_out)
         self.files.append(t_out)
-        config = self._read_config()
-        config['files'] = [f'{f.name}' for f in self.files]
-        self._write_config(config)
-    
-    def _read_config(self):
-        with self.config_path.open() as fin:
-            return json.load(fin)
+        self.config['files'] += [f'{f.name}' for f in self.files]
 
-    def _write_config(self, config):
-        with self.config_path.open(mode='w') as fout:
-            json.dump(config, fout)
-    
     def process(self):
         dirty = []
         for file in self.files:
@@ -112,20 +83,21 @@ class Dataset(object):
         from kaldi_helpers.script_utilities import find_files_by_extensions
         from kaldi_helpers.script_utilities.globals import SOX_PATH
 
-
         base_directory = f'{self.data_path}'
         audio_extensions = {"*.wav"}
         temporary_directory_path = Path(f'/tmp/{self.hash}/working')
         temporary_directory_path.mkdir(parents=True, exist_ok=True)
         temporary_directory = f'{temporary_directory_path}'
 
-        all_files_in_dir = glob.glob(os.path.join(base_directory, "**"), recursive=True)
-        input_audio = [ file_ for file_ in all_files_in_dir if file_.endswith(".wav")]
+        all_files_in_dir = glob.glob(os.path.join(
+            base_directory, "**"), recursive=True)
+        input_audio = [
+            file_ for file_ in all_files_in_dir if file_.endswith(".wav")]
         process_lock = threading.Lock()
         temporary_directories = set()
 
         map_arguments = [(index, audio_path, process_lock, temporary_directories, temporary_directory)
-                        for index, audio_path in enumerate(input_audio)]
+                         for index, audio_path in enumerate(input_audio)]
         # Multi-Threaded Audio Re-sampling
         with Pool() as pool:
             outputs = pool.map(process_item, map_arguments)

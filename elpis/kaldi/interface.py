@@ -53,25 +53,16 @@ class KaldiInterface(FSObject):
         # make a default logger
         self.new_logger(default=True)
 
-    def _edit_interface_config(self, key, value):
-        with open(self.interface_path, 'r') as fin:
-            config = json.load(fin)
-        config[key].append(value)
-        with open(self.interface_path, 'w') as fout:
-            json.dump(config, fout)
-
     def new_logger(self, default=False):
         logger = Logger(self.loggers_path)
-        self._edit_interface_config('loggers', logger.hash)
+        self.config['loggers'] += [logger.hash]
         if default:
             self.logger = logger
         return logger
 
     def new_dataset(self, dsname):
-        ds = Dataset(self.datasets_path, dsname, self.logger)
-        self._edit_interface_config('datasets', {
-            dsname: ds.hash
-        })
+        ds = Dataset(parent_path=self.datasets_path, name=dsname, logger=self.logger)
+        self.config['datasets'] += [{ dsname: ds.hash }]
         return ds
 
     def get_dataset(self, dsname):
@@ -82,9 +73,7 @@ class KaldiInterface(FSObject):
 
     def new_model(self, mname):
         m = Model(self.models_path, mname, self.logger)
-        self._edit_interface_config('models', {
-            mname: m.hash
-        })
+        self.config['models'] += [{ mname: m.hash }]
         return m
 
     def get_model(self, mname):
@@ -95,9 +84,7 @@ class KaldiInterface(FSObject):
 
     def new_transcription(self, tname, model):
         t = Transcription(self.transcriptions_path, tname, self.logger, model)
-        self._edit_interface_config('transcriptions', {
-            tname: t.hash
-        })
+        self.config['transcriptions'] += [{ tname: t.hash }]
         return t
 
     def get_transcription(self, tname):

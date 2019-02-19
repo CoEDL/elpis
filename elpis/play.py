@@ -24,6 +24,9 @@ print(t.elan().decode('utf-8'))
 
 # obj = FSObject('/tmp/this')
 # h = obj.hash
+# obj.config['test'] = []
+# obj.config['test'] += [5]
+# print(obj.config)
 # print("h:", h)
 # print("int(h, 16):", int(h, 16))
 # d = int(h, 16)

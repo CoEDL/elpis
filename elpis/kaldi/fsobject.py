@@ -24,12 +24,15 @@ class FSObject(object):
         # path to the object
         self.__path = Path(parent_path).joinpath(dir_name)
         self.path.mkdir(parents=True, exist_ok=True)
+        self.logger = logger
 
-        self._initial_config({
-            'name': name,
-            'hash': h,
-            'logger': None if logger is None else logger.hash
-        })
+        self.ConfigurationInterface(self)._save({})
+        self.config['name'] = name
+        self.config['hash'] = h
+        if logger is None:
+            self.config['logger'] = None
+        else:
+            self.config['logger'] = logger.hash
 
     def _initial_config(self, config):
         self.ConfigurationInterface(self)._save(config)
