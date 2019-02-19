@@ -10,6 +10,11 @@ from io import BufferedIOBase
 from kaldi_helpers.input_scripts import process_eaf, clean_json_data, process_item
 
 class Dataset(object):
+    @classmethod
+    def load(cls, basepath: Path):
+        # TODO: unimplemented
+        pass
+
     def __init__(self, basepath:Path, name:str, sesson: Session):
         super().__init__()
         self.name: str = name
@@ -59,6 +64,10 @@ class Dataset(object):
         with audio_path.open(mode='rb') as fa:
             with transc_path.open(mode='rb') as ft:
                 self.add_fp(fa, ft, aname, tname)
+
+    def add(self, file, name=None):
+        # TODO: unimplemented
+        pass
 
     def add_fp(self, audio_fp: BufferedIOBase, transc_fp: BufferedIOBase, audio_name: str, transc_name: str):
         a_out: Path = self.data_path.joinpath(audio_name)

@@ -2,6 +2,7 @@ from . import hasher
 from .session import Session
 from .command import run
 from .dataset import Dataset
+from .path_structure import KaldiPathStructure
 from pathlib import Path
 import pystache
 import os
@@ -37,6 +38,7 @@ class Model(object):
 
     def train(self):
         # task make-kaldi-subfolders
+        k_path = KaldiPathStructure(self.path)
         local_kaldi_path = self.path.joinpath('kaldi')
         local_kaldi_path.mkdir(parents=True, exist_ok=True)
         kaldi_data_local_dict = local_kaldi_path.joinpath( 'data', 'local', 'dict')

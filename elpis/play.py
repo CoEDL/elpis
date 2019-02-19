@@ -19,3 +19,12 @@ t = kaldi.new_transcription('tx', m)
 # t.transcribe('/elpis/abui_toy_corpus/data/1_1_1.wav')
 t.transcribe_align('/elpis/abui_toy_corpus/data/1_1_1.wav')
 print(t.elan().decode('utf-8'))
+
+# from kaldi.fsobject import FSObject
+
+# obj = FSObject('/tmp/this')
+# h = obj.hash
+# print("h:", h)
+# print("int(h, 16):", int(h, 16))
+# d = int(h, 16)
+# print("hex(d):", hex(d))
