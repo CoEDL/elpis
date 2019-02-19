@@ -72,7 +72,7 @@ class KaldiInterface(FSObject):
         return
 
     def new_model(self, mname):
-        m = Model(self.models_path, mname, self.logger)
+        m = Model(parent_path=self.models_path, name=mname, logger=self.logger)
         self.config['models'] += [{ mname: m.hash }]
         return m
 
@@ -82,8 +82,8 @@ class KaldiInterface(FSObject):
     def list_models(self):
         return
 
-    def new_transcription(self, tname, model):
-        t = Transcription(self.transcriptions_path, tname, self.logger, model)
+    def new_transcription(self, tname):
+        t = Transcription(parent_path=self.transcriptions_path, name=tname, logger=self.logger)
         self.config['transcriptions'] += [{ tname: t.hash }]
         return t
 

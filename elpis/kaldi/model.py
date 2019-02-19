@@ -1,7 +1,8 @@
 from . import hasher
-from .session import Session
+from .logger import Logger
 from .command import run
 from .dataset import Dataset
+from .fsobject import FSObject
 from .path_structure import KaldiPathStructure
 from pathlib import Path
 import pystache
@@ -11,13 +12,11 @@ from io import BufferedIOBase
 from kaldi_helpers.input_scripts import create_kaldi_structure, generate_word_list, generate_pronunciation_dictionary
 
 
-class Model(object):
-    def __init__(self, basepath: Path, name:str, sesson: Session):
-        super().__init__()
-        self.name: str = name
-        self.hash: str = hasher.new()
-        self.path: Path = basepath.joinpath(self.hash)
-        self.path.mkdir(parents=True, exist_ok=True)
+class Model(FSObject):
+    def __init__(self, **kwargs):
+        self._config_file = 'model.json'
+        super().__init__(**kwargs)
+        
         self.pronunciation_path = self.path.joinpath('pron.txt')
         self.dataset: Dataset
 

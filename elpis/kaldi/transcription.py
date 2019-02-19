@@ -1,22 +1,22 @@
 from . import hasher
 from pathlib import Path
-from .session import Session
+from .logger import Logger
 from .resample import resample
 from .command import run
+from .fsobject import FSObject
 from io import BufferedIOBase
 import os
 import shutil
 import subprocess
 
 
-class Transcription(object):
-    def __init__(self, basepath: Path, name:str, sesson: Session, model):
-        super().__init__()
-        self.name: str = name
-        self.hash: str = hasher.new()
-        self.path: Path = basepath.joinpath(self.hash)
-        self.path.mkdir(parents=True, exist_ok=True)
+class Transcription(FSObject):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.audio_file_path = self.path.joinpath('audio.wav')
+        self.model = None
+
+    def link(self, model):
         self.model = model
     
     def _cook_generate_infer_files(self):
