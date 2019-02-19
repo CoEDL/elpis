@@ -10,8 +10,23 @@ from . import hasher
 from .command import run
 from .logger import Logger
 from .fsobject import FSObject
+from .path_structure import existing_attributes, ensure_paths_exist
 
 from kaldi_helpers.input_scripts import process_eaf, clean_json_data, process_item
+
+DEFAULT_TIER = 'Phrase'
+
+class DSPaths(object):
+    def __init__(self, basepath: Path):
+        # directories
+        attrs = existing_attributes(self)
+        self.basepath = basepath
+        self.original = self.basepath.joinpath('original')
+        self.resampled = self.basepath.joinpath('resampled')
+        ensure_paths_exist(self, attrs)
+
+        # files
+        self.filtered_json: Path = self.basepath.joinpath('filtered.json')
 
 
 class Dataset(FSObject):
@@ -20,22 +35,29 @@ class Dataset(FSObject):
         self._config_file = 'dataset.json'
         super().__init__(**kwargs)
         self.files: List[Path] = []
-
-        # paths
-        self.data_path: Path = self.path.joinpath('original')
-        self.data_path.mkdir(parents=True, exist_ok=True)
-        self.elan_json_path: Path = self.path.joinpath('elan.json')
-        self.resampled_path: Path = self.path.joinpath('resampled')
-        self.resampled_path.mkdir(parents=True, exist_ok=True)
-
-        # additional attributes
+        self.pathto = DSPaths(self.path)
         self.has_been_processed = False
-        self.tier = 'Phrase'
 
         # config
-        self.config['tier'] = 'Phrase'
+        self.config['tier'] = DEFAULT_TIER
         self.config['has_been_processed'] = False
         self.config['files'] = []
+
+    @classmethod
+    def load(cls, basepath: Path):
+        self = super().load(basename)
+        self.files = [Path(path) for path in self.config['files']]
+        self.pathto = DSPaths(self.path)
+        self.has_been_processed = self.config['has_been_processed']
+        return self
+    
+    @property
+    def tier(self) -> str:
+        return self.config['tier']
+
+    @tier.setter
+    def tier(self, value: str):
+        self.config['tier'] = value
 
     def add(self, audio_file: Path, transc_file: Path):
         audio_path = Path(audio_file)
@@ -46,13 +68,13 @@ class Dataset(FSObject):
             with transc_path.open(mode='rb') as ft:
                 self.add_fp(fa, ft, aname, tname)
 
-    def add(self, file, name=None):
-        # TODO: unimplemented
-        pass
+    # def add(self, file, name=None):
+    #     # TODO: unimplemented
+    #     pass
 
     def add_fp(self, audio_fp: BufferedIOBase, transc_fp: BufferedIOBase, audio_name: str, transc_name: str):
-        a_out: Path = self.data_path.joinpath(audio_name)
-        t_out: Path = self.data_path.joinpath(transc_name)
+        a_out: Path = self.pathto.original.joinpath(audio_name)
+        t_out: Path = self.pathto.original.joinpath(transc_name)
         with a_out.open(mode='wb') as faout:
             faout.write(audio_fp.read())
         with t_out.open(mode='wb') as ftout:
@@ -69,7 +91,7 @@ class Dataset(FSObject):
                 dirty.extend(obj)
         # TODO other options for the command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
         filtered = clean_json_data(json_data=dirty)
-        with self.elan_json_path.open(mode='w') as fout:
+        with self.pathto.filtered_json.open(mode='w') as fout:
             json.dump(filtered, fout)
 
         import argparse
@@ -83,7 +105,7 @@ class Dataset(FSObject):
         from kaldi_helpers.script_utilities import find_files_by_extensions
         from kaldi_helpers.script_utilities.globals import SOX_PATH
 
-        base_directory = f'{self.data_path}'
+        base_directory = f'{self.pathto.original}'
         audio_extensions = {"*.wav"}
         temporary_directory_path = Path(f'/tmp/{self.hash}/working')
         temporary_directory_path.mkdir(parents=True, exist_ok=True)
@@ -104,12 +126,10 @@ class Dataset(FSObject):
             # TODO: overwrite?
             # Replace original files
             for audio_file in outputs:
-                move(audio_file, self.resampled_path)
+                move(audio_file, self.pathto.resampled)
                 # file_name = os.path.basename(audio_file)
                 # parent_directory = os.path.dirname(os.path.dirname(audio_file))
                 # move(audio_file, os.path.join(parent_directory, file_name))
             # Clean up tmp folders
             for d in temporary_directories:
                 os.rmdir(d)
-        # p = run(f"cd {self.resampled_path}; tar cf {self.path}/media.tar `find . | grep '\.wav'`")
-        # print(p.stdout.decode('utf-8'))

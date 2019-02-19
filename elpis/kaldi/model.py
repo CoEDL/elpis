@@ -72,7 +72,7 @@ class Model(FSObject):
         text_corpus_path.mkdir(parents=True, exist_ok=True)
         corpus_file_path = self.path.joinpath('corpus.txt')
         create_kaldi_structure(
-            input_json=f'{self.dataset.elan_json_path}',
+            input_json=f'{self.dataset.pathto.filtered_json}',
             output_folder=f'{output_path}',
             silence_markers=None,
             text_corpus=f'{text_corpus_path}',
@@ -82,7 +82,7 @@ class Model(FSObject):
         # task make-wordlist
         word_list_path = self.path.joinpath('wordlist.txt')
         additional_words_path = self.path.joinpath('additional_words_path.txt') # TODO: does not exist
-        generate_word_list(transcription_file=f'{self.dataset.elan_json_path}',
+        generate_word_list(transcription_file=f'{self.dataset.pathto.filtered_json}',
                        word_list_file=f'{additional_words_path}',
                        output_file=f'{word_list_path}',
                        kaldi_corpus_file=f'{corpus_file_path}')
@@ -109,7 +109,7 @@ class Model(FSObject):
                     {
                         'KALDI_ROOT': '/kaldi',
                         'HELPERS_PATH': '/kaldi-helpers',
-                        'CORPUS_PATH': f'..{self.dataset.data_path}'
+                        'CORPUS_PATH': f'..{self.dataset.pathto.original}'
                     }
                 )
                 fout.write(content)
@@ -177,8 +177,8 @@ class Model(FSObject):
         p = run(f"cp -L -r /kaldi/egs/wsj/s5/utils {local_kaldi_path}/utils")
 
         # modified extract-wavs
-        for audio_file in os.listdir(self.dataset.resampled_path):
-            src = f'{self.dataset.resampled_path.joinpath(audio_file)}'
+        for audio_file in os.listdir(self.dataset.pathto.resampled):
+            src = f'{self.dataset.pathto.resampled.joinpath(audio_file)}'
             dst=f'{local_kaldi_path}'
             shutil.copy(src, dst)
         print('done.')

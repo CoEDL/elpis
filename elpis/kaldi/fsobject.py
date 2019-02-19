@@ -39,8 +39,10 @@ class FSObject(object):
 
     @classmethod
     def load(cls, basepath: Path):
-        # TODO: unimplemented
-        pass
+        self = cls.__new__(cls)
+        self.__path = Path(basepath)
+        self.logger = None # TODO: use get_logger when implemented
+        return self
 
     @property
     def path(self) -> Path:

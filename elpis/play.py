@@ -23,7 +23,10 @@ print(t.elan().decode('utf-8'))
 
 # from kaldi.fsobject import FSObject
 
-# obj = FSObject('/tmp/this')
+# obj = FSObject(parent_path='/tmp/here', dir_name='ha')
+# obj2 = FSObject.load('/tmp/here/ha')
+# print('o2.path', obj2.path)
+# print('o2.hash', obj2.hash)
 # h = obj.hash
 # obj.config['test'] = []
 # obj.config['test'] += [5]
