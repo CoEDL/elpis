@@ -5,10 +5,7 @@ const initState = {
     date: null,
     pronunciationFile: '',
     settings: {
-        frequency: 44100,
-        mfcc: 22050,
-        ngram: 1,
-        beam: 10
+        ngram: 1
     },
     apiWaiting: {status: false, message: 'something'}
 }

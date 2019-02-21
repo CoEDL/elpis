@@ -55,6 +55,7 @@
     "model": {
         "new": {
             "title": "New Model",
+            "nameLabel": "name",
             "namePlaceholder": "Name",
             "nextButton": "Go"
         },
@@ -76,7 +77,7 @@
             "advancedHeader": "Advanced",
             "audioLabel": "Audio Frequency",
             "mfccLabel": "MFCC stuff",
-            "nGramLabel": "n-gram",
+            "ngramLabel": "n-gram",
             "beamLabel": "Beam size",
             "nextButton": "Next: train model"
         },

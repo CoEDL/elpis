@@ -1,27 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Header, Segment, Form, Button } from 'semantic-ui-react';
+import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import { Formik } from 'formik';
 import { modelName } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import urls from 'urls'
 
 class ModelNew extends Component {
 
-    handleChangeModelName = (event) => {
-        // TODO check for errors in the naming process
-
-        this.props.modelName({ name: event.target.value });
-
-        // TODO goto next step
-        // TODO verify on the go if this is a valid name or not
-        // TODO enable/disable depending on the above comment.
-        // TODO Debounce.
-    }
-
     render() {
-        const { t, name } = this.props;
+        const { t, name, modelName } = this.props;
         return (
             <div>
                 <Branding />
@@ -36,30 +27,62 @@ class ModelNew extends Component {
                                 { t('model.new.title') }
                             </Header>
 
-                            <Form>
-                                <Form.Field>
-                                    <input
-                                        placeholder={ t('model.new.namePlaceholder') }
-                                        onChange={ this.handleChangeModelName }
-                                        value={ name }
-                                    />
-                                    {/* {modelList.indexOf(modelName) > -1 ? (<Label basic color='red' pointing>
-                                        Model name already exists
-                                    </Label>):(<div/>)} */}
-                                </Form.Field>
+                            <Formik
+                                enableReinitialize
+                                initialValues={ {
+                                    name: name
+                                } }
+                                validate={ values => {
+                                    let errors = {};
+                                    if (!values.name) {
+                                        errors.name = 'Required';
+                                    } else if (
+                                        !/^[A-Za-z ]+$/i.test(values.name)
+                                    ) {
+                                        errors.name = 'Invalid name';
+                                    }
+                                    return errors;
+                                } }
+                                onSubmit={ (values, { setSubmitting }) => {
+                                    // demo
+                                    setTimeout(() => {
+                                        alert(JSON.stringify(values, null, 2));
+                                        setSubmitting(false);
+                                    }, 400);
 
-                                <Button type='submit' as={ Link } to="/add-data" >
-                                    { t('model.new.nextButton') }
-                                </Button>
+                                    // redux action
+                                    modelName(values.name)
 
-                                {/* <Button type='submit' as={Link} to="/add-data" disabled={modelList.indexOf(modelName) > -1 || modelName===""}>GO</Button> */ }
-
-                            </Form>
-
-                            {/* <Divider /> */ }
-
-                            {/* {modelList} */ }
-
+                                    // go to next page
+                                    this.props.history.push(urls.gui.model.pronunciation)
+                                } }
+                            >
+                                { ({
+                                    values,
+                                    errors,
+                                    dirty,
+                                    touched,
+                                    handleSubmit,
+                                    handleChange,
+                                    isSubmitting,
+                                    /* and other goodies */
+                                }) => (
+                                        <Form onSubmit={ handleSubmit }>
+                                            <Form.Field>
+                                                <Input
+                                                    label={ t('model.new.nameLabel') }
+                                                    value={ values.name }
+                                                    placeholder={ t('model.new.namePlaceholder') }
+                                                    name="name"
+                                                    type="text"
+                                                    onChange={ handleChange } />
+                                            </Form.Field>
+                                            <Button type='submit' onClick={ handleSubmit } >
+                                                { t('model.new.nextButton') }
+                                            </Button>
+                                        </Form>
+                                    ) }
+                            </Formik>
                         </Grid.Column>
                     </Grid>
                 </Segment>

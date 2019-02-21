@@ -18,7 +18,7 @@ class ModelTraining extends Component {
         const settingDescription = [
             t('model.settings.audioLabel') + ' ' + settings.frequency,
             t('model.settings.mfccLabel')  + ' ' + settings.mfcc,
-            t('model.settings.nGramLabel') + ' ' + settings.ngram,
+            t('model.settings.ngramLabel') + ' ' + settings.ngram,
             t('model.settings.beamLabel')  + ' ' + settings.beam
         ].join(' ~ ');
 

@@ -3,11 +3,11 @@ import { Link, withRouter } from "react-router-dom";
 import { Checkbox, Grid, Header, Segment, Icon, List, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import { Formik } from 'formik';
 import { replaceFiles, triggerApiWaiting, dataBundleSettings } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import FileUpload from './FileUpload';
-import { Formik } from 'formik';
 import urls from 'urls'
 
 class DataBundleFiles extends Component {

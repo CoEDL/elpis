@@ -3,29 +3,15 @@ import { Link, withRouter } from 'react-router-dom';
 import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import { Formik } from 'formik';
 import { dataBundleName } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
-import { Formik } from 'formik';
 import urls from 'urls'
 
 class DataBundleNew extends Component {
 
-
-    handleName = (event) => {
-        // TODO check for errors in the naming process
-
-        this.props.dataBundleName({ name: event.target.value });
-
-        // TODO goto next step
-        // TODO verify on the go if this is a valid name or not
-        // TODO enable/disable depending on the above comment.
-        // TODO Debounce.
-    }
-
     render() {
-        console.log('urls', urls)
-
         const { t, name, dataBundleName } = this.props;
         return (
             <div>
@@ -83,7 +69,13 @@ class DataBundleNew extends Component {
                                 }) => (
                                         <Form onSubmit={ handleSubmit }>
                                             <Form.Field>
-                                                <Input label={ t('dataBundle.new.nameLabel') } value={ values.name } name="name" type="text" onChange={ handleChange } />
+                                                <Input
+                                                    label={ t('dataBundle.new.nameLabel') }
+                                                    value={ values.name }
+                                                    placeholder={ t('dataBundle.new.namePlaceholder') }
+                                                    name="name"
+                                                    type="text"
+                                                    onChange={ handleChange } />
                                             </Form.Field>
                                             <Button type='submit' onClick={ handleSubmit } >
                                                 { t('dataBundle.new.nextButton') }
