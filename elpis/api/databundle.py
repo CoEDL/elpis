@@ -27,6 +27,7 @@ def name():
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
     if request.method == 'POST':
         ds.name = request.json['name']
+    return jsonify({"name": ds.name})
 
 
 @bp.route("/list")
