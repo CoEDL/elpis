@@ -30,28 +30,17 @@ def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     m = kaldi.new_model(request.values.get("name"))
     app.config['CURRENT_MODEL'] = m
-    return f'''{{"status": "ok", "message": "new model created", "data":{m.config._load()}}}'''
+    return f'''{{"status": "ok", "data":{m.config._load()}}}'''
 
 
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
     m = app.config['CURRENT_MODEL']
+    if m is None:
+        return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
     if request.method == 'POST':
         m.name = request.json['name']
-    return f'{{ "status": "ok", "message":"", "data": "{m.name}" }}'
-
-
-@bp.route("/date")
-def date():
-    file_path = os.path.join(CURRENT_MODEL_DIR, 'date.txt')
-    if request.method == 'POST':
-        # update the state name
-        with open(file_path, 'w') as fout:
-            fout.write(request.json['date'])
-            fout.close()
-    # return the state
-    with open(file_path, 'r') as fin:
-        return f'{{ "date": "{fin.read()}" }}'
+    return f'{{ "status": "ok", "data": "{m.name}" }}'
 
 
 @bp.route("/transcription-files", methods=['GET', 'POST'])

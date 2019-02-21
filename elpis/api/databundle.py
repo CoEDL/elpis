@@ -17,7 +17,6 @@ def new():
     app.config['CURRENT_DATABUNDLE'] = ds
     return jsonify({
         "status": "ok",
-        "message": f"new data bundle created called {ds.name}",
         "data": ds.config._load()
     })
 
@@ -25,10 +24,13 @@ def new():
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    if ds is None:
+        return '{"status":"error", "data": "No current data bundle exists (prehaps create one first)"}'
     if request.method == 'POST':
         ds.name = request.json['name']
     return jsonify({
-        "status": "ok","message":"", "data": ds.name})
+        "status": "ok",
+        "data": ds.name})
 
 
 @bp.route("/list")
@@ -36,7 +38,6 @@ def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     return jsonify({
         "status": "ok",
-        "message": "",
         "data": kaldi.list_datasets()
     })
 
@@ -44,6 +45,8 @@ def list_existing():
 @bp.route("/files", methods=['GET', 'POST'])
 def files():
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    if ds is None:
+        return '{"status":"error", "data": "No current data bundle exists (prehaps create one first)"}'
     if request.method == 'POST':
         files_overwrite = request.form["filesOverwrite"]
         print('filesOverwrite:', files_overwrite)
@@ -55,6 +58,8 @@ def files():
 @bp.route("/prepare", methods=['GET', 'POST'])
 def prepare():
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    if ds is None:
+        return '{"status":"error", "data": "No current data bundle exists (prehaps create one first)"}'
     ds.process()
     with ds.pathto.word_count_json.open() as fin:
         return fin.read()

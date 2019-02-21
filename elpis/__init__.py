@@ -19,7 +19,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
-    interface_path = Path('/root/.local/share/elpis/test')
+    interface_path = Path('/elpis/state')
     if not interface_path.exists():
         app.config['INTERFACE'] = KaldiInterface(interface_path)
     else:

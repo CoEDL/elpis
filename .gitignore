@@ -17,6 +17,7 @@ node_modules/
 
 # Server
 log.txt
+state/
 
 #testing
 
