@@ -15,6 +15,7 @@
         },
         "new": {
             "title": "New Data Bundle",
+            "nameLabel": "name",
             "namePlaceholder": "Name",
             "nextButton": "Next"
         },
@@ -24,7 +25,9 @@
             "filesHeader": "Uploaded files",
             "filesReplaceLabel": "Replace files?",
             "settingsHeader": "Settings",
+            "tierLabel": "name",
             "settingsDescription": "Some info about the settings",
+            "saveButton": "Save",
             "nextButton": "Next: process this data",
             "nextButtonError": "Next: (simulate a data input error)"
         },

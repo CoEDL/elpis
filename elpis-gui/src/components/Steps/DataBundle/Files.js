@@ -143,10 +143,10 @@ class DataBundleFiles extends Component {
                                     }) => (
                                             <Form onSubmit={ handleSubmit }>
                                                 <Form.Field>
-                                                    <Input label="tier" value={ values.tier } name="tier" type="text" onChange={ handleChange } />
+                                                    <Input label={ t('dataBundle.files.tierLabel') } value={ values.tier } name="tier" type="text" onChange={ handleChange } />
                                                 </Form.Field>
                                                 <Button type='submit' onClick={ handleSubmit } >
-                                                    { t('dataBundle.new.nextButton') }
+                                                    { t('dataBundle.files.saveButton') }
                                                 </Button>
                                             </Form>
                                         ) }
