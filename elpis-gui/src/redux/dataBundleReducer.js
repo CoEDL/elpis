@@ -2,7 +2,7 @@ import {getFileExtension} from 'helpers'
 
 const initState = {
     name: "",
-    date: null,
+    dbNames: [],
     replaceFiles: false,
     audioFiles: [],
     transcriptionFiles: [],
@@ -11,7 +11,7 @@ const initState = {
         tier: 'Phrase'
     },
     preparedData: {
-        wordlist: ['aa', 'bbb', 'cccc', 'ddd']
+        wordlist: []
     }
 }
 
@@ -26,14 +26,22 @@ const dataBundle = (state = initState, action) => {
             }
 
 
+        case 'DATA_BUNDLE_LIST':
+            return {
+                ...state,
+                dbNames: action.response.data.data
+            }
+
         case 'DATA_BUNDLE_NEW':
             return {
-                ...state, name: action.response.data.data.name
+                ...state,
+                name: action.response.data.data.name
             }
 
         case 'DATA_BUNDLE_NAME':
             return {
-                ...state, name: action.response.data.data.name
+                ...state,
+                name: action.response.data.data.name
             }
 
         case 'DATA_BUNDLE_DATE':
