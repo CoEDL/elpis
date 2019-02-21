@@ -10,7 +10,17 @@ class DataBundlePrepare extends Component {
     componentDidMount() {
     }
     render() {
-        const { t } = this.props;
+        const { t, preparedData } = this.props;
+        console.log("preparedData", preparedData)
+        const wordlistTable = preparedData.wordlist ? (
+            <Segment>
+                <Header as='h1'>{ t('dataBundle.prepare.wordlistHeader') }</Header>
+                <ul>
+                    {preparedData.wordlist.map( word =><li>{word}</li>)}
+                </ul>
+            </Segment>
+        ) : null
+
         return (
             <div>
                 <Branding />
@@ -24,37 +34,10 @@ class DataBundlePrepare extends Component {
                             <h2>{ t('dataBundle.prepare.header') }</h2>
                             <p>{ t('dataBundle.prepare.bannerMessage') }</p>
                             <p>{ t('dataBundle.prepare.bannerMessageDetailed') }</p>
-                            <Grid columns={ 2 }>
-                                <Grid.Column>
-                                    <Header as='h1'>{ t('dataBundle.prepare.wordlistHeader') }</Header>
-                                    <List>
-                                        <List.Item>
-                                            <List.Content>amakaang</List.Content>
-                                        </List.Item>
-                                        <List.Item>
-                                            <List.Content>kaai</List.Content>
-                                        </List.Item>
-                                        <List.Item>
-                                            <List.Content>muila</List.Content>
-                                        </List.Item>
-                                    </List>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Header as='h1'>{ t('dataBundle.prepare.frequencyHeader') }</Header>
-                                    <List>
-                                        <List.Item>
-                                            <List.Content>21</List.Content>
-                                        </List.Item>
-                                        <List.Item>
-                                            <List.Content>77</List.Content>
-                                        </List.Item>
-                                        <List.Item>
-                                            <List.Content>84</List.Content>
-                                        </List.Item>
-                                    </List>
-                                </Grid.Column>
-                            </Grid>
-                            <Divider />
+
+
+                            { wordlistTable }
+
                             <Button type='submit' as={ Link } to="/model/pronunciation-dictionary">{ t('dataBundle.prepare.nextButton') }</Button>
                         </Grid.Column>
                     </Grid>
@@ -64,5 +47,10 @@ class DataBundlePrepare extends Component {
     }
 }
 
-export default translate('common')(DataBundlePrepare)
+const mapStateToProps = state => {
+    return {
+        preparedData: state.dataBundle.preparedData
+    }
+}
+export default connect(mapStateToProps)(translate('common')(DataBundlePrepare))
 

@@ -10,6 +10,9 @@ const initState = {
     settings: {
         tier: 'Phrase'
     },
+    preparedData: {
+        wordlist: ['aa', 'bbb', 'cccc', 'ddd']
+    }
 }
 
 
@@ -72,8 +75,10 @@ const dataBundle = (state = initState, action) => {
             }
 
         case 'DATA_BUNDLE_PREPARE':
+
             return {
-                ...state
+                ...state,
+                preparedData: {...state.preparedData, wordlist: action.response.data}
             }
 
         default:
