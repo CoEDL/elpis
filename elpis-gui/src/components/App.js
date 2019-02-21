@@ -5,7 +5,7 @@ import {
     Welcome,
     DataBundleList,
     DataBundleNew,
-    DataBundleAddFiles,
+    DataBundleFiles,
     DataBundlePreparation,
     DataBundlePreparationError,
     ModelList,
@@ -33,7 +33,7 @@ class App extends Component {
 
                         <Route path={urls.gui.dataBundle.index} exact component={ DataBundleList } />
                         <Route path={urls.gui.dataBundle.new} component={ DataBundleNew } />
-                        <Route path={urls.gui.dataBundle.files} component={ DataBundleAddFiles } />
+                        <Route path={urls.gui.dataBundle.files} component={ DataBundleFiles } />
                         <Route path={urls.gui.dataBundle.clean} exact component={ DataBundlePreparation } />
                         <Route path={urls.gui.dataBundle.preparationError} component={ DataBundlePreparationError } />
 

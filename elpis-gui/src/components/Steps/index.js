@@ -2,7 +2,7 @@ export { default as Welcome } from './Welcome';
 
 export { default as DataBundleList } from './DataBundle/List';
 export { default as DataBundleNew } from './DataBundle/New';
-export { default as DataBundleAddFiles } from './DataBundle/AddFiles';
+export { default as DataBundleFiles } from './DataBundle/Files';
 export { default as DataBundlePreparation } from './DataBundle/Preparation';
 export { default as DataBundlePreparationError } from './DataBundle/PreparationError'
 

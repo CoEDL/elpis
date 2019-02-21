@@ -18,7 +18,7 @@
             "namePlaceholder": "Name",
             "nextButton": "Next"
         },
-        "addFiles": {
+        "files": {
             "title": "Add data",
             "description": "Some description and information about file formats, naming requirements etc.",
             "filesHeader": "Uploaded files",

@@ -58,6 +58,7 @@ export const dataBundleNew = () => {
 }
 
 export const dataBundleName = postData => {
+    console.log("ACTION data bundle name", postData)
     const url = baseUrl + '/api/data-bundle/name';
     return postApi(url, postData, 'dataBundleName');
 }
