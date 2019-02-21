@@ -37,6 +37,7 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
+    dataBundleList: response => ({ type: 'DATA_BUNDLE_LIST', response }),
     dataBundleNew: response => ({ type: 'DATA_BUNDLE_NEW', response }),
     dataBundleName: response => ({ type: 'DATA_BUNDLE_NAME', response }),
     dataBundleFiles: response => ({ type: 'DATA_BUNDLE_FILES', response }),
@@ -54,6 +55,11 @@ var successHandler = {
 
 // * * * * * * * * * * DATA BUNDLES * * * * * * * * * * * * * * *
 
+export const dataBundleList = postData => {
+    const url = baseUrl + urls.api.dataBundle.list
+    return postApi(url, postData, 'dataBundleList')
+}
+
 export const dataBundleNew = postData => {
     const url = baseUrl + urls.api.dataBundle.new
     return postApi(url, postData, 'dataBundleNew')
@@ -62,11 +68,6 @@ export const dataBundleNew = postData => {
 export const dataBundleName = postData => {
     const url = baseUrl + urls.api.dataBundle.name
     return postApi(url, postData, 'dataBundleName')
-}
-
-export const dataBundleDate = postData => {
-    const url = baseUrl + '/api/data-bundle/date'
-    return postApi(url, postData, 'dataBundleDate')
 }
 
 export const dataBundleSettings = postData => {
@@ -80,15 +81,11 @@ export const dataBundleFiles = postData => {
     return postApi(url, postData, 'dataBundleFiles', headers)
 }
 
-// should this be GET or POST some kind of trigger and return response?
 export const dataBundlePrepare = () => {
     console.log("action do dataBundlePrepare")
     const url = baseUrl + urls.api.dataBundle.prepare
     return postApi(url, null, 'dataBundlePrepare')
 }
-// GET_CLEANED_DATA_BUNDLE
-
-
 
 
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
@@ -101,11 +98,6 @@ export const modelNew = () => {
 export const modelName = postData => {
     const url = baseUrl + '/api/model/name'
     return postApi(url, postData, 'modelName')
-}
-
-export const modelDate = postData => {
-    const url = baseUrl + '/api/model/date'
-    return postApi(url, postData, 'modelDate')
 }
 
 export const modelPronunciation = postData => {
