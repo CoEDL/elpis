@@ -16,10 +16,7 @@ class ModelTraining extends Component {
 
         // TODO: display as list rather than run-on line
         const settingDescription = [
-            t('model.settings.audioLabel') + ' ' + settings.frequency,
-            t('model.settings.mfccLabel')  + ' ' + settings.mfcc,
-            t('model.settings.ngramLabel') + ' ' + settings.ngram,
-            t('model.settings.beamLabel')  + ' ' + settings.beam
+            t('model.settings.ngramLabel') + ' ' + settings.ngram
         ].join(' ~ ');
 
 
@@ -46,7 +43,7 @@ class ModelTraining extends Component {
 
                             <Card fluid>
                                 <Card.Content header={ t('model.training.settingsHeader') } />
-                                <Card.Content description={ settingDescription } />
+                                <Card.Content description={ t('model.settings.ngramLabel') + ' ' + settings.ngram } />
                             </Card>
 
                             <Step.Group size='mini'>
