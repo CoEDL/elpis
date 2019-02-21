@@ -25,7 +25,7 @@
             "filesHeader": "Uploaded files",
             "filesReplaceLabel": "Replace files?",
             "settingsHeader": "Settings",
-            "tierLabel": "name",
+            "tierLabel": "tier name",
             "settingsDescription": "Some info about the settings",
             "saveButton": "Save",
             "nextButton": "Next: process this data",
