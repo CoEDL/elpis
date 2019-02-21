@@ -13,7 +13,7 @@ bp.register_blueprint(parent_bp)
 @bp.route("/new", methods=['GET', 'POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
-    ds = kaldi.new_dataset(request.values.get("name"))
+    ds = kaldi.new_dataset(request.json['name'])
     app.config['CURRENT_DATABUNDLE'] = ds
     return jsonify({
         "status": "ok",
