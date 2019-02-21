@@ -69,30 +69,30 @@ class FSObject(object):
         return self.ConfigurationInterface(self)
 
     class ConfigurationInterface(object):
-        def __init__(this, self):
-            this.self = self
+        def __init__(self, fsobj):
+            self.fsobj = fsobj
 
-        def _file_name(this):
-            return getattr(this.self, '_config_file', 'config.json')
+        def _file_name(self):
+            return getattr(self.fsobj, '_config_file', 'config.json')
 
-        def _load(this):
-            with open(f'{this.self.path}/{this._file_name()}', 'r') as fin:
+        def _load(self):
+            with open(f'{self.fsobj.path}/{self._file_name()}', 'r') as fin:
                 return json.load(fin)
 
-        def _save(this, conf):
-            with open(f'{this.self.path}/{this._file_name()}', 'w') as fout:
+        def _save(self, conf):
+            with open(f'{self.fsobj.path}/{self._file_name()}', 'w') as fout:
                 return json.dump(conf, fout)
 
-        def __getitem__(this, key: str):
-            return this._load()[key]
+        def __getitem__(self, key: str):
+            return self._load()[key]
 
-        def __setitem__(this, key, value):
-            config = this._load()
+        def __setitem__(self, key, value):
+            config = self._load()
             config[key] = value
-            this._save(config)
+            self._save(config)
 
-        def __repr__(this):
-            return this._load().__repr__()
+        def __repr__(self):
+            return self._load().__repr__()
 
-        def __str__(this):
-            return this._load().__str__()
+        def __str__(self):
+            return self._load().__str__()

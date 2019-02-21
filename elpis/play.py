@@ -1,25 +1,33 @@
 from kaldi.interface import KaldiInterface
 
-kaldi = KaldiInterface()
+kaldi = KaldiInterface.load('/tmp/main01')
 print(kaldi.path)
 
-ds = kaldi.new_dataset('dsx')
-ds.add('/elpis/abui_toy_corpus/data/1_1_5.eaf', '/elpis/abui_toy_corpus/data/1_1_5.wav')
-with open('/elpis/abui_toy_corpus/data/1_1_4.eaf', 'rb') as feaf:
-    with open('/elpis/abui_toy_corpus/data/1_1_4.wav', 'rb') as fwav:
-        ds.add_fp(feaf, fwav, 'f.eaf', 'f.wav')
+# ds = kaldi.new_dataset('dsy')
+ds = kaldi.get_dataset('dsy')
+print(ds)
+print(dir(ds))
+print(f"ds.path = {ds.path}")
+print(f"ds.files = {ds.files}")
+# ds.add('/elpis/abui_toy_corpus/data/1_1_5.eaf', '/elpis/abui_toy_corpus/data/1_1_5.wav')
+# with open('/elpis/abui_toy_corpus/data/1_1_4.eaf', 'rb') as feaf:
+#     with open('/elpis/abui_toy_corpus/data/1_1_4.wav', 'rb') as fwav:
+#         ds.add_fp(feaf, fwav, 'f.eaf', 'f.wav')
 ds.process()
 
-m = kaldi.new_model('mx')
-m.link(ds)
-m.set_pronunciation_path('/elpis/abui_toy_corpus/config/letter_to_sound.txt')
-m.train()
+print("ds.path:",ds.path)
+print("kaldi.list_datasets():",kaldi.list_datasets())
 
-t = kaldi.new_transcription('tx')
-t.link(m)
-# t.transcribe('/elpis/abui_toy_corpus/data/1_1_1.wav')
-t.transcribe_align('/elpis/abui_toy_corpus/data/1_1_1.wav')
-print(t.elan().decode('utf-8'))
+# m = kaldi.new_model('mx')
+# m.link(ds)
+# m.set_pronunciation_path('/elpis/abui_toy_corpus/config/letter_to_sound.txt')
+# m.train()
+
+# t = kaldi.new_transcription('tx')
+# t.link(m)
+# # t.transcribe('/elpis/abui_toy_corpus/data/1_1_1.wav')
+# t.transcribe_align('/elpis/abui_toy_corpus/data/1_1_1.wav')
+# print(t.elan().decode('utf-8'))
 
 # from kaldi.fsobject import FSObject
 

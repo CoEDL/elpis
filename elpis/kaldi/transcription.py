@@ -11,6 +11,7 @@ import subprocess
 
 
 class Transcription(FSObject):
+    _config_file = "transcription.json"
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.audio_file_path = self.path.joinpath('audio.wav')

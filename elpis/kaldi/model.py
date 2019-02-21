@@ -9,16 +9,21 @@ import pystache
 import os
 import shutil
 from io import BufferedIOBase
-from kaldi_helpers.input_scripts import create_kaldi_structure, generate_word_list, generate_pronunciation_dictionary
+
+from kaldi_helpers.input_scripts.json_to_kaldi import create_kaldi_structure
+from kaldi_helpers.input_scripts.make_wordlist import generate_word_list
+from kaldi_helpers.input_scripts.make_prn_dict import generate_pronunciation_dictionary
 
 
 class Model(FSObject):
+    _config_file = 'model.json'
     def __init__(self, **kwargs):
-        self._config_file = 'model.json'
         super().__init__(**kwargs)
         
         self.pronunciation_path = self.path.joinpath('pron.txt')
         self.dataset: Dataset
+        self.config['dataset'] = None # dataset hash has not been linked
+        self.config['pronunciation'] = None # file has not been uploaded
 
     def set_pronunciation_content(self, content: str):
         with self.pronunciation_path.open(mode='wb') as fout:
@@ -34,6 +39,7 @@ class Model(FSObject):
 
     def link(self, dataset: Dataset):
         self.dataset = dataset
+        self.config['dataset'] = dataset.hash
 
     def train(self):
         # task make-kaldi-subfolders

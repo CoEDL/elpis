@@ -1,6 +1,7 @@
 import time
 import os
 import json
+import shutil 
 
 from pathlib import Path
 from typing import List
@@ -12,7 +13,9 @@ from .logger import Logger
 from .fsobject import FSObject
 from .path_structure import existing_attributes, ensure_paths_exist
 
-from kaldi_helpers.input_scripts import process_eaf, clean_json_data, process_item
+from kaldi_helpers.input_scripts.elan_to_json import process_eaf
+from kaldi_helpers.input_scripts.clean_json import clean_json_data
+from kaldi_helpers.input_scripts.resample_audio import process_item
 
 DEFAULT_TIER = 'Phrase'
 
@@ -30,9 +33,8 @@ class DSPaths(object):
 
 
 class Dataset(FSObject):
-
+    _config_file = 'dataset.json'
     def __init__(self, **kwargs):
-        self._config_file = 'dataset.json'
         super().__init__(**kwargs)
         self.files: List[Path] = []
         self.pathto = DSPaths(self.path)
@@ -45,7 +47,7 @@ class Dataset(FSObject):
 
     @classmethod
     def load(cls, basepath: Path):
-        self = super().load(basename)
+        self = super().load(basepath)
         self.files = [Path(path) for path in self.config['files']]
         self.pathto = DSPaths(self.path)
         self.has_been_processed = self.config['has_been_processed']
@@ -59,6 +61,38 @@ class Dataset(FSObject):
     def tier(self, value: str):
         self.config['tier'] = value
 
+    def add_elan_file(self, filename, content) -> None:
+        # TODO: unimplemented!
+        return
+    def add_textgrid_file(self, filename, content) -> None:
+        # TODO: unimplemented!
+        return
+    def add_transcriber_file(self, filename, content) -> None:
+        # TODO: unimplemented!
+        return
+
+    def add_wave_file(self, filename, content) -> None:
+        # TODO: unimplemented!
+        return
+    def add_other_audio_type_file(self, filename, content) -> None:
+        # TODO: unimplemented!
+        return
+    
+    def list_audio_files(self) -> List[str]:
+        # TODO: unimplemented!
+        return
+    def list_transcription_files(self) -> List[str]:
+        # TODO: unimplemented!
+        return
+    def list_all_files(self) -> List[str]:
+        # TODO: unimplemented!
+        return
+
+    
+    def remove_file(self, filename) -> None:
+        # TODO: unimplemented!
+        return
+
     def add(self, audio_file: Path, transc_file: Path):
         audio_path = Path(audio_file)
         transc_path = Path(transc_file)
@@ -67,10 +101,6 @@ class Dataset(FSObject):
         with audio_path.open(mode='rb') as fa:
             with transc_path.open(mode='rb') as ft:
                 self.add_fp(fa, ft, aname, tname)
-
-    # def add(self, file, name=None):
-    #     # TODO: unimplemented
-    #     pass
 
     def add_fp(self, audio_fp: BufferedIOBase, transc_fp: BufferedIOBase, audio_name: str, transc_name: str):
         a_out: Path = self.pathto.original.joinpath(audio_name)
@@ -84,10 +114,15 @@ class Dataset(FSObject):
         self.config['files'] += [f'{f.name}' for f in self.files]
 
     def process(self):
+        # remove existing file in resampled
+        # TODO check what other files need removing
+        shutil.rmtree(f'{self.pathto.resampled}')
+        self.pathto.resampled.mkdir(parents=True, exist_ok=True)
+        # process files
         dirty = []
         for file in self.files:
             if file.name.endswith('.eaf'):
-                obj = process_eaf(f'{file.absolute()}', self.tier)
+                obj = process_eaf(f'{self.pathto.original.joinpath(file)}', self.tier)
                 dirty.extend(obj)
         # TODO other options for the command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
         filtered = clean_json_data(json_data=dirty)
@@ -133,3 +168,4 @@ class Dataset(FSObject):
             # Clean up tmp folders
             for d in temporary_directories:
                 os.rmdir(d)
+        self.config['has_been_processed'] = True
