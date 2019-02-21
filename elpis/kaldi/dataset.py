@@ -30,6 +30,7 @@ class DSPaths(object):
 
         # files
         self.filtered_json: Path = self.basepath.joinpath('filtered.json')
+        self.word_count_json: Path = self.basepath.joinpath('word_count.json')
 
 
 class Dataset(FSObject):
@@ -132,6 +133,17 @@ class Dataset(FSObject):
         filtered = clean_json_data(json_data=dirty)
         with self.pathto.filtered_json.open(mode='w') as fout:
             json.dump(filtered, fout)
+            with self.pathto.word_count_json.open(mode='w') as f_word_count:
+                wordlist = {}
+                for transcription in filtered:
+                    words = transcription['transcript'].split()
+                    for word in words:
+                        if word in wordlist:
+                            wordlist[word] += 1
+                        else:
+                            wordlist[word] = 1
+                json.dump(words, f_word_count)
+
 
         import argparse
         import glob

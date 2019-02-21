@@ -26,6 +26,12 @@ def new():
         "data": ds.config._load()
     })
 
+@bp.route("/name", methods=['GET', 'POST'])
+def name():
+    ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    if request.method == 'POST':
+        ds.name = request.json['name']
+
 @bp.route("/list")
 def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
@@ -45,6 +51,12 @@ def files():
             ds.add_fp(file, file.filename)
     return jsonify(ds.files)
 
+@bp.route("/prepare", methods=['GET', 'POST'])
+def prepare():
+    ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    ds.process()
+    with ds.pathto.word_count_json.open() as fin:
+        return fin.read()
 
 
 
