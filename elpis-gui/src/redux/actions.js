@@ -1,6 +1,7 @@
 import axios from 'axios'
+import urls from 'urls'
 
-const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://127.0.0.1:5000'
+const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://0.0.0.0:5000'
 
 const getApi = (url, successFunction) => {
     return dispatch => {
@@ -10,7 +11,7 @@ const getApi = (url, successFunction) => {
                 // dispatch the success handler that came with the request
                 dispatch(successHandler[successFunction](response))
             }).catch((error) => {
-                // For HTTP 400 error responses, dipatch a generic error
+                // For HTTP 400 error responses, dispatch a generic error
                 // or we could use a similar pattern as success for custom actions
                 dispatch(errorHandler(error))
             })
@@ -19,12 +20,12 @@ const getApi = (url, successFunction) => {
 
 const postApi = (url, postData, successFunction, config=null) => {
     return dispatch => {
+        console.log('postData', postData)
         axios.post(url, postData, config)
             .then((response) => {
-                console.log('success')
+                console.log("api response", response)
                 dispatch(successHandler[successFunction](response))
             }).catch((error) => {
-                console.log('error')
                 dispatch(errorHandler(error))
             })
     }
@@ -52,39 +53,37 @@ var successHandler = {
 
 // * * * * * * * * * * DATA BUNDLES * * * * * * * * * * * * * * *
 
-export const dataBundleNew = () => {
-    const url = baseUrl + '/api/data-bundle/new';
-    return postApi(url, null, 'dataBundleNew');
+export const dataBundleNew = postData => {
+    const url = baseUrl + urls.api.dataBundle.new
+    return postApi(url, postData, 'dataBundleNew')
 }
 
 export const dataBundleName = postData => {
-    console.log("ACTION data bundle name", postData)
-    const url = baseUrl + '/api/data-bundle/name';
-    return postApi(url, postData, 'dataBundleName');
+    const url = baseUrl + urls.api.dataBundle.name
+    return postApi(url, postData, 'dataBundleName')
 }
 
 export const dataBundleDate = postData => {
-    const url = baseUrl + '/api/data-bundle/date';
-    return postApi(url, postData, 'dataBundleDate');
-}
-
-// TODO: change url to /api/data-bundle/files
-export const dataBundleFiles = postData => {
-    const url = baseUrl + '/api/model/transcription-files';
-    const headers = {headers: {'content-type': 'multipart/form-data'}}
-    return postApi(url, postData, 'dataBundleFiles', headers);
+    const url = baseUrl + '/api/data-bundle/date'
+    return postApi(url, postData, 'dataBundleDate')
 }
 
 export const dataBundleSettings = postData => {
-    const url = baseUrl + '/api/data-bundle/settings';
-    return postApi(url, postData, 'dataBundleSettings');
+    const url = baseUrl + urls.api.dataBundle.settings
+    return postApi(url, postData, 'dataBundleSettings')
 }
 
+export const dataBundleFiles = postData => {
+    const url = baseUrl + urls.api.dataBundle.files
+    const headers = {headers: {'content-type': 'multipart/form-data'}}
+    return postApi(url, postData, 'dataBundleFiles', headers)
+}
 
 // should this be GET or POST some kind of trigger and return response?
 export const dataBundlePrepare = () => {
-    const url = baseUrl + '/api/data-bundle/prepare';
-    return getApi(url, 'dataBundlePrepare');
+    console.log("action do dataBundlePrepare")
+    const url = baseUrl + urls.api.dataBundle.prepare
+    return postApi(url, null, 'dataBundlePrepare')
 }
 // GET_CLEANED_DATA_BUNDLE
 
@@ -94,47 +93,47 @@ export const dataBundlePrepare = () => {
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 
 export const modelNew = () => {
-    const url = baseUrl + '/api/model/new';
-    return postApi(url, null, 'modelNew');
+    const url = baseUrl + '/api/model/new'
+    return postApi(url, null, 'modelNew')
 }
 
 export const modelName = postData => {
-    const url = baseUrl + '/api/model/name';
-    return postApi(url, postData, 'modelName');
+    const url = baseUrl + '/api/model/name'
+    return postApi(url, postData, 'modelName')
 }
 
 export const modelDate = postData => {
-    const url = baseUrl + '/api/model/date';
-    return postApi(url, postData, 'modelDate');
+    const url = baseUrl + '/api/model/date'
+    return postApi(url, postData, 'modelDate')
 }
 
 export const modelPronunciation = postData => {
-    const url = baseUrl + '/api/model/pronunciation';
+    const url = baseUrl + '/api/model/pronunciation'
     const headers = {headers: {'content-type': 'multipart/form-data'}}
-    return postApi(url, postData, 'modelPronunciation', headers);
+    return postApi(url, postData, 'modelPronunciation', headers)
 }
 
 export const modelLexicon = () => {
-    const url = baseUrl + '/api/model/lexicon';
-    return getApi(url, 'modelLexicon');
+    const url = baseUrl + '/api/model/lexicon'
+    return getApi(url, 'modelLexicon')
 }
 // GET_MODEL_LEXICON
 
 export const modelSettings = postData => {
-    const url = baseUrl + '/api/model/settings';
-    return postApi(url, postData, 'modelSettings');
+    const url = baseUrl + '/api/model/settings'
+    return postApi(url, postData, 'modelSettings')
 }
 
 // get or post?
 export const modelTraining = () => {
-    const url = baseUrl + '/api/model/train';
-    return postApi(url, 'modelTraining');
+    const url = baseUrl + '/api/model/train'
+    return postApi(url, 'modelTraining')
 }
 
 // need a model id?
 export const modelTrainingResults = () => {
-    const url = baseUrl + '/api/model/results';
-    return postApi(url, 'modelTrainingResults');
+    const url = baseUrl + '/api/model/results'
+    return postApi(url, 'modelTrainingResults')
 }
 
 
@@ -144,9 +143,9 @@ export const modelTrainingResults = () => {
 
 export const transcriptionNew = postData => {
     // const url = "http://httpbin.org/post"
-    const url = baseUrl + '/api/transcription/audio';
+    const url = baseUrl + '/api/transcription/audio'
     const headers = {headers: {'content-type': 'multipart/form-data'}}
-    return postApi(url, postData, 'transcriptionNew', headers);
+    return postApi(url, postData, 'transcriptionNew', headers)
 }
 
 // TODO: action to download Elan file

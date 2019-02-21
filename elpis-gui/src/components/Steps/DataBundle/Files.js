@@ -4,7 +4,7 @@ import { Checkbox, Grid, Header, Segment, Icon, List, Form, Input, Button } from
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
-import { replaceFiles, triggerApiWaiting, dataBundleSettings } from 'redux/actions';
+import { replaceFiles, triggerApiWaiting, dataBundleSettings, dataBundlePrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import FileUpload from './FileUpload';
@@ -17,6 +17,7 @@ class DataBundleFiles extends Component {
     }
 
     handleNextButton = () => {
+        this.props.dataBundlePrepare()
         this.props.triggerApiWaiting('preparing data')
         this.props.history.push('/data-bundle/prepare')
     }
@@ -128,6 +129,8 @@ class DataBundleFiles extends Component {
                                         }, 400);
 
                                         // redux action
+                                        const postData = { tier: values.tier }
+                                        dataBundleSettings(postData)
 
                                     } }
                                 >
@@ -197,8 +200,10 @@ const mapDispatchToProps = dispatch => ({
     },
     dataBundleSettings: postData => {
         dispatch(dataBundleSettings(postData));
+    },
+    dataBundlePrepare: () => {
+        dispatch(dataBundlePrepare());
     }
-
 })
 
 export default withRouter(

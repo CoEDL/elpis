@@ -4,15 +4,20 @@ import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
-import { dataBundleName } from 'redux/actions';
+import { dataBundleNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import urls from 'urls'
 
 class DataBundleNew extends Component {
 
+    componentDidMount() {
+        // const { dataBundleNew } = this.props;
+        // dataBundleNew()
+    }
+
     render() {
-        const { t, name, dataBundleName } = this.props;
+        const { t, name, dataBundleNew } = this.props;
         return (
             <div>
                 <Branding />
@@ -45,13 +50,14 @@ class DataBundleNew extends Component {
                                 } }
                                 onSubmit={ (values, { setSubmitting }) => {
                                     // demo
-                                    setTimeout(() => {
-                                        alert(JSON.stringify(values, null, 2));
-                                        setSubmitting(false);
-                                    }, 400);
+                                    // setTimeout(() => {
+                                    //     alert(JSON.stringify(values, null, 2));
+                                    //     setSubmitting(false);
+                                    // }, 400);
 
                                     // redux action
-                                    dataBundleName(name)
+                                    const postData = {name:values.name}
+                                    dataBundleNew(postData)
 
                                     // go to next page
                                     this.props.history.push(urls.gui.dataBundle.files)
@@ -97,8 +103,8 @@ const mapStateToProps = state => {
     }
 }
 const mapDispatchToProps = dispatch => ({
-    dataBundleName: name => {
-        dispatch(dataBundleName(name))
+    dataBundleNew: (name) => {
+        dispatch(dataBundleNew(name))
     }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(DataBundleNew)));

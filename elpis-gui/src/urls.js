@@ -24,11 +24,12 @@ export default {
     },
     "api": {
         "dataBundle": {
-            "new": "/api/data-bundle/new",
-            "files": "/api/data-bundle/files",
-            "list": "/api/data-bundle/list",
-            "prepare": "/api/data-bundle/prepare",
-            "name": "/api/data-bundle/name"
+            "new": "/api/databundle/new",
+            "settings": "/api/databundle/settings",
+            "files": "/api/databundle/files",
+            "list": "/api/databundle/list",
+            "prepare": "/api/databundle/prepare",
+            "name": "/api/databundle/name"
         },
         "model": {
             "new": "/api/model/new"
