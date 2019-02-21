@@ -11,7 +11,8 @@
     },
     "dataBundle": {
         "list": {
-            "title": "List of data bundles"
+            "title": "Previous data bundles",
+            "noneMessage": "No bundles yet"
         },
         "new": {
             "title": "New Data Bundle",
@@ -53,13 +54,16 @@
         }
     },
     "model": {
+        "list": {
+            "title": "Previous models",
+            "noneMessage": "No models yet"
+        },
         "new": {
             "title": "New Model",
             "nameLabel": "name",
             "namePlaceholder": "Name",
             "nextButton": "Go"
         },
-
         "pronDict": {
             "title": "Upload Letter to Sound rules",
             "header": "Letter to sound file",

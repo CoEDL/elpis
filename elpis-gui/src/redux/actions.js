@@ -44,6 +44,7 @@ var successHandler = {
     dataBundleSettings: response => ({ type: 'DATA_BUNDLE_SETTINGS', response }),
     dataBundlePrepare: response => ({ type: 'DATA_BUNDLE_PREPARE', response }),
 
+    modelList: response => ({ type: 'MODEL_LIST', response }),
     modelNew: response => ({ type: 'MODEL_NEW', response }),
     modelName: response => ({ type: 'MODEL_NAME', response }),
     modelDate: response => ({ type: 'MODEL_DATE', response }),
@@ -55,9 +56,9 @@ var successHandler = {
 
 // * * * * * * * * * * DATA BUNDLES * * * * * * * * * * * * * * *
 
-export const dataBundleList = postData => {
+export const dataBundleList = () => {
     const url = baseUrl + urls.api.dataBundle.list
-    return postApi(url, postData, 'dataBundleList')
+    return postApi(url, null, 'dataBundleList')
 }
 
 export const dataBundleNew = postData => {
@@ -90,9 +91,15 @@ export const dataBundlePrepare = () => {
 
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 
-export const modelNew = () => {
-    const url = baseUrl + '/api/model/new'
-    return postApi(url, null, 'modelNew')
+export const modelList = () => {
+    const url = baseUrl + urls.api.model.list
+    return postApi(url, null, 'modelList')
+}
+
+export const modelNew = postData => {
+    console.log("action modelNew", postData)
+    const url = baseUrl + urls.api.model.new
+    return postApi(url, postData, 'modelNew')
 }
 
 export const modelName = postData => {

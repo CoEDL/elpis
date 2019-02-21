@@ -25,7 +25,6 @@ const dataBundle = (state = initState, action) => {
                 replaceFiles: ! state.replaceFiles
             }
 
-
         case 'DATA_BUNDLE_LIST':
             return {
                 ...state,
@@ -42,12 +41,6 @@ const dataBundle = (state = initState, action) => {
             return {
                 ...state,
                 name: action.response.data.data.name
-            }
-
-        case 'DATA_BUNDLE_DATE':
-            // not done yet
-            return {
-                ...state
             }
 
         case 'DATA_BUNDLE_FILES':

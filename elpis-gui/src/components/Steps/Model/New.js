@@ -4,7 +4,7 @@ import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
-import { modelName } from 'redux/actions';
+import { modelNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import urls from 'urls'
@@ -12,7 +12,7 @@ import urls from 'urls'
 class ModelNew extends Component {
 
     render() {
-        const { t, name, modelName } = this.props;
+        const { t, name, modelNew } = this.props;
         return (
             <div>
                 <Branding />
@@ -25,6 +25,7 @@ class ModelNew extends Component {
                         <Grid.Column width={ 12 }>
                             <Header as='h1' text="true">
                                 { t('model.new.title') }
+                                ..{ name }..
                             </Header>
 
                             <Formik
@@ -45,13 +46,14 @@ class ModelNew extends Component {
                                 } }
                                 onSubmit={ (values, { setSubmitting }) => {
                                     // demo
-                                    setTimeout(() => {
-                                        alert(JSON.stringify(values, null, 2));
-                                        setSubmitting(false);
-                                    }, 400);
+                                    // setTimeout(() => {
+                                    //     alert(JSON.stringify(values, null, 2));
+                                    //     setSubmitting(false);
+                                    // }, 400);
 
                                     // redux action
-                                    modelName(values.name)
+                                    const postData = {name:values.name}
+                                    modelNew(postData)
 
                                     // go to next page
                                     this.props.history.push(urls.gui.model.pronunciation)
@@ -97,8 +99,8 @@ const mapStateToProps = state => {
     }
 }
 const mapDispatchToProps = dispatch => ({
-    modelName: name => {
-        dispatch(modelName(name))
+    modelNew: name => {
+        dispatch(modelNew(name))
     }
 })
 export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelNew));

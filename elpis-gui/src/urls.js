@@ -32,6 +32,7 @@ export default {
             "prepare": "/api/databundle/prepare"
         },
         "model": {
+            "list": "/api/model/list",
             "new": "/api/model/new"
         },
         "transcription": {

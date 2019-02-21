@@ -19,7 +19,7 @@ class DataBundleList extends Component {
             <ul>
                 {dbNames.map( name => <li key={name}>{name}</li>)}
             </ul>
-        ) : <li>no bundles yet</li>
+        ) : <p>{ t('dataBundle.list.noneMessage') }</p>
 
         return (
             <div>
@@ -32,7 +32,7 @@ class DataBundleList extends Component {
 
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>
-                            { t('dataBundle.list.title') }
+                                { t('dataBundle.list.title') }
                             </Header>
 
                             { list }
@@ -50,6 +50,7 @@ const mapStateToProps = state => {
         dbNames: state.dataBundle.dbNames
     }
 }
+
 const mapDispatchToProps = dispatch => ({
     dataBundleList: () => {
         dispatch(dataBundleList())

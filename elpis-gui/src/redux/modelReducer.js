@@ -2,6 +2,7 @@ import {getFileExtension} from 'helpers'
 
 const initState = {
     name: "",
+    modelNames: [],
     date: null,
     pronunciationFile: '',
     settings: {
@@ -19,21 +20,25 @@ const model = (state = initState, action) => {
                 apiWaiting: {status: true, message: action.message}
             }
 
-        case 'MODEL_NEW':
-            // get an id back from response?
+        case 'MODEL_LIST':
+        console.log("reducer got model names", action.response.data)
             return {
                 ...state,
+                modelNames: action.response.data.data
+            }
+
+        case 'MODEL_NEW':
+            console.log("reducer got model new", action.response.data)
+            return {
+                ...state,
+                name: action.response.data.data.name
             }
 
         case 'MODEL_NAME':
-            return {
-                ...state, name: action.response.data.name
-            }
-
-        case 'MODEL_DATE':
-            // not done yet
-            return {
-                ...state
+        console.log("reducer got model name", action.response.data)
+        return {
+                ...state,
+                name: action.response.data.data.name
             }
 
         case 'MODEL_PRONUNCIATION_FILE':

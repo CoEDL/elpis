@@ -100,7 +100,7 @@ const mapStateToProps = state => {
     }
 }
 const mapDispatchToProps = dispatch => ({
-    dataBundleNew: (name) => {
+    dataBundleNew: name => {
         dispatch(dataBundleNew(name))
     }
 })
