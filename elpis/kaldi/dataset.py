@@ -36,7 +36,7 @@ class Dataset(FSObject):
     _config_file = 'dataset.json'
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.files: List[Path] = []
+        self.__files: List[Path] = []
         self.pathto = DSPaths(self.path)
         self.has_been_processed = False
 
@@ -48,7 +48,7 @@ class Dataset(FSObject):
     @classmethod
     def load(cls, basepath: Path):
         self = super().load(basepath)
-        self.files = [Path(path) for path in self.config['files']]
+        self.__files = [Path(path) for path in self.config['files']]
         self.pathto = DSPaths(self.path)
         self.has_been_processed = self.config['has_been_processed']
         return self
@@ -60,6 +60,10 @@ class Dataset(FSObject):
     @tier.setter
     def tier(self, value: str):
         self.config['tier'] = value
+    
+    @property
+    def files(self):
+        return self.config['files']
 
     def add_elan_file(self, filename, content) -> None:
         # TODO: unimplemented!
@@ -109,9 +113,9 @@ class Dataset(FSObject):
             faout.write(audio_fp.read())
         with t_out.open(mode='wb') as ftout:
             ftout.write(transc_fp.read())
-        self.files.append(a_out)
-        self.files.append(t_out)
-        self.config['files'] += [f'{f.name}' for f in self.files]
+        self.__files.append(a_out)
+        self.__files.append(t_out)
+        self.config['files'] += [f'{f.name}' for f in self.__files]
 
     def process(self):
         # remove existing file in resampled
@@ -120,7 +124,7 @@ class Dataset(FSObject):
         self.pathto.resampled.mkdir(parents=True, exist_ok=True)
         # process files
         dirty = []
-        for file in self.files:
+        for file in self.__files:
             if file.name.endswith('.eaf'):
                 obj = process_eaf(f'{self.pathto.original.joinpath(file)}', self.tier)
                 dirty.extend(obj)

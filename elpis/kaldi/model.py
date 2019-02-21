@@ -190,7 +190,7 @@ class Model(FSObject):
         # - cp {{ .KALDI_TEMPLATES }}/cmd.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
         shutil.copy(f"{template_path.joinpath('cmd.sh')}", f"{local_kaldi_path}")
         # - cp {{ .KALDI_TEMPLATES }}/run.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
-        with open(f"{template_path.joinpath('run.sh')}", 'r') as fin,
+        with open(f"{template_path.joinpath('run.sh')}", 'r') as fin, \
              open(f"{local_kaldi_path.joinpath('run.sh')}", 'w') as fout:
             fout.write(fin.read().replace('lm_order=1', f"lm_order={self.ngram}"))
         # - cp {{ .KALDI_TEMPLATES }}/score.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/local/

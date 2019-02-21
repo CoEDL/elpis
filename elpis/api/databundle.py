@@ -35,6 +35,17 @@ def list_existing():
         "data": kaldi.list_datasets()
     })
 
+@bp.route("/files", methods=['GET', 'POST'])
+def files():
+    ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    if request.method == 'POST':
+        filesOverwrite = request.form["filesOverwrite"]
+        print('filesOverwrite:', filesOverwrite)
+        for file in request.files.getlist("file"):
+            ds.add_fp(file, file.filename)
+    return jsonify(ds.files)
+
+
 
 
 
