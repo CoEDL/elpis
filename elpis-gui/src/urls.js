@@ -33,7 +33,9 @@ export default {
         },
         "model": {
             "list": "/api/model/list",
-            "new": "/api/model/new"
+            "new": "/api/model/new",
+            "pronunciation": "/api/model/pronunciation",
+            "settings": "/api/model/settings"
         },
         "transcription": {
             "new": "/api/transcription/new"

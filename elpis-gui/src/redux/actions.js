@@ -108,7 +108,7 @@ export const modelName = postData => {
 }
 
 export const modelPronunciation = postData => {
-    const url = baseUrl + '/api/model/pronunciation'
+    const url = baseUrl + urls.api.model.pronunciation
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'modelPronunciation', headers)
 }
@@ -117,10 +117,9 @@ export const modelLexicon = () => {
     const url = baseUrl + '/api/model/lexicon'
     return getApi(url, 'modelLexicon')
 }
-// GET_MODEL_LEXICON
 
 export const modelSettings = postData => {
-    const url = baseUrl + '/api/model/settings'
+    const url = baseUrl + urls.api.model.settings
     return postApi(url, postData, 'modelSettings')
 }
 

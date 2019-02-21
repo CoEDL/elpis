@@ -48,16 +48,17 @@ class ModelSettings extends Component {
                                 onSubmit={ (values, { setSubmitting }) => {
                                     const newSettings = {...settings, ngram: values.ngram}
                                      // demo
-                                     setTimeout(() => {
-                                        alert(JSON.stringify(newSettings, null, 2));
-                                        setSubmitting(false);
-                                    }, 400);
+                                    //  setTimeout(() => {
+                                    //     alert(JSON.stringify(newSettings, null, 2));
+                                    //     setSubmitting(false);
+                                    // }, 400);
 
-                                   // redux action
-                                    modelSettings({settings:newSettings})
+                                    // redux action
+                                    const postData = { settings: newSettings }
+                                    modelSettings(postData)
 
                                     // go to next page
-                                    this.props.history.push(urls.gui.model.pronunciation)
+                                    // this.props.history.push(urls.gui.model.pronunciation)
                                 } }
                             >
                                 { ({
