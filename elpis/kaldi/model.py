@@ -27,6 +27,7 @@ class Model(FSObject):
         self.dataset: Dataset
         self.config['dataset'] = None # dataset hash has not been linked
         self.config['pronunciation'] = None # file has not been uploaded
+        self.config['ngram'] = 3
 
     def set_pronunciation_path(self, path: Path):
         path = Path(path)
@@ -44,6 +45,14 @@ class Model(FSObject):
     def link(self, dataset: Dataset):
         self.dataset = dataset
         self.config['dataset'] = dataset.hash
+
+    @property
+    def ngram(self) -> int:
+        return int(self.config['ngram'])
+    
+    @ngram.setter
+    def ngram(self, value: int) -> None:
+        self.config['ngram'] = value
 
     def train(self):
         # task make-kaldi-subfolders
@@ -181,7 +190,9 @@ class Model(FSObject):
         # - cp {{ .KALDI_TEMPLATES }}/cmd.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
         shutil.copy(f"{template_path.joinpath('cmd.sh')}", f"{local_kaldi_path}")
         # - cp {{ .KALDI_TEMPLATES }}/run.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
-        shutil.copy(f"{template_path.joinpath('run.sh')}", f"{local_kaldi_path}")
+        with open(f"{template_path.joinpath('run.sh')}", 'r') as fin,
+             open(f"{local_kaldi_path.joinpath('run.sh')}", 'w') as fout:
+            fout.write(fin.read().replace('lm_order=1', f"lm_order={self.ngram}"))
         # - cp {{ .KALDI_TEMPLATES }}/score.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/local/
         shutil.copy(f"{template_path.joinpath('score.sh')}", f"{kaldi_local}")
         # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/steps {{ .KALDI_OUTPUT_PATH }}/kaldi/steps
