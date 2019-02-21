@@ -16,7 +16,7 @@ class DataBundlePrepare extends Component {
             <Segment>
                 <Header as='h1'>{ t('dataBundle.prepare.wordlistHeader') }</Header>
                 <ul>
-                    {preparedData.wordlist.map( word =><li>{word}</li>)}
+                    {preparedData.wordlist.map( word =><li key={word}>{word}</li>)}
                 </ul>
             </Segment>
         ) : null
