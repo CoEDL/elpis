@@ -26,7 +26,7 @@ def new():
 def name():
     m = app.config['CURRENT_MODEL']
     if request.method == 'POST':
-        m.name = request.values.get("name")
+        m.name = request.json['name']
     return f'{{ "status": "ok", "message":"", "data": "{m.name}" }}'
 
 
