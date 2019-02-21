@@ -98,25 +98,12 @@ class Dataset(FSObject):
         # TODO: unimplemented!
         return
 
-    def add(self, audio_file: Path, transc_file: Path):
-        audio_path = Path(audio_file)
-        transc_path = Path(transc_file)
-        aname = audio_path.name
-        tname = transc_path.name
-        with audio_path.open(mode='rb') as fa:
-            with transc_path.open(mode='rb') as ft:
-                self.add_fp(fa, ft, aname, tname)
-
-    def add_fp(self, audio_fp: BufferedIOBase, transc_fp: BufferedIOBase, audio_name: str, transc_name: str):
-        a_out: Path = self.pathto.original.joinpath(audio_name)
-        t_out: Path = self.pathto.original.joinpath(transc_name)
-        with a_out.open(mode='wb') as faout:
-            faout.write(audio_fp.read())
-        with t_out.open(mode='wb') as ftout:
-            ftout.write(transc_fp.read())
-        self.__files.append(a_out)
-        self.__files.append(t_out)
-        self.config['files'] += [f'{f.name}' for f in self.__files]
+    def add_fp(self, fp: BufferedIOBase, fname: str):
+        path: Path = self.pathto.original.joinpath(fname)
+        with path.open(mode='wb') as fout:
+            fout.write(fp.read())
+        self.__files.append(path)
+        self.config['files'] = [f'{f.name}' for f in self.__files]
 
     def process(self):
         # remove existing file in resampled

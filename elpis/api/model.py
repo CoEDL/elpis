@@ -137,8 +137,6 @@ def settings():
     """
     file_path = os.path.join(CURRENT_MODEL_DIR, 'settings.txt')
     if request.method == "POST":
-
-        run_settings_task_demo()
         # write settings to file
         print(f'settings: {request.json["settings"]}')
         with open(file_path, 'w') as fout:
