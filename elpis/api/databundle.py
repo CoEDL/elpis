@@ -33,7 +33,7 @@ def name():
         "data": ds.name})
 
 @bp.route("/settings", methods=['GET', 'POST'])
-def tier():
+def settings():
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
     if ds is None:
         return '{"status":"error", "data": "No current data bundle exists (prehaps create one first)"}'
@@ -61,8 +61,9 @@ def files():
     if ds is None:
         return '{"status":"error", "data": "No current data bundle exists (prehaps create one first)"}'
     if request.method == 'POST':
-        files_overwrite = request.form["filesOverwrite"]
-        print('filesOverwrite:', files_overwrite)
+        # TODO think about this below
+        # files_overwrite = request.form["filesOverwrite"]
+        # print('filesOverwrite:', files_overwrite)
         for file in request.files.getlist("file"):
             ds.add_fp(file, file.filename)
     return jsonify(ds.files)
