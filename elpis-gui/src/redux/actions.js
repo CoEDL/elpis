@@ -82,9 +82,9 @@ export const dataBundleSettings = postData => {
 
 
 // should this be GET or POST some kind of trigger and return response?
-export const dataBundleClean = () => {
-    const url = baseUrl + '/api/data-bundle/clean';
-    return getApi(url, 'dataBundleClean');
+export const dataBundlePrepare = () => {
+    const url = baseUrl + '/api/data-bundle/prepare';
+    return getApi(url, 'dataBundlePrepare');
 }
 // GET_CLEANED_DATA_BUNDLE
 

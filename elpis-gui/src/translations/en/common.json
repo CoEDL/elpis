@@ -38,7 +38,7 @@
             "dropFilesHint": "Drop individual files or a folder containing your file here",
             "dropFilesHintDragActive": "Drop files here.."
         },
-        "preparation": {
+        "prepare": {
             "title": "Data preparation",
             "header": "Overview of training corpus",
             "bannerMessage": "Banner Message: text has been cleaned and normalised OK",
@@ -47,7 +47,7 @@
             "frequencyHeader": "Frequency",
             "nextButton": "Next: build letter to sound"
         },
-        "preparationError": {
+        "prepareError": {
             "title": "Data preparation error",
             "backButton": "Back to add data"
         }

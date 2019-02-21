@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
-class DataBundlePreparationError extends Component {
+class DataBundlePrepareError extends Component {
     render() {
         const { t } = this.props;
         return (
@@ -20,7 +20,7 @@ class DataBundlePreparationError extends Component {
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>
                                 <Icon name='warning' />
-                                { t('dataBundle.preparationError.title') }
+                                { t('dataBundle.prepareError.title') }
                             </Header>
 
                             <p>Banner Message: errors were found when cleaning(processing) your data</p>
@@ -28,7 +28,7 @@ class DataBundlePreparationError extends Component {
                             <p>Show the errors and information about how to fix the error</p>
 
                             <Button type='submit' as={ Link } to="/data-bundle/add-files">
-                                { t('dataBundle.preparationError.backButton') }
+                                { t('dataBundle.prepareError.backButton') }
                             </Button>
 
                         </Grid.Column>
@@ -38,4 +38,4 @@ class DataBundlePreparationError extends Component {
         );
     }
 }
-export default translate('common')(DataBundlePreparationError)
+export default translate('common')(DataBundlePrepareError)

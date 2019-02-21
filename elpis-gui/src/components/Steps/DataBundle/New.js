@@ -38,7 +38,7 @@ class DataBundleNew extends Component {
 
                         <Grid.Column width={ 12 }>
                             <Header as='h1' text="true">
-                                Aaa { t('dataBundle.new.title') }
+                                { t('dataBundle.new.title') }
                             </Header>
 
                             <Formik

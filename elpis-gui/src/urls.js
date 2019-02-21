@@ -4,10 +4,9 @@ export default {
             "index": "/data-bundles",
             "new": "/data-bundle/new",
             "files": "/data-bundle/files",
-            "clean": "/data-bundle/clean",
-            "preparationError": "/data-bundle/preparation/error"
+            "prepare": "/data-bundle/prepare",
+            "prepareError": "/data-bundle/prepare/error"
         },
-
         "model": {
             "index": "/models",
             "new": "/model/new",
@@ -18,13 +17,26 @@ export default {
             "trainingResults": "/model/training/results",
             "trainingError": "/model/training/error"
         },
-
         "transcription": {
             "new": "/transcription/new",
             "results": "/transcription/results"
         }
     },
     "api": {
+        "dataBundle": {
+            "new": "/api/data-bundle/new",
+            "files": "/api/data-bundle/files",
+            "list": "/api/data-bundle/list",
+            "prepare": "/api/data-bundle/prepare",
+            "name": "/api/data-bundle/name"
+        },
+        "model": {
+            "new": "/api/model/new"
+        },
+        "transcription": {
+            "new": "/api/transcription/new"
+        }
+
 
     }
 }

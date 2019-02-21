@@ -1,3 +1,5 @@
+import urls from 'urls'
+
 // For convenience while developing, set this true
 // false will make the menus collapse
 const enableAll = true
@@ -7,37 +9,37 @@ const initialStepModelState = {
 	steps: [
 		{
 			title: "Step 1 Data Bundles",
-			path: "/data-bundles",
+			path: urls.gui.dataBundle.index,
 			done: false, doing: false, enabled: true,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Data bundles", path: "/data-bundles", type:"solo" },
-				{ done: false, doing: false, enabled: false, title: "New data bundle", path: "/data-bundle/new" },
-				{ done: false, doing: false, enabled: false, title: "Add data", path: "/data-bundle/files" },
-				{ done: false, doing: false, enabled: false, title: "Data preparation", path: "/data-bundle/clean" }
+				{ done: false, doing: false, enabled: false, title: "Data bundles", path: urls.gui.dataBundle.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "New data bundle", path: urls.gui.dataBundle.new },
+				{ done: false, doing: false, enabled: false, title: "Add data", path: urls.gui.dataBundle.files },
+				{ done: false, doing: false, enabled: false, title: "Data preparation", path: urls.gui.dataBundle.prepare }
 
 			]
 		},
 		{
 			title: "Step 2 Models",
-			path: "/models",
+			path: urls.gui.model.index,
 			done: false, doing: false, enabled: false,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Models", path: "/models", type:"solo" },
-				{ done: false, doing: false, enabled: false, title: "New model", path: "/model/new" },
-				{ done: false, doing: false, enabled: false, title: "Pronunciation dictionary", path: "/model/pronunciation" },
-				{ done: false, doing: false, enabled: false, title: "Lexicon", path: "/model/lexicon" },
-				{ done: false, doing: false, enabled: false, title: "Settings", path: "/model/settings" },
-				{ done: false, doing: false, enabled: false, title: "Training", path: "/model/training" },
-				{ done: false, doing: false, enabled: false, title: "Results", path: "/model/training/results" },
+				{ done: false, doing: false, enabled: false, title: "Models", path: urls.gui.model.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "New model", path: urls.gui.model.new },
+				{ done: false, doing: false, enabled: false, title: "Pronunciation dictionary", path: urls.gui.model.pronunciation },
+				{ done: false, doing: false, enabled: false, title: "Lexicon", path: urls.gui.model.lexicon },
+				{ done: false, doing: false, enabled: false, title: "Settings", path: urls.gui.model.settings },
+				{ done: false, doing: false, enabled: false, title: "Training", path: urls.gui.model.training },
+				{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.model.trainingResults },
 			]
 		},
 		{
 			title: "Step 3 New transcriptions",
-			path: "/transcription/new",
+			path: urls.gui.transcription.new,
 			done: false, doing: false, enabled: false,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Choose file and model", path: "/transcription/new" },
-				{ done: false, doing: false, enabled: false, title: "Results", path: "/transcription/results" },
+				{ done: false, doing: false, enabled: false, title: "Choose file and model", path: urls.gui.transcription.new },
+				{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.transcription.results },
 			]
 		}
 	]

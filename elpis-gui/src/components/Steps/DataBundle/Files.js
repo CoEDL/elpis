@@ -17,8 +17,8 @@ class DataBundleFiles extends Component {
     }
 
     handleNextButton = () => {
-        this.props.triggerApiWaiting('data preparation')
-        this.props.history.push('/data-bundle/preparation')
+        this.props.triggerApiWaiting('preparing data')
+        this.props.history.push('/data-bundle/prepare')
     }
 
     render() {
@@ -159,7 +159,7 @@ class DataBundleFiles extends Component {
                                 <Button type='submit' onClick={ this.handleNextButton }>
                                     { t('dataBundle.files.nextButton') }
                                 </Button>
-                                <Button type='submit' as={ Link } to="/data-bundle/preparation/error" icon>
+                                <Button type='submit' as={ Link } to="/data-bundle/prepare/error" icon>
                                     <Icon name='warning sign' />
                                     { t('dataBundle.files.nextButtonError') }
                                 </Button>

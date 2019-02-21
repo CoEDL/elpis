@@ -6,8 +6,8 @@ import {
     DataBundleList,
     DataBundleNew,
     DataBundleFiles,
-    DataBundlePreparation,
-    DataBundlePreparationError,
+    DataBundlePrepare,
+    DataBundlePrepareError,
     ModelList,
     ModelNew,
     ModelPronunciationDictionary,
@@ -34,8 +34,8 @@ class App extends Component {
                         <Route path={urls.gui.dataBundle.index} exact component={ DataBundleList } />
                         <Route path={urls.gui.dataBundle.new} component={ DataBundleNew } />
                         <Route path={urls.gui.dataBundle.files} component={ DataBundleFiles } />
-                        <Route path={urls.gui.dataBundle.clean} exact component={ DataBundlePreparation } />
-                        <Route path={urls.gui.dataBundle.preparationError} component={ DataBundlePreparationError } />
+                        <Route path={urls.gui.dataBundle.prepare} exact component={ DataBundlePrepare } />
+                        <Route path={urls.gui.dataBundle.prepareError} component={ DataBundlePrepareError } />
 
                         <Route path={urls.gui.model.index} exact component={ ModelList } />
                         <Route path={urls.gui.model.new} component={ ModelNew } />

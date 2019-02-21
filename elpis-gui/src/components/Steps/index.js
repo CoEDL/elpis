@@ -3,8 +3,8 @@ export { default as Welcome } from './Welcome';
 export { default as DataBundleList } from './DataBundle/List';
 export { default as DataBundleNew } from './DataBundle/New';
 export { default as DataBundleFiles } from './DataBundle/Files';
-export { default as DataBundlePreparation } from './DataBundle/Preparation';
-export { default as DataBundlePreparationError } from './DataBundle/PreparationError'
+export { default as DataBundlePrepare } from './DataBundle/Prepare';
+export { default as DataBundlePrepareError } from './DataBundle/PrepareError'
 
 export { default as ModelList } from './Model/List'
 export { default as ModelNew } from './Model/New';
