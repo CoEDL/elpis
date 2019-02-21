@@ -16,14 +16,9 @@ node_modules/
 .idea/
 
 # Server
-user_data/
 log.txt
 
 #testing
-name_file
-uploaded_files/
-abui_toy_corpus/
-test_object_*/
 
 # mac files
 .DS_Store

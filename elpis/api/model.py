@@ -1,10 +1,11 @@
 import os
-from flask import request
+from flask import request, current_app as app
 from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
 import subprocess
 from . import kaldi
+from ..kaldi.interface import KaldiInterface
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 bp.register_blueprint(kaldi.bp)
@@ -26,28 +27,18 @@ def run(cmd: str) -> str:
 
 @bp.route("/new", methods=['POST', 'GET'])
 def new():
-    # assuming that this would only be a POST?
-    # this.models = state.Model()
-    # TODO
-    print('cmd output: ', run(f'rm -rf {CURRENT_MODEL_DIR}/*'))
-    print(f'rm -rf {CURRENT_MODEL_DIR}/*')
-    return '''{status: 'new model created'}'''
+    kaldi: KaldiInterface = app.config['INTERFACE']
+    m = kaldi.new_model(request.values.get("name"))
+    app.config['CURRENT_MODEL'] = m
+    return f'''{{"status": "ok", "message": "new model created", "data":{m.config._load()}}}'''
 
 
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
-    print(request.json['name'])
-    file_path = os.path.join(CURRENT_MODEL_DIR, 'name.txt')
+    m = app.config['CURRENT_MODEL']
     if request.method == 'POST':
-        # update the state name
-        with open(file_path, 'w') as fout:
-            fout.write(request.json['name'])
-            fout.close()
-        # result = subprocess.run(["ls -la"], stdout=subprocess.PIPE)
-        # print(result.stdout)
-    # return the state
-    with open(file_path, 'r') as fin:
-        return f'{{ "name": "{fin.read()}" }}'
+        m.name = request.values.get("name")
+    return f'{{ "status": "ok", "message":"", "data": "{m.name}" }}'
 
 
 @bp.route("/date")
@@ -132,8 +123,6 @@ def settings():
     """
     file_path = os.path.join(CURRENT_MODEL_DIR, 'settings.txt')
     if request.method == "POST":
-
-        run_settings_task_demo()
         # write settings to file
         print(f'settings: {request.json["settings"]}')
         with open(file_path, 'w') as fout:
