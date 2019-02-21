@@ -1,7 +1,5 @@
 import os
-from pathlib import Path
-from flask import Blueprint, redirect, request, url_for, escape
-from werkzeug.utils import secure_filename
+from flask import request
 from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
@@ -20,7 +18,6 @@ def run(cmd: str) -> str:
     process = subprocess.run(
         args,
         check=True,
-        # cwd='/kaldi-helpers',
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT
     )
@@ -46,8 +43,7 @@ def name():
         with open(file_path, 'w') as fout:
             fout.write(request.json['name'])
             fout.close()
-
-        #result = subprocess.run(["ls -la"], stdout=subprocess.PIPE)
+        # result = subprocess.run(["ls -la"], stdout=subprocess.PIPE)
         # print(result.stdout)
     # return the state
     with open(file_path, 'r') as fin:
@@ -82,8 +78,8 @@ def transcription_files():
         # appended to input data or overwrite input data
         # watch out for duplicate files if not overwriting!
 
-        filesOverwrite = request.form["filesOverwrite"]
-        print('filesOverwrite:', filesOverwrite)
+        files_overwrite = request.form["filesOverwrite"]
+        print('filesOverwrite:', files_overwrite)
 
         uploaded_files = request.files.getlist("file")
         file_names = []
@@ -94,10 +90,10 @@ def transcription_files():
                 fout.close()
             file_names.append(file.filename)
 
-    # return just the received file names
-    # and let the GUI append or overwrite
-    # or else, send back the filenames of all input files
-    return json.dumps(file_names)
+            # return just the received file names
+            # and let the GUI append or overwrite
+            # or else, send back the filenames of all input files
+            return json.dumps(file_names)
 
 
 @bp.route("/pronunciation", methods=['POST'])
@@ -125,9 +121,8 @@ def pronunciation():
             fout.write(file.read())
             fout.close()
 
-    with open(file_path, 'rb') as fin:
-        return fin.read()
-
+        with open(file_path, 'rb') as fin:
+            return fin.read()
 
 
 @bp.route("/settings", methods=("GET", "POST"))

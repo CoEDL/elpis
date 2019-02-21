@@ -4,7 +4,8 @@ from flask.helpers import _endpoint_from_view_func
 
 
 class BlueprintSetupState(FlaskBlueprintSetupState):
-    """Overrided methods to handle setting up multi-level blueprints.
+    """
+    Overides methods to handle setting up multi-level blueprints.
     See flask.blueprints.BlueprintSetupState for purpose.
     """
 
@@ -26,7 +27,8 @@ class BlueprintSetupState(FlaskBlueprintSetupState):
 
 
 class Blueprint(FlaskBlueprint):
-    """ Extend the FlaskBlueprint object to allow multi-level blueprints.
+    """
+    Extend the FlaskBlueprint object to allow multi-level blueprints.
     """
 
     def __init__(self, name, import_name, **kwargs):
@@ -38,7 +40,8 @@ class Blueprint(FlaskBlueprint):
         super().__init__(name, import_name, **kwargs)
 
     def register_blueprint(self, blueprint):
-        """ Register a the given blueprint as a sub-module to this blueprint.
+        """
+        Register a the given blueprint as a sub-module to this blueprint.
         Sub-module (or sub-blueprints) will have the parent paths and end points
         appended to their paths and endpoints.
         """
@@ -48,7 +51,8 @@ class Blueprint(FlaskBlueprint):
         self.blueprints.append(blueprint)
 
     def register_app(self, register, app):
-        """From the base-blueprint, recursively add all blueprints in the
+        """
+        From the base-blueprint, recursively add all blueprints in the
         blueprint tree (self.blueprints and their children) to the app.
         """
         if self.is_base_blueprint():
@@ -59,7 +63,8 @@ class Blueprint(FlaskBlueprint):
             blueprint.register_app(register, app)
 
     def register(self, app, options, first_registration=False):
-        """Same method as flask.blueprint.Blueprint.register except slightly
+        """
+        Same method as flask.blueprint.Blueprint.register except slightly
         modified to handle multi-level blueprints.
         """
         self._got_registered_once = True
@@ -75,13 +80,16 @@ class Blueprint(FlaskBlueprint):
             deferred(state)
 
     def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
-        """Saves the url rule until the register function is called.
+        """
+        Saves the url rule until the register function is called.
         """
         url_rule = (rule, endpoint, view_func, options)
         self._url_rule_queue.append(url_rule)
 
     def route(self, rule, **options):
-        """Use the base-blueprint to route rules."""
+        """
+        Use the base-blueprint to route rules.
+        """
         return self.route_from_base(rule, **options)
 
     def route_from_base(self, rule, **options):
@@ -95,7 +103,8 @@ class Blueprint(FlaskBlueprint):
         return self.parent.base_blueprint()
 
     def get_full_endpoint(self) -> str:
-        """Returns the full url-prefix from all blueprints up to the root parent.
+        """
+        Returns the full url-prefix from all blueprints up to the root parent.
         """
         if self.parent:
             return f'{self.parent.get_full_endpoint()}.{self.name}'
@@ -110,7 +119,8 @@ class Blueprint(FlaskBlueprint):
             return url_prefix
 
     def prepare_routes(self):
-        """Call this method to correctly setup this blueprint and the child
+        """
+        Call this method to correctly setup this blueprint and the child
         blueprints before registering their rules to correct full endpoints
         and url-prefixes.
         """
@@ -139,7 +149,9 @@ class Blueprint(FlaskBlueprint):
                 export(rule, endpoint, view_func, options)
 
     def is_base_blueprint(self) -> bool:
-        """Return True if this is the root blueprint."""
+        """
+        Return True if this is the root blueprint.
+        """
         return self.parent is None
 
     def __repr__(self) -> str:

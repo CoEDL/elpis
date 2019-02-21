@@ -1,9 +1,7 @@
-from pathlib import Path
-from typing import List, Dict
 import json
-
+from pathlib import Path
 from . import hasher
-from .logger import EmptyLogger, Logger
+from .logger import Logger
 
 
 class FSObject(object):
@@ -25,10 +23,10 @@ class FSObject(object):
         self.__path = Path(parent_path).joinpath(dir_name)
         self.path.mkdir(parents=True, exist_ok=True)
         self.logger = logger
-
         self.ConfigurationInterface(self)._save({})
         self.config['name'] = name
         self.config['hash'] = h
+
         if logger is None:
             self.config['logger'] = None
         else:
@@ -38,9 +36,9 @@ class FSObject(object):
         self.ConfigurationInterface(self)._save(config)
 
     @classmethod
-    def load(cls, basepath: Path):
+    def load(cls, base_path: Path):
         self = cls.__new__(cls)
-        self.__path = Path(basepath)
+        self.__path = Path(base_path)
         self.logger = None # TODO: use get_logger when implemented
         return self
 

@@ -1,15 +1,15 @@
-import time
-import os
 import json
-import shutil 
+import shutil
+import glob
+import os
+import threading
 
 from pathlib import Path
 from typing import List
 from io import BufferedIOBase
+from multiprocessing.dummy import Pool
+from shutil import move
 
-from . import hasher
-from .command import run
-from .logger import Logger
 from .fsobject import FSObject
 from .path_structure import existing_attributes, ensure_paths_exist
 
@@ -17,7 +17,9 @@ from kaldi_helpers.input_scripts.elan_to_json import process_eaf
 from kaldi_helpers.input_scripts.clean_json import clean_json_data
 from kaldi_helpers.input_scripts.resample_audio import process_item
 
+
 DEFAULT_TIER = 'Phrase'
+
 
 class DSPaths(object):
     def __init__(self, basepath: Path):
@@ -35,6 +37,7 @@ class DSPaths(object):
 
 class Dataset(FSObject):
     _config_file = 'dataset.json'
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.__files: List[Path] = []
@@ -47,8 +50,8 @@ class Dataset(FSObject):
         self.config['files'] = []
 
     @classmethod
-    def load(cls, basepath: Path):
-        self = super().load(basepath)
+    def load(cls, base_path: Path):
+        self = super().load(base_path)
         self.__files = [Path(path) for path in self.config['files']]
         self.pathto = DSPaths(self.path)
         self.has_been_processed = self.config['has_been_processed']
@@ -68,31 +71,35 @@ class Dataset(FSObject):
 
     def add_elan_file(self, filename, content) -> None:
         # TODO: unimplemented!
-        return
+        return []
+
     def add_textgrid_file(self, filename, content) -> None:
         # TODO: unimplemented!
-        return
+        return []
+
     def add_transcriber_file(self, filename, content) -> None:
         # TODO: unimplemented!
-        return
+        return []
 
     def add_wave_file(self, filename, content) -> None:
         # TODO: unimplemented!
-        return
+        return []
+
     def add_other_audio_type_file(self, filename, content) -> None:
         # TODO: unimplemented!
-        return
+        return []
     
     def list_audio_files(self) -> List[str]:
         # TODO: unimplemented!
-        return
+        return []
+
     def list_transcription_files(self) -> List[str]:
         # TODO: unimplemented!
-        return
+        return []
+
     def list_all_files(self) -> List[str]:
         # TODO: unimplemented!
-        return
-
+        return []
     
     def remove_file(self, filename) -> None:
         # TODO: unimplemented!
@@ -129,7 +136,7 @@ class Dataset(FSObject):
             if file.name.endswith('.eaf'):
                 obj = process_eaf(f'{self.pathto.original.joinpath(file)}', self.tier)
                 dirty.extend(obj)
-        # TODO other options for the command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
+        # TODO other options for command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
         filtered = clean_json_data(json_data=dirty)
         with self.pathto.filtered_json.open(mode='w') as fout:
             json.dump(filtered, fout)
@@ -143,18 +150,6 @@ class Dataset(FSObject):
                         else:
                             wordlist[word] = 1
                 json.dump(words, f_word_count)
-
-
-        import argparse
-        import glob
-        import os
-        import subprocess
-        import threading
-        from multiprocessing.dummy import Pool
-        from shutil import move
-        from typing import Set, Tuple
-        from kaldi_helpers.script_utilities import find_files_by_extensions
-        from kaldi_helpers.script_utilities.globals import SOX_PATH
 
         base_directory = f'{self.pathto.original}'
         audio_extensions = {"*.wav"}

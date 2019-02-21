@@ -1,7 +1,9 @@
 from pathlib import Path
 
+
 def existing_attributes(obj):
     return set(dir(obj))
+
 
 def ensure_paths_exist(obj, existing_attrs):
     post_structure_defintions = set(dir(obj))
@@ -27,12 +29,12 @@ class KaldiPathStructure(object):
         self.data_infer: Path = self.data.joinpath('infer')
         self.data_test: Path = self.data.joinpath('test')
         self.data_train: Path = self.data.joinpath('train')
-        
+
         self.local: Path = self.path.joinpath('local')
 
         # check that the newly added directories exist
-        post_structure_defintions = set(dir(self))
-        structure_path_attrs = post_structure_defintions - non_structure_attrs
+        post_structure_definitions = set(dir(self))
+        structure_path_attrs = post_structure_definitions - non_structure_attrs
         for attr in structure_path_attrs:
             path: Path = getattr(self, attr)
             path.mkdir(parents=True, exist_ok=True)

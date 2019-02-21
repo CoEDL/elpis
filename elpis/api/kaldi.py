@@ -1,12 +1,9 @@
 import os
 import shlex
 import subprocess
-
-from flask import escape
 from shutil import copytree
-
 from elpis.blueprint import Blueprint
-from elpis.paths import CURRENT_MODEL_DIR, ELPIS_ROOT_DIR
+from elpis.paths import CURRENT_MODEL_DIR
 from elpis import kaldi
 
 
@@ -41,10 +38,6 @@ def ensure_exists(dir: str):
 
 
 INPUT_PATH = ""
-INPUT_PATH = ""
-INPUT_PATH = ""
-INPUT_PATH = ""
-
 
 
 class KaldiModelBridge(object):

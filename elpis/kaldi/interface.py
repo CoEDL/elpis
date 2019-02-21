@@ -52,8 +52,8 @@ class KaldiInterface(FSObject):
         self.new_logger(default=True)
     
     @classmethod
-    def load(cls, basepath: Path):
-        self = super().load(basepath)
+    def load(cls, base_path: Path):
+        self = super().load(base_path)
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
         self.models_path = self.path.joinpath('models')

@@ -27,7 +27,7 @@ setup(
     license='',
     author='CoEDL',
     author_email='b.foley@uq.edu.au',
-    description='Scripts for preparing language data for use with Kaldi ASR',
+    description='',
     long_description=long_description,
     classifiers=[
         "Programming Language :: Python :: 3.6",

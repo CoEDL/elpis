@@ -1,5 +1,4 @@
 from flask import Flask as FlaskBase
-from flask import Blueprint as FlaskBlueprint
 from .blueprint import Blueprint
 
 

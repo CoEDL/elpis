@@ -1,5 +1,6 @@
 from kaldi.interface import KaldiInterface
 
+
 kaldi = KaldiInterface()
 
 ds = kaldi.get_dataset('dsy')
