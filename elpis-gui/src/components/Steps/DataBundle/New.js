@@ -11,10 +11,7 @@ import urls from 'urls'
 
 class DataBundleNew extends Component {
 
-    componentDidMount() {
-        // const { dataBundleNew } = this.props;
-        // dataBundleNew()
-    }
+    componentDidMount() {}
 
     render() {
         const { t, name, dataBundleNew } = this.props;

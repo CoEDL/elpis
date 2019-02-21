@@ -27,14 +27,13 @@ const dataBundle = (state = initState, action) => {
 
 
         case 'DATA_BUNDLE_NEW':
-            // get an id back from response?
             return {
-                ...state,
+                ...state, name: action.response.data.data.name
             }
 
         case 'DATA_BUNDLE_NAME':
             return {
-                ...state, name: action.response.data.name
+                ...state, name: action.response.data.data.name
             }
 
         case 'DATA_BUNDLE_DATE':
@@ -44,7 +43,6 @@ const dataBundle = (state = initState, action) => {
             }
 
         case 'DATA_BUNDLE_FILES':
-            console.log('reducer UPDATE_DATA_BUNDLE_FILES', action)
             // action.data is an array of filenames
             // parse this, split into separate lists
             let audioFiles = action.response.data.filter(file => getFileExtension(file) === 'wav')

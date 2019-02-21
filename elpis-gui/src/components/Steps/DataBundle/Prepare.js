@@ -11,7 +11,6 @@ class DataBundlePrepare extends Component {
     }
     render() {
         const { t, preparedData } = this.props;
-        console.log("preparedData", preparedData)
         const wordlistTable = preparedData.wordlist ? (
             <Segment>
                 <Header as='h1'>{ t('dataBundle.prepare.wordlistHeader') }</Header>
@@ -31,10 +30,10 @@ class DataBundlePrepare extends Component {
                         </Grid.Column>
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>{ t('dataBundle.prepare.title') }</Header>
+
                             <h2>{ t('dataBundle.prepare.header') }</h2>
                             <p>{ t('dataBundle.prepare.bannerMessage') }</p>
                             <p>{ t('dataBundle.prepare.bannerMessageDetailed') }</p>
-
 
                             { wordlistTable }
 
