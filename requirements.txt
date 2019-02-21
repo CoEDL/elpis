@@ -3,3 +3,4 @@ werkzeug
 appdirs
 pystache
 setuptools
+kaldi-helpers

@@ -6,18 +6,35 @@ from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
 import subprocess
-from ..kaldi_helpers import run_settings_task_demo
-
+from . import kaldi
 
 bp = Blueprint("model", __name__, url_prefix="/model")
+bp.register_blueprint(kaldi.bp)
 
 
-@bp.route("/new", methods=['POST'])
+def run(cmd: str) -> str:
+    import shlex
+    """Captures stdout/stderr and writes it to a log file, then returns the
+    CompleteProcess result object"""
+    args = shlex.split(cmd)
+    process = subprocess.run(
+        args,
+        check=True,
+        # cwd='/kaldi-helpers',
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT
+    )
+    return process.stdout
+
+
+@bp.route("/new", methods=['POST', 'GET'])
 def new():
     # assuming that this would only be a POST?
     # this.models = state.Model()
     # TODO
-    return '{"status": "new model created"}'
+    print('cmd output: ', run(f'rm -rf {CURRENT_MODEL_DIR}/*'))
+    print(f'rm -rf {CURRENT_MODEL_DIR}/*')
+    return '''{status: 'new model created'}'''
 
 
 @bp.route("/name", methods=['GET', 'POST'])
@@ -31,7 +48,7 @@ def name():
             fout.close()
 
         #result = subprocess.run(["ls -la"], stdout=subprocess.PIPE)
-        #print(result.stdout)
+        # print(result.stdout)
     # return the state
     with open(file_path, 'r') as fin:
         return f'{{ "name": "{fin.read()}" }}'
@@ -85,17 +102,32 @@ def transcription_files():
 
 @bp.route("/pronunciation", methods=['POST'])
 def pronunciation():
+    # check the ./config directory structure is correct
+    config_path = os.path.join(CURRENT_MODEL_DIR, 'config')
+    if not os.path.exists(config_path):
+        os.mkdir(config_path)
+    opt_sil_file_path = os.path.join(config_path, 'optional_silence.txt')
+    if not os.path.exists(opt_sil_file_path):
+        with open(opt_sil_file_path, 'w') as fout:
+            fout.write('SIL\n')
+    sil_pho_file_path = os.path.join(config_path, 'silence_phones.txt')
+    if not os.path.exists(sil_pho_file_path):
+        with open(sil_pho_file_path, 'w') as fout:
+            fout.write('SIL\nsil\nspn\n')
+
     # handle incoming data
     if request.method == 'POST':
         file = request.files['file']
-        file_path = os.path.join(CURRENT_MODEL_DIR, file.filename)
+        file_path = os.path.join(config_path, "letter_to_sound.txt")
         print(f'file name: {file.filename}')
 
         with open(file_path, 'wb') as fout:
             fout.write(file.read())
             fout.close()
 
-    return file.filename
+    with open(file_path, 'rb') as fin:
+        return fin.read()
+
 
 
 @bp.route("/settings", methods=("GET", "POST"))
@@ -105,7 +137,7 @@ def settings():
     """
     file_path = os.path.join(CURRENT_MODEL_DIR, 'settings.txt')
     if request.method == "POST":
-        
+
         run_settings_task_demo()
         # write settings to file
         print(f'settings: {request.json["settings"]}')

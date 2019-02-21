@@ -47,7 +47,8 @@ RUN apt-get update && apt-get install -y \
     nano \
     zsh \
     unzip \
-    tree
+    tree \
+    ffmpeg
 
 # Get and Build Kaldi
 WORKDIR /
@@ -86,7 +87,7 @@ RUN wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz && \
     make altinstall
 
 # Add python packages and their dependencies
-RUN apt-get install -y python3-dev python3-pip python3-certifi && \
+RUN apt-get install -y python3-dev python3-pip python3-certifi python3-venv && \
     pip3.6 install numpy pympi-ling praatio pydub
 
 # Add a task runner
@@ -110,6 +111,14 @@ RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/
 # Clean up package manager
 RUN apt-get clean autoclean
 
+# Elpis
+WORKDIR /
+RUN git clone https://github.com/CoEDL/elpis.git
+
+WORKDIR /elpis
+RUN git submodule update --init --recursive && cd elpis-gui && git pull origin master
+RUN npm build
+
 # Get Kaldi-Helpers and install it
 RUN cd /tmp && git clone https://github.com/CoEDL/kaldi-helpers.git /kaldi-helpers
 RUN cd /kaldi-helpers && python3.6 setup.py install
@@ -125,3 +134,9 @@ WORKDIR /kaldi-helpers
 # Add random number generator to skip Docker building cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 RUN git pull
+
+RUN echo "export LC_ALL=C.UTF-8" >> ~/.bashrc
+RUN echo "export LANG=C.UTF-8" >> ~/.bashrc
+
+EXPOSE 5000:5000
+EXPOSE

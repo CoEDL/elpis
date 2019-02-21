@@ -1,8 +1,12 @@
 '''
 Copyright: University of Queensland, 2019
 Contributors:
-             Nicholas Buckeridge - (University of Queensland, 2018)
-             Ben Foley - (University of Queensland, 2018)
+             Nicholas Lambourne - (University of Queensland, 2019)
+             Ben Foley - (University of Queensland, 2019)
+             Robert Cochran - (University of Queensland, 2019)
+             Nicholas Buckeridge - (University of Queensland, 2019)
+             Emmanuel Tope-Ojo - (University of Queensland, 2019)
+             Rah Sanders-Dwyer - (University of Queensland, 2019)
 '''
 
 from setuptools import setup, find_packages

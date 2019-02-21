@@ -1,5 +1,6 @@
 # Python
 venv/
+venv_test/
 *.pyc
 __pycache__/
 *.egg-info/
@@ -15,14 +16,14 @@ node_modules/
 .idea/
 
 # Server
-models/
-transcriptions/
-current_model/
-current_transcription/
+user_data/
+log.txt
 
 #testing
 name_file
 uploaded_files/
+abui_toy_corpus/
+test_object_*/
 
 # mac files
 .DS_Store
