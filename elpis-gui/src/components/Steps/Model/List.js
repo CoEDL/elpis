@@ -15,7 +15,7 @@ class ModelList extends Component {
     render() {
         const { t, modelNames } = this.props;
 
-        const list = modelNames ? (
+        const list = modelNames.length > 0 ? (
             <ul>
                 {modelNames.map( name => <li key={name}>{name}</li>)}
             </ul>

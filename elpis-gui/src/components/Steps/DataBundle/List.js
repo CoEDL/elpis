@@ -15,7 +15,7 @@ class DataBundleList extends Component {
     render() {
         const { t, dbNames } = this.props;
 
-        const list = dbNames ? (
+        const list = dbNames.length > 0 ? (
             <ul>
                 {dbNames.map( name => <li key={name}>{name}</li>)}
             </ul>
