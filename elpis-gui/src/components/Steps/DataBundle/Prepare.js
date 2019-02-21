@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, List, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { dataBundlePrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
@@ -64,10 +63,6 @@ class DataBundlePrepare extends Component {
         );
     }
 }
-const mapDispatchToProps = dispatch => ({
-    dataBundlePrepare: () => {
-        dispatch(dataBundlePrepare());
-    }
-})
-export default connect(null, mapDispatchToProps)(translate('common')(DataBundlePrepare))
+
+export default translate('common')(DataBundlePrepare)
 

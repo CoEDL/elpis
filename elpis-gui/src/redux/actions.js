@@ -41,6 +41,7 @@ var successHandler = {
     dataBundleName: response => ({ type: 'DATA_BUNDLE_NAME', response }),
     dataBundleFiles: response => ({ type: 'DATA_BUNDLE_FILES', response }),
     dataBundleSettings: response => ({ type: 'DATA_BUNDLE_SETTINGS', response }),
+    dataBundlePrepare: response => ({ type: 'DATA_BUNDLE_PREPARE', response }),
 
     modelNew: response => ({ type: 'MODEL_NEW', response }),
     modelName: response => ({ type: 'MODEL_NAME', response }),

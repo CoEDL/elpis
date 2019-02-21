@@ -102,9 +102,6 @@ class DataBundleFiles extends Component {
                                 </Header>
                                 { t('dataBundle.files.settingsDescription') }
 
-
-
-
                                 <Formik
                                     enableReinitialize
                                     initialValues={ {
@@ -123,10 +120,10 @@ class DataBundleFiles extends Component {
                                     } }
                                     onSubmit={ (values, { setSubmitting }) => {
                                         // demo
-                                        setTimeout(() => {
-                                            alert(JSON.stringify(values, null, 2));
-                                            setSubmitting(false);
-                                        }, 400);
+                                        // setTimeout(() => {
+                                        //     alert(JSON.stringify(values, null, 2));
+                                        //     setSubmitting(false);
+                                        // }, 400);
 
                                         // redux action
                                         const postData = { tier: values.tier }

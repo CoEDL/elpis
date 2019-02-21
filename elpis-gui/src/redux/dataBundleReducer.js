@@ -67,7 +67,12 @@ const dataBundle = (state = initState, action) => {
         case 'DATA_BUNDLE_SETTINGS':
             return {
                 ...state,
-                settings: action.response.data.settings
+                settings: {...state.settings, tier: action.response.data.tier}
+            }
+
+        case 'DATA_BUNDLE_PREPARE':
+            return {
+                ...state
             }
 
         default:

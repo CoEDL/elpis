@@ -15,7 +15,9 @@ class FileUpload extends Component {
         // backend will need to know whether to add to existing files
         // or wipe existing and use only these
         // we'll also need to update redux state on this basis
-        formData.append('replaceFiles', this.props.replaceFiles);
+
+        // formData.append('replaceFiles', this.props.replaceFiles);
+
         acceptedFiles.forEach(file => {
             console.log(file)
             formData.append('file', file);
@@ -39,7 +41,6 @@ class FileUpload extends Component {
                                 }) }
                             >
                                 <input { ...getInputProps() } />
-
                                 {
                                     isDragActive ? (
                                         <p>{ t('dataBundle.fileUpload.dropFilesHintDragActive') } </p>
