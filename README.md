@@ -28,6 +28,13 @@ Please check the [wiki](https://github.com/CoEDL/elpis/wiki/Elpis-Step-By-Step-G
 using Elpis on your data. If you're comfortable using Docker and are aware of the types of data required, you can also 
 consult our more concise 
 [advanced guide](https://github.com/CoEDL/elpis/wiki/Inferring-Transcriptions-for-New-Audio-Data-(Advanced)).
+### Requirements
+
+All the required programs should be available in the environment.
+
+* python3 + pip
+* git
+* npm
 
 ## Why Is It Called Elpis?
 

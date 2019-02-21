@@ -1,6 +1,5 @@
 import os
-from typing import List, TextIO as TextFile
-from ..paths import MODELS_DIR
+from typing import List
     
     
 def filter_filenames(filenames: List[str]) -> List[str]:
@@ -11,5 +10,7 @@ class State(object):
     def __init__(self):
         super()
 
-def load_existing_models():#[model]: #corpus?
+
+def load_existing_models():
+    #[model]: #corpus?
     return []

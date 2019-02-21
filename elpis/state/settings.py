@@ -1,19 +1,24 @@
+from typing import List
+
+
 class Settings(object):
+    """
+    Model Settings
+    """
     def __init__(self):
         super()
-        #Model Settings
         self._audio_frequency = 44100
         self._mfcc = 22050
         self._ngram = 3
         self._beam = 10
 
-    def set_settings(settings):
+    def set_settings(self, settings):
         self._audio_frequency = settings[0]
         self._mfcc = settings[1]
         self._ngram = settings[2]
         self._beam = settings[3]
 
-    def get_settings():
+    def get_settings(self) -> List[int]:
         return [
             self._audio_frequency, 
             self._mfcc,

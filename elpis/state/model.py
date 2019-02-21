@@ -1,3 +1,7 @@
+import os
+from .settings import Settings
+
+
 class Model(object):
     """
     Stores the state of the model.
@@ -53,8 +57,7 @@ class Model(object):
         self._date: str = None
         self._settings = Settings()
         self._transcriptions = []
-    
-        
+
     """
     Name
     """ 
@@ -85,7 +88,6 @@ class Model(object):
             fin.write(value)
             self._date = value
 
-
     """
     Get List of Filenames
     """
@@ -101,43 +103,42 @@ class Model(object):
     def additional_text_files(self):
         return os.listdir(self._PATH_ADDITIONAL_TEXT)
 
-
     """
     Set Files to Model
     """
-    def add_audio_file(filename: str, content: bytes):
+    def add_audio_file(self, filename: str, content: bytes):
         with open(f'{self._PATH_AUDIO}/{filename}', 'wb') as fout:
             fout.write(content)
     
-    def add_transcription_file(filename: str, content: bytes):
+    def add_transcription_file(self, filename: str, content: bytes):
         with open(f'{self._PATH_TRANSCRIPTION}/{filename}', 'wb') as fout:
             fout.write(content)
 
-    def add_additional_text_file(filename: str, content: str):
+    def add_additional_text_file(self, filename: str, content: str):
         with open(f'{self._PATH_ADDITIONAL_TEXT}/{filename}', 'w') as fout:
             fout.write(content)
 
-    @pronunciation.setter
-    def pronunciation(self, content: bytes):
-        with open(self._PATH_PRONUNCIATION, 'wb') as fout:
-            return out.write(content)
-
-    """
-    Get Files from Model
-    """
-    def get_audio_file():
-        return None
-
-    def get_transcription_file():
-        return None
-
-    def get_additional_text_file():
-        return None
-
-    def get_pronunciation_file():
-        return None
-    
     @property
     def pronunciation(self):
         with open(self._PATH_PRONUNCIATION, 'rb') as fin:
             return fin.read().decode('utf-16')
+
+    @pronunciation.setter
+    def pronunciation(self, content: bytes):
+        with open(self._PATH_PRONUNCIATION, 'wb') as file_out:
+            return file_out.write(content)
+
+    """
+    Get Files from Model
+    """
+    def get_audio_file(self):
+        return None
+
+    def get_transcription_file(self):
+        return None
+
+    def get_additional_text_file(self):
+        return None
+
+    def get_pronunciation_file(self):
+        return None

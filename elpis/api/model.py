@@ -8,7 +8,6 @@ import json
 import subprocess
 from ..kaldi_helpers import run_settings_task_demo
 
-#from..kaldi_helpers import task_run_demo
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -98,11 +97,12 @@ def pronunciation():
 
     return file.filename
 
-"""
-Settings Route
-"""
+
 @bp.route("/settings", methods=("GET", "POST"))
 def settings():
+    """
+    Settings Route
+    """
     file_path = os.path.join(CURRENT_MODEL_DIR, 'settings.txt')
     if request.method == "POST":
         

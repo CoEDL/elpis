@@ -2,6 +2,7 @@ from flask import Flask as FlaskBase
 from flask import Blueprint as FlaskBlueprint
 from .blueprint import Blueprint
 
+
 class Flask(FlaskBase):
     """Custom app to allow multi-level blueprints."""
     
@@ -19,4 +20,3 @@ class Flask(FlaskBase):
                 lambda bp: super(Flask, self).register_blueprint(bp),
                 self
             )
-

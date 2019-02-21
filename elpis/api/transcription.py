@@ -15,6 +15,7 @@ def new():
     #this.models = state.Model()
     return '{"status": "new model created"}'
 
+
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
     print(request.json['name'])
@@ -54,6 +55,7 @@ def usedModelName():
     with open(file_path, 'r') as fin:
         return f'{{ "usedModelName": "{fin.read()}" }}'
 
+
 @bp.route("/results", methods=['GET', 'POST'])
 def results():
     file_path = os.path.join(CURRENT_MODEL_DIR, 'results.txt')
@@ -66,6 +68,7 @@ def results():
     with open(file_path, 'r') as fin:
         return f'{{ "results": "{fin.read()}" }}'
 
+
 @bp.route("/audio", methods=['GET', 'POST'])
 def audio():
     # setup the path
@@ -76,12 +79,12 @@ def audio():
     # handle incoming data
     if request.method == 'POST':
 
-        file = request.files['file']
-        file_path = os.path.join(CURRENT_MODEL_DIR, file.filename)
-        print(f'file name: {file.filename}')
+        file_ = request.files['file']
+        file_path = os.path.join(CURRENT_MODEL_DIR, file_.filename)
+        print(f'file name: {file_.filename}')
 
         with open(file_path, 'wb') as fout:
-            fout.write(file.read())
+            fout.write(file_.read())
             fout.close()
 
-    return file.filename
+        return file_.filename

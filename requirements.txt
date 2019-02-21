@@ -1,2 +1,5 @@
 Flask
 werkzeug
+appdirs
+pystache
+setuptools
