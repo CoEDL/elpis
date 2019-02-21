@@ -67,7 +67,7 @@ const dataBundle = (state = initState, action) => {
         case 'DATA_BUNDLE_SETTINGS':
             return {
                 ...state,
-                settings: action.response.data
+                settings: action.response.data.settings
             }
 
         default:
