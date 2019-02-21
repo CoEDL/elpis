@@ -4,7 +4,7 @@ const initState = {
     name: "",
     modelNames: [],
     date: null,
-    pronunciationFile: '',
+    pronunciation: '',
     settings: {
         ngram: 1
     },
@@ -41,10 +41,11 @@ const model = (state = initState, action) => {
                 name: action.response.data.data.name
             }
 
-        case 'MODEL_PRONUNCIATION_FILE':
+        case 'MODEL_PRONUNCIATION':
+        console.log("reducer got pron data", action.response.data)
             return {
                 ...state,
-                pronunciationFile: action.response.data
+                pronunciation: action.response.data
             }
 
         case 'MODEL_SETTINGS':

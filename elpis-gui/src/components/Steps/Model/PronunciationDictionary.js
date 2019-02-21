@@ -20,11 +20,16 @@ class ModelPronunciationDictionary extends Component {
     }
 
     render() {
-        const { t, pronunciationFile } = this.props;
+        const { t, pronunciation } = this.props;
 
-        const pronFile = pronunciationFile ?
-            pronunciationFile + ' uploaded OK'
-            : null
+        const pron = pronunciation ? (
+            <Segment>
+                <pre>
+                    {pronunciation}
+                </pre>
+            </Segment>
+
+        ) : null
 
         return (
             <div>
@@ -66,9 +71,7 @@ class ModelPronunciationDictionary extends Component {
                                 } }
                             </Dropzone>
 
-                            <p>
-                                { pronFile }
-                            </p>
+                            { pron }
 
                             <Divider />
 
@@ -86,7 +89,7 @@ class ModelPronunciationDictionary extends Component {
 
 const mapStateToProps = state => {
     return {
-        pronunciationFile: state.model.pronunciationFile,
+        pronunciation: state.model.pronunciation,
     }
 }
 

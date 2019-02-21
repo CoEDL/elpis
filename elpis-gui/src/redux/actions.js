@@ -49,7 +49,7 @@ var successHandler = {
     modelName: response => ({ type: 'MODEL_NAME', response }),
     modelDate: response => ({ type: 'MODEL_DATE', response }),
     modelSettings: response => ({ type: 'MODEL_SETTINGS', response }),
-    modelPronunciationFile: response => ({ type: 'MODEL_PRONUNCIATION_FILE', response }),
+    modelPronunciation: response => ({ type: 'MODEL_PRONUNCIATION', response }),
 
     newTranscriptionFile: response => ({ type: 'NEW_TRANSCRIPTION_FILE', response })
 }
