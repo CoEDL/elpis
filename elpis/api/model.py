@@ -1,57 +1,33 @@
 import os
 from pathlib import Path
-from flask import Blueprint, redirect, request, url_for, escape
+from flask import Blueprint, redirect, request, url_for, escape, current_app as app
 from werkzeug.utils import secure_filename
 from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
 import subprocess
 from . import kaldi
+from ..kaldi.interface import KaldiInterface
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 bp.register_blueprint(kaldi.bp)
 
 
-def run(cmd: str) -> str:
-    import shlex
-    """Captures stdout/stderr and writes it to a log file, then returns the
-    CompleteProcess result object"""
-    args = shlex.split(cmd)
-    process = subprocess.run(
-        args,
-        check=True,
-        # cwd='/kaldi-helpers',
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT
-    )
-    return process.stdout
-
 
 @bp.route("/new", methods=['POST', 'GET'])
 def new():
-    # assuming that this would only be a POST?
-    # this.models = state.Model()
-    # TODO
-    print('cmd output: ', run(f'rm -rf {CURRENT_MODEL_DIR}/*'))
-    print(f'rm -rf {CURRENT_MODEL_DIR}/*')
-    return '''{status: 'new model created'}'''
+    kaldi: KaldiInterface = app.config['INTERFACE']
+    m = kaldi.new_model(request.values.get("name"))
+    app.config['CURRENT_MODEL'] = m
+    return f'''{{"status": "ok", "message": "new model created", "data":{m.config._load()}}}'''
 
 
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
-    print(request.json['name'])
-    file_path = os.path.join(CURRENT_MODEL_DIR, 'name.txt')
+    m = app.config['CURRENT_MODEL']
     if request.method == 'POST':
-        # update the state name
-        with open(file_path, 'w') as fout:
-            fout.write(request.json['name'])
-            fout.close()
-
-        #result = subprocess.run(["ls -la"], stdout=subprocess.PIPE)
-        # print(result.stdout)
-    # return the state
-    with open(file_path, 'r') as fin:
-        return f'{{ "name": "{fin.read()}" }}'
+        m.name = request.values.get("name")
+    return f'{{ "status": "ok", "message":"", "data": "{m.name}" }}'
 
 
 @bp.route("/date")

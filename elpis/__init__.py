@@ -27,6 +27,7 @@ def create_app(test_config=None):
     else:
         app.config['INTERFACE'] = KaldiInterface.load(interface_path)
     app.config['CURRENT_DATABUNDLE'] = None
+    app.config['CURRENT_MODEL'] = None
     
     app.register_blueprint(api.bp)
     print(app.url_map)
