@@ -10,7 +10,7 @@ bp = Blueprint("databundle", __name__, url_prefix="/databundle")
 bp.register_blueprint(parent_bp)
 
 
-@bp.route("/new")
+@bp.route("/new", methods=['GET', 'POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     ds = kaldi.new_dataset(request.values.get("name"))
@@ -27,7 +27,8 @@ def name():
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
     if request.method == 'POST':
         ds.name = request.json['name']
-    return jsonify({"name": ds.name})
+    return jsonify({
+        "status": "ok","message":"", "data": ds.name})
 
 
 @bp.route("/list")
