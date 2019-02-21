@@ -14,6 +14,9 @@ from kaldi_helpers.input_scripts.json_to_kaldi import create_kaldi_structure
 from kaldi_helpers.input_scripts.make_wordlist import generate_word_list
 from kaldi_helpers.input_scripts.make_prn_dict import generate_pronunciation_dictionary
 
+class ModelFiles(object):
+    def __init__(self, basepath: Path):
+        self.kaldi = KaldiPathStructure(basepath)
 
 class Model(FSObject):
     _config_file = 'model.json'
@@ -25,10 +28,6 @@ class Model(FSObject):
         self.config['dataset'] = None # dataset hash has not been linked
         self.config['pronunciation'] = None # file has not been uploaded
 
-    def set_pronunciation_content(self, content: str):
-        with self.pronunciation_path.open(mode='wb') as fout:
-            fout.write(content)
-
     def set_pronunciation_path(self, path: Path):
         path = Path(path)
         with path.open(mode='rb') as fin:
@@ -37,13 +36,21 @@ class Model(FSObject):
     def set_pronunciation_fp(self, file: BufferedIOBase):
         self.set_pronunciation_content(file.read())
 
+    def set_pronunciation_content(self, content: str):
+        self.config['pronunciation'] = True
+        with self.pronunciation_path.open(mode='wb') as fout:
+            fout.write(content)
+
     def link(self, dataset: Dataset):
         self.dataset = dataset
         self.config['dataset'] = dataset.hash
 
     def train(self):
         # task make-kaldi-subfolders
-        k_path = KaldiPathStructure(self.path)
+        kaldi_structure = KaldiPathStructure(self.path)
+        temporary_path = Path('/tmp', self.hash)
+        temporary_path.mkdir(parents=True, exist_ok=True)
+
         local_kaldi_path = self.path.joinpath('kaldi')
         local_kaldi_path.mkdir(parents=True, exist_ok=True)
         kaldi_data_local_dict = local_kaldi_path.joinpath( 'data', 'local', 'dict')
@@ -61,9 +68,9 @@ class Model(FSObject):
 
 
         # task generate-kaldi-configs
-        path_file_path = local_kaldi_path.joinpath('path.sh')
-        mfcc_file_path = kaldi_conf.joinpath('mfcc.conf')
-        decode_config_file_path = kaldi_conf.joinpath('decode.config')
+        path_file_path = kaldi_structure.path.joinpath('path.sh')
+        mfcc_file_path = kaldi_structure.conf.joinpath('mfcc.conf')
+        decode_config_file_path = kaldi_structure.conf.joinpath('decode.config')
 
         template_path = Path('/kaldi-helpers/resources/kaldi_templates')
         path_resource = template_path.joinpath('path.sh')

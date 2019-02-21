@@ -6,6 +6,9 @@ from .app import Flask
 
 from .paths import GUI_STATIC_DIR, GUI_PUBLIC_DIR
 
+from .kaldi.interface import KaldiInterface
+from pathlib import Path
+
 def create_app(test_config=None):
 
     # Setup static resources
@@ -18,6 +21,13 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
+    interface_path = Path('/root/.local/share/elpis/test')
+    if not interface_path.exists():
+        app.config['INTERFACE'] = KaldiInterface(interface_path)
+    else:
+        app.config['INTERFACE'] = KaldiInterface.load(interface_path)
+    app.config['CURRENT_DATABUNDLE'] = None
+    
     app.register_blueprint(api.bp)
     print(app.url_map)
 
