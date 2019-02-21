@@ -32,6 +32,19 @@ def name():
         "status": "ok",
         "data": ds.name})
 
+@bp.route("/settings", methods=['GET', 'POST'])
+def tier():
+    ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    if ds is None:
+        return '{"status":"error", "data": "No current data bundle exists (prehaps create one first)"}'
+    if request.method == 'POST':
+        ds.tier = request.json['tier']
+        # TODO make this an optional parameter
+    return jsonify({
+        "status": "ok",
+        # TODO formalise the setting of the data bundle
+        "data": {"tier": ds.tier}})
+
 
 @bp.route("/list")
 def list_existing():
