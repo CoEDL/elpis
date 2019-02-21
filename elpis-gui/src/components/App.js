@@ -20,6 +20,7 @@ import {
     NewTranscriptionResults
 } from './Steps/index';
 import PageContainer from './PageContainer';
+import urls from 'urls'
 
 
 class App extends Component {
@@ -28,25 +29,25 @@ class App extends Component {
             <div className="App">
                 <Router>
                     <PageContainer>
-                        <Route exact path="/" component={ Welcome } />
+                        <Route path="/" exact component={ Welcome } />
 
-                        <Route exact path="/data-bundles" component={ DataBundleList } />
-                        <Route path="/data-bundle/new" component={ DataBundleNew } />
-                        <Route path="/data-bundle/files" component={ DataBundleAddFiles } />
-                        <Route exact path="/data-bundle/clean" component={ DataBundlePreparation } />
-                        <Route path="/data-bundle/preparation/error" component={ DataBundlePreparationError } />
+                        <Route path={urls.gui.dataBundle.index} exact component={ DataBundleList } />
+                        <Route path={urls.gui.dataBundle.new} component={ DataBundleNew } />
+                        <Route path={urls.gui.dataBundle.files} component={ DataBundleAddFiles } />
+                        <Route path={urls.gui.dataBundle.clean} exact component={ DataBundlePreparation } />
+                        <Route path={urls.gui.dataBundle.preparationError} component={ DataBundlePreparationError } />
 
-                        <Route exact path="/models" component={ ModelList } />
-                        <Route path="/model/new" component={ ModelNew } />
-                        <Route path="/model/pronunciation" component={ ModelPronunciationDictionary } />
-                        <Route path="/model/lexicon" component={ ModelLexicon } />
-                        <Route path="/model/settings" component={ ModelSettings } />
-                        <Route exact path="/model/training" component={ ModelTraining } />
-                        <Route exact path="/model/training/results" component={ ModelTrainingResults } />
-                        <Route exact path="/model/training/error" component={ ModelTrainingError } />
+                        <Route path={urls.gui.model.index} exact component={ ModelList } />
+                        <Route path={urls.gui.model.new} component={ ModelNew } />
+                        <Route path={urls.gui.model.pronunciation} component={ ModelPronunciationDictionary } />
+                        <Route path={urls.gui.model.lexicon} component={ ModelLexicon } />
+                        <Route path={urls.gui.model.settings} component={ ModelSettings } />
+                        <Route path={urls.gui.model.training} exact component={ ModelTraining } />
+                        <Route path={urls.gui.model.trainingResults} exact component={ ModelTrainingResults } />
+                        <Route path={urls.gui.model.trainingError} exact component={ ModelTrainingError } />
 
-                        <Route path="/transcription/new" component={ NewTranscription } />
-                        <Route path="/transcription/results" component={ NewTranscriptionResults } />
+                        <Route path={urls.gui.transcription.new} component={ NewTranscription } />
+                        <Route path={urls.gui.transcription.results} component={ NewTranscriptionResults } />
                     </PageContainer>
                 </Router>
             </div>
