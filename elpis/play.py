@@ -11,10 +11,12 @@ with open('/elpis/abui_toy_corpus/data/1_1_4.eaf', 'rb') as feaf, open('/elpis/a
 ds.process()
 
 def transcribe():
+    t = None
+    def complete():
+        print(t.elan().decode('utf-8'))
     t = kaldi.new_transcription('tx')
     t.link(m)
-    t.transcribe_align('/elpis/abui_toy_corpus/data/1_1_1.wav')
-    print(t.elan().decode('utf-8'))
+    t.transcribe_align('/elpis/abui_toy_corpus/data/1_1_1.wav', on_complete=complete)
 
 m = kaldi.new_model('mx')
 m.link(ds)
