@@ -1,5 +1,5 @@
 import os
-from flask import request, current_app as app
+from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
@@ -30,7 +30,10 @@ def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     m = kaldi.new_model(request.values.get("name"))
     app.config['CURRENT_MODEL'] = m
-    return f'''{{"status": "ok", "data":{m.config._load()}}}'''
+    return jsonify({
+        "status": "ok",
+        "data": m.config._load()
+    })
 
 
 @bp.route("/name", methods=['GET', 'POST'])
@@ -40,7 +43,18 @@ def name():
         return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
     if request.method == 'POST':
         m.name = request.json['name']
-    return f'{{ "status": "ok", "data": "{m.name}" }}'
+    return jsonify({
+        "status": "ok",
+        "data": m.name
+    })
+
+
+def data_bundle():
+    pass
+
+
+# ------------------------------------------------------------------
+# Everything under this ^ line is unchecked ( even this comment :O )
 
 
 @bp.route("/transcription-files", methods=['GET', 'POST'])

@@ -136,7 +136,7 @@ class Dataset(FSObject):
                             wordlist[word] += 1
                         else:
                             wordlist[word] = 1
-                json.dump(words, f_word_count)
+                json.dump(wordlist, f_word_count)
 
         base_directory = f'{self.pathto.original}'
         audio_extensions = {"*.wav"}
