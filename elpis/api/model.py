@@ -6,6 +6,7 @@ import json
 import subprocess
 from . import kaldi
 from ..kaldi.interface import KaldiInterface
+from ..kaldi.model import Model
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 bp.register_blueprint(kaldi.bp)
@@ -47,6 +48,23 @@ def name():
         "status": "ok",
         "data": m.name
     })
+
+@bp.route("/l2s", methods=['POST'])
+def l2s():
+    m: Model = app.config['CURRENT_MODEL']
+    # handle incoming data
+    if request.method == 'POST':
+        file = request.files['file']
+        if m is None:
+            return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
+        m.set_l2s_fp(file)
+    return m.l2s
+
+@bp.route("/lexicon", methods=['GET', 'POST'])
+def generate_lexicon():
+    m: Model = app.config['CURRENT_MODEL']
+    m.generate_lexicon()
+    return m.lexicon
 
 
 def data_bundle():
@@ -92,22 +110,11 @@ def transcription_files():
 
 @bp.route("/pronunciation", methods=['POST'])
 def pronunciation():
-    # check the ./config directory structure is correct
-    config_path = os.path.join(CURRENT_MODEL_DIR, 'config')
-    if not os.path.exists(config_path):
-        os.mkdir(config_path)
-    opt_sil_file_path = os.path.join(config_path, 'optional_silence.txt')
-    if not os.path.exists(opt_sil_file_path):
-        with open(opt_sil_file_path, 'w') as fout:
-            fout.write('SIL\n')
-    sil_pho_file_path = os.path.join(config_path, 'silence_phones.txt')
-    if not os.path.exists(sil_pho_file_path):
-        with open(sil_pho_file_path, 'w') as fout:
-            fout.write('SIL\nsil\nspn\n')
 
     # handle incoming data
     if request.method == 'POST':
         file = request.files['file']
+
         file_path = os.path.join(config_path, "letter_to_sound.txt")
         print(f'file name: {file.filename}')
 
