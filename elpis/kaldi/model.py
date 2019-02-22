@@ -251,7 +251,7 @@ class Model(FSObject):
             ######################################################################
 
             # task _test-train
-            p = run(f"cd {local_kaldi_path}; ./run.sh")
+            p = run(f"cd {local_kaldi_path}; ./run.sh > /tmp/training_log.txt")
             print(p.stdout)
             print('double done.')
 
