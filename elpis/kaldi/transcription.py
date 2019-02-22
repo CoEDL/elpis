@@ -104,10 +104,9 @@ class Transcription(FSObject):
         run(cmd)
 
     def transcribe_align(self, audio, on_complete:Callable=None):
+        self._process_audio_file(audio)
         def transcribe():
-            self._process_audio_file(audio)
             self._cook_generate_infer_files()
-
             kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
 
             # run gmm-decoder-align
