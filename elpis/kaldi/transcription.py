@@ -16,7 +16,7 @@ class Transcription(FSObject):
         super().__init__(**kwargs)
         self.audio_file_path = self.path.joinpath('audio.wav')
         self.model = None
-        self.config["model_hash"] = None
+        self.config["model_name"] = None
         self.config["status"] = "untranscribed"
         self.status = "untranscribed"
 
@@ -26,15 +26,12 @@ class Transcription(FSObject):
     def load(cls, base_path: Path):
         self = super().load(base_path)
         self.audio_file_path = self.path.joinpath('audio.wav')
-        if self.config['model_hash'] is None:
-            self.model = None
-        else:
-            self.model = self.interface
+        self.model = None
         return self
 
     def link(self, model):
         self.model = model
-        self.config['model_hash'] = model.hash
+        self.config['model_name'] = model.name
 
     @property
     def status(self):
@@ -65,11 +62,11 @@ class Transcription(FSObject):
         tmp_path = Path(f'/tmp/{self.hash}')
         tmp_path.mkdir(parents=True, exist_ok=True)
         tmp_file_path = tmp_path.joinpath('original.wav')
-        if isinstance(audio, Path) or isinstance(audio, str):
-            shutil.copy(f'{audio}', f'{tmp_file_path}')
-        elif isinstance(audio, BufferedIOBase):
-            with tmp_file_path.open(mode='wb') as fout:
-                fout.write(audio.read())
+        # if isinstance(audio, Path) or isinstance(audio, str):
+        #     shutil.copy(f'{audio}', f'{tmp_file_path}')
+        # elif isinstance(audio, BufferedIOBase):
+        with tmp_file_path.open(mode='wb') as fout:
+            fout.write(audio.read())
         # resample the audio fie
         resample(tmp_file_path, self.path.joinpath('audio.wav'))
 

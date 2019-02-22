@@ -40,6 +40,19 @@ def new():
     })
 
 
+@bp.route("/load", methods=['GET', 'POST'])
+def new():
+    kaldi: KaldiInterface = app.config['INTERFACE']
+    m = kaldi.get_model(request.json["name"])
+    # set the databundle to match the model
+    app.config['CURRENT_DATABUNDLE'] = m.dataset
+    app.config['CURRENT_MODEL'] = m
+    return jsonify({
+        "status": "ok",
+        "data": m.config._load()
+    })
+
+
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
     m = app.config['CURRENT_MODEL']
@@ -93,10 +106,16 @@ def generate_lexicon():
 @bp.route("/list", methods=['GET', 'POST'])
 def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
+    # TODO see the two todos below
+    results = {'wer': 1, 'del': 1, 'ins': 2, 'sub': 3}
+    lx = [{'name': name, 'results': results} for name in kaldi.list_models()]
     return jsonify({
         "status": "ok",
-        "data": kaldi.list_models()
+        "data": lx
     })
+
+    # TODO make this endpoint list-verbose or something like that
+    # TODO /names could list just the name and /list can be the descriptive verison
 
 @bp.route("/status", methods=['GET', 'POST'])
 def status():

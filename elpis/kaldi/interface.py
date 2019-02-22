@@ -119,10 +119,7 @@ class KaldiInterface(FSObject):
         for hash_dir in os.listdir(f'{self.models_path}'):
             with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
                 name = json.load(fin)['name']
-                # TODO: replace with model training results
-                results = { 'wer': 1, 'del': 1, 'ins': 2, 'sub': 3 }
-                model = {'name': name, 'results': results}
-                models.append(model)
+                models.append(name)
         return models
 
     def new_transcription(self, tname):
@@ -133,7 +130,12 @@ class KaldiInterface(FSObject):
         return t
 
     def get_transcription(self, tname):
-        return
+        if tname not in self.list_transcriptions():
+            raise KaldiError(f'Tried to load a transcription called "{tname}" that does not exist')
+        hash_dir = self.config['transcriptions'][tname]
+        t = Transcription.load(self.transcriptions_path.joinpath(hash_dir))
+        t.model = self.get_model(t.config['model_name'])
+        return t
 
     def list_transcriptions(self):
         names = []

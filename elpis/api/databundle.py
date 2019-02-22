@@ -20,6 +20,16 @@ def new():
         "data": ds.config._load()
     })
 
+@bp.route("/load", methods=['GET', 'POST'])
+def new():
+    kaldi: KaldiInterface = app.config['INTERFACE']
+    ds = kaldi.get_dataset(request.json['name'])
+    app.config['CURRENT_DATABUNDLE'] = ds
+    return jsonify({
+        "status": "ok",
+        "data": ds.config._load()
+    })
+
 
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
