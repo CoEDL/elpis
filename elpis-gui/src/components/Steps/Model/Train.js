@@ -3,18 +3,23 @@ import { Link } from "react-router-dom";
 import { Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import ReactTimeout from 'react-timeout'
 import { triggerApiWaiting, modelTrain, modelStatus } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
 class ModelTrain extends Component {
+    state = {
+        dots: 0
+    }
+
     componentDidMount = () => {
         this.props.triggerApiWaiting('now training')
     }
-
     handleModelTrain = () => {
         console.log('train')
         this.props.modelTrain()
+        this.props.setInterval(this.handleModelStatus, 2000)
     }
     handleModelStatus = () => {
         console.log('status')
@@ -25,7 +30,6 @@ class ModelTrain extends Component {
         const { t, settings, apiWaiting, status } = this.props;
 
         console.log('status', status)
-
 
         return (
             <div>
@@ -114,4 +118,8 @@ const mapDispatchToProps = dispatch => ({
 
 
 })
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelTrain));
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps)(
+    translate('common')(
+    ReactTimeout(ModelTrain)));

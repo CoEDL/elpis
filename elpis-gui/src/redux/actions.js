@@ -62,28 +62,23 @@ export const dataBundleList = () => {
     const url = baseUrl + urls.api.dataBundle.list
     return postApi(url, null, 'dataBundleList')
 }
-
 export const dataBundleNew = postData => {
     const url = baseUrl + urls.api.dataBundle.new
     return postApi(url, postData, 'dataBundleNew')
 }
-
 export const dataBundleName = postData => {
     const url = baseUrl + urls.api.dataBundle.name
     return postApi(url, postData, 'dataBundleName')
 }
-
 export const dataBundleSettings = postData => {
     const url = baseUrl + urls.api.dataBundle.settings
     return postApi(url, postData, 'dataBundleSettings')
 }
-
 export const dataBundleFiles = postData => {
     const url = baseUrl + urls.api.dataBundle.files
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'dataBundleFiles', headers)
 }
-
 export const dataBundlePrepare = () => {
     console.log("action do dataBundlePrepare")
     const url = baseUrl + urls.api.dataBundle.prepare
@@ -97,36 +92,28 @@ export const modelList = () => {
     const url = baseUrl + urls.api.model.list
     return postApi(url, null, 'modelList')
 }
-
 export const modelNew = postData => {
-    console.log("action modelNew", postData)
     const url = baseUrl + urls.api.model.new
     return postApi(url, postData, 'modelNew')
 }
-
 export const modelName = postData => {
     const url = baseUrl + '/api/model/name'
     return postApi(url, postData, 'modelName')
 }
-
 export const modelL2S = postData => {
     const url = baseUrl + urls.api.model.l2s
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'modelL2S', headers)
 }
-
 export const modelLexicon = () => {
     const url = baseUrl + urls.api.model.lexicon
     return postApi(url, null, 'modelLexicon')
 }
-
 export const modelSettings = postData => {
     const url = baseUrl + urls.api.model.settings
     return postApi(url, postData, 'modelSettings')
 }
-
 export const modelTrain = () => {
-    console.log("action got model train")
     const url = baseUrl + '/api/model/train'
     return postApi(url, null, 'modelTrain')
 }
@@ -134,8 +121,6 @@ export const modelStatus = () => {
     const url = baseUrl + '/api/model/status'
     return postApi(url, null, 'modelStatus')
 }
-
-// need a model id?
 export const modelResults = () => {
     const url = baseUrl + '/api/model/results'
     return postApi(url, 'modelResults')
