@@ -13,14 +13,4 @@ CURRENT_DATABUNDLE_DIR = os.path.join(USER_DATA, 'databundles')
 CURRENT_MODEL_DIR = os.path.join(USER_DATA, 'current_model')
 CURRENT_TRANSCRIPTION_DIR = os.path.join(USER_DATA, 'current_transcription')
 
-for directory in [
-    USER_DATA,
-    DATABUNDLES_DIR,
-    MODELS_DIR,
-    TRANSCRIPTIONS_DIR,
-    CURRENT_DATABUNDLE_DIR,
-    CURRENT_MODEL_DIR,
-    CURRENT_TRANSCRIPTION_DIR
-]:
-    if not os.path.exists(directory):
-        os.mkdir(directory)
+
