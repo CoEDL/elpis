@@ -7,6 +7,7 @@ import subprocess
 from . import kaldi
 from ..kaldi.interface import KaldiInterface
 from ..kaldi.model import Model
+from ..kaldi.dataset import Dataset
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 bp.register_blueprint(kaldi.bp)
@@ -30,6 +31,8 @@ def run(cmd: str) -> str:
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     m = kaldi.new_model(request.json["name"])
+    ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    m.link(ds)
     app.config['CURRENT_MODEL'] = m
     return jsonify({
         "status": "ok",
@@ -41,6 +44,7 @@ def new():
 def name():
     m = app.config['CURRENT_MODEL']
     if m is None:
+        # TODO sending a string error back in incorrect, jsonify it.
         return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
     if request.method == 'POST':
         m.name = request.json['name']
@@ -57,6 +61,7 @@ def l2s():
     if request.method == 'POST':
         file = request.files['file']
         if m is None:
+            # TODO some of the end points (like this one) return files, but on error we still return a json string? Looks like bad practice to me
             return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
         m.set_l2s_fp(file)
     return m.l2s
