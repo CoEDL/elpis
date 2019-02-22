@@ -110,12 +110,15 @@ class KaldiInterface(FSObject):
         return
 
     def list_models(self):
-        names = []
+        models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
                 name = json.load(fin)['name']
-                names.append(name)
-        return names
+                # TODO: replace with model training results
+                results = { 'wer': 1, 'del': 1, 'ins': 2, 'sub': 3 }
+                model = {'name': name, 'results': results}
+                models.append(model)
+        return models
 
     def new_transcription(self, tname):
         t = Transcription(parent_path=self.transcriptions_path, name=tname, logger=self.logger)
