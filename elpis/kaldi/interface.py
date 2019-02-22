@@ -122,7 +122,9 @@ class KaldiInterface(FSObject):
 
     def new_transcription(self, tname):
         t = Transcription(parent_path=self.transcriptions_path, name=tname, logger=self.logger)
-        self.config['transcriptions'] += [{ tname: t.hash }]
+        transcriptions = self.config['transcriptions']
+        transcriptions[tname] = t.hash
+        self.config['transcriptions'] = transcriptions
         return t
 
     def get_transcription(self, tname):

@@ -175,7 +175,7 @@ class Dataset(FSObject):
                 os.rmdir(d)
 
         # task make-wordlist
-        generate_word_list(transcription_file=f'{self.dataset.pathto.filtered_json}',
+        generate_word_list(transcription_file=f'{self.pathto.filtered_json}',
                            word_list_file=f'{self.pathto.additional_word_list_txt}',
                            output_file=f'{self.pathto.word_list_txt}',
                            kaldi_corpus_file=f'{self.pathto.corpus_txt}')

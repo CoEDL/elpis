@@ -20,6 +20,7 @@ log.txt
 state/
 
 #testing
+abui_toy_corpus/
 
 # mac files
 .DS_Store

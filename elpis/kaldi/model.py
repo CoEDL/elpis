@@ -4,6 +4,7 @@ import shutil
 from io import BufferedIOBase
 from pathlib import Path
 from typing import Callable
+import threading
 from .command import run
 from .dataset import Dataset
 from .fsobject import FSObject
@@ -17,7 +18,7 @@ class ModelFiles(object):
     def __init__(self, basepath: Path):
         self.kaldi = KaldiPathStructure(basepath)
 
-
+# TODO not thread safe
 class Model(FSObject):
     _config_file = 'model.json'
 
@@ -31,6 +32,8 @@ class Model(FSObject):
         self.config['l2s'] = None  # file has not been uploaded
         self.config['ngram'] = 3
         self.dataset = None
+        self.config['status'] = 'untrained'
+        self.status = 'untrained'
 
     def set_l2s_path(self, path: Path):
         path = Path(path)
@@ -45,6 +48,14 @@ class Model(FSObject):
         self.config['l2s'] = True
         with self.l2s_path.open(mode='wb') as fout:
             fout.write(content)
+
+    @property
+    def status(self):
+        return self.config['status']
+
+    @status.setter
+    def status(self, value: str):
+        self.config['status'] = value
 
     @property
     def l2s(self):
@@ -141,7 +152,7 @@ class Model(FSObject):
 
             # task make-nonsil-phones > {{ .KALDI_OUTPUT_PATH }}/tmp/nonsilence_phones.txt
             nonsilence_phones_path = kaldi_data_local_dict.joinpath('nonsilence_phones.txt')
-            cmd = f"grep -v '^#' < {self.pronunciation_path} | cut -d' ' -f2 | grep -v '^$' | sort -u"
+            cmd = f"grep -v '^#' < {self.l2s_path} | cut -d' ' -f2 | grep -v '^$' | sort -u"
             p = run(cmd)
             with nonsilence_phones_path.open(mode='wb') as fout:
                 fout.write(p.stdout)
@@ -184,6 +195,8 @@ class Model(FSObject):
                     fout.write(content)
 
             # task copy-generated-files
+            output_path = self.path.joinpath('output')
+            output_path.mkdir(parents=True, exist_ok=True)
             # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/corpus.txt {{ .KALDI_OUTPUT_PATH }}/kaldi/data/local/
             shutil.move(f"{output_path.joinpath('training', 'corpus.txt')}", f"{kaldi_data_local}")
             # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/segments {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/
@@ -216,6 +229,7 @@ class Model(FSObject):
             with open(f"{template_path.joinpath('run.sh')}", 'r') as fin, \
                     open(f"{local_kaldi_path.joinpath('run.sh')}", 'w') as fout:
                 fout.write(fin.read().replace('lm_order=1', f"lm_order={self.ngram}"))
+            os.chmod(f"{local_kaldi_path.joinpath('run.sh')}", 0o774)
             # - cp {{ .KALDI_TEMPLATES }}/score.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/local/
             shutil.copy(f"{template_path.joinpath('score.sh')}", f"{kaldi_local}")
             # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/steps {{ .KALDI_OUTPUT_PATH }}/kaldi/steps
@@ -229,6 +243,7 @@ class Model(FSObject):
                 dst = f'{local_kaldi_path}'
                 shutil.copy(src, dst)
             print('done.')
+
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')
 
@@ -239,6 +254,22 @@ class Model(FSObject):
             p = run(f"cd {local_kaldi_path}; ./run.sh")
             print(p.stdout)
             print('double done.')
-        prepare_for_training()
-        train()
+
+        def run_training_in_background():
+            def background_train_task():
+                prepare_for_training()
+                train()
+                self.status = 'trained'
+                on_complete()
+            self.status = 'training'
+            t = threading.Thread(target=background_train_task)
+            t.start()
+
+        if on_complete is None:
+            self.status = 'training'
+            prepare_for_training()
+            train()
+            self.status = 'trained'
+        else:
+            run_training_in_background()
         return
