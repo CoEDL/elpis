@@ -1,5 +1,5 @@
 import os
-from flask import request, current_app as app
+from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
@@ -25,12 +25,16 @@ def run(cmd: str) -> str:
     return process.stdout
 
 
-@bp.route("/new", methods=['POST', 'GET'])
+@bp.route("/new", methods=['GET', 'POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
-    m = kaldi.new_model(request.values.get("name"))
+    m = kaldi.new_model(request.json["name"])
     app.config['CURRENT_MODEL'] = m
-    return f'''{{"status": "ok", "data":{m.config._load()}}}'''
+    # return f'''{{"status": "ok", "data":{m.config._load()}}}'''
+    return jsonify({
+        "status": "ok",
+        "data": m.config._load()
+    })
 
 
 @bp.route("/name", methods=['GET', 'POST'])
@@ -127,3 +131,12 @@ def settings():
             data = json.load(fin)
         # state.settings.get_settings()
         return json.dumps(data)
+
+
+@bp.route("/list", methods=['GET', 'POST'])
+def list_existing():
+    kaldi: KaldiInterface = app.config['INTERFACE']
+    return jsonify({
+        "status": "ok",
+        "data": kaldi.list_models()
+    })

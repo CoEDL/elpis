@@ -46,11 +46,11 @@ class KaldiInterface(FSObject):
         self.config['datasets'] = {}
         self.config['models'] = {}
         self.config['transcriptions'] = {}
-        
+
 
         # make a default logger
         self.new_logger(default=True)
-    
+
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
@@ -85,7 +85,7 @@ class KaldiInterface(FSObject):
             )
         ds = Dataset(parent_path=self.datasets_path, name=dsname, logger=self.logger)
         datasets = self.config['datasets']
-        datasets[dsname] = ds.hash 
+        datasets[dsname] = ds.hash
         self.config['datasets'] = datasets
         return ds
 
@@ -101,7 +101,9 @@ class KaldiInterface(FSObject):
 
     def new_model(self, mname):
         m = Model(parent_path=self.models_path, name=mname, logger=self.logger)
-        self.config['models'] += [{ mname: m.hash }]
+        models = self.config['models']
+        models[mname] = m.hash
+        self.config['models'] = models
         return m
 
     def get_model(self, mname):

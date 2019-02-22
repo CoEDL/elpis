@@ -46,7 +46,7 @@ def settings():
         "data": {"tier": ds.tier}})
 
 
-@bp.route("/list")
+@bp.route("/list", methods=['GET', 'POST'])
 def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     return jsonify({
