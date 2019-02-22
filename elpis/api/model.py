@@ -64,7 +64,10 @@ def settings():
         # TODO make this an optional parameter
     return jsonify({
         "status": "ok",
-        "data": {"ngram": m.ngram}})
+        "data": {
+            "ngram": m.ngram
+        }
+    })
 
 
 @bp.route("/l2s", methods=['POST'])

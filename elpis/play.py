@@ -1,10 +1,9 @@
 from kaldi.interface import KaldiInterface
 
 
-kaldi = KaldiInterface()
+kaldi = KaldiInterface('/elpis/state')
 
 ds = kaldi.new_dataset('dsy')
-# ds.add('/elpis/abui_toy_corpus/data/1_1_5.eaf', '/elpis/abui_toy_corpus/data/1_1_5.wav')
 with open('/elpis/abui_toy_corpus/data/1_1_4.eaf', 'rb') as feaf, open('/elpis/abui_toy_corpus/data/1_1_4.wav', 'rb') as fwav:
     ds.add_fp(feaf, 'f.eaf')
     ds.add_fp(fwav, 'f.wav')

@@ -107,7 +107,12 @@ class KaldiInterface(FSObject):
         return m
 
     def get_model(self, mname):
-        return
+        if mname not in self.list_models():
+            raise KaldiError(f'Tried to load a model called "{mname}" that does not exist')
+        hash_dir = self.config['models'][mname]
+        m = Model.load(self.models_path.joinpath(hash_dir))
+        m.dataset = self.get_dataset(m.config['dataset_name'])
+        return m
 
     def list_models(self):
         models = []

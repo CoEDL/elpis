@@ -8,49 +8,23 @@ import json
 from ..kaldi.interface import KaldiInterface
 from ..kaldi.model import Model
 from ..kaldi.transcription import Transcription
+from ..kaldi import hasher
 
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 
-@bp.route("/new", methods=['GET', 'POST'])
+@bp.route("/new", methods=['POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
-    t = kaldi.new_transcription(request.json["name"])
+    t = kaldi.new_transcription(hasher.new()) # TODO transcriptions have no name
     m: Model = app.config['CURRENT_MODEL']
     t.link(m)
     app.config['CURRENT_TRANSCRIPTION'] = t
+    file = request.files['file']
+    t.transcribe_align(file, on_complete=lambda: print('Transcribed audio file!'))
     return jsonify({
         "status": "ok",
-        "data": t.config._load()
+        "data": t.status
     })
-
-
-
-@bp.route("/name", methods=['GET', 'POST'])
-def name():
-    t = app.config['CURRENT_TRANSCRIPTION']
-    if t is None:
-        # TODO sending a string error back in incorrect, jsonify it.
-        return '{"status":"error", "data": "No current transcription exists (prehaps create one first)"}'
-    if request.method == 'POST':
-        t.name = request.json['name']
-    return jsonify({
-        "status": "ok",
-        "data": t.name
-    })
-
-@bp.route("/transcribe-align", methods=['GET', 'POST'])
-def transcribe_align():
-    t: Transcription = app.config['CURRENT_TRANSCRIPTION']
-
-    # handle incoming data
-    if request.method == 'POST':
-
-        file = request.files['file']
-        t.transcribe_align(file)
-        return jsonify({
-            "status": "ok",
-            "data": t.status
-        })
 
 @bp.route("/status", methods=['GET', 'POST'])
 def status():
@@ -59,3 +33,9 @@ def status():
         "status": "ok",
         "data": t.status
     })
+
+@bp.route("/elan", methods=['POST'])
+def elan():
+    t: Transcription = app.config['CURRENT_TRANSCRIPTION']
+    return t.elan()
+

@@ -16,11 +16,25 @@ class Transcription(FSObject):
         super().__init__(**kwargs)
         self.audio_file_path = self.path.joinpath('audio.wav')
         self.model = None
+        self.config["model_hash"] = None
         self.config["status"] = "untranscribed"
         self.status = "untranscribed"
 
+
+
+    @classmethod
+    def load(cls, base_path: Path):
+        self = super().load(base_path)
+        self.audio_file_path = self.path.joinpath('audio.wav')
+        if self.config['model_hash'] is None:
+            self.model = None
+        else:
+            self.model = self.interface
+        return self
+
     def link(self, model):
         self.model = model
+        self.config['model_hash'] = model.hash
 
     @property
     def status(self):

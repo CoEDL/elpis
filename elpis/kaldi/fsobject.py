@@ -1,4 +1,5 @@
 import json
+import time
 from pathlib import Path
 from . import hasher
 from .logger import Logger
@@ -26,6 +27,7 @@ class FSObject(object):
         self.ConfigurationInterface(self)._save({})
         self.config['name'] = name
         self.config['hash'] = h
+        self.config['date'] = str(time.time())
 
         if logger is None:
             self.config['logger'] = None
@@ -61,6 +63,10 @@ class FSObject(object):
 
     def __hash__(self) -> int:
         return int(f'0x{self.hash}', 0)
+
+    @property
+    def date(self):
+        return self.config['date']
 
     @property
     def config(self):

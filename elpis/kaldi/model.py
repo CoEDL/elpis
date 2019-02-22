@@ -28,12 +28,20 @@ class Model(FSObject):
         self.l2s_path = self.path.joinpath('l2s.txt')
         self.lexicon_txt = self.path.joinpath('kaldi', 'data', 'local', 'dict', 'lexicon.txt')
         self.dataset: Dataset
-        self.config['dataset'] = None  # dataset hash has not been linked
+        self.config['dataset_name'] = None  # dataset hash has not been linked
         self.config['l2s'] = None  # file has not been uploaded
         self.config['ngram'] = 3
         self.dataset = None
         self.config['status'] = 'untrained'
         self.status = 'untrained'
+
+    @classmethod
+    def load(cls, base_path: Path):
+        self = super().load(base_path)
+        self.l2s_path = self.path.joinpath('l2s.txt')
+        self.lexicon_txt = self.path.joinpath('kaldi', 'data', 'local', 'dict', 'lexicon.txt')
+        self.dataset = None
+        return self
 
     def set_l2s_path(self, path: Path):
         path = Path(path)
@@ -64,7 +72,7 @@ class Model(FSObject):
 
     def link(self, dataset: Dataset):
         self.dataset = dataset
-        self.config['dataset'] = dataset.hash
+        self.config['dataset_name'] = dataset.name
 
     @property
     def ngram(self) -> int:
