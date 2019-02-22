@@ -13,11 +13,11 @@ class DataBundleList extends Component {
     }
 
     render() {
-        const { t, dbNames } = this.props;
-
-        const list = dbNames.length > 0 ? (
+        const { t, list } = this.props;
+        console.log('dataBundleList', list)
+        const listEl = list.length > 0 ? (
             <ul>
-                {dbNames.map( name => <li key={name}>{name}</li>)}
+                {list.map( name => <li key={name}>{name}</li>)}
             </ul>
         ) : <p>{ t('dataBundle.list.noneMessage') }</p>
 
@@ -35,7 +35,7 @@ class DataBundleList extends Component {
                                 { t('dataBundle.list.title') }
                             </Header>
 
-                            { list }
+                            { listEl }
 
                         </Grid.Column>
                     </Grid>
@@ -47,7 +47,7 @@ class DataBundleList extends Component {
 
 const mapStateToProps = state => {
     return {
-        dbNames: state.dataBundle.dbNames
+        list: state.dataBundle.dataBundleList
     }
 }
 

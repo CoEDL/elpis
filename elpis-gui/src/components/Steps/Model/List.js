@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Header, List, Segment, Icon, Button } from 'semantic-ui-react';
+import { Grid, Header, List, Segment, Icon, Button, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { modelList } from 'redux/actions';
@@ -13,13 +13,35 @@ class ModelList extends Component {
     }
 
     render() {
-        const { t, modelNames } = this.props;
+        const { t, list } = this.props;
 
-        const list = modelNames.length > 0 ? (
-            <ul>
-                {modelNames.map( name => <li key={name}>{name}</li>)}
-            </ul>
-        ) : <p>{ t('model.list.noneMessage') }</p>
+        const listEl = list.length > 0 ? (
+            <Table celled collapsing>
+                <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell>Name</Table.HeaderCell>
+                    <Table.HeaderCell>WER</Table.HeaderCell>
+                    <Table.HeaderCell>DEL</Table.HeaderCell>
+                    <Table.HeaderCell>INS</Table.HeaderCell>
+                    <Table.HeaderCell>SUB</Table.HeaderCell>
+                </Table.Row>
+                </Table.Header>
+                <Table.Body>
+            {
+                list.map( model => {
+                    return (
+                    <Table.Row key={ model.name }>
+                        <Table.Cell>{ model.name }</Table.Cell>
+                        <Table.Cell>{ model.results.wer }</Table.Cell>
+                        <Table.Cell>{ model.results.del }</Table.Cell>
+                        <Table.Cell>{ model.results.ins }</Table.Cell>
+                        <Table.Cell>{ model.results.sub }</Table.Cell>
+                    </Table.Row>
+                )})
+            }
+            </Table.Body>
+            </Table>
+    ) : <p>{ t('model.list.noneMessage') }</p>
 
         return (
             <div>
@@ -35,7 +57,7 @@ class ModelList extends Component {
                                 { t('model.list.title') }
                             </Header>
 
-                            { list }
+                            { listEl }
 
                         </Grid.Column>
                     </Grid>
@@ -47,7 +69,7 @@ class ModelList extends Component {
 
 const mapStateToProps = state => {
     return {
-        modelNames: state.model.modelNames
+        list: state.model.modelList
     }
 }
 

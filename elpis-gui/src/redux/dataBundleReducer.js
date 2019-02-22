@@ -2,7 +2,7 @@ import {getFileExtension} from 'helpers'
 
 const initState = {
     name: "",
-    dbNames: [],
+    dataBundleList: [],
     replaceFiles: false,
     audioFiles: [],
     transcriptionFiles: [],
@@ -26,9 +26,10 @@ const dataBundle = (state = initState, action) => {
             }
 
         case 'DATA_BUNDLE_LIST':
+        console.log("reducer got data bundle list", action.response.data.data)
             return {
                 ...state,
-                dbNames: action.response.data.data
+                dataBundleList: action.response.data.data
             }
 
         case 'DATA_BUNDLE_NEW':

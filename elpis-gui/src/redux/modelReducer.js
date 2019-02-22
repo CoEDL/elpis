@@ -2,7 +2,7 @@ import {getFileExtension} from 'helpers'
 
 const initState = {
     name: "",
-    modelNames: [],
+    modelList: [],
     date: null,
     pronunciation: '',
     settings: {
@@ -21,10 +21,10 @@ const model = (state = initState, action) => {
             }
 
         case 'MODEL_LIST':
-        console.log("reducer got model names", action.response.data)
+        console.log("reducer got model list", action.response.data)
             return {
                 ...state,
-                modelNames: action.response.data.data
+                modelList: action.response.data.data
             }
 
         case 'MODEL_NEW':
