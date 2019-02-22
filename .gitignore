@@ -18,6 +18,7 @@ node_modules/
 # Server
 log.txt
 state/
+user_data/
 
 #testing
 
