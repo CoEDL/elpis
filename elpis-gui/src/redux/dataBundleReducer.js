@@ -10,8 +10,12 @@ const initState = {
     settings: {
         tier: 'Phrase'
     },
-    preparedData: {
-        wordlist: []
+    wordlist: {
+        amakaang: 2,
+        di: 2,
+        hada: 2,
+        kaai: 2,
+        muila: 2
     }
 }
 
@@ -75,10 +79,10 @@ const dataBundle = (state = initState, action) => {
             }
 
         case 'DATA_BUNDLE_PREPARE':
-
+            console.log("wordlist", action.response.data)
             return {
                 ...state,
-                preparedData: {...state.preparedData, wordlist: action.response.data}
+                wordlist: action.response.data
             }
 
         default:

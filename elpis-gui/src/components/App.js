@@ -10,12 +10,12 @@ import {
     DataBundlePrepareError,
     ModelList,
     ModelNew,
-    ModelPronunciationDictionary,
+    ModelL2S,
     ModelLexicon,
     ModelSettings,
-    ModelTraining,
-    ModelTrainingResults,
-    ModelTrainingError,
+    ModelTrain,
+    ModelResults,
+    ModelError,
     NewTranscription,
     NewTranscriptionResults
 } from './Steps/index';
@@ -39,12 +39,12 @@ class App extends Component {
 
                         <Route path={urls.gui.model.index} exact component={ ModelList } />
                         <Route path={urls.gui.model.new} component={ ModelNew } />
-                        <Route path={urls.gui.model.pronunciation} component={ ModelPronunciationDictionary } />
+                        <Route path={urls.gui.model.l2s} component={ ModelL2S } />
                         <Route path={urls.gui.model.lexicon} component={ ModelLexicon } />
                         <Route path={urls.gui.model.settings} component={ ModelSettings } />
-                        <Route path={urls.gui.model.training} exact component={ ModelTraining } />
-                        <Route path={urls.gui.model.trainingResults} exact component={ ModelTrainingResults } />
-                        <Route path={urls.gui.model.trainingError} exact component={ ModelTrainingError } />
+                        <Route path={urls.gui.model.train} exact component={ ModelTrain } />
+                        <Route path={urls.gui.model.results} exact component={ ModelResults } />
+                        <Route path={urls.gui.model.error} exact component={ ModelError } />
 
                         <Route path={urls.gui.transcription.new} component={ NewTranscription } />
                         <Route path={urls.gui.transcription.results} component={ NewTranscriptionResults } />

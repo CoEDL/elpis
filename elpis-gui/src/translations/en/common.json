@@ -46,7 +46,7 @@
             "bannerMessageDetailed": "Describe what has just happened for the novice user to better understand",
             "wordlistHeader": "Wordlist",
             "frequencyHeader": "Frequency",
-            "nextButton": "Next: build letter to sound"
+            "nextButton": "Next"
         },
         "prepareError": {
             "title": "Data preparation error",
@@ -85,18 +85,20 @@
             "beamLabel": "Beam size",
             "nextButton": "Next: train model"
         },
-        "training": {
+        "train": {
             "title": "Training the Model",
-            "trainingHeader": "The model is being trained",
             "settingsHeader": "Settings",
             "preparingAcousticHeader": "Preparing acoustic data",
             "featuresExtractionHeader": "Features extraction",
             "preparingLanguageDataHeader": "Preparing language data",
             "logsHeader": "Logs",
+            "logsDescription": "gory detail from Kaldi",
+            "trainButton": "Start training",
+            "statusButton": "Check progress",
             "nextButton": "Next: model trained OK",
             "nextButtonError": "Next: model trained Error"
         },
-        "trainingResults": {
+        "results": {
             "title": "Trained Model Results",
             "description": "List of models that have been run here.",
             "downloadButton": "Download a bundle of the model, settings and information about training data",
@@ -105,7 +107,7 @@
             "downloadOkButton": "OK",
             "newTranscribeButton": "Use the model to transcribe new audio"
         },
-        "trainingError": {
+        "error": {
             "title": "Error occured while training the model",
             "errorLogHeader": "Error Log",
             "contactButton": "Contact a Tech-person"

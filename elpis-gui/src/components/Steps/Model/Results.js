@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
-class ModelTrainingResults extends Component {
+class ModelResults extends Component {
 
     state = { open: false }
 
@@ -26,11 +26,11 @@ class ModelTrainingResults extends Component {
 
                         <Grid.Column width={ 12 }>
                             <Header as='h1' text='true'>
-                                { t('model.trainingResults.title') }
+                                { t('model.results.title') }
                             </Header>
 
                             <p>
-                                { t('model.trainingResults.description') }
+                                { t('model.results.description') }
                             </p>
 
                             <Table celled padded sortable>
@@ -72,22 +72,22 @@ class ModelTrainingResults extends Component {
                             <Divider />
 
                             <Modal
-                                trigger={ <Button>{ t('model.trainingResults.downloadButton') }</Button> }
+                                trigger={ <Button>{ t('model.results.downloadButton') }</Button> }
                                 basic size='small'
                                 open={ open }
                                 onOpen={ this.open }
                                 onClose={ this.close }
                             >
-                                <Header icon='archive' content={ t('model.trainingResults.downloadModalHeader') } />
+                                <Header icon='archive' content={ t('model.results.downloadModalHeader') } />
                                 <Modal.Content>
                                     <p>
-                                        { t('model.trainingResults.downloadModalContent') }
+                                        { t('model.results.downloadModalContent') }
                                     </p>
                                 </Modal.Content>
                                 <Modal.Actions>
                                     <Button color='green' inverted onClick={ this.close }>
                                         <Icon name='checkmark' />
-                                        { t('model.trainingResults.downloadOkButton') }
+                                        { t('model.results.downloadOkButton') }
                                     </Button>
                                 </Modal.Actions>
                             </Modal>
@@ -95,7 +95,7 @@ class ModelTrainingResults extends Component {
                             <Divider />
 
                             <Button as={ Link } to="/transcription/new">
-                                { t('model.trainingResults.newTranscribeButton') }
+                                { t('model.results.newTranscribeButton') }
                             </Button>
                         </Grid.Column>
 
@@ -105,4 +105,4 @@ class ModelTrainingResults extends Component {
         );
     }
 }
-export default translate('common')(ModelTrainingResults)
+export default translate('common')(ModelResults)

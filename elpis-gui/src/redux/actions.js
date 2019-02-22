@@ -20,7 +20,7 @@ const getApi = (url, successFunction) => {
 
 const postApi = (url, postData, successFunction, config=null) => {
     return dispatch => {
-        console.log('postData', postData)
+        console.log('postData', url, postData)
         axios.post(url, postData, config)
             .then((response) => {
                 console.log("api response", response)
@@ -47,9 +47,11 @@ var successHandler = {
     modelList: response => ({ type: 'MODEL_LIST', response }),
     modelNew: response => ({ type: 'MODEL_NEW', response }),
     modelName: response => ({ type: 'MODEL_NAME', response }),
-    modelDate: response => ({ type: 'MODEL_DATE', response }),
+    modelL2S: response => ({ type: 'MODEL_L2S', response }),
+    modelLexicon: response => ({ type: 'MODEL_LEXICON', response }),
     modelSettings: response => ({ type: 'MODEL_SETTINGS', response }),
-    modelPronunciation: response => ({ type: 'MODEL_PRONUNCIATION', response }),
+    modelTrain: response => ({ type: 'MODEL_TRAIN', response }),
+    modelStatus: response => ({ type: 'MODEL_STATUS', response }),
 
     newTranscriptionFile: response => ({ type: 'NEW_TRANSCRIPTION_FILE', response })
 }
@@ -107,15 +109,15 @@ export const modelName = postData => {
     return postApi(url, postData, 'modelName')
 }
 
-export const modelPronunciation = postData => {
-    const url = baseUrl + urls.api.model.pronunciation
+export const modelL2S = postData => {
+    const url = baseUrl + urls.api.model.l2s
     const headers = {headers: {'content-type': 'multipart/form-data'}}
-    return postApi(url, postData, 'modelPronunciation', headers)
+    return postApi(url, postData, 'modelL2S', headers)
 }
 
 export const modelLexicon = () => {
-    const url = baseUrl + '/api/model/lexicon'
-    return getApi(url, 'modelLexicon')
+    const url = baseUrl + urls.api.model.lexicon
+    return postApi(url, null, 'modelLexicon')
 }
 
 export const modelSettings = postData => {
@@ -123,16 +125,20 @@ export const modelSettings = postData => {
     return postApi(url, postData, 'modelSettings')
 }
 
-// get or post?
-export const modelTraining = () => {
+export const modelTrain = () => {
+    console.log("action got model train")
     const url = baseUrl + '/api/model/train'
-    return postApi(url, 'modelTraining')
+    return postApi(url, null, 'modelTrain')
+}
+export const modelStatus = () => {
+    const url = baseUrl + '/api/model/status'
+    return postApi(url, null, 'modelStatus')
 }
 
 // need a model id?
-export const modelTrainingResults = () => {
+export const modelResults = () => {
     const url = baseUrl + '/api/model/results'
-    return postApi(url, 'modelTrainingResults')
+    return postApi(url, 'modelResults')
 }
 
 

@@ -6,26 +6,27 @@ import { translate } from 'react-i18next';
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
-import { modelPronunciation } from 'redux/actions';
+import { modelL2S } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
-class ModelPronunciationDictionary extends Component {
+class ModelL2S extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
         console.log("files dropped:", acceptedFiles);
+        const { modelL2S } = this.props
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
-        this.props.modelPronunciation(formData);
+        modelL2S(formData);
     }
 
     render() {
-        const { t, pronunciation } = this.props;
-
-        const pron = pronunciation ? (
+        const { t, l2s } = this.props;
+        console.log("l2s", l2s)
+        const pron = l2s ? (
             <Segment>
                 <pre>
-                    {pronunciation}
+                    {l2s}
                 </pre>
             </Segment>
 
@@ -89,14 +90,14 @@ class ModelPronunciationDictionary extends Component {
 
 const mapStateToProps = state => {
     return {
-        pronunciation: state.model.pronunciation,
+        l2s: state.model.l2s,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    modelPronunciation: postData => {
-        dispatch(modelPronunciation(postData));
+    modelL2S: postData => {
+        dispatch(modelL2S(postData));
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelPronunciationDictionary));
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelL2S));

@@ -3,19 +3,26 @@ import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, List, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import _ from 'lodash'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import urls from 'urls'
 
 class DataBundlePrepare extends Component {
     componentDidMount() {
     }
     render() {
-        const { t, preparedData } = this.props;
-        const wordlistTable = preparedData.wordlist ? (
+        const { t, wordlist } = this.props;
+        console.log("wordlist", wordlist)
+        const wordlistTable = wordlist ? (
             <Segment>
                 <Header as='h1'>{ t('dataBundle.prepare.wordlistHeader') }</Header>
                 <ul>
-                    {preparedData.wordlist.map( word =><li key={word}>{word}</li>)}
+                    {
+                        Object.keys(wordlist).map(function (key) {
+                            return (<li>{key} {wordlist[key]}</li>)
+                        })
+                    }
                 </ul>
             </Segment>
         ) : null
@@ -37,7 +44,10 @@ class DataBundlePrepare extends Component {
 
                             { wordlistTable }
 
-                            <Button type='submit' as={ Link } to="/model/pronunciation-dictionary">{ t('dataBundle.prepare.nextButton') }</Button>
+                            <Button type='submit' as={ Link } to={urls.gui.model.new}>
+                                { t('dataBundle.prepare.nextButton') }
+                            </Button>
+
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -48,7 +58,7 @@ class DataBundlePrepare extends Component {
 
 const mapStateToProps = state => {
     return {
-        preparedData: state.dataBundle.preparedData
+        wordlist: state.dataBundle.wordlist
     }
 }
 export default connect(mapStateToProps)(translate('common')(DataBundlePrepare))

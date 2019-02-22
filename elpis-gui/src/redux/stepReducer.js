@@ -26,11 +26,11 @@ const initialStepModelState = {
 			substeps: [
 				{ done: false, doing: false, enabled: false, title: "Models", path: urls.gui.model.index, type:"solo" },
 				{ done: false, doing: false, enabled: false, title: "New model", path: urls.gui.model.new },
-				{ done: false, doing: false, enabled: false, title: "Pronunciation dictionary", path: urls.gui.model.pronunciation },
+				{ done: false, doing: false, enabled: false, title: "Letter to sound", path: urls.gui.model.l2s },
 				{ done: false, doing: false, enabled: false, title: "Lexicon", path: urls.gui.model.lexicon },
 				{ done: false, doing: false, enabled: false, title: "Settings", path: urls.gui.model.settings },
-				{ done: false, doing: false, enabled: false, title: "Training", path: urls.gui.model.training },
-				{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.model.trainingResults },
+				{ done: false, doing: false, enabled: false, title: "Training", path: urls.gui.model.train },
+				{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.model.results },
 			]
 		},
 		{

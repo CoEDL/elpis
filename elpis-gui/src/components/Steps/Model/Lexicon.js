@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import { Grid, Header, Segment, Icon, Button } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import { modelLexicon } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
 class ModelLexicon extends Component {
+    componentDidMount() {
+        const {modelLexicon} = this.props
+        modelLexicon()
+    }
+
     render() {
-        const { t } = this.props;
+        const { t, lexicon } = this.props;
         return (
             <div>
                 <Branding />
@@ -21,6 +28,11 @@ class ModelLexicon extends Component {
                                 { t('model.lexicon.title') }
                             </Header>
 
+                            <Segment>
+                                <pre>
+                                    { lexicon }
+                                </pre>
+                            </Segment>
 
                         </Grid.Column>
                     </Grid>
@@ -29,4 +41,17 @@ class ModelLexicon extends Component {
         );
     }
 }
-export default translate('common')(ModelLexicon)
+
+const mapStateToProps = state => {
+    return {
+        lexicon: state.model.lexicon,
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    modelLexicon: () => {
+        dispatch(modelLexicon());
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelLexicon));

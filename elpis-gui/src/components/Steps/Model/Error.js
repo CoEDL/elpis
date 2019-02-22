@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
-class ModelTrainingError extends Component {
+class ModelError extends Component {
     render() {
         const { t } = this.props;
         return (
@@ -20,19 +20,19 @@ class ModelTrainingError extends Component {
                         <Grid.Column width={ 12 }>
                             <Header as='h1' text='true'>
                                 <Icon name='warning' />
-                                { t('model.trainingError.title') }
+                                { t('model.error.title') }
                             </Header>
                             <p>We ran into a problem when training the model</p>
                             <p>Please click the button below to connect you to a tech person on slack</p>
                             <p>An error file detailing the log showing below will be sent as an attachment to the technical team on slack</p>
 
                             <Card>
-                                <Card.Content header={ t('model.trainingError.errorLogHeader') } />
-                                <Card.Content description='Error logs spited out while training model' />
+                                <Card.Content header={ t('model.error.errorLogHeader') } />
+                                <Card.Content description='Error logs from training model' />
                             </Card>
 
                             <Button href="https:slack.com/" target="_blank">
-                                { t('model.trainingError.contactButton') }
+                                { t('model.error.contactButton') }
                             </Button>
 
                         </Grid.Column>
@@ -42,4 +42,4 @@ class ModelTrainingError extends Component {
         );
     }
 }
-export default translate('common')(ModelTrainingError)
+export default translate('common')(ModelError)

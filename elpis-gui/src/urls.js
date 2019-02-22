@@ -10,12 +10,12 @@ export default {
         "model": {
             "index": "/models",
             "new": "/model/new",
-            "pronunciation": "/model/pronunciation",
+            "l2s": "/model/l2s",
             "lexicon": "/model/lexicon",
             "settings": "/model/settings",
-            "training": "/model/training",
-            "trainingResults": "/model/training/results",
-            "trainingError": "/model/training/error"
+            "train": "/model/train",
+            "results": "/model/results",
+            "error": "/model/error"
         },
         "transcription": {
             "new": "/transcription/new",
@@ -34,7 +34,8 @@ export default {
         "model": {
             "list": "/api/model/list",
             "new": "/api/model/new",
-            "pronunciation": "/api/model/pronunciation",
+            "l2s": "/api/model/l2s",
+            "lexicon": "/api/model/lexicon",
             "settings": "/api/model/settings"
         },
         "transcription": {

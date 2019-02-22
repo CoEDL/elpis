@@ -4,10 +4,19 @@ const initState = {
     name: "",
     modelList: [],
     date: null,
-    pronunciation: '',
+    l2s: '',
+    lexicon: `!SIL sil
+        <UNK> spn
+        di d I
+        kaai k a: I
+        amakaang a m a k a: ŋ
+        hada h a d a
+        muila m u I l a
+        `,
     settings: {
         ngram: 1
     },
+    status: 'ready',
     apiWaiting: {status: false, message: 'something'}
 }
 
@@ -21,7 +30,7 @@ const model = (state = initState, action) => {
             }
 
         case 'MODEL_LIST':
-        console.log("reducer got model list", action.response.data)
+            console.log("reducer got model list", action.response.data)
             return {
                 ...state,
                 modelList: action.response.data.data
@@ -35,23 +44,42 @@ const model = (state = initState, action) => {
             }
 
         case 'MODEL_NAME':
-        console.log("reducer got model name", action.response.data)
-        return {
-                ...state,
-                name: action.response.data.data.name
-            }
+            console.log("reducer got model name", action.response.data)
+            return {
+                    ...state,
+                    name: action.response.data.data.name
+                }
 
-        case 'MODEL_PRONUNCIATION':
-        console.log("reducer got pron data", action.response.data)
+        case 'MODEL_L2S':
+            console.log("reducer got l2s", action.response.data)
             return {
                 ...state,
-                pronunciation: action.response.data
+                l2s: action.response.data
+            }
+
+        case 'MODEL_LEXICON':
+            console.log("reducer got lexicon", action.response.data)
+            return {
+                ...state,
+                lexicon: action.response.data
             }
 
         case 'MODEL_SETTINGS':
             return {
                 ...state,
                 settings: action.response.data
+            }
+
+        case 'MODEL_TRAIN':
+            return {
+                ...state,
+                status: action.response.data.data
+            }
+
+        case 'MODEL_STATUS':
+            return {
+                ...state,
+                status: action.response.data.data
             }
 
         default:

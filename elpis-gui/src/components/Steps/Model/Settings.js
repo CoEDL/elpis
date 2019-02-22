@@ -58,7 +58,7 @@ class ModelSettings extends Component {
                                     modelSettings(postData)
 
                                     // go to next page
-                                    // this.props.history.push(urls.gui.model.pronunciation)
+                                    this.props.history.push(urls.gui.model.train)
                                 } }
                             >
                                 { ({
