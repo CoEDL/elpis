@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Header, List, Segment, Icon, Button, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { modelList } from 'redux/actions';
+import { modelList, modelLoad } from 'redux/actions';
 import _ from 'lodash'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -41,6 +41,13 @@ class ModelDashboard extends Component {
         }
     }
 
+    handleLoad = name => {
+        const { modelLoad } = this.props
+        console.log("handleLoad name", name)
+        const postData = {name:name}
+        modelLoad(postData)
+    }
+
     render() {
         const { t, list } = this.props;
         const { column, direction } = this.state
@@ -68,7 +75,11 @@ class ModelDashboard extends Component {
                 <Table.Body>
                     {list.map(model => (
                         <Table.Row key={model.name}>
-                        <Table.Cell>{model.name}</Table.Cell>
+                        <Table.Cell>
+                        {model.name}
+                        <Button onClick={()=>this.handleLoad(model.name)}>load</Button>
+
+                        </Table.Cell>
                         <Table.Cell>{model.results.wer}</Table.Cell>
                         </Table.Row>
                     ))}
@@ -112,6 +123,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     modelList: () => {
         dispatch(modelList())
+    },
+    modelLoad: postData => {
+        dispatch(modelLoad(postData))
     }
 })
 

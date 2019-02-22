@@ -44,6 +44,7 @@ var successHandler = {
     dataBundleSettings: response => ({ type: 'DATA_BUNDLE_SETTINGS', response }),
     dataBundlePrepare: response => ({ type: 'DATA_BUNDLE_PREPARE', response }),
 
+    modelLoad: response => ({ type: 'MODEL_LOAD', response }),
     modelList: response => ({ type: 'MODEL_LIST', response }),
     modelNew: response => ({ type: 'MODEL_NEW', response }),
     modelName: response => ({ type: 'MODEL_NAME', response }),
@@ -53,7 +54,8 @@ var successHandler = {
     modelTrain: response => ({ type: 'MODEL_TRAIN', response }),
     modelStatus: response => ({ type: 'MODEL_STATUS', response }),
 
-    transcriptionNew: response => ({ type: 'TRANSCRIPTION_AUDIO', response })
+    transcriptionNew: response => ({ type: 'TRANSCRIPTION_NEW', response }),
+    transcriptionElan: response => ({ type: 'TRANSCRIPTION_ELAN', response })
 }
 
 // * * * * * * * * * * DATA BUNDLES * * * * * * * * * * * * * * *
@@ -87,6 +89,10 @@ export const dataBundlePrepare = () => {
 
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 
+export const modelLoad = postData => {
+    const url = baseUrl + urls.api.model.load
+    return postApi(url, postData, 'modelLoad')
+}
 export const modelList = () => {
     const url = baseUrl + urls.api.model.list
     return postApi(url, null, 'modelList')
@@ -136,8 +142,10 @@ export const transcriptionNew = postData => {
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'transcriptionNew', headers)
 }
-
-// TODO: action to download Elan file
+export const transcriptionElan = postData => {
+    const url = baseUrl + urls.api.transcription.elan
+    return postApi(url, null, 'transcriptionElan')
+}
 
 // TODO: action to download PRAAT file
 

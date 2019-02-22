@@ -79,6 +79,7 @@ class NewTranscription extends Component {
 
 const mapStateToProps = state => {
     return {
+        // probably never gets seen..
         transcriptionAudio: state.transcription.transcriptionAudio
     }
 }

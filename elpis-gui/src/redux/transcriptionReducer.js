@@ -1,9 +1,26 @@
 const initState = {
-    transcriptionAudio: ''
+    transcriptionAudio: '',
+    status: '',
+    elan: null
 }
 
 const transcription = (state = initState, action) => {
+
+    console.log("transcription reducer got", action.response)
+
     switch (action.type) {
+        case 'TRANSCRIPTION_NEW':
+            return {
+                ...state,
+                status: action.response.data.data
+            }
+
+        case 'TRANSCRIPTION_ELAN':
+            return {
+                ...state,
+                elan: action.response.data
+            }
+
         case 'TRANSCRIPTION_AUDIO':
             return {
                 ...state,

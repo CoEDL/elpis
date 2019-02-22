@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
+    "downloadjs": "^1.4.7",
     "file-selector": "^0.1.6",
     "formik": "^1.5.1",
     "i18next": "^14.0.1",

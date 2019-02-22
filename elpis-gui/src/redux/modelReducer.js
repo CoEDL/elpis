@@ -29,15 +29,17 @@ const model = (state = initState, action) => {
                 apiWaiting: {status: true, message: action.message}
             }
 
-        case 'MODEL_LIST':
+
+            case 'MODEL_LIST':
             console.log("reducer got model list", action.response.data)
             return {
                 ...state,
                 modelList: action.response.data.data
             }
 
+        case 'MODEL_LOAD':
         case 'MODEL_NEW':
-            console.log("reducer got model new", action.response.data)
+            console.log("reducer got model new or load", action.response.data)
             return {
                 ...state,
                 name: action.response.data.data.name

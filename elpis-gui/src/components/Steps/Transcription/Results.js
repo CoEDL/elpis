@@ -1,13 +1,29 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, Card, Button } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import downloadjs from 'downloadjs'
+import { transcriptionElan } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
 class NewTranscriptionResults extends Component {
+
+    handleElanBuild = () => {
+        const { transcriptionElan } = this.props
+        transcriptionElan()
+    }
+
+    handleElanDownload = () => {
+        const { elan } = this.props
+        downloadjs(elan, 'elan.eaf', 'text/xml');
+
+    }
+
     render() {
-        const { t } = this.props;
+        const { t, elan } = this.props;
+        console.log(elan)
         // TODO get this from redux?
         const modelName = "English-Indonesian 5-gram with Indonesian 12s"
         const audioName = "some-audio.wav"
@@ -41,12 +57,13 @@ class NewTranscriptionResults extends Component {
 
                             <Divider />
 
-                            <Button as={ Link } to="/">
-                                { t('transcription.results.downloadElanButton') }
+
+                            <Button onClick={ this.handleElanBuild }>
+                                Build Elan
                             </Button>
 
-                            <Button as={ Link } to="/">
-                                { t('transcription.results.downloadPraatButton') }
+                            <Button onClick={ this.handleElanDownload }>
+                                Download Elan
                             </Button>
 
                         </Grid.Column>
@@ -56,4 +73,18 @@ class NewTranscriptionResults extends Component {
         );
     }
 }
-export default translate('common')(NewTranscriptionResults)
+
+
+const mapStateToProps = state => {
+    return {
+        elan: state.transcription.elan
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    transcriptionElan: () => {
+        dispatch(transcriptionElan())
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewTranscriptionResults))

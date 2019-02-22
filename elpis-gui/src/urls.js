@@ -25,6 +25,7 @@ export default {
     "api": {
         "dataBundle": {
             "list": "/api/databundle/list",
+            "names": "/api/databundle/names",
             "new": "/api/databundle/new",
             "name": "/api/databundle/name",
             "settings": "/api/databundle/settings",
@@ -32,7 +33,9 @@ export default {
             "prepare": "/api/databundle/prepare"
         },
         "model": {
+            "load": "/api/model/load",
             "list": "/api/model/list",
+            "names": "/api/model/names",
             "new": "/api/model/new",
             "l2s": "/api/model/l2s",
             "lexicon": "/api/model/lexicon",
