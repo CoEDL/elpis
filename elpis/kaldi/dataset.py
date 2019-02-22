@@ -16,6 +16,8 @@ from .path_structure import existing_attributes, ensure_paths_exist
 from kaldi_helpers.input_scripts.elan_to_json import process_eaf
 from kaldi_helpers.input_scripts.clean_json import clean_json_data
 from kaldi_helpers.input_scripts.resample_audio import process_item
+from kaldi_helpers.input_scripts.make_wordlist import generate_word_list
+from kaldi_helpers.input_scripts.make_prn_dict import generate_pronunciation_dictionary
 
 
 DEFAULT_TIER = 'Phrase'
@@ -33,6 +35,11 @@ class DSPaths(object):
         # files
         self.filtered_json: Path = self.basepath.joinpath('filtered.json')
         self.word_count_json: Path = self.basepath.joinpath('word_count.json')
+        self.word_list_txt: Path = self.basepath.joinpath('word_list.txt')
+        # \/ user uploaded addional words
+        self.additional_word_list_txt = self.basepath.joinpath('additional_word_list.txt')
+        # \/ user uploaded additional text (e.g. paragraphs or sentences)
+        self.corpus_txt = self.basepath.joinpath('corpus.txt')
 
 
 class Dataset(FSObject):
@@ -166,4 +173,11 @@ class Dataset(FSObject):
             # Clean up tmp folders
             for d in temporary_directories:
                 os.rmdir(d)
+
+        # task make-wordlist
+        generate_word_list(transcription_file=f'{self.dataset.pathto.filtered_json}',
+                           word_list_file=f'{self.pathto.additional_word_list_txt}',
+                           output_file=f'{self.pathto.word_list_txt}',
+                           kaldi_corpus_file=f'{self.pathto.corpus_txt}')
+
         self.config['has_been_processed'] = True
