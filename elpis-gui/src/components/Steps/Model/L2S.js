@@ -9,6 +9,7 @@ import { fromEvent } from "file-selector";
 import { modelL2S } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import urls from 'urls'
 
 class ModelL2S extends Component {
 
@@ -42,11 +43,11 @@ class ModelL2S extends Component {
                         </Grid.Column>
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>
-                                { t('model.pronDict.title') }
+                                { t('model.l2s.title') }
                             </Header>
 
                             <p>
-                                { t('model.pronDict.description') }
+                                { t('model.l2s.description') }
                             </p>
 
                             <Divider />
@@ -64,8 +65,8 @@ class ModelL2S extends Component {
 
                                             {
                                                 isDragActive ? (
-                                                    <p>{ t('model.pronDict.dropFilesHintDragActive') } </p>
-                                                ) : (<p>{ t('model.pronDict.dropFilesHint') }</p>)
+                                                    <p>{ t('model.l2s.dropFilesHintDragActive') } </p>
+                                                ) : (<p>{ t('model.l2s.dropFilesHint') }</p>)
                                             }
                                         </div>
                                     );
@@ -76,8 +77,8 @@ class ModelL2S extends Component {
 
                             <Divider />
 
-                            <Button type='submit' as={ Link } to="/model/lexicon">
-                                { t('model.pronDict.nextButton') }
+                            <Button as={ Link } to={ urls.gui.model.lexicon }>
+                                { t('model.l2s.nextButton') }
                             </Button>
 
                         </Grid.Column>

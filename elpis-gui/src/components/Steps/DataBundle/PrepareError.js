@@ -27,7 +27,7 @@ class DataBundlePrepareError extends Component {
                             <p>Novice readable description of what just happened</p>
                             <p>Show the errors and information about how to fix the error</p>
 
-                            <Button type='submit' as={ Link } to="/data-bundle/add-files">
+                            <Button as={ Link } to="/data-bundle/add-files">
                                 { t('dataBundle.prepareError.backButton') }
                             </Button>
 

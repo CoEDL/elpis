@@ -79,7 +79,7 @@ class ModelNew extends Component {
                                                     type="text"
                                                     onChange={ handleChange } />
                                             </Form.Field>
-                                            <Button type='submit' onClick={ handleSubmit } >
+                                            <Button onClick={ handleSubmit } >
                                                 { t('model.new.nextButton') }
                                             </Button>
                                         </Form>

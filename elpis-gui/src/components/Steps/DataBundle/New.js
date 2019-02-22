@@ -80,7 +80,7 @@ class DataBundleNew extends Component {
                                                     type="text"
                                                     onChange={ handleChange } />
                                             </Form.Field>
-                                            <Button type='submit' onClick={ handleSubmit } >
+                                            <Button onClick={ handleSubmit } >
                                                 { t('dataBundle.new.nextButton') }
                                             </Button>
                                         </Form>

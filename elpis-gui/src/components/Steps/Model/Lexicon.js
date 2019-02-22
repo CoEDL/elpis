@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import { Grid, Header, Segment, Icon, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { modelLexicon } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import urls from 'urls'
 
 class ModelLexicon extends Component {
     componentDidMount() {
@@ -33,6 +35,10 @@ class ModelLexicon extends Component {
                                     { lexicon }
                                 </pre>
                             </Segment>
+
+                            <Button as={ Link } to={ urls.gui.model.settings } >
+                                { t('model.lexicon.nextButton') }
+                            </Button>
 
                         </Grid.Column>
                     </Grid>

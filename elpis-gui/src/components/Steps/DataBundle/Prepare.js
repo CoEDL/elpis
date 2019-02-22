@@ -44,7 +44,7 @@ class DataBundlePrepare extends Component {
 
                             { wordlistTable }
 
-                            <Button type='submit' as={ Link } to={urls.gui.model.new}>
+                            <Button as={ Link } to={urls.gui.model.new}>
                                 { t('dataBundle.prepare.nextButton') }
                             </Button>
 

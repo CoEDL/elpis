@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
-import { Checkbox, Grid, Header, Segment, Icon, List, Form, Input, Button } from 'semantic-ui-react';
+import { Checkbox,Divider, Grid, Header, Segment, Icon, List, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
@@ -150,7 +150,7 @@ class DataBundleFiles extends Component {
                                                         type="text"
                                                         onChange={ handleChange } />
                                                 </Form.Field>
-                                                <Button type='submit' onClick={ handleSubmit } >
+                                                <Button onClick={ handleSubmit } >
                                                     { t('dataBundle.files.saveButton') }
                                                 </Button>
                                             </Form>
@@ -160,15 +160,16 @@ class DataBundleFiles extends Component {
 
                             </Segment>
 
-                            <Grid container>
-                                <Button type='submit' onClick={ this.handleNextButton }>
-                                    { t('dataBundle.files.nextButton') }
-                                </Button>
-                                <Button type='submit' as={ Link } to="/data-bundle/prepare/error" icon>
-                                    <Icon name='warning sign' />
-                                    { t('dataBundle.files.nextButtonError') }
-                                </Button>
-                            </Grid>
+                            <Divider />
+
+                            <Button onClick={ this.handleNextButton }>
+                                { t('dataBundle.files.nextButton') }
+                            </Button>
+                            <Button as={ Link } to="/data-bundle/prepare/error">
+                                { t('dataBundle.files.nextButtonError') }
+                            </Button>
+
+
                         </Grid.Column>
                     </Grid>
                 </Segment>

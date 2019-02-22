@@ -13,17 +13,23 @@ class ModelTrain extends Component {
         dots: 0
     }
 
+    statusInterval = null
+
     componentDidMount = () => {
         this.props.triggerApiWaiting('now training')
     }
+
     handleModelTrain = () => {
         console.log('train')
         this.props.modelTrain()
-        this.props.setInterval(this.handleModelStatus, 2000)
+        this.statusInterval = this.props.setInterval(this.handleModelStatus, 2000)
     }
+
     handleModelStatus = () => {
+        const { status } = this.props;
         console.log('status')
         this.props.modelStatus()
+        if (status=='trained') this.props.clearInterval(this.statusInterval)
     }
 
     render() {
@@ -78,9 +84,7 @@ class ModelTrain extends Component {
                             <Button as={ Link } to="/model/train/results">
                                 { t('model.train.nextButton') }
                             </Button>
-
-                            <Button as={ Link } to="/model/train/error" icon>
-                                <Icon name='warning sign' />
+                            <Button as={ Link } to="/model/train/error">
                                 { t('model.train.nextButtonError') }
                             </Button>
 

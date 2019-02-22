@@ -46,7 +46,6 @@ class ModelSettings extends Component {
                                     return errors;
                                 } }
                                 onSubmit={ (values, { setSubmitting }) => {
-                                    const newSettings = {...settings, ngram: values.ngram}
                                      // demo
                                     //  setTimeout(() => {
                                     //     alert(JSON.stringify(newSettings, null, 2));
@@ -54,7 +53,7 @@ class ModelSettings extends Component {
                                     // }, 400);
 
                                     // redux action
-                                    const postData = { settings: newSettings }
+                                    const postData = {ngram: values.ngram}
                                     modelSettings(postData)
 
                                     // go to next page
@@ -80,7 +79,7 @@ class ModelSettings extends Component {
                                                     type="text"
                                                     onChange={ handleChange } />
                                             </Form.Field>
-                                            <Button type='submit' onClick={ handleSubmit } >
+                                            <Button onClick={ handleSubmit } >
                                                 { t('model.settings.nextButton') }
                                             </Button>
                                         </Form>

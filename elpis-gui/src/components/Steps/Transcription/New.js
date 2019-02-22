@@ -90,7 +90,7 @@ class NewTranscription extends Component {
 
                             <Divider />
 
-                            <Button type='submit' as={ Link } to="/transcription/results">
+                            <Button as={ Link } to="/transcription/results">
                                 { t('transcription.new.nextButton') }
                             </Button>
 

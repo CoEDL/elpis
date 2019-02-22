@@ -64,7 +64,7 @@
             "namePlaceholder": "Name",
             "nextButton": "Go"
         },
-        "pronDict": {
+        "l2s": {
             "title": "Upload Letter to Sound rules",
             "header": "Letter to sound file",
             "description": "Letter to sound files are fun.",
@@ -74,7 +74,8 @@
             "nextButton": "Next: review lexicon"
         },
         "lexicon": {
-            "title": "Review the lexicon"
+            "title": "Review the lexicon",
+            "nextButton": "Next"
         },
         "settings": {
             "title": "Model settings",
