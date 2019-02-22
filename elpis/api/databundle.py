@@ -21,7 +21,7 @@ def new():
     })
 
 @bp.route("/load", methods=['GET', 'POST'])
-def new():
+def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     ds = kaldi.get_dataset(request.json['name'])
     app.config['CURRENT_DATABUNDLE'] = ds

@@ -41,7 +41,7 @@ def new():
 
 
 @bp.route("/load", methods=['GET', 'POST'])
-def new():
+def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     m = kaldi.get_model(request.json["name"])
     # set the databundle to match the model
