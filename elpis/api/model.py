@@ -53,6 +53,19 @@ def name():
         "data": m.name
     })
 
+@bp.route("/settings", methods=['GET', 'POST'])
+def settings():
+    m = app.config['CURRENT_MODEL']
+    if m is None:
+        # TODO sending a string error back in incorrect, jsonify it.
+        return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
+    if request.method == 'POST':
+        m.ngram = request.json['ngram']
+        # TODO make this an optional parameter
+    return jsonify({
+        "status": "ok",
+        "data": {"ngram": m.ngram}})
+
 
 @bp.route("/l2s", methods=['POST'])
 def l2s():
