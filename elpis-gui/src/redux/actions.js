@@ -20,10 +20,10 @@ const getApi = (url, successFunction) => {
 
 const postApi = (url, postData, successFunction, config=null) => {
     return dispatch => {
-        console.log('postData', url, postData)
+        // console.log('postData', url, postData)
         axios.post(url, postData, config)
             .then((response) => {
-                console.log("api response", response)
+                // console.log("api response", response)
                 dispatch(successHandler[successFunction](response))
             }).catch((error) => {
                 dispatch(errorHandler(error))
@@ -53,7 +53,7 @@ var successHandler = {
     modelTrain: response => ({ type: 'MODEL_TRAIN', response }),
     modelStatus: response => ({ type: 'MODEL_STATUS', response }),
 
-    newTranscriptionFile: response => ({ type: 'NEW_TRANSCRIPTION_FILE', response })
+    transcriptionNew: response => ({ type: 'TRANSCRIPTION_AUDIO', response })
 }
 
 // * * * * * * * * * * DATA BUNDLES * * * * * * * * * * * * * * *
@@ -80,7 +80,6 @@ export const dataBundleFiles = postData => {
     return postApi(url, postData, 'dataBundleFiles', headers)
 }
 export const dataBundlePrepare = () => {
-    console.log("action do dataBundlePrepare")
     const url = baseUrl + urls.api.dataBundle.prepare
     return postApi(url, null, 'dataBundlePrepare')
 }
@@ -114,16 +113,16 @@ export const modelSettings = postData => {
     return postApi(url, postData, 'modelSettings')
 }
 export const modelTrain = () => {
-    const url = baseUrl + '/api/model/train'
+    const url = baseUrl + urls.api.model.train
     return postApi(url, null, 'modelTrain')
 }
 export const modelStatus = () => {
-    const url = baseUrl + '/api/model/status'
+    const url = baseUrl + urls.api.model.status
     return postApi(url, null, 'modelStatus')
 }
 export const modelResults = () => {
-    const url = baseUrl + '/api/model/results'
-    return postApi(url, 'modelResults')
+    const url = baseUrl + urls.api.model.results
+    return postApi(url, null, 'modelResults')
 }
 
 
@@ -133,7 +132,7 @@ export const modelResults = () => {
 
 export const transcriptionNew = postData => {
     // const url = "http://httpbin.org/post"
-    const url = baseUrl + '/api/transcription/audio'
+    const url = baseUrl + urls.api.transcription.new
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'transcriptionNew', headers)
 }

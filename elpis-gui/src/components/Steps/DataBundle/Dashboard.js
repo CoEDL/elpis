@@ -6,7 +6,7 @@ import { dataBundleList } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 
-class DataBundleList extends Component {
+class DataBundleDashboard extends Component {
     componentDidMount() {
         const { dataBundleList } = this.props
         dataBundleList()
@@ -57,4 +57,4 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(DataBundleList))
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(DataBundleDashboard))

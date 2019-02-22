@@ -1,12 +1,12 @@
 export { default as Welcome } from './Welcome';
 
-export { default as DataBundleList } from './DataBundle/List';
+export { default as DataBundleDashboard } from './DataBundle/Dashboard';
 export { default as DataBundleNew } from './DataBundle/New';
 export { default as DataBundleFiles } from './DataBundle/Files';
 export { default as DataBundlePrepare } from './DataBundle/Prepare';
 export { default as DataBundlePrepareError } from './DataBundle/PrepareError'
 
-export { default as ModelList } from './Model/List'
+export { default as ModelDashboard } from './Model/Dashboard'
 export { default as ModelNew } from './Model/New';
 export { default as ModelL2S } from './Model/L2S';
 export { default as ModelLexicon } from './Model/Lexicon'

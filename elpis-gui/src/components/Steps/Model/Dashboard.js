@@ -6,10 +6,9 @@ import { modelList } from 'redux/actions';
 import _ from 'lodash'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import ListModels from "./ListModels";
 
-class ModelList extends Component {
-
-    // TODO: clean this up, make it work better with data from redux state
+class ModelDashboard extends Component {
 
     state = {
         column: null,
@@ -92,6 +91,8 @@ class ModelList extends Component {
                                 { t('model.list.title') }
                             </Header>
 
+                            <ListModels />
+
                             { listEl }
 
                         </Grid.Column>
@@ -114,4 +115,4 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelList))
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelDashboard))

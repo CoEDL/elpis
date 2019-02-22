@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import './App.css';
 import {
     Welcome,
-    DataBundleList,
+    DataBundleDashboard,
     DataBundleNew,
     DataBundleFiles,
     DataBundlePrepare,
     DataBundlePrepareError,
-    ModelList,
+    ModelDashboard,
     ModelNew,
     ModelL2S,
     ModelLexicon,
@@ -31,13 +31,13 @@ class App extends Component {
                     <PageContainer>
                         <Route path="/" exact component={ Welcome } />
 
-                        <Route path={urls.gui.dataBundle.index} exact component={ DataBundleList } />
+                        <Route path={urls.gui.dataBundle.index} exact component={ DataBundleDashboard } />
                         <Route path={urls.gui.dataBundle.new} component={ DataBundleNew } />
                         <Route path={urls.gui.dataBundle.files} component={ DataBundleFiles } />
                         <Route path={urls.gui.dataBundle.prepare} exact component={ DataBundlePrepare } />
                         <Route path={urls.gui.dataBundle.prepareError} component={ DataBundlePrepareError } />
 
-                        <Route path={urls.gui.model.index} exact component={ ModelList } />
+                        <Route path={urls.gui.model.index} exact component={ ModelDashboard } />
                         <Route path={urls.gui.model.new} component={ ModelNew } />
                         <Route path={urls.gui.model.l2s} component={ ModelL2S } />
                         <Route path={urls.gui.model.lexicon} component={ ModelLexicon } />

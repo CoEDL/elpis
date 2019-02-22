@@ -9,6 +9,7 @@ import { fromEvent } from "file-selector";
 import { transcriptionNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import urls from 'urls'
 
 class NewTranscription extends Component {
 
@@ -20,7 +21,7 @@ class NewTranscription extends Component {
     }
 
     render() {
-        const { t } = this.props;
+        const { t, transcriptionAudio } = this.props;
         return (
             <div>
                 <Branding />
@@ -57,40 +58,13 @@ class NewTranscription extends Component {
                                 } }
                             </Dropzone>
 
-                            newTranscriptionFile: {this.props.newTranscriptionFile}
-
-
-                            <Header as='h1' type="text">{ t('transcription.new.chooseModelHeader') }</Header>
-                            <Grid>
-                                <Grid.Column>
-                                    <List>
-                                        <List.Item>
-                                            <List.Icon name='square outline' />
-                                            <List.Content>English-Indonesian 1-gram</List.Content>
-                                        </List.Item>
-                                        <List.Item>
-                                            <List.Icon name='square outline' />
-                                            <List.Content>English-Indonesian 3-gram</List.Content>
-                                        </List.Item>
-                                        <List.Item>
-                                            <List.Icon name='square outline' />
-                                            <List.Content>English-Indonesian 5-gram with Indonesian 12s</List.Content>
-                                        </List.Item>
-                                        <List.Item>
-                                            <List.Icon name='square outline' />
-                                            <List.Content>Indonesian 1-gram</List.Content>
-                                        </List.Item>
-                                        <List.Item>
-                                            <List.Icon name='square outline' />
-                                            <List.Content>Everything 3-gram with Indonesian 12s</List.Content>
-                                        </List.Item>
-                                    </List>
-                                </Grid.Column>
-                            </Grid>
+                            <p>
+                                transcriptionAudio: {transcriptionAudio}
+                            </p>
 
                             <Divider />
 
-                            <Button as={ Link } to="/transcription/results">
+                            <Button as={ Link } to={ urls.gui.transcription.results }>
                                 { t('transcription.new.nextButton') }
                             </Button>
 
@@ -105,7 +79,7 @@ class NewTranscription extends Component {
 
 const mapStateToProps = state => {
     return {
-        newTranscriptionFile: state.model.newTranscriptionFile
+        transcriptionAudio: state.transcription.transcriptionAudio
     }
 }
 

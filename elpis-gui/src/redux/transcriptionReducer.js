@@ -1,16 +1,13 @@
 const initState = {
-    newTranscriptionFile: ''
+    transcriptionAudio: ''
 }
 
 const transcription = (state = initState, action) => {
     switch (action.type) {
-        case 'UPDATE_NEW_TRANSCRIPTION_FILE':
-            console.log("reducer got", action)
-            // TODO: will we put this into separate reducer ??
-            let newTranscriptionFile = action.response.data
+        case 'TRANSCRIPTION_AUDIO':
             return {
                 ...state,
-                newTranscriptionFile
+                transcriptionAudio: action.response.data
             }
 
         default:

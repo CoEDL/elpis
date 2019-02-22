@@ -36,10 +36,14 @@ export default {
             "new": "/api/model/new",
             "l2s": "/api/model/l2s",
             "lexicon": "/api/model/lexicon",
-            "settings": "/api/model/settings"
+            "settings": "/api/model/settings",
+            "train": "/api/model/train",
+            "status": "/api/model/status",
+            "results": "/api/model/results"
         },
         "transcription": {
-            "new": "/api/transcription/new"
+            "new": "/api/transcription/new",
+            "elan": "/api/transcription/elan"
         }
 
 
