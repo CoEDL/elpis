@@ -27,7 +27,7 @@
         },
         "files": {
             "title": "Add data",
-            "description": "Some description and information about file formats, naming requirements etc.",
+            "description": "Upload your training and testing data here. Audio should be 44.1kHz, Audio files and transcription files must have matching filenames.",
             "filesHeader": "Uploaded files",
             "filesReplaceLabel": "Replace files?",
             "settingsHeader": "Settings",
@@ -41,7 +41,7 @@
             "audioLabel": "Audio files:",
             "transcriptionLabel": "Transcription files:",
             "additionalLabel": "Additional Text files:",
-            "dropFilesHint": "Drop individual files or a folder containing your file here",
+            "dropFilesHint": "Click to select and upload files, or drop your files here",
             "dropFilesHintDragActive": "Drop files here.."
         },
         "prepare": {

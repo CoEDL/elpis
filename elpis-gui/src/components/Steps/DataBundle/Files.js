@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
-import { Checkbox,Divider, Grid, Header, Segment, Icon, List, Form, Input, Button } from 'semantic-ui-react';
+import {  Button, Checkbox, Divider, Form, Grid, Header, Input, List, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
@@ -56,9 +56,7 @@ class DataBundleFiles extends Component {
                                 { t('dataBundle.files.title') }
                             </Header>
 
-                            <p>
-                                { t('dataBundle.files.description') }
-                            </p>
+                            <Message content={ t('dataBundle.files.description') } />
 
                             <Segment>
                                 <FileUpload />
