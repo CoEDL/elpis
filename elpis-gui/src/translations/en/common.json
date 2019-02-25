@@ -10,7 +10,12 @@
         "stepPlaceholder": "step descriptions"
     },
     "dataBundle": {
-        "list": {
+        "common": {
+            "currentDataBundleLabel": "Current data bundle: ",
+            "noCurrentDataBundleLabel": "No current data bundle.",
+            "chooseOrNew": "Choose one from the list below, or start a new one.."
+        },
+        "dashboard": {
             "title": "Previous data bundles",
             "noneMessage": "No bundles yet"
         },
@@ -54,7 +59,12 @@
         }
     },
     "model": {
-        "list": {
+        "common": {
+            "currentModelLabel": "Current model: ",
+            "noCurrentModelLabel": "No current model.",
+            "chooseOrNew": "Choose one from the list below, or start a new one.."
+        },
+        "dashboard": {
             "title": "Previous models",
             "noneMessage": "No models yet"
         },

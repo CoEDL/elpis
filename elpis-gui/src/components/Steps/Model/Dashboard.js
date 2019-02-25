@@ -7,6 +7,7 @@ import _ from 'lodash'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import ListModels from "./ListModels";
+import CurrentModelName from "./CurrentModelName";
 
 class ModelDashboard extends Component {
 
@@ -49,7 +50,7 @@ class ModelDashboard extends Component {
     }
 
     render() {
-        const { t, list } = this.props;
+        const { t, name, list } = this.props;
         const { column, direction } = this.state
 
         console.log("list", list)
@@ -86,7 +87,7 @@ class ModelDashboard extends Component {
                 </Table.Body>
             </Table>
 
-            ) : <p>{ t('model.list.noneMessage') }</p>
+            ) : <p>{ t('model.dashboard.noneMessage') }</p>
 
         return (
             <div>
@@ -99,10 +100,12 @@ class ModelDashboard extends Component {
 
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>
-                                { t('model.list.title') }
+                                { t('model.dashboard.title') }
                             </Header>
 
-                            <ListModels />
+                            <CurrentModelName name={name} />
+
+                            {/* <ListModels /> */}
 
                             { listEl }
 
@@ -116,6 +119,7 @@ class ModelDashboard extends Component {
 
 const mapStateToProps = state => {
     return {
+        name: state.model.name,
         list: state.model.modelList
     }
 }

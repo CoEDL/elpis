@@ -19,7 +19,7 @@ class DataBundleDashboard extends Component {
             <ul>
                 {list.map( name => <li key={name}>{name}</li>)}
             </ul>
-        ) : <p>{ t('dataBundle.list.noneMessage') }</p>
+        ) : <p>{ t('dataBundle.dashboard.noneMessage') }</p>
 
         return (
             <div>
@@ -32,7 +32,7 @@ class DataBundleDashboard extends Component {
 
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>
-                                { t('dataBundle.list.title') }
+                                { t('dataBundle.dashboard.title') }
                             </Header>
 
                             { listEl }
