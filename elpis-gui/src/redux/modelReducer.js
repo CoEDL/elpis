@@ -1,18 +1,18 @@
-import {getFileExtension} from 'helpers'
+const toyLexicon = `!SIL sil
+<UNK> spn
+di d I
+kaai k a: I
+amakaang a m a k a: ŋ
+hada h a d a
+muila m u I l a
+`;
 
 const initState = {
     name: "",
     modelList: [],
     date: null,
     l2s: '',
-    lexicon: `!SIL sil
-        <UNK> spn
-        di d I
-        kaai k a: I
-        amakaang a m a k a: ŋ
-        hada h a d a
-        muila m u I l a
-        `,
+    lexicon: '',
     settings: {
         ngram: 1
     },

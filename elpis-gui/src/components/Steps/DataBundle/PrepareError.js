@@ -4,6 +4,7 @@ import { Grid, Header, Segment, Icon, Button } from 'semantic-ui-react';
 import { translate } from 'react-i18next';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import urls from 'urls'
 
 class DataBundlePrepareError extends Component {
     render() {
@@ -27,7 +28,7 @@ class DataBundlePrepareError extends Component {
                             <p>Novice readable description of what just happened</p>
                             <p>Show the errors and information about how to fix the error</p>
 
-                            <Button as={ Link } to="/data-bundle/add-files">
+                            <Button as={ Link } to={urls.gui.dataBundle.files}>
                                 { t('dataBundle.prepareError.backButton') }
                             </Button>
 

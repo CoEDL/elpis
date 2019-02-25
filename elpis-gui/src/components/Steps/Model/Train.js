@@ -4,6 +4,7 @@ import { Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Mes
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import ReactTimeout from 'react-timeout'
+import { LazyLog } from 'react-lazylog/es5';
 import { triggerApiWaiting, modelTrain, modelStatus } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -76,6 +77,10 @@ class ModelTrain extends Component {
                             <Card fluid>
                                 <Card.Content header={ t('model.train.logsHeader') } />
                                 <Card.Content description={ t('model.train.logsDescription') } />
+  <div className="kaldi-log">
+  <LazyLog stream url="http://0.0.0.0:5000/api/log.txt" />
+  </div>
+
                             </Card>
 
 

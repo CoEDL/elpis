@@ -29,8 +29,8 @@
             "tierLabel": "tier name",
             "settingsDescription": "Some info about the settings",
             "saveButton": "Save",
-            "nextButton": "Next: process this data",
-            "nextButtonError": "Next: (simulate a data input error)"
+            "nextButton": "Next",
+            "nextButtonError": "(Simulate a data input error)"
         },
         "fileUpload": {
             "audioLabel": "Audio files:",
@@ -62,7 +62,7 @@
             "title": "New Model",
             "nameLabel": "name",
             "namePlaceholder": "Name",
-            "nextButton": "Go"
+            "nextButton": "Next"
         },
         "l2s": {
             "title": "Upload Letter to Sound rules",
@@ -71,7 +71,7 @@
             "dropFilesHint": "Drop letter to sound file here",
             "dropFilesHintDragActive": "Here here..",
             "uploadButton": "Upload",
-            "nextButton": "Next: review lexicon"
+            "nextButton": "Next"
         },
         "lexicon": {
             "title": "Review the lexicon",
@@ -84,7 +84,7 @@
             "mfccLabel": "MFCC stuff",
             "ngramLabel": "n-gram",
             "beamLabel": "Beam size",
-            "nextButton": "Next: train model"
+            "nextButton": "Next"
         },
         "train": {
             "title": "Training the Model",
@@ -96,8 +96,8 @@
             "logsDescription": "gory detail from Kaldi",
             "trainButton": "Start training",
             "statusButton": "Check progress",
-            "nextButton": "Next: model trained OK",
-            "nextButtonError": "Next: model trained Error"
+            "nextButton": "Next",
+            "nextButtonError": "(Simulate an error training model)"
         },
         "results": {
             "title": "Trained Model Results",

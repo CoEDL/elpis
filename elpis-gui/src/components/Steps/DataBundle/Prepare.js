@@ -20,7 +20,7 @@ class DataBundlePrepare extends Component {
                 <ul>
                     {
                         Object.keys(wordlist).map(function (key) {
-                            return (<li>{key} {wordlist[key]}</li>)
+                            return (<li key={key}>{key} {wordlist[key]}</li>)
                         })
                     }
                 </ul>

@@ -76,8 +76,8 @@ class ModelDashboard extends Component {
                     {list.map(model => (
                         <Table.Row key={model.name}>
                         <Table.Cell>
-                        {model.name}
-                        <Button onClick={()=>this.handleLoad(model.name)}>load</Button>
+
+                        <Button onClick={()=>this.handleLoad(model.name)}>{model.name}</Button>
 
                         </Table.Cell>
                         <Table.Cell>{model.results.wer}</Table.Cell>

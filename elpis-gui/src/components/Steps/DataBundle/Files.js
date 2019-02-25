@@ -165,11 +165,11 @@ class DataBundleFiles extends Component {
                             <Button onClick={ this.handleNextButton }>
                                 { t('dataBundle.files.nextButton') }
                             </Button>
+{/*
                             <Button as={ Link } to="/data-bundle/prepare/error">
                                 { t('dataBundle.files.nextButtonError') }
                             </Button>
-
-
+ */}
                         </Grid.Column>
                     </Grid>
                 </Segment>
