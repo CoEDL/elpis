@@ -17,7 +17,7 @@ def whole_state():
 
 @bp.route("/log.txt")
 def log():
-    log_file = Path('/elpis/elpis/state/tmp_log.txt')
+    log_file = Path('/elpis/state/tmp_log.txt')
     if log_file.exists():
         with log_file.open() as fin:
             return fin.read()
