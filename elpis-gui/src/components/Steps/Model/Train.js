@@ -8,6 +8,8 @@ import { LazyLog } from 'react-lazylog/es5';
 import { triggerApiWaiting, modelTrain, modelStatus } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import CurrentModelName from "./CurrentModelName";
+import urls from 'urls'
 
 class ModelTrain extends Component {
     state = {
@@ -34,7 +36,7 @@ class ModelTrain extends Component {
     }
 
     render() {
-        const { t, settings, apiWaiting, status } = this.props;
+        const { t, name, settings, apiWaiting, status } = this.props;
 
         console.log('status', status)
 
@@ -48,9 +50,12 @@ class ModelTrain extends Component {
                         </Grid.Column>
 
                         <Grid.Column width={ 12 }>
+
                             <Header as='h1' text='true'>
                                 { t('model.train.title') }
                             </Header>
+
+                            <CurrentModelName name={ name } />
 
                             <Card fluid>
                                 <Card.Content header={ t('model.train.settingsHeader') } />
@@ -77,22 +82,23 @@ class ModelTrain extends Component {
                             <Card fluid>
                                 <Card.Content header={ t('model.train.logsHeader') } />
                                 <Card.Content description={ t('model.train.logsDescription') } />
-  <div className="kaldi-log">
-  <LazyLog stream url="http://0.0.0.0:5000/api/log.txt" />
-  </div>
+
+                                <div className="kaldi-log">
+                                    <LazyLog stream url={urls.api.model.log} />
+                                </div>
 
                             </Card>
 
-
                             <Divider />
 
-                            <Button as={ Link } to="/model/train/results">
+                            <Button as={ Link } to={urls.gui.model.results}>
                                 { t('model.train.nextButton') }
                             </Button>
+{/*
                             <Button as={ Link } to="/model/train/error">
                                 { t('model.train.nextButtonError') }
                             </Button>
-
+ */}
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -109,6 +115,7 @@ class ModelTrain extends Component {
 
 const mapStateToProps = state => {
     return {
+        name: state.model.name,
         settings: state.model.settings,
         apiWaiting: state.model.apiWaiting,
         status: state.model.status

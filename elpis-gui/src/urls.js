@@ -42,7 +42,8 @@ export default {
             "settings": "/api/model/settings",
             "train": "/api/model/train",
             "status": "/api/model/status",
-            "results": "/api/model/results"
+            "results": "/api/model/results",
+            "log": "/api/log.txt"
         },
         "transcription": {
             "new": "/api/transcription/new",

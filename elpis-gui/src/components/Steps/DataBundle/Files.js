@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
-import {  Button, Checkbox, Divider, Form, Grid, Header, Input, List, Message, Segment } from 'semantic-ui-react';
+import { Button, Checkbox, Divider, Form, Grid, Header, Input, List, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
@@ -42,6 +42,13 @@ class DataBundleFiles extends Component {
             </List.Item>
         ))
 
+        const filesHeader = (
+            audioFileList.length > 0 ||
+            transcriptionFilesList.length > 0 ||
+            additionalTextFilesList.length > 0) ? (
+                 t('dataBundle.files.filesHeader')
+            ) : null
+
         return (
             <div>
                 <Branding />
@@ -56,9 +63,9 @@ class DataBundleFiles extends Component {
                                 { t('dataBundle.files.title') }
                             </Header>
 
-                            <Message content={ t('dataBundle.files.description') } />
+                            <Message attached content={ t('dataBundle.files.description') } />
 
-                            <Segment>
+                            <Segment className="attached">
                                 <FileUpload />
 
                                 {/*
@@ -72,7 +79,7 @@ class DataBundleFiles extends Component {
                                 */}
 
                                 <Header as='h3'>
-                                    { t('dataBundle.files.filesHeader') }
+                                    { filesHeader }
                                 </Header>
 
                                 <Grid columns={ 3 }>
@@ -155,7 +162,6 @@ class DataBundleFiles extends Component {
                                         ) }
                                 </Formik>
 
-
                             </Segment>
 
                             <Divider />
@@ -163,7 +169,7 @@ class DataBundleFiles extends Component {
                             <Button onClick={ this.handleNextButton }>
                                 { t('dataBundle.files.nextButton') }
                             </Button>
-{/*
+                            {/*
                             <Button as={ Link } to="/data-bundle/prepare/error">
                                 { t('dataBundle.files.nextButtonError') }
                             </Button>
