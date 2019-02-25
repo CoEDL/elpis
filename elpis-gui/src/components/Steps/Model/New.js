@@ -25,13 +25,12 @@ class ModelNew extends Component {
                         <Grid.Column width={ 12 }>
                             <Header as='h1' text="true">
                                 { t('model.new.title') }
-                                ..{ name }..
                             </Header>
 
                             <Formik
                                 enableReinitialize
                                 initialValues={ {
-                                    name: name
+                                    name: ''
                                 } }
                                 validate={ values => {
                                     let errors = {};

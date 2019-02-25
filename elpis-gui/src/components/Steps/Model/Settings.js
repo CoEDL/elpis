@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Divider, Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
+import { Button, Divider, Form, Grid, Header, Input, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
 import { modelSettings } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import CurrentModelName from "./CurrentModelName";
 import urls from 'urls'
 
 class ModelSettings extends Component {
     render() {
-        const { t, settings, modelSettings } = this.props;
+        const { t, name, settings, modelSettings } = this.props;
         return (
             <div>
                 <Branding />
@@ -27,7 +28,9 @@ class ModelSettings extends Component {
                                 { t('model.settings.title') }
                             </Header>
 
-                            <Divider />
+                            <CurrentModelName name={ name } />
+
+                            <Message content={ t('model.settings.description') } />
 
                             <Formik
                                 enableReinitialize
@@ -95,6 +98,7 @@ class ModelSettings extends Component {
 
 const mapStateToProps = state => {
     return {
+        name: state.model.name,
         settings: state.model.settings
     }
 }

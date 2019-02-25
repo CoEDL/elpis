@@ -34,5 +34,10 @@ code {
 .kaldi-log {
     height: 300px;
     width: 100%;
-    border: 1px solid red;
+    border: 1px solid #aaa;
+}
+
+.current-data-bundle,
+.current-model {
+    background-color: #D3A0F0;
 }

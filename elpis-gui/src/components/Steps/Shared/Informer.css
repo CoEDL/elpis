@@ -1,8 +1,18 @@
-.stepList {position: relative}
-.stepList .item {position: relative;}
+.stepList {
+    position: relative
+}
+
+.stepList .item {
+    position: relative;
+}
 
 .stepDone,
-.substepDone {background-color:#E0C6EE; }
+.substepDone {
+    background-color: #E0C6EE;
+}
 
 .stepDoing {}
-.substepDoing {background-color:#D3A0F0; font-weight: bold}
+
+.substepDoing {
+    background-color: #D3A0F0;
+}

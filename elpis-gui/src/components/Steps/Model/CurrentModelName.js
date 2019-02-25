@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import { Message } from 'semantic-ui-react';
 
 class CurrentModelName extends Component {
 
@@ -9,17 +10,17 @@ class CurrentModelName extends Component {
 
         const current = name ?
         (
-            t('model.common.currentModelLabel') + name
+            <Message>
+                { t('model.common.currentModelLabel') + name }
+            </Message>
         ) : (
-            t('model.common.noCurrentModelLabel') +
-            ' ' +
-            t('model.common.chooseOrNew')
+            <Message negative>
+                { t('model.common.noCurrentModelLabel') }
+            </Message>
         )
 
         return (
-            <div className="current-name">
-                { current }
-            </div>
+            <>{ current }</>
         )
     }
 }

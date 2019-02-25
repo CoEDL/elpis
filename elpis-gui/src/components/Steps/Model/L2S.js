@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Grid, Header, Segment, Icon, Divider, Button } from 'semantic-ui-react';
+import { Button, Divider, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import classNames from "classnames";
@@ -9,6 +9,7 @@ import { fromEvent } from "file-selector";
 import { modelL2S } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import CurrentModelName from "./CurrentModelName";
 import urls from 'urls'
 
 class ModelL2S extends Component {
@@ -22,12 +23,12 @@ class ModelL2S extends Component {
     }
 
     render() {
-        const { t, l2s } = this.props;
+        const { t, l2s, name } = this.props;
         console.log("l2s", l2s)
         const pron = l2s ? (
             <Segment>
                 <pre>
-                    {l2s}
+                    { l2s }
                 </pre>
             </Segment>
 
@@ -41,16 +42,16 @@ class ModelL2S extends Component {
                         <Grid.Column width={ 4 }>
                             <Informer />
                         </Grid.Column>
+
                         <Grid.Column width={ 12 }>
+
                             <Header as='h1'>
                                 { t('model.l2s.title') }
                             </Header>
 
-                            <p>
-                                { t('model.l2s.description') }
-                            </p>
+                            <CurrentModelName name={ name } />
 
-                            <Divider />
+                            <Message content={ t('model.l2s.description') } />
 
                             <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({ getRootProps, getInputProps, isDragActive }) => {
@@ -92,6 +93,7 @@ class ModelL2S extends Component {
 const mapStateToProps = state => {
     return {
         l2s: state.model.l2s,
+        name: state.model.name,
     }
 }
 

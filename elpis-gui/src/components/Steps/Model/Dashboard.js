@@ -23,15 +23,15 @@ class ModelDashboard extends Component {
     }
 
     handleSort = (clickedColumn, data) => () => {
-        const { column,  direction } = this.state
+        const { column, direction } = this.state
 
         if (column !== clickedColumn) {
-          this.setState({
-            column: clickedColumn,
-            // data: _.sortBy(data, [clickedColumn]),
-            direction: 'ascending',
-          })
-          return
+            this.setState({
+                column: clickedColumn,
+                // data: _.sortBy(data, [clickedColumn]),
+                direction: 'ascending',
+            })
+            return
         }
 
         if (data) {
@@ -45,7 +45,7 @@ class ModelDashboard extends Component {
     handleLoad = name => {
         const { modelLoad } = this.props
         console.log("handleLoad name", name)
-        const postData = {name:name}
+        const postData = { name: name }
         modelLoad(postData)
     }
 
@@ -60,34 +60,38 @@ class ModelDashboard extends Component {
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
-                        sorted={column === 'name' ? direction : null}
-                        onClick={this.handleSort('name', list)}
+                            sorted={ column === 'name' ? direction : null }
+                            onClick={ this.handleSort('name', list) }
                         >
-                        Name
+                            Name
                         </Table.HeaderCell>
                         <Table.HeaderCell
-                        sorted={column === 'wer' ? direction : null}
-                        onClick={this.handleSort('wer', list.results)}
+                            sorted={ column === 'wer' ? direction : null }
+                            onClick={ this.handleSort('wer', list.results) }
                         >
-                        WER
+                            WER
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {list.map(model => (
-                        <Table.Row key={model.name}>
-                        <Table.Cell>
+                    {
+                        list.map(model => {
+                            const className = (name == model.name) ? 'current-model' : ''
+                            return (
 
-                        <Button onClick={()=>this.handleLoad(model.name)}>{model.name}</Button>
-
-                        </Table.Cell>
-                        <Table.Cell>{model.results.wer}</Table.Cell>
-                        </Table.Row>
-                    ))}
+                                <Table.Row key={ model.name } className={ className }>
+                                    <Table.Cell>
+                                        <Button onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
+                                    </Table.Cell>
+                                    <Table.Cell>{ model.results.wer }</Table.Cell>
+                                </Table.Row>
+                            )
+                        })
+                    }
                 </Table.Body>
             </Table>
 
-            ) : <p>{ t('model.dashboard.noneMessage') }</p>
+        ) : <p>{ t('model.dashboard.noneMessage') }</p>
 
         return (
             <div>
@@ -99,13 +103,14 @@ class ModelDashboard extends Component {
                         </Grid.Column>
 
                         <Grid.Column width={ 12 }>
+
                             <Header as='h1'>
                                 { t('model.dashboard.title') }
                             </Header>
 
-                            <CurrentModelName name={name} />
+                            <CurrentModelName name={ name } />
 
-                            {/* <ListModels /> */}
+                            {/* <ListModels /> */ }
 
                             { listEl }
 

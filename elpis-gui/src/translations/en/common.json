@@ -77,18 +77,20 @@
         "l2s": {
             "title": "Upload Letter to Sound rules",
             "header": "Letter to sound file",
-            "description": "Letter to sound files are fun.",
-            "dropFilesHint": "Drop letter to sound file here",
+            "description": "The letter to sound file is used to build a pronunciation dictionary for the corpus. Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols. ",
+            "dropFilesHint": "Click here to upload your l2s file, or drop one here",
             "dropFilesHintDragActive": "Here here..",
             "uploadButton": "Upload",
             "nextButton": "Next"
         },
         "lexicon": {
             "title": "Review the lexicon",
+            "description": "This pronunciation lexicon has been generated from the wordlist and letter-to-sound rules you uploaded. Check it before training.",
             "nextButton": "Next"
         },
         "settings": {
             "title": "Model settings",
+            "description": "These settings are used when training the model.",
             "advancedHeader": "Advanced",
             "audioLabel": "Audio Frequency",
             "mfccLabel": "MFCC stuff",
@@ -127,7 +129,7 @@
     "transcription": {
         "new": {
             "title": "Transcribe some audio",
-            "dropFilesHint": "Drop audio file here",
+            "dropFilesHint": "Click here to choose an audio file, or drop an audio file here",
             "dropFilesHintDragActive": "Here here..",
             "addAudioButton": "Add Audio",
             "chooseModelHeader": "Choose a model",

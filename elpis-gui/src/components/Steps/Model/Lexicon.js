@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Divider, Grid, Header, Segment, Icon, Button } from 'semantic-ui-react';
+import { Button, Divider, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { modelLexicon } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import CurrentModelName from "./CurrentModelName";
 import urls from 'urls'
 
 class ModelLexicon extends Component {
@@ -15,7 +16,7 @@ class ModelLexicon extends Component {
     }
 
     render() {
-        const { t, lexicon } = this.props;
+        const { t, lexicon, name } = this.props;
         return (
             <div>
                 <Branding />
@@ -26,9 +27,14 @@ class ModelLexicon extends Component {
                         </Grid.Column>
 
                         <Grid.Column width={ 12 }>
+
                             <Header as='h1'>
                                 { t('model.lexicon.title') }
                             </Header>
+
+                            <CurrentModelName name={ name } />
+
+                            <Message content={ t('model.lexicon.description') } />
 
                             <Button as={ Link } to={ urls.gui.model.settings } >
                                 { t('model.lexicon.nextButton') }
@@ -53,6 +59,7 @@ class ModelLexicon extends Component {
 const mapStateToProps = state => {
     return {
         lexicon: state.model.lexicon,
+        name: state.model.name,
     }
 }
 
