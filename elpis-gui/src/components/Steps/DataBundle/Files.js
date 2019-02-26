@@ -4,7 +4,7 @@ import { Button, Checkbox, Divider, Form, Grid, Header, Input, List, Message, Se
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
-import { replaceFiles, triggerApiWaiting, dataBundleSettings, dataBundlePrepare } from 'redux/actions';
+import { dataBundleSettings, dataBundlePrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import FileUpload from './FileUpload';
@@ -12,19 +12,14 @@ import urls from 'urls'
 
 class DataBundleFiles extends Component {
 
-    handleFilesReplaceToggle = () => {
-        this.props.replaceFiles()
-    }
-
     handleNextButton = () => {
         this.props.dataBundlePrepare()
-        this.props.triggerApiWaiting('preparing data')
         this.props.history.push('/data-bundle/prepare')
     }
 
     render() {
 
-        const { t, audioFiles, transcriptionFiles, additionalTextFiles, replace, settings, dataBundleSettings } = this.props;
+        const { t, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
 
         const audioFileList = audioFiles.map(file => (
             <List.Item key={ file }>
@@ -67,16 +62,6 @@ class DataBundleFiles extends Component {
 
                             <Segment className="attached">
                                 <FileUpload />
-
-                                {/*
-                                TODO: change implementation to have a remove all files button instead
-                                <Checkbox
-                                    toggle
-                                    onChange={ this.handleFilesReplaceToggle }
-                                    defaultChecked={ replace }
-                                    label={ t('dataBundle.files.filesReplaceLabel') }
-                                />
-                                */}
 
                                 <Header as='h3'>
                                     { filesHeader }
@@ -188,18 +173,11 @@ const mapStateToProps = state => {
         audioFiles: state.dataBundle.audioFiles,
         transcriptionFiles: state.dataBundle.transcriptionFiles,
         additionalTextFiles: state.dataBundle.additionalTextFiles,
-        replace: state.dataBundle.replaceFiles,
         settings: state.dataBundle.settings
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    replaceFiles: () => {
-        dispatch(replaceFiles());
-    },
-    triggerApiWaiting: message => {
-        dispatch(triggerApiWaiting(message));
-    },
     dataBundleSettings: postData => {
         dispatch(dataBundleSettings(postData));
     },

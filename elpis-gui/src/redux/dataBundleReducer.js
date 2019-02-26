@@ -3,7 +3,6 @@ import {getFileExtension} from 'helpers'
 const initState = {
     name: "",
     dataBundleList: [],
-    replaceFiles: false,
     audioFiles: [],
     transcriptionFiles: [],
     additionalTextFiles: [],
@@ -22,12 +21,6 @@ const initState = {
 
 const dataBundle = (state = initState, action) => {
     switch (action.type) {
-
-        case 'REPLACE_FILES':
-            return {
-                ...state,
-                replaceFiles: ! state.replaceFiles
-            }
 
         case 'DATA_BUNDLE_LIST':
         console.log("reducer got data bundle list", action.response.data.data)
@@ -59,9 +52,6 @@ const dataBundle = (state = initState, action) => {
             transcriptionFiles.sort()
             additionalTextFiles.sort()
 
-            // decide whether to add to existing, or overwrite
-            // combine received filenames with existing set if replaceFiles is true
-            if (state.replaceFiles === false && state.audioFiles.length > 0) audioFiles = [...audioFiles, ...state.audioFiles]
             // remove duplicates
             audioFiles = [...(new Set(audioFiles))];
             return {

@@ -29,7 +29,6 @@
             "title": "Add data",
             "description": "Upload your training and testing data here. Audio should be 44.1kHz, Audio files and transcription files must have matching filenames.",
             "filesHeader": "Uploaded files",
-            "filesReplaceLabel": "Replace files?",
             "settingsHeader": "Settings",
             "tierLabel": "tier name",
             "settingsDescription": "Some info about the settings",

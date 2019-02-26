@@ -153,6 +153,4 @@ export const transcriptionElan = postData => {
 
 export const setCurrentStep = (url) => ({ type: 'SET_CURRENT_STEP', url })
 
-export const replaceFiles = (status) => ({ type: 'REPLACE_FILES', status })
-
 export const triggerApiWaiting = (message) => ({ type: 'TRIGGER_API_WAITING', message })

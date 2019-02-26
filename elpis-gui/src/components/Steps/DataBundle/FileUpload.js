@@ -12,12 +12,6 @@ class FileUpload extends Component {
         console.log("files dropped:", acceptedFiles);
 
         var formData = new FormData();
-        // backend will need to know whether to add to existing files
-        // or wipe existing and use only these
-        // we'll also need to update redux state on this basis
-
-        // formData.append('replaceFiles', this.props.replaceFiles);
-
         acceptedFiles.forEach(file => {
             console.log(file)
             formData.append('file', file);
@@ -55,11 +49,6 @@ class FileUpload extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        replaceFiles: state.model.replaceFiles
-    }
-}
 
 const mapDispatchToProps = dispatch => ({
     dataBundleFiles: postData => {
@@ -67,4 +56,4 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(FileUpload));
+export default connect(null, mapDispatchToProps)(translate('common')(FileUpload));
