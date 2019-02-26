@@ -42,7 +42,8 @@ const model = (state = initState, action) => {
             console.log("reducer got model new or load", action.response.data)
             return {
                 ...state,
-                name: action.response.data.data.config.name
+                name: action.response.data.data.config.name,
+                l2s: action.response.data.data.l2s
             }
 
         case 'MODEL_NAME':

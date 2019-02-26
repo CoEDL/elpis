@@ -31,11 +31,14 @@ code {
     margin-bottom: 2rem;
 }
 
+
+/*
 .kaldi-log {
     height: 300px;
     width: 100%;
     border: 1px solid #aaa;
 }
+*/
 
 .current-data-bundle,
 .current-model {
