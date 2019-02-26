@@ -57,6 +57,10 @@ class Model(FSObject):
         with self.l2s_path.open(mode='wb') as fout:
             fout.write(content)
 
+    def get_l2s_content(self):
+        with self.l2s_path.open(mode='r') as fin:
+            return fin.read()
+
     @property
     def status(self):
         return self.config['status']
@@ -201,56 +205,58 @@ class Model(FSObject):
                         }
                     )
                     fout.write(content)
+            try:
+                # task copy-generated-files
+                output_path = self.path.joinpath('output')
+                output_path.mkdir(parents=True, exist_ok=True)
+                # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/corpus.txt {{ .KALDI_OUTPUT_PATH }}/kaldi/data/local/
+                shutil.move(f"{output_path.joinpath('training', 'corpus.txt')}", f"{kaldi_data_local}")
+                # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/segments {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/
+                # testing/text {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/utt2spk {{ .KALDI_OUTPUT_PATH }}/tmp/json_
+                # splitted/testing/wav.scp {{ .KALDI_OUTPUT_PATH }}/kaldi/data/test/
+                shutil.move(f"{output_path.joinpath('testing', 'segments')}", f"{kaldi_data_test.joinpath('segments')}")
+                shutil.move(f"{output_path.joinpath('testing', 'text')}", f"{kaldi_data_test.joinpath('text')}")
+                shutil.move(f"{output_path.joinpath('testing', 'utt2spk')}", f"{kaldi_data_test.joinpath('utt2spk')}")
+                shutil.move(f"{output_path.joinpath('testing', 'wav.scp')}", f"{kaldi_data_test.joinpath('wav.scp')}")
+                # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/segments {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted
+                # /training/text {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/utt2spk {{ .KALDI_OUTPUT_PATH }}/tmp/json
+                # _splitted/training/wav.scp {{ .KALDI_OUTPUT_PATH }}/kaldi/data/train/
+                shutil.move(f"{output_path.joinpath('training', 'segments')}", f"{kaldi_data_train.joinpath('segments')}")
+                shutil.move(f"{output_path.joinpath('training', 'text')}", f"{kaldi_data_train.joinpath('text')}")
+                shutil.move(f"{output_path.joinpath('training', 'utt2spk')}", f"{kaldi_data_train.joinpath('utt2spk')}")
+                shutil.move(f"{output_path.joinpath('training', 'wav.scp')}", f"{kaldi_data_train.joinpath('wav.scp')}")
 
-            # task copy-generated-files
-            output_path = self.path.joinpath('output')
-            output_path.mkdir(parents=True, exist_ok=True)
-            # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/corpus.txt {{ .KALDI_OUTPUT_PATH }}/kaldi/data/local/
-            shutil.move(f"{output_path.joinpath('training', 'corpus.txt')}", f"{kaldi_data_local}")
-            # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/segments {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/
-            # testing/text {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/utt2spk {{ .KALDI_OUTPUT_PATH }}/tmp/json_
-            # splitted/testing/wav.scp {{ .KALDI_OUTPUT_PATH }}/kaldi/data/test/
-            shutil.move(f"{output_path.joinpath('testing', 'segments')}", f"{kaldi_data_test.joinpath('segments')}")
-            shutil.move(f"{output_path.joinpath('testing', 'text')}", f"{kaldi_data_test.joinpath('text')}")
-            shutil.move(f"{output_path.joinpath('testing', 'utt2spk')}", f"{kaldi_data_test.joinpath('utt2spk')}")
-            shutil.move(f"{output_path.joinpath('testing', 'wav.scp')}", f"{kaldi_data_test.joinpath('wav.scp')}")
-            # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/segments {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted
-            # /training/text {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/utt2spk {{ .KALDI_OUTPUT_PATH }}/tmp/json
-            # _splitted/training/wav.scp {{ .KALDI_OUTPUT_PATH }}/kaldi/data/train/
-            shutil.move(f"{output_path.joinpath('training', 'segments')}", f"{kaldi_data_train.joinpath('segments')}")
-            shutil.move(f"{output_path.joinpath('training', 'text')}", f"{kaldi_data_train.joinpath('text')}")
-            shutil.move(f"{output_path.joinpath('training', 'utt2spk')}", f"{kaldi_data_train.joinpath('utt2spk')}")
-            shutil.move(f"{output_path.joinpath('training', 'wav.scp')}", f"{kaldi_data_train.joinpath('wav.scp')}")
+                # task copy-phones-configs
+                optional_silence_file_path = kaldi_data_local_dict.joinpath('optional_silence.txt')
+                silence_phones_file_path = kaldi_data_local_dict.joinpath('silence_phones.txt')
+                with optional_silence_file_path.open(mode='w') as fout:
+                    fout.write('SIL\n')
+                with silence_phones_file_path.open(mode='w') as fout:
+                    fout.write('SIL\nsil\nspn\n')
 
-            # task copy-phones-configs
-            optional_silence_file_path = kaldi_data_local_dict.joinpath('optional_silence.txt')
-            silence_phones_file_path = kaldi_data_local_dict.joinpath('silence_phones.txt')
-            with optional_silence_file_path.open(mode='w') as fout:
-                fout.write('SIL\n')
-            with silence_phones_file_path.open(mode='w') as fout:
-                fout.write('SIL\nsil\nspn\n')
+                # task copy-helper-scripts
+                # - cp {{ .KALDI_TEMPLATES }}/cmd.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
+                shutil.copy(f"{template_path.joinpath('cmd.sh')}", f"{local_kaldi_path}")
+                # - cp {{ .KALDI_TEMPLATES }}/run.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
+                with open(f"{template_path.joinpath('run.sh')}", 'r') as fin, \
+                        open(f"{local_kaldi_path.joinpath('run.sh')}", 'w') as fout:
+                    fout.write(fin.read().replace('lm_order=1', f"lm_order={self.ngram}"))
+                os.chmod(f"{local_kaldi_path.joinpath('run.sh')}", 0o774)
+                # - cp {{ .KALDI_TEMPLATES }}/score.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/local/
+                shutil.copy(f"{template_path.joinpath('score.sh')}", f"{kaldi_local}")
+                # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/steps {{ .KALDI_OUTPUT_PATH }}/kaldi/steps
+                run(f"cp -L -r /kaldi/egs/wsj/s5/steps {local_kaldi_path}/steps")
+                # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/utils {{ .KALDI_OUTPUT_PATH }}/kaldi/utils
+                run(f"cp -L -r /kaldi/egs/wsj/s5/utils {local_kaldi_path}/utils")
 
-            # task copy-helper-scripts
-            # - cp {{ .KALDI_TEMPLATES }}/cmd.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
-            shutil.copy(f"{template_path.joinpath('cmd.sh')}", f"{local_kaldi_path}")
-            # - cp {{ .KALDI_TEMPLATES }}/run.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
-            with open(f"{template_path.joinpath('run.sh')}", 'r') as fin, \
-                    open(f"{local_kaldi_path.joinpath('run.sh')}", 'w') as fout:
-                fout.write(fin.read().replace('lm_order=1', f"lm_order={self.ngram}"))
-            os.chmod(f"{local_kaldi_path.joinpath('run.sh')}", 0o774)
-            # - cp {{ .KALDI_TEMPLATES }}/score.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/local/
-            shutil.copy(f"{template_path.joinpath('score.sh')}", f"{kaldi_local}")
-            # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/steps {{ .KALDI_OUTPUT_PATH }}/kaldi/steps
-            run(f"cp -L -r /kaldi/egs/wsj/s5/steps {local_kaldi_path}/steps")
-            # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/utils {{ .KALDI_OUTPUT_PATH }}/kaldi/utils
-            run(f"cp -L -r /kaldi/egs/wsj/s5/utils {local_kaldi_path}/utils")
-
-            # modified extract-wavs
-            for audio_file in os.listdir(self.dataset.pathto.resampled):
-                src = f'{self.dataset.pathto.resampled.joinpath(audio_file)}'
-                dst = f'{local_kaldi_path}'
-                shutil.copy(src, dst)
-            print('done.')
+                # modified extract-wavs
+                for audio_file in os.listdir(self.dataset.pathto.resampled):
+                    src = f'{self.dataset.pathto.resampled.joinpath(audio_file)}'
+                    dst = f'{local_kaldi_path}'
+                    shutil.copy(src, dst)
+                print('done.')
+            except:
+                print('couldnt prepare kaldi dirs')
 
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')
