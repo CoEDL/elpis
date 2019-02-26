@@ -34,9 +34,10 @@ def new():
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
     m.link(ds)
     app.config['CURRENT_MODEL'] = m
+    data = {"config": m.config._load()}
     return jsonify({
         "status": "ok",
-        "data": m.config._load()
+        "data": data
     })
 
 
@@ -47,11 +48,14 @@ def load():
     # set the databundle to match the model
     app.config['CURRENT_DATABUNDLE'] = m.dataset
     app.config['CURRENT_MODEL'] = m
+    data = {
+        "config": m.config._load(),
+        "l2s": m.get_l2s_content()
+    }
     return jsonify({
         "status": "ok",
-        "data": m.config._load()
+        "data": data
     })
-
 
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
