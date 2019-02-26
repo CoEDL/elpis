@@ -27,10 +27,7 @@ class CurrentModelName extends Component {
         ) : (
             <Message negative>
                 { t('model.common.noCurrentModelLabel') }
-
-                {/* dont show this on dashboard */}
                 { link }
-
             </Message>
         )
 
