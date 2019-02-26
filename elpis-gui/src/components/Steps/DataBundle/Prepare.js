@@ -40,7 +40,8 @@ class DataBundlePrepare extends Component {
 
                             <h2>{ t('dataBundle.prepare.header') }</h2>
                             <p>{ t('dataBundle.prepare.bannerMessage') }</p>
-                            <p>{ t('dataBundle.prepare.bannerMessageDetailed') }</p>
+
+                            {/* <p>{ t('dataBundle.prepare.bannerMessageDetailed') }</p> */}
 
                             { wordlistTable }
 

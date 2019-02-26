@@ -4,7 +4,6 @@ import { Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Mes
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import ReactTimeout from 'react-timeout'
-import { LazyLog } from 'react-lazylog/es5';
 import { triggerApiWaiting, modelTrain, modelStatus } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -12,33 +11,43 @@ import CurrentModelName from "./CurrentModelName";
 import urls from 'urls'
 
 class ModelTrain extends Component {
-    state = {
-        dots: 0
-    }
 
     statusInterval = null
 
     componentDidMount = () => {
-        this.props.triggerApiWaiting('now training')
+        // this.props.triggerApiWaiting('now training')
     }
 
     handleModelTrain = () => {
-        console.log('train')
         this.props.modelTrain()
-        this.statusInterval = this.props.setInterval(this.handleModelStatus, 2000)
+        this.statusInterval = this.props.setInterval(this.handleModelStatus, 5000)
     }
 
     handleModelStatus = () => {
         const { status } = this.props;
-        console.log('status')
         this.props.modelStatus()
         if (status=='trained') this.props.clearInterval(this.statusInterval)
+    }
+
+
+    onScroll = () => {
+        console.log("onScroll")
+    }
+    follow = () => {
+        console.log("follow")
     }
 
     render() {
         const { t, name, settings, apiWaiting, status } = this.props;
 
         console.log('status', status)
+
+        const loadingIcon = (status === 'training') ? (
+            <Icon name='circle notched' loading  />
+        ) : null
+
+        const testUrl = 'https://runkit.io/eliperelman/streaming-endpoint/branches/master'
+        // const logUrl = 'http://0.0.0.0:9001'
 
         return (
             <div>
@@ -71,9 +80,8 @@ class ModelTrain extends Component {
                                 </Button>
                             </Segment>
 
-
                             <Message icon>
-                                <Icon name='circle notched' loading />
+                                { loadingIcon }
                                 <Message.Content>
                                     <Message.Header>{ status }</Message.Header>
                                 </Message.Content>
@@ -82,11 +90,10 @@ class ModelTrain extends Component {
                             <Card fluid>
                                 <Card.Content header={ t('model.train.logsHeader') } />
                                 <Card.Content description={ t('model.train.logsDescription') } />
-
                                 <div className="kaldi-log">
-                                    <LazyLog stream url={urls.api.model.log} />
-                                </div>
 
+
+                                </div>
                             </Card>
 
                             <Divider />
@@ -131,8 +138,6 @@ const mapDispatchToProps = dispatch => ({
     modelStatus: () => {
         dispatch(modelStatus())
     },
-
-
 })
 export default connect(
     mapStateToProps,

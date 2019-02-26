@@ -30,7 +30,7 @@ const model = (state = initState, action) => {
             }
 
 
-            case 'MODEL_LIST':
+        case 'MODEL_LIST':
             console.log("reducer got model list", action.response.data)
             return {
                 ...state,
@@ -42,7 +42,7 @@ const model = (state = initState, action) => {
             console.log("reducer got model new or load", action.response.data)
             return {
                 ...state,
-                name: action.response.data.data.name
+                name: action.response.data.data.config.name
             }
 
         case 'MODEL_NAME':
@@ -53,7 +53,7 @@ const model = (state = initState, action) => {
                 }
 
         case 'MODEL_L2S':
-            console.log("reducer got l2s", action.response.data)
+            console.log("reducer got l2s", action)
             return {
                 ...state,
                 l2s: action.response.data

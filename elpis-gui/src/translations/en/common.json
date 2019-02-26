@@ -47,8 +47,8 @@
         "prepare": {
             "title": "Data preparation",
             "header": "Overview of training corpus",
-            "bannerMessage": "Banner Message: text has been cleaned and normalised OK",
-            "bannerMessageDetailed": "Describe what has just happened for the novice user to better understand",
+            "bannerMessage": "Text has been cleaned and normalised OK",
+            "bannerMessageDetailed": "Punctuation has been removed.",
             "wordlistHeader": "Wordlist",
             "frequencyHeader": "Frequency",
             "nextButton": "Next"

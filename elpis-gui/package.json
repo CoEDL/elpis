@@ -23,8 +23,7 @@
     "redux-devtools-extension": "^2.13.7",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "^0.84.0",
-    "superagent": "^4.1.0"
+    "semantic-ui-react": "^0.84.0"
   },
   "scripts": {
     "start": "react-scripts start",
