@@ -1,5 +1,9 @@
 import {getFileExtension} from 'helpers'
 
+let audioFiles
+let transcriptionFiles
+let additionalTextFiles
+
 const initState = {
     name: "",
     dataBundleList: [],
@@ -32,9 +36,23 @@ const dataBundle = (state = initState, action) => {
         case 'DATA_BUNDLE_LOAD':
         case 'DATA_BUNDLE_NEW':
             console.log("reducer got data bundle new or load", action.response.data)
+            // action.data is an array of filenames. parse this, split into separate lists
+            audioFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'wav')
+            transcriptionFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'eaf')
+            additionalTextFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'txt')
+            audioFiles.sort()
+            transcriptionFiles.sort()
+            additionalTextFiles.sort()
+            // remove duplicates
+            audioFiles = [...(new Set(audioFiles))];
+            transcriptionFiles = [...(new Set(transcriptionFiles))];
             return {
                 ...state,
-                name: action.response.data.data.name
+                audioFiles,
+                transcriptionFiles,
+                additionalTextFiles,
+                name: action.response.data.data.name,
+                settings: {...state.settings, tier: action.response.data.data.tier}
             }
 
         case 'DATA_BUNDLE_NAME':
@@ -44,16 +62,13 @@ const dataBundle = (state = initState, action) => {
             }
 
         case 'DATA_BUNDLE_FILES':
-            // action.data is an array of filenames
-            // parse this, split into separate lists
-            let audioFiles = action.response.data.filter(file => getFileExtension(file) === 'wav')
-            let transcriptionFiles = action.response.data.filter(file => getFileExtension(file) === 'eaf')
-            let additionalTextFiles = action.response.data.filter(file => getFileExtension(file) === 'txt')
-
+            // action.data is an array of filenames. parse this, split into separate lists
+            audioFiles = action.response.data.filter(file => getFileExtension(file) === 'wav')
+            transcriptionFiles = action.response.data.filter(file => getFileExtension(file) === 'eaf')
+            additionalTextFiles = action.response.data.filter(file => getFileExtension(file) === 'txt')
             audioFiles.sort()
             transcriptionFiles.sort()
             additionalTextFiles.sort()
-
             // remove duplicates
             audioFiles = [...(new Set(audioFiles))];
             return {
