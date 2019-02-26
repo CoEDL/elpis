@@ -32,7 +32,7 @@ class DataBundleNew extends Component {
                             <Formik
                                 enableReinitialize
                                 initialValues={ {
-                                    name: name
+                                    name: ''
                                 } }
                                 validate={ values => {
                                     let errors = {};

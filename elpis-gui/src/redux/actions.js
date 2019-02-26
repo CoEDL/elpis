@@ -37,6 +37,7 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
+    dataBundleLoad: response => ({ type: 'DATA_BUNDLE_LOAD', response }),
     dataBundleList: response => ({ type: 'DATA_BUNDLE_LIST', response }),
     dataBundleNew: response => ({ type: 'DATA_BUNDLE_NEW', response }),
     dataBundleName: response => ({ type: 'DATA_BUNDLE_NAME', response }),
@@ -60,6 +61,10 @@ var successHandler = {
 
 // * * * * * * * * * * DATA BUNDLES * * * * * * * * * * * * * * *
 
+export const dataBundleLoad = postData => {
+    const url = baseUrl + urls.api.dataBundle.load
+    return postApi(url, postData, 'dataBundleLoad')
+}
 export const dataBundleList = () => {
     const url = baseUrl + urls.api.dataBundle.list
     return postApi(url, null, 'dataBundleList')

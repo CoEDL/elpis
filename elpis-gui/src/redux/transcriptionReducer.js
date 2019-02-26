@@ -6,8 +6,6 @@ const initState = {
 
 const transcription = (state = initState, action) => {
 
-    console.log("transcription reducer got", action.response)
-
     switch (action.type) {
         case 'TRANSCRIPTION_NEW':
             return {

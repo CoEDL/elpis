@@ -8,18 +8,18 @@ import { dataBundleSettings, dataBundlePrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import FileUpload from './FileUpload';
+import CurrentDataBundleName from "./CurrentDataBundleName";
 import urls from 'urls'
 
 class DataBundleFiles extends Component {
 
     handleNextButton = () => {
-        this.props.dataBundlePrepare()
         this.props.history.push('/data-bundle/prepare')
     }
 
     render() {
 
-        const { t, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
+        const { t, name, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
 
         const audioFileList = audioFiles.map(file => (
             <List.Item key={ file }>
@@ -57,6 +57,8 @@ class DataBundleFiles extends Component {
                             <Header as='h1'>
                                 { t('dataBundle.files.title') }
                             </Header>
+
+                            <CurrentDataBundleName name={ name } />
 
                             <Message attached content={ t('dataBundle.files.description') } />
 
@@ -170,6 +172,7 @@ class DataBundleFiles extends Component {
 
 const mapStateToProps = state => {
     return {
+        name: state.dataBundle.name,
         audioFiles: state.dataBundle.audioFiles,
         transcriptionFiles: state.dataBundle.transcriptionFiles,
         additionalTextFiles: state.dataBundle.additionalTextFiles,

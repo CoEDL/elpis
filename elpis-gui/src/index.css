@@ -40,12 +40,25 @@ code {
 }
 */
 
+.data-bundle-list {
+    padding-left: 0;
+}
+
+.data-bundle-list li {
+    padding: 0.5rem;
+    list-style-type: none;
+}
+
 .current-data-bundle,
 .current-model {
-    background-color: #D3A0F0;
+    background-color: #D3A0F0 !important;
 }
 
 .ReactVirtualized__Grid__innerScrollContainer {
     max-height: none !important;
     min-height: 100px !important;
+}
+
+li.no-lst {
+    list-style-type: none
 }

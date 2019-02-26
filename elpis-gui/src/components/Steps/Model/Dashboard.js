@@ -76,9 +76,8 @@ class ModelDashboard extends Component {
                 <Table.Body>
                     {
                         list.map(model => {
-                            const className = (name == model.name) ? 'current-model' : ''
+                            const className = (name === model.name) ? 'current-model' : ''
                             return (
-
                                 <Table.Row key={ model.name } className={ className }>
                                     <Table.Cell>
                                         <Button onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>

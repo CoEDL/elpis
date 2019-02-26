@@ -24,6 +24,7 @@ export default {
     },
     "api": {
         "dataBundle": {
+            "load": "/api/databundle/load",
             "list": "/api/databundle/list",
             "names": "/api/databundle/names",
             "new": "/api/databundle/new",

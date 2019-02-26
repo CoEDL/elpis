@@ -29,7 +29,9 @@ const dataBundle = (state = initState, action) => {
                 dataBundleList: action.response.data.data
             }
 
+        case 'DATA_BUNDLE_LOAD':
         case 'DATA_BUNDLE_NEW':
+            console.log("reducer got data bundle new or load", action.response.data)
             return {
                 ...state,
                 name: action.response.data.data.name
