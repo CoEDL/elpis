@@ -9,6 +9,7 @@ import { fromEvent } from "file-selector";
 import { transcriptionNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import CurrentModelName from "components/Steps/Model/CurrentModelName";
 import urls from 'urls'
 
 class NewTranscription extends Component {
@@ -21,7 +22,7 @@ class NewTranscription extends Component {
     }
 
     render() {
-        const { t, transcriptionAudio } = this.props;
+        const { t, name } = this.props;
         return (
             <div>
                 <Branding />
@@ -36,6 +37,7 @@ class NewTranscription extends Component {
                                 { t('transcription.new.title') }
                             </Header>
 
+                            <CurrentModelName name={ name } />
 
                             <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({ getRootProps, getInputProps, isDragActive }) => {
@@ -58,10 +60,6 @@ class NewTranscription extends Component {
                                 } }
                             </Dropzone>
 
-                            <p>
-                                transcriptionAudio: {transcriptionAudio}
-                            </p>
-
                             <Divider />
 
                             <Button as={ Link } to={ urls.gui.transcription.results }>
@@ -79,8 +77,7 @@ class NewTranscription extends Component {
 
 const mapStateToProps = state => {
     return {
-        // probably never gets seen..
-        transcriptionAudio: state.transcription.transcriptionAudio
+        name: state.model.name,
     }
 }
 

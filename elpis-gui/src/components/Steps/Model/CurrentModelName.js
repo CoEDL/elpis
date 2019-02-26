@@ -1,12 +1,23 @@
 import React, { Component } from 'react'
+import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Message } from 'semantic-ui-react';
+import urls from 'urls'
 
 class CurrentModelName extends Component {
 
     render() {
-        const { t, name } = this.props
+        const { t, name, match } = this.props
+
+        const link = (match.url !== urls.gui.model.index) ? (
+            <>
+            &nbsp;
+            <Link to={urls.gui.model.index}>
+                { t('model.common.chooseOrNewLabel') }
+            </Link>
+            </>
+        ) : ( null )
 
         const current = name ?
         (
@@ -16,6 +27,10 @@ class CurrentModelName extends Component {
         ) : (
             <Message negative>
                 { t('model.common.noCurrentModelLabel') }
+
+                {/* dont show this on dashboard */}
+                { link }
+
             </Message>
         )
 
@@ -30,4 +45,8 @@ const mapStateToProps = state => {
         name: state.model.name
     }
 }
-export default connect(mapStateToProps)(translate('common')(CurrentModelName))
+export default withRouter(
+    connect(mapStateToProps)(
+        translate('common')(CurrentModelName)
+    )
+)
