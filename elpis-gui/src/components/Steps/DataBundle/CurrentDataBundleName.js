@@ -21,7 +21,7 @@ class CurrentDataBundleName extends Component {
 
         const current = name ?
         (
-            <Message>
+            <Message color='olive'>
                 { t('dataBundle.common.currentDataBundleLabel') + name }
             </Message>
         ) : (

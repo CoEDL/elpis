@@ -21,7 +21,7 @@ class CurrentModelName extends Component {
 
         const current = name ?
         (
-            <Message>
+            <Message color='olive'>
                 { t('model.common.currentModelLabel') + name }
                 <br />
                 { t('dataBundle.common.currentDataBundleLabel') + dataBundleName }

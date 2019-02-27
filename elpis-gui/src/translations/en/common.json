@@ -16,7 +16,7 @@
             "chooseOrNewLabel": "Choose one."
         },
         "dashboard": {
-            "title": "Previous data bundles",
+            "title": "Data bundles",
             "noneMessage": "No bundles yet"
         },
         "new": {
@@ -64,7 +64,7 @@
             "chooseOrNewLabel": "Choose one."
         },
         "dashboard": {
-            "title": "Previous models",
+            "title": "Models",
             "noneMessage": "No models yet"
         },
         "new": {
