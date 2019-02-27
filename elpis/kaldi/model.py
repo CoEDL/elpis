@@ -30,7 +30,7 @@ class Model(FSObject):
         self.dataset: Dataset
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.config['l2s'] = None  # file has not been uploaded
-        self.config['ngram'] = 3
+        self.config['ngram'] = 1 # default to 1 to make playing quicker
         self.dataset = None
         self.config['status'] = 'untrained'
         self.status = 'untrained'
