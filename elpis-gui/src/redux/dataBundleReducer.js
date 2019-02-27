@@ -13,13 +13,7 @@ const initState = {
     settings: {
         tier: 'Phrase'
     },
-    wordlist: {
-        amakaang: 2,
-        di: 2,
-        hada: 2,
-        kaai: 2,
-        muila: 2
-    }
+    wordlist: {}
 }
 
 
@@ -86,10 +80,16 @@ const dataBundle = (state = initState, action) => {
             }
 
         case 'DATA_BUNDLE_PREPARE':
-            console.log("wordlist", action.response.data)
+            // console.log("wordlist", action.response.data)
+            // change the format of wordlist for better UI display
+            // TODO do this in the backend
+            const data = action.response.data
+            const wordlist = Object.keys(data).map(function (key) {
+                return ({name:key, frequency: data[key]})
+            })
             return {
                 ...state,
-                wordlist: action.response.data
+                wordlist
             }
 
         default:

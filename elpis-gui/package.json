@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "array-sort": "^1.0.0",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "downloadjs": "^1.4.7",

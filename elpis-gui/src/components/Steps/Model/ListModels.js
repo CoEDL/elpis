@@ -10,7 +10,7 @@ class ListModels extends Component {
     render() {
         return (
             <div>
-                models
+                TODO: list models here
             </div>
         )}
 }

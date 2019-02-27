@@ -1,56 +1,51 @@
 import React, { Component } from 'react';
-import { Grid, Header, List, Segment, Icon, Button, Table } from 'semantic-ui-react';
+import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { modelList, modelLoad } from 'redux/actions';
-import _ from 'lodash'
+// import _ from 'lodash'
+import arraySort from 'array-sort'
+
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
-import ListModels from "./ListModels";
+// import ListModels from "./ListModels";
 import CurrentModelName from "./CurrentModelName";
 
 class ModelDashboard extends Component {
 
     state = {
         column: null,
-        data: [],
-        direction: null,
+        reverse: false
     }
 
     componentDidMount() {
-        const { modelList } = this.props
-        modelList()
+        this.props.modelList()
     }
 
     handleSort = (clickedColumn, data) => () => {
-        const { column, direction } = this.state
+        const { column } = this.state
 
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
-                // data: _.sortBy(data, [clickedColumn]),
-                direction: 'ascending',
+                reverse: false,
             })
-            return
-        }
-
-        if (data) {
+            arraySort(data, clickedColumn, { reverse: false })
+        } else {
             this.setState({
-                data: data.reverse(),
-                direction: direction === 'ascending' ? 'descending' : 'ascending',
+                reverse: ! this.state.reverse
             })
+            arraySort(data, clickedColumn, { reverse: ! this.state.reverse })
         }
     }
 
     handleLoad = name => {
-        const { modelLoad } = this.props
-        console.log("handleLoad name", name)
         const postData = { name: name }
-        modelLoad(postData)
+        this.props.modelLoad(postData)
     }
 
     render() {
-        const { t, name, list } = this.props;
+        const { t, name, list } = this.props
         const { column, direction } = this.state
 
         console.log("list", list)

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Divider, Grid, Header, Segment, List, Button } from 'semantic-ui-react';
+import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import _ from 'lodash'
+// import _ from 'lodash'
+import arraySort from 'array-sort'
 import { dataBundlePrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -12,25 +13,73 @@ import urls from 'urls'
 
 class DataBundlePrepare extends Component {
 
+    state = {
+        column: null,
+        reverse: false
+    }
+
     componentDidMount() {
         this.props.dataBundlePrepare()
     }
 
-    render() {
-        const { t, name, wordlist } = this.props;
+    handleSort = (clickedColumn, data) => () => {
+        const { column } = this.state
 
-        const wordlistTable = wordlist ? (
-            <Segment>
-                <Header as='h1'>{ t('dataBundle.prepare.wordlistHeader') }</Header>
-                <ul>
+        if (column !== clickedColumn) {
+            this.setState({
+                column: clickedColumn,
+                reverse: false,
+            })
+            arraySort(data, clickedColumn, { reverse: false })
+        } else {
+            this.setState({
+                reverse: ! this.state.reverse
+            })
+            arraySort(data, clickedColumn, { reverse: ! this.state.reverse })
+        }
+    }
+
+    render() {
+        const { t, name, list } = this.props
+        const { column, direction } = this.state
+
+        console.log("list", list)
+
+        const listEl = list.length > 0 ? (
+            <Table sortable celled fixed unstackable>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell
+                            sorted={ column === 'name' ? direction : null }
+                            onClick={ this.handleSort('name', list) }
+                        >
+                            Name
+                        </Table.HeaderCell>
+                        <Table.HeaderCell
+                            sorted={ column === 'frequency' ? direction : null }
+                            onClick={ this.handleSort('frequency', list) }
+                        >
+                            Frequency
+                        </Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
                     {
-                        Object.keys(wordlist).map(function (key) {
-                            return (<li className="no-lst" key={key}>{key} {wordlist[key]}</li>)
+                        list.map(word => {
+                            return (
+                                <Table.Row key={ word.name }>
+                                    <Table.Cell>
+                                        { word.name }
+                                    </Table.Cell>
+                                    <Table.Cell>{ word.frequency }</Table.Cell>
+                                </Table.Row>
+                            )
                         })
                     }
-                </ul>
-            </Segment>
-        ) : null
+                </Table.Body>
+            </Table>
+
+        ) : <p>{ t('model.dashboard.noneMessage') }</p>
 
         return (
             <div>
@@ -50,7 +99,9 @@ class DataBundlePrepare extends Component {
 
                             {/* <p>{ t('dataBundle.prepare.bannerMessageDetailed') }</p> */}
 
-                            { wordlistTable }
+                            {/* { wordlistTable } */}
+
+                            { listEl }
 
                             <Button as={ Link } to={urls.gui.model.new}>
                                 { t('dataBundle.prepare.nextButton') }
@@ -67,7 +118,7 @@ class DataBundlePrepare extends Component {
 const mapStateToProps = state => {
     return {
         name: state.dataBundle.name,
-        wordlist: state.dataBundle.wordlist
+        list: state.dataBundle.wordlist
     }
 }
 
