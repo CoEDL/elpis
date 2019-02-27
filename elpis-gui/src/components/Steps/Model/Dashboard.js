@@ -3,7 +3,6 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { modelList, modelLoad } from 'redux/actions';
-// import _ from 'lodash'
 import arraySort from 'array-sort'
 
 import Branding from 'components/Steps/Shared/Branding';
@@ -47,8 +46,6 @@ class ModelDashboard extends Component {
     render() {
         const { t, name, list } = this.props
         const { column, direction } = this.state
-
-        console.log("list", list)
 
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>

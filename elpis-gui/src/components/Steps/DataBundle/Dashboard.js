@@ -15,14 +15,12 @@ class DataBundleDashboard extends Component {
 
     handleLoad = name => {
         const { dataBundleLoad } = this.props
-        console.log("handleLoad name", name)
         const postData = { name: name }
         dataBundleLoad(postData)
     }
 
     render() {
         const { t, list, currentName } = this.props;
-        console.log('dataBundleList', list)
         const listEl = list.length > 0 ? (
             <ul className="data-bundle-list">
                 {list.map( name => {
