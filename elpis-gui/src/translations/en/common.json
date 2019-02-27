@@ -77,7 +77,7 @@
         "l2s": {
             "title": "Upload Letter to Sound rules",
             "header": "Letter to sound file",
-            "description": "The letter to sound file is used to build a pronunciation dictionary for the corpus. Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols.  \n\n For example: \n n n \n ng ŋ \n r r \n y j",
+            "description": "The letter to sound file is used to build a pronunciation dictionary for the corpus. Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols. You can include comments in this file by beginning the comment line with #. For example: \n\n # This is a comment \n n n \n ng ŋ \n r r \n y j",
             "dropFilesHint": "Click here to upload your l2s file, or drop one here",
             "dropFilesHintDragActive": "Here here..",
             "uploadButton": "Upload",
