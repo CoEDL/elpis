@@ -63,6 +63,7 @@ li.no-lst {
     list-style-type: none
 }
 
+.ui.form .error,
 .ui.message .content {
     white-space: pre-line;
 }

@@ -3,7 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import { Button, Checkbox, Divider, Form, Grid, Header, Input, List, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { Formik } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import { dataBundleSettings, dataBundlePrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -106,9 +106,9 @@ class DataBundleFiles extends Component {
                                         if (!values.tier) {
                                             errors.tier = 'Required';
                                         } else if (
-                                            !/^[A-Za-z ]+$/i.test(values.tier)
+                                            !/^[ 0-9a-zA-Z\-_@]+$/i.test(values.tier)
                                         ) {
-                                            errors.tier = 'Invalid tier name';
+                                            errors.tier = t('dataBundle.files.tierErrorMessage');
                                         }
                                         return errors;
                                     } }
@@ -143,6 +143,7 @@ class DataBundleFiles extends Component {
                                                         name="tier"
                                                         type="text"
                                                         onChange={ handleChange } />
+                                                    <ErrorMessage component="div" className="error" name="tier" />
                                                 </Form.Field>
                                                 <Button onClick={ handleSubmit } >
                                                     { t('dataBundle.files.saveButton') }
