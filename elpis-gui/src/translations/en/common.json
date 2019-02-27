@@ -84,7 +84,7 @@
         },
         "lexicon": {
             "title": "Review the lexicon",
-            "description": "This pronunciation lexicon has been generated from the wordlist and letter-to-sound rules you uploaded. Check it before training.",
+            "description": "The pronunciation lexicon is generated from the wordlist and letter-to-sound rules you uploaded. Check it before training.",
             "nextButton": "Next"
         },
         "settings": {
