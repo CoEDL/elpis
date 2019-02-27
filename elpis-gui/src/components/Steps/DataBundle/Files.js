@@ -108,21 +108,13 @@ class DataBundleFiles extends Component {
                                         } else if (
                                             !/^[ 0-9a-zA-Z\-_@]+$/i.test(values.tier)
                                         ) {
-                                            errors.tier = t('dataBundle.files.tierErrorMessage');
+                                            errors.tier = t('dataBundle.common.invalidCharacterErrorMessage');
                                         }
                                         return errors;
                                     } }
                                     onSubmit={ (values, { setSubmitting }) => {
-                                        // demo
-                                        // setTimeout(() => {
-                                        //     alert(JSON.stringify(values, null, 2));
-                                        //     setSubmitting(false);
-                                        // }, 400);
-
-                                        // redux action
                                         const postData = { tier: values.tier }
                                         dataBundleSettings(postData)
-
                                     } }
                                 >
                                     { ({

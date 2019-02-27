@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { Formik } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import { modelNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -37,24 +37,15 @@ class ModelNew extends Component {
                                     if (!values.name) {
                                         errors.name = 'Required';
                                     } else if (
-                                        !/^[A-Za-z ]+$/i.test(values.name)
+                                        !/^[ 0-9a-zA-Z\-_@]+$/i.test(values.name)
                                     ) {
-                                        errors.name = 'Invalid name';
+                                        errors.name = t('common.invalidCharacterErrorMessage');
                                     }
                                     return errors;
                                 } }
                                 onSubmit={ (values, { setSubmitting }) => {
-                                    // demo
-                                    // setTimeout(() => {
-                                    //     alert(JSON.stringify(values, null, 2));
-                                    //     setSubmitting(false);
-                                    // }, 400);
-
-                                    // redux action
                                     const postData = {name:values.name}
                                     modelNew(postData)
-
-                                    // go to next page
                                     this.props.history.push(urls.gui.model.l2s)
                                 } }
                             >
@@ -77,6 +68,7 @@ class ModelNew extends Component {
                                                     name="name"
                                                     type="text"
                                                     onChange={ handleChange } />
+                                                    <ErrorMessage component="div" className="error" name="name" />
                                             </Form.Field>
                                             <Button onClick={ handleSubmit } >
                                                 { t('model.new.nextButton') }

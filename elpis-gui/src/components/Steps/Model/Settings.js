@@ -53,17 +53,8 @@ class ModelSettings extends Component {
                                     return errors;
                                 } }
                                 onSubmit={ (values, { setSubmitting }) => {
-                                     // demo
-                                    //  setTimeout(() => {
-                                    //     alert(JSON.stringify(newSettings, null, 2));
-                                    //     setSubmitting(false);
-                                    // }, 400);
-
-                                    // redux action
                                     const postData = {ngram: values.ngram}
                                     modelSettings(postData)
-
-                                    // go to next page
                                     this.props.history.push(urls.gui.model.train)
                                 } }
                             >
