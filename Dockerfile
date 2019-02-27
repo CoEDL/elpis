@@ -111,6 +111,9 @@ RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/
 # Clean up package manager
 RUN apt-get clean autoclean
 
+# Add random number generator to skip Docker building cache
+ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+
 # Elpis
 WORKDIR /
 RUN git clone https://github.com/CoEDL/elpis.git
@@ -131,12 +134,10 @@ RUN cd /tmp && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussel
 
 WORKDIR /kaldi-helpers
 
-# Add random number generator to skip Docker building cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
-RUN git pull
-
+RUN echo "FLASK_ENV=development" >> ~/.bashrc
+RUN echo "FLASK_APP=elpis" >> ~/.bashrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.bashrc
 RUN echo "export LANG=C.UTF-8" >> ~/.bashrc
 
 EXPOSE 5000:5000
-EXPOSE
+EXPOSE 8008:8008
