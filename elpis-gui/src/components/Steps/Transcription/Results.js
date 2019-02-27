@@ -7,6 +7,7 @@ import downloadjs from 'downloadjs'
 import { transcriptionElan } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import CurrentModelName from "components/Steps/Model/CurrentModelName";
 
 class NewTranscriptionResults extends Component {
 
@@ -22,28 +23,29 @@ class NewTranscriptionResults extends Component {
     }
 
     render() {
-        const { t, elan } = this.props;
-        console.log(elan)
-        // TODO get this from redux?
-        const modelName = "English-Indonesian 5-gram with Indonesian 12s"
-        const audioName = "some-audio.wav"
+        const { t, elan, name, audioFile } = this.props;
+        console.log("elan", elan)
+        console.log("audioFile", audioFile)
 
         return (
             <div>
                 <Branding />
                 <Segment>
                     <Grid centered>
+
                         <Grid.Column width={ 4 }>
                             <Informer />
                         </Grid.Column>
 
                         <Grid.Column width={ 12 }>
+
                             <Header as='h1' text='true'>
                                 { t('transcription.results.title') }
                             </Header>
 
-                            <p>{ t('transcription.results.usingModel', { modelName }) } </p>
-                            <p>{ t('transcription.results.usingAudio', { audioName }) } </p>
+                            <CurrentModelName name={ name } />
+
+                            <p>{ t('transcription.results.usingAudio') } { audioFile } </p>
 
                             <Card fluid>
                                 <Card.Content header={ t('transcription.results.errorLogHeader') } />
@@ -56,7 +58,6 @@ class NewTranscriptionResults extends Component {
                             </Card>
 
                             <Divider />
-
 
                             <Button onClick={ this.handleElanBuild }>
                                 Build Elan
@@ -77,7 +78,9 @@ class NewTranscriptionResults extends Component {
 
 const mapStateToProps = state => {
     return {
-        elan: state.transcription.elan
+        name: state.model.name,
+        elan: state.transcription.elan,
+        audioFile: state.transcription.audioFile
     }
 }
 

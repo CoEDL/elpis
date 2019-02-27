@@ -151,7 +151,7 @@ export const transcriptionElan = postData => {
     return postApi(url, null, 'transcriptionElan')
 }
 
-// TODO: action to download PRAAT file
+export const transcriptionAudio = audioFile => ({ type: 'TRANSCRIPTION_AUDIO', audioFile })
 
 
 // * * * * * * * * * * GENERAL * * * * * * * * * * * * * * *

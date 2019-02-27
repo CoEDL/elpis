@@ -6,7 +6,7 @@ import { translate } from 'react-i18next';
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
-import { transcriptionNew } from 'redux/actions';
+import { transcriptionNew, transcriptionAudio } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "components/Steps/Model/CurrentModelName";
@@ -18,11 +18,11 @@ class NewTranscription extends Component {
         console.log("files dropped:", acceptedFiles);
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
-        this.props.transcriptionNew(formData);
+        this.props.transcriptionNew(formData, acceptedFiles[0].name);
     }
 
     render() {
-        const { t, name } = this.props;
+        const { t, audioFile, name } = this.props;
         return (
             <div>
                 <Branding />
@@ -60,6 +60,8 @@ class NewTranscription extends Component {
                                 } }
                             </Dropzone>
 
+                            { audioFile }
+
                             <Divider />
 
                             <Button as={ Link } to={ urls.gui.transcription.results }>
@@ -78,11 +80,13 @@ class NewTranscription extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
+        audioFile: state.transcription.audioFile,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    transcriptionNew: postData => {
+    transcriptionNew: (postData, fileName) => {
+        dispatch(transcriptionAudio(fileName));
         dispatch(transcriptionNew(postData));
     }
 })
