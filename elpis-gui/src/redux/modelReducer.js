@@ -73,7 +73,7 @@ const model = (state = initState, action) => {
         case 'MODEL_SETTINGS':
             return {
                 ...state,
-                settings: action.response.data
+                settings: action.response.data.data
             }
 
         case 'MODEL_TRAIN':
