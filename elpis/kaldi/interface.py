@@ -118,11 +118,16 @@ class KaldiInterface(FSObject):
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
+                name = json.load(fin)['name']
+                models.append(name)
+        return models
+
+    def list_models_verbose(self):
+        models = []
+        for hash_dir in os.listdir(f'{self.models_path}'):
+            with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
                 data = json.load(fin)
                 model = {'name': data['name'], 'dataset_name': data['dataset_name']}
-                # name = json.load(fin)['name']
-                # dataset_name = json.load(fin)['dataset_name']
-                # print(dataset_name)
                 models.append(model)
         return models
 
