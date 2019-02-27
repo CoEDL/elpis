@@ -111,8 +111,8 @@ def generate_lexicon():
 def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     # TODO see the two todos below
-    results = {'wer': 1, 'del': 1, 'ins': 2, 'sub': 3}
-    lx = [{'name': name, 'results': results} for name in kaldi.list_models()]
+    fake_results = {'wer': 1, 'del': 1, 'ins': 2, 'sub': 3}
+    lx = [{'name': model['name'], 'results': fake_results, 'dataset_name': model['dataset_name']} for model in kaldi.list_models()]
     return jsonify({
         "status": "ok",
         "data": lx
