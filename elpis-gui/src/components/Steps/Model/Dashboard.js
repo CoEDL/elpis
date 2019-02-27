@@ -40,6 +40,7 @@ class ModelDashboard extends Component {
 
     handleLoad = name => {
         const postData = { name: name }
+        console.log('handle load name', name)
         this.props.modelLoad(postData)
     }
 
