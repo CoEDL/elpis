@@ -32,7 +32,10 @@ class ModelSettings extends Component {
 
                             <Message content={ t('model.settings.description') } />
 
+                            <Message attached content={ t('model.settings.ngramDescription') } />
+
                             <Formik
+                                className="attached"
                                 enableReinitialize
                                 initialValues={ {
                                     ngram: settings.ngram

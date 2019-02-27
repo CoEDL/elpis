@@ -62,3 +62,7 @@ code {
 li.no-lst {
     list-style-type: none
 }
+
+.ui.message .content {
+    white-space: pre-line;
+}

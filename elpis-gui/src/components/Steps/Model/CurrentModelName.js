@@ -8,7 +8,7 @@ import urls from 'urls'
 class CurrentModelName extends Component {
 
     render() {
-        const { t, name, match } = this.props
+        const { t, dataset_name, name, match } = this.props
 
         const link = (match.url !== urls.gui.model.index) ? (
             <>
@@ -23,6 +23,8 @@ class CurrentModelName extends Component {
         (
             <Message>
                 { t('model.common.currentModelLabel') + name }
+                <br />
+                { t('dataBundle.common.currentDataBundleLabel') + dataset_name }
             </Message>
         ) : (
             <Message negative>
@@ -39,7 +41,8 @@ class CurrentModelName extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.model.name
+        name: state.model.name,
+        dataset_name: state.model.dataset_name
     }
 }
 export default withRouter(

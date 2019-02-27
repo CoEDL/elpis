@@ -8,8 +8,9 @@ muila m u I l a
 `;
 
 const initState = {
-    name: "",
     modelList: [],
+    name: '',
+    dataBundleName: '',
     date: null,
     l2s: '',
     lexicon: '',
@@ -43,7 +44,9 @@ const model = (state = initState, action) => {
             return {
                 ...state,
                 name: action.response.data.data.config.name,
-                l2s: action.response.data.data.l2s
+                l2s: action.response.data.data.l2s,
+                dataBundleName: action.response.data.data.config.dataset_name,
+                settings: {...state.settings, ngram: action.response.data.data.config.ngram}
             }
 
         case 'MODEL_NAME':

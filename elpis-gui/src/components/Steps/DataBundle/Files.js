@@ -92,9 +92,11 @@ class DataBundleFiles extends Component {
                                 <Header as='h3'>
                                     { t('dataBundle.files.settingsHeader') }
                                 </Header>
-                                { t('dataBundle.files.settingsDescription') }
+
+                                <Message attached content={ t('dataBundle.files.settingsDescription') } />
 
                                 <Formik
+                                    className="attached"
                                     enableReinitialize
                                     initialValues={ {
                                         tier: settings.tier

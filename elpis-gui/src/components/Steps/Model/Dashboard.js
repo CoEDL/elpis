@@ -47,6 +47,8 @@ class ModelDashboard extends Component {
         const { t, name, list } = this.props
         const { column, direction } = this.state
 
+        console.log("list", list)
+
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
                 <Table.Header>
@@ -56,6 +58,12 @@ class ModelDashboard extends Component {
                             onClick={ this.handleSort('name', list) }
                         >
                             Name
+                        </Table.HeaderCell>
+                        <Table.HeaderCell
+                            sorted={ column === 'dataset_name' ? direction : null }
+                            onClick={ this.handleSort('dataset_name', list) }
+                        >
+                            Data
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'wer' ? direction : null }
@@ -74,6 +82,7 @@ class ModelDashboard extends Component {
                                     <Table.Cell>
                                         <Button onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
                                     </Table.Cell>
+                                    <Table.Cell>{ model.dataset_name }</Table.Cell>
                                     <Table.Cell>{ model.results.wer }</Table.Cell>
                                 </Table.Row>
                             )

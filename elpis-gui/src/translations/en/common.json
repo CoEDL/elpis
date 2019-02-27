@@ -27,12 +27,12 @@
         },
         "files": {
             "title": "Add data",
-            "description": "Upload your training and testing data here. Audio should be 44.1kHz, Audio files and transcription files must have matching filenames.",
+            "description": "Upload your training and testing data here. \n Please use 44.1kHz WAV format audio, and .eaf Elan transcription files. \n Audio files and transcription files must have matching filenames.",
             "filesHeader": "Uploaded files",
             "settingsHeader": "Settings",
             "tierLabel": "tier name",
-            "settingsDescription": "Some info about the settings",
-            "saveButton": "Save",
+            "settingsDescription": "What is the name of the Elan tier that your transcriptions are on?",
+            "saveButton": "Save Settings",
             "nextButton": "Next",
             "nextButtonError": "(Simulate a data input error)"
         },
@@ -76,7 +76,7 @@
         "l2s": {
             "title": "Upload Letter to Sound rules",
             "header": "Letter to sound file",
-            "description": "The letter to sound file is used to build a pronunciation dictionary for the corpus. Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols. ",
+            "description": "The letter to sound file is used to build a pronunciation dictionary for the corpus. Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols.  \n\n For example: \n n n \n ng ŋ \n r r \n y j",
             "dropFilesHint": "Click here to upload your l2s file, or drop one here",
             "dropFilesHintDragActive": "Here here..",
             "uploadButton": "Upload",
@@ -93,6 +93,7 @@
             "advancedHeader": "Advanced",
             "audioLabel": "Audio Frequency",
             "mfccLabel": "MFCC stuff",
+            "ngramDescription": "n-gram value of 1 will set the system to learn single words. To make the system learn from words and their context (neighbouring words), set the n-gram to 2 or 3.",
             "ngramLabel": "n-gram",
             "beamLabel": "Beam size",
             "nextButton": "Next"
