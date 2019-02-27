@@ -85,7 +85,7 @@
         },
         "lexicon": {
             "title": "Review the lexicon",
-            "description": "The pronunciation lexicon is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in yout letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
+            "description": "The pronunciation lexicon is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
             "nextButton": "Next"
         },
         "settings": {
