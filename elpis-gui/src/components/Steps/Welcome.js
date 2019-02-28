@@ -23,20 +23,20 @@ class StepWelcome extends Component {
 					<Grid.Column>
 
 						<Segment>
-							<Button as={ Link } to="/data-bundles">
-								{ t('welcome.dataBundlesButton') }
-							</Button>
-							<Button as={ Link } to="/models">
-								{ t('welcome.modelsButton') }
-							</Button>
-						</Segment>
-
-						<Segment>
 							<Button as={ Link } to="/data-bundle/new">
 								{ t('welcome.newDataBundleButton') }
 							</Button>
 							<Button as={ Link } to="/model/new">
 								{ t('welcome.newModelButton') }
+							</Button>
+						</Segment>
+
+						<Segment>
+							<Button as={ Link } to="/data-bundles">
+								{ t('welcome.dataBundlesButton') }
+							</Button>
+							<Button as={ Link } to="/models">
+								{ t('welcome.modelsButton') }
 							</Button>
 						</Segment>
 

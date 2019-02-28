@@ -41,7 +41,7 @@ class NewTranscriptionResults extends Component {
         console.log("audioFile", audioFile)
         console.log('status', status)
 
-        const loadingIcon = (status === 'training') ? (
+        const loadingIcon = (status === 'transcribing') ? (
             <Icon name='circle notched' loading  />
         ) : null
 
