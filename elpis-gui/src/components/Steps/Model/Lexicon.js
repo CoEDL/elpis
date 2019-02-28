@@ -11,8 +11,16 @@ import urls from 'urls'
 
 class ModelLexicon extends Component {
     componentDidMount() {
-        const {modelLexicon} = this.props
-        modelLexicon()
+        const { l2s, modelLexicon } = this.props
+        console.log("ModelLexicon has l2s?", l2s)
+
+        // TODO get this from a status code instead of some string
+        if ((l2s === '') || (l2s === 'No l2s yet')) {
+            console.log("No l2s yet")
+        } else {
+            // only do this if we have real l2s data
+            modelLexicon()
+        }
     }
 
     render() {
@@ -60,6 +68,7 @@ const mapStateToProps = state => {
     return {
         lexicon: state.model.lexicon,
         name: state.model.name,
+        l2s: state.model.l2s,
     }
 }
 
