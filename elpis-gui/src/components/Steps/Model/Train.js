@@ -25,8 +25,8 @@ class ModelTrain extends Component {
     }
 
     handleModelStatus = () => {
-        const { status } = this.props;
-        this.props.modelStatus()
+        const { status, modelStatus } = this.props;
+        modelStatus()
         if (status=='trained') this.props.clearInterval(this.statusInterval)
     }
 
@@ -46,9 +46,6 @@ class ModelTrain extends Component {
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />
         ) : null
-
-        const testUrl = 'https://runkit.io/eliperelman/streaming-endpoint/branches/master'
-        // const logUrl = 'http://0.0.0.0:9001'
 
         return (
             <div>
@@ -146,8 +143,6 @@ const mapDispatchToProps = dispatch => ({
         dispatch(modelStatus())
     },
 })
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps)(
+export default connect(mapStateToProps, mapDispatchToProps)(
     translate('common')(
-    ReactTimeout(ModelTrain)));
+    ReactTimeout(ModelTrain)))

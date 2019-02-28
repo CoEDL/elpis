@@ -1,7 +1,7 @@
 const initState = {
     audioFile: '',
     elan: null,
-    status: ''
+    status: 'ready'
 }
 
 const transcription = (state = initState, action) => {
@@ -27,6 +27,12 @@ const transcription = (state = initState, action) => {
                 audioFile: action.audioFile
             }
 
+        case 'TRANSCRIPTION_STATUS':
+            console.log("TRANSCRIPTION_STATUS", action.response.data.data)
+            return {
+                ...state,
+                status: action.response.data.data
+            }
         default:
             return state;
     }

@@ -48,9 +48,8 @@ export default {
         },
         "transcription": {
             "new": "/api/transcription/new",
+            "status": "/api/transcription/status",
             "elan": "/api/transcription/elan"
         }
-
-
     }
 }

@@ -141,7 +141,9 @@
             "usingAudio": "for audio {{audioName}}",
             "errorLogHeader": "Error Log",
             "resultsHeader": "Transcription as text",
-            "downloadElanButton": "Download ELAN file here",
+            "downloadButtonsNotReadyYet": "download buttons will be available when the data has been transcribed",
+            "buildElanButton": "1. Build ELAN file",
+            "downloadElanButton": "2. Download ELAN file",
             "downloadPraatButton": "Download TextGrid PRAAT file here"
         }
     },

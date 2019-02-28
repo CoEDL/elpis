@@ -56,6 +56,7 @@ var successHandler = {
     modelStatus: response => ({ type: 'MODEL_STATUS', response }),
 
     transcriptionNew: response => ({ type: 'TRANSCRIPTION_NEW', response }),
+    transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
     transcriptionElan: response => ({ type: 'TRANSCRIPTION_ELAN', response })
 }
 
@@ -150,7 +151,11 @@ export const transcriptionElan = postData => {
     const url = baseUrl + urls.api.transcription.elan
     return postApi(url, null, 'transcriptionElan')
 }
-
+export const transcriptionStatus = () => {
+    console.log("transcriptionStatus")
+    const url = baseUrl + urls.api.transcription.status
+    return postApi(url, null, 'transcriptionStatus')
+}
 export const transcriptionAudio = audioFile => ({ type: 'TRANSCRIPTION_AUDIO', audioFile })
 
 
