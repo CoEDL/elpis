@@ -58,8 +58,11 @@ class Model(FSObject):
             fout.write(content)
 
     def get_l2s_content(self):
-        with self.l2s_path.open(mode='r') as fin:
-            return fin.read()
+        try:
+            with self.l2s_path.open(mode='r') as fin:
+                return fin.read()
+        except FileNotFoundError:
+            return 'No l2s file yet'
 
     @property
     def status(self):
