@@ -13,7 +13,6 @@ import CurrentModelName from "components/Steps/Model/CurrentModelName";
 class NewTranscriptionResults extends Component {
 
     componentDidMount = () => {
-        const { status, transcriptionStatus } = this.props;
         this.statusInterval = this.props.setInterval(this.handleTranscriptionStatus, 5000)
     }
 
@@ -21,7 +20,7 @@ class NewTranscriptionResults extends Component {
         const { status, transcriptionStatus } = this.props;
         console.log("status")
         transcriptionStatus()
-        if (status=='trained') this.props.clearInterval(this.statusInterval)
+        if (status==='transcribed') this.props.clearInterval(this.statusInterval)
     }
 
     handleElanBuild = () => {
