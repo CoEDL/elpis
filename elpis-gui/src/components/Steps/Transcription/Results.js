@@ -17,10 +17,16 @@ class NewTranscriptionResults extends Component {
     }
 
     handleTranscriptionStatus = () => {
-        const { status, transcriptionStatus } = this.props;
+        const { status, transcriptionStatus, transcriptionElan } = this.props;
         console.log("status")
         transcriptionStatus()
-        if (status==='transcribed') this.props.clearInterval(this.statusInterval)
+        if (status==='transcribed') {
+            this.props.clearInterval(this.statusInterval)
+            // build the Elan
+            transcriptionElan()
+        }
+
+
     }
 
     handleElanBuild = () => {
@@ -31,7 +37,6 @@ class NewTranscriptionResults extends Component {
     handleElanDownload = () => {
         const { elan } = this.props
         downloadjs(elan, 'elan.eaf', 'text/xml');
-
     }
 
     render() {
@@ -45,12 +50,8 @@ class NewTranscriptionResults extends Component {
             <Icon name='circle notched' loading  />
         ) : null
 
-        const elanButtons = (status==='transcribed') ? (
+        const elanButtons = (status==='transcribed' && elan) ? (
             <Segment>
-                <Button onClick={ this.handleElanBuild }>
-                { t('transcription.results.buildElanButton') }
-                </Button>
-
                 <Button onClick={ this.handleElanDownload }>
                 { t('transcription.results.downloadElanButton') }
                 </Button>
