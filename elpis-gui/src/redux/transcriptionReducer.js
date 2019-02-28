@@ -29,7 +29,6 @@ const transcription = (state = initState, action) => {
             }
 
         case 'TRANSCRIPTION_STATUS':
-            console.log("TRANSCRIPTION_STATUS", action.response.data.data)
             return {
                 ...state,
                 status: action.response.data.data

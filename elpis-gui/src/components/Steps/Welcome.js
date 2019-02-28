@@ -47,23 +47,7 @@ class StepWelcome extends Component {
 						</Segment>
 
 						<Segment>
-							<Header as='h2'>Instructional Video</Header>
-							<p>{ t('welcome.intro', { passInSomething: "memememe" }) }</p>
-						</Segment>
-
-						<Segment>
-							<p>{ t('welcome.stepPlaceholder') }</p>
-							<Placeholder>
-								<Placeholder.Header>
-									<Placeholder.Line />
-									<Placeholder.Line />
-								</Placeholder.Header>
-								<Placeholder.Paragraph>
-									<Placeholder.Line />
-									<Placeholder.Line />
-									<Placeholder.Line />
-								</Placeholder.Paragraph>
-							</Placeholder>
+						More information here..
 						</Segment>
 
 					</Grid.Column>
