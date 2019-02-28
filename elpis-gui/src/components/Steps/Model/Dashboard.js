@@ -102,7 +102,7 @@ class ModelDashboard extends Component {
                                 { t('model.dashboard.title') }
                             </Header>
 
-                            <CurrentModelName name={ name } />
+                            <CurrentModelName />
 
                             {/* <ListModels /> */ }
 

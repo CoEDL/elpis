@@ -24,7 +24,7 @@ class ModelLexicon extends Component {
     }
 
     render() {
-        const { t, lexicon, name } = this.props;
+        const { t, lexicon } = this.props;
         return (
             <div>
                 <Branding />
@@ -40,7 +40,7 @@ class ModelLexicon extends Component {
                                 { t('model.lexicon.title') }
                             </Header>
 
-                            <CurrentModelName name={ name } />
+                            <CurrentModelName />
 
                             <Message content={ t('model.lexicon.description') } />
 

@@ -23,7 +23,7 @@ class ModelL2S extends Component {
     }
 
     render() {
-        const { t, l2s, name } = this.props;
+        const { t, l2s } = this.props;
         console.log("l2s", l2s)
         const pron = l2s ? (
             <Segment>
@@ -49,7 +49,7 @@ class ModelL2S extends Component {
                                 { t('model.l2s.title') }
                             </Header>
 
-                            <CurrentModelName name={ name } />
+                            <CurrentModelName />
 
                             <Message content={ t('model.l2s.description') } />
 

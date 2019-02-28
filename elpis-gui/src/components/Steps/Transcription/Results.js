@@ -35,7 +35,7 @@ class NewTranscriptionResults extends Component {
     }
 
     render() {
-        const { t, elan, name, audioFile, status } = this.props;
+        const { t, elan, audioFile, status } = this.props;
 
         console.log("elan", elan)
         console.log("audioFile", audioFile)
@@ -77,7 +77,7 @@ class NewTranscriptionResults extends Component {
                                 { t('transcription.results.title') }
                             </Header>
 
-                            <CurrentModelName name={ name } />
+                            <CurrentModelName />
 
                             <p>{ t('transcription.results.usingAudio') } { audioFile } </p>
 

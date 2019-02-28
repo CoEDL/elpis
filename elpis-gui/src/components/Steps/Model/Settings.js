@@ -12,7 +12,7 @@ import urls from 'urls'
 
 class ModelSettings extends Component {
     render() {
-        const { t, name, settings, modelSettings } = this.props;
+        const { t, settings, modelSettings } = this.props;
         console.log("settings", settings)
         return (
             <div>
@@ -29,7 +29,7 @@ class ModelSettings extends Component {
                                 { t('model.settings.title') }
                             </Header>
 
-                            <CurrentModelName name={ name } />
+                            <CurrentModelName />
 
                             <Message content={ t('model.settings.description') } />
 

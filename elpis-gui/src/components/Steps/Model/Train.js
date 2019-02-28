@@ -39,7 +39,7 @@ class ModelTrain extends Component {
     }
 
     render() {
-        const { t, name, settings, apiWaiting, status } = this.props;
+        const { t, settings, apiWaiting, status } = this.props;
 
         console.log('status', status)
 
@@ -62,7 +62,7 @@ class ModelTrain extends Component {
                                 { t('model.train.title') }
                             </Header>
 
-                            <CurrentModelName name={ name } />
+                            <CurrentModelName />
 
                             <Card fluid>
                                 <Card.Content header={ t('model.train.settingsHeader') } />

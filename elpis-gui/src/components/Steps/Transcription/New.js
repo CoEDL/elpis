@@ -22,7 +22,7 @@ class NewTranscription extends Component {
     }
 
     render() {
-        const { t, audioFile, name } = this.props;
+        const { t, audioFile } = this.props;
         return (
             <div>
                 <Branding />
@@ -37,7 +37,7 @@ class NewTranscription extends Component {
                                 { t('transcription.new.title') }
                             </Header>
 
-                            <CurrentModelName name={ name } />
+                            <CurrentModelName />
 
                             <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({ getRootProps, getInputProps, isDragActive }) => {
