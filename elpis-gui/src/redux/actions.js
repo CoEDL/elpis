@@ -1,7 +1,9 @@
 import axios from 'axios'
 import urls from 'urls'
 
-const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://0.0.0.0:5000'
+console.log(window.location.host)
+// 'http://0.0.0.0:5000'
+const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://'+window.location.host
 
 const getApi = (url, successFunction) => {
     return dispatch => {
