@@ -42,8 +42,6 @@ class NewTranscriptionResults extends Component {
     render() {
         const { t, elan, audioFile, status } = this.props;
 
-        console.log("elan", elan)
-        console.log("audioFile", audioFile)
         console.log('status', status)
 
         const loadingIcon = (status === 'transcribing') ? (
@@ -101,8 +99,7 @@ class NewTranscriptionResults extends Component {
                             </Card>
  */}
 
-
-{elanButtons}
+                            {elanButtons}
 
                         </Grid.Column>
                     </Grid>
