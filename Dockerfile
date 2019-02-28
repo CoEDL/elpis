@@ -139,5 +139,25 @@ RUN echo "FLASK_APP=elpis" >> ~/.bashrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.bashrc
 RUN echo "export LANG=C.UTF-8" >> ~/.bashrc
 
+# Move ENV lines up. Putting here for now so I can build on top of cached builds
+ENV FLASK_ENV='development'
+ENV FLASK_APP='elpis'
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
+WORKDIR /kaldi-helpers
+RUN python3.6 setup.py bdist_egg && \
+    cp dist/kaldi_helpers-0.23-py3.6.egg /usr/local/lib/python3.6/site-packages/kaldi_helpers-0.2-py3.6.egg
+
+WORKDIR /elpis/elpis-gui
+RUN npm install && \
+    npm run build
+
+WORKDIR /elpis
+RUN pip3.6 install appdirs pystache && \
+    pip3.6 install -r requirements.txt
+
+ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
+
 EXPOSE 5000:5000
 EXPOSE 8008:8008
