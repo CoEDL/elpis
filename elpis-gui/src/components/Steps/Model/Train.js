@@ -95,7 +95,7 @@ class ModelTrain extends Component {
                                     <ScrollFollow
                                         startFollowing={true}
                                         render={({ follow, onScroll }) => (
-                                        <LazyLog url="http://example.log" stream follow={follow} onScroll={onScroll} />
+                                        <LazyLog url={urls.api.model.logstream} stream follow={follow} onScroll={onScroll} />
                                         )}
                                     />
                                 </div>

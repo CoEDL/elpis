@@ -44,7 +44,7 @@ export default {
             "train": "/api/model/train",
             "status": "/api/model/status",
             "results": "/api/model/results",
-            "log": "/api/log.txt"
+            "logstream": "/api/logstream"
         },
         "transcription": {
             "new": "/api/transcription/new",
