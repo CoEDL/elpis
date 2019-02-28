@@ -66,12 +66,6 @@ class ModelDashboard extends Component {
                         >
                             Data
                         </Table.HeaderCell>
-                        <Table.HeaderCell
-                            sorted={ column === 'wer' ? direction : null }
-                            onClick={ this.handleSort('wer', list.results) }
-                        >
-                            WER
-                        </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -84,7 +78,6 @@ class ModelDashboard extends Component {
                                         <Button onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
                                     </Table.Cell>
                                     <Table.Cell>{ model.dataset_name }</Table.Cell>
-                                    <Table.Cell>{ model.results.wer }</Table.Cell>
                                 </Table.Row>
                             )
                         })
