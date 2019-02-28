@@ -39,7 +39,7 @@ class DataBundlePrepare extends Component {
     }
 
     render() {
-        const { t, name, list } = this.props
+        const { t, list } = this.props
         const { column, direction } = this.state
 
         const listEl = list.length > 0 ? (
@@ -89,7 +89,7 @@ class DataBundlePrepare extends Component {
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>{ t('dataBundle.prepare.title') }</Header>
 
-                            <CurrentDataBundleName name={ name } />
+                            <CurrentDataBundleName />
 
                             <h2>{ t('dataBundle.prepare.header') }</h2>
                             <p>{ t('dataBundle.prepare.bannerMessage') }</p>
@@ -114,7 +114,6 @@ class DataBundlePrepare extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.dataBundle.name,
         list: state.dataBundle.wordlist
     }
 }

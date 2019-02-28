@@ -75,7 +75,7 @@ class ModelDashboard extends Component {
                             return (
                                 <Table.Row key={ model.name } className={ className }>
                                     <Table.Cell>
-                                        <Button onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
+                                        <Button fluid onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
                                     </Table.Cell>
                                     <Table.Cell>{ model.dataset_name }</Table.Cell>
                                 </Table.Row>

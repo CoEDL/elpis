@@ -49,7 +49,7 @@ class DataBundleDashboard extends Component {
                                 { t('dataBundle.dashboard.title') }
                             </Header>
 
-                            <CurrentDataBundleName name={ name } />
+                            <CurrentDataBundleName />
 
                             <Segment>
                                 { listEl }

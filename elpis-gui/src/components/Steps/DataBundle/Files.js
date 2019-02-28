@@ -19,7 +19,7 @@ class DataBundleFiles extends Component {
 
     render() {
 
-        const { t, name, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
+        const { t, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
 
         const audioFileList = audioFiles.map(file => (
             <List.Item key={ file }>
@@ -58,7 +58,7 @@ class DataBundleFiles extends Component {
                                 { t('dataBundle.files.title') }
                             </Header>
 
-                            <CurrentDataBundleName name={ name } />
+                            <CurrentDataBundleName />
 
                             <Message attached content={ t('dataBundle.files.description') } />
 
@@ -167,7 +167,6 @@ class DataBundleFiles extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.dataBundle.name,
         audioFiles: state.dataBundle.audioFiles,
         transcriptionFiles: state.dataBundle.transcriptionFiles,
         additionalTextFiles: state.dataBundle.additionalTextFiles,
