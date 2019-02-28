@@ -133,6 +133,7 @@
             "dropFilesHintDragActive": "Here here..",
             "addAudioButton": "Add Audio",
             "chooseModelHeader": "Choose a model",
+            "usingAudio": "uploaded audio {{audioName}}",
             "nextButton": "Go"
         },
         "results": {

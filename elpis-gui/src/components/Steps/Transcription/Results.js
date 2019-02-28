@@ -78,7 +78,7 @@ class NewTranscriptionResults extends Component {
 
                             <CurrentModelName />
 
-                            <p>{ t('transcription.results.usingAudio') } { audioFile } </p>
+                            <Segment>{ t('transcription.results.usingAudio') } { audioFile } </Segment>
 
                             <Message icon>
                                 { loadingIcon }

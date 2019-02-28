@@ -22,7 +22,14 @@ class NewTranscription extends Component {
     }
 
     render() {
-        const { t, audioFile } = this.props;
+        const { t, audioFile, name } = this.props;
+
+        const audioFileEl = audioFile ? (
+            <Segment>{ t('transcription.new.usingAudio') } { audioFile } </Segment>
+        ) : null
+
+        const showNext = (audioFile && name) ? true : false
+
         return (
             <div>
                 <Branding />
@@ -60,11 +67,11 @@ class NewTranscription extends Component {
                                 } }
                             </Dropzone>
 
-                            { audioFile }
+                            { audioFileEl }
 
                             <Divider />
 
-                            <Button as={ Link } to={ urls.gui.transcription.results }>
+                            <Button as={ Link } to={ urls.gui.transcription.results } disabled={ !showNext } >
                                 { t('transcription.new.nextButton') }
                             </Button>
 
