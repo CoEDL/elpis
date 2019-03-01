@@ -21,7 +21,9 @@ class ModelResults extends Component {
         console.log("results", results)
         const resultsEl = results ? (
             <Segment>
-                (known bug: this is only showing the last trained results, not necessarily for the selected model)
+
+                (known bug: this is showing the most recently trained results, not necessarily for the selected model)
+
                 <Table celled>
                     <Table.Body>
                         <Table.Row>
