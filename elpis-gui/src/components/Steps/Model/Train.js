@@ -47,6 +47,19 @@ class ModelTrain extends Component {
             <Icon name='circle notched' loading  />
         ) : null
 
+        const trainingButton = (status === 'ready') ? (
+            <Button onClick={this.handleModelTrain}>
+                { t('model.train.trainButton') }
+            </Button>
+        ) : null
+
+        const checkStatusButton = (status === 'training') ? (
+            <Button onClick={this.handleModelStatus}>
+                { t('model.train.statusButton') }
+            </Button>
+        ) : null
+
+
         return (
             <div>
                 <Branding />
@@ -70,12 +83,8 @@ class ModelTrain extends Component {
                             </Card>
 
                             <Segment>
-                                <Button onClick={this.handleModelTrain}>
-                                    { t('model.train.trainButton') }
-                                </Button>
-                                <Button onClick={this.handleModelStatus}>
-                                    { t('model.train.statusButton') }
-                                </Button>
+                                {trainingButton}
+                                {checkStatusButton}
                             </Segment>
 
                             <Message icon>

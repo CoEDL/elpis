@@ -14,6 +14,7 @@ const initState = {
     date: null,
     l2s: '',
     lexicon: '',
+    results: null,
     settings: {
         ngram: 1
     },
@@ -81,6 +82,13 @@ const model = (state = initState, action) => {
             return {
                 ...state,
                 status: action.response.data.data
+            }
+
+        case 'MODEL_RESULTS':
+            console.log("reducer got results", action.response.data)
+            return {
+                ...state,
+                results: action.response.data.data
             }
 
         case 'MODEL_STATUS':

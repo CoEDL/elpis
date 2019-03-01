@@ -1,20 +1,37 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
+import { modelResults } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import CurrentModelName from "./CurrentModelName";
 
 class ModelResults extends Component {
-
-    state = { open: false }
-
-    open = () => this.setState({ open: true })
-    close = () => this.setState({ open: false })
+    componentDidMount() {
+        const { name, modelResults } = this.props
+        console.log("name", name)
+        if (name) modelResults()
+    }
 
     render() {
-        const { open } = this.state
-        const { t } = this.props;
+        const { t, results } = this.props;
+
+        console.log("results", results)
+        const resultsEl = results ? (
+            <Segment>
+                (known bug: this is only showing the last trained results, not necessarily for the selected model)
+                <Grid.Row columns={5}>
+                    <Grid.Column>wer {results.wer_val}</Grid.Column>
+                    <Grid.Column>{results.count_val}</Grid.Column>
+                    <Grid.Column>del {results.del_val}</Grid.Column>
+                    <Grid.Column>ins {results.ins_val}</Grid.Column>
+                    <Grid.Column>sub {results.sub_val}</Grid.Column>
+                </Grid.Row>
+            </Segment>
+        ) : null
+
         return (
             <div>
                 <Branding />
@@ -29,9 +46,9 @@ class ModelResults extends Component {
                                 { t('model.results.title') }
                             </Header>
 
-                            <p>
-                                { t('model.results.description') }
-                            </p>
+                            <CurrentModelName />
+
+                            { resultsEl }
 
                             <Divider />
 
@@ -47,4 +64,18 @@ class ModelResults extends Component {
         );
     }
 }
-export default translate('common')(ModelResults)
+
+const mapStateToProps = state => {
+    return {
+        name: state.model.name,
+        results: state.model.results
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    modelResults: () => {
+        dispatch(modelResults());
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelResults));

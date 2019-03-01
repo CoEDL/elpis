@@ -56,6 +56,7 @@ var successHandler = {
     modelSettings: response => ({ type: 'MODEL_SETTINGS', response }),
     modelTrain: response => ({ type: 'MODEL_TRAIN', response }),
     modelStatus: response => ({ type: 'MODEL_STATUS', response }),
+    modelResults: response => ({ type: 'MODEL_RESULTS', response }),
 
     transcriptionNew: response => ({ type: 'TRANSCRIPTION_NEW', response }),
     transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
@@ -135,6 +136,7 @@ export const modelStatus = () => {
     return postApi(url, null, 'modelStatus')
 }
 export const modelResults = () => {
+    console.log("action to get results")
     const url = baseUrl + urls.api.model.results
     return postApi(url, null, 'modelResults')
 }
