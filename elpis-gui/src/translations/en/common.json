@@ -141,13 +141,13 @@
             "usingAudio": "for audio {{audioName}}",
             "errorLogHeader": "Error Log",
             "resultsHeader": "Transcription as text",
-            "downloadButtonsNotReadyYet": "download buttons will be available when the data has been transcribed",
+            "downloadButtonsNotReadyYet": "download buttons will be available after the data has been transcribed and the Elan file has been generated.",
             "downloadElanButton": "Download ELAN file",
             "downloadPraatButton": "Download TextGrid PRAAT file here"
         }
     },
     "common": {
-        "selectOneBelow": "Select one from the list below.",
+        "selectOneBelow": "Select one from the list below or make a new one.",
         "chooseOrNewLabel": "Choose one.",
         "invalidCharacterErrorMessage": "Please use these characters: \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
     }
