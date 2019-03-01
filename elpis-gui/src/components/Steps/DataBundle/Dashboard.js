@@ -1,16 +1,38 @@
 import React, { Component } from 'react';
-import { Button, Grid, Header, Segment } from 'semantic-ui-react';
+import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { dataBundleList, dataBundleLoad } from 'redux/actions';
+import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentDataBundleName from "./CurrentDataBundleName";
 
 class DataBundleDashboard extends Component {
+
+    state = {
+        column: null,
+        reverse: false
+    }
+
     componentDidMount() {
-        const { dataBundleList } = this.props
-        dataBundleList()
+        this.props.dataBundleList()
+    }
+
+    handleSort = (clickedColumn, data) => () => {
+        const { column } = this.state
+        if (column !== clickedColumn) {
+            this.setState({
+                column: clickedColumn,
+                reverse: false,
+            })
+            arraySort(data, clickedColumn, { reverse: false })
+        } else {
+            this.setState({
+                reverse: ! this.state.reverse
+            })
+            arraySort(data, clickedColumn, { reverse: ! this.state.reverse })
+        }
     }
 
     handleLoad = name => {
@@ -20,19 +42,35 @@ class DataBundleDashboard extends Component {
     }
 
     render() {
-        const { t, list, currentName } = this.props;
+        const { t, name, list } = this.props;
+        const { column, direction } = this.state
         const listEl = list.length > 0 ? (
-            <ul className="data-bundle-list">
-                {list.map( name => {
-                    const className = (name === currentName) ? 'current-data-bundle' : ''
-                    const color = (name === currentName) ? 'purple' : ''
-                    return (
-                        <li key={name}>
-                            <Button className={className} fluid onClick={ () => this.handleLoad(name) }>{ name }</Button>
-                        </li>
-                    )}
-                )}
-            </ul>
+            <Table sortable celled fixed unstackable>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell
+                            sorted={ column === 'name' ? direction : null }
+                            onClick={ this.handleSort('name', list) }
+                        >
+                            Name
+                        </Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                {
+                    list.map( dataBundleName => {
+                        const className = (dataBundleName === name) ? 'current-data-bundle' : ''
+                        return (
+                            <Table.Row key={ dataBundleName } className={ className }>
+                                <Table.Cell>
+                                    <Button fluid onClick={ () => this.handleLoad(dataBundleName) }>{ dataBundleName }</Button>
+                                </Table.Cell>
+                            </Table.Row>
+                        )
+                    })
+                }
+                </Table.Body>
+            </Table>
         ) : <p>{ t('dataBundle.dashboard.noneMessage') }</p>
 
         return (
@@ -66,7 +104,7 @@ class DataBundleDashboard extends Component {
 const mapStateToProps = state => {
     return {
         list: state.dataBundle.dataBundleList,
-        currentName: state.dataBundle.name
+        name: state.dataBundle.name
     }
 }
 
