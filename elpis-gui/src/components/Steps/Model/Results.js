@@ -22,13 +22,17 @@ class ModelResults extends Component {
         const resultsEl = results ? (
             <Segment>
                 (known bug: this is only showing the last trained results, not necessarily for the selected model)
-                <Grid.Row columns={5}>
-                    <Grid.Column>wer {results.wer_val}</Grid.Column>
-                    <Grid.Column>{results.count_val}</Grid.Column>
-                    <Grid.Column>del {results.del_val}</Grid.Column>
-                    <Grid.Column>ins {results.ins_val}</Grid.Column>
-                    <Grid.Column>sub {results.sub_val}</Grid.Column>
-                </Grid.Row>
+                <Table celled>
+                    <Table.Body>
+                        <Table.Row>
+                            <Table.Cell>wer {results.wer}</Table.Cell>
+                            <Table.Cell>{results.count_val}</Table.Cell>
+                            <Table.Cell>del {results.del_val}</Table.Cell>
+                            <Table.Cell>ins {results.ins_val}</Table.Cell>
+                            <Table.Cell>sub {results.sub_val}</Table.Cell>
+                        </Table.Row>
+                    </Table.Body>
+                </Table>
             </Segment>
         ) : null
 
