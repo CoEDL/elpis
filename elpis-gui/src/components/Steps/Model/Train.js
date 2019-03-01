@@ -97,16 +97,16 @@ class ModelTrain extends Component {
                             <Card fluid>
                                 <Card.Content header={ t('model.train.logsHeader') } />
                                 <Card.Content description={ t('model.train.logsDescription') } />
-                                <div className="kaldi-log">
 {/*
+                                <div className="kaldi-log">
                                     <ScrollFollow
                                         startFollowing={true}
                                         render={({ follow, onScroll }) => (
                                         <LazyLog url={urls.api.model.logstream} stream follow={follow} onScroll={onScroll} />
                                         )}
                                     />
-*/}
                                 </div>
+*/}
                             </Card>
 
                             <Divider />

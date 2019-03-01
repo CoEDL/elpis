@@ -104,7 +104,7 @@
             "featuresExtractionHeader": "Features extraction",
             "preparingLanguageDataHeader": "Preparing language data",
             "logsHeader": "Logs",
-            "logsDescription": "gory detail from Kaldi",
+            "logsDescription": "gory detail from Kaldi (coming soon)",
             "trainButton": "Start training",
             "statusButton": "Check progress",
             "nextButton": "Next",
