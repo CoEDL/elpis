@@ -72,7 +72,7 @@ class DataBundleNew extends Component {
                                                     onChange={ handleChange } />
                                                     <ErrorMessage component="div" className="error" name="name" />
                                             </Form.Field>
-                                            <Button onClick={ handleSubmit } >
+                                            <Button onClick={ handleSubmit }>
                                                 { t('dataBundle.new.nextButton') }
                                             </Button>
                                         </Form>

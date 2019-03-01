@@ -18,7 +18,8 @@ class DataBundlePrepare extends Component {
     }
 
     componentDidMount() {
-        this.props.dataBundlePrepare()
+        const {name, dataBundlePrepare} = this.props
+        if (name) dataBundlePrepare()
     }
 
     handleSort = (clickedColumn, data) => () => {
@@ -43,6 +44,8 @@ class DataBundlePrepare extends Component {
         const { column, direction } = this.state
 
         const listEl = list.length > 0 ? (
+            <>
+            <h2>{ t('dataBundle.prepare.header') }</h2>
             <Table sortable celled fixed unstackable>
                 <Table.Header>
                     <Table.Row>
@@ -75,8 +78,9 @@ class DataBundlePrepare extends Component {
                     }
                 </Table.Body>
             </Table>
+            </>
 
-        ) : <p>{ t('model.dashboard.noneMessage') }</p>
+        ) : null
 
         return (
             <div>
@@ -90,13 +94,6 @@ class DataBundlePrepare extends Component {
                             <Header as='h1'>{ t('dataBundle.prepare.title') }</Header>
 
                             <CurrentDataBundleName />
-
-                            <h2>{ t('dataBundle.prepare.header') }</h2>
-                            <p>{ t('dataBundle.prepare.bannerMessage') }</p>
-
-                            {/* <p>{ t('dataBundle.prepare.bannerMessageDetailed') }</p> */}
-
-                            {/* { wordlistTable } */}
 
                             { listEl }
 
@@ -114,7 +111,8 @@ class DataBundlePrepare extends Component {
 
 const mapStateToProps = state => {
     return {
-        list: state.dataBundle.wordlist
+        list: state.dataBundle.wordlist,
+        name: state.dataBundle.name
     }
 }
 
