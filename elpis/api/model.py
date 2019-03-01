@@ -9,6 +9,8 @@ from ..kaldi.interface import KaldiInterface
 from ..kaldi.model import Model
 from ..kaldi.dataset import Dataset
 
+from pathlib import Path
+
 bp = Blueprint("model", __name__, url_prefix="/model")
 bp.register_blueprint(kaldi.bp)
 
@@ -111,7 +113,7 @@ def generate_lexicon():
 def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     # TODO see the two todos below
-    fake_results = {'wer': 1, 'del': 1, 'ins': 2, 'sub': 3}
+    fake_results = {}
     lx = [{'name': model['name'], 'results': fake_results, 'dataset_name': model['dataset_name']} for model in kaldi.list_models_verbose()]
     return jsonify({
         "status": "ok",
@@ -138,4 +140,36 @@ def train():
         "data": m.status
     })
 
+@bp.route("/results", methods=['GET', 'POST'])
+def results():
+    m: Model = app.config['CURRENT_MODEL']
+
+    wer_lines = []
+    log_file = Path('/elpis/state/tmp_log.txt')
+    if log_file.exists():
+        with log_file.open() as fin:
+            for line in reversed(list(fin)):
+                line = line.rstrip()
+                if "%WER" in line:
+                    # use line to sort by best val
+                    line_r = line.replace('%WER ', '')
+                    wer_lines.append(line_r)
+            wer_lines.sort(reverse = True)
+            line = wer_lines[0]
+            line_split = line.split(None, 1)
+            wer = line_split[0]
+            line_results = line_split[1]
+            line_results = line_results.replace('[','')
+            line_results = line_results.replace(']','')
+            results_split = line_results.split(',')
+            count_val = results_split[0].strip()
+            ins_val = results_split[1].replace(' ins','').strip()
+            del_val = results_split[2].replace(' del','').strip()
+            sub_val = results_split[3].replace(' sub','').strip()
+            results = {'wer':wer, 'count_val':count_val, 'ins_val':ins_val, 'del_val':del_val, 'sub_val':sub_val}
+            print(results)
+    return jsonify({
+        "status": "ok",
+        "data": results
+    })
 
