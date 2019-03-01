@@ -14,10 +14,12 @@ class CurrentModelName extends Component {
             <>
             &nbsp;
             <Link to={urls.gui.model.index}>
-                { t('model.common.chooseOrNewLabel') }
+                { t('common.chooseOrNewLabel') }
             </Link>
             </>
-        ) : ( null )
+        ) : (
+            <>&nbsp; { t('common.selectOneBelow') }</>
+        )
 
         const current = name ?
         (
