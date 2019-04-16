@@ -9,6 +9,11 @@ class Flask(FlaskBase):
         super().__init__(*args, **kwargs)
 
     def register_blueprint(self, blueprint, **options):
+        """
+        If the blueprint being registered if from flask, use the native
+        register_blueprint function, otherwise if the Blueprint is from our
+        Blueprint.py, then register the blueprint as required.
+        """
         if not isinstance(blueprint, Blueprint):
             super().register_blueprint(blueprint, **options)
         else:

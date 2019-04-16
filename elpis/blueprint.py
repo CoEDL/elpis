@@ -2,6 +2,24 @@ from flask import Blueprint as FlaskBlueprint
 from flask.blueprints import BlueprintSetupState as FlaskBlueprintSetupState
 from flask.helpers import _endpoint_from_view_func
 
+# This Blueprint implementaion extends the Flask Blueprint by allowing
+# multilevel blueprints. That is Blueprints can register blueprints. This was
+# does to make the server codebase modular.
+
+# The key descision that lead to this was in understanding this code was to be
+# refactored later, it would be good if endpoints for the API were as
+# independent as possible (and for syntax sugar - it's cool to have
+# sub-blueprints for further modularity ;) ).
+
+# Implementing sub-blueprints introduces a few difficulties as blueprints were
+# not designed to be modular. The classes below delegate the creation of
+# routes to the most parent blueprint. As the most parent blueprint is being
+# found, the endpoint names are generated (example "api.model.new" - endpoint
+# for "new" function in the "model" blueprint is contained in the "api" parent
+# blueprint).
+
+# Most of the methods are overriding existing ones. See the Base classes for
+# parameter and function details.
 
 class BlueprintSetupState(FlaskBlueprintSetupState):
     """
@@ -93,11 +111,17 @@ class Blueprint(FlaskBlueprint):
         return self.route_from_base(rule, **options)
 
     def route_from_base(self, rule, **options):
+        """
+        Use the root blueprint to route a rule.
+        """
         if self.is_base_blueprint():
             return super().route(rule, **options)
         return self.parent.route_from_base(rule, **options)
 
     def base_blueprint(self):
+        """
+        Recersively find the return the base blueprint.
+        """
         if self.is_base_blueprint():
             return self
         return self.parent.base_blueprint()
@@ -107,11 +131,17 @@ class Blueprint(FlaskBlueprint):
         Returns the full url-prefix from all blueprints up to the root parent.
         """
         if self.parent:
+            # Normally having a dot('.') in the name is naughty and isn't
+            # allowed because they can be accessed like attributes, but
+            # for this modularity we are breaking this rule.
             return f'{self.parent.get_full_endpoint()}.{self.name}'
         else:
             return self.name
 
     def get_full_url_prefix(self) -> str:
+        """
+        Recursively build the URL prefix for this blueprint.
+        """
         url_prefix = '' if self.url_prefix is None else self.url_prefix
         if self.parent:
             return f'{self.parent.get_full_url_prefix()}{url_prefix}'
@@ -132,6 +162,9 @@ class Blueprint(FlaskBlueprint):
                 self.record(lambda s:
                             s.add_url_rule(new_rule, end_point, view_function, **route_options))
             else:
+                # Remove the ability to access the vie_function like a an
+                # attribute because we want a dot('.') in the endpoint name
+                # for syntax sugar.
                 self.record(lambda s:
                             s.add_url_rule(new_rule, end_point, view_function, **route_options))
 

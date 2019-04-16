@@ -11,6 +11,8 @@ from pathlib import Path
 
 
 def create_app(test_config=None):
+    # Called by the flask run command in the cli.
+
     # Setup static resources
     # create and configure the app
     # auto detect for yarn watch or yarn build
@@ -27,25 +29,35 @@ def create_app(test_config=None):
     # else:
     #     static_dir = static_dir_watch
     print('using static_dir:', static_dir)
+    # Create a custom Flask instance defined in the app.py file. Same as a
+    # normal Flask class but with a specialised blueprint function.
     app = Flask(__name__,
                 instance_relative_config=True,
                 static_folder=GUI_PUBLIC_DIR + static_dir,
                 static_url_path=static_dir)
 
+    # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
+
+    # For a single user, storing the Kaldi interface object is okay to do in
+    # the app.config, however, this would need to change for multi-user.
+    # Each user would require a unique KaldiInterface. One KaldiInterface
+    # stores all the artifacts that user has generated. 
     interface_path = Path('/elpis/state')
     if not interface_path.exists():
         app.config['INTERFACE'] = KaldiInterface(interface_path)
     else:
         app.config['INTERFACE'] = KaldiInterface.load(interface_path)
-    app.config['CURRENT_DATABUNDLE'] = None
-    app.config['CURRENT_MODEL'] = None
+    app.config['CURRENT_DATABUNDLE'] = None # not okay for multi-user
+    app.config['CURRENT_MODEL'] = None # not okay for multi-user
 
+    # add the api routes
     app.register_blueprint(api.bp)
     print(app.url_map)
 
+    # the rest of the routes below are for the single file react app.
     @app.route('/index.html')
     def index_file():
         """Redirects to '/' for React."""
