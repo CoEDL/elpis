@@ -4,6 +4,16 @@ from pathlib import Path
 from . import hasher
 from .logger import Logger
 
+# Desing constraint
+# Since there are four classes that must have their states saved to the
+# operating system, this single class was made to provide some common
+# functionality and a standard of operation for these classes. The alternative
+# to using this method of storing everything on disk (using the file system
+# directly) was to implement a database, however, kaldi required access to
+# files and a specific file structure. This was the constrain that lead to the FSObject.
+
+# The classes that use FSObject as a base are: Dataset, Model, Transcription
+# and KaldiInterface.
 
 class FSObject(object):
     def __init__(self,
@@ -39,6 +49,12 @@ class FSObject(object):
 
     @classmethod
     def load(cls, base_path: Path):
+        """
+        Create the proxy FSObject from an existing one in the file-system.
+
+        :param base_path: is the path to the FSObject representation.
+        :return: an instansiated FSObject proxy.
+        """
         self = cls.__new__(cls)
         self.__path = Path(base_path)
         self.logger = None # TODO: use get_logger when implemented
@@ -73,6 +89,14 @@ class FSObject(object):
         return self.ConfigurationInterface(self)
 
     class ConfigurationInterface(object):
+        """
+        Continuesly save changes to disk and only read properties from disk
+        (in the JSON file storing the objects configuration).
+
+        This class is more syntax sugar. Particularly so we can treat the
+        'config' attribute/property in the FSObject class like a JSON
+        (or dict), since it is interfacing directly with one.
+        """
         def __init__(self, fsobj):
             self.fsobj = fsobj
 

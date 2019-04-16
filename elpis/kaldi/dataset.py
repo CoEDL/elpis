@@ -20,10 +20,14 @@ from kaldi_helpers.input_scripts.make_wordlist import generate_word_list
 from kaldi_helpers.input_scripts.make_prn_dict import generate_pronunciation_dictionary
 
 
+# TODO: this is very ELAN specific code...
 DEFAULT_TIER = 'Phrase'
 
 
 class DSPaths(object):
+    """
+    Path locations for the DataSet object. Attribures represent paths to DataSet artifacts.
+    """
     def __init__(self, basepath: Path):
         # directories
         attrs = existing_attributes(self)
@@ -43,6 +47,13 @@ class DSPaths(object):
 
 
 class Dataset(FSObject):
+    """
+    Dataset (or commonly referred to as Data Bundle on the front end) stores
+    the original and resampled audio, and original transcription files.
+    Datasets in the same KaldiInterface must have unique names.
+    """
+
+    # The configuration settings stored in the file below.
     _config_file = 'dataset.json'
 
     def __init__(self, **kwargs):
