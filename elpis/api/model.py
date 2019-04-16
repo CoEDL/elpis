@@ -4,7 +4,6 @@ from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
 import subprocess
-from . import kaldi
 from ..kaldi.interface import KaldiInterface
 from ..kaldi.model import Model
 from ..kaldi.dataset import Dataset
@@ -12,7 +11,6 @@ from ..kaldi.dataset import Dataset
 from pathlib import Path
 
 bp = Blueprint("model", __name__, url_prefix="/model")
-bp.register_blueprint(kaldi.bp)
 
 
 def run(cmd: str) -> str:

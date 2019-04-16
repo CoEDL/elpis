@@ -6,6 +6,8 @@ from . import transcription
 from pathlib import Path
 
 bp = Blueprint("api", __name__, url_prefix="/api")
+
+# add blueprint collections to the api blueprint.
 bp.register_blueprint(databundle.bp)
 bp.register_blueprint(model.bp)
 bp.register_blueprint(transcription.bp)

@@ -1,14 +1,10 @@
 from flask import request
 from ..blueprint import Blueprint
-from .kaldi import bp as parent_bp
 from flask import current_app as app, jsonify
 from ..kaldi.interface import KaldiInterface
 from ..kaldi.dataset import Dataset
 
-
 bp = Blueprint("databundle", __name__, url_prefix="/databundle")
-bp.register_blueprint(parent_bp)
-
 
 @bp.route("/new", methods=['GET', 'POST'])
 def new():

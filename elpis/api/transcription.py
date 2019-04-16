@@ -2,9 +2,9 @@ import os
 from pathlib import Path
 from flask import Blueprint, redirect, request, url_for, escape, current_app as app, jsonify
 from werkzeug.utils import secure_filename
+import json
 from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
-import json
 from ..kaldi.interface import KaldiInterface
 from ..kaldi.model import Model
 from ..kaldi.transcription import Transcription
