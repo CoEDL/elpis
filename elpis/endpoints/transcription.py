@@ -5,10 +5,10 @@ from werkzeug.utils import secure_filename
 import json
 from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
-from ..kaldi.interface import KaldiInterface
-from ..kaldi.model import Model
-from ..kaldi.transcription import Transcription
-from ..kaldi import hasher
+from ..wrappers.interface import KaldiInterface
+from ..wrappers.model import Model
+from ..wrappers.transcription import Transcription
+from ..wrappers import hasher
 
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 

@@ -6,7 +6,7 @@ from .app import Flask
 
 from .paths import GUI_STATIC_DIR, GUI_PUBLIC_DIR
 
-from .kaldi.interface import KaldiInterface
+from .wrappers.interface import KaldiInterface
 from pathlib import Path
 
 

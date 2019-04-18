@@ -4,9 +4,9 @@ from ..blueprint import Blueprint
 from ..paths import CURRENT_MODEL_DIR
 import json
 import subprocess
-from ..kaldi.interface import KaldiInterface
-from ..kaldi.model import Model
-from ..kaldi.dataset import Dataset
+from ..wrappers.interface import KaldiInterface
+from ..wrappers.model import Model
+from ..wrappers.dataset import Dataset
 
 from pathlib import Path
 
