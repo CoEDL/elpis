@@ -1,9 +1,10 @@
 # Python
-venv/
+./env/
 venv_test/
 *.pyc
 __pycache__/
 *.egg-info/
+./elpis.egg-info/
 
 # Node
 package-lock.json
@@ -24,3 +25,8 @@ abui_toy_corpus/
 
 # mac files
 .DS_Store
+
+
+build/
+dist/
+venv/
