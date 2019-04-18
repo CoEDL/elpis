@@ -14,8 +14,8 @@ from flask.helpers import _endpoint_from_view_func
 # Implementing sub-blueprints introduces a few difficulties as blueprints were
 # not designed to be modular. The classes below delegate the creation of
 # routes to the most parent blueprint. As the most parent blueprint is being
-# found, the endpoint names are generated (example "api.model.new" - endpoint
-# for "new" function in the "model" blueprint is contained in the "api" parent
+# found, the endpoint names are generated (example "endpoints.model.new" - endpoint
+# for "new" function in the "model" blueprint is contained in the "endpoints" parent
 # blueprint).
 
 # Most of the methods are overriding existing ones. See the Base classes for

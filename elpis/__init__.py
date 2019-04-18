@@ -1,7 +1,7 @@
 import sys, os
 from flask import redirect
 import optparse
-from . import api
+from . import endpoints
 from .app import Flask
 
 from .paths import GUI_STATIC_DIR, GUI_PUBLIC_DIR
@@ -53,8 +53,8 @@ def create_app(test_config=None):
     app.config['CURRENT_DATABUNDLE'] = None # not okay for multi-user
     app.config['CURRENT_MODEL'] = None # not okay for multi-user
 
-    # add the api routes
-    app.register_blueprint(api.bp)
+    # add the endpoints routes
+    app.register_blueprint(endpoints.bp)
     print(app.url_map)
 
     # the rest of the routes below are for the single file react app.
