@@ -5,7 +5,9 @@ from elpis.wrappers.objects.model import Model
 from elpis.wrappers.objects.transcription import Transcription
 from elpis.wrappers.utilities import hasher
 
+
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
+
 
 @bp.route("/new", methods=['POST'])
 def new():
@@ -21,6 +23,7 @@ def new():
         "data": t.status
     })
 
+
 @bp.route("/status", methods=['GET', 'POST'])
 def status():
     t: Transcription = app.config['CURRENT_TRANSCRIPTION']
@@ -29,8 +32,8 @@ def status():
         "data": t.status
     })
 
+
 @bp.route("/elan", methods=['POST'])
 def elan():
     t: Transcription = app.config['CURRENT_TRANSCRIPTION']
     return t.elan()
-

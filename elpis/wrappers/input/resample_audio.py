@@ -17,8 +17,7 @@ import threading
 from multiprocessing.dummy import Pool
 from shutil import move
 from typing import Set, Tuple
-from kaldi_helpers.script_utilities import find_files_by_extensions
-from kaldi_helpers.script_utilities.globals import SOX_PATH
+from ..utilities.globals import SOX_PATH
 
 
 def join_norm(p1, p2) -> str:

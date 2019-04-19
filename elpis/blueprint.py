@@ -2,6 +2,7 @@ from flask import Blueprint as FlaskBlueprint
 from flask.blueprints import BlueprintSetupState as FlaskBlueprintSetupState
 from flask.helpers import _endpoint_from_view_func
 
+
 # This Blueprint implementaion extends the Flask Blueprint by allowing
 # multilevel blueprints. That is Blueprints can register blueprints. This was
 # does to make the server codebase modular.
@@ -20,6 +21,7 @@ from flask.helpers import _endpoint_from_view_func
 
 # Most of the methods are overriding existing ones. See the Base classes for
 # parameter and function details.
+
 
 class BlueprintSetupState(FlaskBlueprintSetupState):
     """

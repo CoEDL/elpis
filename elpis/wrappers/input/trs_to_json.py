@@ -18,7 +18,7 @@ import uuid
 import glob
 import xml.etree.ElementTree as ET
 from typing import Dict, List, Set, Tuple, Union
-from kaldi_helpers.script_utilities import find_files_by_extensions, write_data_to_json_file
+from ..utilities import find_files_by_extensions, write_data_to_json_file
 
 
 def conditional_log(condition: bool, text: str) -> None:

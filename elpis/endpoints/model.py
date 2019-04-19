@@ -54,6 +54,7 @@ def load():
         "data": data
     })
 
+
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
     m = app.config['CURRENT_MODEL']
@@ -66,6 +67,7 @@ def name():
         "status": "ok",
         "data": m.name
     })
+
 
 @bp.route("/settings", methods=['GET', 'POST'])
 def settings():
@@ -118,6 +120,7 @@ def list_existing():
     # TODO make this endpoint list-verbose or something like that
     # TODO /names could list just the name and /list can be the descriptive verison
 
+
 @bp.route("/status", methods=['GET', 'POST'])
 def status():
     m: Model = app.config['CURRENT_MODEL']
@@ -125,6 +128,7 @@ def status():
         "status": "ok",
         "data": m.status
     })
+
 
 @bp.route("/train", methods=['GET', 'POST'])
 def train():
@@ -134,6 +138,7 @@ def train():
         "status": "ok",
         "data": m.status
     })
+
 
 @bp.route("/results", methods=['GET', 'POST'])
 def results():
@@ -167,4 +172,3 @@ def results():
         "status": "ok",
         "data": results
     })
-

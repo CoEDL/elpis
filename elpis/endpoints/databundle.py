@@ -4,7 +4,9 @@ from flask import current_app as app, jsonify
 from elpis.wrappers.objects.interface import KaldiInterface
 from elpis.wrappers.objects.dataset import Dataset
 
+
 bp = Blueprint("databundle", __name__, url_prefix="/databundle")
+
 
 @bp.route("/new", methods=['GET', 'POST'])
 def new():
@@ -15,6 +17,7 @@ def new():
         "status": "ok",
         "data": ds.config._load()
     })
+
 
 @bp.route("/load", methods=['GET', 'POST'])
 def load():
@@ -37,6 +40,7 @@ def name():
     return jsonify({
         "status": "ok",
         "data": ds.name})
+
 
 @bp.route("/settings", methods=['GET', 'POST'])
 def settings():

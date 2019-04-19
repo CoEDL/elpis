@@ -15,7 +15,7 @@ import argparse
 import os
 import sys
 from typing import List, Dict
-from kaldi_helpers.script_utilities import load_json_file
+from ..utilities import load_json_file
 
 
 def save_word_list(word_list: List[str], file_name: str) -> None:

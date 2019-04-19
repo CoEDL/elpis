@@ -12,7 +12,7 @@ Contributors:
 import argparse
 from praatio import tgio
 from typing import Dict
-from kaldi_helpers.script_utilities import *
+from ..utilities import *
 
 
 def process_textgrid(input_directory: str) -> List[Dict[str, Union[str, int]]]:

@@ -5,7 +5,7 @@ from io import BufferedIOBase
 from pathlib import Path
 from typing import Callable
 import threading
-from elpis.wrappers.utilities.command import run
+from elpis.wrappers.objects.command import run
 from elpis.wrappers.objects.dataset import Dataset
 from elpis.wrappers.objects.fsobject import FSObject
 from elpis.wrappers.objects.path_structure import KaldiPathStructure

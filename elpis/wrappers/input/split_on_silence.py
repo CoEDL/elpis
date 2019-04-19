@@ -12,7 +12,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
-from kaldi_helpers.script_utilities import find_all_files_in_dir_by_extensions
+from ..utilities import find_all_files_in_dir_by_extensions
 
 
 def match_target_amplitude(segment: AudioSegment, target_dbfs) -> AudioSegment:

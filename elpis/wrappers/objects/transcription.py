@@ -1,6 +1,6 @@
 from pathlib import Path
 from elpis.wrappers.input.resample import resample
-from elpis.wrappers.utilities.command import run
+from elpis.wrappers.objects.command import run
 from elpis.wrappers.objects.fsobject import FSObject
 import shutil
 import threading
