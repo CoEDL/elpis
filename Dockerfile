@@ -119,20 +119,12 @@ WORKDIR /
 RUN git clone https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
-RUN git submodule update --init --recursive && cd elpis-gui && git pull origin master
-RUN npm build
-
-# Get Kaldi-Helpers and install it
-RUN cd /tmp && git clone https://github.com/CoEDL/kaldi-helpers.git /kaldi-helpers
-RUN cd /kaldi-helpers && python3.6 setup.py install
+RUN git clone https://github.com/CoEDL/elpis-gui.git
 
 # Get example corpora
-RUN cd /tmp && git clone https://github.com/CoEDL/toy-corpora.git && \
-    mv toy-corpora/* /kaldi-helpers/resources/corpora/
+RUN cd /tmp && git clone https://github.com/CoEDL/toy-corpora.git
 
-RUN cd /tmp && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-
-WORKDIR /kaldi-helpers
+RUN cd /tmp && sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 
 RUN echo "FLASK_ENV=development" >> ~/.bashrc
 RUN echo "FLASK_APP=elpis" >> ~/.bashrc
@@ -145,17 +137,12 @@ ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-WORKDIR /kaldi-helpers
-RUN python3.6 setup.py bdist_egg && \
-    cp dist/kaldi_helpers-0.23-py3.6.egg /usr/local/lib/python3.6/site-packages/kaldi_helpers-0.2-py3.6.egg
-
 WORKDIR /elpis/elpis-gui
 RUN npm install && \
     npm run build
 
 WORKDIR /elpis
-RUN pip3.6 install appdirs pystache && \
-    pip3.6 install -r requirements.txt
+RUN pip3.6 install -r requirements.txt
 
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
