@@ -23,12 +23,12 @@ transfer-transcription-to-kaldi:
 process-infer-files:
   desc: ""
   cmds:
-    - python3.6 /kaldi-helpers/kaldi_helpers/input_scripts/elan_to_json.py
+    - python3.6 /kaldi-helpers/kaldi_helpers/input/elan_to_json.py
                 --input_dir /kaldi-helpers/working_dir/input/infer
                 --output_dir /tmp/out
                 --tier Phrase
                 --output_json /tmp/dirty.json
-    - python3.6 /kaldi-helpers/kaldi_helpers/input_scripts/json_to_kaldi.py
+    - python3.6 /kaldi-helpers/kaldi_helpers/input/json_to_kaldi.py
                 --input_json /tmp/dirty.json
                 --output_folder /tmp/json_splitted
                 --corpus_file working_dir/input/output/tmp/corpus.txt

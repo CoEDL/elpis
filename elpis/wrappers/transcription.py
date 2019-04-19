@@ -73,10 +73,10 @@ class Transcription(FSObject):
     def _bake_gmm_decode_align(self):
         with open('/kaldi-helpers/kaldi_helpers/inference_scripts/gmm-decode-align.sh', 'r') as fin:
             content: str = fin.read()
-        content = content.replace('../../../../kaldi_helpers/output_scripts/ctm_to_textgrid.py',
-                                  '/kaldi-helpers/kaldi_helpers/output_scripts/ctm_to_textgrid.py')
-        content = content.replace('../../../../kaldi_helpers/output_scripts/textgrid_to_elan.py',
-                                  '/kaldi-helpers/kaldi_helpers/output_scripts/textgrid_to_elan.py')
+        content = content.replace('../../../../kaldi_helpers/output/ctm_to_textgrid.py',
+                                  '/kaldi-helpers/kaldi_helpers/output/ctm_to_textgrid.py')
+        content = content.replace('../../../../kaldi_helpers/output/textgrid_to_elan.py',
+                                  '/kaldi-helpers/kaldi_helpers/output/textgrid_to_elan.py')
         decode_file_path = self.path.joinpath('gmm-decode-align.sh')
         with decode_file_path.open(mode='w') as fout:
             fout.write(content)
