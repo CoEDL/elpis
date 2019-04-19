@@ -1,5 +1,5 @@
 import subprocess
-from kaldi_helpers.script_utilities.globals import SOX_PATH
+from elpis.wrappers.utilities.globals import SOX_PATH
 from pathlib import Path
 
 

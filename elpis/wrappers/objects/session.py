@@ -1,5 +1,5 @@
 from pathlib import Path
-from . import hasher
+from elpis.wrappers.utilities import hasher
 
 
 class Session(object):

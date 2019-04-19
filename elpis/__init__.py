@@ -1,12 +1,11 @@
-import sys, os
+import os
 from flask import redirect
-import optparse
 from . import endpoints
 from .app import Flask
 
 from .paths import GUI_STATIC_DIR, GUI_PUBLIC_DIR
 
-from .wrappers.interface import KaldiInterface
+from elpis.wrappers.objects.interface import KaldiInterface
 from pathlib import Path
 
 

@@ -1,6 +1,13 @@
-Flask
-werkzeug
 appdirs
-pystache
-setuptools
+Flask
 kaldi-helpers
+langid
+nltk
+numpy
+praatio
+pydub
+pympi-ling
+pystache
+pytest
+setuptools
+werkzeug

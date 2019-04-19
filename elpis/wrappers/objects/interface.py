@@ -1,18 +1,19 @@
 import os
 import json
-from . import hasher
+from elpis.wrappers.utilities import hasher
 from pathlib import Path
 from appdirs import user_data_dir
-from .errors import KaldiError
-from .dataset import Dataset
-from .logger import Logger
-from .model import Model
-from .transcription import Transcription
-from .fsobject import FSObject
+from elpis.wrappers.objects.errors import KaldiError
+from elpis.wrappers.objects.dataset import Dataset
+from elpis.wrappers.objects.logger import Logger
+from elpis.wrappers.objects.model import Model
+from elpis.wrappers.objects.transcription import Transcription
+from elpis.wrappers.objects.fsobject import FSObject
 
 
 class KaldiInterface(FSObject):
     _config_file = 'interface.json'
+
     def __init__(self, path: Path = None):
         if path is None:
             name = hasher.new()
@@ -47,7 +48,6 @@ class KaldiInterface(FSObject):
         self.config['models'] = {}
         self.config['transcriptions'] = {}
 
-
         # make a default logger
         self.new_logger(default=True)
 
@@ -67,7 +67,6 @@ class KaldiInterface(FSObject):
         self.models = {}
         self.transcriptions = {}
         return self
-
 
     def new_logger(self, default=False):
         logger = Logger(self.loggers_path)

@@ -4,7 +4,7 @@
 # interface directory already ('dsy', 'mx', 'tx'), if they do, make the kaldi
 # interface in a new location.
 
-from kaldi.interface import KaldiInterface
+from elpis.wrappers.objects.interface import KaldiInterface
 
 # Step 0
 # ======

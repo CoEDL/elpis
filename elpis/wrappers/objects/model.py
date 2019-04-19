@@ -5,18 +5,18 @@ from io import BufferedIOBase
 from pathlib import Path
 from typing import Callable
 import threading
-from .command import run
-from .dataset import Dataset
-from .fsobject import FSObject
-from .path_structure import KaldiPathStructure
-from kaldi_helpers.input_scripts.json_to_kaldi import create_kaldi_structure
-from kaldi_helpers.input_scripts.make_wordlist import generate_word_list
-from kaldi_helpers.input_scripts.make_prn_dict import generate_pronunciation_dictionary
+from elpis.wrappers.utilities.command import run
+from elpis.wrappers.objects.dataset import Dataset
+from elpis.wrappers.objects.fsobject import FSObject
+from elpis.wrappers.objects.path_structure import KaldiPathStructure
+from elpis.wrappers.input.json_to_kaldi import create_kaldi_structure
+from elpis.wrappers.input.make_prn_dict import generate_pronunciation_dictionary
 
 
 class ModelFiles(object):
     def __init__(self, basepath: Path):
         self.kaldi = KaldiPathStructure(basepath)
+
 
 # TODO not thread safe
 class Model(FSObject):

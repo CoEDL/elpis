@@ -1,8 +1,7 @@
 from pathlib import Path
-from .resample import resample
-from .command import run
-from .fsobject import FSObject
-from io import BufferedIOBase
+from elpis.wrappers.input.resample import resample
+from elpis.wrappers.utilities.command import run
+from elpis.wrappers.objects.fsobject import FSObject
 import shutil
 import threading
 import subprocess
@@ -19,8 +18,6 @@ class Transcription(FSObject):
         self.config["model_name"] = None
         self.config["status"] = "untranscribed"
         self.status = "untranscribed"
-
-
 
     @classmethod
     def load(cls, base_path: Path):
@@ -44,7 +41,7 @@ class Transcription(FSObject):
     def _cook_generate_infer_files(self):
         # cook the infer file generator
         # TODO fix below
-        with open('/kaldi-helpers/kaldi_helpers/inference_scripts/generate-infer-files.sh', 'r') as fin:
+        with open('/kaldi-helpers/kaldi_helpers/inference/generate-infer-files.sh', 'r') as fin:
             generator: str = fin.read()
         generator = generator.replace('working_dir/input/infer', f'{self.path}')
         generator = generator.replace('working_dir/input/output/kaldi/data/test',
@@ -71,7 +68,7 @@ class Transcription(FSObject):
         resample(tmp_file_path, self.path.joinpath('audio.wav'))
 
     def _bake_gmm_decode_align(self):
-        with open('/kaldi-helpers/kaldi_helpers/inference_scripts/gmm-decode-align.sh', 'r') as fin:
+        with open('/kaldi-helpers/kaldi_helpers/inference/gmm-decode-align.sh', 'r') as fin:
             content: str = fin.read()
         content = content.replace('../../../../kaldi_helpers/output/ctm_to_textgrid.py',
                                   '/kaldi-helpers/kaldi_helpers/output/ctm_to_textgrid.py')
@@ -94,7 +91,7 @@ class Transcription(FSObject):
         # run gmm-decoder
         shutil.copytree(f'{self.path}', f"{kaldi_infer_path}")
         shutil.copy(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-        subprocess.run('sh /kaldi-helpers/kaldi_helpers/inference_scripts/gmm-decode.sh'.split(),
+        subprocess.run('sh /kaldi-helpers/kaldi_helpers/inference/gmm-decode.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
 
         # move results
@@ -113,7 +110,7 @@ class Transcription(FSObject):
             shutil.copytree(f'{self.path}', f"{kaldi_infer_path}")
             shutil.copy(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
             self._bake_gmm_decode_align()
-            # p = subprocess.run('sh /kaldi-helpers/kaldi_helpers/inference_scripts/gmm-decode-align.sh'.split(),
+            # p = subprocess.run('sh /kaldi-helpers/kaldi_helpers/inference/gmm-decode-align.sh'.split(),
             # cwd=f'{self.model.path.joinpath("kaldi")}')
 
             # move results

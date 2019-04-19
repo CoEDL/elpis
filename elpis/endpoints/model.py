@@ -1,12 +1,9 @@
-import os
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
-from ..paths import CURRENT_MODEL_DIR
-import json
 import subprocess
-from ..wrappers.interface import KaldiInterface
-from ..wrappers.model import Model
-from ..wrappers.dataset import Dataset
+from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.wrappers.objects.model import Model
+from elpis.wrappers.objects.dataset import Dataset
 
 from pathlib import Path
 

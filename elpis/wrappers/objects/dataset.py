@@ -11,13 +11,12 @@ from multiprocessing.dummy import Pool
 from shutil import move
 
 from .fsobject import FSObject
-from .path_structure import existing_attributes, ensure_paths_exist
+from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
 
-from kaldi_helpers.input_scripts.elan_to_json import process_eaf
-from kaldi_helpers.input_scripts.clean_json import clean_json_data
-from kaldi_helpers.input_scripts.resample_audio import process_item
-from kaldi_helpers.input_scripts.make_wordlist import generate_word_list
-from kaldi_helpers.input_scripts.make_prn_dict import generate_pronunciation_dictionary
+from elpis.wrappers.input.elan_to_json import process_eaf
+from elpis.wrappers.input.clean_json import clean_json_data
+from elpis.wrappers.input.resample_audio import process_item
+from elpis.wrappers.input.make_wordlist import generate_word_list
 
 
 # TODO: this is very ELAN specific code...

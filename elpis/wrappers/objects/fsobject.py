@@ -1,8 +1,8 @@
 import json
 import time
 from pathlib import Path
-from . import hasher
-from .logger import Logger
+from elpis.wrappers.utilities import hasher
+from elpis.wrappers.objects.logger import Logger
 
 # Desing constraint
 # Since there are four classes that must have their states saved to the
@@ -14,6 +14,7 @@ from .logger import Logger
 
 # The classes that use FSObject as a base are: Dataset, Model, Transcription
 # and KaldiInterface.
+
 
 class FSObject(object):
     def __init__(self,
