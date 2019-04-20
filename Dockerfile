@@ -87,8 +87,7 @@ RUN wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz && \
     make altinstall
 
 # Add python packages and their dependencies
-RUN apt-get install -y python3-dev python3-pip python3-certifi python3-venv && \
-    pip3.6 install numpy pympi-ling praatio pydub
+RUN apt-get install -y python3-dev python3-pip python3-certifi python3-venv
 
 # Add a task runner
 RUN curl -s https://taskfile.org/install.sh | sh && mv ./bin/task /bin/
@@ -111,6 +110,9 @@ RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/
 # Clean up package manager
 RUN apt-get clean autoclean
 
+# Oh-My-Bash
+RUN cd /tmp && sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+
 # Add random number generator to skip Docker building cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
@@ -121,10 +123,8 @@ RUN git clone https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN git clone https://github.com/CoEDL/elpis-gui.git
 
-# Get example corpora
-RUN cd /tmp && git clone https://github.com/CoEDL/toy-corpora.git
-
-RUN cd /tmp && sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+WORKDIR /tmp
+RUN git clone https://github.com/CoEDL/toy-corpora.git
 
 RUN echo "FLASK_ENV=development" >> ~/.bashrc
 RUN echo "FLASK_APP=elpis" >> ~/.bashrc
@@ -142,9 +142,8 @@ RUN npm install && \
     npm run build
 
 WORKDIR /elpis
-RUN pip3.6 install -r requirements.txt
+RUN python3 -m venv venv && source venv/bin/activate && pip3.6 install -r requirements.txt
 
-ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
+#ENTRYPOINT ["source", "venv/bin/activate", "&&", "flask", "run", "--host", "0.0.0.0"]
 
-EXPOSE 5000:5000
-EXPOSE 8008:8008
+EXPOSE 5000:5000 8008:8008
