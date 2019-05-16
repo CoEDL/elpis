@@ -58,7 +58,7 @@ RUN echo "===> install Kaldi (latest from source)"  && \
     cd /kaldi/tools && \
     make && \
     ./install_portaudio.sh && \
-    cd /kaldi/src && ./configure --shared && \
+    cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
     make depend  && make && \
     cd /kaldi/src/online && make depend && make
