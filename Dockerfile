@@ -142,8 +142,12 @@ RUN npm install && \
     npm run build
 
 WORKDIR /elpis
-RUN python3 -m venv venv && source venv/bin/activate && pip3.6 install -r requirements.txt
+ENV VIRTUAL_ENV=/elpis/venv
+RUN /usr/bin/python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-#ENTRYPOINT ["source", "venv/bin/activate", "&&", "flask", "run", "--host", "0.0.0.0"]
+RUN pip3.6 install -r requirements.txt
 
-EXPOSE 5000:5000 8008:8008
+ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
+
+EXPOSE 5000:5000
