@@ -41,7 +41,7 @@ class Transcription(FSObject):
     def _cook_generate_infer_files(self):
         # cook the infer file generator
         # TODO fix below
-        with open('/kaldi-helpers/kaldi_helpers/inference/generate-infer-files.sh', 'r') as fin:
+        with open('/elpis/elpis/wrappers/inference/generate-infer-files.sh', 'r') as fin:
             generator: str = fin.read()
         generator = generator.replace('working_dir/input/infer', f'{self.path}')
         generator = generator.replace('working_dir/input/output/kaldi/data/test',
@@ -68,7 +68,7 @@ class Transcription(FSObject):
         resample(tmp_file_path, self.path.joinpath('audio.wav'))
 
     def _bake_gmm_decode_align(self):
-        with open('/kaldi-helpers/kaldi_helpers/inference/gmm-decode-align.sh', 'r') as fin:
+        with open('/elpis/elpis/wrappers/inference/gmm-decode-align.sh', 'r') as fin:
             content: str = fin.read()
         content = content.replace('../../../../kaldi_helpers/output/ctm_to_textgrid.py',
                                   '/kaldi-helpers/kaldi_helpers/output/ctm_to_textgrid.py')
