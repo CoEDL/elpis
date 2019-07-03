@@ -70,6 +70,8 @@ def files():
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
     if ds is None:
         return '{"status":"error", "data": "No current data bundle exists (prehaps create one first)"}'
+    print(ds)
+
     if request.method == 'POST':
         # TODO think about this below
         # files_overwrite = request.form["filesOverwrite"]

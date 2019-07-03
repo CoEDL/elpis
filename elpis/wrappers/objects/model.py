@@ -160,7 +160,7 @@ class Model(FSObject):
             mfcc_file_path = kaldi_structure.conf.joinpath('mfcc.conf')
             decode_config_file_path = kaldi_structure.conf.joinpath('decode.config')
 
-            template_path = Path('/kaldi-helpers/resources/kaldi_templates')
+            template_path = Path('/elpis/wrappers/templates')
             path_resource = template_path.joinpath('path.sh')
             mfcc_resource = template_path.joinpath('mfcc.conf')
             decode_config_resource = template_path.joinpath('decode.config')

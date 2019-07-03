@@ -5,17 +5,19 @@ from . import transcription
 
 from pathlib import Path
 
-bp = Blueprint("endpoints", __name__, url_prefix="/endpoints")
+bp = Blueprint("endpoints", __name__, url_prefix="/api")
 
 # add blueprint collections to the endpoints blueprint.
 bp.register_blueprint(databundle.bp)
 bp.register_blueprint(model.bp)
 bp.register_blueprint(transcription.bp)
 
+
 @bp.route("/")
 def whole_state():
     # TODO: implement this if needed
-    return '{"yet to be named": "the enture model!"}'
+    return '{"yet to be named": "the entire model!"}'
+
 
 @bp.route("/log.txt")
 def log():

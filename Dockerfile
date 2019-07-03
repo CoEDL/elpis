@@ -118,7 +118,7 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 # Elpis
 WORKDIR /
-RUN git clone https://github.com/CoEDL/elpis.git
+RUN git clone -b consolidation https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN git clone https://github.com/CoEDL/elpis-gui.git
@@ -148,6 +148,6 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN pip3.6 install -r requirements.txt
 
-ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
+# ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
