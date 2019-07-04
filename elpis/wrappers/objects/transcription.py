@@ -71,9 +71,9 @@ class Transcription(FSObject):
         with open('/elpis/elpis/wrappers/inference/gmm-decode-align.sh', 'r') as fin:
             content: str = fin.read()
         content = content.replace('../../../../kaldi_helpers/output/ctm_to_textgrid.py',
-                                  '/kaldi-helpers/kaldi_helpers/output/ctm_to_textgrid.py')
+                                  '/elpis/elpis/wrappers/output/ctm_to_textgrid.py')
         content = content.replace('../../../../kaldi_helpers/output/textgrid_to_elan.py',
-                                  '/kaldi-helpers/kaldi_helpers/output/textgrid_to_elan.py')
+                                  '/elpis/elpis/wrappers/output/textgrid_to_elan.py')
         decode_file_path = self.path.joinpath('gmm-decode-align.sh')
         with decode_file_path.open(mode='w') as fout:
             fout.write(content)
@@ -91,7 +91,7 @@ class Transcription(FSObject):
         # run gmm-decoder
         shutil.copytree(f'{self.path}', f"{kaldi_infer_path}")
         shutil.copy(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-        subprocess.run('sh /kaldi-helpers/kaldi_helpers/inference/gmm-decode.sh'.split(),
+        subprocess.run('sh /elpis/elpis/wrappers/inferenceinference/gmm-decode.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
 
         # move results
