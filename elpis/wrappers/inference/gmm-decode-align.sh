@@ -148,9 +148,11 @@ utils/int2sym.pl -f 5- \
     data/infer/align-words-best-intkeys.ctm \
     > data/infer/align-words-best-wordkeys.ctm
 
+./elpis/venv/bin/activate
+
 # BEST PATH WORDS (CTM) --> TEXTGRID
 echo "==== Converting CTM to Textgrid ===="
-python3.6 /elpis/elpis/wrappers/output/ctm_to_textgrid.py \
+python /elpis/elpis/wrappers/output/ctm_to_textgrid.py \
     --ctm data/infer/align-words-best-wordkeys.ctm \
     --wav data/infer/wav.scp \
     --seg data/infer/segments \
@@ -158,7 +160,7 @@ python3.6 /elpis/elpis/wrappers/output/ctm_to_textgrid.py \
 
 # TEXTGRID --> ELAN
 echo "==== Converting Textgrid to ELAN ===="
-python3.6 /elpis/elpis/wrappers/output/textgrid_to_elan.py \
+python /elpis/elpis/wrappers/output/textgrid_to_elan.py \
     --tg data/infer/utterance-0.TextGrid \
     --wav data/infer/wav.scp \
     --outfile data/infer/utterance-0.eaf
