@@ -75,9 +75,10 @@ class Transcription(FSObject):
         content = content.replace('../../../../kaldi_helpers/output/textgrid_to_elan.py',
                                   '/elpis/elpis/wrappers/output/textgrid_to_elan.py')
         decode_file_path = self.path.joinpath('gmm-decode-align.sh')
-        with decode_file_path.open(mode='w') as fout:
-            fout.write(content)
+        with decode_file_path.open(mode='w') as file_:
+            file_.write(content)
         run(f'chmod +x {decode_file_path}')
+
         p = subprocess.run(f'sh {decode_file_path}'.split(), cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
 
     def transcribe(self, audio):
@@ -100,8 +101,9 @@ class Transcription(FSObject):
         cmd += f"cp \"{kaldi_path}/$infer_audio_filename\" {self.path}"
         run(cmd)
 
-    def transcribe_align(self, audio, on_complete:Callable=None):
+    def transcribe_align(self, audio, on_complete: Callable=None):
         self._process_audio_file(audio)
+
         def transcribe():
             self._cook_generate_infer_files()
             kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
