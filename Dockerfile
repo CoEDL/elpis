@@ -148,6 +148,6 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN pip3.6 install -r requirements.txt
 
-# ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
+ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
