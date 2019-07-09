@@ -8,33 +8,33 @@ for use in automatically transcribing audio. It relies on the [Kaldi](http://kal
 The goal of Elpis is to expose the power of Kaldi to linguists and language workers by abstracting away much of the 
 needless technical complexity.
 
-Currently, the major component of Elpis is [kaldi_helpers](https://github.com/CoEDL/kaldi_helpers), a collection of 
+Elpis grew out of the [kaldi_helpers](https://github.com/CoEDL/kaldi_helpers) project, a collection of 
 Python and shell scripts designed to prepare data for use with Kaldi and convert between the various time-aligned 
-transcription formats that linguists work with.
+transcription formats that linguists work with. These scripts now make up the core of Elpis' input preparation and output
+conversion engines.
 
 ![Elpis Pathway](./docs/img/elpis-pipeline.svg)
 
 ## How Does It Work?
 
 Elpis uses [Docker](https://www.docker.com/), specifically an [Ubuntu Linux](https://www.ubuntu.com/) image, to install
-Kaldi and its (many) dependencies. It also installs [kaldi_helpers](https://github.com/CoEDL/kaldi_helpers) and the 
-[Task](https://taskfile.org/#/) task runner. We have defined a number of tasks which automate many common workflows like
-data preparation, model creation and inferring transcriptions for new files. You can read about these tasks and how to 
-use them [here](https://github.com/CoEDL/elpis/wiki/tasks).
+Kaldi and its (many) dependencies in an Ubuntu linux environment. Elpis itself consists of wrappers around Kaldi file 
+system objects, a [Flask](http://flask.pocoo.org/) server, and a web-based graphical user interface written in 
+[React](https://reactjs.org/).
+
+![Elpis GUI](./docs/img/elpis-gui.png)
 
 ## How Do I Use It?
 
-Please check the [wiki](https://github.com/CoEDL/elpis/wiki/Elpis-Step-By-Step-Guide) pages for a step-by-step guide to
-using Elpis on your data. If you're comfortable using Docker and are aware of the types of data required, you can also 
-consult our more concise 
-[advanced guide](https://github.com/CoEDL/elpis/wiki/Inferring-Transcriptions-for-New-Audio-Data-(Advanced)).
+Please check the [wiki](https://github.com/CoEDL/elpis/wiki/2019-ICLDC-Workshop-Steps) pages for a step-by-step guide to
+using Elpis on your data. 
+
+If you want to play around with Elpis' internals, or contribute to development we recommend
+cloning this repository and building the Docker image, but without the Docker ENTRYPOINT (you can simply comment it out).
+
 ### Requirements
 
-All the required programs should be available in the environment.
-
-* python3 + pip
-* git
-* npm
+All of the required dependencies are included in the Docker image provided, including Kaldi, Python 3 etc.
 
 ## Why Is It Called Elpis?
 
@@ -44,7 +44,7 @@ We've also backronymed it to stand for "Endangered Language Pipeline and Inferen
 for this project derives from our desire to assist in documentation and revitalisation efforts for the world's many
 endangered languages - including many in Australia, where most of Elpis' development has occurred.
 
-## I'm An Academic, How Do I Cite This?
+## I'm An Academic, How Do I Cite This In My Research?
 
 This software is the product of academic research funded by the Australian Research Council 
 [Centre of Excellence for the Dynamics of Language](http://www.dynamicsoflanguage.edu.au/). If you use the software 
@@ -55,3 +55,7 @@ Maxwell-Smith, Z., Nash, D., Olsson, O., Richards, M., San, N., Stoakes, H., Thi
 J. (2018). Building Speech Recognition Systems for Language Documentation: The CoEDL Endangered
 Language Pipeline and Inference System (Elpis). In S. S. Agrawal (Ed.), *The 6th Intl. Workshop on Spoken
 Language Technologies for Under-Resourced Languages (SLTU)* (pp. 200–204). Available on https://www.isca-speech.org/archive/SLTU_2018/pdfs/Ben.pdf.
+
+
+<img src="docs/img/coedl.png" align="right" width="250px"/> <img src="docs/img/uq.png" align="right" width="250px"/>
+
