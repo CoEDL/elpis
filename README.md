@@ -57,5 +57,5 @@ Language Pipeline and Inference System (Elpis). In S. S. Agrawal (Ed.), *The 6th
 Language Technologies for Under-Resourced Languages (SLTU)* (pp. 200–204). Available on https://www.isca-speech.org/archive/SLTU_2018/pdfs/Ben.pdf.
 
 
-<img src="docs/img/coedl.png" align="right" width="250px"/> <img src="docs/img/uq.png" align="right" width="250px"/>
+<img src="docs/img/coedl.png" align="left" width="250px"/> <img src="docs/img/uq.png" align="left" width="250px"/>
 
