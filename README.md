@@ -30,7 +30,7 @@ Please check the [wiki](https://github.com/CoEDL/elpis/wiki/2019-ICLDC-Workshop-
 using Elpis on your data. 
 
 If you want to play around with Elpis' internals, or contribute to development we recommend
-cloning this repository and building the Docker image, but without the Docker ENTRYPOINT (you can simply comment it out).
+cloning this repository and building the Docker image, but without the Docker `ENTRYPOINT` (you can simply comment it out).
 
 ### Requirements
 
@@ -57,5 +57,8 @@ Language Pipeline and Inference System (Elpis). In S. S. Agrawal (Ed.), *The 6th
 Language Technologies for Under-Resourced Languages (SLTU)* (pp. 200–204). Available on https://www.isca-speech.org/archive/SLTU_2018/pdfs/Ben.pdf.
 
 
-<img src="docs/img/coedl.png" align="center" width="250px"/> <img src="docs/img/uq.png" align="center" width="125px"/>
+<p align="center">
+    <img src="docs/img/coedl.png" width="250px" style="margin-right: 40px"/> 
+    <img src="docs/img/uq.png" width="125px" style="margin-left: 40px"/>
+</p>
 
