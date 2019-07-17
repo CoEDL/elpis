@@ -20,7 +20,7 @@ conversion engines.
 Elpis uses [Docker](https://www.docker.com/), specifically an [Ubuntu Linux](https://www.ubuntu.com/) image, to install
 Kaldi and its (many) dependencies in an Ubuntu linux environment. Elpis itself consists of wrappers around Kaldi file 
 system objects, a [Flask](http://flask.pocoo.org/) server, and a web-based graphical user interface written in 
-[React](https://reactjs.org/).
+[React](https://reactjs.org/) (maintained in a separate repository [here](https://github.com/CoEDL/elpis-gui)).
 
 ![Elpis GUI](./docs/img/elpis-gui.png)
 
@@ -30,7 +30,8 @@ Please check the [wiki](https://github.com/CoEDL/elpis/wiki/2019-ICLDC-Workshop-
 using Elpis on your data. 
 
 If you want to play around with Elpis' internals, or contribute to development we recommend
-cloning this repository and building the Docker image, but without the Docker `ENTRYPOINT` (you can simply comment it out).
+cloning this repository and building the Docker image, but without the Docker `ENTRYPOINT` (you can simply comment it 
+out or pass the argument `--entrypoint="bin/bash"` when starting up the Docker image).
 
 ### Requirements
 
@@ -47,8 +48,8 @@ endangered languages - including many in Australia, where most of Elpis' develop
 ## I'm An Academic, How Do I Cite This In My Research?
 
 This software is the product of academic research funded by the Australian Research Council 
-[Centre of Excellence for the Dynamics of Language](http://www.dynamicsoflanguage.edu.au/). If you use the software 
-or code in an academic setting, please be sure to cite it appropriately as follows:
+[Centre of Excellence for the Dynamics of Language](http://www.dynamicsoflanguage.edu.au/). If you use the software in 
+an academic setting, please be sure to cite it appropriately as follows:
 
 > Foley, B., Arnold, J., Coto-Solano, R., Durantin, G., Ellison, T. M., van Esch, D., Heath, S., Kratochvíl, F.,
 Maxwell-Smith, Z., Nash, D., Olsson, O., Richards, M., San, N., Stoakes, H., Thieberger, N. & Wiles,

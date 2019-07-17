@@ -146,7 +146,7 @@ ENV VIRTUAL_ENV=/elpis/venv
 RUN /usr/bin/python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip3.6 install -r requirements.txt
+RUN pip3.6 install wheel && python setup.py develop
 
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
