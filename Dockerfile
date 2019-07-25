@@ -118,8 +118,9 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 # Elpis
 WORKDIR /
-RUN git clone -b consolidation https://github.com/CoEDL/elpis.git
+RUN git clone https://github.com/CoEDL/elpis.git
 
+# Elpis GUI
 WORKDIR /elpis
 RUN git clone https://github.com/CoEDL/elpis-gui.git
 
