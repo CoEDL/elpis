@@ -45,6 +45,10 @@ We've also backronymed it to stand for "Endangered Language Pipeline and Inferen
 for this project derives from our desire to assist in documentation and revitalisation efforts for the world's many
 endangered languages - including many in Australia, where most of Elpis' development has occurred.
 
+## I'm having trouble!
+This project is under construction and not yet stable. Please contact us by email at `elpis.asr@gmail.com` 
+for project status information and support getting started.
+
 ## I'm An Academic, How Do I Cite This In My Research?
 
 This software is the product of academic research funded by the Australian Research Council 
