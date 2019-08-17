@@ -82,10 +82,12 @@ class ModelTrain extends Component {
                                 <Card.Content description={ t('model.settings.ngramLabel') + ' ' + settings.ngram } />
                             </Card>
 
-                            <Segment>
-                                {trainingButton}
-                                {checkStatusButton}
-                            </Segment>
+                            {status !== "trained" &&
+                                <Segment>
+                                    {trainingButton}
+                                    {checkStatusButton}
+                                </Segment>
+                            }
 
                             <Message icon>
                                 { loadingIcon }
@@ -94,10 +96,10 @@ class ModelTrain extends Component {
                                 </Message.Content>
                             </Message>
 
+{/*
                             <Card fluid>
                                 <Card.Content header={ t('model.train.logsHeader') } />
                                 <Card.Content description={ t('model.train.logsDescription') } />
-{/*
                                 <div className="kaldi-log">
                                     <ScrollFollow
                                         startFollowing={true}
@@ -106,14 +108,14 @@ class ModelTrain extends Component {
                                         )}
                                     />
                                 </div>
-*/}
-                            </Card>
-
+                                </Card>
                             <Divider />
+*/}
 
-                            <Button as={ Link } to={urls.gui.model.results}>
-                                { t('model.train.nextButton') }
-                            </Button>
+                            <Button as={Link} to={urls.gui.model.results} disabled={status === 'ready'}>
+                                    { t('model.train.nextButton') }
+                                </Button>
+
 {/*
                             <Button as={ Link } to="/model/train/error">
                                 { t('model.train.nextButtonError') }
