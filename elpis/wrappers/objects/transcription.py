@@ -2,11 +2,12 @@ from pathlib import Path
 from elpis.wrappers.input.resample import resample
 from elpis.wrappers.objects.command import run
 from elpis.wrappers.objects.fsobject import FSObject
-import shutil
+# import shutil
 import threading
 import subprocess
 from typing import Callable
-
+import os
+import distutils.dir_util
 
 class Transcription(FSObject):
     _config_file = "transcription.json"
@@ -16,8 +17,8 @@ class Transcription(FSObject):
         self.audio_file_path = self.path.joinpath('audio.wav')
         self.model = None
         self.config["model_name"] = None
-        self.config["status"] = "untranscribed"
-        self.status = "untranscribed"
+        self.config["status"] = "ready"
+        self.status = "ready"
 
     @classmethod
     def load(cls, base_path: Path):
@@ -38,6 +39,7 @@ class Transcription(FSObject):
     def status(self, value: str):
         self.config['status'] = value
 
+    # builds the infer files in the state transcription dir,
     def _cook_generate_infer_files(self):
         # cook the infer file generator
         # TODO fix below
@@ -64,7 +66,7 @@ class Transcription(FSObject):
         # elif isinstance(audio, BufferedIOBase):
         with tmp_file_path.open(mode='wb') as fout:
             fout.write(audio.read())
-        # resample the audio fie
+        # resample the audio file
         resample(tmp_file_path, self.path.joinpath('audio.wav'))
 
     def _bake_gmm_decode_align(self):
@@ -81,18 +83,19 @@ class Transcription(FSObject):
 
         p = subprocess.run(f'sh {decode_file_path}'.split(), cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
 
-    def transcribe(self, audio):
-        self._process_audio_file(audio)
-        self._cook_generate_infer_files()
-
+    def transcribe(self, on_complete: Callable=None):
+        self.status = "transcribing"
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
         kaldi_test_path = self.model.path.joinpath('kaldi', 'data', 'test')
         kaldi_path = self.model.path.joinpath('kaldi')
 
-        # run gmm-decoder
-        shutil.copytree(f'{self.path}', f"{kaldi_infer_path}")
-        shutil.copy(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-        subprocess.run('sh /elpis/elpis/wrappers/inferenceinference/gmm-decode.sh'.split(),
+        kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
+        os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
+        distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
+
+        distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
+
+        subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
 
         # move results
@@ -100,17 +103,18 @@ class Transcription(FSObject):
         cmd += f"infer_audio_filename=$(head -n 1 {kaldi_test_path}/wav.scp | awk '{{print $2}}' |  cut -c 3- ) && "
         cmd += f"cp \"{kaldi_path}/$infer_audio_filename\" {self.path}"
         run(cmd)
+        self.status = "transcribed"
+        on_complete()
 
-    def transcribe_align(self, audio, on_complete: Callable=None):
-        self._process_audio_file(audio)
+    def transcribe_align(self, on_complete: Callable=None):
 
         def transcribe():
-            self._cook_generate_infer_files()
+
             kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
 
-            # run gmm-decoder-align
-            shutil.copytree(f'{self.path}', f"{kaldi_infer_path}")
-            shutil.copy(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
+            distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
+            distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
+
             self._bake_gmm_decode_align()
             # p = subprocess.run('sh /kaldi-helpers/kaldi_helpers/inference/gmm-decode-align.sh'.split(),
             # cwd=f'{self.model.path.joinpath("kaldi")}')
@@ -120,7 +124,7 @@ class Transcription(FSObject):
             # cmd += f"infer_audio_filename=$(head -n 1 {kaldi_test_path}/wav.scp | awk '{{print $2}}' |  cut -c 3- ) && "
             # cmd += f"cp \"{kaldi_path}/$infer_audio_filename\" {self.path}"
             # run(cmd)
-            shutil.copy(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
+            distutils.file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
             self.status = "transcribed"
 
         def transcribe_in_background():
@@ -133,6 +137,15 @@ class Transcription(FSObject):
         else:
             t = threading.Thread(target=transcribe_in_background)
             t.start()
+
+    def prepare_audio(self, audio, on_complete: Callable=None):
+        self._process_audio_file(audio)
+        self._cook_generate_infer_files()
+        on_complete()
+
+    def text(self):
+        with open(f'{self.path}/one-best-hypothesis.txt', 'rb') as fin:
+            return fin.read()
 
     def elan(self):
         with open(f'{self.path}/{self.hash}.eaf', 'rb') as fin:
