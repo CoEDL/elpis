@@ -48,7 +48,10 @@ export default {
         },
         "transcription": {
             "new": "/api/transcription/new",
+            "transcribe": "/api/transcription/transcribe",
+            "transcribe_align": "/api/transcription/transcribe-align",
             "status": "/api/transcription/status",
+            "text": "/api/transcription/text",
             "elan": "/api/transcription/elan"
         }
     }

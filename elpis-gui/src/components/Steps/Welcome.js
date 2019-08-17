@@ -50,13 +50,21 @@ class StepWelcome extends Component {
 						<Segment>
 
 							<p>
-								Elpis is a tool to train a "speech recognition model", which you can then use to transcribe audio.
+								Elpis is a speech recognition tool, which you can use to transcribe audio.
+								It works in three parts:
 							</p>
-
 							<p>
-								Start by <Link to="/data-bundle/new">making a new data bundle</Link>.
+								Step 1) Collect some files <br />
+								Step 2) Training <br />
+								Step 3) Use it to tanscribe new audio
 							</p>
 
+						</Segment>
+
+						<Segment>
+							<p>
+								Start by <Link to="/data-bundle/new">making a new data bundle</Link> or <Link to="/data-bundles/">or use an existing one</Link>.
+							</p>
 						</Segment>
 
 					</Grid.Column>

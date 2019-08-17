@@ -5,60 +5,55 @@ import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import ReactTimeout from 'react-timeout'
 import downloadjs from 'downloadjs'
-import { transcriptionElan, transcriptionStatus } from 'redux/actions';
+import { transcriptionStatus ,transcriptionTranscribe, transcriptionTranscribeAlign, transcriptionGetText, transcriptionGetElan } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "components/Steps/Model/CurrentModelName";
 
 class NewTranscriptionResults extends Component {
 
+    statusInterval = null
+
     componentDidMount = () => {
-        this.statusInterval = this.props.setInterval(this.handleTranscriptionStatus, 5000)
+        const format = this.props.match.params.format
+        this.statusInterval = this.props.setInterval(this.handleTranscriptionStatus, 1000)
+        if (format == "text") this.props.transcriptionTranscribe()
+        if (format == "elan") this.props.transcriptionTranscribeAlign()
     }
 
     handleTranscriptionStatus = () => {
-        const { status, transcriptionStatus, transcriptionElan } = this.props;
-        console.log("status")
+        const { status, transcriptionStatus } = this.props;
+        const format = this.props.match.params.format
+
+        // check status from API
         transcriptionStatus()
+
         if (status==='transcribed') {
             this.props.clearInterval(this.statusInterval)
-            // build the Elan
-            transcriptionElan()
+            if (format == "text") this.props.transcriptionGetText()
+            if (format == "elan") this.props.transcriptionGetElan()
         }
-
-
     }
 
     handleElanBuild = () => {
         const { transcriptionElan } = this.props
-        transcriptionElan()
+        transcribeElan()
     }
 
-    handleElanDownload = () => {
-        const { elan } = this.props
-        downloadjs(elan, 'elan.eaf', 'text/xml');
+    handleDownload = () => {
+        const { elan, text } = this.props
+        const format = this.props.match.params.format
+        if (format == "text") downloadjs(text, 'text.txt', 'text/txt');
+        if (format == "elan") downloadjs(elan, 'elan.eaf', 'text/xml');
     }
 
     render() {
-        const { t, elan, audioFile, status } = this.props;
-
-        console.log('status', status)
+        const { t, audioFilename, elan, text, status } = this.props;
+        const format = this.props.match.params.format
 
         const loadingIcon = (status === 'transcribing') ? (
             <Icon name='circle notched' loading  />
         ) : null
-
-        const elanButtons = (status==='transcribed' && elan) ? (
-            <Segment>
-                <Button onClick={ this.handleElanDownload }>
-                { t('transcription.results.downloadElanButton') }
-                </Button>
-            </Segment>
-        ) : (
-            <Segment>
-                { t('transcription.results.downloadButtonsNotReadyYet') }
-            </Segment>
-        )
 
         return (
             <div>
@@ -78,7 +73,9 @@ class NewTranscriptionResults extends Component {
 
                             <CurrentModelName />
 
-                            <Segment>{ t('transcription.results.usingAudio') } { audioFile } </Segment>
+                            <Segment>
+                                {t('transcription.results.usingAudio', { audioFilename: audioFilename})}
+                            </Segment>
 
                             <Message icon>
                                 { loadingIcon }
@@ -87,19 +84,16 @@ class NewTranscriptionResults extends Component {
                                 </Message.Content>
                             </Message>
 
-{/*
-                            <Card fluid>
-                                <Card.Content header={ t('transcription.results.errorLogHeader') } />
-                                <Card.Content description='Were there any errors? Just output the log, nothing fancy' />
-                            </Card>
 
-                            <Card fluid>
-                                <Card.Content header={ t('transcription.results.resultsHeader') } />
-                                <Card.Content description='Blah Blah Blah Blah Blah' />
-                            </Card>
- */}
+                            {format == "text" && text && status == 'transcribed' &&
+                            <Segment>
+                                {text.split(' ').slice(1).join(' ')}
+                            </Segment>
+                            }
 
-                            {elanButtons}
+                            <Button disabled={status !== 'transcribed'} onClick={this.handleDownload}>
+                                {t('transcription.results.downloadButton')}
+                            </Button>
 
                         </Grid.Column>
                     </Grid>
@@ -113,19 +107,29 @@ class NewTranscriptionResults extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
-        elan: state.transcription.elan,
-        audioFile: state.transcription.audioFile,
-        status: state.transcription.status
+        status: state.transcription.status,
+        audioFilename: state.transcription.audioFilename,
+        text: state.transcription.text,
+        elan: state.transcription.elan
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    transcriptionElan: () => {
-        dispatch(transcriptionElan())
-    },
     transcriptionStatus: () => {
         dispatch(transcriptionStatus())
     },
+    transcriptionTranscribe: () => {
+        dispatch(transcriptionTranscribe())
+    },
+    transcriptionTranscribeAlign: () => {
+        dispatch(transcriptionTranscribeAlign())
+    },
+    transcriptionGetText: () => {
+        dispatch(transcriptionGetText())
+    },
+    transcriptionGetElan: () => {
+        dispatch(transcriptionGetElan())
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(

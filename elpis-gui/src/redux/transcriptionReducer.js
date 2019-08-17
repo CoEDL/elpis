@@ -1,38 +1,58 @@
 const initState = {
-    audioFile: '',
-    elan: null,
-    status: 'ready'
+    audioFilename: null,
+    status: 'ready',
+    text: null,
+    elan: null
 }
 
 const transcription = (state = initState, action) => {
 
     switch (action.type) {
-        case 'TRANSCRIPTION_NEW':
-            console.log("transcription reducer got", action.response)
+
+        // this just stores the audio filename
+        case 'TRANSCRIPTION_AUDIO_FILE':
+            console.log("reducer got file", action.filename)
+            return {
+                ...state,
+                audioFilename: action.filename
+            }
+
+        // after uploading the file
+        case 'TRANSCRIPTION_PREPARE':
             return {
                 ...state,
                 status: action.response.data.data,
             }
 
-        case 'TRANSCRIPTION_ELAN':
+        case 'TRANSCRIPTION_STATUS':
+            console.log("reducer", action.response.data.data)
+            return {
+                ...state,
+                status: action.response.data.data
+            }
+
+        case 'TRANSCRIPTION_STATUS_RESET':
+            return {
+                ...state,
+                status: 'ready',
+                text: null,
+                elan: null
+            }
+
+
+        case 'TRANSCRIPTION_GET_TEXT':
+            console.log("get text", action.response.data)
+            return {
+                ...state,
+                text: action.response.data
+            }
+
+        case 'TRANSCRIPTION_GET_ELAN':
             return {
                 ...state,
                 elan: action.response.data
             }
 
-        case 'TRANSCRIPTION_AUDIO':
-            console.log("TRANSCRIPTION_AUDIO action", action)
-            return {
-                ...state,
-                audioFile: action.audioFile,
-                status: 'ready'
-            }
-
-        case 'TRANSCRIPTION_STATUS':
-            return {
-                ...state,
-                status: action.response.data.data
-            }
         default:
             return state;
     }

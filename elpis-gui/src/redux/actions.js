@@ -58,9 +58,12 @@ var successHandler = {
     modelStatus: response => ({ type: 'MODEL_STATUS', response }),
     modelResults: response => ({ type: 'MODEL_RESULTS', response }),
 
-    transcriptionNew: response => ({ type: 'TRANSCRIPTION_NEW', response }),
+    transcriptionPrepare: response => ({ type: 'TRANSCRIPTION_PREPARE', response }),
     transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
-    transcriptionElan: response => ({ type: 'TRANSCRIPTION_ELAN', response })
+    transcriptionTranscribe: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE', response }),
+    transcriptionTranscribeAlign: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE_ALIGN', response }),
+    transcriptionGetText: response => ({ type: 'TRANSCRIPTION_GET_TEXT', response }),
+    transcriptionGetElan: response => ({ type: 'TRANSCRIPTION_GET_ELAN', response })
 }
 
 // * * * * * * * * * * DATA BUNDLES * * * * * * * * * * * * * * *
@@ -146,26 +149,61 @@ export const modelResults = () => {
 
 // * * * * * * * * * * TRANSCRIPTION * * * * * * * * * * * * * * *
 
-export const transcriptionNew = postData => {
-    // const url = "http://httpbin.org/post"
-    const url = baseUrl + urls.api.transcription.new
-    const headers = {headers: {'content-type': 'multipart/form-data'}}
-    return postApi(url, postData, 'transcriptionNew', headers)
+
+// export const transcriptionNew = postData => {
+//     console.log("start a new transcription")
+//     const url = baseUrl + urls.api.transcription.new
+//     const headers = {headers: {'content-type': 'multipart/form-data'}}
+//     return postApi(url, postData, 'transcriptionNew', headers)
+// }
+// export const transcriptionNewAlign = postData => {
+//     console.log("start a new transcription align")
+//     const url = baseUrl + urls.api.transcription.newAlign
+//     console.log("url", url)
+//     const headers = {headers: {'content-type': 'multipart/form-data'}}
+//     return postApi(url, postData, 'transcriptionNewAlign', headers)
+// }
+// export const transcriptionGetText = postData => {
+//     const url = baseUrl + urls.api.transcription.text
+//     return postApi(url, null, 'transcriptionGetText')
+// }
+
+export const transcriptionAudioFile = filename => {
+    console.log("action got file", filename)
+    return ({ type: 'TRANSCRIPTION_AUDIO_FILE', filename })
 }
-export const transcriptionElan = postData => {
-    const url = baseUrl + urls.api.transcription.elan
-    return postApi(url, null, 'transcriptionElan')
+export const transcriptionPrepare = postData => {
+    const url = baseUrl + urls.api.transcription.new
+    const headers = { headers: { 'content-type': 'multipart/form-data' } }
+    return postApi(url, postData, 'transcriptionPrepare', headers)
 }
 export const transcriptionStatus = () => {
-    console.log("transcriptionStatus")
     const url = baseUrl + urls.api.transcription.status
     return postApi(url, null, 'transcriptionStatus')
 }
-export const transcriptionAudio = audioFile => ({ type: 'TRANSCRIPTION_AUDIO', audioFile })
+export const transcriptionTranscribe = () => {
+    const url = baseUrl + urls.api.transcription.transcribe
+    console.log(url)
+    return postApi(url, null, 'transcriptionTranscribe')
+}
+export const transcriptionTranscribeAlign = () => {
+    const url = baseUrl + urls.api.transcription.transcribe_align
+    console.log(url)
+    return postApi(url, null, 'transcriptionTranscribeAlign')
+}
+export const transcriptionGetText = postData => {
+    const url = baseUrl + urls.api.transcription.text
+    return postApi(url, null, 'transcriptionGetText')
+}
+export const transcriptionGetElan = postData => {
+    const url = baseUrl + urls.api.transcription.elan
+    return postApi(url, null, 'transcriptionGetElan')
+}
+export const transcriptionStatusReset = status => ({ type: 'TRANSCRIPTION_STATUS_RESET', status })
 
 
 // * * * * * * * * * * GENERAL * * * * * * * * * * * * * * *
 
-export const setCurrentStep = (url) => ({ type: 'SET_CURRENT_STEP', url })
+export const setCurrentStep = url => ({ type: 'SET_CURRENT_STEP', url })
 
-export const triggerApiWaiting = (message) => ({ type: 'TRIGGER_API_WAITING', message })
+export const triggerApiWaiting = message => ({ type: 'TRIGGER_API_WAITING', message })

@@ -47,7 +47,7 @@ class App extends Component {
                         <Route path={urls.gui.model.error} exact component={ ModelError } />
 
                         <Route path={urls.gui.transcription.new} component={ NewTranscription } />
-                        <Route path={urls.gui.transcription.results} component={ NewTranscriptionResults } />
+                        <Route path={urls.gui.transcription.results + '/:format'} component={ NewTranscriptionResults } />
                     </PageContainer>
                 </Router>
             </div>

@@ -22,7 +22,7 @@ class DataBundleFiles extends Component {
         const { t, status, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
 
         const loadingIcon = (status === 'loading') ? (
-            <div class="status">
+            <div className="status">
                 <Icon name='circle notched' size="big" loading /> Uploading files
             </div>
         ) : null
