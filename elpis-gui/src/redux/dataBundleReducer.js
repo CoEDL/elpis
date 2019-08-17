@@ -6,6 +6,7 @@ let additionalTextFiles
 
 const initState = {
     name: "",
+    status: "",
     dataBundleList: [],
     audioFiles: [],
     transcriptionFiles: [],
@@ -65,8 +66,10 @@ const dataBundle = (state = initState, action) => {
             additionalTextFiles.sort()
             // remove duplicates
             audioFiles = [...(new Set(audioFiles))];
+
             return {
                 ...state,
+                status: "files loaded",
                 audioFiles,
                 transcriptionFiles,
                 additionalTextFiles
@@ -92,6 +95,11 @@ const dataBundle = (state = initState, action) => {
                 wordlist
             }
 
+        case 'DATA_BUNDLE_STATUS':
+            return {
+                ...state,
+                status: action.status
+            }
         default:
             return state;
     }

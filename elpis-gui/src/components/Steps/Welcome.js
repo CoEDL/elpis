@@ -21,7 +21,7 @@ class StepWelcome extends Component {
 
 				<Grid.Row>
 					<Grid.Column>
-
+{/*
 						<Segment>
 							<Button as={ Link } to="/data-bundle/new">
 								{ t('welcome.newDataBundleButton') }
@@ -45,9 +45,18 @@ class StepWelcome extends Component {
 								{ t('welcome.newTranscriptionButton') }
 							</Button>
 						</Segment>
+*/}
 
 						<Segment>
-						More information here..
+
+							<p>
+								Elpis is a tool to train a "speech recognition model", which you can then use to transcribe audio.
+							</p>
+
+							<p>
+								Start by <Link to="/data-bundle/new">making a new data bundle</Link>.
+							</p>
+
 						</Segment>
 
 					</Grid.Column>

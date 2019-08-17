@@ -90,6 +90,7 @@ export const dataBundleFiles = postData => {
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'dataBundleFiles', headers)
 }
+export const dataBundleStatus = status => ({ type: 'DATA_BUNDLE_STATUS', status })
 export const dataBundlePrepare = () => {
     const url = baseUrl + urls.api.dataBundle.prepare
     return postApi(url, null, 'dataBundlePrepare')

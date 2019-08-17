@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
 import { translate } from 'react-i18next';
-import { dataBundleFiles } from 'redux/actions';
+import { dataBundleFiles, dataBundleStatus } from 'redux/actions';
 import { connect } from 'react-redux';
 
 class FileUpload extends Component {
@@ -16,6 +16,7 @@ class FileUpload extends Component {
             console.log(file)
             formData.append('file', file);
         })
+        this.props.dataBundleStatus("loading");
         this.props.dataBundleFiles(formData);
     };
 
@@ -53,6 +54,9 @@ class FileUpload extends Component {
 const mapDispatchToProps = dispatch => ({
     dataBundleFiles: postData => {
         dispatch(dataBundleFiles(postData));
+    },
+    dataBundleStatus: status => {
+        dispatch(dataBundleStatus(status));
     }
 })
 

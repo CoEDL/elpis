@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
-import { Button, Checkbox, Divider, Form, Grid, Header, Input, List, Message, Segment } from 'semantic-ui-react';
+import { Button, Checkbox, Divider, Form, Grid, Header, Icon, Input, List, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik, ErrorMessage } from 'formik';
@@ -19,7 +19,13 @@ class DataBundleFiles extends Component {
 
     render() {
 
-        const { t, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
+        const { t, status, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
+
+        const loadingIcon = (status === 'loading') ? (
+            <div class="status">
+                <Icon name='circle notched' size="big" loading /> Uploading files
+            </div>
+        ) : null
 
         const audioFileList = audioFiles.map(file => (
             <List.Item key={ file }>
@@ -63,7 +69,10 @@ class DataBundleFiles extends Component {
                             <Message attached content={ t('dataBundle.files.description') } />
 
                             <Segment className="attached">
+
                                 <FileUpload />
+
+                                <p>{loadingIcon}</p>
 
                                 <Header as='h3'>
                                     { filesHeader }
@@ -170,7 +179,8 @@ const mapStateToProps = state => {
         audioFiles: state.dataBundle.audioFiles,
         transcriptionFiles: state.dataBundle.transcriptionFiles,
         additionalTextFiles: state.dataBundle.additionalTextFiles,
-        settings: state.dataBundle.settings
+        settings: state.dataBundle.settings,
+        status: state.dataBundle.status
     }
 }
 

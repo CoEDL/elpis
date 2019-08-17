@@ -20,6 +20,10 @@ code {
     background-color: orange;
 }
 
+.status {
+    margin-top:1em;
+}
+
 .logo {
     height: 50px !important;
     width: auto !important;
