@@ -35,11 +35,6 @@ class NewTranscriptionResults extends Component {
         }
     }
 
-    handleElanBuild = () => {
-        const { transcriptionElan } = this.props
-        transcribeElan()
-    }
-
     handleDownload = () => {
         const { elan, text } = this.props
         const format = this.props.match.params.format
