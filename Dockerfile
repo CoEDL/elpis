@@ -83,7 +83,7 @@ RUN wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz && \
     tar xvf Python-3.6.6.tgz && \
     cd Python-3.6.6 && \
     ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
-    make -j8 && \
+    make -j8 build_all && \
     make altinstall
 
 # Add python packages and their dependencies
@@ -118,14 +118,14 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 # Elpis
 WORKDIR /
-RUN git clone https://github.com/CoEDL/elpis.git
+RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 
 # Elpis GUI
 WORKDIR /elpis
-RUN git clone https://github.com/CoEDL/elpis-gui.git
+RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
 
 WORKDIR /tmp
-RUN git clone https://github.com/CoEDL/toy-corpora.git
+RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
 RUN echo "FLASK_ENV=development" >> ~/.bashrc
 RUN echo "FLASK_APP=elpis" >> ~/.bashrc
