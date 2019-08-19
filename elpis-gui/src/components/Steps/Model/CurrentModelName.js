@@ -24,9 +24,9 @@ class CurrentModelName extends Component {
         const current = name ?
         (
             <Message color='olive'>
-                { t('model.common.currentModelLabel') + name }
-                <br />
                 { t('dataBundle.common.currentDataBundleLabel') + dataBundleName }
+                <br />
+                { t('model.common.currentModelLabel') + name }
             </Message>
         ) : (
             <Message negative>

@@ -53,7 +53,7 @@ class DataBundlePrepare extends Component {
                             sorted={ column === 'name' ? direction : null }
                             onClick={ this.handleSort('name', list) }
                         >
-                            Name
+                            Word
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'frequency' ? direction : null }

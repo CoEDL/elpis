@@ -59,7 +59,7 @@ class ModelDashboard extends Component {
                             sorted={ column === 'dataset_name' ? direction : null }
                             onClick={ this.handleSort('dataset_name', list) }
                         >
-                            Data
+                            Recordings
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>

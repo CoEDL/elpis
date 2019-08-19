@@ -8,26 +8,26 @@ const initialStepModelState = {
 	currentStep: [0, 0],
 	steps: [
 		{
-			title: "Step 1 Data Bundles",
+			title: "Step 1 Recordings",
 			path: urls.gui.dataBundle.index,
 			done: false, doing: false, enabled: true,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Data bundles", path: urls.gui.dataBundle.index, type:"solo" },
-				{ done: false, doing: false, enabled: false, title: "New data bundle", path: urls.gui.dataBundle.new },
-				{ done: false, doing: false, enabled: false, title: "Add data", path: urls.gui.dataBundle.files },
-				{ done: false, doing: false, enabled: false, title: "Data preparation", path: urls.gui.dataBundle.prepare }
+				{ done: false, doing: false, enabled: false, title: "Recordings", path: urls.gui.dataBundle.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.dataBundle.new },
+				{ done: false, doing: false, enabled: false, title: "Add files", path: urls.gui.dataBundle.files },
+				{ done: false, doing: false, enabled: false, title: "Preparation", path: urls.gui.dataBundle.prepare }
 
 			]
 		},
 		{
-			title: "Step 2 Models",
+			title: "Step 2 Training",
 			path: urls.gui.model.index,
 			done: false, doing: false, enabled: false,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Models", path: urls.gui.model.index, type:"solo" },
-				{ done: false, doing: false, enabled: false, title: "New model", path: urls.gui.model.new },
+				{ done: false, doing: false, enabled: false, title: "Training sessions", path: urls.gui.model.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.model.new },
 				{ done: false, doing: false, enabled: false, title: "Letter to sound", path: urls.gui.model.l2s },
-				{ done: false, doing: false, enabled: false, title: "Lexicon", path: urls.gui.model.lexicon },
+				{ done: false, doing: false, enabled: false, title: "Pronunciation", path: urls.gui.model.lexicon },
 				{ done: false, doing: false, enabled: false, title: "Settings", path: urls.gui.model.settings },
 				{ done: false, doing: false, enabled: false, title: "Training", path: urls.gui.model.train },
 				{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.model.results },

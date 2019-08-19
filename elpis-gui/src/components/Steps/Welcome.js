@@ -21,31 +21,6 @@ class StepWelcome extends Component {
 
 				<Grid.Row>
 					<Grid.Column>
-{/*
-						<Segment>
-							<Button as={ Link } to="/data-bundle/new">
-								{ t('welcome.newDataBundleButton') }
-							</Button>
-							<Button as={ Link } to="/model/new">
-								{ t('welcome.newModelButton') }
-							</Button>
-						</Segment>
-
-						<Segment>
-							<Button as={ Link } to="/data-bundles">
-								{ t('welcome.dataBundlesButton') }
-							</Button>
-							<Button as={ Link } to="/models">
-								{ t('welcome.modelsButton') }
-							</Button>
-						</Segment>
-
-						<Segment>
-							<Button as={ Link } to="/transcription/new">
-								{ t('welcome.newTranscriptionButton') }
-							</Button>
-						</Segment>
-*/}
 
 						<Segment>
 
@@ -54,8 +29,8 @@ class StepWelcome extends Component {
 								It works in three parts:
 							</p>
 							<p>
-								Step 1) Collect some files <br />
-								Step 2) Training <br />
+								Step 1) Add some language recordings and their transcriptions that you already have <br />
+								Step 2) Training the tool <br />
 								Step 3) Use it to tanscribe new audio
 							</p>
 
@@ -63,7 +38,7 @@ class StepWelcome extends Component {
 
 						<Segment>
 							<p>
-								Start by <Link to="/data-bundle/new">making a new data bundle</Link> or <Link to="/data-bundles/">or use an existing one</Link>.
+								Start by <Link to="/data-bundle/new">adding some recordings</Link> or <Link to="/data-bundles/">or use what you have added before</Link>.
 							</p>
 						</Segment>
 

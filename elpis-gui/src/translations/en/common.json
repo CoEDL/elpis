@@ -1,39 +1,32 @@
 {
     "welcome": {
-        "title": "Elpis",
-        "intro": "This is fun. {{passInSomething}}",
-        "newDataBundleButton": "Build a new Data Bundle",
-        "newModelButton": "Build a new Model",
-        "dataBundlesButton": "Choose an existing Data Bundle",
-        "modelsButton": "Choose a Model",
-        "newTranscriptionButton": "New Transcription",
-        "stepPlaceholder": "step descriptions"
+        "title": "Elpis"
     },
     "dataBundle": {
         "common": {
-            "currentDataBundleLabel": "Current data bundle: ",
-            "noCurrentDataBundleLabel": "No current data bundle."
+            "currentDataBundleLabel": "Current recordings: ",
+            "noCurrentDataBundleLabel": "No groups of recording files yet."
         },
         "dashboard": {
-            "title": "Data bundles",
-            "noneMessage": "No bundles yet"
+            "title": "Recordings",
+            "noneMessage": "No recordings yet"
         },
         "new": {
-            "title": "New Data Bundle",
+            "title": "New group of recordings",
             "nameLabel": "name",
             "namePlaceholder": "Name",
             "nextButton": "Next"
         },
         "files": {
-            "title": "Add data",
-            "description": "Upload your training and testing data here. \n Please use 44.1kHz WAV format audio, and .eaf Elan transcription files. \n Audio files and transcription files must have matching filenames.",
+            "title": "Add files",
+            "description": "Upload your language recording and transcription files here. \n Please use 44.1kHz WAV format audio, and .eaf Elan transcription files. \n Audio files and transcription files need to have matching filenames. \n You can also upload text files like wordlists or stories that don't have audio.",
             "filesHeader": "Uploaded files",
             "settingsHeader": "Settings",
             "tierLabel": "tier name",
             "settingsDescription": "What is the name of the Elan tier that your transcriptions are on?",
             "saveButton": "Save Settings",
             "nextButton": "Next",
-            "nextButtonError": "(Simulate a data input error)"
+            "nextButtonError": "(Simulate a file input error)"
         },
         "fileUpload": {
             "audioLabel": "Audio files:",
@@ -43,8 +36,8 @@
             "dropFilesHintDragActive": "Drop files here.."
         },
         "prepare": {
-            "title": "Data preparation",
-            "header": "Overview of training corpus",
+            "title": "Recording preparation",
+            "header": "Word frequency of training files",
             "bannerMessage": "Text has been cleaned and normalised OK",
             "bannerMessageDetailed": "Punctuation has been removed.",
             "wordlistHeader": "Wordlist",
@@ -52,22 +45,22 @@
             "nextButton": "Next"
         },
         "prepareError": {
-            "title": "Data preparation error",
-            "backButton": "Back to add data"
+            "title": "File preparation error",
+            "backButton": "Back to add files"
         }
     },
     "model": {
         "common": {
-            "currentModelLabel": "Current model: ",
-            "noCurrentModelLabel": "No current model.",
+            "currentModelLabel": "Current training session: ",
+            "noCurrentModelLabel": "No current training session.",
             "chooseOrNewLabel": "Choose one."
         },
         "dashboard": {
-            "title": "Models",
-            "noneMessage": "No models yet"
+            "title": "Training",
+            "noneMessage": "No training sessions yet"
         },
         "new": {
-            "title": "New Model",
+            "title": "New training session",
             "nameLabel": "name",
             "namePlaceholder": "Name",
             "nextButton": "Next"
@@ -82,8 +75,8 @@
             "nextButton": "Next"
         },
         "lexicon": {
-            "title": "Review the lexicon",
-            "description": "The pronunciation lexicon is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
+            "title": "Review the pronunciation dictionary",
+            "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
             "nextButton": "Next"
         },
         "settings": {
@@ -100,9 +93,9 @@
         "train": {
             "title": "Training the Model",
             "settingsHeader": "Settings",
-            "preparingAcousticHeader": "Preparing acoustic data",
+            "preparingAcousticHeader": "Preparing acoustic information",
             "featuresExtractionHeader": "Features extraction",
-            "preparingLanguageDataHeader": "Preparing language data",
+            "preparingLanguageDataHeader": "Preparing language information",
             "logsHeader": "Logs",
             "logsDescription": "gory detail from Kaldi (coming soon)",
             "trainButton": "Start training",
@@ -113,11 +106,11 @@
         "results": {
             "title": "Trained Model Results",
             "description": "List of models that have been run here.",
-            "downloadButton": "Download a bundle of the model, settings and information about training data",
+            "downloadButton": "Download a bundle of the model, settings and information about training information",
             "downloadModalHeader": "Your files and settings are being compiled",
             "downloadModalContent": "Click Save on your browser's download dialog",
             "downloadOkButton": "OK",
-            "newTranscribeButton": "Use the model to transcribe new audio"
+            "newTranscribeButton": "Use the trained model to transcribe new audio"
         },
         "error": {
             "title": "Error occured while training the model",
