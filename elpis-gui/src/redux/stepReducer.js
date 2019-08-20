@@ -15,7 +15,7 @@ const initialStepModelState = {
 				{ done: false, doing: false, enabled: false, title: "Recordings", path: urls.gui.dataBundle.index, type:"solo" },
 				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.dataBundle.new },
 				{ done: false, doing: false, enabled: false, title: "Add files", path: urls.gui.dataBundle.files },
-				{ done: false, doing: false, enabled: false, title: "Preparation", path: urls.gui.dataBundle.prepare }
+				{ done: false, doing: false, enabled: false, title: "Prepare", path: urls.gui.dataBundle.prepare }
 
 			]
 		},
@@ -24,7 +24,7 @@ const initialStepModelState = {
 			path: urls.gui.model.index,
 			done: false, doing: false, enabled: false,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Training sessions", path: urls.gui.model.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "Sessions", path: urls.gui.model.index, type:"solo" },
 				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.model.new },
 				{ done: false, doing: false, enabled: false, title: "Letter to sound", path: urls.gui.model.l2s },
 				{ done: false, doing: false, enabled: false, title: "Pronunciation", path: urls.gui.model.lexicon },

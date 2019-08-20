@@ -38,7 +38,7 @@ class StepWelcome extends Component {
 
 						<Segment>
 							<p>
-								Start by <Link to="/data-bundle/new">adding some recordings</Link> or <Link to="/data-bundles/">or use what you have added before</Link>.
+								Start by <Link to="/data-bundle/new">making a new group of recordings</Link> or <Link to="/data-bundles/">or use one you have started before</Link>.
 							</p>
 						</Segment>
 

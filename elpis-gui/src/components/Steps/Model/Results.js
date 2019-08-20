@@ -22,8 +22,6 @@ class ModelResults extends Component {
         const resultsEl = results ? (
             <Segment>
 
-                (known bug: this is showing the most recently trained results, not necessarily for the selected model)
-
                 <Table celled>
                     <Table.Body>
                         <Table.Row>
@@ -35,6 +33,10 @@ class ModelResults extends Component {
                         </Table.Row>
                     </Table.Body>
                 </Table>
+                <p className="bug">
+                    This is showing the most recently trained results, not necessarily for the selected model.
+                </p>
+
             </Segment>
         ) : null
 

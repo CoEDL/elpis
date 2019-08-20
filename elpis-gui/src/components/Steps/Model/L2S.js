@@ -74,13 +74,13 @@ class ModelL2S extends Component {
                                 } }
                             </Dropzone>
 
-                            { pron }
+                            <Button as={Link} to={urls.gui.model.lexicon}>
+                                {t('model.l2s.nextButton')}
+                            </Button>
 
                             <Divider />
 
-                            <Button as={ Link } to={ urls.gui.model.lexicon }>
-                                { t('model.l2s.nextButton') }
-                            </Button>
+                            { pron }
 
                         </Grid.Column>
                     </Grid>

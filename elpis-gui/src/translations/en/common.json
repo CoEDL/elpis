@@ -5,11 +5,11 @@
     "dataBundle": {
         "common": {
             "currentDataBundleLabel": "Current recordings: ",
-            "noCurrentDataBundleLabel": "No groups of recording files yet."
+            "noCurrentDataBundleLabel": "No groups of recordings yet."
         },
         "dashboard": {
             "title": "Recordings",
-            "noneMessage": "No recordings yet"
+            "noneMessage": "No groups of recordings yet"
         },
         "new": {
             "title": "New group of recordings",
@@ -36,7 +36,7 @@
             "dropFilesHintDragActive": "Drop files here.."
         },
         "prepare": {
-            "title": "Recording preparation",
+            "title": "Prepare",
             "header": "Word frequency of training files",
             "bannerMessage": "Text has been cleaned and normalised OK",
             "bannerMessageDetailed": "Punctuation has been removed.",
@@ -80,18 +80,18 @@
             "nextButton": "Next"
         },
         "settings": {
-            "title": "Model settings",
-            "description": "These settings are used when training the model.",
+            "title": "Settings",
+            "description": "These settings are used to adjust the training.",
             "advancedHeader": "Advanced",
             "audioLabel": "Audio Frequency",
             "mfccLabel": "MFCC stuff",
-            "ngramDescription": "n-gram value of 1 will set the system to learn single words. To make the system learn from words and their context (neighbouring words), set the n-gram to 2 or 3.",
+            "ngramDescription": "The n-gram adjusts whether the system learns single words or words and their neighbours. A value of 1 will set the system to learn single words. To make the system learn from words and their neighbouring words, set the n-gram to 2 or 3.",
             "ngramLabel": "n-gram",
             "beamLabel": "Beam size",
             "nextButton": "Next"
         },
         "train": {
-            "title": "Training the Model",
+            "title": "Training",
             "settingsHeader": "Settings",
             "preparingAcousticHeader": "Preparing acoustic information",
             "featuresExtractionHeader": "Features extraction",
@@ -104,16 +104,16 @@
             "nextButtonError": "(Simulate an error training model)"
         },
         "results": {
-            "title": "Trained Model Results",
+            "title": "Results",
             "description": "List of models that have been run here.",
             "downloadButton": "Download a bundle of the model, settings and information about training information",
             "downloadModalHeader": "Your files and settings are being compiled",
             "downloadModalContent": "Click Save on your browser's download dialog",
             "downloadOkButton": "OK",
-            "newTranscribeButton": "Use the trained model to transcribe new audio"
+            "newTranscribeButton": "Transcribe new audio"
         },
         "error": {
-            "title": "Error occured while training the model",
+            "title": "Error occured while training",
             "errorLogHeader": "Error Log",
             "contactButton": "Contact a Tech-person"
         }
@@ -124,7 +124,7 @@
             "dropFilesHint": "Click here to choose an audio file, or drop an audio file here",
             "dropFilesHintDragActive": "Here here..",
             "addAudioButton": "Add Audio",
-            "chooseModelHeader": "Choose a model",
+            "chooseModelHeader": "Choose a training session",
             "usingAudio": "uploaded audio {{audioFilename}}",
             "format": "Format ",
             "resultsText": "Text",
@@ -133,7 +133,7 @@
         },
         "results": {
             "title": "Transcribed results",
-            "usingModel": "using model {{modelName}}",
+            "usingModel": "using training {{modelName}}",
             "usingAudio": "for audio {{audioFilename}}",
             "errorLogHeader": "Error Log",
             "resultsHeader": "Transcription as text",

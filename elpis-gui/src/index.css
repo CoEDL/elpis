@@ -68,3 +68,8 @@ li.no-lst {
 .ui.message .content {
     white-space: pre-line;
 }
+
+.bug {
+    color: #333;
+    font-style: italic;
+}
