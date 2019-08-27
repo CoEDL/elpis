@@ -26,7 +26,7 @@ system objects, a [Flask](http://flask.pocoo.org/) server, and a web-based graph
 
 ## How Do I Use It?
 
-Please check the [wiki](https://github.com/CoEDL/elpis/wiki/2019-ICLDC-Workshop-Steps) pages for a step-by-step guide to
+Please check the [wiki](https://github.com/CoEDL/elpis/wiki/) pages for a step-by-step guide to
 using Elpis on your data. 
 
 If you want to play around with Elpis' internals, or contribute to development we recommend
