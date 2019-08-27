@@ -60,7 +60,7 @@ RUN echo "===> install Kaldi (latest from source)"  && \
     cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
     make depend  && make && \
-    cd /kaldi/src/online2 && make depend && make &&
+    cd /kaldi/src/online2 && make depend && make && \
     cd /kaldi/src/online2bin && make depend && make
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
