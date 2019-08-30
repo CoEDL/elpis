@@ -104,7 +104,8 @@ class Transcription(FSObject):
         cmd += f"cp \"{kaldi_path}/$infer_audio_filename\" {self.path}"
         run(cmd)
         self.status = "transcribed"
-        on_complete()
+        if on_complete is not None:
+            on_complete()
 
     def transcribe_align(self, on_complete: Callable=None):
 
