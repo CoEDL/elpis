@@ -141,7 +141,8 @@ class Transcription(FSObject):
     def prepare_audio(self, audio, on_complete: Callable=None):
         self._process_audio_file(audio)
         self._cook_generate_infer_files()
-        on_complete()
+        if on_complete is not None:
+            on_complete()
 
     def text(self):
         with open(f'{self.path}/one-best-hypothesis.txt', 'rb') as fin:

@@ -258,8 +258,8 @@ class Model(FSObject):
                     dst = f'{local_kaldi_path}'
                     shutil.copy(src, dst)
                 print('done.')
-            except:
-                print('couldnt prepare kaldi dirs')
+            except e:
+                print('couldnt prepare kaldi dirs: ', e)
 
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')

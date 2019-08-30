@@ -128,6 +128,16 @@ class Dataset(FSObject):
             fout.write(fp.read())
         self.__files.append(path)
         self.config['files'] = [f'{f.name}' for f in self.__files]
+    
+    def add_directory(self, path, filter=[]):
+        """Add all the contents of the given directory to the dataset."""
+        path: Path = Path(path)
+        for filepath in path.iterdir():
+            if len(filter) != 0:
+                if filepath.name.split('.')[-1] not in filter:
+                    continue
+            file_pointer = filepath.open(mode='rb')
+            self.add_fp(file_pointer, filepath.name)
 
     def process(self):
         # remove existing file in resampled
