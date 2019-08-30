@@ -16,7 +16,7 @@ kaldi = KaldiInterface('/elpis/state')
 # ======
 # Setup a dataset to to train data on.
 ds = kaldi.new_dataset('dsy')
-ds.add_directory('/elpis/abui_toy_corpus/data/', filter=['eaf', 'wav'])
+ds.add_directory('/recordings/transcribed', filter=['eaf', 'wav'])
 ds.process()
 
 # Step 2
@@ -24,7 +24,7 @@ ds.process()
 # Link dataset to a new model, then train the model.
 m = kaldi.new_model('mx')
 m.link(ds)
-m.set_l2s_path('/elpis/abui_toy_corpus/config/letter_to_sound.txt')
+m.set_l2s_path('/recordings/letter_to_sound.txt')
 m.generate_lexicon()
 m.train() # may take a while
 
@@ -33,7 +33,9 @@ m.train() # may take a while
 # Make a transcription interface and transcribe unseen audio to elan.
 t = kaldi.new_transcription('tx')
 t.link(m)
-with open('/elpis/abui_toy_corpus/data/1_1_1.wav', 'rb') as faudio:
+with open('/recordings/untranscribed.wav', 'rb') as faudio:
     t.prepare_audio(faudio)
-t.transcribe_align()
-print(t.elan().decode('utf-8'))
+# t.transcribe_align()
+t.transcribe()
+# print(t.elan().decode('utf-8'))
+print(t.text().decode('utf-8'))
