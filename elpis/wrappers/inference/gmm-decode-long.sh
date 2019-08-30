@@ -3,19 +3,38 @@
 # Include Path
 . ./path.sh
 
-# COPY TRAINED MODEL
-echo "==== Copying Pretrained Model ===="
-cp -R ./exp/tri1 ./exp/tri
+# AUDIO --> FEATURE VECTORS
+echo "==== Extracting Feature Vectors ===="
+steps/make_mfcc.sh --nj 1 data/infer exp/make_mfcc/infer mfcc
 
-# "Usage: online-wav-gmm-decode-faster [options] wav-rspecifier model-in"
-#        "fst-in word-symbol-table silence-phones transcript-wspecifier "
+echo "==== Applying CMVN ===="
+apply-cmvn --utt2spk=ark:data/infer/utt2spk \
+    scp:mfcc/cmvn_test.scp \
+    scp:mfcc/raw_mfcc_infer.1.scp ark:- | \
+    add-deltas ark:- ark:data/infer/delta-feats.ark
 
+# TRAINED GMM-HMM + FEATURE VECTORS --> LATTICE
+echo "==== Producing Lattice ===="
+gmm-latgen-faster \
+    --word-symbol-table=exp/tri1/graph/words.txt \
+    exp/tri1/final.mdl \
+    exp/tri1/graph/HCLG.fst \
+    ark:data/infer/delta-feats.ark \
+    ark,t:data/infer/lattices.ark
+
+./steps/online/prepare_online_decoding.sh \
+    data/train \
+    data/lang \
+    exp/tri \
+    exp/tri/final.mdl \
+    exp/tri_online
 
 /kaldi/src/featbin/compute-cmvn-stats ark:data/infer/delta-feats.ark cmvn.scp
 
 /kaldi/src/online2bin/online2-wav-gmm-latgen-faster \
+    --model=exp/tri/final.mdl \
     --global-cmvn-stats=cmvn.scp \
-    ./exp/tri1/graph/HCLG.fst \
-    ark:./data/infer/spk2utt \
-    scp:./wav.scp \
-    ark:./lattice.ark
+    exp/tri/graph/HCLG.fst \
+    ark:data/infer/spk2utt \
+    scp:wav.scp \
+    ark:data/infer/lattices.ark
