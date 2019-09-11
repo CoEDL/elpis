@@ -4,6 +4,7 @@ import subprocess
 from elpis.wrappers.objects.interface import KaldiInterface
 from elpis.wrappers.objects.model import Model
 from elpis.wrappers.objects.dataset import Dataset
+from elpis.wrappers.objects.pron_dict import PronDict
 
 from pathlib import Path
 
@@ -28,8 +29,12 @@ def run(cmd: str) -> str:
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     m = kaldi.new_model(request.json["name"])
+    print(app.config['CURRENT_DATABUNDLE'])
+    print(app.config['CURRENT_PRON_DICT'])
     ds: Dataset = app.config['CURRENT_DATABUNDLE']
-    m.link(ds)
+    pd: PronDict = app.config['CURRENT_PRON_DICT']
+    m.link(ds, pd)
+    m.build_kaldi_structure()
     app.config['CURRENT_MODEL'] = m
     data = {"config": m.config._load()}
     return jsonify({
@@ -42,12 +47,19 @@ def new():
 def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     m = kaldi.get_model(request.json["name"])
+    print("model load")
     # set the databundle to match the model
     app.config['CURRENT_DATABUNDLE'] = m.dataset
+    app.config['CURRENT_PRON_DICT'] = m.pron_dict
     app.config['CURRENT_MODEL'] = m
     data = {
         "config": m.config._load()
     }
+    # print(m.pron_dict.config['name'])
+    # print(m.pron_dict.config['pron_dict_name'])
+    # print(m.pron_dict.config['l2s'])
+    # print(m.pron_dict.l2s_path)
+    # print(m.pron_dict.lexicon_txt)
     return jsonify({
         "status": "ok",
         "data": data

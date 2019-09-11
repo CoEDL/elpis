@@ -51,6 +51,7 @@ class Model(FSObject):
         self.config['status'] = value
 
     def link(self, dataset: Dataset, pron_dict: PronDict):
+        print("model link")
         self.dataset = dataset
         self.config['dataset_name'] = dataset.name
         self.pron_dict = pron_dict
@@ -66,6 +67,7 @@ class Model(FSObject):
 
 
     def build_kaldi_structure(self):
+        print("build_kaldi_structure")
         # task make-kaldi-subfolders
         temporary_path = Path('/tmp', self.hash)
         temporary_path.mkdir(parents=True, exist_ok=True)
@@ -100,7 +102,10 @@ class Model(FSObject):
         )
 
     def train(self, on_complete:Callable=None):
+        print("train")
+
         def prepare_for_training():
+            print("prepare_for_training")
 
             print(f"self path is {self.path}")
 
@@ -232,7 +237,7 @@ class Model(FSObject):
                     dst = f'{local_kaldi_path}'
                     shutil.copy(src, dst)
                 print('done.')
-            except e:
+            except BaseException as e:
                 print('couldnt prepare kaldi dirs: ', e)
 
         def train():

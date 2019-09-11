@@ -3,19 +3,25 @@ from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.wrappers.objects.interface import KaldiInterface
 from elpis.wrappers.objects.pron_dict import PronDict
+from elpis.wrappers.objects.dataset import Dataset
 
 
-bp = Blueprint("pron_dict", __name__, url_prefix="/pron_dict")
+bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
 
 
 @bp.route("/new", methods=['GET', 'POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     pd = kaldi.new_pron_dict(request.json['name'])
+    ds: Dataset = app.config['CURRENT_DATABUNDLE']
+    pd.link(ds)
     app.config['CURRENT_PRON_DICT'] = pd
+    data = {
+        "config": pd.config._load()
+    }
     return jsonify({
         "status": "ok",
-        "data": pd.config._load()
+        "data": data
     })
 
 
@@ -23,10 +29,15 @@ def new():
 def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     pd = kaldi.get_pron_dict(request.json['name'])
+    app.config['CURRENT_DATABUNDLE'] = pd.dataset
     app.config['CURRENT_PRON_DICT'] = pd
+    data = {
+        "config": pd.config._load(),
+        "l2s": pd.get_l2s_content()
+    }
     return jsonify({
         "status": "ok",
-        "data": pd.config._load()
+        "data": data
     })
 
 
@@ -39,7 +50,8 @@ def name():
         pd.name = request.json['name']
     return jsonify({
         "status": "ok",
-        "data": pd.name})
+        "data": pd.name
+    })
 
 
 @bp.route("/list", methods=['GET', 'POST'])

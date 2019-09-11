@@ -120,6 +120,7 @@ class KaldiInterface(FSObject):
             raise KaldiError(f'Tried to load a pron dict called "{pdname}" that does not exist')
         hash_dir = self.config['pron_dicts'][pdname]
         pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
+        pd.dataset = self.get_dataset(pd.config['dataset_name'])
         return pd
 
     def list_pron_dicts(self):
@@ -141,23 +142,26 @@ class KaldiInterface(FSObject):
         hash_dir = self.config['models'][mname]
         m = Model.load(self.models_path.joinpath(hash_dir))
         m.dataset = self.get_dataset(m.config['dataset_name'])
+        m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
         return m
 
     def list_models(self):
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
-            with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
-                name = json.load(fin)['name']
-                models.append(name)
+            if not hash_dir.startswith('.'):
+                with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
+                    name = json.load(fin)['name']
+                    models.append(name)
         return models
 
     def list_models_verbose(self):
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
-            with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
-                data = json.load(fin)
-                model = {'name': data['name'], 'dataset_name': data['dataset_name']}
-                models.append(model)
+            if not hash_dir.startswith('.'):
+                with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
+                    data = json.load(fin)
+                    model = {'name': data['name'], 'dataset_name': data['dataset_name']}
+                    models.append(model)
         return models
 
     def new_transcription(self, tname):
@@ -178,8 +182,9 @@ class KaldiInterface(FSObject):
     def list_transcriptions(self):
         names = []
         for hash_dir in os.listdir(f'{self.transcriptions_path}'):
-            with self.transcriptions_path.joinpath(hash_dir, Transcription._config_file).open() as fin:
-                name = json.load(fin)['name']
-                names.append(name)
+            if not hash_dir.startswith('.'):
+                with self.transcriptions_path.joinpath(hash_dir, Transcription._config_file).open() as fin:
+                    name = json.load(fin)['name']
+                    names.append(name)
         return names
 
