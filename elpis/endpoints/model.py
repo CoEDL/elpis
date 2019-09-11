@@ -47,7 +47,6 @@ def new():
 def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     m = kaldi.get_model(request.json["name"])
-    print("model load")
     # set the databundle to match the model
     app.config['CURRENT_DATABUNDLE'] = m.dataset
     app.config['CURRENT_PRON_DICT'] = m.pron_dict
@@ -55,11 +54,6 @@ def load():
     data = {
         "config": m.config._load()
     }
-    # print(m.pron_dict.config['name'])
-    # print(m.pron_dict.config['pron_dict_name'])
-    # print(m.pron_dict.config['l2s'])
-    # print(m.pron_dict.l2s_path)
-    # print(m.pron_dict.lexicon_txt)
     return jsonify({
         "status": "ok",
         "data": data
