@@ -73,6 +73,7 @@ var successHandler = {
 
 // * * * * * * * * * * DATA SETS * * * * * * * * * * * * * * *
 
+<<<<<<< HEAD
 export const datasetLoad = postData => {
     const url = baseUrl + urls.api.dataset.load
     return postApi(url, postData, 'datasetLoad')
@@ -94,14 +95,44 @@ export const datasetSettings = postData => {
     return postApi(url, postData, 'datasetSettings')
 }
 export const datasetFiles = postData => {
+=======
+export const dataBundleLoad = postData => {
+    const url = baseUrl + urls.api.dataset.load
+    return postApi(url, postData, 'dataBundleLoad')
+}
+export const dataBundleList = () => {
+    const url = baseUrl + urls.api.dataset.list
+    return postApi(url, null, 'dataBundleList')
+}
+export const dataBundleNew = postData => {
+    const url = baseUrl + urls.api.dataset.new
+    return postApi(url, postData, 'dataBundleNew')
+}
+export const dataBundleName = postData => {
+    const url = baseUrl + urls.api.dataset.name
+    return postApi(url, postData, 'dataBundleName')
+}
+export const dataBundleSettings = postData => {
+    const url = baseUrl + urls.api.dataset.settings
+    return postApi(url, postData, 'dataBundleSettings')
+}
+export const dataBundleFiles = postData => {
+>>>>>>> master
     const url = baseUrl + urls.api.dataset.files
     const headers = {headers: {'content-type': 'multipart/form-data'}}
     return postApi(url, postData, 'datasetFiles', headers)
 }
+<<<<<<< HEAD
 export const datasetStatus = status => ({ type: 'DATASET_STATUS', status })
 export const datasetPrepare = () => {
     const url = baseUrl + urls.api.dataset.prepare
     return postApi(url, null, 'datasetPrepare')
+=======
+export const dataBundleStatus = status => ({ type: 'DATA_BUNDLE_STATUS', status })
+export const dataBundlePrepare = () => {
+    const url = baseUrl + urls.api.dataset.prepare
+    return postApi(url, null, 'dataBundlePrepare')
+>>>>>>> master
 }
 
 

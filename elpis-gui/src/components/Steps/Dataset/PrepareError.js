@@ -29,7 +29,11 @@ class DatasetPrepareError extends Component {
                             <p>Show the errors and information about how to fix the error</p>
 
                             <Button as={ Link } to={urls.gui.dataset.files}>
+<<<<<<< HEAD:src/components/Steps/Dataset/PrepareError.js
                                 { t('dataset.prepareError.backButton') }
+=======
+                                { t('dataBundle.prepareError.backButton') }
+>>>>>>> master:src/components/Steps/DataBundle/PrepareError.js
                             </Button>
 
                         </Grid.Column>

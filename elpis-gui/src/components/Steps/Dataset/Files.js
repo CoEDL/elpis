@@ -162,7 +162,11 @@ class DatasetFiles extends Component {
                             </Button>
                             {/*
                             <Button as={ Link } to="/dataset/prepare/error">
+<<<<<<< HEAD:src/components/Steps/Dataset/Files.js
                                 { t('dataset.files.nextButtonError') }
+=======
+                                { t('dataBundle.files.nextButtonError') }
+>>>>>>> master:src/components/Steps/DataBundle/Files.js
                             </Button>
  */}
                         </Grid.Column>

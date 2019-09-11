@@ -47,7 +47,11 @@ class DatasetNew extends Component {
                                 } }
                                 onSubmit={ (values, { setSubmitting }) => {
                                     const postData = {name:values.name}
+<<<<<<< HEAD:src/components/Steps/Dataset/New.js
                                     datasetNew(postData)
+=======
+                                    dataBundleNew(postData)
+>>>>>>> master:src/components/Steps/DataBundle/New.js
                                     this.props.history.push(urls.gui.dataset.files)
                                 } }
                             >
