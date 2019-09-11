@@ -77,7 +77,7 @@ class ModelSettings extends Component {
                                                     type="text"
                                                     onChange={ handleChange } />
                                             </Form.Field>
-                                            <Button onClick={ handleSubmit } >
+                                            <Button type="button" onClick={ handleSubmit } >
                                                 { t('model.settings.nextButton') }
                                             </Button>
                                         </Form>

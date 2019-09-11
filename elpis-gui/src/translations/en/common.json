@@ -38,6 +38,7 @@
         "prepare": {
             "title": "Prepare",
             "header": "Word frequency of training files",
+            "description": "This is showing only the transcription text, not additional words.",
             "bannerMessage": "Text has been cleaned and normalised OK",
             "bannerMessageDetailed": "Punctuation has been removed.",
             "wordlistHeader": "Wordlist",
@@ -49,18 +50,18 @@
             "backButton": "Back to add files"
         }
     },
-    "model": {
+    "pronDict": {
         "common": {
-            "currentModelLabel": "Current training session: ",
-            "noCurrentModelLabel": "No current training session.",
+            "currentPronDictLabel": "Current pronunciation dictionary: ",
+            "noCurrentPronDictLabel": "No current pronunciation dictionary.",
             "chooseOrNewLabel": "Choose one."
         },
         "dashboard": {
-            "title": "Training",
-            "noneMessage": "No training sessions yet"
+            "title": "Pronunciation Dictionary",
+            "noneMessage": "No pronunciation dictionary yet"
         },
         "new": {
-            "title": "New training session",
+            "title": "New pronunciation dictionary",
             "nameLabel": "name",
             "namePlaceholder": "Name",
             "nextButton": "Next"
@@ -77,6 +78,23 @@
         "lexicon": {
             "title": "Review the pronunciation dictionary",
             "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
+            "nextButton": "Next"
+        }
+    },
+    "model": {
+        "common": {
+            "currentModelLabel": "Current training session: ",
+            "noCurrentModelLabel": "No current training session.",
+            "chooseOrNewLabel": "Choose one."
+        },
+        "dashboard": {
+            "title": "Training",
+            "noneMessage": "No training sessions yet"
+        },
+        "new": {
+            "title": "New training session",
+            "nameLabel": "name",
+            "namePlaceholder": "Name",
             "nextButton": "Next"
         },
         "settings": {

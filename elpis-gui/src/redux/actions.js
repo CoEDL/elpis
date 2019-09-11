@@ -47,12 +47,17 @@ var successHandler = {
     dataBundleSettings: response => ({ type: 'DATA_BUNDLE_SETTINGS', response }),
     dataBundlePrepare: response => ({ type: 'DATA_BUNDLE_PREPARE', response }),
 
+    pronDictLoad: response => ({ type: 'PRON_DICT_LOAD', response }),
+    pronDictList: response => ({ type: 'PRON_DICT_LIST', response }),
+    pronDictNew: response => ({ type: 'PRON_DICT_NEW', response }),
+    pronDictName: response => ({ type: 'PRON_DICT_NAME', response }),
+    pronDictL2S: response => ({ type: 'PRON_DICT_L2S', response }),
+    pronDictLexicon: response => ({ type: 'PRON_DICT_LEXICON', response }),
+
     modelLoad: response => ({ type: 'MODEL_LOAD', response }),
     modelList: response => ({ type: 'MODEL_LIST', response }),
     modelNew: response => ({ type: 'MODEL_NEW', response }),
     modelName: response => ({ type: 'MODEL_NAME', response }),
-    modelL2S: response => ({ type: 'MODEL_L2S', response }),
-    modelLexicon: response => ({ type: 'MODEL_LEXICON', response }),
     modelSettings: response => ({ type: 'MODEL_SETTINGS', response }),
     modelTrain: response => ({ type: 'MODEL_TRAIN', response }),
     modelStatus: response => ({ type: 'MODEL_STATUS', response }),
@@ -100,6 +105,35 @@ export const dataBundlePrepare = () => {
 }
 
 
+// * * * * * * * * * * PRON DICT * * * * * * * * * * * * * * *
+
+
+export const pronDictLoad = postData => {
+    const url = baseUrl + urls.api.pronDict.load
+    return postApi(url, postData, 'pronDictLoad')
+}
+export const pronDictList = () => {
+    const url = baseUrl + urls.api.pronDict.list
+    return postApi(url, null, 'pronDictList')
+}
+export const pronDictNew = postData => {
+    const url = baseUrl + urls.api.pronDict.new
+    return postApi(url, postData, 'pronDictNew')
+}
+export const pronDictName = postData => {
+    const url = baseUrl + urls.api.pronDict.name
+    return postApi(url, postData, 'pronDictName')
+}
+export const pronDictL2S = postData => {
+    const url = baseUrl + urls.api.pronDict.l2s
+    const headers = { headers: { 'content-type': 'multipart/form-data' } }
+    return postApi(url, postData, 'pronDictL2S', headers)
+}
+export const pronDictLexicon = () => {
+    const url = baseUrl + urls.api.pronDict.lexicon
+    return postApi(url, null, 'pronDictLexicon')
+}
+
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 
 export const modelLoad = postData => {
@@ -115,17 +149,8 @@ export const modelNew = postData => {
     return postApi(url, postData, 'modelNew')
 }
 export const modelName = postData => {
-    const url = baseUrl + '/api/model/name'
+    const url = baseUrl + urls.api.model.name
     return postApi(url, postData, 'modelName')
-}
-export const modelL2S = postData => {
-    const url = baseUrl + urls.api.model.l2s
-    const headers = {headers: {'content-type': 'multipart/form-data'}}
-    return postApi(url, postData, 'modelL2S', headers)
-}
-export const modelLexicon = () => {
-    const url = baseUrl + urls.api.model.lexicon
-    return postApi(url, null, 'modelLexicon')
 }
 export const modelSettings = postData => {
     const url = baseUrl + urls.api.model.settings

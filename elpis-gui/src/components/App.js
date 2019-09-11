@@ -8,10 +8,12 @@ import {
     DataBundleFiles,
     DataBundlePrepare,
     DataBundlePrepareError,
+    PronDictDashboard,
+    PronDictNew,
+    PronDictL2S,
+    PronDictLexicon,
     ModelDashboard,
     ModelNew,
-    ModelL2S,
-    ModelLexicon,
     ModelSettings,
     ModelTrain,
     ModelResults,
@@ -37,10 +39,13 @@ class App extends Component {
                         <Route path={urls.gui.dataBundle.prepare} exact component={ DataBundlePrepare } />
                         <Route path={urls.gui.dataBundle.prepareError} component={ DataBundlePrepareError } />
 
+                        <Route path={urls.gui.pronDict.index} exact component={PronDictDashboard} />
+                        <Route path={urls.gui.pronDict.new} component={PronDictNew} />
+                        <Route path={urls.gui.pronDict.l2s} component={PronDictL2S} />
+                        <Route path={urls.gui.pronDict.lexicon} component={PronDictLexicon} />
+
                         <Route path={urls.gui.model.index} exact component={ ModelDashboard } />
                         <Route path={urls.gui.model.new} component={ ModelNew } />
-                        <Route path={urls.gui.model.l2s} component={ ModelL2S } />
-                        <Route path={urls.gui.model.lexicon} component={ ModelLexicon } />
                         <Route path={urls.gui.model.settings} component={ ModelSettings } />
                         <Route path={urls.gui.model.train} exact component={ ModelTrain } />
                         <Route path={urls.gui.model.results} exact component={ ModelResults } />

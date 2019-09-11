@@ -6,20 +6,20 @@ import { translate } from 'react-i18next';
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
-import { modelL2S } from 'redux/actions';
+import { pronDictL2S } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
-import CurrentModelName from "./CurrentModelName";
+import CurrentPronDictName from "./CurrentPronDictName";
 import urls from 'urls'
 
-class ModelL2S extends Component {
+class PronDictL2S extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
         console.log("files dropped:", acceptedFiles);
-        const { modelL2S } = this.props
+        const { pronDictL2S } = this.props
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
-        modelL2S(formData);
+        pronDictL2S(formData);
     }
 
     render() {
@@ -46,12 +46,12 @@ class ModelL2S extends Component {
                         <Grid.Column width={ 12 }>
 
                             <Header as='h1'>
-                                { t('model.l2s.title') }
+                                { t('pronDict.l2s.title') }
                             </Header>
 
-                            <CurrentModelName />
+                            <CurrentPronDictName />
 
-                            <Message content={ t('model.l2s.description') } />
+                            <Message content={ t('pronDict.l2s.description') } />
 
                             <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({ getRootProps, getInputProps, isDragActive }) => {
@@ -66,16 +66,16 @@ class ModelL2S extends Component {
 
                                             {
                                                 isDragActive ? (
-                                                    <p>{ t('model.l2s.dropFilesHintDragActive') } </p>
-                                                ) : (<p>{ t('model.l2s.dropFilesHint') }</p>)
+                                                    <p>{ t('pronDict.l2s.dropFilesHintDragActive') } </p>
+                                                ) : (<p>{ t('pronDict.l2s.dropFilesHint') }</p>)
                                             }
                                         </div>
                                     );
                                 } }
                             </Dropzone>
 
-                            <Button as={Link} to={urls.gui.model.lexicon}>
-                                {t('model.l2s.nextButton')}
+                            <Button as={Link} to={urls.gui.pronDict.lexicon}>
+                                {t('pronDict.l2s.nextButton')}
                             </Button>
 
                             <Divider />
@@ -92,15 +92,15 @@ class ModelL2S extends Component {
 
 const mapStateToProps = state => {
     return {
-        l2s: state.model.l2s,
-        name: state.model.name,
+        l2s: state.pronDict.l2s,
+        name: state.pronDict.name,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    modelL2S: postData => {
-        dispatch(modelL2S(postData));
+    pronDictL2S: postData => {
+        dispatch(pronDictL2S(postData));
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelL2S));
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(PronDictL2S));

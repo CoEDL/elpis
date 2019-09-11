@@ -46,7 +46,7 @@ class ModelNew extends Component {
                                 onSubmit={ (values, { setSubmitting }) => {
                                     const postData = {name:values.name}
                                     modelNew(postData)
-                                    this.props.history.push(urls.gui.model.l2s)
+                                    this.props.history.push(urls.gui.model.settings)
                                 } }
                             >
                                 { ({

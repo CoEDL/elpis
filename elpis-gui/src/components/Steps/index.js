@@ -6,10 +6,13 @@ export { default as DataBundleFiles } from './DataBundle/Files';
 export { default as DataBundlePrepare } from './DataBundle/Prepare';
 export { default as DataBundlePrepareError } from './DataBundle/PrepareError'
 
+export { default as PronDictDashboard } from './PronDict/Dashboard'
+export { default as PronDictNew } from './PronDict/New';
+export { default as PronDictL2S } from './PronDict/L2S';
+export { default as PronDictLexicon } from './PronDict/Lexicon'
+
 export { default as ModelDashboard } from './Model/Dashboard'
 export { default as ModelNew } from './Model/New';
-export { default as ModelL2S } from './Model/L2S';
-export { default as ModelLexicon } from './Model/Lexicon'
 export { default as ModelSettings } from './Model/Settings'
 export { default as ModelTrain } from './Model/Train'
 export { default as ModelResults } from './Model/Results'

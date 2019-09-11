@@ -61,11 +61,18 @@ class ModelDashboard extends Component {
                         >
                             Recordings
                         </Table.HeaderCell>
+                        <Table.HeaderCell
+                            sorted={ column === 'pron_dict_name' ? direction : null }
+                            onClick={this.handleSort('pron_dict_name', list) }
+                        >
+                            Pronunciation Dictionaries
+                        </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
                     {
                         list.map(model => {
+                            console.log(model)
                             const className = (name === model.name) ? 'current-model' : ''
                             return (
                                 <Table.Row key={ model.name } className={ className }>
@@ -73,6 +80,7 @@ class ModelDashboard extends Component {
                                         <Button fluid onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
                                     </Table.Cell>
                                     <Table.Cell>{ model.dataset_name }</Table.Cell>
+                                    <Table.Cell>{model.pron_dict_name }</Table.Cell>
                                 </Table.Row>
                             )
                         })

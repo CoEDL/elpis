@@ -72,7 +72,7 @@ class DataBundleFiles extends Component {
 
                                 <FileUpload />
 
-                                <p>{loadingIcon}</p>
+                                <div>{loadingIcon}</div>
 
                                 <Header as='h3'>
                                     { filesHeader }
@@ -146,7 +146,7 @@ class DataBundleFiles extends Component {
                                                         onChange={ handleChange } />
                                                     <ErrorMessage component="div" className="error" name="tier" />
                                                 </Form.Field>
-                                                <Button onClick={ handleSubmit } >
+                                                <Button type="button" onClick={ handleSubmit } >
                                                     { t('dataBundle.files.saveButton') }
                                                 </Button>
                                             </Form>

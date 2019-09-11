@@ -11,6 +11,7 @@ const initState = {
     modelList: [],
     name: '',
     dataBundleName: '',
+    pronDictName: '',
     date: null,
     l2s: '',
     lexicon: '',
@@ -49,6 +50,7 @@ const model = (state = initState, action) => {
                 status: 'ready',
                 lexicon: 'No lexicon yet',
                 dataBundleName: action.response.data.data.config.dataset_name,
+                pronDictName: action.response.data.data.config.pron_dict_name,
                 settings: {...state.settings, ngram: action.response.data.data.config.ngram}
             }
 

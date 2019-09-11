@@ -43,6 +43,8 @@ class DataBundleDashboard extends Component {
 
     render() {
         const { t, name, list } = this.props;
+        console.log("this.props.list", list)
+        console.log("this.props.name", name)
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>

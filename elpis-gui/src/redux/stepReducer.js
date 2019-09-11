@@ -12,7 +12,7 @@ const initialStepModelState = {
 			path: urls.gui.dataBundle.index,
 			done: false, doing: false, enabled: true,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Recordings", path: urls.gui.dataBundle.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "List", path: urls.gui.dataBundle.index, type:"solo" },
 				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.dataBundle.new },
 				{ done: false, doing: false, enabled: false, title: "Add files", path: urls.gui.dataBundle.files },
 				{ done: false, doing: false, enabled: false, title: "Prepare", path: urls.gui.dataBundle.prepare }
@@ -20,21 +20,30 @@ const initialStepModelState = {
 			]
 		},
 		{
-			title: "Step 2 Training",
+			title: "Step 2 Pronunciation Dictionary",
+			path: urls.gui.pronDict.index,
+			done: false, doing: false, enabled: false,
+			substeps: [
+				{ done: false, doing: false, enabled: false, title: "List", path: urls.gui.pronDict.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.pronDict.new },
+				{ done: false, doing: false, enabled: false, title: "Letter to sound", path: urls.gui.pronDict.l2s },
+				{ done: false, doing: false, enabled: false, title: "Pronunciation", path: urls.gui.pronDict.lexicon }
+			]
+		},
+		{
+			title: "Step 3 Training",
 			path: urls.gui.model.index,
 			done: false, doing: false, enabled: false,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Sessions", path: urls.gui.model.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "List", path: urls.gui.model.index, type: "solo" },
 				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.model.new },
-				{ done: false, doing: false, enabled: false, title: "Letter to sound", path: urls.gui.model.l2s },
-				{ done: false, doing: false, enabled: false, title: "Pronunciation", path: urls.gui.model.lexicon },
 				{ done: false, doing: false, enabled: false, title: "Settings", path: urls.gui.model.settings },
 				{ done: false, doing: false, enabled: false, title: "Training", path: urls.gui.model.train },
 				{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.model.results },
 			]
 		},
 		{
-			title: "Step 3 New transcriptions",
+			title: "Step 4 New transcriptions",
 			path: urls.gui.transcription.new,
 			done: false, doing: false, enabled: false,
 			substeps: [
