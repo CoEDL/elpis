@@ -103,7 +103,12 @@ def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     # TODO see the two todos below
     fake_results = {}
-    lx = [{'name': model['name'], 'results': fake_results, 'dataset_name': model['dataset_name']} for model in kaldi.list_models_verbose()]
+    lx = [{
+        'name': model['name'],
+        'results': fake_results,
+        'dataset_name': model['dataset_name'],
+        'pron_dict_name': model['pron_dict_name']
+        } for model in kaldi.list_models_verbose()]
     return jsonify({
         "status": "ok",
         "data": lx

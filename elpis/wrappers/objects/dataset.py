@@ -40,9 +40,9 @@ class DSPaths(object):
         self.word_count_json: Path = self.basepath.joinpath('word_count.json')
         self.word_list_txt: Path = self.basepath.joinpath('word_list.txt')
         # \/ user uploaded addional words
-        self.additional_word_list_txt = self.basepath.joinpath('additional_word_list.txt')
+        self.additional_word_list_txt = self.original.joinpath('additional_word_list.txt')
         # \/ user uploaded additional text (e.g. paragraphs or sentences)
-        self.corpus_txt = self.basepath.joinpath('corpus.txt')
+        self.corpus_txt = self.original.joinpath('corpus.txt')
 
 
 class Dataset(FSObject):
@@ -196,8 +196,9 @@ class Dataset(FSObject):
 
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.filtered_json}',
+                           output_file=f'{self.pathto.word_list_txt}',
                            additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
-                           additional_corpus_file=f'{self.pathto.corpus_txt}',
-                           output_file=f'{self.pathto.word_list_txt}')
+                           additional_corpus_file=f'{self.pathto.corpus_txt}'
+                           )
 
         self.config['has_been_processed'] = True

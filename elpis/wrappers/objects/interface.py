@@ -160,7 +160,11 @@ class KaldiInterface(FSObject):
             if not hash_dir.startswith('.'):
                 with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
                     data = json.load(fin)
-                    model = {'name': data['name'], 'dataset_name': data['dataset_name']}
+                    model = {
+                        'name': data['name'],
+                        'dataset_name': data['dataset_name'],
+                        'pron_dict_name': data['pron_dict_name']
+                        }
                     models.append(model)
         return models
 

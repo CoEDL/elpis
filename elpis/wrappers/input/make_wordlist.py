@@ -65,16 +65,17 @@ def extract_additional_words(file_name: str) -> List[str]:
 
 
 def generate_word_list(transcription_file: str,
+                       output_file: str,
                        additional_word_list_file: str,
-                       additional_corpus_file: str,
-                       output_file: str) -> None:
+                       additional_corpus_file: str
+                       ) -> None:
     """
     Generates the wordlist.txt file used to populate the Kaldi file structure and generate
     the lexicon.txt file.
     :param transcription_file: path to the json file containing the transcriptions
-    :param additional_word_list_file: file path to additional text wordlist
-    :param additional_corpus_file: file path to the corpus.txt created
     :param output_file: the path of the file to write the word list to
+    :param additional_word_list_file: file path to additional wordlist text
+    :param additional_corpus_file: file path to the additional corpus text
     :return:
     """
     json_data: List[Dict[str, str]] = load_json_file(transcription_file)
@@ -117,20 +118,21 @@ def main():
                         type=str,
                         required=True,
                         help="The path of the file to write the word list to.")
-    parser.add_argument("-w", "--word_list",
+    parser.add_argument("-w", "--additional_word_list_file",
                         type=str,
                         required=False,
                         help="File path to an optional additional word list.")
-    parser.add_argument("-c", "--kaldi_corpus",
+    parser.add_argument("-c", "--additional_corpus_file",
                         type=str,
-                        help="File path to the corpus.txt created by json_to_kaldi.py.",
+                        help="File path to the corpus.txt .",
                         required=True)
     arguments = parser.parse_args()
 
     generate_word_list(transcription_file=arguments.infile,
-                       additional_word_list_file=arguments.word_list,
-                       additional_corpus_file=arguments.kaldi_corpus,
-                       output_file=arguments.outfile)
+                       output_file=arguments.outfile,
+                       additional_word_list_file=arguments.additional_word_list_file,
+                       additional_corpus_file=arguments.additional_corpus_file
+                       )
 
     print("Done.", file=sys.stderr)
 
