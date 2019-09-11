@@ -62,7 +62,7 @@ class PronDictDashboard extends Component {
                 {
                     list.map( pronDictName => {
                         console.log(pronDictName, ":", name)
-                        const className = (pronDictName === name) ? 'current-data-bundle' : ''
+                        const className = (pronDictName === name) ? 'current-dataset' : ''
                         return (
                             <Table.Row key={ pronDictName } className={ className }>
                                 <Table.Cell>

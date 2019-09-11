@@ -5,15 +5,15 @@ import { translate } from 'react-i18next';
 import { Message } from 'semantic-ui-react';
 import urls from 'urls'
 
-class CurrentDataBundleName extends Component {
+class CurrentDatasetName extends Component {
 
     render() {
         const { t, name, match } = this.props
 
-        const link = (match.url !== urls.gui.dataBundle.index) ? (
+        const link = (match.url !== urls.gui.dataset.index) ? (
             <>
             &nbsp;
-            <Link to={urls.gui.dataBundle.index}>
+            <Link to={urls.gui.dataset.index}>
                 { t('common.chooseOrNewLabel') }
             </Link>
             </>
@@ -24,11 +24,11 @@ class CurrentDataBundleName extends Component {
         const current = name ?
         (
             <Message color='olive'>
-                { t('dataBundle.common.currentDataBundleLabel') + name }
+                { t('dataset.common.currentDatasetLabel') + name }
             </Message>
         ) : (
             <Message negative>
-                { t('dataBundle.common.noCurrentDataBundleLabel') }
+                { t('dataset.common.noCurrentDatasetLabel') }
                 { link }
             </Message>
         )
@@ -41,11 +41,11 @@ class CurrentDataBundleName extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.dataBundle.name
+        name: state.dataset.name
     }
 }
 export default withRouter(
     connect(mapStateToProps)(
-        translate('common')(CurrentDataBundleName)
+        translate('common')(CurrentDatasetName)
     )
 )

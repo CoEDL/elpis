@@ -6,7 +6,7 @@ import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import urls from 'urls'
 
-class DataBundlePrepareError extends Component {
+class DatasetPrepareError extends Component {
     render() {
         const { t } = this.props;
         return (
@@ -21,15 +21,15 @@ class DataBundlePrepareError extends Component {
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>
                                 <Icon name='warning' />
-                                { t('dataBundle.prepareError.title') }
+                                { t('dataset.prepareError.title') }
                             </Header>
 
                             <p>Banner Message: errors were found when cleaning(processing) your data</p>
                             <p>Novice readable description of what just happened</p>
                             <p>Show the errors and information about how to fix the error</p>
 
-                            <Button as={ Link } to={urls.gui.dataBundle.files}>
-                                { t('dataBundle.prepareError.backButton') }
+                            <Button as={ Link } to={urls.gui.dataset.files}>
+                                { t('dataset.prepareError.backButton') }
                             </Button>
 
                         </Grid.Column>
@@ -39,4 +39,4 @@ class DataBundlePrepareError extends Component {
         );
     }
 }
-export default translate('common')(DataBundlePrepareError)
+export default translate('common')(DatasetPrepareError)

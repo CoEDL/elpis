@@ -39,13 +39,13 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
-    dataBundleLoad: response => ({ type: 'DATA_BUNDLE_LOAD', response }),
-    dataBundleList: response => ({ type: 'DATA_BUNDLE_LIST', response }),
-    dataBundleNew: response => ({ type: 'DATA_BUNDLE_NEW', response }),
-    dataBundleName: response => ({ type: 'DATA_BUNDLE_NAME', response }),
-    dataBundleFiles: response => ({ type: 'DATA_BUNDLE_FILES', response }),
-    dataBundleSettings: response => ({ type: 'DATA_BUNDLE_SETTINGS', response }),
-    dataBundlePrepare: response => ({ type: 'DATA_BUNDLE_PREPARE', response }),
+    datasetLoad: response => ({ type: 'DATASET_LOAD', response }),
+    datasetList: response => ({ type: 'DATASET_LIST', response }),
+    datasetNew: response => ({ type: 'DATASET_NEW', response }),
+    datasetName: response => ({ type: 'DATASET_NAME', response }),
+    datasetFiles: response => ({ type: 'DATASET_FILES', response }),
+    datasetSettings: response => ({ type: 'DATASET_SETTINGS', response }),
+    datasetPrepare: response => ({ type: 'DATASET_PREPARE', response }),
 
     pronDictLoad: response => ({ type: 'PRON_DICT_LOAD', response }),
     pronDictList: response => ({ type: 'PRON_DICT_LIST', response }),
@@ -71,37 +71,37 @@ var successHandler = {
     transcriptionGetElan: response => ({ type: 'TRANSCRIPTION_GET_ELAN', response })
 }
 
-// * * * * * * * * * * DATA BUNDLES * * * * * * * * * * * * * * *
+// * * * * * * * * * * DATA SETS * * * * * * * * * * * * * * *
 
-export const dataBundleLoad = postData => {
-    const url = baseUrl + urls.api.dataBundle.load
-    return postApi(url, postData, 'dataBundleLoad')
+export const datasetLoad = postData => {
+    const url = baseUrl + urls.api.dataset.load
+    return postApi(url, postData, 'datasetLoad')
 }
-export const dataBundleList = () => {
-    const url = baseUrl + urls.api.dataBundle.list
-    return postApi(url, null, 'dataBundleList')
+export const datasetList = () => {
+    const url = baseUrl + urls.api.dataset.list
+    return postApi(url, null, 'datasetList')
 }
-export const dataBundleNew = postData => {
-    const url = baseUrl + urls.api.dataBundle.new
-    return postApi(url, postData, 'dataBundleNew')
+export const datasetNew = postData => {
+    const url = baseUrl + urls.api.dataset.new
+    return postApi(url, postData, 'datasetNew')
 }
-export const dataBundleName = postData => {
-    const url = baseUrl + urls.api.dataBundle.name
-    return postApi(url, postData, 'dataBundleName')
+export const datasetName = postData => {
+    const url = baseUrl + urls.api.dataset.name
+    return postApi(url, postData, 'datasetName')
 }
-export const dataBundleSettings = postData => {
-    const url = baseUrl + urls.api.dataBundle.settings
-    return postApi(url, postData, 'dataBundleSettings')
+export const datasetSettings = postData => {
+    const url = baseUrl + urls.api.dataset.settings
+    return postApi(url, postData, 'datasetSettings')
 }
-export const dataBundleFiles = postData => {
-    const url = baseUrl + urls.api.dataBundle.files
+export const datasetFiles = postData => {
+    const url = baseUrl + urls.api.dataset.files
     const headers = {headers: {'content-type': 'multipart/form-data'}}
-    return postApi(url, postData, 'dataBundleFiles', headers)
+    return postApi(url, postData, 'datasetFiles', headers)
 }
-export const dataBundleStatus = status => ({ type: 'DATA_BUNDLE_STATUS', status })
-export const dataBundlePrepare = () => {
-    const url = baseUrl + urls.api.dataBundle.prepare
-    return postApi(url, null, 'dataBundlePrepare')
+export const datasetStatus = status => ({ type: 'DATASET_STATUS', status })
+export const datasetPrepare = () => {
+    const url = baseUrl + urls.api.dataset.prepare
+    return postApi(url, null, 'datasetPrepare')
 }
 
 

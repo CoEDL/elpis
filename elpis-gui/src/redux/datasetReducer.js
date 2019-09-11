@@ -7,7 +7,7 @@ let additionalTextFiles
 const initState = {
     name: "",
     status: "",
-    dataBundleList: [],
+    datasetList: [],
     audioFiles: [],
     transcriptionFiles: [],
     additionalTextFiles: [],
@@ -18,19 +18,19 @@ const initState = {
 }
 
 
-const dataBundle = (state = initState, action) => {
+const dataset = (state = initState, action) => {
     switch (action.type) {
 
-        case 'DATA_BUNDLE_LIST':
-        console.log("reducer got data bundle list", action.response.data.data)
+        case 'DATASET_LIST':
+        console.log("reducer got data set list", action.response.data.data)
             return {
                 ...state,
-                dataBundleList: action.response.data.data
+                datasetList: action.response.data.data
             }
 
-        case 'DATA_BUNDLE_LOAD':
-        case 'DATA_BUNDLE_NEW':
-            console.log("reducer got data bundle new or load", action.response.data)
+        case 'DATASET_LOAD':
+        case 'DATASET_NEW':
+            console.log("reducer got data set new or load", action.response.data)
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'wav')
             transcriptionFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'eaf')
@@ -50,13 +50,13 @@ const dataBundle = (state = initState, action) => {
                 settings: {...state.settings, tier: action.response.data.data.tier}
             }
 
-        case 'DATA_BUNDLE_NAME':
+        case 'DATASET_NAME':
             return {
                 ...state,
                 name: action.response.data.data.name
             }
 
-        case 'DATA_BUNDLE_FILES':
+        case 'DATASET_FILES':
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = action.response.data.filter(file => getFileExtension(file) === 'wav')
             transcriptionFiles = action.response.data.filter(file => getFileExtension(file) === 'eaf')
@@ -75,14 +75,14 @@ const dataBundle = (state = initState, action) => {
                 additionalTextFiles
             }
 
-        case 'DATA_BUNDLE_SETTINGS':
+        case 'DATASET_SETTINGS':
             // watch out for response.data.data ...
             return {
                 ...state,
                 settings: {...state.settings, tier: action.response.data.data.tier}
             }
 
-        case 'DATA_BUNDLE_PREPARE':
+        case 'DATASET_PREPARE':
             // console.log("wordlist", action.response.data)
             // change the format of wordlist for better UI display
             // TODO do this in the backend
@@ -95,7 +95,7 @@ const dataBundle = (state = initState, action) => {
                 wordlist
             }
 
-        case 'DATA_BUNDLE_STATUS':
+        case 'DATASET_STATUS':
             return {
                 ...state,
                 status: action.status
@@ -105,4 +105,4 @@ const dataBundle = (state = initState, action) => {
     }
 }
 
-export default dataBundle;
+export default dataset;

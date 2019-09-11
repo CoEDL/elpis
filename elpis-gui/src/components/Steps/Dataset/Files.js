@@ -4,22 +4,22 @@ import { Button, Checkbox, Divider, Form, Grid, Header, Icon, Input, List, Messa
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik, ErrorMessage } from 'formik';
-import { dataBundleSettings, dataBundlePrepare } from 'redux/actions';
+import { datasetSettings, datasetPrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import FileUpload from './FileUpload';
-import CurrentDataBundleName from "./CurrentDataBundleName";
+import CurrentDatasetName from "./CurrentDatasetName";
 import urls from 'urls'
 
-class DataBundleFiles extends Component {
+class DatasetFiles extends Component {
 
     handleNextButton = () => {
-        this.props.history.push('/data-bundle/prepare')
+        this.props.history.push(urls.gui.dataset.prepare)
     }
 
     render() {
 
-        const { t, status, audioFiles, transcriptionFiles, additionalTextFiles, settings, dataBundleSettings } = this.props;
+        const { t, status, audioFiles, transcriptionFiles, additionalTextFiles, settings, datasetSettings } = this.props;
 
         const loadingIcon = (status === 'loading') ? (
             <div className="status">
@@ -47,7 +47,7 @@ class DataBundleFiles extends Component {
             audioFileList.length > 0 ||
             transcriptionFilesList.length > 0 ||
             additionalTextFilesList.length > 0) ? (
-                 t('dataBundle.files.filesHeader')
+                 t('dataset.files.filesHeader')
             ) : null
 
         return (
@@ -61,12 +61,12 @@ class DataBundleFiles extends Component {
 
                         <Grid.Column width={ 12 }>
                             <Header as='h1'>
-                                { t('dataBundle.files.title') }
+                                { t('dataset.files.title') }
                             </Header>
 
-                            <CurrentDataBundleName />
+                            <CurrentDatasetName />
 
-                            <Message attached content={ t('dataBundle.files.description') } />
+                            <Message attached content={ t('dataset.files.description') } />
 
                             <Segment className="attached">
 
@@ -99,10 +99,10 @@ class DataBundleFiles extends Component {
 
                             <Segment>
                                 <Header as='h3'>
-                                    { t('dataBundle.files.settingsHeader') }
+                                    { t('dataset.files.settingsHeader') }
                                 </Header>
 
-                                <Message attached content={ t('dataBundle.files.settingsDescription') } />
+                                <Message attached content={ t('dataset.files.settingsDescription') } />
 
                                 <Formik
                                     className="attached"
@@ -117,13 +117,13 @@ class DataBundleFiles extends Component {
                                         } else if (
                                             !/^[ 0-9a-zA-Z\-_@]+$/i.test(values.tier)
                                         ) {
-                                            errors.tier = t('dataBundle.common.invalidCharacterErrorMessage');
+                                            errors.tier = t('dataset.common.invalidCharacterErrorMessage');
                                         }
                                         return errors;
                                     } }
                                     onSubmit={ (values, { setSubmitting }) => {
                                         const postData = { tier: values.tier }
-                                        dataBundleSettings(postData)
+                                        datasetSettings(postData)
                                     } }
                                 >
                                     { ({
@@ -139,7 +139,7 @@ class DataBundleFiles extends Component {
                                             <Form onSubmit={ handleSubmit }>
                                                 <Form.Field>
                                                     <Input
-                                                        label={ t('dataBundle.files.tierLabel') }
+                                                        label={ t('dataset.files.tierLabel') }
                                                         value={ values.tier }
                                                         name="tier"
                                                         type="text"
@@ -147,7 +147,7 @@ class DataBundleFiles extends Component {
                                                     <ErrorMessage component="div" className="error" name="tier" />
                                                 </Form.Field>
                                                 <Button type="button" onClick={ handleSubmit } >
-                                                    { t('dataBundle.files.saveButton') }
+                                                    { t('dataset.files.saveButton') }
                                                 </Button>
                                             </Form>
                                         ) }
@@ -158,11 +158,11 @@ class DataBundleFiles extends Component {
                             <Divider />
 
                             <Button onClick={ this.handleNextButton }>
-                                { t('dataBundle.files.nextButton') }
+                                { t('dataset.files.nextButton') }
                             </Button>
                             {/*
-                            <Button as={ Link } to="/data-bundle/prepare/error">
-                                { t('dataBundle.files.nextButtonError') }
+                            <Button as={ Link } to="/dataset/prepare/error">
+                                { t('dataset.files.nextButtonError') }
                             </Button>
  */}
                         </Grid.Column>
@@ -176,20 +176,20 @@ class DataBundleFiles extends Component {
 
 const mapStateToProps = state => {
     return {
-        audioFiles: state.dataBundle.audioFiles,
-        transcriptionFiles: state.dataBundle.transcriptionFiles,
-        additionalTextFiles: state.dataBundle.additionalTextFiles,
-        settings: state.dataBundle.settings,
-        status: state.dataBundle.status
+        audioFiles: state.dataset.audioFiles,
+        transcriptionFiles: state.dataset.transcriptionFiles,
+        additionalTextFiles: state.dataset.additionalTextFiles,
+        settings: state.dataset.settings,
+        status: state.dataset.status
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    dataBundleSettings: postData => {
-        dispatch(dataBundleSettings(postData));
+    datasetSettings: postData => {
+        dispatch(datasetSettings(postData));
     },
-    dataBundlePrepare: () => {
-        dispatch(dataBundlePrepare());
+    datasetPrepare: () => {
+        dispatch(datasetPrepare());
     }
 })
 
@@ -198,6 +198,6 @@ export default withRouter(
         mapStateToProps,
         mapDispatchToProps
     )(
-        translate('common')(DataBundleFiles)
+        translate('common')(DatasetFiles)
     )
 );

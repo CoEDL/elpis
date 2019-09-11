@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
 import { translate } from 'react-i18next';
-import { dataBundleFiles, dataBundleStatus } from 'redux/actions';
+import { datasetFiles, datasetStatus } from 'redux/actions';
 import { connect } from 'react-redux';
 
 class FileUpload extends Component {
@@ -16,8 +16,8 @@ class FileUpload extends Component {
             console.log(file)
             formData.append('file', file);
         })
-        this.props.dataBundleStatus("loading");
-        this.props.dataBundleFiles(formData);
+        this.props.datasetStatus("loading");
+        this.props.datasetFiles(formData);
     };
 
     render() {
@@ -38,8 +38,8 @@ class FileUpload extends Component {
                                 <input { ...getInputProps() } />
                                 {
                                     isDragActive ? (
-                                        <p>{ t('dataBundle.fileUpload.dropFilesHintDragActive') } </p>
-                                    ) : (<p>{ t('dataBundle.fileUpload.dropFilesHint') }</p>)
+                                        <p>{ t('dataset.fileUpload.dropFilesHintDragActive') } </p>
+                                    ) : (<p>{ t('dataset.fileUpload.dropFilesHint') }</p>)
                                 }
                             </div>
                         );
@@ -52,11 +52,11 @@ class FileUpload extends Component {
 
 
 const mapDispatchToProps = dispatch => ({
-    dataBundleFiles: postData => {
-        dispatch(dataBundleFiles(postData));
+    datasetFiles: postData => {
+        dispatch(datasetFiles(postData));
     },
-    dataBundleStatus: status => {
-        dispatch(dataBundleStatus(status));
+    datasetStatus: status => {
+        dispatch(datasetStatus(status));
     }
 })
 

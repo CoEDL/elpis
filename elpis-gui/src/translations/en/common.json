@@ -2,10 +2,10 @@
     "welcome": {
         "title": "Elpis"
     },
-    "dataBundle": {
+    "dataset": {
         "common": {
-            "currentDataBundleLabel": "Current recordings: ",
-            "noCurrentDataBundleLabel": "No groups of recordings yet."
+            "currentDatasetLabel": "Current recordings: ",
+            "noCurrentDatasetLabel": "No groups of recordings yet."
         },
         "dashboard": {
             "title": "Recordings",
@@ -124,7 +124,7 @@
         "results": {
             "title": "Results",
             "description": "List of models that have been run here.",
-            "downloadButton": "Download a bundle of the model, settings and information about training information",
+            "downloadButton": "Download a set of the model, settings and information about training information",
             "downloadModalHeader": "Your files and settings are being compiled",
             "downloadModalContent": "Click Save on your browser's download dialog",
             "downloadOkButton": "OK",

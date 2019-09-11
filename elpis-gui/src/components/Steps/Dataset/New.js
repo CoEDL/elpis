@@ -4,17 +4,17 @@ import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik, ErrorMessage } from 'formik';
-import { dataBundleNew } from 'redux/actions';
+import { datasetNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import urls from 'urls'
 
-class DataBundleNew extends Component {
+class DatasetNew extends Component {
 
     componentDidMount() {}
 
     render() {
-        const { t, name, dataBundleNew } = this.props;
+        const { t, name, datasetNew } = this.props;
         return (
             <div>
                 <Branding />
@@ -26,7 +26,7 @@ class DataBundleNew extends Component {
 
                         <Grid.Column width={ 12 }>
                             <Header as='h1' text="true">
-                                { t('dataBundle.new.title') }
+                                { t('dataset.new.title') }
                             </Header>
 
                             <Formik
@@ -47,8 +47,8 @@ class DataBundleNew extends Component {
                                 } }
                                 onSubmit={ (values, { setSubmitting }) => {
                                     const postData = {name:values.name}
-                                    dataBundleNew(postData)
-                                    this.props.history.push(urls.gui.dataBundle.files)
+                                    datasetNew(postData)
+                                    this.props.history.push(urls.gui.dataset.files)
                                 } }
                             >
                                 { ({
@@ -64,16 +64,16 @@ class DataBundleNew extends Component {
                                         <Form onSubmit={ handleSubmit }>
                                             <Form.Field>
                                                 <Input
-                                                    label={ t('dataBundle.new.nameLabel') }
+                                                    label={ t('dataset.new.nameLabel') }
                                                     value={ values.name }
-                                                    placeholder={ t('dataBundle.new.namePlaceholder') }
+                                                    placeholder={ t('dataset.new.namePlaceholder') }
                                                     name="name"
                                                     type="text"
                                                     onChange={ handleChange } />
                                                     <ErrorMessage component="div" className="error" name="name" />
                                             </Form.Field>
                                             <Button type="button" onClick={ handleSubmit }>
-                                                { t('dataBundle.new.nextButton') }
+                                                { t('dataset.new.nextButton') }
                                             </Button>
                                         </Form>
                                     ) }
@@ -88,12 +88,12 @@ class DataBundleNew extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.dataBundle.name
+        name: state.dataset.name
     }
 }
 const mapDispatchToProps = dispatch => ({
-    dataBundleNew: name => {
-        dispatch(dataBundleNew(name))
+    datasetNew: name => {
+        dispatch(datasetNew(name))
     }
 })
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(DataBundleNew)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(DatasetNew)));

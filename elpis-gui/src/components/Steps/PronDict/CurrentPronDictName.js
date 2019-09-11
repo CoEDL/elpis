@@ -8,7 +8,7 @@ import urls from 'urls'
 class CurrentPronDictName extends Component {
 
     render() {
-        const { t, dataBundleName, name, match } = this.props
+        const { t, datasetName, name, match } = this.props
 
         const link = (match.url !== urls.gui.pronDict.index) ? (
             <>
@@ -26,7 +26,7 @@ class CurrentPronDictName extends Component {
             <Message color='olive'>
                 {t('pronDict.common.currentPronDictLabel') + name }
                 <br />
-                {t('dataBundle.common.currentDataBundleLabel') + dataBundleName }
+                {t('dataset.common.currentDatasetLabel') + datasetName }
             </Message>
         ) : (
             <Message negative>
@@ -44,7 +44,7 @@ class CurrentPronDictName extends Component {
 const mapStateToProps = state => {
     return {
         name: state.pronDict.name,
-        dataBundleName: state.pronDict.dataBundleName
+        datasetName: state.pronDict.datasetName
     }
 }
 export default withRouter(

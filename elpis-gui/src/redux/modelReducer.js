@@ -10,7 +10,7 @@ muila m u I l a
 const initState = {
     modelList: [],
     name: '',
-    dataBundleName: '',
+    datasetName: '',
     pronDictName: '',
     date: null,
     l2s: '',
@@ -49,7 +49,7 @@ const model = (state = initState, action) => {
                 l2s: action.response.data.data.l2s,
                 status: 'ready',
                 lexicon: 'No lexicon yet',
-                dataBundleName: action.response.data.data.config.dataset_name,
+                datasetName: action.response.data.data.config.dataset_name,
                 pronDictName: action.response.data.data.config.pron_dict_name,
                 settings: {...state.settings, ngram: action.response.data.data.config.ngram}
             }

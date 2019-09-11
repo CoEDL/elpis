@@ -10,7 +10,7 @@ muila m u I l a
 const initState = {
     pronDictList: [],
     name: '',
-    dataBundleName: '',
+    datasetName: '',
     date: null,
     l2s: '',
     lexicon: '',
@@ -41,7 +41,7 @@ const pronDict = (state = initState, action) => {
             return {
                 ...state,
                 name: action.response.data.data.config.name,
-                dataBundleName: action.response.data.data.config.dataset_name,
+                datasetName: action.response.data.data.config.dataset_name,
                 l2s: action.response.data.data.l2s,
                 lexicon: 'No lexicon yet'
             }

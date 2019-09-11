@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { dataBundleList, dataBundleLoad } from 'redux/actions';
 import arraySort from 'array-sort'
+import { datasetPrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
-import CurrentDataBundleName from "./CurrentDataBundleName";
+import CurrentDatasetName from "./CurrentDatasetName";
+import urls from 'urls'
 
-class DataBundleDashboard extends Component {
+class DatasetPrepare extends Component {
 
     state = {
         column: null,
@@ -16,11 +18,13 @@ class DataBundleDashboard extends Component {
     }
 
     componentDidMount() {
-        this.props.dataBundleList()
+        const {name, datasetPrepare} = this.props
+        if (name) datasetPrepare()
     }
 
     handleSort = (clickedColumn, data) => () => {
         const { column } = this.state
+
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
@@ -35,18 +39,14 @@ class DataBundleDashboard extends Component {
         }
     }
 
-    handleLoad = name => {
-        const { dataBundleLoad } = this.props
-        const postData = { name: name }
-        dataBundleLoad(postData)
-    }
-
     render() {
-        const { t, name, list } = this.props;
-        console.log("this.props.list", list)
-        console.log("this.props.name", name)
+        const { t, list } = this.props
         const { column, direction } = this.state
+
         const listEl = list.length > 0 ? (
+            <>
+            <h2>{ t('dataset.prepare.header') }</h2>
+            <p>{ t('dataset.prepare.description') }</p>
             <Table sortable celled fixed unstackable>
                 <Table.Header>
                     <Table.Row>
@@ -54,26 +54,34 @@ class DataBundleDashboard extends Component {
                             sorted={ column === 'name' ? direction : null }
                             onClick={ this.handleSort('name', list) }
                         >
-                            Name
+                            Word
+                        </Table.HeaderCell>
+                        <Table.HeaderCell
+                            sorted={ column === 'frequency' ? direction : null }
+                            onClick={ this.handleSort('frequency', list) }
+                        >
+                            Frequency
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                {
-                    list.map( dataBundleName => {
-                        const className = (dataBundleName === name) ? 'current-data-bundle' : ''
-                        return (
-                            <Table.Row key={ dataBundleName } className={ className }>
-                                <Table.Cell>
-                                    <Button fluid onClick={ () => this.handleLoad(dataBundleName) }>{ dataBundleName }</Button>
-                                </Table.Cell>
-                            </Table.Row>
-                        )
-                    })
-                }
+                    {
+                        list.map(word => {
+                            return (
+                                <Table.Row key={ word.name }>
+                                    <Table.Cell>
+                                        { word.name }
+                                    </Table.Cell>
+                                    <Table.Cell>{ word.frequency }</Table.Cell>
+                                </Table.Row>
+                            )
+                        })
+                    }
                 </Table.Body>
             </Table>
-        ) : <p>{ t('dataBundle.dashboard.noneMessage') }</p>
+            </>
+
+        ) : null
 
         return (
             <div>
@@ -83,17 +91,16 @@ class DataBundleDashboard extends Component {
                         <Grid.Column width={ 4 }>
                             <Informer />
                         </Grid.Column>
-
                         <Grid.Column width={ 12 }>
-                            <Header as='h1'>
-                                { t('dataBundle.dashboard.title') }
-                            </Header>
+                            <Header as='h1'>{ t('dataset.prepare.title') }</Header>
 
-                            <CurrentDataBundleName />
+                            <CurrentDatasetName />
 
-                            <Segment>
-                                { listEl }
-                            </Segment>
+                            { listEl }
+
+                            <Button as={ Link } to={urls.gui.pronDict.new}>
+                                { t('dataset.prepare.nextButton') }
+                            </Button>
 
                         </Grid.Column>
                     </Grid>
@@ -105,18 +112,16 @@ class DataBundleDashboard extends Component {
 
 const mapStateToProps = state => {
     return {
-        list: state.dataBundle.dataBundleList,
-        name: state.dataBundle.name
+        list: state.dataset.wordlist,
+        name: state.dataset.name
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    dataBundleList: () => {
-        dispatch(dataBundleList())
-    },
-    dataBundleLoad: postData => {
-        dispatch(dataBundleLoad(postData))
+    datasetPrepare: () => {
+        dispatch(datasetPrepare());
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(DataBundleDashboard))
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(DatasetPrepare))
+
