@@ -69,12 +69,13 @@ def generate_word_list(transcription_file: str,
                        output_file: str,
                        kaldi_corpus_file: str) -> None:
     """
+    TODO check this description is accurate.. word_list_file and kaldi_corpus_file are additional texts
     Generates the wordlist.txt file used to populate the Kaldi file structure and generate
     the lexicon.txt file.
     :param transcription_file: path to the json file containing the transcriptions
     :param word_list_file: the path of the file to write the word list to
     :param output_file: the path of the file to write the word list to
-    :param kaldi_corpus_file: file path to the corpus.txt created by json_to_kaldi.py
+    :param kaldi_corpus_file: file path to the corpus.txt created
     :return:
     """
     json_data: List[Dict[str, str]] = load_json_file(transcription_file)
@@ -105,7 +106,7 @@ def generate_word_list(transcription_file: str,
 def main():
     """
     Run the entire make_wordlist.py as a command line utility.
-    
+
     Usage: python3 make_wordlist.py [-h] -i INFILE [-o OUTFILE] [-w WORDLIST] [-t TEXTCORPUS] [-c KALDICORPUS]
     """
     parser = argparse.ArgumentParser()

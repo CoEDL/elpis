@@ -7,10 +7,11 @@ from typing import Callable
 import threading
 from elpis.wrappers.objects.command import run
 from elpis.wrappers.objects.dataset import Dataset
+from elpis.wrappers.objects.pron_dict import PronDict
 from elpis.wrappers.objects.fsobject import FSObject
-from elpis.wrappers.objects.path_structure import KaldiPathStructure
 from elpis.wrappers.input.json_to_kaldi import create_kaldi_structure
-from elpis.wrappers.input.make_prn_dict import generate_pronunciation_dictionary
+from elpis.wrappers.objects.path_structure import KaldiPathStructure
+
 
 
 class ModelFiles(object):
@@ -24,45 +25,22 @@ class Model(FSObject):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-        self.l2s_path = self.path.joinpath('l2s.txt')
-        self.lexicon_txt = self.path.joinpath('kaldi', 'data', 'local', 'dict', 'lexicon.txt')
         self.dataset: Dataset
-        self.config['dataset_name'] = None  # dataset hash has not been linked
-        self.config['l2s'] = None  # file has not been uploaded
-        self.config['ngram'] = 1 # default to 1 to make playing quicker
         self.dataset = None
+        self.config['dataset_name'] = None  # dataset hash has not been linked
+        self.pron_dict: PronDict
+        self.pron_dict = None
+        self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
+        self.config['ngram'] = 1 # default to 1 to make playing quicker
         self.config['status'] = 'untrained'
         self.status = 'untrained'
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
-        self.l2s_path = self.path.joinpath('l2s.txt')
-        self.lexicon_txt = self.path.joinpath('kaldi', 'data', 'local', 'dict', 'lexicon.txt')
         self.dataset = None
+        self.pron_dict = None
         return self
-
-    def set_l2s_path(self, path: Path):
-        path = Path(path)
-        with path.open(mode='rb') as fin:
-            self.set_l2s_fp(fin)
-
-    def set_l2s_fp(self, file: BufferedIOBase):
-        self.set_l2s_content(file.read())
-
-    def set_l2s_content(self, content: str):
-        # TODO: this function uses parameter str, and must be bytes or UTF-16
-        self.config['l2s'] = True
-        with self.l2s_path.open(mode='wb') as fout:
-            fout.write(content)
-
-    def get_l2s_content(self):
-        try:
-            with self.l2s_path.open(mode='r') as fin:
-                return fin.read()
-        except FileNotFoundError:
-            return 'No l2s yet'
 
     @property
     def status(self):
@@ -72,14 +50,11 @@ class Model(FSObject):
     def status(self, value: str):
         self.config['status'] = value
 
-    @property
-    def l2s(self):
-        with self.l2s_path.open(mode='rb') as fin:
-            return fin.read()
-
-    def link(self, dataset: Dataset):
+    def link(self, dataset: Dataset, pron_dict: PronDict):
         self.dataset = dataset
         self.config['dataset_name'] = dataset.name
+        self.pron_dict = pron_dict
+        self.config['pron_dict_name'] = pron_dict.name
 
     @property
     def ngram(self) -> int:
@@ -89,7 +64,8 @@ class Model(FSObject):
     def ngram(self, value: int) -> None:
         self.config['ngram'] = value
 
-    def generate_lexicon(self):
+
+    def build_kaldi_structure(self):
         # task make-kaldi-subfolders
         temporary_path = Path('/tmp', self.hash)
         temporary_path.mkdir(parents=True, exist_ok=True)
@@ -123,18 +99,11 @@ class Model(FSObject):
             corpus_file=f'{corpus_file_path}'
         )
 
-        # task make-prn-dict
-        # TODO this file needs to be reflected in kaldi_data_local_dict
-        generate_pronunciation_dictionary(word_list=f'{self.dataset.pathto.word_list_txt}',
-                                          pronunciation_dictionary=f'{self.lexicon_txt}',
-                                          config_file=f'{self.l2s_path}')
-    @property
-    def lexicon(self):
-        with self.lexicon_txt.open(mode='rb') as fin:
-            return fin.read()
-
     def train(self, on_complete:Callable=None):
         def prepare_for_training():
+
+            print(f"self path is {self.path}")
+
             # task make-kaldi-subfolders
             kaldi_structure = KaldiPathStructure(self.path)
             temporary_path = Path('/tmp', self.hash)
@@ -155,6 +124,9 @@ class Model(FSObject):
             kaldi_local = local_kaldi_path.joinpath('local')
             kaldi_local.mkdir(parents=True, exist_ok=True)
 
+            # copy the pron dict
+            shutil.copy(f"{self.pron_dict.lexicon_txt}", f"{kaldi_data_local_dict.joinpath('lexicon.txt')}")
+
             # task generate-kaldi-configs
             path_file_path = kaldi_structure.path.joinpath('path.sh')
             mfcc_file_path = kaldi_structure.conf.joinpath('mfcc.conf')
@@ -167,7 +139,7 @@ class Model(FSObject):
 
             # task make-nonsil-phones > {{ .KALDI_OUTPUT_PATH }}/tmp/nonsilence_phones.txt
             nonsilence_phones_path = kaldi_data_local_dict.joinpath('nonsilence_phones.txt')
-            cmd = f"grep -v '^#' < {self.l2s_path} | cut -d' ' -f2 | grep -v '^$' | sort -u"
+            cmd = f"grep -v '^#' < {self.pron_dict.l2s_path} | cut -d' ' -f2 | grep -v '^$' | sort -u"
             p = run(cmd)
             with nonsilence_phones_path.open(mode='wb') as fout:
                 fout.write(p.stdout)
@@ -212,8 +184,10 @@ class Model(FSObject):
                 # task copy-generated-files
                 output_path = self.path.joinpath('output')
                 output_path.mkdir(parents=True, exist_ok=True)
+
                 # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/corpus.txt {{ .KALDI_OUTPUT_PATH }}/kaldi/data/local/
                 shutil.move(f"{output_path.joinpath('training', 'corpus.txt')}", f"{kaldi_data_local}")
+
                 # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/segments {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/
                 # testing/text {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/utt2spk {{ .KALDI_OUTPUT_PATH }}/tmp/json_
                 # splitted/testing/wav.scp {{ .KALDI_OUTPUT_PATH }}/kaldi/data/test/

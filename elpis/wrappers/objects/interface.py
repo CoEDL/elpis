@@ -5,6 +5,7 @@ from pathlib import Path
 from appdirs import user_data_dir
 from elpis.wrappers.objects.errors import KaldiError
 from elpis.wrappers.objects.dataset import Dataset
+from elpis.wrappers.objects.pron_dict import PronDict
 from elpis.wrappers.objects.logger import Logger
 from elpis.wrappers.objects.model import Model
 from elpis.wrappers.objects.transcription import Transcription
@@ -32,6 +33,8 @@ class KaldiInterface(FSObject):
         # ensure object directories exist
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
+        self.pron_dicts_path = self.path.joinpath('pron_dicts')
+        self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
         self.models_path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
         self.loggers_path = self.path.joinpath('loggers')
@@ -40,11 +43,13 @@ class KaldiInterface(FSObject):
         # config objects
         self.loggers = []
         self.datasets = {}
+        self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
 
         self.config['loggers'] = []
         self.config['datasets'] = {}
+        self.config['pron_dicts'] = {}
         self.config['models'] = {}
         self.config['transcriptions'] = {}
 
@@ -56,6 +61,8 @@ class KaldiInterface(FSObject):
         self = super().load(base_path)
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
+        self.pron_dicts_path = self.path.joinpath('pron_dicts')
+        self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
         self.models_path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
         self.loggers_path = self.path.joinpath('loggers')
@@ -64,6 +71,7 @@ class KaldiInterface(FSObject):
         # config objects
         self.loggers = []
         self.datasets = {}
+        self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
         return self
@@ -97,6 +105,28 @@ class KaldiInterface(FSObject):
     def list_datasets(self):
         names = [name for name in self.config['datasets'].keys()]
         return names
+
+
+
+    def new_pron_dict(self, pdname):
+        pd = PronDict(parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
+        pron_dicts = self.config['pron_dicts']
+        pron_dicts[pdname] = pd.hash
+        self.config['pron_dicts'] = pron_dicts
+        return pd
+
+    def get_pron_dict(self, pdname):
+        if pdname not in self.list_pron_dicts():
+            raise KaldiError(f'Tried to load a pron dict called "{pdname}" that does not exist')
+        hash_dir = self.config['pron_dicts'][pdname]
+        pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
+        return pd
+
+    def list_pron_dicts(self):
+        names = [name for name in self.config['pron_dicts'].keys()]
+        return names
+
+
 
     def new_model(self, mname):
         m = Model(parent_path=self.models_path, name=mname, logger=self.logger)

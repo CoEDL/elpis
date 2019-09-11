@@ -46,8 +46,7 @@ def load():
     app.config['CURRENT_DATABUNDLE'] = m.dataset
     app.config['CURRENT_MODEL'] = m
     data = {
-        "config": m.config._load(),
-        "l2s": m.get_l2s_content()
+        "config": m.config._load()
     }
     return jsonify({
         "status": "ok",
@@ -85,25 +84,6 @@ def settings():
         }
     })
 
-
-@bp.route("/l2s", methods=['POST'])
-def l2s():
-    m: Model = app.config['CURRENT_MODEL']
-    # handle incoming data
-    if request.method == 'POST':
-        file = request.files['file']
-        if m is None:
-            # TODO some of the end points (like this one) return files, but on error we still return a json string? Looks like bad practice to me
-            return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
-        m.set_l2s_fp(file)
-    return m.l2s
-
-
-@bp.route("/lexicon", methods=['GET', 'POST'])
-def generate_lexicon():
-    m: Model = app.config['CURRENT_MODEL']
-    m.generate_lexicon()
-    return m.lexicon
 
 
 @bp.route("/list", methods=['GET', 'POST'])
