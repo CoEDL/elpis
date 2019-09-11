@@ -28,7 +28,7 @@ class DataBundlePrepareError extends Component {
                             <p>Novice readable description of what just happened</p>
                             <p>Show the errors and information about how to fix the error</p>
 
-                            <Button as={ Link } to={urls.gui.dataBundle.files}>
+                            <Button as={ Link } to={urls.gui.dataset.files}>
                                 { t('dataBundle.prepareError.backButton') }
                             </Button>
 

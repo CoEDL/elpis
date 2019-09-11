@@ -9,13 +9,13 @@ const initialStepModelState = {
 	steps: [
 		{
 			title: "Step 1 Recordings",
-			path: urls.gui.dataBundle.index,
+			path: urls.gui.dataset.index,
 			done: false, doing: false, enabled: true,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "List", path: urls.gui.dataBundle.index, type:"solo" },
-				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.dataBundle.new },
-				{ done: false, doing: false, enabled: false, title: "Add files", path: urls.gui.dataBundle.files },
-				{ done: false, doing: false, enabled: false, title: "Prepare", path: urls.gui.dataBundle.prepare }
+				{ done: false, doing: false, enabled: false, title: "List", path: urls.gui.dataset.index, type:"solo" },
+				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.dataset.new },
+				{ done: false, doing: false, enabled: false, title: "Add files", path: urls.gui.dataset.files },
+				{ done: false, doing: false, enabled: false, title: "Prepare", path: urls.gui.dataset.prepare }
 
 			]
 		},

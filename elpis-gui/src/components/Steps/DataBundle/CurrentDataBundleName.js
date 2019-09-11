@@ -10,10 +10,10 @@ class CurrentDataBundleName extends Component {
     render() {
         const { t, name, match } = this.props
 
-        const link = (match.url !== urls.gui.dataBundle.index) ? (
+        const link = (match.url !== urls.gui.dataset.index) ? (
             <>
             &nbsp;
-            <Link to={urls.gui.dataBundle.index}>
+            <Link to={urls.gui.dataset.index}>
                 { t('common.chooseOrNewLabel') }
             </Link>
             </>

@@ -41,16 +41,16 @@ code {
     border: 1px solid #aaa;
 }
 
-.data-bundle-list {
+.dataset-list {
     padding-left: 0;
 }
 
-.data-bundle-list li {
+.dataset-list li {
     padding: 0.5rem;
     list-style-type: none;
 }
 
-.current-data-bundle,
+.current-dataset,
 .current-model {
     background-color: #D3A0F0 !important;
 }

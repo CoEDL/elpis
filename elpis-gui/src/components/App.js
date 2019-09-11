@@ -33,11 +33,11 @@ class App extends Component {
                     <PageContainer>
                         <Route path="/" exact component={ Welcome } />
 
-                        <Route path={urls.gui.dataBundle.index} exact component={ DataBundleDashboard } />
-                        <Route path={urls.gui.dataBundle.new} component={ DataBundleNew } />
-                        <Route path={urls.gui.dataBundle.files} component={ DataBundleFiles } />
-                        <Route path={urls.gui.dataBundle.prepare} exact component={ DataBundlePrepare } />
-                        <Route path={urls.gui.dataBundle.prepareError} component={ DataBundlePrepareError } />
+                        <Route path={urls.gui.dataset.index} exact component={ DataBundleDashboard } />
+                        <Route path={urls.gui.dataset.new} component={ DataBundleNew } />
+                        <Route path={urls.gui.dataset.files} component={ DataBundleFiles } />
+                        <Route path={urls.gui.dataset.prepare} exact component={ DataBundlePrepare } />
+                        <Route path={urls.gui.dataset.prepareError} component={ DataBundlePrepareError } />
 
                         <Route path={urls.gui.pronDict.index} exact component={PronDictDashboard} />
                         <Route path={urls.gui.pronDict.new} component={PronDictNew} />

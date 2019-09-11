@@ -1,11 +1,11 @@
 export default {
     "gui": {
-        "dataBundle": {
-            "index": "/data-bundles",
-            "new": "/data-bundle/new",
-            "files": "/data-bundle/files",
-            "prepare": "/data-bundle/prepare",
-            "prepareError": "/data-bundle/prepare/error"
+        "dataset": {
+            "index": "/dataset",
+            "new": "/dataset/new",
+            "files": "/dataset/files",
+            "prepare": "/dataset/prepare",
+            "prepareError": "/dataset/prepare/error"
         },
         "pronDict": {
             "index": "/pron-dicts",
@@ -27,15 +27,15 @@ export default {
         }
     },
     "api": {
-        "dataBundle": {
-            "load": "/api/databundle/load",
-            "list": "/api/databundle/list",
-            "name": "/api/databundle/name",
-            "new": "/api/databundle/new",
-            "name": "/api/databundle/name",
-            "settings": "/api/databundle/settings",
-            "files": "/api/databundle/files",
-            "prepare": "/api/databundle/prepare"
+        "dataset": {
+            "load": "/api/dataset/load",
+            "list": "/api/dataset/list",
+            "name": "/api/dataset/name",
+            "new": "/api/dataset/new",
+            "name": "/api/dataset/name",
+            "settings": "/api/dataset/settings",
+            "files": "/api/dataset/files",
+            "prepare": "/api/dataset/prepare"
         },
         "pronDict": {
             "load": "/api/pron-dict/load",

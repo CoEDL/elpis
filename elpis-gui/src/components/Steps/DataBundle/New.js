@@ -48,7 +48,7 @@ class DataBundleNew extends Component {
                                 onSubmit={ (values, { setSubmitting }) => {
                                     const postData = {name:values.name}
                                     dataBundleNew(postData)
-                                    this.props.history.push(urls.gui.dataBundle.files)
+                                    this.props.history.push(urls.gui.dataset.files)
                                 } }
                             >
                                 { ({

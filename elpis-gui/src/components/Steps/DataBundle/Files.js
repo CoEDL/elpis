@@ -14,7 +14,7 @@ import urls from 'urls'
 class DataBundleFiles extends Component {
 
     handleNextButton = () => {
-        this.props.history.push('/data-bundle/prepare')
+        this.props.history.push(urls.gui.dataset.prepare)
     }
 
     render() {
@@ -161,7 +161,7 @@ class DataBundleFiles extends Component {
                                 { t('dataBundle.files.nextButton') }
                             </Button>
                             {/*
-                            <Button as={ Link } to="/data-bundle/prepare/error">
+                            <Button as={ Link } to="/dataset/prepare/error">
                                 { t('dataBundle.files.nextButtonError') }
                             </Button>
  */}

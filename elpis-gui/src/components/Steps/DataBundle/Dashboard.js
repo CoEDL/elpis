@@ -61,7 +61,7 @@ class DataBundleDashboard extends Component {
                 <Table.Body>
                 {
                     list.map( dataBundleName => {
-                        const className = (dataBundleName === name) ? 'current-data-bundle' : ''
+                        const className = (dataBundleName === name) ? 'current-dataset' : ''
                         return (
                             <Table.Row key={ dataBundleName } className={ className }>
                                 <Table.Cell>
