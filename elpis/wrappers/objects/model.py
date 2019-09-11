@@ -66,25 +66,6 @@ class Model(FSObject):
 
 
     def build_kaldi_structure(self):
-        # task make-kaldi-subfolders
-        temporary_path = Path('/tmp', self.hash)
-        temporary_path.mkdir(parents=True, exist_ok=True)
-
-        local_kaldi_path = self.path.joinpath('kaldi')
-        local_kaldi_path.mkdir(parents=True, exist_ok=True)
-        kaldi_data_local_dict = local_kaldi_path.joinpath('data', 'local', 'dict')
-        kaldi_data_local_dict.mkdir(parents=True, exist_ok=True)
-        kaldi_data_local = local_kaldi_path.joinpath('data', 'local')
-        kaldi_data_local.mkdir(parents=True, exist_ok=True)
-        kaldi_data_test = local_kaldi_path.joinpath('data', 'test')
-        kaldi_data_test.mkdir(parents=True, exist_ok=True)
-        kaldi_data_train = local_kaldi_path.joinpath('data', 'train')
-        kaldi_data_train.mkdir(parents=True, exist_ok=True)
-        kaldi_conf = local_kaldi_path.joinpath('conf')
-        kaldi_conf.mkdir(parents=True, exist_ok=True)
-        kaldi_local = local_kaldi_path.joinpath('local')
-        kaldi_local.mkdir(parents=True, exist_ok=True)
-
         # task json-to-kaldi
         output_path = self.path.joinpath('output')
         output_path.mkdir(parents=True, exist_ok=True)
@@ -104,8 +85,6 @@ class Model(FSObject):
         def prepare_for_training():
             # task make-kaldi-subfolders
             kaldi_structure = KaldiPathStructure(self.path)
-            temporary_path = Path('/tmp', self.hash)
-            temporary_path.mkdir(parents=True, exist_ok=True)
 
             local_kaldi_path = self.path.joinpath('kaldi')
             local_kaldi_path.mkdir(parents=True, exist_ok=True)
