@@ -13,7 +13,7 @@ bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     pron_dict = kaldi.new_pron_dict(request.json['name'])
-    dataset: Dataset = app.config['CURRENT_DATABUNDLE']
+    dataset: Dataset = app.config['CURRENT_DATASET']
     pron_dict.link(dataset)
     app.config['CURRENT_PRON_DICT'] = pron_dict
     data = {
@@ -29,7 +29,7 @@ def new():
 def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     pron_dict = kaldi.get_pron_dict(request.json['name'])
-    app.config['CURRENT_DATABUNDLE'] = pron_dict.dataset
+    app.config['CURRENT_DATASET'] = pron_dict.dataset
     app.config['CURRENT_PRON_DICT'] = pron_dict
     data = {
         "config": pron_dict.config._load(),
@@ -45,7 +45,7 @@ def load():
 def name():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
     if pron_dict is None:
-        return '{"status":"error", "data": "No current pron dict exists (prehaps create one first)"}'
+        return '{"status":"error", "data": "No current pron dict exists (perhaps create one first)"}'
     if request.method == 'POST':
         pron_dict.name = request.json['name']
     return jsonify({
@@ -71,7 +71,7 @@ def l2s():
         file = request.files['file']
         if pron_dict is None:
             # TODO some of the end points (like this one) return files, but on error we still return a json string? Looks like bad practice to me
-            return '{"status":"error", "data": "No current pron dict exists (prehaps create one first)"}'
+            return '{"status":"error", "data": "No current pron dict exists (perhaps create one first)"}'
         pron_dict.set_l2s_fp(file)
     return pron_dict.l2s
 
