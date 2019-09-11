@@ -22,8 +22,7 @@ class PronDict(FSObject):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dataset: Dataset
-        self.dataset = None
+        self.dataset: Dataset = None
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.l2s_path = self.path.joinpath('l2s.txt')
         self.lexicon_txt = self.path.joinpath('lexicon.txt')

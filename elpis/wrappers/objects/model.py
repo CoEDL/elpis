@@ -25,11 +25,9 @@ class Model(FSObject):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dataset: Dataset
-        self.dataset = None
+        self.dataset: Dataset = None
         self.config['dataset_name'] = None  # dataset hash has not been linked
-        self.pron_dict: PronDict
-        self.pron_dict = None
+        self.pron_dict: PronDict = None
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
         self.config['ngram'] = 1 # default to 1 to make playing quicker
         self.config['status'] = 'untrained'
@@ -208,7 +206,7 @@ class Model(FSObject):
                     src = f'{self.dataset.pathto.resampled.joinpath(audio_file)}'
                     dst = f'{local_kaldi_path}'
                     shutil.copy(src, dst)
-                print('done.')
+                print('kaldi dirs preparation done.')
             except BaseException as e:
                 print('couldnt prepare kaldi dirs: ', e)
 
@@ -221,7 +219,7 @@ class Model(FSObject):
             # task _test-train
             p = run(f"cd {local_kaldi_path}; ./run.sh > /elpis/state/tmp_log.txt")
             print(p.stdout)
-            print('double done.')
+            print('train double done.')
 
         def run_training_in_background():
             def background_train_task():
