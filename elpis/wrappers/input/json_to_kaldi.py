@@ -4,12 +4,12 @@
 Parse json file and extract transcription information which are then processed and output in the desired Kaldi format.
 The output files will be stored in two separate folders training and testing inside the specified output directory.
 
-training : 
+training :
     corpus.txt, text, segments, wav.scp, utt2spk, spk2utt
-testing : 
+testing :
     corpus.txt, text, segments, wav.scp, utt2spk, spk2utt
-            
-The training folder is for the model creation using Kaldi, whereas the testing folder is used for verifying the 
+
+The training folder is for the model creation using Kaldi, whereas the testing folder is used for verifying the
 reliability of the model.
 
 Copyright: University of Queensland, 2019
@@ -64,7 +64,7 @@ def clean_corpus_file(corpus_file_path: str) -> List[str]:
 
 class KaldiInput:
     """
-    Class to store information for the training and testing data sets.     
+    Class to store information for the training and testing data sets.
     """
 
     def __init__(self, output_folder: str) -> None:
@@ -93,9 +93,9 @@ class KaldiInput:
     def add_speaker(self, speaker_id: str) -> str:
         """
         Adds a speaker element if it is not already present.
-        
+
         :param speaker_id: speaker id - could be a name of a uuid code
-        :return: returns the correctly formatted speaker id 
+        :return: returns the correctly formatted speaker id
         """
         if speaker_id not in self.speakers:
             self.speakers[speaker_id] = str(uuid.uuid4())  # create speaker id
@@ -105,8 +105,8 @@ class KaldiInput:
     def add_recording(self, audio_file: str) -> str:
         """
         Adds an audio file it is not already present.
-        
-        :param audio_file: name of audio file 
+
+        :param audio_file: name of audio file
         :return: returns a correctly formatted audio file description
         """
         if audio_file not in self.recordings:
@@ -123,7 +123,7 @@ class KaldiInput:
             silence_markers: bool) -> None:
         """
         Appends new items to the transcripts, segments, utt2spk and corpus lists.
-        
+
         :param recording_id: id for the recording file
         :param speaker_id: id for the speaker who uttered the phrase
         :param utterance_id: unique id for the uttered phrase
@@ -142,7 +142,7 @@ class KaldiInput:
 
     def write_and_close(self) -> None:
         """
-        After parsing the json file and populating the segments, transcripts, speakers, recordings, utt2spk and corpus 
+        After parsing the json file and populating the segments, transcripts, speakers, recordings, utt2spk and corpus
         lists with data, this function performs the final write to their respective files.
         """
 
@@ -243,11 +243,13 @@ def create_kaldi_structure(input_json: str,
 
     if text_corpus:
         text_corpus_directory = text_corpus
-        print(f"Using additional text corpus at {text_corpus_directory}")
+        print(f"Will use any additional text corpus in {text_corpus_directory}")
         all_files_in_dir = set(glob.glob(os.path.join(text_corpus_directory, "**"), recursive=True))
+        print(f"num files in {text_corpus}: {len(all_files_in_dir)}")
         only_text = []
         for file_ in all_files_in_dir:
             file_name, extension = os.path.splitext(file_)
+            print(f"file {file_name}")
             if extension == ".txt":
                 only_text.append(file_)
         for corpora_file in only_text:
@@ -261,9 +263,9 @@ def create_kaldi_structure(input_json: str,
 
 
 def main() -> None:
-    """ 
-    Run the entire json_to_kaldi.py as a command line utility. 
-    
+    """
+    Run the entire json_to_kaldi.py as a command line utility.
+
     Usage: python3 json_to_kaldi.py -i INPUT_JSON -o OUTPUT_FOLDER [-s] [-t TEXT_CORPUS] [-c CORPUS_FILE]
     """
     parser = argparse.ArgumentParser(description="Convert json from stdin to Kaldi input files "

@@ -107,7 +107,7 @@ def generate_pronunciation_dictionary(word_list: str,
     for character in missing_characters:
         print(f"Unexpected character: {character}", file=sys.stderr)
 
-    print("Done", file=sys.stderr)
+    print(f"Wrote lexicon to {pronunciation_dictionary}", file=sys.stderr)
 
 
 def main():

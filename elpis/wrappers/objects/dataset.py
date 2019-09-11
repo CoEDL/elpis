@@ -40,9 +40,9 @@ class DSPaths(object):
         self.word_count_json: Path = self.basepath.joinpath('word_count.json')
         self.word_list_txt: Path = self.basepath.joinpath('word_list.txt')
         # \/ user uploaded addional words
-        self.additional_word_list_txt = self.basepath.joinpath('additional_word_list.txt')
+        self.additional_word_list_txt = self.original.joinpath('additional_word_list.txt')
         # \/ user uploaded additional text (e.g. paragraphs or sentences)
-        self.corpus_txt = self.basepath.joinpath('corpus.txt')
+        self.corpus_txt = self.original.joinpath('corpus.txt')
 
 
 class Dataset(FSObject):
@@ -73,7 +73,7 @@ class Dataset(FSObject):
         self.pathto = DSPaths(self.path)
         self.has_been_processed = self.config['has_been_processed']
         return self
-    
+
     @property
     def tier(self) -> str:
         return self.config['tier']
@@ -81,7 +81,7 @@ class Dataset(FSObject):
     @tier.setter
     def tier(self, value: str):
         self.config['tier'] = value
-    
+
     @property
     def files(self):
         return self.config['files']
@@ -105,7 +105,7 @@ class Dataset(FSObject):
     def add_other_audio_type_file(self, filename, content) -> None:
         # TODO: unimplemented!
         return []
-    
+
     def list_audio_files(self) -> List[str]:
         # TODO: unimplemented!
         return []
@@ -117,7 +117,7 @@ class Dataset(FSObject):
     def list_all_files(self) -> List[str]:
         # TODO: unimplemented!
         return []
-    
+
     def remove_file(self, filename) -> None:
         # TODO: unimplemented!
         return
@@ -128,7 +128,7 @@ class Dataset(FSObject):
             fout.write(fp.read())
         self.__files.append(path)
         self.config['files'] = [f'{f.name}' for f in self.__files]
-    
+
     def add_directory(self, path, filter=[]):
         """Add all the contents of the given directory to the dataset."""
         path: Path = Path(path)
@@ -196,8 +196,9 @@ class Dataset(FSObject):
 
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.filtered_json}',
-                           word_list_file=f'{self.pathto.additional_word_list_txt}',
                            output_file=f'{self.pathto.word_list_txt}',
-                           kaldi_corpus_file=f'{self.pathto.corpus_txt}')
+                           additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
+                           additional_corpus_file=f'{self.pathto.corpus_txt}'
+                           )
 
         self.config['has_been_processed'] = True

@@ -4,6 +4,7 @@ import subprocess
 from elpis.wrappers.objects.interface import KaldiInterface
 from elpis.wrappers.objects.model import Model
 from elpis.wrappers.objects.dataset import Dataset
+from elpis.wrappers.objects.pron_dict import PronDict
 
 from pathlib import Path
 
@@ -27,11 +28,15 @@ def run(cmd: str) -> str:
 @bp.route("/new", methods=['GET', 'POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
-    m = kaldi.new_model(request.json["name"])
-    ds: Dataset = app.config['CURRENT_DATABUNDLE']
-    m.link(ds)
-    app.config['CURRENT_MODEL'] = m
-    data = {"config": m.config._load()}
+    model = kaldi.new_model(request.json["name"])
+    print(app.config['CURRENT_DATABUNDLE'])
+    print(app.config['CURRENT_PRON_DICT'])
+    dataset: Dataset = app.config['CURRENT_DATABUNDLE']
+    pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
+    model.link(dataset, pron_dict)
+    model.build_kaldi_structure()
+    app.config['CURRENT_MODEL'] = model
+    data = {"config": model.config._load()}
     return jsonify({
         "status": "ok",
         "data": data
@@ -41,13 +46,13 @@ def new():
 @bp.route("/load", methods=['GET', 'POST'])
 def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
-    m = kaldi.get_model(request.json["name"])
+    model = kaldi.get_model(request.json["name"])
     # set the databundle to match the model
-    app.config['CURRENT_DATABUNDLE'] = m.dataset
-    app.config['CURRENT_MODEL'] = m
+    app.config['CURRENT_DATABUNDLE'] = model.dataset
+    app.config['CURRENT_PRON_DICT'] = model.pron_dict
+    app.config['CURRENT_MODEL'] = model
     data = {
-        "config": m.config._load(),
-        "l2s": m.get_l2s_content()
+        "config": model.config._load()
     }
     return jsonify({
         "status": "ok",
@@ -57,53 +62,34 @@ def load():
 
 @bp.route("/name", methods=['GET', 'POST'])
 def name():
-    m = app.config['CURRENT_MODEL']
-    if m is None:
+    model = app.config['CURRENT_MODEL']
+    if model is None:
         # TODO sending a string error back in incorrect, jsonify it.
         return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
     if request.method == 'POST':
-        m.name = request.json['name']
+        model.name = request.json['name']
     return jsonify({
         "status": "ok",
-        "data": m.name
+        "data": model.name
     })
 
 
 @bp.route("/settings", methods=['GET', 'POST'])
 def settings():
-    m = app.config['CURRENT_MODEL']
-    if m is None:
+    model = app.config['CURRENT_MODEL']
+    if model is None:
         # TODO sending a string error back in incorrect, jsonify it.
         return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
     if request.method == 'POST':
-        m.ngram = request.json['ngram']
+        model.ngram = request.json['ngram']
         # TODO make this an optional parameter
     return jsonify({
         "status": "ok",
         "data": {
-            "ngram": m.ngram
+            "ngram": model.ngram
         }
     })
 
-
-@bp.route("/l2s", methods=['POST'])
-def l2s():
-    m: Model = app.config['CURRENT_MODEL']
-    # handle incoming data
-    if request.method == 'POST':
-        file = request.files['file']
-        if m is None:
-            # TODO some of the end points (like this one) return files, but on error we still return a json string? Looks like bad practice to me
-            return '{"status":"error", "data": "No current model exists (prehaps create one first)"}'
-        m.set_l2s_fp(file)
-    return m.l2s
-
-
-@bp.route("/lexicon", methods=['GET', 'POST'])
-def generate_lexicon():
-    m: Model = app.config['CURRENT_MODEL']
-    m.generate_lexicon()
-    return m.lexicon
 
 
 @bp.route("/list", methods=['GET', 'POST'])
@@ -111,10 +97,15 @@ def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     # TODO see the two todos below
     fake_results = {}
-    lx = [{'name': model['name'], 'results': fake_results, 'dataset_name': model['dataset_name']} for model in kaldi.list_models_verbose()]
+    data = [{
+        'name': model['name'],
+        'results': fake_results,
+        'dataset_name': model['dataset_name'],
+        'pron_dict_name': model['pron_dict_name']
+        } for model in kaldi.list_models_verbose()]
     return jsonify({
         "status": "ok",
-        "data": lx
+        "data": data
     })
 
     # TODO make this endpoint list-verbose or something like that
@@ -123,26 +114,26 @@ def list_existing():
 
 @bp.route("/status", methods=['GET', 'POST'])
 def status():
-    m: Model = app.config['CURRENT_MODEL']
+    model: Model = app.config['CURRENT_MODEL']
     return jsonify({
         "status": "ok",
-        "data": m.status
+        "data": model.status
     })
 
 
 @bp.route("/train", methods=['GET', 'POST'])
 def train():
-    m: Model = app.config['CURRENT_MODEL']
-    m.train(on_complete=lambda: print("Training complete!"))
+    model: Model = app.config['CURRENT_MODEL']
+    model.train(on_complete=lambda: print("Training complete!"))
     return jsonify({
         "status": "ok",
-        "data": m.status
+        "data": model.status
     })
 
 
 @bp.route("/results", methods=['GET', 'POST'])
 def results():
-    m: Model = app.config['CURRENT_MODEL']
+    model: Model = app.config['CURRENT_MODEL']
 
     wer_lines = []
     log_file = Path('/elpis/state/tmp_log.txt')

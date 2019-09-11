@@ -5,6 +5,7 @@ from pathlib import Path
 from appdirs import user_data_dir
 from elpis.wrappers.objects.errors import KaldiError
 from elpis.wrappers.objects.dataset import Dataset
+from elpis.wrappers.objects.pron_dict import PronDict
 from elpis.wrappers.objects.logger import Logger
 from elpis.wrappers.objects.model import Model
 from elpis.wrappers.objects.transcription import Transcription
@@ -32,6 +33,8 @@ class KaldiInterface(FSObject):
         # ensure object directories exist
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
+        self.pron_dicts_path = self.path.joinpath('pron_dicts')
+        self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
         self.models_path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
         self.loggers_path = self.path.joinpath('loggers')
@@ -40,11 +43,13 @@ class KaldiInterface(FSObject):
         # config objects
         self.loggers = []
         self.datasets = {}
+        self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
 
         self.config['loggers'] = []
         self.config['datasets'] = {}
+        self.config['pron_dicts'] = {}
         self.config['models'] = {}
         self.config['transcriptions'] = {}
 
@@ -56,6 +61,8 @@ class KaldiInterface(FSObject):
         self = super().load(base_path)
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
+        self.pron_dicts_path = self.path.joinpath('pron_dicts')
+        self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
         self.models_path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
         self.loggers_path = self.path.joinpath('loggers')
@@ -64,6 +71,7 @@ class KaldiInterface(FSObject):
         # config objects
         self.loggers = []
         self.datasets = {}
+        self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
         return self
@@ -98,6 +106,29 @@ class KaldiInterface(FSObject):
         names = [name for name in self.config['datasets'].keys()]
         return names
 
+
+
+    def new_pron_dict(self, pdname):
+        pd = PronDict(parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
+        pron_dicts = self.config['pron_dicts']
+        pron_dicts[pdname] = pd.hash
+        self.config['pron_dicts'] = pron_dicts
+        return pd
+
+    def get_pron_dict(self, pdname):
+        if pdname not in self.list_pron_dicts():
+            raise KaldiError(f'Tried to load a pron dict called "{pdname}" that does not exist')
+        hash_dir = self.config['pron_dicts'][pdname]
+        pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
+        pd.dataset = self.get_dataset(pd.config['dataset_name'])
+        return pd
+
+    def list_pron_dicts(self):
+        names = [name for name in self.config['pron_dicts'].keys()]
+        return names
+
+
+
     def new_model(self, mname):
         m = Model(parent_path=self.models_path, name=mname, logger=self.logger)
         models = self.config['models']
@@ -111,23 +142,30 @@ class KaldiInterface(FSObject):
         hash_dir = self.config['models'][mname]
         m = Model.load(self.models_path.joinpath(hash_dir))
         m.dataset = self.get_dataset(m.config['dataset_name'])
+        m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
         return m
 
     def list_models(self):
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
-            with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
-                name = json.load(fin)['name']
-                models.append(name)
+            if not hash_dir.startswith('.'):
+                with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
+                    name = json.load(fin)['name']
+                    models.append(name)
         return models
 
     def list_models_verbose(self):
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
-            with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
-                data = json.load(fin)
-                model = {'name': data['name'], 'dataset_name': data['dataset_name']}
-                models.append(model)
+            if not hash_dir.startswith('.'):
+                with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
+                    data = json.load(fin)
+                    model = {
+                        'name': data['name'],
+                        'dataset_name': data['dataset_name'],
+                        'pron_dict_name': data['pron_dict_name']
+                        }
+                    models.append(model)
         return models
 
     def new_transcription(self, tname):
@@ -148,8 +186,9 @@ class KaldiInterface(FSObject):
     def list_transcriptions(self):
         names = []
         for hash_dir in os.listdir(f'{self.transcriptions_path}'):
-            with self.transcriptions_path.joinpath(hash_dir, Transcription._config_file).open() as fin:
-                name = json.load(fin)['name']
-                names.append(name)
+            if not hash_dir.startswith('.'):
+                with self.transcriptions_path.joinpath(hash_dir, Transcription._config_file).open() as fin:
+                    name = json.load(fin)['name']
+                    names.append(name)
         return names
 

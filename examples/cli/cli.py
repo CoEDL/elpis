@@ -21,19 +21,26 @@ ds.process()
 
 # Step 2
 # ======
-# Link dataset to a new model, then train the model.
-m = kaldi.new_model('mx')
-m.link(ds)
-m.set_l2s_path('/recordings/letter_to_sound.txt')
-m.generate_lexicon()
-m.train() # may take a while
+# Build pronunciation dictionary
+pd = kaldi.new_pron_dict('pd')
+pd.link(ds)
+pd.set_l2s_path('/recordings/letter_to_sound.txt')
+pd.generate_lexicon()
 
 # Step 3
+# ======
+# Link dataset and pd to a new model, then train the model.
+m = kaldi.new_model('mx')
+m.link(ds, pd)
+m.build_kaldi_structure()
+m.train() # may take a while
+
+# Step 4
 # ======
 # Make a transcription interface and transcribe unseen audio to elan.
 t = kaldi.new_transcription('tx')
 t.link(m)
-with open('/recordings/untranscribed.wav', 'rb') as faudio:
+with open('/recordings/untranscribed/audio.wav', 'rb') as faudio:
     t.prepare_audio(faudio)
 # t.transcribe_align()
 t.transcribe()
