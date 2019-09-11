@@ -65,17 +65,16 @@ def extract_additional_words(file_name: str) -> List[str]:
 
 
 def generate_word_list(transcription_file: str,
-                       word_list_file: str,
-                       output_file: str,
-                       kaldi_corpus_file: str) -> None:
+                       additional_word_list_file: str,
+                       additional_corpus_file: str,
+                       output_file: str) -> None:
     """
-    TODO check this description is accurate.. word_list_file and kaldi_corpus_file are additional texts
     Generates the wordlist.txt file used to populate the Kaldi file structure and generate
     the lexicon.txt file.
     :param transcription_file: path to the json file containing the transcriptions
-    :param word_list_file: the path of the file to write the word list to
+    :param additional_word_list_file: file path to additional text wordlist
+    :param additional_corpus_file: file path to the corpus.txt created
     :param output_file: the path of the file to write the word list to
-    :param kaldi_corpus_file: file path to the corpus.txt created
     :return:
     """
     json_data: List[Dict[str, str]] = load_json_file(transcription_file)
@@ -86,12 +85,12 @@ def generate_word_list(transcription_file: str,
     word_list = extract_word_list(json_data)
 
     # Add additional words to lexicon if required
-    if word_list_file:
-        additional_words = extract_additional_words(word_list_file)
+    if additional_word_list_file:
+        additional_words = extract_additional_words(additional_word_list_file)
         word_list.extend(additional_words)
 
-    if kaldi_corpus_file:
-        corpus_file_words = extract_additional_words(kaldi_corpus_file)
+    if additional_corpus_file:
+        corpus_file_words = extract_additional_words(additional_corpus_file)
         word_list.extend(corpus_file_words)
 
     # Remove duplicates
@@ -129,9 +128,9 @@ def main():
     arguments = parser.parse_args()
 
     generate_word_list(transcription_file=arguments.infile,
-                       word_list_file=arguments.word_list,
-                       output_file=arguments.outfile,
-                       kaldi_corpus_file=arguments.kaldi_corpus)
+                       additional_word_list_file=arguments.word_list,
+                       additional_corpus_file=arguments.kaldi_corpus,
+                       output_file=arguments.outfile)
 
     print("Done.", file=sys.stderr)
 

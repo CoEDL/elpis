@@ -42,7 +42,6 @@ class DSPaths(object):
         # \/ user uploaded addional words
         self.additional_word_list_txt = self.basepath.joinpath('additional_word_list.txt')
         # \/ user uploaded additional text (e.g. paragraphs or sentences)
-        print("*****corpus")
         self.corpus_txt = self.basepath.joinpath('corpus.txt')
 
 
@@ -197,8 +196,8 @@ class Dataset(FSObject):
 
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.filtered_json}',
-                           word_list_file=f'{self.pathto.additional_word_list_txt}',
-                           output_file=f'{self.pathto.word_list_txt}',
-                           kaldi_corpus_file=f'{self.pathto.corpus_txt}')
+                           additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
+                           additional_corpus_file=f'{self.pathto.corpus_txt}',
+                           output_file=f'{self.pathto.word_list_txt}')
 
         self.config['has_been_processed'] = True
