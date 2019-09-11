@@ -60,13 +60,8 @@ class DatasetDashboard extends Component {
                 </Table.Header>
                 <Table.Body>
                 {
-<<<<<<< HEAD:src/components/Steps/Dataset/Dashboard.js
                     list.map( datasetName => {
                         const className = (datasetName === name) ? 'current-dataset' : ''
-=======
-                    list.map( dataBundleName => {
-                        const className = (dataBundleName === name) ? 'current-dataset' : ''
->>>>>>> master:src/components/Steps/DataBundle/Dashboard.js
                         return (
                             <Table.Row key={ datasetName } className={ className }>
                                 <Table.Cell>
