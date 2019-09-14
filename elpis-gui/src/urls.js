@@ -44,6 +44,8 @@ export default {
             "new": "/api/pron-dict/new",
             "l2s": "/api/pron-dict/l2s",
             "lexicon": "/api/pron-dict/lexicon",
+            "generateLexicon": "/api/pron-dict/generate-lexicon",
+            "saveLexicon": "/api/pron-dict/save-lexicon"
         },
         "model": {
             "load": "/api/model/load",

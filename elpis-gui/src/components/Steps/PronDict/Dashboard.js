@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictList, pronDictLoad } from 'redux/actions';
+import { pronDictList, pronDictLoad, pronDictGetLexicon } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -43,8 +43,6 @@ class PronDictDashboard extends Component {
 
     render() {
         const { t, name, list } = this.props;
-        console.log("this.props.list", list)
-        console.log("this.props.name", name)
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
@@ -61,7 +59,6 @@ class PronDictDashboard extends Component {
                 <Table.Body>
                 {
                     list.map( pronDictName => {
-                        console.log(pronDictName, ":", name)
                         const className = (pronDictName === name) ? 'current-dataset' : ''
                         return (
                             <Table.Row key={ pronDictName } className={ className }>
@@ -110,6 +107,7 @@ const mapStateToProps = state => {
         name: state.pronDict.name
     }
 }
+
 
 const mapDispatchToProps = dispatch => ({
     pronDictList: () => {

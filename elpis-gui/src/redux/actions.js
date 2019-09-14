@@ -53,6 +53,8 @@ var successHandler = {
     pronDictName: response => ({ type: 'PRON_DICT_NAME', response }),
     pronDictL2S: response => ({ type: 'PRON_DICT_L2S', response }),
     pronDictLexicon: response => ({ type: 'PRON_DICT_LEXICON', response }),
+    pronDictGenerateLexicon: response => ({ type: 'PRON_DICT_LEXICON', response }),
+    pronDictSaveLexicon: response => ({ type: 'PRON_DICT_SAVE_LEXICON', response }),
 
     modelLoad: response => ({ type: 'MODEL_LOAD', response }),
     modelList: response => ({ type: 'MODEL_LIST', response }),
@@ -133,6 +135,15 @@ export const pronDictLexicon = () => {
     const url = baseUrl + urls.api.pronDict.lexicon
     return postApi(url, null, 'pronDictLexicon')
 }
+export const pronDictGenerateLexicon = () => {
+    const url = baseUrl + urls.api.pronDict.generateLexicon
+    return postApi(url, null, 'pronDictGenerateLexicon')
+}
+export const pronDictSaveLexicon = postData => {
+    const url = baseUrl + urls.api.pronDict.saveLexicon
+    return postApi(url, postData, 'pronDictSaveLexicon')
+}
+export const testUpdateLexicon = data => ({ type: 'TEST_UPDATE_LEXICON', data })
 
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 
@@ -165,7 +176,6 @@ export const modelStatus = () => {
     return postApi(url, null, 'modelStatus')
 }
 export const modelResults = () => {
-    console.log("action to get results")
     const url = baseUrl + urls.api.model.results
     return postApi(url, null, 'modelResults')
 }
@@ -174,24 +184,6 @@ export const modelResults = () => {
 
 // * * * * * * * * * * TRANSCRIPTION * * * * * * * * * * * * * * *
 
-
-// export const transcriptionNew = postData => {
-//     console.log("start a new transcription")
-//     const url = baseUrl + urls.api.transcription.new
-//     const headers = {headers: {'content-type': 'multipart/form-data'}}
-//     return postApi(url, postData, 'transcriptionNew', headers)
-// }
-// export const transcriptionNewAlign = postData => {
-//     console.log("start a new transcription align")
-//     const url = baseUrl + urls.api.transcription.newAlign
-//     console.log("url", url)
-//     const headers = {headers: {'content-type': 'multipart/form-data'}}
-//     return postApi(url, postData, 'transcriptionNewAlign', headers)
-// }
-// export const transcriptionGetText = postData => {
-//     const url = baseUrl + urls.api.transcription.text
-//     return postApi(url, null, 'transcriptionGetText')
-// }
 
 export const transcriptionAudioFile = filename => {
     console.log("action got file", filename)

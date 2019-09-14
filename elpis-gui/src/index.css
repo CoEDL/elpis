@@ -73,3 +73,9 @@ li.no-lst {
     color: #333;
     font-style: italic;
 }
+
+textarea.lexicon {
+    font-family: monospace;
+    width: 100%;
+    min-height: 20em;
+}

@@ -1,30 +1,40 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Button, Divider, Grid, Header, Message, Segment } from 'semantic-ui-react';
+import { Button, Divider, Form, Grid, Header, Message, Segment, TextArea } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictLexicon } from 'redux/actions';
+import { pronDictLexicon, pronDictGenerateLexicon, pronDictSaveLexicon, testUpdateLexicon } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentPronDictName from "./CurrentPronDictName";
 import urls from 'urls'
 
 class PronDictLexicon extends Component {
-    componentDidMount() {
-        const { l2s, pronDictLexicon } = this.props
-        console.log("PronDictLexicon has l2s?", l2s)
 
-        // TODO get this from a status code instead of some string
-        if ((l2s === '') || (l2s === 'No l2s yet')) {
-            console.log("No l2s yet")
-        } else {
-            // only do this if we have real l2s data
-            pronDictLexicon()
-        }
+
+    componentDidMount = () => {
     }
 
+    generateLexicon = () => {
+        this.props.pronDictGenerateLexicon()
+    }
+
+    saveLexicon = () => {
+        console.log("Lexicon.js updateLexicon", this.props.lexicon)
+        const data = { "lexicon": this.props.lexicon }
+        this.props.pronDictSaveLexicon(data)
+    }
+
+    handleChange = (event) => {
+        console.log("Lexicon.js handleChange", event.target.value)
+        this.props.testUpdateLexicon( { "lexicon": event.target.value } )
+    }
+
+
     render() {
-        const { t, lexicon } = this.props;
+
+        const { t, lexicon } = this.props
+
         return (
             <div>
                 <Branding />
@@ -44,38 +54,51 @@ class PronDictLexicon extends Component {
 
                             <Message content={ t('pronDict.lexicon.description') } />
 
-                            <Button as={Link} to={urls.gui.model.index } >
-                                { t('pronDict.lexicon.nextButton') }
-                            </Button>
-
-                            <Divider />
-
                             <Segment>
-                                <pre>
-                                    { lexicon }
-                                </pre>
+                                <Form>
+                                    <TextArea
+                                        className="lexicon"
+                                        onChange={this.handleChange}
+                                        value={lexicon} >
+                                    </TextArea>
+                                </Form>
+                                <Button onClick={this.generateLexicon}>reset</Button>
+                                <Button onClick={this.saveLexicon} positive>save</Button>
                             </Segment>
+
+                            <Button as={Link} to={urls.gui.model.index}>
+                                {t('pronDict.lexicon.nextButton')}
+                            </Button>
 
                         </Grid.Column>
                     </Grid>
                 </Segment>
             </div>
-        );
+        )
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
-        lexicon: state.pronDict.lexicon,
         name: state.pronDict.name,
         l2s: state.pronDict.l2s,
+        lexicon: state.pronDict.lexicon
     }
 }
 
 const mapDispatchToProps = dispatch => ({
     pronDictLexicon: () => {
-        dispatch(pronDictLexicon());
+        dispatch(pronDictLexicon())
+    },
+    pronDictGenerateLexicon: () => {
+        dispatch(pronDictGenerateLexicon())
+    },
+    pronDictSaveLexicon: data => {
+        dispatch(pronDictSaveLexicon(data))
+    },
+    testUpdateLexicon: data => {
+        dispatch(testUpdateLexicon(data))
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(PronDictLexicon));
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(PronDictLexicon))

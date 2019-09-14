@@ -26,45 +26,51 @@ const pronDict = (state = initState, action) => {
                 apiWaiting: {status: true, message: action.message}
             }
 
-
         case 'PRON_DICT_LIST':
-            console.log("reducer got pron dict list", action.response.data)
             return {
                 ...state,
                 pronDictList: action.response.data.data
             }
 
-        case 'PRON_DICT_LOAD':
         case 'PRON_DICT_NEW':
-            console.log("name", action.response.data.data.name)
-            console.log("reducer got pron dict new or load", action.response.data)
+            console.log("pron dict new", action.response.data.data.config.name)
+        case 'PRON_DICT_LOAD':
+            console.log("pron dict load", action.response.data.data.config.name)
             return {
                 ...state,
                 name: action.response.data.data.config.name,
                 datasetName: action.response.data.data.config.dataset_name,
                 l2s: action.response.data.data.l2s,
-                lexicon: 'No lexicon yet'
+                lexicon: action.response.data.data.lexicon,
             }
 
         case 'PRON_DICT_NAME':
-            console.log("reducer got pron dict name", action.response.data)
             return {
                     ...state,
                     name: action.response.data.data.name
                 }
 
         case 'PRON_DICT_L2S':
-            console.log("reducer got l2s", action)
             return {
                 ...state,
                 l2s: action.response.data
             }
 
         case 'PRON_DICT_LEXICON':
-            console.log("reducer got lexicon", action.response.data)
             return {
                 ...state,
                 lexicon: action.response.data
+            }
+
+        case 'PRON_DICT_SAVE_LEXICON':
+            return {
+                ...state,
+                lexicon: action.response.data
+            }
+        case 'TEST_UPDATE_LEXICON':
+            return {
+                ...state,
+                lexicon: action.data.lexicon
             }
 
         default:
