@@ -47,7 +47,7 @@ class DSPaths(object):
 
 class Dataset(FSObject):
     """
-    Dataset (or commonly referred to as Data Bundle on the front end) stores
+    Dataset (or commonly referred to as Recordings on the front end) stores
     the original and resampled audio, and original transcription files.
     Datasets in the same KaldiInterface must have unique names.
     """

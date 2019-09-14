@@ -88,7 +88,7 @@ class KaldiInterface(FSObject):
         if dsname in self.config['datasets'].keys():
             raise KaldiError(
                 f'Tried adding \'{dsname}\' which is already in {existing_names} with hash {self.config["datasets"][dsname]}.',
-                human_message=f'data bundle with name "{dsname}" already exists'
+                human_message=f'data set with name "{dsname}" already exists'
             )
         ds = Dataset(parent_path=self.datasets_path, name=dsname, logger=self.logger)
         datasets = self.config['datasets']

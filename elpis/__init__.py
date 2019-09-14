@@ -49,7 +49,7 @@ def create_app(test_config=None):
         app.config['INTERFACE'] = KaldiInterface(interface_path)
     else:
         app.config['INTERFACE'] = KaldiInterface.load(interface_path)
-    app.config['CURRENT_DATABUNDLE'] = None # not okay for multi-user
+    app.config['CURRENT_DATASET'] = None # not okay for multi-user
     app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user
     app.config['CURRENT_MODEL'] = None # not okay for multi-user
 
