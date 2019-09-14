@@ -24,6 +24,7 @@
             "settingsHeader": "Settings",
             "tierLabel": "tier name",
             "settingsDescription": "What is the name of the Elan tier that your transcriptions are on?",
+            "uploadButton": "Upload",
             "saveButton": "Save Settings",
             "nextButton": "Next",
             "nextButtonError": "(Simulate a file input error)"

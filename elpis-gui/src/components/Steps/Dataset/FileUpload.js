@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
+import { Button } from 'semantic-ui-react';
 import { fromEvent } from "file-selector";
 import { translate } from 'react-i18next';
 import { datasetFiles, datasetStatus } from 'redux/actions';
@@ -41,6 +42,7 @@ class FileUpload extends Component {
                                         <p>{ t('dataset.fileUpload.dropFilesHintDragActive') } </p>
                                     ) : (<p>{ t('dataset.fileUpload.dropFilesHint') }</p>)
                                 }
+                                <Button>{t('dataset.files.uploadButton')}</Button>
                             </div>
                         );
                     } }

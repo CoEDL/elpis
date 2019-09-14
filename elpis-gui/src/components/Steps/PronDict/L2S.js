@@ -53,34 +53,41 @@ class PronDictL2S extends Component {
 
                             <Message content={ t('pronDict.l2s.description') } />
 
-                            <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
-                                { ({ getRootProps, getInputProps, isDragActive }) => {
-                                    return (
-                                        <div
-                                            { ...getRootProps() }
-                                            className={ classNames("dropzone", {
-                                                "dropzone_active": isDragActive
-                                            }) }
-                                        >
-                                            <input { ...getInputProps() } />
+                            { ! pron &&
+                                <Segment>
+                                    <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
+                                        { ({ getRootProps, getInputProps, isDragActive }) => {
+                                            return (
+                                                <div
+                                                    { ...getRootProps() }
+                                                    className={ classNames("dropzone", {
+                                                        "dropzone_active": isDragActive
+                                                    }) }
+                                                >
+                                                    <input { ...getInputProps() } />
 
-                                            {
-                                                isDragActive ? (
-                                                    <p>{ t('pronDict.l2s.dropFilesHintDragActive') } </p>
-                                                ) : (<p>{ t('pronDict.l2s.dropFilesHint') }</p>)
-                                            }
-                                        </div>
-                                    );
-                                } }
-                            </Dropzone>
+                                                    {
+                                                        isDragActive ? (
+                                                            <p>{ t('pronDict.l2s.dropFilesHintDragActive') } </p>
+                                                        ) : (<p>{ t('pronDict.l2s.dropFilesHint') }</p>)
+                                                    }
+                                                    <Button>{t('pronDict.l2s.uploadButton')}</Button>
+                                                </div>
+                                            );
+                                        } }
+                                    </Dropzone>
+                                </Segment>
+                            }
+
+                            {pron &&
+                                <Segment>
+                                    { pron }
+                                </Segment>
+                            }
 
                             <Button as={Link} to={urls.gui.pronDict.lexicon}>
                                 {t('pronDict.l2s.nextButton')}
                             </Button>
-
-                            <Divider />
-
-                            { pron }
 
                         </Grid.Column>
                     </Grid>
