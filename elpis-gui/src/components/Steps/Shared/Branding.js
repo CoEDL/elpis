@@ -9,7 +9,7 @@ export default class StepBranding extends Component {
         return (
             <Header as='h1'>
                 <Link to="/">
-                    <img src="https://github.com/CoEDL/elpis/raw/master/docs/img/elpis.png" className="logo" alt="logo" />
+                    <img src="/elpis.png" className="logo" alt="logo" />
                 </Link>
             </Header>
         )
