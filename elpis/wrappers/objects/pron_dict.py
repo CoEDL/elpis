@@ -25,7 +25,7 @@ class PronDict(FSObject):
         self.dataset: Dataset = None
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.l2s_path = self.path.joinpath('l2s.txt')
-        self.lexicon_txt = self.path.joinpath('lexicon.txt')
+        self.lexicon_txt = self.path.joinpath('lexicon.txt') #TODO change to lexicon_txt_path
         self.config['l2s'] = None  # file has not been uploaded
 
     @classmethod
@@ -68,7 +68,6 @@ class PronDict(FSObject):
 
 
     def generate_lexicon(self):
-
         # task make-prn-dict
         # TODO this file needs to be reflected in kaldi_data_local_dict
         generate_pronunciation_dictionary(word_list=f'{self.dataset.pathto.word_list_txt}',
@@ -78,3 +77,23 @@ class PronDict(FSObject):
     def lexicon(self):
         with self.lexicon_txt.open(mode='rb') as fin:
             return fin.read()
+
+
+    def get_lexicon_content(self):
+        try:
+            with self.lexicon_txt.open(mode='r') as fin:
+                return fin.read()
+        except FileNotFoundError:
+            return 'No lexicon yet'
+
+
+    def save_lexicon(self, text):
+        # open pron dict file
+        # write lexicon text to file
+        print("lexicon", text)
+        try:
+            with self.lexicon_txt.open(mode='w') as fout:
+                fout.write(text)
+        except FileNotFoundError:
+            return 'No lexicon yet'
+        return self.lexicon
