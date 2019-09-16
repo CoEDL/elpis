@@ -34,7 +34,7 @@ class ModelResults extends Component {
                     </Table.Body>
                 </Table>
                 <p className="bug">
-                    This is showing the most recently trained results, not necessarily for the selected model.
+                    Oops, this is showing the most recently trained results, not necessarily for the selected model.
                 </p>
 
             </Segment>
@@ -57,12 +57,6 @@ class ModelResults extends Component {
                             <CurrentModelName />
 
                             { resultsEl }
-
-                            <Divider />
-
-                            <Button as={ Link } to="/transcription/new">
-                                { t('model.results.newTranscribeButton') }
-                            </Button>
 
                         </Grid.Column>
 
