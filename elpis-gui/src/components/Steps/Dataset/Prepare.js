@@ -98,8 +98,8 @@ class DatasetPrepare extends Component {
 
                             { listEl }
 
-                            <Button as={ Link } to={urls.gui.pronDict.new}>
-                                { t('dataset.prepare.nextButton') }
+                            <Button as={Link} to={urls.gui.pronDict.index}>
+                                { t('common.nextButton') }
                             </Button>
 
                         </Grid.Column>

@@ -8,13 +8,13 @@ export default {
             "prepareError": "/dataset/prepare/error"
         },
         "pronDict": {
-            "index": "/pron-dicts",
+            "index": "/pron-dict",
             "new": "/pron-dict/new",
             "l2s": "/pron-dict/l2s",
             "lexicon": "/pron-dict/lexicon"
         },
         "model": {
-            "index": "/models",
+            "index": "/model",
             "new": "/model/new",
             "settings": "/model/settings",
             "train": "/model/train",

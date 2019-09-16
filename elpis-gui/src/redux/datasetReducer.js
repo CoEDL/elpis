@@ -22,7 +22,6 @@ const dataset = (state = initState, action) => {
     switch (action.type) {
 
         case 'DATASET_LIST':
-        console.log("reducer got data set list", action.response.data.data)
             return {
                 ...state,
                 datasetList: action.response.data.data
@@ -30,7 +29,6 @@ const dataset = (state = initState, action) => {
 
         case 'DATASET_LOAD':
         case 'DATASET_NEW':
-            console.log("reducer got data set new or load", action.response.data)
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'wav')
             transcriptionFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'eaf')

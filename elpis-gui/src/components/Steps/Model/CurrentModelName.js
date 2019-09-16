@@ -11,14 +11,11 @@ class CurrentModelName extends Component {
         const { t, datasetName, pronDictName, name, match } = this.props
 
         const link = (match.url !== urls.gui.model.index) ? (
-            <>
-            &nbsp;
             <Link to={urls.gui.model.index}>
                 { t('common.chooseOrNewLabel') }
             </Link>
-            </>
         ) : (
-            <>&nbsp; { t('common.selectOneBelow') }</>
+            t('common.selectOneBelow')
         )
 
         const current = name ?
@@ -33,6 +30,7 @@ class CurrentModelName extends Component {
         ) : (
             <Message negative>
                 { t('model.common.noCurrentModelLabel') }
+                <br />
                 { link }
             </Message>
         )

@@ -73,7 +73,7 @@ class DatasetNew extends Component {
                                                     <ErrorMessage component="div" className="error" name="name" />
                                             </Form.Field>
                                             <Button type="button" onClick={ handleSubmit }>
-                                                { t('dataset.new.nextButton') }
+                                                { t('common.nextButton') }
                                             </Button>
                                         </Form>
                                     ) }

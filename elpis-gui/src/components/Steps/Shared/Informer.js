@@ -4,7 +4,6 @@ import { List, Accordion } from 'semantic-ui-react';
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import { setCurrentStep } from 'redux/actions'
-import Indicator from 'components/Steps/Shared/Indicator';
 import './Informer.css'
 
 
@@ -61,16 +60,6 @@ class StepInformer extends Component {
 											// we'll use these to target the selected substep in redux
 											step.substeps.map((substep, j) => {
 												const color = (substep.doing) ? doing : (substep.done) ? done : todo
-												// Build the indicator component
-												let indicator = (<Indicator
-													// Determine the colour status of the step.
-													color={ color }
-													// if this is the first substep in the step, then cap it.
-													cap={ j === 0 }
-													// if this is the last substep in the step, then cup it.
-													cup={ j === step.substeps.length - 1 }
-												/>);
-
 
 												// substep classes
 												const substepClassNames = classNames({
@@ -84,7 +73,6 @@ class StepInformer extends Component {
 														onClick={ () => this.handleStepSelect(substep, i, j) }
 														key={ substep.title }>
 
-														{ indicator }
 
 														<div style={ { paddingLeft: "1.4em" } }>{ substep.title }</div>
 

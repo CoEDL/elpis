@@ -11,14 +11,11 @@ class CurrentDatasetName extends Component {
         const { t, name, match } = this.props
 
         const link = (match.url !== urls.gui.dataset.index) ? (
-            <>
-            &nbsp;
             <Link to={urls.gui.dataset.index}>
                 { t('common.chooseOrNewLabel') }
             </Link>
-            </>
         ) : (
-            <>&nbsp; { t('common.selectOneBelow') }</>
+            t('common.selectOneBelow')
         )
 
         const current = name ?
@@ -29,6 +26,7 @@ class CurrentDatasetName extends Component {
         ) : (
             <Message negative>
                 { t('dataset.common.noCurrentDatasetLabel') }
+                <br />
                 { link }
             </Message>
         )

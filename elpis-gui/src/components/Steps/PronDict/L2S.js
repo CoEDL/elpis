@@ -86,7 +86,7 @@ class PronDictL2S extends Component {
                             }
 
                             <Button as={Link} to={urls.gui.pronDict.lexicon}>
-                                {t('pronDict.l2s.nextButton')}
+                                {t('common.nextButton')}
                             </Button>
 
                         </Grid.Column>

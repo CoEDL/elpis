@@ -158,13 +158,9 @@ class DatasetFiles extends Component {
                             <Divider />
 
                             <Button onClick={ this.handleNextButton }>
-                                { t('dataset.files.nextButton') }
+                                { t('common.nextButton') }
                             </Button>
-                            {/*
-                            <Button as={ Link } to="/dataset/prepare/error">
-                                { t('dataset.files.nextButtonError') }
-                            </Button>
- */}
+
                         </Grid.Column>
                     </Grid>
                 </Segment>

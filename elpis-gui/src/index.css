@@ -79,3 +79,22 @@ textarea.lexicon {
     width: 100%;
     min-height: 20em;
 }
+
+.ui.button.add {
+    margin: 1em;
+}
+
+.right {
+    float: right
+}
+
+.ui.styled.accordion .content {
+    padding: 0 !important;
+}
+
+.ui.list .item {
+    padding: 0.5em 0 !important;
+}
+.ui.list .item > div {
+    padding-left: 1em !important;
+}

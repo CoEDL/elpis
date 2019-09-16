@@ -96,31 +96,10 @@ class ModelTrain extends Component {
                                 </Message.Content>
                             </Message>
 
-{/*
-                            <Card fluid>
-                                <Card.Content header={ t('model.train.logsHeader') } />
-                                <Card.Content description={ t('model.train.logsDescription') } />
-                                <div className="kaldi-log">
-                                    <ScrollFollow
-                                        startFollowing={true}
-                                        render={({ follow, onScroll }) => (
-                                        <LazyLog url={urls.api.model.logstream} stream follow={follow} onScroll={onScroll} />
-                                        )}
-                                    />
-                                </div>
-                                </Card>
-                            <Divider />
-*/}
-
                             <Button as={Link} to={urls.gui.model.results} disabled={status === 'ready'}>
-                                    { t('model.train.nextButton') }
-                                </Button>
-
-{/*
-                            <Button as={ Link } to="/model/train/error">
-                                { t('model.train.nextButtonError') }
+                                { t('common.nextButton') }
                             </Button>
-*/}
+
                         </Grid.Column>
                     </Grid>
                 </Segment>

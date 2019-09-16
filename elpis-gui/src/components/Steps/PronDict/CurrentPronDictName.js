@@ -11,14 +11,11 @@ class CurrentPronDictName extends Component {
         const { t, datasetName, name, match } = this.props
 
         const link = (match.url !== urls.gui.pronDict.index) ? (
-            <>
-            &nbsp;
             <Link to={urls.gui.pronDict.index}>
                 { t('common.chooseOrNewLabel') }
             </Link>
-            </>
         ) : (
-            <>&nbsp; { t('common.selectOneBelow') }</>
+            t('common.selectOneBelow')
         )
 
         const current = name ?
@@ -31,6 +28,7 @@ class CurrentPronDictName extends Component {
         ) : (
             <Message negative>
                 { t('pronDict.common.noCurrentPronDictLabel') }
+                <br />
                 { link }
             </Message>
         )

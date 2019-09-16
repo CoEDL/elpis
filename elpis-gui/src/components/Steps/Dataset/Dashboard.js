@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
+import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { datasetList, datasetLoad } from 'redux/actions';
@@ -7,6 +8,7 @@ import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentDatasetName from "./CurrentDatasetName";
+import urls from 'urls';
 
 class DatasetDashboard extends Component {
 
@@ -43,36 +45,40 @@ class DatasetDashboard extends Component {
 
     render() {
         const { t, name, list } = this.props;
-        console.log("this.props.list", list)
-        console.log("this.props.name", name)
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
-            <Table sortable celled fixed unstackable>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell
-                            sorted={ column === 'name' ? direction : null }
-                            onClick={ this.handleSort('name', list) }
-                        >
-                            Name
-                        </Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                {
-                    list.map( datasetName => {
-                        const className = (datasetName === name) ? 'current-dataset' : ''
-                        return (
-                            <Table.Row key={ datasetName } className={ className }>
-                                <Table.Cell>
-                                    <Button fluid onClick={ () => this.handleLoad(datasetName) }>{ datasetName }</Button>
-                                </Table.Cell>
-                            </Table.Row>
-                        )
-                    })
-                }
-                </Table.Body>
-            </Table>
+            <>
+                <div className='right'>
+                    <Button className='add' content={t('common.newButton')} labelPosition='left'  icon='add' as={Link} to={urls.gui.dataset.new} />
+                </div>
+
+                <Table sortable celled fixed unstackable>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell
+                                sorted={ column === 'name' ? direction : null }
+                                onClick={ this.handleSort('name', list) }
+                            >
+                                Name
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                    {
+                        list.map( datasetName => {
+                            const className = (datasetName === name) ? 'current-dataset' : ''
+                            return (
+                                <Table.Row key={ datasetName } className={ className }>
+                                    <Table.Cell>
+                                        <Button fluid onClick={ () => this.handleLoad(datasetName) }>{ datasetName }</Button>
+                                    </Table.Cell>
+                                </Table.Row>
+                            )
+                        })
+                    }
+                    </Table.Body>
+                </Table>
+            </>
         ) : <p>{ t('dataset.dashboard.noneMessage') }</p>
 
         return (

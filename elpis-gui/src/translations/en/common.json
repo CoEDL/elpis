@@ -9,13 +9,12 @@
         },
         "dashboard": {
             "title": "Recordings",
-            "noneMessage": "No groups of recordings yet"
+            "noneMessage": "No groups of recordings yet."
         },
         "new": {
             "title": "New group of recordings",
             "nameLabel": "name",
-            "namePlaceholder": "Name",
-            "nextButton": "Next"
+            "namePlaceholder": "Name"
         },
         "files": {
             "title": "Add files",
@@ -26,7 +25,6 @@
             "settingsDescription": "What is the name of the Elan tier that your transcriptions are on?",
             "uploadButton": "Upload",
             "saveButton": "Save Settings",
-            "nextButton": "Next",
             "nextButtonError": "(Simulate a file input error)"
         },
         "fileUpload": {
@@ -43,8 +41,7 @@
             "bannerMessage": "Text has been cleaned and normalised OK",
             "bannerMessageDetailed": "Punctuation has been removed.",
             "wordlistHeader": "Wordlist",
-            "frequencyHeader": "Frequency",
-            "nextButton": "Next"
+            "frequencyHeader": "Frequency"
         },
         "prepareError": {
             "title": "File preparation error",
@@ -64,8 +61,7 @@
         "new": {
             "title": "New pronunciation dictionary",
             "nameLabel": "name",
-            "namePlaceholder": "Name",
-            "nextButton": "Next"
+            "namePlaceholder": "Name"
         },
         "l2s": {
             "title": "Upload Letter to Sound rules",
@@ -73,13 +69,11 @@
             "description": "The letter to sound file is used to build a pronunciation dictionary for the corpus. Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols. You can include comments in this file by beginning the comment line with #. For example: \n\n # This is a comment \n n n \n ng ŋ \n r r \n y j",
             "dropFilesHint": "Click here to upload your l2s file, or drop one here",
             "dropFilesHintDragActive": "Here here..",
-            "uploadButton": "Upload",
-            "nextButton": "Next"
+            "uploadButton": "Upload"
         },
         "lexicon": {
             "title": "Review the pronunciation dictionary",
-            "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
-            "nextButton": "Next"
+            "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again."
         }
     },
     "model": {
@@ -95,8 +89,7 @@
         "new": {
             "title": "New training session",
             "nameLabel": "name",
-            "namePlaceholder": "Name",
-            "nextButton": "Next"
+            "namePlaceholder": "Name"
         },
         "settings": {
             "title": "Settings",
@@ -106,8 +99,7 @@
             "mfccLabel": "MFCC stuff",
             "ngramDescription": "The n-gram adjusts whether the system learns single words or words and their neighbours. A value of 1 will set the system to learn single words. To make the system learn from words and their neighbouring words, set the n-gram to 2 or 3.",
             "ngramLabel": "n-gram",
-            "beamLabel": "Beam size",
-            "nextButton": "Next"
+            "beamLabel": "Beam size"
         },
         "train": {
             "title": "Training",
@@ -119,7 +111,6 @@
             "logsDescription": "gory detail from Kaldi (coming soon)",
             "trainButton": "Start training",
             "statusButton": "Check progress",
-            "nextButton": "Next",
             "nextButtonError": "(Simulate an error training model)"
         },
         "results": {
@@ -161,7 +152,9 @@
         }
     },
     "common": {
-        "selectOneBelow": "Select one from the list below or make a new one.",
+        "nextButton": "Next",
+        "newButton": "New",
+        "selectOneBelow": "Make a new one, or select one from the list below.",
         "chooseOrNewLabel": "Choose one.",
         "invalidCharacterErrorMessage": "Please use these characters: \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
     }

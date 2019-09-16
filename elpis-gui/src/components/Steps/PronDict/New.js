@@ -73,7 +73,7 @@ class PronDictNew extends Component {
                                                     <ErrorMessage component="div" className="error" name="name" />
                                             </Form.Field>
                                             <Button type="button" onClick={ handleSubmit }>
-                                                { t('pronDict.new.nextButton') }
+                                                { t('common.nextButton') }
                                             </Button>
                                         </Form>
                                     ) }

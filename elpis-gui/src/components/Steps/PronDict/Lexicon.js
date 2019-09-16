@@ -55,19 +55,21 @@ class PronDictLexicon extends Component {
                             <Message content={ t('pronDict.lexicon.description') } />
 
                             <Segment>
-                                <Form>
+                                <Form attached>
                                     <TextArea
                                         className="lexicon"
                                         onChange={this.handleChange}
                                         value={lexicon} >
                                     </TextArea>
                                 </Form>
-                                <Button onClick={this.generateLexicon}>reset</Button>
-                                <Button onClick={this.saveLexicon} positive>save</Button>
+                                <Button.Group attached='bottom'>
+                                    <Button onClick={this.generateLexicon}>reset</Button>
+                                    <Button onClick={this.saveLexicon} positive>save</Button>
+                                </Button.Group>
                             </Segment>
 
                             <Button as={Link} to={urls.gui.model.index}>
-                                {t('pronDict.lexicon.nextButton')}
+                                {t('common.nextButton')}
                             </Button>
 
                         </Grid.Column>

@@ -71,7 +71,7 @@ class ModelNew extends Component {
                                                     <ErrorMessage component="div" className="error" name="name" />
                                             </Form.Field>
                                             <Button onClick={ handleSubmit } >
-                                                { t('model.new.nextButton') }
+                                                { t('common.nextButton') }
                                             </Button>
                                         </Form>
                                     ) }

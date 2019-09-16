@@ -6,13 +6,12 @@
     position: relative;
 }
 
-.stepDone,
+.ui.styled.accordion .active.title.stepDone,
 .substepDone {
     background-color: #E0C6EE;
 }
 
-.stepDoing {}
-
+.ui.styled.accordion .active.title.stepDoing,
 .substepDoing {
     background-color: #D3A0F0;
 }
