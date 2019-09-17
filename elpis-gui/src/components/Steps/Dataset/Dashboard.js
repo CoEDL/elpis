@@ -47,38 +47,32 @@ class DatasetDashboard extends Component {
         const { t, name, list } = this.props;
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
-            <>
-                <div className='right'>
-                    <Button className='add' content={t('common.newButton')} labelPosition='left'  icon='add' as={Link} to={urls.gui.dataset.new} />
-                </div>
-
-                <Table sortable celled fixed unstackable>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell
-                                sorted={ column === 'name' ? direction : null }
-                                onClick={ this.handleSort('name', list) }
-                            >
-                                Name
-                            </Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                    {
-                        list.map( datasetName => {
-                            const className = (datasetName === name) ? 'current-dataset' : ''
-                            return (
-                                <Table.Row key={ datasetName } className={ className }>
-                                    <Table.Cell>
-                                        <Button fluid onClick={ () => this.handleLoad(datasetName) }>{ datasetName }</Button>
-                                    </Table.Cell>
-                                </Table.Row>
-                            )
-                        })
-                    }
-                    </Table.Body>
-                </Table>
-            </>
+            <Table sortable celled fixed unstackable>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell
+                            sorted={ column === 'name' ? direction : null }
+                            onClick={ this.handleSort('name', list) }
+                        >
+                            Name
+                        </Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                {
+                    list.map( datasetName => {
+                        const className = (datasetName === name) ? 'current-dataset' : ''
+                        return (
+                            <Table.Row key={ datasetName } className={ className }>
+                                <Table.Cell>
+                                    <Button fluid onClick={ () => this.handleLoad(datasetName) }>{ datasetName }</Button>
+                                </Table.Cell>
+                            </Table.Row>
+                        )
+                    })
+                }
+                </Table.Body>
+            </Table>
         ) : <p>{ t('dataset.dashboard.noneMessage') }</p>
 
         return (
@@ -96,6 +90,10 @@ class DatasetDashboard extends Component {
                             </Header>
 
                             <CurrentDatasetName />
+
+                            <Segment>
+                                <Button className='add' content={t('common.newButton')} labelPosition='left' icon='add' as={Link} to={urls.gui.dataset.new} />
+                            </Segment>
 
                             <Segment>
                                 { listEl }

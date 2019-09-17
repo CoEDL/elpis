@@ -48,53 +48,47 @@ class ModelDashboard extends Component {
         const { t, name, list } = this.props
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
-            <>
-                <div className='right'>
-                    <Button className='add' content={t('common.newButton')} labelPosition='left' icon='add' as={Link} to={urls.gui.model.new} />
-                </div>
-
-                <Table sortable celled fixed unstackable>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell
-                                sorted={ column === 'name' ? direction : null }
-                                onClick={ this.handleSort('name', list) }
-                            >
-                                Name
-                            </Table.HeaderCell>
-                            <Table.HeaderCell
-                                sorted={ column === 'dataset_name' ? direction : null }
-                                onClick={ this.handleSort('dataset_name', list) }
-                            >
-                                Recordings
-                            </Table.HeaderCell>
-                            <Table.HeaderCell
-                                sorted={ column === 'pron_dict_name' ? direction : null }
-                                onClick={this.handleSort('pron_dict_name', list) }
-                            >
-                                Pronunciation Dictionaries
-                            </Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {
-                            list.map(model => {
-                                console.log(model)
-                                const className = (name === model.name) ? 'current-model' : ''
-                                return (
-                                    <Table.Row key={ model.name } className={ className }>
-                                        <Table.Cell>
-                                            <Button fluid onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
-                                        </Table.Cell>
-                                        <Table.Cell>{ model.dataset_name }</Table.Cell>
-                                        <Table.Cell>{ model.pron_dict_name }</Table.Cell>
-                                    </Table.Row>
-                                )
-                            })
-                        }
-                    </Table.Body>
-                </Table>
-            </>
+            <Table sortable celled fixed unstackable>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell
+                            sorted={ column === 'name' ? direction : null }
+                            onClick={ this.handleSort('name', list) }
+                        >
+                            Name
+                        </Table.HeaderCell>
+                        <Table.HeaderCell
+                            sorted={ column === 'dataset_name' ? direction : null }
+                            onClick={ this.handleSort('dataset_name', list) }
+                        >
+                            Recordings
+                        </Table.HeaderCell>
+                        <Table.HeaderCell
+                            sorted={ column === 'pron_dict_name' ? direction : null }
+                            onClick={this.handleSort('pron_dict_name', list) }
+                        >
+                            Pronunciation Dictionaries
+                        </Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    {
+                        list.map(model => {
+                            console.log(model)
+                            const className = (name === model.name) ? 'current-model' : ''
+                            return (
+                                <Table.Row key={ model.name } className={ className }>
+                                    <Table.Cell>
+                                        <Button fluid onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
+                                    </Table.Cell>
+                                    <Table.Cell>{ model.dataset_name }</Table.Cell>
+                                    <Table.Cell>{ model.pron_dict_name }</Table.Cell>
+                                </Table.Row>
+                            )
+                        })
+                    }
+                </Table.Body>
+            </Table>
         ) : <p>{ t('model.dashboard.noneMessage') }</p>
 
         return (
@@ -114,9 +108,13 @@ class ModelDashboard extends Component {
 
                             <CurrentModelName />
 
-                            {/* <ListModels /> */ }
+                            <Segment>
+                                <Button className='add' content={t('common.newButton')} labelPosition='left' icon='add' as={Link} to={urls.gui.dataset.new} />
+                            </Segment>
 
-                            { listEl }
+                            <Segment>
+                                { listEl }
+                            </Segment>
 
                         </Grid.Column>
                     </Grid>
