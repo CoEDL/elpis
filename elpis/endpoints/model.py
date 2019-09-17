@@ -29,8 +29,14 @@ def run(cmd: str) -> str:
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     model = kaldi.new_model(request.json["name"])
-    print(app.config['CURRENT_DATASET'])
-    print(app.config['CURRENT_PRON_DICT'])
+
+    # override the current dataset and pron_dict
+    dataset = kaldi.get_dataset(request.json['dataset_name'])
+    pron_dict = kaldi.get_pron_dict(request.json['pron_dict_name'])
+
+    app.config['CURRENT_DATASET'] = dataset
+    app.config['CURRENT_PRON_DICT'] = pron_dict
+
     dataset: Dataset = app.config['CURRENT_DATASET']
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
     model.link(dataset, pron_dict)
