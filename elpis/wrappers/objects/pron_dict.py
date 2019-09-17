@@ -59,7 +59,7 @@ class PronDict(FSObject):
             with self.l2s_path.open(mode='r') as fin:
                 return fin.read()
         except FileNotFoundError:
-            return 'No l2s yet'
+            return False
 
     @property
     def l2s(self):
