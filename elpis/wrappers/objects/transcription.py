@@ -55,6 +55,7 @@ class Transcription(FSObject):
             fout.write(generator)
         run(f'chmod +x {generator_file_path}')
         run(f'{generator_file_path}')
+        print("")
 
     def _process_audio_file(self, audio):
         # copy audio to the tmp folder for resampling
@@ -88,11 +89,8 @@ class Transcription(FSObject):
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
         kaldi_test_path = self.model.path.joinpath('kaldi', 'data', 'test')
         kaldi_path = self.model.path.joinpath('kaldi')
-
-        kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
-
         distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
 
         subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode.sh'.split(),
@@ -110,9 +108,8 @@ class Transcription(FSObject):
     def transcribe_align(self, on_complete: Callable=None):
 
         def transcribe():
-
             kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
-
+            os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
             distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
             distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
 

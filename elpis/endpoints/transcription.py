@@ -11,7 +11,6 @@ bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 
 @bp.route("/new", methods=['POST'])
 def new():
-    print('prepare new transcription')
     kaldi: KaldiInterface = app.config['INTERFACE']
     transcription = kaldi.new_transcription(hasher.new())  # TODO transcriptions have no name
     model: Model = app.config['CURRENT_MODEL']
