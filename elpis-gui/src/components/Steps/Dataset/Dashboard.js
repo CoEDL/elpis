@@ -7,6 +7,7 @@ import { datasetList, datasetLoad } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import NewForm from 'components/Steps/Dataset/NewForm';
 import CurrentDatasetName from "./CurrentDatasetName";
 import urls from 'urls';
 
@@ -45,6 +46,7 @@ class DatasetDashboard extends Component {
 
     render() {
         const { t, name, list } = this.props;
+        console.log("list", list)
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
@@ -91,13 +93,26 @@ class DatasetDashboard extends Component {
 
                             <CurrentDatasetName />
 
-                            <Segment>
-                                <Button className='add' content={t('common.newButton')} labelPosition='left' icon='add' as={Link} to={urls.gui.dataset.new} />
-                            </Segment>
+                            {list.length==0 &&
+                                <NewForm />
+                            }
 
-                            <Segment>
-                                { listEl }
-                            </Segment>
+                            {list.length > 0 &&
+                                <>
+                                    <Segment>
+                                        <Button
+                                            className='add'
+                                            content={t('common.newButton')}
+                                            labelPosition='left'
+                                            icon='add'
+                                            as={Link}
+                                            to={urls.gui.dataset.new} />
+                                    </Segment>
+                                    <Segment>
+                                        {listEl}
+                                    </Segment>
+                                </>
+                            }
 
                         </Grid.Column>
                     </Grid>

@@ -7,7 +7,8 @@ import { Formik, ErrorMessage } from 'formik';
 import { modelNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
-import urls from 'urls'
+import NewForm from 'components/Steps/Model/NewForm';
+
 
 class ModelNew extends Component {
 
@@ -27,55 +28,8 @@ class ModelNew extends Component {
                                 { t('model.new.title') }
                             </Header>
 
-                            <Formik
-                                enableReinitialize
-                                initialValues={ {
-                                    name: ''
-                                } }
-                                validate={ values => {
-                                    let errors = {};
-                                    if (!values.name) {
-                                        errors.name = 'Required';
-                                    } else if (
-                                        !/^[ 0-9a-zA-Z\-_@]+$/i.test(values.name)
-                                    ) {
-                                        errors.name = t('common.invalidCharacterErrorMessage');
-                                    }
-                                    return errors;
-                                } }
-                                onSubmit={ (values, { setSubmitting }) => {
-                                    const postData = {name:values.name}
-                                    modelNew(postData)
-                                    this.props.history.push(urls.gui.model.settings)
-                                } }
-                            >
-                                { ({
-                                    values,
-                                    errors,
-                                    dirty,
-                                    touched,
-                                    handleSubmit,
-                                    handleChange,
-                                    isSubmitting,
-                                    /* and other goodies */
-                                }) => (
-                                        <Form onSubmit={ handleSubmit }>
-                                            <Form.Field>
-                                                <Input
-                                                    label={ t('model.new.nameLabel') }
-                                                    value={ values.name }
-                                                    placeholder={ t('model.new.namePlaceholder') }
-                                                    name="name"
-                                                    type="text"
-                                                    onChange={ handleChange } />
-                                                    <ErrorMessage component="div" className="error" name="name" />
-                                            </Form.Field>
-                                            <Button onClick={ handleSubmit } >
-                                                { t('common.nextButton') }
-                                            </Button>
-                                        </Form>
-                                    ) }
-                            </Formik>
+                            <NewForm />
+
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -84,14 +38,5 @@ class ModelNew extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        name: state.model.name
-    }
-}
-const mapDispatchToProps = dispatch => ({
-    modelNew: name => {
-        dispatch(modelNew(name))
-    }
-})
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelNew));
+
+export default translate('common')(ModelNew)

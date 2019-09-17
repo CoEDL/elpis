@@ -7,7 +7,7 @@ import { modelList, modelLoad } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
-// import ListModels from "./ListModels";
+import NewForm from 'components/Steps/Model/NewForm';
 import CurrentModelName from "./CurrentModelName";
 import urls from 'urls';
 
@@ -108,13 +108,27 @@ class ModelDashboard extends Component {
 
                             <CurrentModelName />
 
-                            <Segment>
-                                <Button className='add' content={t('common.newButton')} labelPosition='left' icon='add' as={Link} to={urls.gui.model.new} />
-                            </Segment>
 
-                            <Segment>
-                                { listEl }
-                            </Segment>
+                            {list.length == 0 &&
+                                <NewForm />
+                            }
+
+                            {list.length > 0 &&
+                                <>
+                                    <Segment>
+                                        <Button
+                                            className='add'
+                                            content={t('common.newButton')}
+                                            labelPosition='left'
+                                            icon='add'
+                                            as={Link}
+                                            to={urls.gui.model.new} />
+                                    </Segment>
+                                    <Segment>
+                                        {listEl}
+                                    </Segment>
+                                </>
+                            }
 
                         </Grid.Column>
                     </Grid>

@@ -7,6 +7,7 @@ import { pronDictList, pronDictLoad, pronDictGetLexicon } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
+import NewForm from 'components/Steps/PronDict/NewForm';
 import CurrentPronDictName from "./CurrentPronDictName";
 import urls from 'urls';
 
@@ -92,13 +93,26 @@ class PronDictDashboard extends Component {
 
                             <CurrentPronDictName />
 
-                            <Segment>
-                                <Button className='add' content={t('common.newButton')} labelPosition='left' icon='add' as={Link} to={urls.gui.pronDict.new} />
-                            </Segment>
+                            {list.length == 0 &&
+                                <NewForm />
+                            }
 
-                            <Segment>
-                                { listEl }
-                            </Segment>
+                            {list.length > 0 &&
+                                <>
+                                    <Segment>
+                                    <Button
+                                        className='add'
+                                        content={t('common.newButton')}
+                                        labelPosition='left'
+                                        icon='add'
+                                        as={Link}
+                                        to={urls.gui.pronDict.new} />
+                                    </Segment>
+                                    <Segment>
+                                        {listEl}
+                                    </Segment>
+                                </>
+                            }
 
                         </Grid.Column>
                     </Grid>
