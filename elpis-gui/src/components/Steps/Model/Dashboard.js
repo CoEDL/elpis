@@ -109,7 +109,7 @@ class ModelDashboard extends Component {
                             <CurrentModelName />
 
                             <Segment>
-                                <Button className='add' content={t('common.newButton')} labelPosition='left' icon='add' as={Link} to={urls.gui.dataset.new} />
+                                <Button className='add' content={t('common.newButton')} labelPosition='left' icon='add' as={Link} to={urls.gui.model.new} />
                             </Segment>
 
                             <Segment>
