@@ -217,7 +217,10 @@ class Model(FSObject):
             ######################################################################
 
             # task _test-train
-            p = run(f"cd {local_kaldi_path}; ./run.sh > /elpis/state/tmp_log.txt")
+            tmp_log_path = '/elpis/state/tmp_log.txt'
+            if os.path.isfile(tmp_log_path):
+                os.remove(tmp_log_path)
+            p = run(f"cd {local_kaldi_path}; ./run.sh > {tmp_log_path}")
             print(p.stdout)
             print('train double done.')
 
