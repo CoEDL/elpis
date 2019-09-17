@@ -114,7 +114,7 @@ class Model(FSObject):
 
             # task make-nonsil-phones > {{ .KALDI_OUTPUT_PATH }}/tmp/nonsilence_phones.txt
             nonsilence_phones_path = kaldi_data_local_dict.joinpath('nonsilence_phones.txt')
-            cmd = f"grep -v '^#' < {self.pron_dict.l2s_path} | cut -d' ' -f2 | grep -v '^$' | sort -u"
+            cmd = f"grep -v '^#' < {self.pron_dict.l2s_path} | cut -d' ' -f2 | grep -v '^$' | uniq"
             p = run(cmd)
             with nonsilence_phones_path.open(mode='wb') as fout:
                 fout.write(p.stdout)
