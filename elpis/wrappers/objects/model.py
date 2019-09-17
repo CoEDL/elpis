@@ -11,6 +11,7 @@ from elpis.wrappers.objects.pron_dict import PronDict
 from elpis.wrappers.objects.fsobject import FSObject
 from elpis.wrappers.input.json_to_kaldi import create_kaldi_structure
 from elpis.wrappers.objects.path_structure import KaldiPathStructure
+from collections import OrderedDict
 
 
 
@@ -81,6 +82,7 @@ class Model(FSObject):
     def train(self, on_complete:Callable=None):
 
         def prepare_for_training():
+            print("prepare_for_training")
             # task make-kaldi-subfolders
             kaldi_structure = KaldiPathStructure(self.path)
 
@@ -114,10 +116,21 @@ class Model(FSObject):
 
             # task make-nonsil-phones > {{ .KALDI_OUTPUT_PATH }}/tmp/nonsilence_phones.txt
             nonsilence_phones_path = kaldi_data_local_dict.joinpath('nonsilence_phones.txt')
-            cmd = f"grep -v '^#' < {self.pron_dict.l2s_path} | cut -d' ' -f2 | grep -v '^$' | uniq"
-            p = run(cmd)
-            with nonsilence_phones_path.open(mode='wb') as fout:
-                fout.write(p.stdout)
+            # build a unnique non-sorted list of the phone symbols
+            # can't use sorting, because the rules may have order significance
+            # ignore comment lines that begin with #
+            seen = OrderedDict()
+            for line in open(self.pron_dict.l2s_path, "r"):
+                if line[0] == "#":
+                    pass
+                else:
+                    line = line.split()[1:]
+                    if len(line) > 0:
+                        line = line[0]
+                        seen[line] = seen.get(line, 0) + 1
+            with nonsilence_phones_path.open(mode='w') as fout:
+                for (item,i) in seen.items():
+                    fout.write("%s\n" % item)
 
             with path_file_path.open(mode='w') as fout:
                 with path_resource.open() as fin:
