@@ -70,7 +70,9 @@ var successHandler = {
     transcriptionTranscribe: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE', response }),
     transcriptionTranscribeAlign: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE_ALIGN', response }),
     transcriptionGetText: response => ({ type: 'TRANSCRIPTION_GET_TEXT', response }),
-    transcriptionGetElan: response => ({ type: 'TRANSCRIPTION_GET_ELAN', response })
+    transcriptionGetElan: response => ({ type: 'TRANSCRIPTION_GET_ELAN', response }),
+
+    configReset: response => ({ type: 'CONFIG_RESET', response })
 }
 
 // * * * * * * * * * * DATA SETS * * * * * * * * * * * * * * *
@@ -224,3 +226,9 @@ export const transcriptionStatusReset = status => ({ type: 'TRANSCRIPTION_STATUS
 export const setCurrentStep = url => ({ type: 'SET_CURRENT_STEP', url })
 
 export const triggerApiWaiting = message => ({ type: 'TRIGGER_API_WAITING', message })
+
+export const configReset = postData => {
+    console.log("actions configReset")
+    const url = baseUrl + urls.api.config.reset
+    return postApi(url, null, 'configReset')
+}

@@ -52,6 +52,10 @@ const steps = (state = initialStepModelState, action) => {
 
 	switch (action.type) {
 
+		case 'CONFIG_RESET':
+			console.log("reducer got CONFIG_RESET")
+			return {...state}
+
 		// Set the 'doing' status by matching URL
 		case 'SET_CURRENT_STEP':
 			let rememberToEnableTheNextStep = false
