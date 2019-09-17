@@ -75,11 +75,15 @@ class ModelDashboard extends Component {
                     {
                         list.map(model => {
                             console.log(model)
-                            const className = (name === model.name) ? 'current-model' : ''
+                            const className = (name === model.name) ? 'current' : ''
                             return (
                                 <Table.Row key={ model.name } className={ className }>
                                     <Table.Cell>
-                                        <Button fluid onClick={ () => this.handleLoad(model.name) }>{ model.name }</Button>
+                                        <Button
+                                            className={className}
+                                            fluid
+                                            onClick={ () => this.handleLoad(model.name) }
+                                            >{ model.name }</Button>
                                     </Table.Cell>
                                     <Table.Cell>{ model.dataset_name }</Table.Cell>
                                     <Table.Cell>{ model.pron_dict_name }</Table.Cell>

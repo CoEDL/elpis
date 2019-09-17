@@ -63,11 +63,15 @@ class PronDictDashboard extends Component {
                 {
                     list.map( pronDictName => {
                         console.log(list)
-                        const className = (pronDictName === name) ? 'current-dataset' : ''
+                        const className = (pronDictName === name) ? 'current' : ''
                         return (
-                            <Table.Row key={ pronDictName } className={ className }>
+                            <Table.Row key={ pronDictName }>
                                 <Table.Cell>
-                                    <Button fluid onClick={ () => this.handleLoad(pronDictName) }>{ pronDictName }</Button>
+                                    <Button
+                                        className={className}
+                                        fluid
+                                        onClick={ () => this.handleLoad(pronDictName) }
+                                        >{ pronDictName }</Button>
                                 </Table.Cell>
                             </Table.Row>
                         )

@@ -21,12 +21,12 @@ class CurrentPronDictName extends Component {
         const current = name ?
         (
             <Message color='olive'>
-                {t('pronDict.common.currentPronDictLabel') + name }
-                <br />
                 {t('dataset.common.currentDatasetLabel') + datasetName }
+                <br />
+                {t('pronDict.common.currentPronDictLabel') + name }
             </Message>
         ) : (
-            <Message negative>
+            <Message color='purple'>
                 { t('pronDict.common.noCurrentPronDictLabel') }
                 <br />
                 { link }

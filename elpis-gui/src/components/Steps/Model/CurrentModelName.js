@@ -28,7 +28,7 @@ class CurrentModelName extends Component {
                 { t('model.common.currentModelLabel') + name }
             </Message>
         ) : (
-            <Message negative>
+            <Message color='purple'>
                 { t('model.common.noCurrentModelLabel') }
                 <br />
                 { link }

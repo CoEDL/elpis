@@ -63,11 +63,15 @@ class DatasetDashboard extends Component {
                 <Table.Body>
                 {
                     list.map( datasetName => {
-                        const className = (datasetName === name) ? 'current-dataset' : ''
+                        const className = (datasetName === name) ? 'current' : ''
                         return (
-                            <Table.Row key={ datasetName } className={ className }>
+                            <Table.Row key={ datasetName }>
                                 <Table.Cell>
-                                    <Button fluid onClick={ () => this.handleLoad(datasetName) }>{ datasetName }</Button>
+                                    <Button
+                                        className={className}
+                                        fluid
+                                        onClick={ () => this.handleLoad(datasetName) }
+                                        >{ datasetName }</Button>
                                 </Table.Cell>
                             </Table.Row>
                         )

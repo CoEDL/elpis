@@ -50,8 +50,8 @@ code {
     list-style-type: none;
 }
 
-.current-dataset,
-.current-model {
+
+.button.current {
     background-color: #D3A0F0 !important;
 }
 

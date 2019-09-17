@@ -24,7 +24,7 @@ class CurrentDatasetName extends Component {
                 { t('dataset.common.currentDatasetLabel') + name }
             </Message>
         ) : (
-            <Message negative>
+            <Message color='purple'>
                 { t('dataset.common.noCurrentDatasetLabel') }
                 <br />
                 { link }
