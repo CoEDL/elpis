@@ -3,7 +3,7 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { modelList, modelLoad } from 'redux/actions';
+import { modelList, modelLoad, datasetLoad, pronDictLoad } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -38,10 +38,14 @@ class ModelDashboard extends Component {
         }
     }
 
-    handleLoad = name => {
-        const postData = { name: name }
-        console.log('handle load name', name)
-        this.props.modelLoad(postData)
+    handleLoad = values => {
+        console.log('handle load name', values.name)
+        const { modelLoad } = this.props
+        const modelData = { name: values.name }
+        const datasetData = { name: values.dataset_name }
+        const pronDictData = { name: values.pron_dict_name }
+
+        modelLoad(modelData, datasetData, pronDictData)
     }
 
     render() {
@@ -74,7 +78,6 @@ class ModelDashboard extends Component {
                 <Table.Body>
                     {
                         list.map(model => {
-                            console.log(model)
                             const className = (name === model.name) ? 'current' : ''
                             return (
                                 <Table.Row key={ model.name } className={ className }>
@@ -82,7 +85,7 @@ class ModelDashboard extends Component {
                                         <Button
                                             className={className}
                                             fluid
-                                            onClick={ () => this.handleLoad(model.name) }
+                                            onClick={ () => this.handleLoad(model) }
                                             >{ model.name }</Button>
                                     </Table.Cell>
                                     <Table.Cell>{ model.dataset_name }</Table.Cell>
@@ -153,8 +156,11 @@ const mapDispatchToProps = dispatch => ({
     modelList: () => {
         dispatch(modelList())
     },
-    modelLoad: postData => {
-        dispatch(modelLoad(postData))
+    modelLoad: (modelData, datasetData, pronDictData) => {
+        // TODO asynch these?
+        dispatch(modelLoad(modelData))
+        dispatch(datasetLoad(datasetData))
+        dispatch(pronDictLoad(pronDictData))
     }
 })
 

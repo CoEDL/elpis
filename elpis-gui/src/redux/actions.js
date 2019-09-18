@@ -21,6 +21,7 @@ const getApi = (url, successFunction) => {
 }
 
 const postApi = (url, postData, successFunction, config=null) => {
+    // console.log("postAPI doing", url, postData)
     return dispatch => {
         // console.log('postData', url, postData)
         axios.post(url, postData, config)
@@ -28,6 +29,7 @@ const postApi = (url, postData, successFunction, config=null) => {
                 // console.log("api response", response)
                 dispatch(successHandler[successFunction](response))
             }).catch((error) => {
+                // console.log("api error", error)
                 dispatch(errorHandler(error))
             })
     }

@@ -4,7 +4,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import { Button, Form, Grid, Header, Input, Label, Segment, Select, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { datasetList, pronDictList, modelNew } from 'redux/actions';
+import { pronDictList, modelNew, pronDictLoad } from 'redux/actions';
 import urls from 'urls'
 
 
@@ -12,26 +12,32 @@ class NewForm extends Component {
 
     // Get me a list of all the data sets and pron dicts we have
     componentDidMount() {
-        const { datasetList, pronDictList } = this.props
-        datasetList()
+        const { pronDictList } = this.props
         pronDictList()
     }
 
 
     render() {
-        const { t, name, currentDataset, currentPronDict, datasets, pronDicts, modelNew } = this.props;
+        const { t, name, currentPronDict, pronDicts, modelNew, pronDictLoad } = this.props;
+
         /**
-         *  If we have a current dataset or pron dict, pre-select that in the form,
-         *  else preselect the firest item in each list.
-         *  This allows the values to be passed i onsubmit without haivng to explicitly select either
+         *  If we have a current pron dict, pre-select that in the form,
+         *  else preselect the first item in each list.
+         *  This allows the values to be passed to onsubmit without having to explicitly select either
         */
+        let defaultPronDictName = ''
+        if (currentPronDict) {
+            defaultPronDictName = currentPronDict
+        } else if (pronDicts.length > 0) {
+            defaultPronDictName = pronDicts[0]["name"]
+        }
+
         return (
             <Formik
                 enableReinitialize
                 initialValues={{
                     name: '',
-                    dataset_name: currentDataset ? currentDataset : datasets[0],
-                    pron_dict_name: currentPronDict ? currentPronDict : pronDicts[0]
+                    pron_dict_name: defaultPronDictName
                 }}
                 validate={values => {
                     let errors = {};
@@ -45,8 +51,9 @@ class NewForm extends Component {
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    const postData = { name: values.name, dataset_name: values.dataset_name, pron_dict_name: values.pron_dict_name }
-                    modelNew(postData)
+                    const modelData = { name: values.name, pron_dict_name: values.pron_dict_name }
+                    console.log("new model onsubmit", modelData)
+                    modelNew(modelData)
                     this.props.history.push(urls.gui.model.settings)
                 }}
             >
@@ -70,16 +77,11 @@ class NewForm extends Component {
                             </Form.Field>
 
                             <Form.Field>
-                                <label>{t('model.new.selectDatasetLabel')}</label>
-                                <Field component="select" name="dataset_name">
-                                    {datasets.map(name =>(<option key={name} value={name}>{name}</option>))}
-                                </Field>
-                            </Form.Field>
-
-                            <Form.Field>
                                 <label>{t('model.new.selectPronDictLabel')}</label>
                                 <Field component="select" name="pron_dict_name">
-                                    {pronDicts.map(name =>(<option key={name} value={name}>{name}</option>))}
+                                { pronDicts.map(pronDict =>
+                                    (<option key={pronDict.name} value={pronDict.name}>{pronDict.name} ( {pronDict.data_set_name} ) </option>))
+                                }
                                 </Field>
                             </Form.Field>
 
@@ -98,21 +100,17 @@ class NewForm extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
-        datasets: state.dataset.datasetList,
-        currentDataset: state.dataset.name,
         pronDicts: state.pronDict.pronDictList,
         currentPronDict: state.pronDict.name,
     }
 }
 const mapDispatchToProps = dispatch => ({
-    datasetList: () => {
-        dispatch(datasetList())
-    },
     pronDictList: () => {
         dispatch(pronDictList())
     },
-    modelNew: postData => {
-        dispatch(modelNew(postData))
+    modelNew: (modelData) => {
+        // need to pass the new name, the selected pron_dict_name. we get its dataset_name in flask
+        dispatch(modelNew(modelData))
     }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewForm)));

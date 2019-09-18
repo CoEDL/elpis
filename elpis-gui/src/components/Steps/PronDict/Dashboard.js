@@ -46,6 +46,7 @@ class PronDictDashboard extends Component {
 
     render() {
         const { t, name, list } = this.props;
+        const listArray = Array.from(list.keys())
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
@@ -53,24 +54,31 @@ class PronDictDashboard extends Component {
                     <Table.Row>
                         <Table.HeaderCell
                             sorted={ column === 'name' ? direction : null }
-                            onClick={ this.handleSort('name', list) }
+                            onClick={ this.handleSort('name', listArray) }
                         >
                             Name
+                        </Table.HeaderCell>
+                        <Table.HeaderCell>
+                            Recordings
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
                 {
-                    list.map( pronDictName => {
-                        const className = (pronDictName === name) ? 'current' : ''
+                    list.map( pronDict => {
+                        const className = (pronDict.name === name) ? 'current' : ''
                         return (
-                            <Table.Row key={ pronDictName }>
+                            <Table.Row key={pronDict.name }>
                                 <Table.Cell>
+
                                     <Button
                                         className={className}
                                         fluid
-                                        onClick={ () => this.handleLoad(pronDictName) }
-                                        >{ pronDictName }</Button>
+                                        onClick={() => this.handleLoad(pronDict.name) }
+                                        >{pronDict.name }</Button>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {pronDict.data_set_name}
                                 </Table.Cell>
                             </Table.Row>
                         )
