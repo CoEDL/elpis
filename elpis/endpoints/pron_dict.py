@@ -60,7 +60,7 @@ def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     return jsonify({
         "status": "ok",
-        "data": kaldi.list_pron_dicts()
+        "data": kaldi.list_pron_dicts_verbose()
     })
 
 
