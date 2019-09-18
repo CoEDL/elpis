@@ -62,7 +62,6 @@ class PronDictDashboard extends Component {
                 <Table.Body>
                 {
                     list.map( pronDictName => {
-                        console.log(list)
                         const className = (pronDictName === name) ? 'current' : ''
                         return (
                             <Table.Row key={ pronDictName }>

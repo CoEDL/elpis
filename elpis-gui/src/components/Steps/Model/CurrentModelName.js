@@ -44,8 +44,8 @@ class CurrentModelName extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
-        datasetName: state.model.datasetName,
-        pronDictName: state.model.pronDictName
+        datasetName: state.dataset.name,
+        pronDictName: state.pronDict.name
     }
 }
 export default withRouter(

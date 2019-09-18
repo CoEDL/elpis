@@ -20,6 +20,15 @@ const initState = {
 const pronDict = (state = initState, action) => {
     switch (action.type) {
 
+        // When we change models, we need to reset the current pronDict
+        case 'MODEL_LOAD':
+        case 'MODEL_NEW':
+            console.log("data set reducer got MODEL_LOAD", action.response.data.data.config.dataset_name)
+            return {
+                ...state,
+                name: action.response.data.data.config.pron_dict_name
+            }
+
         case 'TRIGGER_API_WAITING':
             return {
                 ...state,

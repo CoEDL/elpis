@@ -42,7 +42,7 @@ class CurrentPronDictName extends Component {
 const mapStateToProps = state => {
     return {
         name: state.pronDict.name,
-        datasetName: state.pronDict.datasetName
+        datasetName: state.dataset.name
     }
 }
 export default withRouter(

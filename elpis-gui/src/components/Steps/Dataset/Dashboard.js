@@ -46,7 +46,6 @@ class DatasetDashboard extends Component {
 
     render() {
         const { t, name, list } = this.props;
-        console.log("list", list)
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>

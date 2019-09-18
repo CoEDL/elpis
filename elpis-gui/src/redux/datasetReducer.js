@@ -21,6 +21,15 @@ const initState = {
 const dataset = (state = initState, action) => {
     switch (action.type) {
 
+        // When we change models, we need to reset the current dataset
+        case 'MODEL_LOAD':
+        case 'MODEL_NEW':
+            console.log("data set reducer got MODEL_LOAD", action.response.data.data.config.dataset_name)
+            return {
+                ...state,
+                name: action.response.data.data.config.dataset_name
+            }
+
         case 'DATASET_LIST':
             return {
                 ...state,
