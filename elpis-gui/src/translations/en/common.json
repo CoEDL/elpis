@@ -89,7 +89,9 @@
         "new": {
             "title": "New training session",
             "nameLabel": "name",
-            "namePlaceholder": "Name"
+            "namePlaceholder": "Name",
+            "selectDatasetLabel": "Select recordings for this session",
+            "selectPronDictLabel": "Select a pronunciation dictionary for this session"
         },
         "settings": {
             "title": "Settings",
