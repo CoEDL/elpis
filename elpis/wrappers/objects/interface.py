@@ -132,7 +132,7 @@ class KaldiInterface(FSObject):
         names = [name for name in self.config['pron_dicts'].keys()]
         for name in names:
             pd = self.get_pron_dict(name)
-            pron_dicts.append({"name":name, "data_set_name":pd.dataset.name })
+            pron_dicts.append({"name":name, "dataset_name":pd.dataset.name })
         return pron_dicts
 
 
