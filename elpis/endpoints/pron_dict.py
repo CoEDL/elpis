@@ -13,7 +13,13 @@ bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     pron_dict = kaldi.new_pron_dict(request.json['name'])
-    dataset: Dataset = app.config['CURRENT_DATASET']
+
+    # dataset: Dataset = app.config['CURRENT_DATASET']
+
+    print('**** name', request.json['name'])
+    print('**** dataset_name', request.json['dataset_name'])
+
+    dataset = kaldi.get_dataset(request.json['dataset_name'])
     pron_dict.link(dataset)
     app.config['CURRENT_PRON_DICT'] = pron_dict
     data = {
