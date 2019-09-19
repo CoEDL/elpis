@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Formik, Field, ErrorMessage } from 'formik';
-import { Button, Form, Grid, Header, Input, Label, Segment, Select, Divider } from 'semantic-ui-react';
+import { Button, Form, Input, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictList, modelNew, pronDictLoad } from 'redux/actions';
+import { pronDictList, modelNew } from 'redux/actions';
 import urls from 'urls'
 
 
@@ -18,7 +18,7 @@ class NewForm extends Component {
 
 
     render() {
-        const { t, name, currentPronDict, pronDicts, modelNew, pronDictLoad } = this.props;
+        const { t, name, currentPronDict, pronDicts, modelNew } = this.props;
 
         /**
          *  If we have a current pron dict, pre-select that in the form,
@@ -80,7 +80,7 @@ class NewForm extends Component {
                                 <label>{t('model.new.selectPronDictLabel')}</label>
                                 <Field component="select" name="pron_dict_name">
                                 { pronDicts.map(pronDict =>
-                                    (<option key={pronDict.name} value={pronDict.name}>{pronDict.name} ( {pronDict.data_set_name} ) </option>))
+                                    (<option key={pronDict.name} value={pronDict.name}>{pronDict.name} ( {pronDict.dataset_name} ) </option>))
                                 }
                                 </Field>
                             </Form.Field>
@@ -108,9 +108,9 @@ const mapDispatchToProps = dispatch => ({
     pronDictList: () => {
         dispatch(pronDictList())
     },
-    modelNew: (modelData) => {
+    modelNew: (postData) => {
         // need to pass the new name, the selected pron_dict_name. we get its dataset_name in flask
-        dispatch(modelNew(modelData))
+        dispatch(modelNew(postData))
     }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewForm)));

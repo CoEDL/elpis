@@ -1,23 +1,36 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Formik, ErrorMessage } from 'formik';
-import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
+import { Formik, Field, ErrorMessage } from 'formik';
+import { Button, Form, Input, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictNew } from 'redux/actions';
+import { datasetList, pronDictNew } from 'redux/actions';
 import urls from 'urls'
 
 
 class NewForm extends Component {
 
+    componentDidMount() {
+        this.props.datasetList()
+    }
+
     render() {
-        const { t, name, pronDictNew } = this.props;
+        const { t, currentDataset, datasets, pronDictNew } = this.props;
+
+        let defaultDatasetName = ''
+        if (currentDataset) {
+            defaultDatasetName = currentDataset
+        } else if (datasets.length > 0) {
+            defaultDatasetName = datasets[0]
+        }
+
         return (
 
             <Formik
                 enableReinitialize
                 initialValues={{
-                    name: ''
+                    name: '',
+                    dataset_name: defaultDatasetName
                 }}
                 validate={values => {
                     let errors = {};
@@ -31,7 +44,8 @@ class NewForm extends Component {
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    const postData = { name: values.name }
+                    const postData = { name: values.name, dataset_name: values.dataset_name }
+                    console.log("new pron dict form submit", values)
                     pronDictNew(postData)
                     this.props.history.push(urls.gui.pronDict.l2s)
                 }}
@@ -39,11 +53,8 @@ class NewForm extends Component {
                 {({
                     values,
                     errors,
-                    dirty,
-                    touched,
                     handleSubmit,
                     handleChange,
-                    isSubmitting,
                     /* and other goodies */
                 }) => (
                         <Form onSubmit={handleSubmit}>
@@ -57,6 +68,18 @@ class NewForm extends Component {
                                     onChange={handleChange} />
                                 <ErrorMessage component="div" className="error" name="name" />
                             </Form.Field>
+
+                            <Form.Field>
+                                <label>select a group of recordings</label>
+                                <Field component="select" name="dataset_name">
+                                    {datasets.map(name =>
+                                        (<option key={name} value={name}>{name}</option>))
+                                    }
+                                </Field>
+                            </Form.Field>
+
+                            <Divider />
+
                             <Button type="button" onClick={handleSubmit}>
                                 {t('common.nextButton')}
                             </Button>
@@ -69,12 +92,17 @@ class NewForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.pronDict.name
+        name: state.pronDict.name,
+        currentDataset: state.dataset.name,
+        datasets: state.dataset.datasetList
     }
 }
 const mapDispatchToProps = dispatch => ({
-    pronDictNew: name => {
-        dispatch(pronDictNew(name))
+    datasetList: () => {
+        dispatch(datasetList())
+    },
+    pronDictNew: postData => {
+        dispatch(pronDictNew(postData))
     }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewForm)));

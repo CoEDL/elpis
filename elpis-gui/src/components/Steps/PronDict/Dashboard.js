@@ -3,7 +3,7 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictList, pronDictLoad, pronDictGetLexicon } from 'redux/actions';
+import { pronDictList, pronDictLoad, datasetLoad, pronDictGetLexicon } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -38,10 +38,11 @@ class PronDictDashboard extends Component {
         }
     }
 
-    handleLoad = name => {
+    handleLoad = values => {
         const { pronDictLoad } = this.props
-        const postData = { name: name }
-        pronDictLoad(postData)
+        const postData = { name: values.name }
+        const datasetData = { name: values.dataset_name }
+        pronDictLoad(postData, datasetData)
     }
 
     render() {
@@ -74,11 +75,11 @@ class PronDictDashboard extends Component {
                                     <Button
                                         className={className}
                                         fluid
-                                        onClick={() => this.handleLoad(pronDict.name) }
+                                        onClick={() => this.handleLoad(pronDict) }
                                         >{pronDict.name }</Button>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {pronDict.data_set_name}
+                                    {pronDict.dataset_name}
                                 </Table.Cell>
                             </Table.Row>
                         )
@@ -145,8 +146,9 @@ const mapDispatchToProps = dispatch => ({
     pronDictList: () => {
         dispatch(pronDictList())
     },
-    pronDictLoad: postData => {
-        dispatch(pronDictLoad(postData))
+    pronDictLoad: (pronDictData, datasetData) => {
+        dispatch(pronDictLoad(pronDictData))
+        dispatch(datasetLoad(datasetData))
     }
 })
 
