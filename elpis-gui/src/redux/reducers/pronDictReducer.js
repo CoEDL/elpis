@@ -29,17 +29,21 @@ const pronDict = (state = initState, action) => {
                 lexicon
             }
 
+        case actionTypes.PRON_DICT_LIST_SUCCESS:
+            return {
+                ...state,
+                pronDictList: action.payload.data.data
+            }
+
+
+
+
         case 'TRIGGER_API_WAITING':
             return {
                 ...state,
                 apiWaiting: {status: true, message: action.message}
             }
 
-        case 'PRON_DICT_LIST':
-            return {
-                ...state,
-                pronDictList: action.response.data.data
-            }
 
 
         case 'PRON_DICT_L2S':

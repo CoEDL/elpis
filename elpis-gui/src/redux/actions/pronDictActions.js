@@ -67,3 +67,35 @@ const pronDictLoadFailure = error => ({
     type: actionTypes.PRON_DICT_LOAD_FAILURE,
     payload: { error }
 })
+
+
+
+/* * * * * * * * * * * *  LIST * * * * * * * * * * *  */
+
+export function pronDictList() {
+    const url = baseUrl + urls.api.pronDict.list
+    return async dispatch => {
+        dispatch(pronDictListStarted())
+        await axios.post(url)
+            .then(response => {
+                dispatch(pronDictListSuccess(response))
+            })
+            .catch(error => {
+                dispatch(pronDictListFailure(error))
+                throw error
+            })
+        return "Listed a pronDict OK"
+    }
+}
+
+const pronDictListStarted = () => ({
+    type: actionTypes.PRON_DICT_LIST_STARTED
+})
+const pronDictListSuccess = response => ({
+    type: actionTypes.PRON_DICT_LIST_SUCCESS,
+    payload: { ...response }
+})
+const pronDictListFailure = error => ({
+    type: actionTypes.PRON_DICT_LIST_FAILURE,
+    payload: { error }
+})
