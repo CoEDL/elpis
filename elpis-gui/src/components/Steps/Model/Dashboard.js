@@ -39,12 +39,10 @@ class ModelDashboard extends Component {
     }
 
     handleLoad = values => {
-        console.log('handle load name', values.name)
         const { modelLoad } = this.props
         const modelData = { name: values.name }
         const datasetData = { name: values.dataset_name }
         const pronDictData = { name: values.pron_dict_name }
-
         modelLoad(modelData, datasetData, pronDictData)
     }
 

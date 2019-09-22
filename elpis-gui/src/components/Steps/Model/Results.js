@@ -11,14 +11,11 @@ import CurrentModelName from "./CurrentModelName";
 class ModelResults extends Component {
     componentDidMount() {
         const { name, modelResults } = this.props
-        console.log("name", name)
         if (name) modelResults()
     }
 
     render() {
         const { t, results } = this.props;
-
-        console.log("results", results)
         const resultsEl = results ? (
             <Segment>
 

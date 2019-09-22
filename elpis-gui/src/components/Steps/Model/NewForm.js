@@ -52,7 +52,6 @@ class NewForm extends Component {
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                     const modelData = { name: values.name, pron_dict_name: values.pron_dict_name }
-                    console.log("new model onsubmit", modelData)
                     modelNew(modelData)
                     this.props.history.push(urls.gui.model.settings)
                 }}

@@ -13,7 +13,6 @@ import urls from 'urls'
 class ModelSettings extends Component {
     render() {
         const { t, settings, modelSettings } = this.props;
-        console.log("settings", settings)
         return (
             <div>
                 <Branding />

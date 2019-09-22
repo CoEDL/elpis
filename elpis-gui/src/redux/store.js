@@ -18,7 +18,6 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
     if (action.type == 'CONFIG_RESET') {
-        console.log("rootreducer is resetting")
         state = undefined
     }
     return appReducer(state, action)

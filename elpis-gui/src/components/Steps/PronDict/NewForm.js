@@ -45,7 +45,6 @@ class NewForm extends Component {
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                     const postData = { name: values.name, dataset_name: values.dataset_name }
-                    console.log("new pron dict form submit", values)
                     pronDictNew(postData)
                     this.props.history.push(urls.gui.pronDict.l2s)
                 }}

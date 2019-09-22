@@ -34,7 +34,6 @@ const model = (state = initState, action) => {
 
 
         case 'MODEL_LIST':
-            console.log("reducer got model list", action.response.data)
             return {
                 ...state,
                 modelList: action.response.data.data
@@ -42,7 +41,6 @@ const model = (state = initState, action) => {
 
         case 'MODEL_LOAD':
         case 'MODEL_NEW':
-            console.log("reducer got model new or load", action.response.data)
             return {
                 ...state,
                 name: action.response.data.data.config.name,
@@ -55,21 +53,18 @@ const model = (state = initState, action) => {
             }
 
         case 'MODEL_NAME':
-            console.log("reducer got model name", action.response.data)
             return {
                     ...state,
                     name: action.response.data.data.name
                 }
 
         case 'MODEL_L2S':
-            console.log("reducer got l2s", action)
             return {
                 ...state,
                 l2s: action.response.data
             }
 
         case 'MODEL_LEXICON':
-            console.log("reducer got lexicon", action.response.data)
             return {
                 ...state,
                 lexicon: action.response.data
@@ -88,7 +83,6 @@ const model = (state = initState, action) => {
             }
 
         case 'MODEL_RESULTS':
-            console.log("reducer got results", action.response.data)
             return {
                 ...state,
                 results: action.response.data.data

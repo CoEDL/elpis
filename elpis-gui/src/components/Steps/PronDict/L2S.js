@@ -24,7 +24,6 @@ class PronDictL2S extends Component {
 
     render() {
         const { t, l2s } = this.props;
-        console.log("l2s", l2s)
         const pron = l2s ? (
             <Segment>
                 <pre>

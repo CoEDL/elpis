@@ -20,13 +20,11 @@ class PronDictLexicon extends Component {
     }
 
     saveLexicon = () => {
-        console.log("Lexicon.js updateLexicon", this.props.lexicon)
         const data = { "lexicon": this.props.lexicon }
         this.props.pronDictSaveLexicon(data)
     }
 
     handleChange = (event) => {
-        console.log("Lexicon.js handleChange", event.target.value)
         this.props.testUpdateLexicon( { "lexicon": event.target.value } )
     }
 

@@ -11,7 +11,6 @@ const transcription = (state = initState, action) => {
 
         // this just stores the audio filename
         case 'TRANSCRIPTION_AUDIO_FILE':
-            console.log("reducer got file", action.filename)
             return {
                 ...state,
                 audioFilename: action.filename
@@ -25,7 +24,6 @@ const transcription = (state = initState, action) => {
             }
 
         case 'TRANSCRIPTION_STATUS':
-            console.log("reducer", action.response.data.data)
             return {
                 ...state,
                 status: action.response.data.data
@@ -41,7 +39,6 @@ const transcription = (state = initState, action) => {
 
 
         case 'TRANSCRIPTION_GET_TEXT':
-            console.log("get text", action.response.data)
             return {
                 ...state,
                 text: action.response.data

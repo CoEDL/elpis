@@ -32,16 +32,12 @@ class ModelTrain extends Component {
 
 
     onScroll = () => {
-        console.log("onScroll")
     }
     follow = () => {
-        console.log("follow")
     }
 
     render() {
         const { t, settings, apiWaiting, status } = this.props;
-
-        console.log('status', status)
 
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />

@@ -22,12 +22,9 @@ class NewTranscription extends Component {
     onDrop = (acceptedFiles, rejectedFiles) => {
         console.log("files dropped:", acceptedFiles);
         // reset status cause we have a new file
-
         // var formData = new FormData();
         // formData.append('file', acceptedFiles[0]);
-
         this.setState({ audioFilename: acceptedFiles[0].name})
-
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
         this.props.transcriptionAudioFile(acceptedFiles[0].name)
@@ -41,19 +38,12 @@ class NewTranscription extends Component {
 
     render() {
         const { t, audioFilename, modelName } = this.props;
-
         let audioFileEl
-
-        console.log("audioFilename", audioFilename)
-
         if (this.state.audioFilename) {
             audioFileEl = <Segment>{t('transcription.new.usingAudio', { audioFilename: this.state.audioFilename }) } </Segment>
         } else if (audioFilename) {
             audioFileEl = <Segment>{t('transcription.new.usingAudio', { audioFilename })} </Segment>
         }
-
-
-
 
         let showNext = (modelName && this.state.audioFilename) ? true : false
 
