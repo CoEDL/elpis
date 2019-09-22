@@ -1,17 +1,33 @@
 import React, { Component } from 'react';
-import { Header } from 'semantic-ui-react';
+import { Button, Image, Segment } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import elpisLogo from './elpis.png'
+import { connect } from 'react-redux';
+import { configReset } from 'redux/actions';
 
-export default class StepBranding extends Component {
+class StepBranding extends Component {
+
+    reset = () => {
+        this.props.configReset()
+        window.location.reload(false)
+    }
 
     render() {
         return (
-            <Header as='h1'>
+            <Segment clearing as='h1'>
                 <Link to="/">
-                    <img src={elpisLogo} className="logo" alt="logo" />
+                    <Image floated="left" src={elpisLogo} className="logo" alt="logo" />
                 </Link>
-            </Header>
+                <Button floated="right" basic onClick={this.reset}>reset</Button>
+            </Segment>
         )
     }
 }
+
+const mapDispatchToProps = dispatch => ({
+    configReset: postData => {
+        dispatch(configReset(postData))
+    }
+})
+
+export default connect(null, mapDispatchToProps)(StepBranding)

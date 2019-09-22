@@ -59,10 +59,7 @@ class StepWelcome extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-	}
-}
+
 const mapDispatchToProps = dispatch => ({
 	configReset: postData => {
 		dispatch(configReset(postData))
@@ -70,4 +67,4 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepWelcome))
+export default connect(null, mapDispatchToProps)(translate('common')(StepWelcome))

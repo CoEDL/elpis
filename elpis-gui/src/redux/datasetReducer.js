@@ -1,4 +1,10 @@
 import {getFileExtension} from 'helpers'
+import {
+    DATASET_NEW_STARTED,
+    DATASET_NEW_SUCCESS,
+    DATASET_NEW_FAILURE
+} from './datasetActionTypes';
+
 
 let audioFiles
 let transcriptionFiles
@@ -21,14 +27,30 @@ const initState = {
 const dataset = (state = initState, action) => {
     switch (action.type) {
 
+
+
+
         case 'DATASET_LIST':
             return {
                 ...state,
                 datasetList: action.response.data.data
             }
 
+        case DATASET_NEW_STARTED:
+            console.log("reducer got ds new started")
+            return {...state}
+
+        case DATASET_NEW_SUCCESS:
+            console.log("reducer got ds new success")
+            return {...state}
+
+        case DATASET_NEW_FAILURE:
+            console.log("reducer got ds new fail")
+            return {...state}
+
         case 'DATASET_LOAD':
         case 'DATASET_NEW':
+            console.log("reducer got ds new")
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'wav')
             transcriptionFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'eaf')

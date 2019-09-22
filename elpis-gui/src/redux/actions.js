@@ -87,10 +87,10 @@ export const datasetList = () => {
     const url = baseUrl + urls.api.dataset.list
     return postApi(url, null, 'datasetList')
 }
-export const datasetNew = postData => {
-    const url = baseUrl + urls.api.dataset.new
-    return postApi(url, postData, 'datasetNew')
-}
+// export const datasetNew = postData => {
+//     const url = baseUrl + urls.api.dataset.new
+//     return postApi(url, postData, 'datasetNew')
+// }
 export const datasetName = postData => {
     const url = baseUrl + urls.api.dataset.name
     return postApi(url, postData, 'datasetName')
