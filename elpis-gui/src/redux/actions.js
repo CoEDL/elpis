@@ -44,7 +44,6 @@ var successHandler = {
 
     pronDictLoad: response => ({ type: 'PRON_DICT_LOAD', response }),
     pronDictList: response => ({ type: 'PRON_DICT_LIST', response }),
-    pronDictNew: response => ({ type: 'PRON_DICT_NEW', response }),
     pronDictName: response => ({ type: 'PRON_DICT_NAME', response }),
     pronDictL2S: response => ({ type: 'PRON_DICT_L2S', response }),
     pronDictLexicon: response => ({ type: 'PRON_DICT_LEXICON', response }),
@@ -81,10 +80,7 @@ export const pronDictList = () => {
     const url = baseUrl + urls.api.pronDict.list
     return postApi(url, null, 'pronDictList')
 }
-export const pronDictNew = postData => {
-    const url = baseUrl + urls.api.pronDict.new
-    return postApi(url, postData, 'pronDictNew')
-}
+
 export const pronDictName = postData => {
     const url = baseUrl + urls.api.pronDict.name
     return postApi(url, postData, 'pronDictName')

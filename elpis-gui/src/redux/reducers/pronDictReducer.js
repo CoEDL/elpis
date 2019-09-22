@@ -1,11 +1,4 @@
-const toyLexicon = `!SIL sil
-<UNK> spn
-di d I
-kaai k a: I
-amakaang a m a k a: ŋ
-hada h a d a
-muila m u I l a
-`;
+import * as actionTypes from '../actionTypes/pronDictActionTypes';
 
 const initState = {
     pronDictList: [],
@@ -20,6 +13,12 @@ const initState = {
 const pronDict = (state = initState, action) => {
     switch (action.type) {
 
+        case actionTypes.PRON_DICT_NEW_SUCCESS:
+            return {
+                ...initState,
+                name: action.payload.data.data.config.name
+            }
+
         case 'TRIGGER_API_WAITING':
             return {
                 ...state,
@@ -32,7 +31,7 @@ const pronDict = (state = initState, action) => {
                 pronDictList: action.response.data.data
             }
 
-        case 'PRON_DICT_NEW':
+
         case 'PRON_DICT_LOAD':
             return {
                 ...state,

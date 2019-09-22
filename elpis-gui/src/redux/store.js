@@ -1,7 +1,7 @@
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import dataset from './reducers/datasetReducer';
-import pronDict from './pronDictReducer';
+import pronDict from './reducers/pronDictReducer';
 import model from './modelReducer';
 import transcription from './transcriptionReducer';
 import steps from './stepReducer';

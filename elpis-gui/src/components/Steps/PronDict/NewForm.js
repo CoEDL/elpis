@@ -4,7 +4,8 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import { Button, Form, Input, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { datasetList, pronDictNew } from 'redux/actions';
+import { pronDictNew } from 'redux/actions/pronDictActions';
+import { datasetList } from 'redux/actions/datasetActions';
 import urls from 'urls'
 
 
@@ -29,7 +30,7 @@ class NewForm extends Component {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    name: '',
+                    name: 'pd',
                     dataset_name: defaultDatasetName
                 }}
                 validate={values => {
