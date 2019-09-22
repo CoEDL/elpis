@@ -4,7 +4,7 @@ import { Formik, ErrorMessage } from 'formik';
 import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { datasetNew } from 'redux/datasetActions';
+import { datasetNew } from 'redux/actions/datasetActions';
 import urls from 'urls'
 
 
@@ -74,7 +74,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     datasetNew: (name, history) => {
         dispatch(datasetNew(name, history))
-            .then(response => console.log("done", response))
+            .then(response => {
+                console.log("done", response)
+                history.push(urls.gui.dataset.files)
+            })
             .catch(error => console.log("error", error))
     }
 })

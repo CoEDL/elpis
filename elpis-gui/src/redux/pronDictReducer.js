@@ -42,12 +42,6 @@ const pronDict = (state = initState, action) => {
                 lexicon: action.response.data.data.lexicon,
             }
 
-        case 'PRON_DICT_NAME':
-            return {
-                    ...state,
-                    name: action.response.data.data.name
-                }
-
         case 'PRON_DICT_L2S':
             return {
                 ...state,

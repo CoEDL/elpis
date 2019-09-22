@@ -2,8 +2,11 @@ import {getFileExtension} from 'helpers'
 import {
     DATASET_NEW_STARTED,
     DATASET_NEW_SUCCESS,
-    DATASET_NEW_FAILURE
-} from './datasetActionTypes';
+    DATASET_NEW_FAILURE,
+    DATASET_LOAD_STARTED,
+    DATASET_LOAD_SUCCESS,
+    DATASET_LOAD_FAILURE
+} from '../types/datasetActionTypes';
 
 
 const initState = {
@@ -41,12 +44,9 @@ const dataset = (state = initState, action) => {
             // all we should need at this stage is the name
             console.log("reducer got ds new success", action)
             var { name, tier, files } = action.payload.data.data
-            return {
-                ...state,
-                name,
-            }
+            return { ...state, name }
 
-        case 'DATASET_LOAD':
+        case DATASET_LOAD_SUCCESS:
             // loading existing data set might have files and settings
             var { name, tier, files } = action.payload.data.data
             // action.data is an array of filenames. parse this, split into separate lists
@@ -63,13 +63,6 @@ const dataset = (state = initState, action) => {
                 transcriptionFiles,
                 additionalTextFiles,
                 settings: { ...state.settings, tier }
-            }
-
-        case 'DATASET_NAME':
-            var { name } = action.response.data.data
-            return {
-                ...state,
-                name
             }
 
         case 'DATASET_FILES':
@@ -112,6 +105,7 @@ const dataset = (state = initState, action) => {
                 ...state,
                 status: action.status
             }
+
         default:
             return state;
     }

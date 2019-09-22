@@ -41,10 +41,7 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
-    datasetLoad: response => ({ type: 'DATASET_LOAD', response }),
     datasetList: response => ({ type: 'DATASET_LIST', response }),
-    datasetNew: response => ({ type: 'DATASET_NEW', response }),
-    datasetName: response => ({ type: 'DATASET_NAME', response }),
     datasetFiles: response => ({ type: 'DATASET_FILES', response }),
     datasetSettings: response => ({ type: 'DATASET_SETTINGS', response }),
     datasetPrepare: response => ({ type: 'DATASET_PREPARE', response }),
@@ -79,21 +76,9 @@ var successHandler = {
 
 // * * * * * * * * * * DATA SETS * * * * * * * * * * * * * * *
 
-export const datasetLoad = postData => {
-    const url = baseUrl + urls.api.dataset.load
-    return postApi(url, postData, 'datasetLoad')
-}
 export const datasetList = () => {
     const url = baseUrl + urls.api.dataset.list
     return postApi(url, null, 'datasetList')
-}
-// export const datasetNew = postData => {
-//     const url = baseUrl + urls.api.dataset.new
-//     return postApi(url, postData, 'datasetNew')
-// }
-export const datasetName = postData => {
-    const url = baseUrl + urls.api.dataset.name
-    return postApi(url, postData, 'datasetName')
 }
 export const datasetSettings = postData => {
     const url = baseUrl + urls.api.dataset.settings
