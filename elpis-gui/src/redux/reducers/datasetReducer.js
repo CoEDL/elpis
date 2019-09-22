@@ -1,14 +1,5 @@
 import {getFileExtension} from 'helpers'
-import {
-    DATASET_NEW_STARTED,
-    DATASET_NEW_SUCCESS,
-    DATASET_NEW_FAILURE,
-    DATASET_LOAD_SUCCESS,
-    DATASET_LIST_SUCCESS,
-    DATASET_FILES_STARTED,
-    DATASET_FILES_SUCCESS,
-} from '../types/datasetActionTypes';
-
+import * as actionTypes from '../actionTypes/datasetActionTypes';
 
 const initState = {
     name: "",
@@ -28,19 +19,19 @@ const dataset = (state = initState, action) => {
     switch (action.type) {
 
         // Boilerplate for all...
-        case DATASET_NEW_STARTED:
+        case actionTypes.DATASET_NEW_STARTED:
             return {...state}
 
-        case DATASET_NEW_FAILURE:
+        case actionTypes.DATASET_NEW_FAILURE:
             return {...state}
 
-        case DATASET_NEW_SUCCESS:
+        case actionTypes.DATASET_NEW_SUCCESS:
             // all we should need at this stage is the name
             console.log("reducer got ds new success", action)
             var { name, tier, files } = action.payload.data.data
             return { ...state, name }
 
-        case DATASET_LOAD_SUCCESS:
+        case actionTypes.DATASET_LOAD_SUCCESS:
             // loading existing data set might have files and settings
             var { name, tier, files } = action.payload.data.data
             // action.data is an array of filenames. parse this, split into separate lists
@@ -59,17 +50,17 @@ const dataset = (state = initState, action) => {
                 settings: { ...state.settings, tier }
             }
 
-        case DATASET_LIST_SUCCESS:
+        case actionTypes.DATASET_LIST_SUCCESS:
             return {
                 ...state,
                 datasetList: action.payload.data.data
             }
 
-        case DATASET_FILES_STARTED:
+        case actionTypes.DATASET_FILES_STARTED:
             return { ...state, status: "loading" }
 
 
-        case DATASET_FILES_SUCCESS:
+        case actionTypes.DATASET_FILES_SUCCESS:
             var { data } = action.payload
             // action.data is an array of filenames. parse this, split into separate lists
             var audioFiles = data.filter(file => getFileExtension(file) === 'wav').sort()
