@@ -68,11 +68,6 @@ var successHandler = {
 
 // * * * * * * * * * * PRON DICT * * * * * * * * * * * * * * *
 
-
-export const pronDictLexicon = () => {
-    const url = baseUrl + urls.api.pronDict.lexicon
-    return postApi(url, null, 'pronDictLexicon')
-}
 export const pronDictGenerateLexicon = () => {
     const url = baseUrl + urls.api.pronDict.generateLexicon
     return postApi(url, null, 'pronDictGenerateLexicon')
@@ -81,7 +76,8 @@ export const pronDictSaveLexicon = postData => {
     const url = baseUrl + urls.api.pronDict.saveLexicon
     return postApi(url, postData, 'pronDictSaveLexicon')
 }
-export const testUpdateLexicon = data => ({ type: 'TEST_UPDATE_LEXICON', data })
+// just for local state
+export const pronDictUpdateLexicon = data => ({ type: 'PRON_DICT_UPDATE_LEXICON', data })
 
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 

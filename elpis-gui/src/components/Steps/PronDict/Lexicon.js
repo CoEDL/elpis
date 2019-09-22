@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Divider, Form, Grid, Header, Message, Segment, TextArea } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictLexicon, pronDictGenerateLexicon, pronDictSaveLexicon, testUpdateLexicon } from 'redux/actions';
+import { pronDictGenerateLexicon, pronDictSaveLexicon, pronDictUpdateLexicon } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentPronDictName from "./CurrentPronDictName";
@@ -25,7 +25,7 @@ class PronDictLexicon extends Component {
     }
 
     handleChange = (event) => {
-        this.props.testUpdateLexicon( { "lexicon": event.target.value } )
+        this.props.pronDictUpdateLexicon( { "lexicon": event.target.value } )
     }
 
 
@@ -53,7 +53,7 @@ class PronDictLexicon extends Component {
                             <Message content={ t('pronDict.lexicon.description') } />
 
                             <Segment>
-                                <Form attached>
+                                <Form>
                                     <TextArea
                                         className="lexicon"
                                         onChange={this.handleChange}
@@ -87,17 +87,14 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    pronDictLexicon: () => {
-        dispatch(pronDictLexicon())
-    },
     pronDictGenerateLexicon: () => {
         dispatch(pronDictGenerateLexicon())
     },
     pronDictSaveLexicon: data => {
         dispatch(pronDictSaveLexicon(data))
     },
-    testUpdateLexicon: data => {
-        dispatch(testUpdateLexicon(data))
+    pronDictUpdateLexicon: data => {
+        dispatch(pronDictUpdateLexicon(data))
     }
 })
 

@@ -63,7 +63,7 @@ const pronDict = (state = initState, action) => {
                 ...state,
                 lexicon: action.response.data
             }
-        case 'TEST_UPDATE_LEXICON':
+        case 'PRON_DICT_UPDATE_LEXICON':
             return {
                 ...state,
                 lexicon: action.data.lexicon
