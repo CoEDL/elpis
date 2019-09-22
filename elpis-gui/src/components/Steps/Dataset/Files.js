@@ -4,7 +4,8 @@ import { Button, Checkbox, Divider, Form, Grid, Header, Icon, Input, List, Messa
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik, ErrorMessage } from 'formik';
-import { datasetSettings, datasetPrepare } from 'redux/actions';
+import { datasetSettings } from 'redux/actions/datasetActions';
+import { datasetPrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import FileUpload from './FileUpload';

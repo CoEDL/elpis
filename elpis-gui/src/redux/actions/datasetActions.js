@@ -110,7 +110,6 @@ export function datasetFiles(postData) {
         dispatch(datasetFilesStarted())
         await axios.post(url, postData, config)
             .then(response => {
-                console.log("datasetFiles action got response", response)
                 dispatch(datasetFilesSuccess(response))
             })
             .catch(error => {
@@ -133,5 +132,39 @@ const datasetFilesFailure = error => ({
     payload: { error }
 })
 
+
+
+
+/* * * * * * * * * * * *  SETTINGS * * * * * * * * * * *  */
+
+export function datasetSettings(postData) {
+    console.log("settings", postData)
+    const url = baseUrl + urls.api.dataset.settings
+    return async dispatch => {
+        dispatch(datasetSettingsStarted())
+        await axios.post(url, postData)
+            .then(response => {
+                console.log("datasetSettings action got response", response)
+                dispatch(datasetSettingsSuccess(response))
+            })
+            .catch(error => {
+                dispatch(datasetSettingsFailure(error))
+                throw error
+            })
+        return "Added settings to a dataset OK"
+    }
+}
+
+const datasetSettingsStarted = () => ({
+    type: actionTypes.DATASET_SETTINGS_STARTED
+})
+const datasetSettingsSuccess = response => ({
+    type: actionTypes.DATASET_SETTINGS_SUCCESS,
+    payload: { ...response }
+})
+const datasetSettingsFailure = error => ({
+    type: actionTypes.DATASET_SETTINGS_FAILURE,
+    payload: { error }
+})
 
 

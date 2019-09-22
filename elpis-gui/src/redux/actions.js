@@ -41,8 +41,6 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
-    datasetFiles: response => ({ type: 'DATASET_FILES', response }),
-    datasetSettings: response => ({ type: 'DATASET_SETTINGS', response }),
     datasetPrepare: response => ({ type: 'DATASET_PREPARE', response }),
 
     pronDictLoad: response => ({ type: 'PRON_DICT_LOAD', response }),
@@ -75,11 +73,6 @@ var successHandler = {
 
 // * * * * * * * * * * DATA SETS * * * * * * * * * * * * * * *
 
-
-export const datasetSettings = postData => {
-    const url = baseUrl + urls.api.dataset.settings
-    return postApi(url, postData, 'datasetSettings')
-}
 export const datasetPrepare = () => {
     const url = baseUrl + urls.api.dataset.prepare
     return postApi(url, null, 'datasetPrepare')

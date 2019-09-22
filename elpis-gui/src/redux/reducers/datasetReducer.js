@@ -59,7 +59,6 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_FILES_STARTED:
             return { ...state, status: "loading" }
 
-
         case actionTypes.DATASET_FILES_SUCCESS:
             var { data } = action.payload
             // action.data is an array of filenames. parse this, split into separate lists
@@ -76,8 +75,9 @@ const dataset = (state = initState, action) => {
                 additionalTextFiles
             }
 
-        case 'DATASET_SETTINGS':
-            var { tier } = action.response.data.data
+        case actionTypes.DATASET_SETTINGS:
+            console.log(action.payload)
+            var { tier } = action.payload.data.data
             return {
                 ...state,
                 settings: {...state.settings, tier}
