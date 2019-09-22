@@ -48,6 +48,12 @@ const pronDict = (state = initState, action) => {
                 lexicon: action.payload.data
             }
 
+        case actionTypes.PRON_DICT_SAVE_LEXICON:
+            return {
+                ...state,
+                lexicon: action.payload.data
+            }
+
 
 
         case 'TRIGGER_API_WAITING':
@@ -56,13 +62,6 @@ const pronDict = (state = initState, action) => {
                 apiWaiting: {status: true, message: action.message}
             }
 
-
-
-        case 'PRON_DICT_SAVE_LEXICON':
-            return {
-                ...state,
-                lexicon: action.response.data
-            }
         case 'PRON_DICT_UPDATE_LEXICON':
             return {
                 ...state,

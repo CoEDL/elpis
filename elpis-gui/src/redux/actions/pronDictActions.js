@@ -137,7 +137,7 @@ const pronDictL2SFailure = error => ({
 
 
 
-/* * * * * * * * * * * *  LEXICON * * * * * * * * * * *  */
+/* * * * * * * * * * * *  BUILD LEXICON * * * * * * * * * * *  */
 
 export function pronDictBuildLexicon() {
     const url = baseUrl + urls.api.pronDict.buildLexicon
@@ -151,7 +151,7 @@ export function pronDictBuildLexicon() {
                 dispatch(pronDictBuildLexiconFailure(error))
                 throw error
             })
-        return "lexiconed pronDicts OK"
+        return "Built pronDict OK"
     }
 }
 
@@ -164,5 +164,36 @@ const pronDictBuildLexiconSuccess = response => ({
 })
 const pronDictBuildLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_BUILD_LEXICON_FAILURE,
+    payload: { error }
+})
+
+
+/* * * * * * * * * * * *  SAVE LEXICON * * * * * * * * * * *  */
+
+export function pronDictSaveLexicon(postData) {
+    const url = baseUrl + urls.api.pronDict.saveLexicon
+    return async dispatch => {
+        dispatch(pronDictSaveLexiconStarted())
+        await axios.post(url, postData)
+            .then(response => {
+                dispatch(pronDictSaveLexiconSuccess(response))
+            })
+            .catch(error => {
+                dispatch(pronDictSaveLexiconFailure(error))
+                throw error
+            })
+        return "Saved pronDict OK"
+    }
+}
+
+const pronDictSaveLexiconStarted = () => ({
+    type: actionTypes.PRON_DICT_SAVE_LEXICON_STARTED
+})
+const pronDictSaveLexiconSuccess = response => ({
+    type: actionTypes.PRON_DICT_SAVE_LEXICON_SUCCESS,
+    payload: { ...response }
+})
+const pronDictSaveLexiconFailure = error => ({
+    type: actionTypes.PRON_DICT_SAVE_LEXICON_FAILURE,
     payload: { error }
 })

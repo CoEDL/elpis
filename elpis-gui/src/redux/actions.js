@@ -42,8 +42,6 @@ export const errorHandler = (error) => {
 
 var successHandler = {
 
-    pronDictSaveLexicon: response => ({ type: 'PRON_DICT_SAVE_LEXICON', response }),
-
     modelLoad: response => ({ type: 'MODEL_LOAD', response }),
     modelList: response => ({ type: 'MODEL_LIST', response }),
     modelNew: response => ({ type: 'MODEL_NEW', response }),
@@ -66,10 +64,7 @@ var successHandler = {
 
 // * * * * * * * * * * PRON DICT * * * * * * * * * * * * * * *
 
-export const pronDictSaveLexicon = postData => {
-    const url = baseUrl + urls.api.pronDict.saveLexicon
-    return postApi(url, postData, 'pronDictSaveLexicon')
-}
+
 // just for local state
 export const pronDictUpdateLexicon = data => ({ type: 'PRON_DICT_UPDATE_LEXICON', data })
 
