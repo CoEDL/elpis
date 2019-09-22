@@ -3,7 +3,10 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { modelList, modelLoad, datasetLoad, pronDictLoad } from 'redux/actions';
+import { modelLoad } from 'redux/actions/modelActions';
+import { datasetLoad } from 'redux/actions/datasetActions';
+import { pronDictLoad } from 'redux/actions/pronDictActions';
+import { modelList } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -155,10 +158,9 @@ const mapDispatchToProps = dispatch => ({
         dispatch(modelList())
     },
     modelLoad: (modelData, datasetData, pronDictData) => {
-        // TODO asynch these?
         dispatch(modelLoad(modelData))
-        dispatch(datasetLoad(datasetData))
-        dispatch(pronDictLoad(pronDictData))
+            .then( response => dispatch(datasetLoad(datasetData)))
+            .then( response => dispatch(pronDictLoad(pronDictData)))
     }
 })
 

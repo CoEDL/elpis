@@ -23,16 +23,17 @@ const model = (state = initState, action) => {
             var { name } = action.payload.data.data.config
             return { ...initState, name }
 
-        case 'MODEL_LOAD':
+        case actionTypes.MODEL_LOAD_SUCCESS:
+            var { config, l2s } = action.payload.data.data
             return {
                 ...state,
-                name: action.response.data.data.config.name,
-                l2s: action.response.data.data.l2s,
+                name: config.name,
+                l2s,
                 status: 'ready',
                 lexicon: 'No lexicon yet',
-                datasetName: action.response.data.data.config.dataset_name,
-                pronDictName: action.response.data.data.config.pron_dict_name,
-                settings: {...state.settings, ngram: action.response.data.data.config.ngram}
+                datasetName: config.dataset_name,
+                pronDictName: config.pron_dict_name,
+                settings: {...state.settings, ngram: config.ngram}
             }
 
 

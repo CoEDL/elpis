@@ -42,7 +42,7 @@ export const errorHandler = (error) => {
 
 var successHandler = {
 
-    modelLoad: response => ({ type: 'MODEL_LOAD', response }),
+    // modelLoad: response => ({ type: 'MODEL_LOAD', response }),
     modelList: response => ({ type: 'MODEL_LIST', response }),
     modelNew: response => ({ type: 'MODEL_NEW', response }),
     modelSettings: response => ({ type: 'MODEL_SETTINGS', response }),
@@ -62,10 +62,10 @@ var successHandler = {
 
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 
-export const modelLoad = postData => {
-    const url = baseUrl + urls.api.model.load
-    return postApi(url, postData, 'modelLoad')
-}
+// export const modelLoad = postData => {
+//     const url = baseUrl + urls.api.model.load
+//     return postApi(url, postData, 'modelLoad')
+// }
 export const modelList = () => {
     const url = baseUrl + urls.api.model.list
     return postApi(url, null, 'modelList')

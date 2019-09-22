@@ -149,11 +149,7 @@ const mapDispatchToProps = dispatch => ({
     },
     pronDictLoad: (pronDictData, datasetData) => {
         dispatch(pronDictLoad(pronDictData))
-            .then((response)=>{
-                console.log(response)
-                console.log("pron dict loaded, now load the dataset", datasetData)
-                dispatch(datasetLoad(datasetData))
-            })
+            .then( response => dispatch(datasetLoad(datasetData)))
     }
 })
 
