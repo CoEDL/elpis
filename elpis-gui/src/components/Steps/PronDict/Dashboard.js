@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { pronDictList, pronDictLoad } from 'redux/actions/pronDictActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
-
-import { pronDictGetLexicon } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';

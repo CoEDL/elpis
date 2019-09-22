@@ -36,6 +36,12 @@ const pronDict = (state = initState, action) => {
             }
 
 
+        case actionTypes.PRON_DICT_L2S_SUCCESS:
+            return {
+                ...state,
+                l2s: action.payload.data
+            }
+
 
 
         case 'TRIGGER_API_WAITING':
@@ -45,12 +51,6 @@ const pronDict = (state = initState, action) => {
             }
 
 
-
-        case 'PRON_DICT_L2S':
-            return {
-                ...state,
-                l2s: action.response.data
-            }
 
         case 'PRON_DICT_LEXICON':
             return {

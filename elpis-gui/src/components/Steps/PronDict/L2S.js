@@ -6,7 +6,7 @@ import { translate } from 'react-i18next';
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
-import { pronDictL2S } from 'redux/actions';
+import { pronDictL2S } from 'redux/actions/pronDictActions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentPronDictName from "./CurrentPronDictName";

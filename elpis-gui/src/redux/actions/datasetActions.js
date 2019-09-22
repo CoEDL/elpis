@@ -83,7 +83,7 @@ export function datasetList() {
                 dispatch(datasetListFailure(error))
                 throw error
             })
-        return "Listed a dataset OK"
+        return "Listed datasets OK"
     }
 }
 

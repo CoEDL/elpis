@@ -84,7 +84,7 @@ export function pronDictList() {
                 dispatch(pronDictListFailure(error))
                 throw error
             })
-        return "Listed a pronDict OK"
+        return "Listed pronDicts OK"
     }
 }
 
@@ -97,5 +97,39 @@ const pronDictListSuccess = response => ({
 })
 const pronDictListFailure = error => ({
     type: actionTypes.PRON_DICT_LIST_FAILURE,
+    payload: { error }
+})
+
+
+
+
+/* * * * * * * * * * * *  L2S * * * * * * * * * * *  */
+
+export function pronDictL2S(postData) {
+    const url = baseUrl + urls.api.pronDict.l2s
+    const config = { headers: { 'content-type': 'multipart/form-data' } }
+    return async dispatch => {
+        dispatch(pronDictL2SStarted())
+        await axios.post(url, postData, config)
+            .then(response => {
+                dispatch(pronDictL2SSuccess(response))
+            })
+            .catch(error => {
+                dispatch(pronDictL2SFailure(error))
+                throw error
+            })
+        return "Added pronDict L2S OK"
+    }
+}
+
+const pronDictL2SStarted = () => ({
+    type: actionTypes.PRON_DICT_L2S_STARTED
+})
+const pronDictL2SSuccess = response => ({
+    type: actionTypes.PRON_DICT_L2S_SUCCESS,
+    payload: { ...response }
+})
+const pronDictL2SFailure = error => ({
+    type: actionTypes.PRON_DICT_L2S_FAILURE,
     payload: { error }
 })

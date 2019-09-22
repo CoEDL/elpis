@@ -42,7 +42,6 @@ export const errorHandler = (error) => {
 
 var successHandler = {
 
-    pronDictL2S: response => ({ type: 'PRON_DICT_L2S', response }),
     pronDictLexicon: response => ({ type: 'PRON_DICT_LEXICON', response }),
     pronDictGenerateLexicon: response => ({ type: 'PRON_DICT_LEXICON', response }),
     pronDictSaveLexicon: response => ({ type: 'PRON_DICT_SAVE_LEXICON', response }),
@@ -69,11 +68,7 @@ var successHandler = {
 
 // * * * * * * * * * * PRON DICT * * * * * * * * * * * * * * *
 
-export const pronDictL2S = postData => {
-    const url = baseUrl + urls.api.pronDict.l2s
-    const headers = { headers: { 'content-type': 'multipart/form-data' } }
-    return postApi(url, postData, 'pronDictL2S', headers)
-}
+
 export const pronDictLexicon = () => {
     const url = baseUrl + urls.api.pronDict.lexicon
     return postApi(url, null, 'pronDictLexicon')
