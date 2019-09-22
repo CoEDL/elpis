@@ -37,10 +37,10 @@ const model = (state = initState, action) => {
             }
 
 
-        case 'MODEL_LIST':
+        case actionTypes.MODEL_LIST_SUCCESS:
             return {
                 ...state,
-                modelList: action.response.data.data
+                modelList: action.payload.data.data
             }
 
         case 'MODEL_L2S':
