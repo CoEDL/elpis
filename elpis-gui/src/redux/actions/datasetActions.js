@@ -82,7 +82,7 @@ export function datasetList() {
             .catch(error => {
                 dispatch(datasetListFailure(error))
                 throw error
-            })
+})
         return "Listed datasets OK"
     }
 }

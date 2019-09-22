@@ -1,0 +1,1 @@
+export const APP_SET_CURRENT_STEP = "APP_SET_CURRENT_STEP"

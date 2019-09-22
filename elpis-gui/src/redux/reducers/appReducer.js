@@ -1,3 +1,4 @@
+import * as actionTypes from '../actionTypes/appActionTypes';
 import urls from 'urls'
 
 // For convenience while developing, set this true
@@ -46,14 +47,13 @@ const initialStepModelState = {
 	]
 }
 
-const steps = (state = initialStepModelState, action) => {
+const app = (state = initialStepModelState, action) => {
 	let newSteps = []
 	let currentIndex = []
 
 	switch (action.type) {
 
-		// Set the 'doing' status by matching URL
-		case 'SET_CURRENT_STEP':
+		case actionTypes.APP_SET_CURRENT_STEP:
 			let rememberToEnableTheNextStep = false
 			// Track down which is the current substep by matching path to URL
 			// Split the url into parts, remove the first / to avoid empty first item in array
@@ -147,4 +147,4 @@ const steps = (state = initialStepModelState, action) => {
 			return state
 	}
 }
-export default steps;
+export default app;

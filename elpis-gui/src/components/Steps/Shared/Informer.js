@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { List, Accordion } from 'semantic-ui-react';
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { setCurrentStep } from 'redux/actions'
+import { setCurrentStep } from 'redux/actions/appActions'
 import './Informer.css'
 
 
@@ -93,7 +93,7 @@ class StepInformer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		steps: state.steps.steps,
+		steps: state.app.steps,
 		ownProps: ownProps
 	}
 }

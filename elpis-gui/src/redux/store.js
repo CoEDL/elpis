@@ -1,21 +1,21 @@
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import app from './reducers/appReducer';
 import dataset from './reducers/datasetReducer';
 import pronDict from './reducers/pronDictReducer';
 import model from './reducers/modelReducer';
 import transcription from './transcriptionReducer';
-import steps from './stepReducer';
 import thunk from 'redux-thunk';
 
 const appReducer = combineReducers({
+    app,
     dataset,
     pronDict,
     model,
-    transcription,
-    steps
+    transcription
 });
 
-
+// hard reset
 const rootReducer = (state, action) => {
     if (action.type == 'CONFIG_RESET') {
         console.log("doing reset")
