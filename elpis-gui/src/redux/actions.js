@@ -45,7 +45,6 @@ var successHandler = {
     modelLoad: response => ({ type: 'MODEL_LOAD', response }),
     modelList: response => ({ type: 'MODEL_LIST', response }),
     modelNew: response => ({ type: 'MODEL_NEW', response }),
-    modelName: response => ({ type: 'MODEL_NAME', response }),
     modelSettings: response => ({ type: 'MODEL_SETTINGS', response }),
     modelTrain: response => ({ type: 'MODEL_TRAIN', response }),
     modelStatus: response => ({ type: 'MODEL_STATUS', response }),
@@ -74,10 +73,6 @@ export const modelList = () => {
 export const modelNew = postData => {
     const url = baseUrl + urls.api.model.new
     return postApi(url, postData, 'modelNew')
-}
-export const modelName = postData => {
-    const url = baseUrl + urls.api.model.name
-    return postApi(url, postData, 'modelName')
 }
 export const modelSettings = postData => {
     const url = baseUrl + urls.api.model.settings
