@@ -131,3 +131,67 @@ const modelSettingsFailure = error => ({
     type: actionTypes.MODEL_SETTINGS_FAILURE,
     payload: { error }
 })
+
+
+
+/* * * * * * * * * * * *  TRAIN * * * * * * * * * * *  */
+
+export function modelTrain() {
+    const url = baseUrl + urls.api.model.train
+    return async dispatch => {
+        dispatch(modelTrainStarted())
+        await axios.post(url)
+            .then(response => {
+                dispatch(modelTrainSuccess(response))
+            })
+            .catch(error => {
+                dispatch(modelTrainFailure(error))
+                throw error
+            })
+        return "Trained models OK"
+    }
+}
+
+const modelTrainStarted = () => ({
+    type: actionTypes.MODEL_TRAIN_STARTED
+})
+const modelTrainSuccess = response => ({
+    type: actionTypes.MODEL_TRAIN_SUCCESS,
+    payload: { ...response }
+})
+const modelTrainFailure = error => ({
+    type: actionTypes.MODEL_TRAIN_FAILURE,
+    payload: { error }
+})
+
+
+/* * * * * * * * * * * *  STATUS * * * * * * * * * * *  */
+
+export function modelStatus() {
+    const url = baseUrl + urls.api.model.status
+    return async dispatch => {
+        dispatch(modelStatusStarted())
+        await axios.post(url)
+            .then(response => {
+                dispatch(modelStatusSuccess(response))
+            })
+            .catch(error => {
+                dispatch(modelStatusFailure(error))
+                throw error
+            })
+        return "Statused models OK"
+    }
+}
+
+const modelStatusStarted = () => ({
+    type: actionTypes.MODEL_STATUS_STARTED
+})
+const modelStatusSuccess = response => ({
+    type: actionTypes.MODEL_STATUS_SUCCESS,
+    payload: { ...response }
+})
+const modelStatusFailure = error => ({
+    type: actionTypes.MODEL_STATUS_FAILURE,
+    payload: { error }
+})
+

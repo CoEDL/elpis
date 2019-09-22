@@ -42,18 +42,23 @@ const model = (state = initState, action) => {
                 modelList: action.payload.data.data
             }
 
-
-
         case actionTypes.MODEL_SETTINGS_SUCCESS:
             return {
                 ...state,
                 settings: action.payload.data.data
             }
 
-        case 'MODEL_TRAIN':
+        case actionTypes.MODEL_TRAIN_SUCCESS:
             return {
                 ...state,
-                status: action.response.data.data
+                status: action.payload.data.data
+            }
+
+
+        case actionTypes.MODEL_STATUS_SUCCESS:
+            return {
+                ...state,
+                status: action.payload.data.data
             }
 
         case 'MODEL_RESULTS':
@@ -61,13 +66,6 @@ const model = (state = initState, action) => {
                 ...state,
                 results: action.response.data.data
             }
-
-        case 'MODEL_STATUS':
-            return {
-                ...state,
-                status: action.response.data.data
-            }
-
         default:
             return state;
     }
