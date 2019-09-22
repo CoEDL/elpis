@@ -195,3 +195,35 @@ const modelStatusFailure = error => ({
     payload: { error }
 })
 
+
+/* * * * * * * * * * * *  RESULTS * * * * * * * * * * *  */
+
+export function modelResults() {
+    const url = baseUrl + urls.api.model.results
+    console.log(url)
+    return async dispatch => {
+        dispatch(modelResultsStarted())
+        await axios.post(url)
+            .then(response => {
+                dispatch(modelResultsSuccess(response))
+            })
+            .catch(error => {
+                dispatch(modelResultsFailure(error))
+                throw error
+            })
+        return "Resultsed models OK"
+    }
+}
+
+const modelResultsStarted = () => ({
+    type: actionTypes.MODEL_RESULTS_STARTED
+})
+const modelResultsSuccess = response => ({
+    type: actionTypes.MODEL_RESULTS_SUCCESS,
+    payload: { ...response }
+})
+const modelResultsFailure = error => ({
+    type: actionTypes.MODEL_RESULTS_FAILURE,
+    payload: { error }
+})
+

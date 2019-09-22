@@ -54,17 +54,16 @@ const model = (state = initState, action) => {
                 status: action.payload.data.data
             }
 
-
         case actionTypes.MODEL_STATUS_SUCCESS:
             return {
                 ...state,
                 status: action.payload.data.data
             }
 
-        case 'MODEL_RESULTS':
+        case actionTypes.MODEL_RESULTS_SUCCESS:
             return {
                 ...state,
-                results: action.response.data.data
+                results: action.payload.data.data
             }
         default:
             return state;

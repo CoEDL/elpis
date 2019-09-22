@@ -42,8 +42,6 @@ export const errorHandler = (error) => {
 
 var successHandler = {
 
-    modelResults: response => ({ type: 'MODEL_RESULTS', response }),
-
     transcriptionPrepare: response => ({ type: 'TRANSCRIPTION_PREPARE', response }),
     transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
     transcriptionTranscribe: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE', response }),
@@ -53,15 +51,6 @@ var successHandler = {
 
     configReset: response => ({ type: 'CONFIG_RESET', response })
 }
-
-// * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
-
-
-export const modelResults = () => {
-    const url = baseUrl + urls.api.model.results
-    return postApi(url, null, 'modelResults')
-}
-
 
 
 // * * * * * * * * * * TRANSCRIPTION * * * * * * * * * * * * * * *
