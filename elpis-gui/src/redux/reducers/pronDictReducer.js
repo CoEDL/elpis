@@ -54,18 +54,17 @@ const pronDict = (state = initState, action) => {
                 lexicon: action.payload.data
             }
 
+        case actionTypes.PRON_DICT_UPDATE_LEXICON:
+            return {
+                ...state,
+                lexicon: action.data.lexicon
+            }
 
 
         case 'TRIGGER_API_WAITING':
             return {
                 ...state,
                 apiWaiting: {status: true, message: action.message}
-            }
-
-        case 'PRON_DICT_UPDATE_LEXICON':
-            return {
-                ...state,
-                lexicon: action.data.lexicon
             }
 
         default:

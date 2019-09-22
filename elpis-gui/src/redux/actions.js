@@ -61,13 +61,6 @@ var successHandler = {
     configReset: response => ({ type: 'CONFIG_RESET', response })
 }
 
-
-// * * * * * * * * * * PRON DICT * * * * * * * * * * * * * * *
-
-
-// just for local state
-export const pronDictUpdateLexicon = data => ({ type: 'PRON_DICT_UPDATE_LEXICON', data })
-
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 
 export const modelLoad = postData => {

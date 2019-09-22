@@ -197,3 +197,10 @@ const pronDictSaveLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_SAVE_LEXICON_FAILURE,
     payload: { error }
 })
+
+/* * * * * * * * * * * *  UPDATE LEXICON * * * * * * * * * * *  */
+
+export const pronDictUpdateLexicon = data => ({
+    type: actionTypes.PRON_DICT_UPDATE_LEXICON,
+    data
+})
