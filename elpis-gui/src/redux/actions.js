@@ -42,8 +42,7 @@ export const errorHandler = (error) => {
 
 var successHandler = {
 
-    modelNew: response => ({ type: 'MODEL_NEW', response }),
-    modelSettings: response => ({ type: 'MODEL_SETTINGS', response }),
+    // modelSettings: response => ({ type: 'MODEL_SETTINGS', response }),
     modelTrain: response => ({ type: 'MODEL_TRAIN', response }),
     modelStatus: response => ({ type: 'MODEL_STATUS', response }),
     modelResults: response => ({ type: 'MODEL_RESULTS', response }),
@@ -61,14 +60,10 @@ var successHandler = {
 // * * * * * * * * * * MODEL * * * * * * * * * * * * * * *
 
 
-export const modelNew = postData => {
-    const url = baseUrl + urls.api.model.new
-    return postApi(url, postData, 'modelNew')
-}
-export const modelSettings = postData => {
-    const url = baseUrl + urls.api.model.settings
-    return postApi(url, postData, 'modelSettings')
-}
+// export const modelSettings = postData => {
+//     const url = baseUrl + urls.api.model.settings
+//     return postApi(url, postData, 'modelSettings')
+// }
 export const modelTrain = () => {
     const url = baseUrl + urls.api.model.train
     return postApi(url, null, 'modelTrain')

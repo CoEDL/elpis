@@ -44,10 +44,10 @@ const model = (state = initState, action) => {
 
 
 
-        case 'MODEL_SETTINGS':
+        case actionTypes.MODEL_SETTINGS_SUCCESS:
             return {
                 ...state,
-                settings: action.response.data.data
+                settings: action.payload.data.data
             }
 
         case 'MODEL_TRAIN':

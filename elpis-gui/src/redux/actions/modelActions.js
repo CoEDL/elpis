@@ -100,3 +100,34 @@ const modelListFailure = error => ({
 })
 
 
+
+
+/* * * * * * * * * * * *  SETTINGS * * * * * * * * * * *  */
+
+export function modelSettings(postData) {
+    const url = baseUrl + urls.api.model.settings
+    return async dispatch => {
+        dispatch(modelSettingsStarted())
+        await axios.post(url, postData)
+            .then(response => {
+                dispatch(modelSettingsSuccess(response))
+            })
+            .catch(error => {
+                dispatch(modelSettingsFailure(error))
+                throw error
+            })
+        return "Added settings to a model OK"
+    }
+}
+
+const modelSettingsStarted = () => ({
+    type: actionTypes.MODEL_SETTINGS_STARTED
+})
+const modelSettingsSuccess = response => ({
+    type: actionTypes.MODEL_SETTINGS_SUCCESS,
+    payload: { ...response }
+})
+const modelSettingsFailure = error => ({
+    type: actionTypes.MODEL_SETTINGS_FAILURE,
+    payload: { error }
+})
