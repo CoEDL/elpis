@@ -26,12 +26,6 @@ const initState = {
 const model = (state = initState, action) => {
     switch (action.type) {
 
-        case 'TRIGGER_API_WAITING':
-            return {
-                ...state,
-                apiWaiting: {status: true, message: action.message}
-            }
-
 
         case 'MODEL_LIST':
             return {

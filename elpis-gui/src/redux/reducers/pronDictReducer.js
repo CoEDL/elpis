@@ -61,12 +61,6 @@ const pronDict = (state = initState, action) => {
             }
 
 
-        case 'TRIGGER_API_WAITING':
-            return {
-                ...state,
-                apiWaiting: {status: true, message: action.message}
-            }
-
         default:
             return state;
     }

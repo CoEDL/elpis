@@ -136,8 +136,6 @@ export const transcriptionStatusReset = status => ({ type: 'TRANSCRIPTION_STATUS
 
 export const setCurrentStep = url => ({ type: 'SET_CURRENT_STEP', url })
 
-export const triggerApiWaiting = message => ({ type: 'TRIGGER_API_WAITING', message })
-
 export const configReset = postData => {
     console.log("actions configReset")
     const url = baseUrl + urls.api.config.reset
