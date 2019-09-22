@@ -138,13 +138,11 @@ const datasetFilesFailure = error => ({
 /* * * * * * * * * * * *  SETTINGS * * * * * * * * * * *  */
 
 export function datasetSettings(postData) {
-    console.log("settings", postData)
     const url = baseUrl + urls.api.dataset.settings
     return async dispatch => {
         dispatch(datasetSettingsStarted())
         await axios.post(url, postData)
             .then(response => {
-                console.log("datasetSettings action got response", response)
                 dispatch(datasetSettingsSuccess(response))
             })
             .catch(error => {
@@ -164,6 +162,39 @@ const datasetSettingsSuccess = response => ({
 })
 const datasetSettingsFailure = error => ({
     type: actionTypes.DATASET_SETTINGS_FAILURE,
+    payload: { error }
+})
+
+
+/* * * * * * * * * * * *  PREPARE * * * * * * * * * * *  */
+
+export function datasetPrepare() {
+    console.log("prepare")
+    const url = baseUrl + urls.api.dataset.prepare
+    return async dispatch => {
+        dispatch(datasetPrepareStarted())
+        await axios.post(url)
+            .then(response => {
+                console.log("datasetPrepare action got response", response)
+                dispatch(datasetPrepareSuccess(response))
+            })
+            .catch(error => {
+                dispatch(datasetPrepareFailure(error))
+                throw error
+            })
+        return "Added prepare to a dataset OK"
+    }
+}
+
+const datasetPrepareStarted = () => ({
+    type: actionTypes.DATASET_PREPARE_STARTED
+})
+const datasetPrepareSuccess = response => ({
+    type: actionTypes.DATASET_PREPARE_SUCCESS,
+    payload: { ...response }
+})
+const datasetPrepareFailure = error => ({
+    type: actionTypes.DATASET_PREPARE_FAILURE,
     payload: { error }
 })
 

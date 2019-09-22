@@ -26,8 +26,6 @@ const dataset = (state = initState, action) => {
             return {...state}
 
         case actionTypes.DATASET_NEW_SUCCESS:
-            // all we should need at this stage is the name
-            console.log("reducer got ds new success", action)
             var { name, tier, files } = action.payload.data.data
             return { ...state, name }
 
@@ -83,16 +81,13 @@ const dataset = (state = initState, action) => {
                 settings: {...state.settings, tier}
             }
 
-        case 'DATASET_PREPARE':
+        case actionTypes.DATASET_PREPARE_SUCCESS:
             // TODO do this in the backend
-            var data = action.response.data
+            var data = action.payload.data
             let wordlist = Object.keys(data).map(function (key) {
                 return ({name:key, frequency: data[key]})
             })
-            return {
-                ...state,
-                wordlist
-            }
+            return { ...state, wordlist }
 
         default:
             return state;

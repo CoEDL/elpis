@@ -41,7 +41,6 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
-    datasetPrepare: response => ({ type: 'DATASET_PREPARE', response }),
 
     pronDictLoad: response => ({ type: 'PRON_DICT_LOAD', response }),
     pronDictList: response => ({ type: 'PRON_DICT_LIST', response }),
@@ -71,16 +70,8 @@ var successHandler = {
     configReset: response => ({ type: 'CONFIG_RESET', response })
 }
 
-// * * * * * * * * * * DATA SETS * * * * * * * * * * * * * * *
-
-export const datasetPrepare = () => {
-    const url = baseUrl + urls.api.dataset.prepare
-    return postApi(url, null, 'datasetPrepare')
-}
-
 
 // * * * * * * * * * * PRON DICT * * * * * * * * * * * * * * *
-
 
 export const pronDictLoad = postData => {
     const url = baseUrl + urls.api.pronDict.load

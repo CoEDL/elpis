@@ -18,8 +18,8 @@ class DatasetPrepare extends Component {
     }
 
     componentDidMount() {
-        const {name, datasetPrepare} = this.props
-        if (name) datasetPrepare()
+        // const {name, datasetPrepare} = this.props
+        // if (name) datasetPrepare()
     }
 
     handleSort = (clickedColumn, data) => () => {
@@ -40,10 +40,10 @@ class DatasetPrepare extends Component {
     }
 
     render() {
-        const { t, list } = this.props
+        const { t, wordlist } = this.props
         const { column, direction } = this.state
 
-        const listEl = list.length > 0 ? (
+        const listEl = wordlist.length > 0 ? (
             <>
             <h2>{ t('dataset.prepare.header') }</h2>
             <p>{ t('dataset.prepare.description') }</p>
@@ -52,13 +52,13 @@ class DatasetPrepare extends Component {
                     <Table.Row>
                         <Table.HeaderCell
                             sorted={ column === 'name' ? direction : null }
-                            onClick={ this.handleSort('name', list) }
+                                onClick={this.handleSort('name', wordlist) }
                         >
                             Word
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'frequency' ? direction : null }
-                            onClick={ this.handleSort('frequency', list) }
+                                onClick={this.handleSort('frequency', wordlist) }
                         >
                             Frequency
                         </Table.HeaderCell>
@@ -66,7 +66,7 @@ class DatasetPrepare extends Component {
                 </Table.Header>
                 <Table.Body>
                     {
-                        list.map(word => {
+                        wordlist.map(word => {
                             return (
                                 <Table.Row key={ word.name }>
                                     <Table.Cell>
@@ -112,8 +112,7 @@ class DatasetPrepare extends Component {
 
 const mapStateToProps = state => {
     return {
-        list: state.dataset.wordlist,
-        name: state.dataset.name
+        wordlist: state.dataset.wordlist
     }
 }
 
