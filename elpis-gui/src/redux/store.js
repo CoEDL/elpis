@@ -7,13 +7,23 @@ import transcription from './transcriptionReducer';
 import steps from './stepReducer';
 import thunk from 'redux-thunk';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     dataset,
     pronDict,
     model,
     transcription,
     steps
 });
+
+
+const rootReducer = (state, action) => {
+    if (action.type == 'CONFIG_RESET') {
+        console.log("rootreducer is resetting")
+        state = undefined
+    }
+    return appReducer(state, action)
+}
+
 
 const store = createStore(rootReducer,
     composeWithDevTools(applyMiddleware(thunk))
