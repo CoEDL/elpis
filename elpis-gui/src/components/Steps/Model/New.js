@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
-import { connect } from 'react-redux';
+import { Grid, Header, Segment } from 'semantic-ui-react';
 import { translate } from 'react-i18next';
-import { Formik, ErrorMessage } from 'formik';
-import { modelNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import NewForm from 'components/Steps/Model/NewForm';

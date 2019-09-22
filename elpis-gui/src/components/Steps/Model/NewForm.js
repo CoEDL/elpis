@@ -4,7 +4,8 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import { Button, Form, Input, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictList, modelNew } from 'redux/actions';
+import { pronDictList } from 'redux/actions/pronDictActions';
+import { modelNew } from 'redux/actions/modelActions';
 import urls from 'urls'
 
 

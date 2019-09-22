@@ -1,11 +1,4 @@
-const toyLexicon = `!SIL sil
-<UNK> spn
-di d I
-kaai k a: I
-amakaang a m a k a: ŋ
-hada h a d a
-muila m u I l a
-`;
+import * as actionTypes from '../actionTypes/modelActionTypes';
 
 const initState = {
     modelList: [],
@@ -26,15 +19,11 @@ const initState = {
 const model = (state = initState, action) => {
     switch (action.type) {
 
-
-        case 'MODEL_LIST':
-            return {
-                ...state,
-                modelList: action.response.data.data
-            }
+        case actionTypes.MODEL_NEW_SUCCESS:
+            var { name } = action.payload.data.data.config
+            return { ...initState, name }
 
         case 'MODEL_LOAD':
-        case 'MODEL_NEW':
             return {
                 ...state,
                 name: action.response.data.data.config.name,
@@ -46,11 +35,12 @@ const model = (state = initState, action) => {
                 settings: {...state.settings, ngram: action.response.data.data.config.ngram}
             }
 
-        case 'MODEL_NAME':
+
+        case 'MODEL_LIST':
             return {
-                    ...state,
-                    name: action.response.data.data.name
-                }
+                ...state,
+                modelList: action.response.data.data
+            }
 
         case 'MODEL_L2S':
             return {

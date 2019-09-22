@@ -26,7 +26,7 @@ const dataset = (state = initState, action) => {
             return {...state}
 
         case actionTypes.DATASET_NEW_SUCCESS:
-            var { name, tier, files } = action.payload.data.data
+            var { name } = action.payload.data.data
             return { ...initState, name }
 
         case actionTypes.DATASET_LOAD_SUCCESS:
