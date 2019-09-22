@@ -27,7 +27,7 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_NEW_SUCCESS:
             var { name, tier, files } = action.payload.data.data
-            return { ...state, name }
+            return { ...initState, name }
 
         case actionTypes.DATASET_LOAD_SUCCESS:
             // loading existing data set might have files and settings
@@ -42,11 +42,15 @@ const dataset = (state = initState, action) => {
             return {
                 ...state,
                 name,
+                status: "",
                 audioFiles,
                 transcriptionFiles,
                 additionalTextFiles,
-                settings: { ...state.settings, tier }
+                settings: { ...state.settings, tier },
+                tier: "",
+                wordlist: "",
             }
+
 
         case actionTypes.DATASET_LIST_SUCCESS:
             return {
