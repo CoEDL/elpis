@@ -6,10 +6,6 @@ import {
 } from './datasetActionTypes';
 
 
-let audioFiles
-let transcriptionFiles
-let additionalTextFiles
-
 const initState = {
     name: "",
     status: "",
@@ -27,9 +23,6 @@ const initState = {
 const dataset = (state = initState, action) => {
     switch (action.type) {
 
-
-
-
         case 'DATASET_LIST':
             return {
                 ...state,
@@ -40,53 +33,54 @@ const dataset = (state = initState, action) => {
             console.log("reducer got ds new started")
             return {...state}
 
-        case DATASET_NEW_SUCCESS:
-            console.log("reducer got ds new success")
-            return {...state}
-
         case DATASET_NEW_FAILURE:
             console.log("reducer got ds new fail")
             return {...state}
 
+        case DATASET_NEW_SUCCESS:
+            // all we should need at this stage is the name
+            console.log("reducer got ds new success", action)
+            var { name, tier, files } = action.payload.data.data
+            return {
+                ...state,
+                name,
+            }
+
         case 'DATASET_LOAD':
-        case 'DATASET_NEW':
-            console.log("reducer got ds new")
+            // loading existing data set might have files and settings
+            var { name, tier, files } = action.payload.data.data
             // action.data is an array of filenames. parse this, split into separate lists
-            audioFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'wav')
-            transcriptionFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'eaf')
-            additionalTextFiles = action.response.data.data.files.filter(file => getFileExtension(file) === 'txt')
-            audioFiles.sort()
-            transcriptionFiles.sort()
-            additionalTextFiles.sort()
-            // remove duplicates
+            var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort()
+            var transcriptionFiles = files.filter(file => getFileExtension(file) === 'eaf').sort()
+            var additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort()
+            // remove duplicates (should do this on the server though!)
             audioFiles = [...(new Set(audioFiles))];
             transcriptionFiles = [...(new Set(transcriptionFiles))];
             return {
                 ...state,
+                name,
                 audioFiles,
                 transcriptionFiles,
                 additionalTextFiles,
-                name: action.response.data.data.name,
-                settings: {...state.settings, tier: action.response.data.data.tier}
+                settings: { ...state.settings, tier }
             }
 
         case 'DATASET_NAME':
+            var { name } = action.response.data.data
             return {
                 ...state,
-                name: action.response.data.data.name
+                name
             }
 
         case 'DATASET_FILES':
+            var { files } = action.response.data
+            console.log("doing files in DATASET_FILES")
             // action.data is an array of filenames. parse this, split into separate lists
-            audioFiles = action.response.data.filter(file => getFileExtension(file) === 'wav')
-            transcriptionFiles = action.response.data.filter(file => getFileExtension(file) === 'eaf')
-            additionalTextFiles = action.response.data.filter(file => getFileExtension(file) === 'txt')
-            audioFiles.sort()
-            transcriptionFiles.sort()
-            additionalTextFiles.sort()
+            var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort()
+            var transcriptionFiles = files.filter(file => getFileExtension(file) === 'eaf').sort()
+            var additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort()
             // remove duplicates
             audioFiles = [...(new Set(audioFiles))];
-
             return {
                 ...state,
                 status: "files loaded",
@@ -96,16 +90,16 @@ const dataset = (state = initState, action) => {
             }
 
         case 'DATASET_SETTINGS':
-            // watch out for response.data.data ...
+            var { tier } = action.response.data.data
             return {
                 ...state,
-                settings: {...state.settings, tier: action.response.data.data.tier}
+                settings: {...state.settings, tier}
             }
 
         case 'DATASET_PREPARE':
             // TODO do this in the backend
-            const data = action.response.data
-            const wordlist = Object.keys(data).map(function (key) {
+            var data = action.response.data
+            let wordlist = Object.keys(data).map(function (key) {
                 return ({name:key, frequency: data[key]})
             })
             return {
