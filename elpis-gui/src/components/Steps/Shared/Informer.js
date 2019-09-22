@@ -11,20 +11,13 @@ class StepInformer extends Component {
 
 	handleStepSelect = (step, i, j) => {
 		const { history } = this.props
-		// Go to new page
 		history.push(step.path)
 	}
 
 	componentDidMount = () => {
-		// identify which step is currently being done
 		const { match, setCurrentStep } = this.props
-		// let urlParams = match.url.split('/')
-		// urlParams = urlParams.filter(function(x){
-		// 	return (x !== (undefined || null || ''));
-		// });
 		setCurrentStep(match.url)
 	}
-
 
 	render() {
 		const { steps } = this.props
