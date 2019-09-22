@@ -15,7 +15,6 @@ class StepWelcome extends Component {
 
 	render() {
 		const { t, list } = this.props
-		console.log("list", list)
 		return (
 
 			<Grid>

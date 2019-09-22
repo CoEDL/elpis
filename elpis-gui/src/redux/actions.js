@@ -190,7 +190,6 @@ export const modelResults = () => {
 
 
 export const transcriptionAudioFile = filename => {
-    console.log("action got file", filename)
     return ({ type: 'TRANSCRIPTION_AUDIO_FILE', filename })
 }
 export const transcriptionPrepare = postData => {
@@ -204,12 +203,10 @@ export const transcriptionStatus = () => {
 }
 export const transcriptionTranscribe = () => {
     const url = baseUrl + urls.api.transcription.transcribe
-    console.log(url)
     return postApi(url, null, 'transcriptionTranscribe')
 }
 export const transcriptionTranscribeAlign = () => {
     const url = baseUrl + urls.api.transcription.transcribe_align
-    console.log(url)
     return postApi(url, null, 'transcriptionTranscribeAlign')
 }
 export const transcriptionGetText = postData => {
