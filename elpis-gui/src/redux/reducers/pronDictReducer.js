@@ -19,6 +19,16 @@ const pronDict = (state = initState, action) => {
                 name: action.payload.data.data.config.name
             }
 
+        case actionTypes.PRON_DICT_LOAD_SUCCESS:
+            var { config, datasetName, l2s, lexicon } = action.payload.data.data
+            return {
+                ...state,
+                name: config.name,
+                datasetName: config.dataset_name,
+                l2s,
+                lexicon
+            }
+
         case 'TRIGGER_API_WAITING':
             return {
                 ...state,
@@ -31,15 +41,6 @@ const pronDict = (state = initState, action) => {
                 pronDictList: action.response.data.data
             }
 
-
-        case 'PRON_DICT_LOAD':
-            return {
-                ...state,
-                name: action.response.data.data.config.name,
-                datasetName: action.response.data.data.config.dataset_name,
-                l2s: action.response.data.data.l2s,
-                lexicon: action.response.data.data.lexicon,
-            }
 
         case 'PRON_DICT_L2S':
             return {

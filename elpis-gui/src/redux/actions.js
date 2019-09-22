@@ -72,10 +72,6 @@ var successHandler = {
 
 // * * * * * * * * * * PRON DICT * * * * * * * * * * * * * * *
 
-export const pronDictLoad = postData => {
-    const url = baseUrl + urls.api.pronDict.load
-    return postApi(url, postData, 'pronDictLoad')
-}
 export const pronDictList = () => {
     const url = baseUrl + urls.api.pronDict.list
     return postApi(url, null, 'pronDictList')

@@ -3,7 +3,10 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictList, pronDictLoad, datasetLoad, pronDictGetLexicon } from 'redux/actions';
+import { pronDictLoad } from 'redux/actions/pronDictActions';
+import { datasetLoad } from 'redux/actions/datasetActions';
+
+import { pronDictList, pronDictGetLexicon } from 'redux/actions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -148,7 +151,11 @@ const mapDispatchToProps = dispatch => ({
     },
     pronDictLoad: (pronDictData, datasetData) => {
         dispatch(pronDictLoad(pronDictData))
-        dispatch(datasetLoad(datasetData))
+            .then((response)=>{
+                console.log(response)
+                console.log("pron dict loaded, now load the dataset", datasetData)
+                dispatch(datasetLoad(datasetData))
+            })
     }
 })
 

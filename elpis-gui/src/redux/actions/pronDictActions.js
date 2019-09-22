@@ -36,3 +36,34 @@ const pronDictNewFailure = error => ({
     payload: { error }
 })
 
+
+/* * * * * * * * * * * *  LOAD * * * * * * * * * * *  */
+
+
+export function pronDictLoad(postData) {
+    const url = baseUrl + urls.api.pronDict.load
+    return async dispatch => {
+        dispatch(pronDictLoadStarted())
+        await axios.post(url, postData)
+            .then(response => {
+                dispatch(pronDictLoadSuccess(response))
+            })
+            .catch(error => {
+                dispatch(pronDictLoadFailure(error))
+                throw error
+            })
+        return "Loaded a pronDict OK"
+    }
+}
+
+const pronDictLoadStarted = () => ({
+    type: actionTypes.PRON_DICT_LOAD_STARTED
+})
+const pronDictLoadSuccess = response => ({
+    type: actionTypes.PRON_DICT_LOAD_SUCCESS,
+    payload: { ...response }
+})
+const pronDictLoadFailure = error => ({
+    type: actionTypes.PRON_DICT_LOAD_FAILURE,
+    payload: { error }
+})
