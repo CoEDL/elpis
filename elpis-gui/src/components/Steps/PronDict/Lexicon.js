@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { Button, Divider, Form, Grid, Header, Message, Segment, TextArea } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictGenerateLexicon, pronDictSaveLexicon, pronDictUpdateLexicon } from 'redux/actions';
+import { pronDictBuildLexicon } from 'redux/actions/pronDictActions';
+import { pronDictSaveLexicon, pronDictUpdateLexicon } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentPronDictName from "./CurrentPronDictName";
@@ -16,7 +17,7 @@ class PronDictLexicon extends Component {
     }
 
     generateLexicon = () => {
-        this.props.pronDictGenerateLexicon()
+        this.props.pronDictBuildLexicon()
     }
 
     saveLexicon = () => {
@@ -87,8 +88,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    pronDictGenerateLexicon: () => {
-        dispatch(pronDictGenerateLexicon())
+    pronDictBuildLexicon: () => {
+        dispatch(pronDictBuildLexicon())
     },
     pronDictSaveLexicon: data => {
         dispatch(pronDictSaveLexicon(data))

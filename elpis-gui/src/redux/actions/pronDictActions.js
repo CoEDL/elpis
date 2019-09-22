@@ -133,3 +133,36 @@ const pronDictL2SFailure = error => ({
     type: actionTypes.PRON_DICT_L2S_FAILURE,
     payload: { error }
 })
+
+
+
+
+/* * * * * * * * * * * *  LEXICON * * * * * * * * * * *  */
+
+export function pronDictBuildLexicon() {
+    const url = baseUrl + urls.api.pronDict.buildLexicon
+    return async dispatch => {
+        dispatch(pronDictBuildLexiconStarted())
+        await axios.post(url)
+            .then(response => {
+                dispatch(pronDictBuildLexiconSuccess(response))
+            })
+            .catch(error => {
+                dispatch(pronDictBuildLexiconFailure(error))
+                throw error
+            })
+        return "lexiconed pronDicts OK"
+    }
+}
+
+const pronDictBuildLexiconStarted = () => ({
+    type: actionTypes.PRON_DICT_BUILD_LEXICON_STARTED
+})
+const pronDictBuildLexiconSuccess = response => ({
+    type: actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS,
+    payload: { ...response }
+})
+const pronDictBuildLexiconFailure = error => ({
+    type: actionTypes.PRON_DICT_BUILD_LEXICON_FAILURE,
+    payload: { error }
+})
