@@ -3,9 +3,10 @@ import {
     DATASET_NEW_STARTED,
     DATASET_NEW_SUCCESS,
     DATASET_NEW_FAILURE,
-    DATASET_LOAD_STARTED,
     DATASET_LOAD_SUCCESS,
-    DATASET_LOAD_FAILURE
+    DATASET_LIST_SUCCESS,
+    DATASET_FILES_STARTED,
+    DATASET_FILES_SUCCESS,
 } from '../types/datasetActionTypes';
 
 
@@ -26,18 +27,11 @@ const initState = {
 const dataset = (state = initState, action) => {
     switch (action.type) {
 
-        case 'DATASET_LIST':
-            return {
-                ...state,
-                datasetList: action.response.data.data
-            }
-
+        // Boilerplate for all...
         case DATASET_NEW_STARTED:
-            console.log("reducer got ds new started")
             return {...state}
 
         case DATASET_NEW_FAILURE:
-            console.log("reducer got ds new fail")
             return {...state}
 
         case DATASET_NEW_SUCCESS:
@@ -65,18 +59,27 @@ const dataset = (state = initState, action) => {
                 settings: { ...state.settings, tier }
             }
 
-        case 'DATASET_FILES':
-            var { files } = action.response.data
-            console.log("doing files in DATASET_FILES")
+        case DATASET_LIST_SUCCESS:
+            return {
+                ...state,
+                datasetList: action.payload.data.data
+            }
+
+        case DATASET_FILES_STARTED:
+            return { ...state, status: "loading" }
+
+
+        case DATASET_FILES_SUCCESS:
+            var { data } = action.payload
             // action.data is an array of filenames. parse this, split into separate lists
-            var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort()
-            var transcriptionFiles = files.filter(file => getFileExtension(file) === 'eaf').sort()
-            var additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort()
+            var audioFiles = data.filter(file => getFileExtension(file) === 'wav').sort()
+            var transcriptionFiles = data.filter(file => getFileExtension(file) === 'eaf').sort()
+            var additionalTextFiles = data.filter(file => getFileExtension(file) === 'txt').sort()
             // remove duplicates
             audioFiles = [...(new Set(audioFiles))];
             return {
                 ...state,
-                status: "files loaded",
+                status: "done",
                 audioFiles,
                 transcriptionFiles,
                 additionalTextFiles
@@ -98,12 +101,6 @@ const dataset = (state = initState, action) => {
             return {
                 ...state,
                 wordlist
-            }
-
-        case 'DATASET_STATUS':
-            return {
-                ...state,
-                status: action.status
             }
 
         default:

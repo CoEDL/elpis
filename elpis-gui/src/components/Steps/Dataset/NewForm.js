@@ -75,7 +75,6 @@ const mapDispatchToProps = dispatch => ({
     datasetNew: (name, history) => {
         dispatch(datasetNew(name, history))
             .then(response => {
-                console.log("done", response)
                 history.push(urls.gui.dataset.files)
             })
             .catch(error => console.log("error", error))

@@ -3,8 +3,7 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { datasetList } from 'redux/actions';
-import { datasetLoad } from 'redux/actions/datasetActions';
+import { datasetList, datasetLoad } from 'redux/actions/datasetActions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -139,6 +138,10 @@ const mapDispatchToProps = dispatch => ({
     },
     datasetLoad: postData => {
         dispatch(datasetLoad(postData))
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => console.log("error", error))
     }
 })
 
