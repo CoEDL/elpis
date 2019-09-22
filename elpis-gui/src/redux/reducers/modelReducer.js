@@ -36,24 +36,13 @@ const model = (state = initState, action) => {
                 settings: {...state.settings, ngram: config.ngram}
             }
 
-
         case actionTypes.MODEL_LIST_SUCCESS:
             return {
                 ...state,
                 modelList: action.payload.data.data
             }
 
-        case 'MODEL_L2S':
-            return {
-                ...state,
-                l2s: action.response.data
-            }
 
-        case 'MODEL_LEXICON':
-            return {
-                ...state,
-                lexicon: action.response.data
-            }
 
         case 'MODEL_SETTINGS':
             return {
