@@ -3,7 +3,7 @@ import { Button, Image, Segment } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import elpisLogo from './elpis.png'
 import { connect } from 'react-redux';
-import { configReset } from 'redux/actions';
+import { configReset } from 'redux/actions/appActions';
 
 class StepBranding extends Component {
 
