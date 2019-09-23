@@ -19,6 +19,7 @@ class Transcription(FSObject):
         self.config["model_name"] = None
         self.config["status"] = "ready"
         self.status = "ready"
+        self.type = None
 
     @classmethod
     def load(cls, base_path: Path):
@@ -86,6 +87,7 @@ class Transcription(FSObject):
 
     def transcribe(self, on_complete: Callable=None):
         self.status = "transcribing"
+        self.type = "text"
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
         kaldi_test_path = self.model.path.joinpath('kaldi', 'data', 'test')
         kaldi_path = self.model.path.joinpath('kaldi')
@@ -130,6 +132,7 @@ class Transcription(FSObject):
             on_complete()
 
         self.status = "transcribing"
+        self.type = "elan"
         if on_complete is None:
             transcribe()
         else:

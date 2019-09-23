@@ -28,9 +28,13 @@ def new():
 def transcribe():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     transcription.transcribe(on_complete=lambda: print('Transcribed text!'))
+    data = {
+        "status": transcription.status,
+        "type": transcription.type
+    }
     return jsonify({
         "status": "ok",
-        "data": transcription.status
+        "data": data
     })
 
 
@@ -38,18 +42,26 @@ def transcribe():
 def transcribe_align():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     transcription.transcribe_align(on_complete=lambda: print('Transcribed and aligned!'))
+    data = {
+        "status": transcription.status,
+        "type": transcription.type
+    }
     return jsonify({
         "status": "ok",
-        "data": transcription.status
+        "data": data
     })
 
 
 @bp.route("/status", methods=['GET', 'POST'])
 def status():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
+    data = {
+        "status": transcription.status,
+        "type": transcription.type
+    }
     return jsonify({
         "status": "ok",
-        "data": transcription.status
+        "data": data
     })
 
 
