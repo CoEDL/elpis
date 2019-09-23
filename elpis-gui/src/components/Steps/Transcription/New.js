@@ -6,7 +6,7 @@ import { translate } from 'react-i18next';
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
-import { transcriptionAudioFile, transcriptionPrepare, transcriptionStatusReset } from 'redux/actions';
+import { transcriptionAudioFile, transcriptionNew, transcriptionStatusReset } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "components/Steps/Model/CurrentModelName";
@@ -28,7 +28,7 @@ class NewTranscription extends Component {
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
         this.props.transcriptionAudioFile(acceptedFiles[0].name)
-        this.props.transcriptionPrepare(formData)
+        this.props.transcriptionNew(formData)
     }
 
     componentDidMount = () => {
@@ -124,8 +124,8 @@ const mapDispatchToProps = dispatch => ({
     transcriptionAudioFile: filename => {
         dispatch(transcriptionAudioFile(filename))
     },
-    transcriptionPrepare: formData => {
-        dispatch(transcriptionPrepare(formData))
+    transcriptionNew: formData => {
+        dispatch(transcriptionNew(formData))
     },
     transcriptionStatusReset: () => {
         dispatch(transcriptionStatusReset())
