@@ -37,3 +37,34 @@ const transcriptionNewFailure = error => ({
     payload: { error }
 })
 
+
+/* * * * * * * * * * * *  STATUS * * * * * * * * * * *  */
+
+export function transcriptionStatus() {
+    const url = baseUrl + urls.api.transcription.status
+    return async dispatch => {
+        dispatch(transcriptionStatusStarted())
+        await axios.post(url)
+            .then(response => {
+                dispatch(transcriptionStatusSuccess(response))
+            })
+            .catch(error => {
+                dispatch(transcriptionStatusFailure(error))
+                throw error
+            })
+        return "Got status for transcriptions OK"
+    }
+}
+
+const transcriptionStatusStarted = () => ({
+    type: actionTypes.TRANSCRIPTION_STATUS_STARTED
+})
+const transcriptionStatusSuccess = response => ({
+    type: actionTypes.TRANSCRIPTION_STATUS_SUCCESS,
+    payload: { ...response }
+})
+const transcriptionStatusFailure = error => ({
+    type: actionTypes.TRANSCRIPTION_STATUS_FAILURE,
+    payload: { error }
+})
+

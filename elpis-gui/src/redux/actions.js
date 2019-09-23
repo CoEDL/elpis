@@ -42,7 +42,7 @@ export const errorHandler = (error) => {
 
 var successHandler = {
     // transcriptionNew: response => ({ type: 'TRANSCRIPTION_PREPARE', response }),
-    transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
+    // transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
     transcriptionTranscribe: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE', response }),
     transcriptionTranscribeAlign: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE_ALIGN', response }),
     transcriptionGetText: response => ({ type: 'TRANSCRIPTION_GET_TEXT', response }),
@@ -53,10 +53,10 @@ var successHandler = {
 // * * * * * * * * * * TRANSCRIPTION * * * * * * * * * * * * * * *
 
 
-export const transcriptionStatus = () => {
-    const url = baseUrl + urls.api.transcription.status
-    return postApi(url, null, 'transcriptionStatus')
-}
+// export const transcriptionStatus = () => {
+//     const url = baseUrl + urls.api.transcription.status
+//     return postApi(url, null, 'transcriptionStatus')
+// }
 export const transcriptionTranscribe = () => {
     const url = baseUrl + urls.api.transcription.transcribe
     return postApi(url, null, 'transcriptionTranscribe')

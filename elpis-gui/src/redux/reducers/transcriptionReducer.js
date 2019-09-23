@@ -18,18 +18,21 @@ const transcription = (state = initState, action) => {
             console.log("originalFilename", originalFilename)
             return { ...initState, filename: originalFilename }
 
-        // after uploading the file
-        case 'TRANSCRIPTION_PREPARE':
+
+        case actionTypes.TRANSCRIPTION_STATUS_SUCCESS:
+            console.log("reducer got transcription status", action)
             return {
                 ...state,
-                status: action.response.data.data,
+                status: action.payload.data.data
             }
 
-        case 'TRANSCRIPTION_STATUS':
-            return {
-                ...state,
-                status: action.response.data.data
-            }
+        // // after uploading the file
+        // case 'TRANSCRIPTION_PREPARE':
+        //     return {
+        //         ...state,
+        //         status: action.response.data.data,
+        //     }
+
 
         case 'TRANSCRIPTION_STATUS_RESET':
             return {

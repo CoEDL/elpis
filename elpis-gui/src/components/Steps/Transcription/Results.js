@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import ReactTimeout from 'react-timeout'
 import downloadjs from 'downloadjs'
-import { transcriptionStatus ,transcriptionTranscribe, transcriptionTranscribeAlign, transcriptionGetText, transcriptionGetElan } from 'redux/actions';
+import { transcriptionStatus  } from 'redux/actions/transcriptionActions';
+import { transcriptionTranscribe, transcriptionTranscribeAlign, transcriptionGetText, transcriptionGetElan } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "components/Steps/Model/CurrentModelName";
@@ -15,10 +16,15 @@ class NewTranscriptionResults extends Component {
     statusInterval = null
 
     componentDidMount = () => {
+        const { transcriptionTranscribe, transcriptionTranscribeAlign } = this.props;
+
+        // trigger a status check every so often
+        this.statusInterval = setInterval(this.handleTranscriptionStatus, 1000)
+
+        // make a plain text or aligned transcription depending on the URL param
         const format = this.props.match.params.format
-        this.statusInterval = this.props.setInterval(this.handleTranscriptionStatus, 1000)
-        if (format == "text") this.props.transcriptionTranscribe()
-        if (format == "elan") this.props.transcriptionTranscribeAlign()
+        if (format == "text") transcriptionTranscribe()
+        if (format == "elan") transcriptionTranscribeAlign()
     }
 
     handleTranscriptionStatus = () => {
@@ -33,6 +39,7 @@ class NewTranscriptionResults extends Component {
             if (format == "text") this.props.transcriptionGetText()
             if (format == "elan") this.props.transcriptionGetElan()
         }
+        // TODO handle a status error, but it would be better to handle error at the action level
     }
 
     handleDownload = () => {
