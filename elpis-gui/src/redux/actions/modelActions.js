@@ -5,9 +5,9 @@ import * as actionTypes from '../actionTypes/modelActionTypes';
 
 const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://'+window.location.host
 
+
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */
 
-// make new model, then change url to add files page
 export function modelNew(postData) {
     const url = baseUrl + urls.api.model.new
     return async dispatch => {
@@ -38,7 +38,6 @@ const modelNewFailure = error => ({
 
 
 /* * * * * * * * * * * *  LOAD * * * * * * * * * * *  */
-
 
 export function modelLoad(postData) {
     const url = baseUrl + urls.api.model.load
@@ -100,8 +99,6 @@ const modelListFailure = error => ({
 })
 
 
-
-
 /* * * * * * * * * * * *  SETTINGS * * * * * * * * * * *  */
 
 export function modelSettings(postData) {
@@ -131,7 +128,6 @@ const modelSettingsFailure = error => ({
     type: actionTypes.MODEL_SETTINGS_FAILURE,
     payload: { error }
 })
-
 
 
 /* * * * * * * * * * * *  TRAIN * * * * * * * * * * *  */
@@ -226,4 +222,3 @@ const modelResultsFailure = error => ({
     type: actionTypes.MODEL_RESULTS_FAILURE,
     payload: { error }
 })
-

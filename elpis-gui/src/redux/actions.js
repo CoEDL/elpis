@@ -41,15 +41,12 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
-
     transcriptionNew: response => ({ type: 'TRANSCRIPTION_PREPARE', response }),
     transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
     transcriptionTranscribe: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE', response }),
     transcriptionTranscribeAlign: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE_ALIGN', response }),
     transcriptionGetText: response => ({ type: 'TRANSCRIPTION_GET_TEXT', response }),
     transcriptionGetElan: response => ({ type: 'TRANSCRIPTION_GET_ELAN', response }),
-
-    configReset: response => ({ type: 'CONFIG_RESET', response })
 }
 
 

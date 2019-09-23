@@ -5,9 +5,9 @@ import * as actionTypes from '../actionTypes/datasetActionTypes';
 
 const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://'+window.location.host
 
+
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */
 
-// make new dataset, then change url to add files page
 export function datasetNew(postData) {
     const url = baseUrl + urls.api.dataset.new
     return async dispatch => {
@@ -38,7 +38,6 @@ const datasetNewFailure = error => ({
 
 
 /* * * * * * * * * * * *  LOAD * * * * * * * * * * *  */
-
 
 export function datasetLoad(postData) {
     const url = baseUrl + urls.api.dataset.load
@@ -82,7 +81,7 @@ export function datasetList() {
             .catch(error => {
                 dispatch(datasetListFailure(error))
                 throw error
-})
+        })
         return "Listed datasets OK"
     }
 }
@@ -98,7 +97,6 @@ const datasetListFailure = error => ({
     type: actionTypes.DATASET_LIST_FAILURE,
     payload: { error }
 })
-
 
 
 /* * * * * * * * * * * *  FILES * * * * * * * * * * *  */
@@ -131,8 +129,6 @@ const datasetFilesFailure = error => ({
     type: actionTypes.DATASET_FILES_FAILURE,
     payload: { error }
 })
-
-
 
 
 /* * * * * * * * * * * *  SETTINGS * * * * * * * * * * *  */
@@ -197,5 +193,3 @@ const datasetPrepareFailure = error => ({
     type: actionTypes.DATASET_PREPARE_FAILURE,
     payload: { error }
 })
-
-

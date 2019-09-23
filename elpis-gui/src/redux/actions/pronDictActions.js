@@ -5,9 +5,9 @@ import * as actionTypes from '../actionTypes/pronDictActionTypes';
 
 const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://'+window.location.host
 
+
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */
 
-// make new pronDict, then change url to add files page
 export function pronDictNew(postData) {
     const url = baseUrl + urls.api.pronDict.new
     return async dispatch => {
@@ -39,7 +39,6 @@ const pronDictNewFailure = error => ({
 
 /* * * * * * * * * * * *  LOAD * * * * * * * * * * *  */
 
-
 export function pronDictLoad(postData) {
     const url = baseUrl + urls.api.pronDict.load
     return async dispatch => {
@@ -67,7 +66,6 @@ const pronDictLoadFailure = error => ({
     type: actionTypes.PRON_DICT_LOAD_FAILURE,
     payload: { error }
 })
-
 
 
 /* * * * * * * * * * * *  LIST * * * * * * * * * * *  */
@@ -101,8 +99,6 @@ const pronDictListFailure = error => ({
 })
 
 
-
-
 /* * * * * * * * * * * *  L2S * * * * * * * * * * *  */
 
 export function pronDictL2S(postData) {
@@ -133,8 +129,6 @@ const pronDictL2SFailure = error => ({
     type: actionTypes.PRON_DICT_L2S_FAILURE,
     payload: { error }
 })
-
-
 
 
 /* * * * * * * * * * * *  BUILD LEXICON * * * * * * * * * * *  */
@@ -197,6 +191,7 @@ const pronDictSaveLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_SAVE_LEXICON_FAILURE,
     payload: { error }
 })
+
 
 /* * * * * * * * * * * *  UPDATE LEXICON * * * * * * * * * * *  */
 
