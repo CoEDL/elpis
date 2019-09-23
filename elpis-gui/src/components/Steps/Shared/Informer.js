@@ -38,36 +38,37 @@ class StepInformer extends Component {
 
 						return (
 							<div key={ i }>
+								<Accordion styled fluid>
+									<Accordion.Content active={ step.enabled || step.doing }>
+										<List relaxed className="stepList">
+											{
+												// for each substep (pass in the step index and the substep index)
+												// we'll use these to target the selected substep in redux
+												step.substeps.map((substep, j) => {
 
-								<Accordion.Content active={ step.enabled || step.doing }>
-									<List className="stepList">
-										{
-											// for each substep (pass in the step index and the substep index)
-											// we'll use these to target the selected substep in redux
-											step.substeps.map((substep, j) => {
+													// substep classes
+													const substepClassNames = classNames({
+														firstSubstep: j === 0,
+														substepDone: substep.done,
+														substepDoing: substep.doing,
+														disabled: !substep.enabled
+													})
 
-												// substep classes
-												const substepClassNames = classNames({
-													firstSubstep: j === 0,
-													substepDone: substep.done,
-													substepDoing: substep.doing,
-													disabled: !substep.enabled
-												})
+													return (
+														<List.Item className={ substepClassNames }
+															onClick={ () => this.handleStepSelect(substep, i, j) }
+															key={ substep.title }>
 
-												return (
-													<List.Item className={ substepClassNames }
-														onClick={ () => this.handleStepSelect(substep, i, j) }
-														key={ substep.title }>
+															<div style={{ paddingLeft: "1.4em" }}>{substep.title} </div>
 
-														<div style={ { paddingLeft: "1.4em" } }>{ substep.title }</div>
-
-													</List.Item>
+														</List.Item>
+													)
+												}
 												)
 											}
-											)
-										}
-									</List>
-								</Accordion.Content>
+										</List>
+									</Accordion.Content>
+								</Accordion>
 							</div>
 						)
 					})
