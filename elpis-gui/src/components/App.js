@@ -21,8 +21,7 @@ import {
     ModelTrain,
     ModelResults,
     ModelError,
-    NewTranscription,
-    NewTranscriptionResults
+    NewTranscription
 } from './Steps/index';
 import PageContainer from './PageContainer';
 import urls from 'urls'
@@ -55,7 +54,6 @@ class App extends Component {
                         <Route path={urls.gui.model.error} exact component={ ModelError } />
 
                         <Route path={urls.gui.transcription.new} component={ NewTranscription } />
-                        <Route path={urls.gui.transcription.results + '/:format'} component={ NewTranscriptionResults } />
                     </PageContainer>
                 </Router>
             </div>

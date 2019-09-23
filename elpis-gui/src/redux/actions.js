@@ -41,37 +41,31 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
-    // transcriptionNew: response => ({ type: 'TRANSCRIPTION_PREPARE', response }),
-    // transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
-    transcriptionTranscribe: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE', response }),
-    transcriptionTranscribeAlign: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE_ALIGN', response }),
-    transcriptionGetText: response => ({ type: 'TRANSCRIPTION_GET_TEXT', response }),
-    transcriptionGetElan: response => ({ type: 'TRANSCRIPTION_GET_ELAN', response }),
+    // transcriptionTranscribe: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE', response }),
+    // transcriptionTranscribeAlign: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE_ALIGN', response }),
+    // transcriptionGetText: response => ({ type: 'TRANSCRIPTION_GET_TEXT', response }),
+    // transcriptionGetElan: response => ({ type: 'TRANSCRIPTION_GET_ELAN', response }),
 }
 
 
 // * * * * * * * * * * TRANSCRIPTION * * * * * * * * * * * * * * *
 
 
-// export const transcriptionStatus = () => {
-//     const url = baseUrl + urls.api.transcription.status
-//     return postApi(url, null, 'transcriptionStatus')
+// export const transcriptionTranscribe = () => {
+//     const url = baseUrl + urls.api.transcription.transcribe
+//     return postApi(url, null, 'transcriptionTranscribe')
 // }
-export const transcriptionTranscribe = () => {
-    const url = baseUrl + urls.api.transcription.transcribe
-    return postApi(url, null, 'transcriptionTranscribe')
-}
-export const transcriptionTranscribeAlign = () => {
-    const url = baseUrl + urls.api.transcription.transcribe_align
-    return postApi(url, null, 'transcriptionTranscribeAlign')
-}
-export const transcriptionGetText = postData => {
-    const url = baseUrl + urls.api.transcription.text
-    return postApi(url, null, 'transcriptionGetText')
-}
-export const transcriptionGetElan = postData => {
-    const url = baseUrl + urls.api.transcription.elan
-    return postApi(url, null, 'transcriptionGetElan')
-}
-export const transcriptionStatusReset = status => ({ type: 'TRANSCRIPTION_STATUS_RESET', status })
+// export const transcriptionTranscribeAlign = () => {
+//     const url = baseUrl + urls.api.transcription.transcribe_align
+//     return postApi(url, null, 'transcriptionTranscribeAlign')
+// }
+// export const transcriptionGetText = postData => {
+//     const url = baseUrl + urls.api.transcription.text
+//     return postApi(url, null, 'transcriptionGetText')
+// }
+// export const transcriptionGetElan = postData => {
+//     const url = baseUrl + urls.api.transcription.elan
+//     return postApi(url, null, 'transcriptionGetElan')
+// }
+// export const transcriptionStatusReset = status => ({ type: 'TRANSCRIPTION_STATUS_RESET', status })
 

@@ -41,7 +41,7 @@ const initialStepModelState = {
 			path: urls.gui.transcription.new,
 			done: false, doing: false, enabled: false,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Transcribe", path: urls.gui.transcription.new }
+				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.transcription.new }
 			]
 		}
 	]

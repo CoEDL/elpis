@@ -19,4 +19,3 @@ export { default as ModelResults } from './Model/Results'
 export { default as ModelError } from './Model/Error'
 
 export { default as NewTranscription } from './Transcription/New'
-export { default as NewTranscriptionResults } from './Transcription/Results'

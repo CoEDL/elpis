@@ -145,8 +145,7 @@
         },
         "results": {
             "title": "Transcribed results",
-            "usingModel": "using training {{modelName}}",
-            "usingAudio": "for audio {{audioFilename}}",
+            "usingAudio": "For {{filename}}",
             "errorLogHeader": "Error Log",
             "resultsHeader": "Transcription as text",
             "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
