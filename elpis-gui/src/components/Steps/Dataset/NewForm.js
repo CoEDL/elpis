@@ -17,7 +17,7 @@ class NewForm extends Component {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    name: 'a'
+                    name: 'ds'
                 }}
                 validate={values => {
                     let errors = {};

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Button, Divider, Grid, Header, Icon, List, Message, Segment } from 'semantic-ui-react';
+import { Button, Divider, Dropdown, Form, Grid, Header, Icon, List, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import classNames from "classnames";
@@ -14,6 +14,9 @@ import {
     transcriptionTranscribeAlign,
     transcriptionGetText,
     transcriptionGetElan } from 'redux/actions/transcriptionActions';
+import { modelLoad, modelList } from 'redux/actions/modelActions';
+import { datasetLoad } from 'redux/actions/datasetActions';
+import { pronDictLoad } from 'redux/actions/pronDictActions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "components/Steps/Model/CurrentModelName";
@@ -23,7 +26,10 @@ class NewTranscription extends Component {
 
     statusInterval = null
 
-    componentDidMount = () => {}
+
+    componentDidMount() {
+        this.props.modelList()
+    }
 
     triggerStatusCheck = () => {
         console.log("trigger status check")
@@ -78,9 +84,29 @@ class NewTranscription extends Component {
         this.props.transcriptionNew(formData)
     }
 
+    handleSelectModel = (e, { value }) => {
+        console.log(value)
+        const { list, modelLoad } = this.props
+        // get the matching ds and pd values
+        var selectedModel = list.filter(m => m.name==value)
+        console.log("selectedModel", selectedModel)
+        // argh, this is weird, but reusing code from Model Dashboard
+        const modelData = { name: selectedModel[0].name }
+        const datasetData = { name: selectedModel[0].dataset_name }
+        const pronDictData = { name: selectedModel[0].pron_dict_name }
+        console.log(modelData, datasetData, pronDictData)
+        modelLoad(modelData, datasetData, pronDictData)
+    }
+
 
     render = () => {
-        const { t, filename, status, type, text, elan, modelName } = this.props;
+        const { t, filename, list, status, type, text, elan, modelName } = this.props;
+
+        console.log("modelList", list)
+        console.log("modelName", modelName)
+        const listOptions = list.map(model => ({"key": model.name, "value": model.name, "text": model.name}))
+        console.log("listOptions", listOptions)
+
 
         // preven the buttnos from being clicked if we haven't got
         // an active model, or file to transcribe
@@ -108,6 +134,21 @@ class NewTranscription extends Component {
 
                             <CurrentModelName />
 
+                            <Segment>
+                                {listOptions &&
+                                    <Form.Field>
+                                    <label className="pad-right">{t('transcription.new.selectModelLabel')}</label>
+                                        <Dropdown
+                                            placeholder={t('common.choose')}
+                                            selection
+                                            name="model_name"
+                                            options={listOptions}
+                                            defaultValue={modelName ? modelName : ''}
+                                            onChange={this.handleSelectModel} />
+                                    </Form.Field>
+                                }
+                            </Segment>
+
                             <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({ getRootProps, getInputProps, isDragActive }) => {
                                     return (
@@ -124,6 +165,7 @@ class NewTranscription extends Component {
                                                     <p>{ t('transcription.new.dropFilesHintDragActive') } </p>
                                                 ) : (<p>{ t('transcription.new.dropFilesHint') }</p>)
                                             }
+                                            <Button>{t('transcription.new.uploadButton')}</Button>
                                         </div>
                                     );
                                 } }
@@ -181,6 +223,7 @@ class NewTranscription extends Component {
 
 const mapStateToProps = state => {
     return {
+        list: state.model.modelList,
         modelName: state.model.name,
         filename: state.transcription.filename,
         status: state.transcription.status,
@@ -226,9 +269,13 @@ const mapDispatchToProps = dispatch => ({
     transcriptionGetElan: () => {
         dispatch(transcriptionGetElan())
     },
-    dispatchStatus: (status, type) => {
-        console.log(status, type)
-        dispatch(transcriptionStatus())
+    modelList: () => {
+        dispatch(modelList())
+    },
+    modelLoad: (modelData, datasetData, pronDictData) => {
+        dispatch(modelLoad(modelData))
+            .then(response => dispatch(datasetLoad(datasetData)))
+            .then(response => dispatch(pronDictLoad(pronDictData)))
     }
 })
 

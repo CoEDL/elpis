@@ -31,7 +31,7 @@
             "audioLabel": "Audio files:",
             "transcriptionLabel": "Transcription files:",
             "additionalLabel": "Additional Text files:",
-            "dropFilesHint": "Click to select and upload files, or drop your files here",
+            "dropFilesHint": "Upload or drop your files here",
             "dropFilesHintDragActive": "Drop files here.."
         },
         "prepare": {
@@ -67,7 +67,7 @@
             "title": "Upload Letter to Sound rules",
             "header": "Letter to sound file",
             "description": "The letter to sound file is used to build a pronunciation dictionary for the corpus. Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols. You can include comments in this file by beginning the comment line with #. For example: \n\n # This is a comment \n n n \n ng ŋ \n r r \n y j",
-            "dropFilesHint": "Click here to upload your l2s file, or drop one here",
+            "dropFilesHint": "Upload your l2s file, or drop one here",
             "dropFilesHintDragActive": "Here here..",
             "uploadButton": "Upload"
         },
@@ -133,7 +133,8 @@
     "transcription": {
         "new": {
             "title": "Transcribe some audio",
-            "dropFilesHint": "Click here to choose an audio file, or drop an audio file here",
+            "selectModelLabel": "Select a model to use",
+            "dropFilesHint": "Upload or drop an audio file here",
             "dropFilesHintDragActive": "Here here..",
             "addAudioButton": "Add Audio",
             "chooseModelHeader": "Choose a training session",
@@ -141,7 +142,8 @@
             "format": "Format ",
             "resultsText": "Text",
             "resultsElan": "Elan",
-            "nextButton": "Go"
+            "nextButton": "Go",
+            "uploadButton": "Upload"
         },
         "results": {
             "title": "Transcribed results",
@@ -156,6 +158,7 @@
         "nextButton": "Next",
         "newButton": "New",
         "selectOneBelow": "Make a new one, or select one from the list below.",
+        "choose": "Choose",
         "chooseOrNewLabel": "Choose one.",
         "invalidCharacterErrorMessage": "Please use these characters: \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
     }

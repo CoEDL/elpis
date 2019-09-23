@@ -37,7 +37,7 @@ class NewForm extends Component {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    name: '',
+                    name: 'm',
                     pron_dict_name: defaultPronDictName
                 }}
                 validate={values => {
