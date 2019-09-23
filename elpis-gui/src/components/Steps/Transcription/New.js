@@ -110,7 +110,7 @@ class NewTranscription extends Component {
         let enableButtons = (modelName && filename && status=='ready') ? true : false
 
         const loadingIcon = (status == 'transcribing') ? (
-            <Icon name='circle notched' loading />
+            <Icon name='circle notched' size="big" loading />
         ) : null
 
         return (
