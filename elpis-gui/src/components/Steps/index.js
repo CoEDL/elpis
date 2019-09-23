@@ -4,7 +4,6 @@ export { default as DatasetDashboard } from './Dataset/Dashboard';
 export { default as DatasetNew } from './Dataset/New';
 export { default as DatasetFiles } from './Dataset/Files';
 export { default as DatasetPrepare } from './Dataset/Prepare';
-export { default as DatasetPrepareError } from './Dataset/PrepareError'
 
 export { default as PronDictDashboard } from './PronDict/Dashboard'
 export { default as PronDictNew } from './PronDict/New';

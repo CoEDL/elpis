@@ -35,7 +35,7 @@
             "dropFilesHintDragActive": "Drop files here.."
         },
         "prepare": {
-            "title": "Prepare",
+            "title": "Wordlist",
             "header": "Word frequency of training files",
             "description": "This is showing only the transcription text, not additional words.",
             "bannerMessage": "Text has been cleaned and normalised OK",

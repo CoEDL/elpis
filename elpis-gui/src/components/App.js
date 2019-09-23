@@ -10,7 +10,6 @@ import {
     DatasetNew,
     DatasetFiles,
     DatasetPrepare,
-    DatasetPrepareError,
     PronDictDashboard,
     PronDictNew,
     PronDictL2S,
@@ -39,7 +38,6 @@ class App extends Component {
                         <Route path={urls.gui.dataset.new} component={ DatasetNew } />
                         <Route path={urls.gui.dataset.files} component={ DatasetFiles } />
                         <Route path={urls.gui.dataset.prepare} exact component={ DatasetPrepare } />
-                        <Route path={urls.gui.dataset.prepareError} component={ DatasetPrepareError } />
 
                         <Route path={urls.gui.pronDict.index} exact component={PronDictDashboard} />
                         <Route path={urls.gui.pronDict.new} component={PronDictNew} />
