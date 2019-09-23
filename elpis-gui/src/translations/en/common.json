@@ -137,7 +137,7 @@
             "dropFilesHintDragActive": "Here here..",
             "addAudioButton": "Add Audio",
             "chooseModelHeader": "Choose a training session",
-            "usingAudio": "uploaded audio {{audioFilename}}",
+            "usingAudio": "Uploaded {{filename}}",
             "format": "Format ",
             "resultsText": "Text",
             "resultsElan": "Elan",

@@ -6,7 +6,8 @@ import { translate } from 'react-i18next';
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
-import { transcriptionAudioFile, transcriptionNew, transcriptionStatusReset } from 'redux/actions';
+import { transcriptionNew } from 'redux/actions/transcriptionActions';
+import { transcriptionAudioFile, transcriptionStatusReset } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "components/Steps/Model/CurrentModelName";
@@ -14,20 +15,9 @@ import urls from 'urls'
 
 class NewTranscription extends Component {
 
-    state = {
-        audioFilename: null,
-        // formData: null
-    }
-
     onDrop = (acceptedFiles, rejectedFiles) => {
-        console.log("files dropped:", acceptedFiles);
-        // reset status cause we have a new file
-        // var formData = new FormData();
-        // formData.append('file', acceptedFiles[0]);
-        this.setState({ audioFilename: acceptedFiles[0].name})
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
-        this.props.transcriptionAudioFile(acceptedFiles[0].name)
         this.props.transcriptionNew(formData)
     }
 
@@ -35,17 +25,12 @@ class NewTranscription extends Component {
         this.props.transcriptionStatusReset()
     }
 
-
     render() {
-        const { t, audioFilename, modelName } = this.props;
-        let audioFileEl
-        if (this.state.audioFilename) {
-            audioFileEl = <Segment>{t('transcription.new.usingAudio', { audioFilename: this.state.audioFilename }) } </Segment>
-        } else if (audioFilename) {
-            audioFileEl = <Segment>{t('transcription.new.usingAudio', { audioFilename })} </Segment>
-        }
+        const { t, filename, modelName } = this.props;
 
-        let showNext = (modelName && this.state.audioFilename) ? true : false
+        // preven the buttnos from being clicked if we haven't got
+        // an active model, or file to transcribe
+        let enableButtons = (modelName && filename) ? true : false
 
         return (
             <div>
@@ -62,8 +47,6 @@ class NewTranscription extends Component {
                             </Header>
 
                             <CurrentModelName />
-
-                            {/* disabled={!modelName}  */}
 
                             <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({ getRootProps, getInputProps, isDragActive }) => {
@@ -86,24 +69,24 @@ class NewTranscription extends Component {
                                 } }
                             </Dropzone>
 
-                            { audioFileEl }
+                            {filename &&
+                                <Segment>{t('transcription.new.usingAudio', { filename })} </Segment>
+                            }
 
                             <Divider />
 
-                            <div>
+                            <Segment>
 
                                 {t('transcription.new.format')}
-                                {
-                                    showNext = true
-                                }
-                                <Button as={Link} to={urls.gui.transcription.results + '/text'} disabled={!showNext} >
+
+                                <Button as={Link} to={urls.gui.transcription.results + '/text'} disabled={!enableButtons} >
                                     {t('transcription.new.resultsText')}
                                 </Button>
 
-                                <Button as={Link} to={urls.gui.transcription.results + '/elan'} disabled={!showNext} >
+                                <Button as={Link} to={urls.gui.transcription.results + '/elan'} disabled={!enableButtons} >
                                     {t('transcription.new.resultsElan')}
                                 </Button>
-                            </div>
+                            </Segment>
 
                         </Grid.Column>
                     </Grid>
@@ -116,14 +99,11 @@ class NewTranscription extends Component {
 const mapStateToProps = state => {
     return {
         modelName: state.model.name,
-        audioFilename: state.transcription.audioFilename,
+        filename: state.transcription.filename,
         status: state.transcription.status
     }
 }
 const mapDispatchToProps = dispatch => ({
-    transcriptionAudioFile: filename => {
-        dispatch(transcriptionAudioFile(filename))
-    },
     transcriptionNew: formData => {
         dispatch(transcriptionNew(formData))
     },

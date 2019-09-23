@@ -41,7 +41,7 @@ export const errorHandler = (error) => {
 }
 
 var successHandler = {
-    transcriptionNew: response => ({ type: 'TRANSCRIPTION_PREPARE', response }),
+    // transcriptionNew: response => ({ type: 'TRANSCRIPTION_PREPARE', response }),
     transcriptionStatus: response => ({ type: 'TRANSCRIPTION_STATUS', response }),
     transcriptionTranscribe: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE', response }),
     transcriptionTranscribeAlign: response => ({ type: 'TRANSCRIPTION_TRANSCRIBE_ALIGN', response }),
@@ -53,14 +53,6 @@ var successHandler = {
 // * * * * * * * * * * TRANSCRIPTION * * * * * * * * * * * * * * *
 
 
-export const transcriptionAudioFile = filename => {
-    return ({ type: 'TRANSCRIPTION_AUDIO_FILE', filename })
-}
-export const transcriptionNew = postData => {
-    const url = baseUrl + urls.api.transcription.new
-    const headers = { headers: { 'content-type': 'multipart/form-data' } }
-    return postApi(url, postData, 'transcriptionNew', headers)
-}
 export const transcriptionStatus = () => {
     const url = baseUrl + urls.api.transcription.status
     return postApi(url, null, 'transcriptionStatus')

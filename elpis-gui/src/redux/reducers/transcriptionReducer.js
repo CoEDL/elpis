@@ -1,5 +1,7 @@
+import * as actionTypes from '../actionTypes/transcriptionActionTypes';
+
 const initState = {
-    audioFilename: null,
+    filename: null,
     status: 'ready',
     text: null,
     elan: null
@@ -9,12 +11,12 @@ const transcription = (state = initState, action) => {
 
     switch (action.type) {
 
-        // this just stores the audio filename
-        case 'TRANSCRIPTION_AUDIO_FILE':
-            return {
-                ...state,
-                audioFilename: action.filename
-            }
+
+        case actionTypes.TRANSCRIPTION_NEW_SUCCESS:
+            console.log("reducer got new transcription", action)
+            var { originalFilename } = action.payload.data.data
+            console.log("originalFilename", originalFilename)
+            return { ...initState, filename: originalFilename }
 
         // after uploading the file
         case 'TRANSCRIPTION_PREPARE':

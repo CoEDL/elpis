@@ -4,7 +4,7 @@ import app from './reducers/appReducer';
 import dataset from './reducers/datasetReducer';
 import pronDict from './reducers/pronDictReducer';
 import model from './reducers/modelReducer';
-import transcription from './transcriptionReducer';
+import transcription from './reducers/transcriptionReducer';
 import thunk from 'redux-thunk';
 
 const appReducer = combineReducers({
