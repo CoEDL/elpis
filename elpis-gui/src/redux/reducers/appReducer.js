@@ -9,39 +9,30 @@ const initialStepModelState = {
 	currentStep: [0, 0],
 	steps: [
 		{
-			title: "Step 1 Recordings",
-			path: urls.gui.dataset.index,
-			done: false, doing: false, enabled: true,
 			substeps: [
+				{ done: false, doing: false, enabled: false, title: "Step 1 Recordings", path: urls.gui.dataset.index },
 				{ done: false, doing: false, enabled: false, title: "Add files", path: urls.gui.dataset.files },
 				{ done: false, doing: false, enabled: false, title: "Prepare", path: urls.gui.dataset.prepare }
 			]
 		},
 		{
-			title: "Step 2 Pronunciation Dictionary",
-			path: urls.gui.pronDict.index,
-			done: false, doing: false, enabled: false,
 			substeps: [
+				{ done: false, doing: false, enabled: false, title: "Step 2 Pronunciation", path: urls.gui.pronDict.index },
 				{ done: false, doing: false, enabled: false, title: "Letter to sound", path: urls.gui.pronDict.l2s },
 				{ done: false, doing: false, enabled: false, title: "Pronunciation", path: urls.gui.pronDict.lexicon }
 			]
 		},
 		{
-			title: "Step 3 Training",
-			path: urls.gui.model.index,
-			done: false, doing: false, enabled: false,
 			substeps: [
+				{ done: false, doing: false, enabled: false, title: "Step 3 Training", path: urls.gui.model.index },
 				{ done: false, doing: false, enabled: false, title: "Settings", path: urls.gui.model.settings },
 				{ done: false, doing: false, enabled: false, title: "Training", path: urls.gui.model.train },
 				{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.model.results },
 			]
 		},
 		{
-			title: "Step 4 New transcriptions",
-			path: urls.gui.transcription.new,
-			done: false, doing: false, enabled: false,
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "New", path: urls.gui.transcription.new }
+				{ done: false, doing: false, enabled: false, title: "Step 4 New transcriptions", path: urls.gui.transcription.new }
 			]
 		}
 	]
@@ -60,10 +51,6 @@ const app = (state = initialStepModelState, action) => {
 			let urls_params = action.url.slice(1, action.url.length).split("/")
 
 			state.steps.forEach((step, i) => {
-				// watch out for leading / in step.path. remove it for comparison
-				if (urls_params[0] === step.path.slice(1)) {
-					currentIndex = [i, null]
-				}
 				step.substeps.forEach((substep, j) => {
 					if (action.url === substep.path) {
 						currentIndex = [i, j]

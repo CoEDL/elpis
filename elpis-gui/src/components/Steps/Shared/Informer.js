@@ -36,25 +36,19 @@ class StepInformer extends Component {
 							disabled: !step.enabled
 						})
 
-						const done  = "#E0C6EE";
-						const doing = "#D3A0F0";
-						const todo  = "#ccc";
-
 						return (
-							<div key={ step.title }>
-								<Accordion.Title className={ stepClassNames } active={ step.enabled || step.doing } onClick={ () => this.handleStepSelect(step, i, 0) }>
-									{ step.title }
-								</Accordion.Title>
+							<div key={ i }>
+
 								<Accordion.Content active={ step.enabled || step.doing }>
 									<List className="stepList">
 										{
 											// for each substep (pass in the step index and the substep index)
 											// we'll use these to target the selected substep in redux
 											step.substeps.map((substep, j) => {
-												const color = (substep.doing) ? doing : (substep.done) ? done : todo
 
 												// substep classes
 												const substepClassNames = classNames({
+													firstSubstep: j === 0,
 													substepDone: substep.done,
 													substepDoing: substep.doing,
 													disabled: !substep.enabled
@@ -64,7 +58,6 @@ class StepInformer extends Component {
 													<List.Item className={ substepClassNames }
 														onClick={ () => this.handleStepSelect(substep, i, j) }
 														key={ substep.title }>
-
 
 														<div style={ { paddingLeft: "1.4em" } }>{ substep.title }</div>
 
