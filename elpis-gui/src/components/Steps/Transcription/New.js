@@ -102,21 +102,16 @@ class NewTranscription extends Component {
     render = () => {
         const { t, filename, list, status, type, text, elan, modelName } = this.props;
 
-        console.log("modelList", list)
-        console.log("modelName", modelName)
+        console.log("status", status)
         const listOptions = list.map(model => ({"key": model.name, "value": model.name, "text": model.name}))
-        console.log("listOptions", listOptions)
-
 
         // preven the buttnos from being clicked if we haven't got
         // an active model, or file to transcribe
-        let enableButtons = (modelName && filename) ? true : false
+        let enableButtons = (modelName && filename && status=='ready') ? true : false
 
         const loadingIcon = (status == 'transcribing') ? (
             <Icon name='circle notched' loading />
-        ) : (
-            <p>ready or done</p>
-        )
+        ) : null
 
         return (
             <div>
@@ -191,7 +186,7 @@ class NewTranscription extends Component {
                             </Segment>
 
                             <Segment>
-                                {loadingIcon} | {status} {type}
+                                {loadingIcon} {status} {type}
                             </Segment>
 
                             {text &&
