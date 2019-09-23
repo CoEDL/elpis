@@ -4,7 +4,6 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import arraySort from 'array-sort'
-import { datasetPrepare } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentDatasetName from "./CurrentDatasetName";
@@ -17,10 +16,7 @@ class DatasetPrepare extends Component {
         reverse: false
     }
 
-    componentDidMount() {
-        // const {name, datasetPrepare} = this.props
-        // if (name) datasetPrepare()
-    }
+    componentDidMount() {}
 
     handleSort = (clickedColumn, data) => () => {
         const { column } = this.state
@@ -116,11 +112,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    datasetPrepare: () => {
-        dispatch(datasetPrepare());
-    }
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(DatasetPrepare))
+export default connect(mapStateToProps)(translate('common')(DatasetPrepare))
 
