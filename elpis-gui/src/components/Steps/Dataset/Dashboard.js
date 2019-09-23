@@ -114,6 +114,11 @@ class DatasetDashboard extends Component {
                                     <Segment>
                                         {listEl}
                                     </Segment>
+
+                                    <Button as={Link} to={urls.gui.dataset.files} disabled={!name}>
+                                        {t('common.nextButton')}
+                                    </Button>
+
                                 </>
                             }
 
