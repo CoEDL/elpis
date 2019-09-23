@@ -18,9 +18,10 @@ def new():
     app.config['CURRENT_TRANSCRIPTION'] = transcription
     file = request.files['file']
     transcription.prepare_audio(file, on_complete=lambda: print('Prepared audio file!'))
+    data = {"status": transcription.status, "originalFilename": file.filename}
     return jsonify({
         "status": "ok",
-        "data": transcription.status
+        "data": data
     })
 
 @bp.route("/transcribe", methods=['GET','POST'])
