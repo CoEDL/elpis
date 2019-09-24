@@ -39,13 +39,18 @@ class DatasetPrepare extends Component {
     }
 
     render() {
-        const { t, wordlist } = this.props
+        const { t, additionalTextFiles, wordlist } = this.props
+
         const { column, direction } = this.state
 
         const listEl = wordlist.length > 0 ? (
             <>
             <h2>{ t('dataset.prepare.header') }</h2>
-            <p>{ t('dataset.prepare.description') }</p>
+
+            { additionalTextFiles.length > 0 &&
+                <p>{ t('dataset.prepare.description') }</p>
+            }
+
             <Table sortable celled fixed unstackable>
                 <Table.Header>
                     <Table.Row>
@@ -111,7 +116,8 @@ class DatasetPrepare extends Component {
 
 const mapStateToProps = state => {
     return {
-        wordlist: state.dataset.wordlist
+        wordlist: state.dataset.wordlist,
+        additionalTextFiles: state.dataset.additionalTextFiles
     }
 }
 
