@@ -28,5 +28,5 @@ export const configReset = () => {
 
 const datasetResetSuccess = response => ({
     type: actionTypes.APP_CONFIG_RESET,
-    payload: { ...response }
+    response: { ...response }
 })

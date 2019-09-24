@@ -20,11 +20,11 @@ const model = (state = initState, action) => {
     switch (action.type) {
 
         case actionTypes.MODEL_NEW_SUCCESS:
-            var { name } = action.payload.data.data.config
+            var { name } = action.response.data.data.config
             return { ...initState, name }
 
         case actionTypes.MODEL_LOAD_SUCCESS:
-            var { config, l2s } = action.payload.data.data
+            var { config, l2s } = action.response.data.data
             return {
                 ...state,
                 name: config.name,
@@ -39,31 +39,31 @@ const model = (state = initState, action) => {
         case actionTypes.MODEL_LIST_SUCCESS:
             return {
                 ...state,
-                modelList: action.payload.data.data
+                modelList: action.response.data.data
             }
 
         case actionTypes.MODEL_SETTINGS_SUCCESS:
             return {
                 ...state,
-                settings: action.payload.data.data
+                settings: action.response.data.data
             }
 
         case actionTypes.MODEL_TRAIN_SUCCESS:
             return {
                 ...state,
-                status: action.payload.data.data
+                status: action.response.data.data
             }
 
         case actionTypes.MODEL_STATUS_SUCCESS:
             return {
                 ...state,
-                status: action.payload.data.data
+                status: action.response.data.data
             }
 
         case actionTypes.MODEL_RESULTS_SUCCESS:
             return {
                 ...state,
-                results: action.payload.data.data
+                results: action.response.data.data
             }
         default:
             return state;

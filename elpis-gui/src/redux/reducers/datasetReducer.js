@@ -26,12 +26,12 @@ const dataset = (state = initState, action) => {
             return {...state}
 
         case actionTypes.DATASET_NEW_SUCCESS:
-            var { name } = action.payload.data.data
+            var { name } = action.response.data.data
             return { ...initState, name }
 
         case actionTypes.DATASET_LOAD_SUCCESS:
             // loading existing data set might have files and settings
-            var { name, tier, files } = action.payload.data.data
+            var { name, tier, files } = action.response.data.data
             // action.data is an array of filenames. parse this, split into separate lists
             var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort()
             var transcriptionFiles = files.filter(file => getFileExtension(file) === 'eaf').sort()
@@ -55,14 +55,14 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_LIST_SUCCESS:
             return {
                 ...state,
-                datasetList: action.payload.data.data
+                datasetList: action.response.data.data
             }
 
         case actionTypes.DATASET_FILES_STARTED:
             return { ...state, status: "loading" }
 
         case actionTypes.DATASET_FILES_SUCCESS:
-            var { data } = action.payload
+            var { data } = action.response
             // action.data is an array of filenames. parse this, split into separate lists
             var audioFiles = data.filter(file => getFileExtension(file) === 'wav').sort()
             var transcriptionFiles = data.filter(file => getFileExtension(file) === 'eaf').sort()
@@ -78,8 +78,8 @@ const dataset = (state = initState, action) => {
             }
 
         case actionTypes.DATASET_SETTINGS:
-            console.log(action.payload)
-            var { tier } = action.payload.data.data
+            console.log(action.response)
+            var { tier } = action.response.data.data
             return {
                 ...state,
                 settings: {...state.settings, tier}
@@ -87,7 +87,7 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_PREPARE_SUCCESS:
             // TODO do this in the backend
-            var data = action.payload.data
+            var data = action.response.data
             let wordlist = Object.keys(data).map(function (key) {
                 return ({name:key, frequency: data[key]})
             })

@@ -29,11 +29,11 @@ const modelNewStarted = () => ({
 })
 const modelNewSuccess = response => ({
     type: actionTypes.MODEL_NEW_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const modelNewFailure = error => ({
     type: actionTypes.MODEL_NEW_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -60,11 +60,11 @@ const modelLoadStarted = () => ({
 })
 const modelLoadSuccess = response => ({
     type: actionTypes.MODEL_LOAD_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const modelLoadFailure = error => ({
     type: actionTypes.MODEL_LOAD_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -91,11 +91,11 @@ const modelListStarted = () => ({
 })
 const modelListSuccess = response => ({
     type: actionTypes.MODEL_LIST_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const modelListFailure = error => ({
     type: actionTypes.MODEL_LIST_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -122,11 +122,11 @@ const modelSettingsStarted = () => ({
 })
 const modelSettingsSuccess = response => ({
     type: actionTypes.MODEL_SETTINGS_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const modelSettingsFailure = error => ({
     type: actionTypes.MODEL_SETTINGS_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -153,11 +153,11 @@ const modelTrainStarted = () => ({
 })
 const modelTrainSuccess = response => ({
     type: actionTypes.MODEL_TRAIN_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const modelTrainFailure = error => ({
     type: actionTypes.MODEL_TRAIN_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -184,11 +184,11 @@ const modelStatusStarted = () => ({
 })
 const modelStatusSuccess = response => ({
     type: actionTypes.MODEL_STATUS_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const modelStatusFailure = error => ({
     type: actionTypes.MODEL_STATUS_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -216,9 +216,9 @@ const modelResultsStarted = () => ({
 })
 const modelResultsSuccess = response => ({
     type: actionTypes.MODEL_RESULTS_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const modelResultsFailure = error => ({
     type: actionTypes.MODEL_RESULTS_FAILURE,
-    payload: { error }
+    response: { error }
 })

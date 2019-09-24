@@ -29,11 +29,11 @@ const pronDictNewStarted = () => ({
 })
 const pronDictNewSuccess = response => ({
     type: actionTypes.PRON_DICT_NEW_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const pronDictNewFailure = error => ({
     type: actionTypes.PRON_DICT_NEW_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -60,11 +60,11 @@ const pronDictLoadStarted = () => ({
 })
 const pronDictLoadSuccess = response => ({
     type: actionTypes.PRON_DICT_LOAD_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const pronDictLoadFailure = error => ({
     type: actionTypes.PRON_DICT_LOAD_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -91,11 +91,11 @@ const pronDictListStarted = () => ({
 })
 const pronDictListSuccess = response => ({
     type: actionTypes.PRON_DICT_LIST_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const pronDictListFailure = error => ({
     type: actionTypes.PRON_DICT_LIST_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -123,11 +123,11 @@ const pronDictL2SStarted = () => ({
 })
 const pronDictL2SSuccess = response => ({
     type: actionTypes.PRON_DICT_L2S_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const pronDictL2SFailure = error => ({
     type: actionTypes.PRON_DICT_L2S_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -154,11 +154,11 @@ const pronDictBuildLexiconStarted = () => ({
 })
 const pronDictBuildLexiconSuccess = response => ({
     type: actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const pronDictBuildLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_BUILD_LEXICON_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -185,11 +185,11 @@ const pronDictSaveLexiconStarted = () => ({
 })
 const pronDictSaveLexiconSuccess = response => ({
     type: actionTypes.PRON_DICT_SAVE_LEXICON_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const pronDictSaveLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_SAVE_LEXICON_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 

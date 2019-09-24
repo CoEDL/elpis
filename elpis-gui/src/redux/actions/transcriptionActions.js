@@ -30,11 +30,11 @@ const transcriptionNewStarted = () => ({
 })
 const transcriptionNewSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_NEW_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const transcriptionNewFailure = error => ({
     type: actionTypes.TRANSCRIPTION_NEW_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -62,11 +62,11 @@ const transcriptionStatusStarted = () => ({
 })
 const transcriptionStatusSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_STATUS_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const transcriptionStatusFailure = error => ({
     type: actionTypes.TRANSCRIPTION_STATUS_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -95,11 +95,11 @@ const transcriptionTranscribeStarted = () => ({
 })
 const transcriptionTranscribeSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_TRANSCRIBE_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const transcriptionTranscribeFailure = error => ({
     type: actionTypes.TRANSCRIPTION_TRANSCRIBE_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -128,11 +128,11 @@ const transcriptionTranscribeAlignStarted = () => ({
 })
 const transcriptionTranscribeAlignSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_TRANSCRIBE_ALIGN_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const transcriptionTranscribeAlignFailure = error => ({
     type: actionTypes.TRANSCRIPTION_TRANSCRIBE_ALIGN_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -161,11 +161,11 @@ const transcriptionGetTextStarted = () => ({
 })
 const transcriptionGetTextSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_GET_TEXT_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const transcriptionGetTextFailure = error => ({
     type: actionTypes.TRANSCRIPTION_GET_TEXT_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -194,10 +194,10 @@ const transcriptionGetElanStarted = () => ({
 })
 const transcriptionGetElanSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_GET_ELAN_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const transcriptionGetElanFailure = error => ({
     type: actionTypes.TRANSCRIPTION_GET_ELAN_FAILURE,
-    payload: { error }
+    response: { error }
 })
 

@@ -29,11 +29,11 @@ const datasetNewStarted = () => ({
 })
 const datasetNewSuccess = response => ({
     type: actionTypes.DATASET_NEW_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const datasetNewFailure = error => ({
     type: actionTypes.DATASET_NEW_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -60,11 +60,11 @@ const datasetLoadStarted = () => ({
 })
 const datasetLoadSuccess = response => ({
     type: actionTypes.DATASET_LOAD_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const datasetLoadFailure = error => ({
     type: actionTypes.DATASET_LOAD_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -91,11 +91,11 @@ const datasetListStarted = () => ({
 })
 const datasetListSuccess = response => ({
     type: actionTypes.DATASET_LIST_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const datasetListFailure = error => ({
     type: actionTypes.DATASET_LIST_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -123,11 +123,11 @@ const datasetFilesStarted = () => ({
 })
 const datasetFilesSuccess = response => ({
     type: actionTypes.DATASET_FILES_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const datasetFilesFailure = error => ({
     type: actionTypes.DATASET_FILES_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -154,11 +154,11 @@ const datasetSettingsStarted = () => ({
 })
 const datasetSettingsSuccess = response => ({
     type: actionTypes.DATASET_SETTINGS_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const datasetSettingsFailure = error => ({
     type: actionTypes.DATASET_SETTINGS_FAILURE,
-    payload: { error }
+    response: { error }
 })
 
 
@@ -187,9 +187,9 @@ const datasetPrepareStarted = () => ({
 })
 const datasetPrepareSuccess = response => ({
     type: actionTypes.DATASET_PREPARE_SUCCESS,
-    payload: { ...response }
+    response: { ...response }
 })
 const datasetPrepareFailure = error => ({
     type: actionTypes.DATASET_PREPARE_FAILURE,
-    payload: { error }
+    response: { error }
 })

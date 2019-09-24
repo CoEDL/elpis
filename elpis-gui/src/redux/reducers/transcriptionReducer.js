@@ -14,7 +14,7 @@ const transcription = (state = initState, action) => {
 
         case actionTypes.TRANSCRIPTION_NEW_SUCCESS:
             console.log("reducer got new transcription", action)
-            var { originalFilename } = action.payload.data.data
+            var { originalFilename } = action.response.data.data
             console.log("originalFilename", originalFilename)
             return { ...initState, filename: originalFilename }
 
@@ -37,24 +37,24 @@ const transcription = (state = initState, action) => {
 
         case actionTypes.TRANSCRIPTION_TRANSCRIBE_SUCCESS:
             console.log("reducer got transcribe success", action)
-            var { status, type } = action.payload.data.data
+            var { status, type } = action.response.data.data
             return { ...state, status, type }
 
         case actionTypes.TRANSCRIPTION_TRANSCRIBE_ALIGN_SUCCESS:
             console.log("reducer got transcribe align success", action)
-            var { status, type } = action.payload.data.data
+            var { status, type } = action.response.data.data
             return { ...state, status, type }
 
         case actionTypes.TRANSCRIPTION_STATUS_SUCCESS:
             console.log("reducer got transcription status", action)
-            var { status, type } = action.payload.data.data
+            var { status, type } = action.response.data.data
             return { ...state, status, type }
 
 
         case actionTypes.TRANSCRIPTION_GET_TEXT_SUCCESS:
             console.log("reducer got transcription text", action)
             // TODO: do this on the backend
-            var text = action.payload.data
+            var text = action.response.data
             text = text.split(' ').slice(1).join(' ')
             return { ...state, text }
 
@@ -62,7 +62,7 @@ const transcription = (state = initState, action) => {
             console.log("reducer got transcription elan", action)
             return {
                 ...state,
-                elan: action.payload.data
+                elan: action.response.data
             }
 
         // // after uploading the file
