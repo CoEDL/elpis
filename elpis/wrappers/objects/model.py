@@ -64,7 +64,6 @@ class Model(FSObject):
     def ngram(self, value: int) -> None:
         self.config['ngram'] = value
 
-
     def build_kaldi_structure(self):
         # task json-to-kaldi
         output_path = self.path.joinpath('output')

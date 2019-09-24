@@ -67,7 +67,6 @@ def load():
 @bp.route("/list", methods=['GET'])
 def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
-    # TODO see the two todos below
     fake_results = {}
     data = {
         "list": [{
@@ -87,11 +86,9 @@ def list_existing():
 def settings():
     model = app.config['CURRENT_MODEL']
     if model is None:
-        # TODO sending a string error back in incorrect, jsonify it.
-        return '{"status":"error", "data": "No current model exists (perhaps create one first)"}'
+        return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
     if request.method == 'POST':
         model.ngram = request.json['ngram']
-        # TODO make this an optional parameter
     data = {
         "settings":{
             "ngram": model.ngram
@@ -106,6 +103,8 @@ def settings():
 @bp.route("/train", methods=['GET'])
 def train():
     model: Model = app.config['CURRENT_MODEL']
+    if model is None:
+        return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
     model.train(on_complete=lambda: print("Training complete!"))
     data = {
         "status": model.status
@@ -119,6 +118,8 @@ def train():
 @bp.route("/status", methods=['GET'])
 def status():
     model: Model = app.config['CURRENT_MODEL']
+    if model is None:
+        return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
     data = {
         "status": model.status
     }
@@ -131,9 +132,11 @@ def status():
 @bp.route("/results", methods=['GET'])
 def results():
     model: Model = app.config['CURRENT_MODEL']
-
+    if model is None:
+        return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
     wer_lines = []
     log_file = Path('/elpis/state/tmp_log.txt')
+    results = {}
     if log_file.exists():
         with log_file.open() as fin:
             for line in reversed(list(fin)):
@@ -156,6 +159,8 @@ def results():
             sub_val = results_split[3].replace(' sub','').strip()
             results = {'wer':wer, 'count_val':count_val, 'ins_val':ins_val, 'del_val':del_val, 'sub_val':sub_val}
             print(results)
+    else:
+        return jsonify({"status":404, "data": "No log file was found, couldn't parse the results"})
     data = {
         "results": results
     }
