@@ -41,7 +41,8 @@
             "bannerMessage": "Text has been cleaned and normalised OK",
             "bannerMessageDetailed": "Punctuation has been removed.",
             "wordlistHeader": "Wordlist",
-            "frequencyHeader": "Frequency"
+            "frequencyHeader": "Frequency",
+            "noWords": "No words found, please upload some files."
         },
         "prepareError": {
             "title": "File preparation error",

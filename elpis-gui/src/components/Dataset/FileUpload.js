@@ -19,11 +19,20 @@ class FileUpload extends Component {
     }
 
     render() {
-        const { t } = this.props
+
+        const { t, name } = this.props
+
+        const interactionDisabled = name ? false : true
+        console.log("interactionDisabled", interactionDisabled)
+
         return (
             <div className="FileUpload">
 
-                <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
+                <Dropzone
+                    disabled={interactionDisabled}
+                    className="dropzone"
+                    onDrop={ this.onDrop }
+                    getDataTransferItems={ evt => fromEvent(evt) }>
                     { ({ getRootProps, getInputProps, isDragActive }) => {
                         return (
                             <div

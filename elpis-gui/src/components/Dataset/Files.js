@@ -20,7 +20,9 @@ class DatasetFiles extends Component {
 
     render() {
 
-        const { t, status, audioFiles, transcriptionFiles, additionalTextFiles, settings, datasetSettings } = this.props;
+        const { t, name, status, audioFiles, transcriptionFiles, additionalTextFiles, settings, datasetSettings } = this.props;
+
+        const interactionDisabled = name ? false : true
 
         const loadingIcon = (status === 'loading') ? (
             <div className="status">
@@ -71,7 +73,7 @@ class DatasetFiles extends Component {
 
                             <Segment className="attached">
 
-                                <FileUpload />
+                                <FileUpload name={name} />
 
                                 <div>{loadingIcon}</div>
 
@@ -147,7 +149,7 @@ class DatasetFiles extends Component {
                                                         onChange={ handleChange } />
                                                     <ErrorMessage component="div" className="error" name="tier" />
                                                 </Form.Field>
-                                                <Button type="button" onClick={ handleSubmit } >
+                                                <Button type="button" onClick={handleSubmit} disabled={interactionDisabled}>
                                                     { t('dataset.files.saveButton') }
                                                 </Button>
                                             </Form>
@@ -158,7 +160,7 @@ class DatasetFiles extends Component {
 
                             <Divider />
 
-                            <Button onClick={ this.handleNextButton }>
+                            <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
                                 { t('common.nextButton') }
                             </Button>
 
@@ -173,6 +175,7 @@ class DatasetFiles extends Component {
 
 const mapStateToProps = state => {
     return {
+        name: state.dataset.name,
         audioFiles: state.dataset.audioFiles,
         transcriptionFiles: state.dataset.transcriptionFiles,
         additionalTextFiles: state.dataset.additionalTextFiles,

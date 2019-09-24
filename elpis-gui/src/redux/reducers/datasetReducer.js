@@ -26,7 +26,6 @@ const dataset = (state = initState, action) => {
             return {...state}
 
         case actionTypes.DATASET_NEW_SUCCESS:
-            console.log("reducer got", action)
             var { name } = action.response.data.data.config
             return { ...initState, name }
 
@@ -85,12 +84,23 @@ const dataset = (state = initState, action) => {
             }
 
         case actionTypes.DATASET_PREPARE_SUCCESS:
-            // TODO do this in the backend
-            var data = action.response.data
-            let wordlist = Object.keys(data).map(function (key) {
-                return ({name:key, frequency: data[key]})
-            })
-            return { ...state, wordlist }
+            var { data, status } = action.response.data
+            if ( status == 200 ) {
+                // First decode the text we receive from the API
+                const wordlistObj = JSON.parse(data.wordlist)
+
+                const wordlist = Object.keys(wordlistObj).map( key => {
+                    return ({ name: key, frequency: wordlistObj[key] })
+                })
+
+                if (wordlist.length > 0) return { ...state, wordlist }
+                else console.log("no words")
+
+            } else {
+                // Errors are formatted as { status: code, data: message }
+                console.log( data )
+                return { ...state }
+            }
 
         default:
             return state;

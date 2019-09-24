@@ -18,7 +18,8 @@ class DatasetPrepare extends Component {
     }
 
     componentDidMount() {
-        this.props.datasetPrepare()
+        const { name, datasetPrepare } = this.props
+        if (name) datasetPrepare()
     }
 
     handleSort = (clickedColumn, data) => () => {
@@ -42,6 +43,8 @@ class DatasetPrepare extends Component {
         const { t, additionalTextFiles, wordlist } = this.props
 
         const { column, direction } = this.state
+
+        const interactionDisabled = (name && wordlist.length > 0) ? false : true
 
         const listEl = wordlist.length > 0 ? (
             <>
@@ -85,7 +88,9 @@ class DatasetPrepare extends Component {
             </Table>
             </>
 
-        ) : null
+        ) : (
+            <p>{t('dataset.prepare.noWords')}</p>
+        )
 
         return (
             <div>
@@ -102,7 +107,7 @@ class DatasetPrepare extends Component {
 
                             { listEl }
 
-                            <Button as={Link} to={urls.gui.pronDict.index}>
+                            <Button as={Link} to={urls.gui.pronDict.index} disabled={interactionDisabled}>
                                 { t('common.nextButton') }
                             </Button>
 
@@ -116,11 +121,10 @@ class DatasetPrepare extends Component {
 
 const mapStateToProps = state => {
     return {
+        name: state.dataset.name,
         wordlist: state.dataset.wordlist,
         additionalTextFiles: state.dataset.additionalTextFiles
     }
 }
 
-
 export default connect(mapStateToProps, { datasetPrepare })(translate('common')(DatasetPrepare))
-
