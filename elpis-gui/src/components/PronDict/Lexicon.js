@@ -31,7 +31,9 @@ class PronDictLexicon extends Component {
 
     render() {
 
-        const { t, lexicon } = this.props
+        const { t, lexicon, name } = this.props
+
+        const interactionDisabled = name ? false : true
 
         return (
             <div>
@@ -61,12 +63,12 @@ class PronDictLexicon extends Component {
                                     </TextArea>
                                 </Form>
                                 <Button.Group attached='bottom'>
-                                    <Button onClick={this.generateLexicon}>reset</Button>
-                                    <Button onClick={this.saveLexicon} positive>save</Button>
+                                    <Button onClick={this.generateLexicon} disabled={interactionDisabled}>reset</Button>
+                                    <Button onClick={this.saveLexicon} positive disabled={interactionDisabled}>save</Button>
                                 </Button.Group>
                             </Segment>
 
-                            <Button as={Link} to={urls.gui.model.index}>
+                            <Button as={Link} to={urls.gui.model.index} disabled={interactionDisabled}>
                                 {t('common.nextButton')}
                             </Button>
 

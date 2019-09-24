@@ -23,7 +23,10 @@ class PronDictL2S extends Component {
     }
 
     render() {
-        const { t, l2s } = this.props;
+        const { t, l2s, name } = this.props;
+
+        const interactionDisabled = name ? false : true
+
         const pron = l2s ? (
             <Segment>
                 <pre>
@@ -54,7 +57,11 @@ class PronDictL2S extends Component {
 
                             { ! pron &&
                                 <Segment>
-                                    <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
+                                    <Dropzone
+                                        disabled={interactionDisabled}
+                                        className="dropzone"
+                                        onDrop={ this.onDrop }
+                                        getDataTransferItems={ evt => fromEvent(evt) }>
                                         { ({ getRootProps, getInputProps, isDragActive }) => {
                                             return (
                                                 <div
@@ -84,7 +91,7 @@ class PronDictL2S extends Component {
                                 </Segment>
                             }
 
-                            <Button as={Link} to={urls.gui.pronDict.lexicon}>
+                            <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
                                 {t('common.nextButton')}
                             </Button>
 
