@@ -10,17 +10,19 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 
 export function modelNew(postData) {
     const url = baseUrl + urls.api.model.new
+    var responseData
     return async dispatch => {
         dispatch(modelNewStarted())
         await axios.post(url, postData)
             .then( response => {
+                responseData = response.data
                 dispatch(modelNewSuccess(response))
             })
             .catch( error => {
                 dispatch(modelNewFailure(error))
                 throw error
             })
-        return "Made a new model OK"
+        return responseData
     }
 }
 
@@ -41,17 +43,19 @@ const modelNewFailure = error => ({
 
 export function modelLoad(postData) {
     const url = baseUrl + urls.api.model.load
+    var responseData
     return async dispatch => {
         dispatch(modelLoadStarted())
         await axios.post(url, postData)
             .then(response => {
+                responseData = response.data
                 dispatch(modelLoadSuccess(response))
             })
             .catch(error => {
                 dispatch(modelLoadFailure(error))
                 throw error
             })
-        return "Loaded a model OK"
+        return responseData
     }
 }
 
@@ -72,17 +76,19 @@ const modelLoadFailure = error => ({
 
 export function modelList() {
     const url = baseUrl + urls.api.model.list
+    var responseData
     return async dispatch => {
         dispatch(modelListStarted())
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(modelListSuccess(response))
             })
             .catch(error => {
                 dispatch(modelListFailure(error))
                 throw error
             })
-        return "Listed models OK"
+        return responseData
     }
 }
 
@@ -103,17 +109,19 @@ const modelListFailure = error => ({
 
 export function modelSettings(postData) {
     const url = baseUrl + urls.api.model.settings
+    var responseData
     return async dispatch => {
         dispatch(modelSettingsStarted())
         await axios.post(url, postData)
             .then(response => {
+                responseData = response.data
                 dispatch(modelSettingsSuccess(response))
             })
             .catch(error => {
                 dispatch(modelSettingsFailure(error))
                 throw error
             })
-        return "Added settings to a model OK"
+        return responseData
     }
 }
 
@@ -134,17 +142,19 @@ const modelSettingsFailure = error => ({
 
 export function modelTrain() {
     const url = baseUrl + urls.api.model.train
+    var responseData
     return async dispatch => {
         dispatch(modelTrainStarted())
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(modelTrainSuccess(response))
             })
             .catch(error => {
                 dispatch(modelTrainFailure(error))
                 throw error
             })
-        return "Trained models OK"
+        return responseData
     }
 }
 
@@ -165,17 +175,19 @@ const modelTrainFailure = error => ({
 
 export function modelStatus() {
     const url = baseUrl + urls.api.model.status
+    var responseData
     return async dispatch => {
         dispatch(modelStatusStarted())
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(modelStatusSuccess(response))
             })
             .catch(error => {
                 dispatch(modelStatusFailure(error))
                 throw error
             })
-        return "Statused models OK"
+        return responseData
     }
 }
 
@@ -196,18 +208,19 @@ const modelStatusFailure = error => ({
 
 export function modelResults() {
     const url = baseUrl + urls.api.model.results
-    console.log(url)
+    var responseData
     return async dispatch => {
         dispatch(modelResultsStarted())
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(modelResultsSuccess(response))
             })
             .catch(error => {
                 dispatch(modelResultsFailure(error))
                 throw error
             })
-        return "Resultsed models OK"
+        return responseData
     }
 }
 

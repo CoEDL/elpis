@@ -10,17 +10,19 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 
 export function pronDictNew(postData) {
     const url = baseUrl + urls.api.pronDict.new
+    var responseData
     return async dispatch => {
         dispatch(pronDictNewStarted())
         await axios.post(url, postData)
             .then( response => {
+                responseData = response.data
                 dispatch(pronDictNewSuccess(response))
             })
             .catch( error => {
                 dispatch(pronDictNewFailure(error))
                 throw error
             })
-        return "Made a new pronDict OK"
+        return responseData
     }
 }
 
@@ -41,17 +43,19 @@ const pronDictNewFailure = error => ({
 
 export function pronDictLoad(postData) {
     const url = baseUrl + urls.api.pronDict.load
+    var responseData
     return async dispatch => {
         dispatch(pronDictLoadStarted())
         await axios.post(url, postData)
             .then(response => {
+                responseData = response.data
                 dispatch(pronDictLoadSuccess(response))
             })
             .catch(error => {
                 dispatch(pronDictLoadFailure(error))
                 throw error
             })
-        return "Loaded a pronDict OK"
+        return responseData
     }
 }
 
@@ -72,17 +76,19 @@ const pronDictLoadFailure = error => ({
 
 export function pronDictList() {
     const url = baseUrl + urls.api.pronDict.list
+    var responseData
     return async dispatch => {
         dispatch(pronDictListStarted())
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(pronDictListSuccess(response))
             })
             .catch(error => {
                 dispatch(pronDictListFailure(error))
                 throw error
             })
-        return "Listed pronDicts OK"
+        return responseData
     }
 }
 
@@ -104,17 +110,19 @@ const pronDictListFailure = error => ({
 export function pronDictL2S(postData) {
     const url = baseUrl + urls.api.pronDict.l2s
     const config = { headers: { 'content-type': 'multipart/form-data' } }
+    var responseData
     return async dispatch => {
         dispatch(pronDictL2SStarted())
         await axios.post(url, postData, config)
             .then(response => {
+                responseData = response.data
                 dispatch(pronDictL2SSuccess(response))
             })
             .catch(error => {
                 dispatch(pronDictL2SFailure(error))
                 throw error
             })
-        return "Added pronDict L2S OK"
+        return responseData
     }
 }
 
@@ -135,17 +143,19 @@ const pronDictL2SFailure = error => ({
 
 export function pronDictBuildLexicon() {
     const url = baseUrl + urls.api.pronDict.buildLexicon
+    var responseData
     return async dispatch => {
         dispatch(pronDictBuildLexiconStarted())
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(pronDictBuildLexiconSuccess(response))
             })
             .catch(error => {
                 dispatch(pronDictBuildLexiconFailure(error))
                 throw error
             })
-        return "Built pronDict OK"
+        return responseData
     }
 }
 
@@ -166,17 +176,19 @@ const pronDictBuildLexiconFailure = error => ({
 
 export function pronDictSaveLexicon(postData) {
     const url = baseUrl + urls.api.pronDict.saveLexicon
+    var responseData
     return async dispatch => {
         dispatch(pronDictSaveLexiconStarted())
         await axios.post(url, postData)
             .then(response => {
+                responseData = response.data
                 dispatch(pronDictSaveLexiconSuccess(response))
             })
             .catch(error => {
                 dispatch(pronDictSaveLexiconFailure(error))
                 throw error
             })
-        return "Saved pronDict OK"
+        return responseData
     }
 }
 

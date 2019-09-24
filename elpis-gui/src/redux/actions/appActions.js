@@ -11,17 +11,18 @@ export const setCurrentStep = url => ({
 })
 
 export const configReset = () => {
-    console.log("actions configReset")
     const url = baseUrl + urls.api.config.reset
-    return async dispatch => {
+    var responseData
+    return async (dispatch ) => {
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(datasetResetSuccess(response))
             })
             .catch(error => {
                 throw error
             })
-        return "Reset OK"
+        return responseData
     }
 }
 

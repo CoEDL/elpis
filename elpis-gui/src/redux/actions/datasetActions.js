@@ -10,17 +10,19 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 
 export function datasetNew(postData) {
     const url = baseUrl + urls.api.dataset.new
+    var responseData
     return async dispatch => {
         dispatch(datasetNewStarted())
         await axios.post(url, postData)
             .then( response => {
+                responseData = response.data
                 dispatch(datasetNewSuccess(response))
             })
             .catch( error => {
                 dispatch(datasetNewFailure(error))
                 throw error
             })
-        return "Made a new dataset OK"
+        return responseData
     }
 }
 
@@ -41,17 +43,19 @@ const datasetNewFailure = error => ({
 
 export function datasetLoad(postData) {
     const url = baseUrl + urls.api.dataset.load
+    var responseData
     return async dispatch => {
         dispatch(datasetLoadStarted())
         await axios.post(url, postData)
             .then(response => {
+                responseData = response.data
                 dispatch(datasetLoadSuccess(response))
             })
             .catch(error => {
                 dispatch(datasetLoadFailure(error))
                 throw error
             })
-        return "Loaded a dataset OK"
+        return responseData
     }
 }
 
@@ -72,17 +76,19 @@ const datasetLoadFailure = error => ({
 
 export function datasetList() {
     const url = baseUrl + urls.api.dataset.list
+    var responseData
     return async dispatch => {
         dispatch(datasetListStarted())
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(datasetListSuccess(response))
             })
             .catch(error => {
                 dispatch(datasetListFailure(error))
                 throw error
         })
-        return "Listed datasets OK"
+        return responseData
     }
 }
 
@@ -104,17 +110,19 @@ const datasetListFailure = error => ({
 export function datasetFiles(postData) {
     const url = baseUrl + urls.api.dataset.files
     const config = { headers: { 'content-type': 'multipart/form-data' } }
+    var responseData
     return async dispatch => {
         dispatch(datasetFilesStarted())
         await axios.post(url, postData, config)
             .then(response => {
+                responseData = response.data
                 dispatch(datasetFilesSuccess(response))
             })
             .catch(error => {
                 dispatch(datasetFilesFailure(error))
                 throw error
             })
-        return "Added files to a dataset OK"
+        return responseData
     }
 }
 
@@ -135,17 +143,19 @@ const datasetFilesFailure = error => ({
 
 export function datasetSettings(postData) {
     const url = baseUrl + urls.api.dataset.settings
+    var responseData
     return async dispatch => {
         dispatch(datasetSettingsStarted())
         await axios.post(url, postData)
             .then(response => {
+                responseData = response.data
                 dispatch(datasetSettingsSuccess(response))
             })
             .catch(error => {
                 dispatch(datasetSettingsFailure(error))
                 throw error
             })
-        return "Added settings to a dataset OK"
+        return responseData
     }
 }
 
@@ -165,20 +175,20 @@ const datasetSettingsFailure = error => ({
 /* * * * * * * * * * * *  PREPARE * * * * * * * * * * *  */
 
 export function datasetPrepare() {
-    console.log("prepare")
     const url = baseUrl + urls.api.dataset.prepare
+    var responseData
     return async dispatch => {
         dispatch(datasetPrepareStarted())
         await axios.post(url)
             .then(response => {
-                console.log("datasetPrepare action got response", response)
+                responseData = response.data
                 dispatch(datasetPrepareSuccess(response))
             })
             .catch(error => {
                 dispatch(datasetPrepareFailure(error))
                 throw error
             })
-        return "Added prepare to a dataset OK"
+        return responseData
     }
 }
 

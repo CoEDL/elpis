@@ -5,23 +5,25 @@ import * as actionTypes from '../actionTypes/transcriptionActionTypes';
 
 const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://'+window.location.host
 
+
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */
 
 export function transcriptionNew(postData) {
     const url = baseUrl + urls.api.transcription.new
     const config = { headers: { 'content-type': 'multipart/form-data' } }
+    var responseData
     return async dispatch => {
         dispatch(transcriptionNewStarted())
         await axios.post(url, postData, config)
             .then( response => {
-                console.log("transcriptionNew action response", response)
+                responseData = response.data
                 dispatch(transcriptionNewSuccess(response))
             })
             .catch( error => {
                 dispatch(transcriptionNewFailure(error))
                 throw error
             })
-        return "Made a new transcription OK"
+        return response
     }
 }
 
@@ -41,19 +43,20 @@ const transcriptionNewFailure = error => ({
 /* * * * * * * * * * * *  STATUS * * * * * * * * * * *  */
 
 export function transcriptionStatus() {
-    console.log("action transcribe status")
     const url = baseUrl + urls.api.transcription.status
+    var responseData
     return async dispatch => {
         dispatch(transcriptionStatusStarted())
         await axios.post(url)
             .then(response => {
+                responseData = response.data
                 dispatch(transcriptionStatusSuccess(response))
             })
             .catch(error => {
                 dispatch(transcriptionStatusFailure(error))
                 throw error
             })
-        return "Got status for transcriptions OK"
+        return response
     }
 }
 
@@ -73,20 +76,21 @@ const transcriptionStatusFailure = error => ({
 /* * * * * * * * * * * *  TRANSCRIBE * * * * * * * * * * *  */
 
 export function transcriptionTranscribe() {
-    console.log("action transcribe")
     const url = baseUrl + urls.api.transcription.transcribe
+    var responseData
     return async dispatch => {
         dispatch(transcriptionTranscribeStarted())
         await axios.post(url)
             .then(response => {
                 // this is a status value
+                responseData = response.data
                 dispatch(transcriptionTranscribeSuccess(response))
             })
             .catch(error => {
                 dispatch(transcriptionTranscribeFailure(error))
                 throw error
             })
-        return "Got transcribe for transcription OK"
+        return response
     }
 }
 
@@ -106,20 +110,20 @@ const transcriptionTranscribeFailure = error => ({
 /* * * * * * * * * * * *  TRANSCRIBE ALIGN * * * * * * * * * * *  */
 
 export function transcriptionTranscribeAlign() {
-    console.log("action transcribe align")
     const url = baseUrl + urls.api.transcription.transcribe_align
+    var responseData
     return async dispatch => {
         dispatch(transcriptionTranscribeAlignStarted())
         await axios.post(url)
             .then(response => {
-                console.log("transcribe align got a response", response)
+                responseData = response.data
                 dispatch(transcriptionTranscribeAlignSuccess(response))
             })
             .catch(error => {
                 dispatch(transcriptionTranscribeAlignFailure(error))
                 throw error
             })
-        return "Got transcribe align for transcription OK"
+        return response
     }
 }
 
@@ -139,20 +143,20 @@ const transcriptionTranscribeAlignFailure = error => ({
 /* * * * * * * * * * * *  TEXT * * * * * * * * * * *  */
 
 export function transcriptionGetText() {
-    console.log("action transcribe get text")
     const url = baseUrl + urls.api.transcription.text
+    var responseData
     return async dispatch => {
         dispatch(transcriptionGetTextStarted())
         await axios.post(url)
             .then(response => {
-                console.log("get text action got response", response)
+                responseData = response.data
                 dispatch(transcriptionGetTextSuccess(response))
             })
             .catch(error => {
                 dispatch(transcriptionGetTextFailure(error))
                 throw error
             })
-        return "Got text for transcriptions OK"
+        return response
     }
 }
 
@@ -172,20 +176,20 @@ const transcriptionGetTextFailure = error => ({
 /* * * * * * * * * * * *  ELAN * * * * * * * * * * *  */
 
 export function transcriptionGetElan() {
-    console.log("action transcribe get elan")
     const url = baseUrl + urls.api.transcription.elan
+    var responseData
     return async dispatch => {
         dispatch(transcriptionGetElanStarted())
         await axios.post(url)
             .then(response => {
-                console.log("get elan action got response", response)
+                responseData = response.data
                 dispatch(transcriptionGetElanSuccess(response))
             })
             .catch(error => {
                 dispatch(transcriptionGetElanFailure(error))
                 throw error
             })
-        return "Got elan for transcriptions OK"
+        return response
     }
 }
 
