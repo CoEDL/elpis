@@ -93,8 +93,6 @@ class NewTranscription extends Component {
     render = () => {
         const { t, filename, list, status, type, text, elan, modelName } = this.props;
 
-        console.log("render got status", status)
-
         const listOptions = list.map(model => ({"key": model.name, "value": model.name, "text": model.name}))
 
         // preven the buttnos from being clicked if we haven't got
@@ -244,9 +242,7 @@ const mapDispatchToProps = dispatch => ({
     },
     transcriptionStatus: () => {
         dispatch(transcriptionStatus())
-            .then(response => {
-                console.log("transcription status", response)
-            })
+            .then(response => console.log(response))
     },
     transcriptionGetText: () => {
         dispatch(transcriptionGetText())
