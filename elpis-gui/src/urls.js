@@ -43,19 +43,17 @@ export default {
             "load": "/api/pron-dict/load",
             "list": "/api/pron-dict/list",
             "l2s": "/api/pron-dict/l2s",
-            "buildLexicon": "/api/pron-dict/generate-lexicon",
+            "generateLexicon": "/api/pron-dict/generate-lexicon",
             "saveLexicon": "/api/pron-dict/save-lexicon"
         },
         "model": {
+            "new": "/api/model/new",
             "load": "/api/model/load",
             "list": "/api/model/list",
-            "name": "/api/model/name",
-            "new": "/api/model/new",
             "settings": "/api/model/settings",
             "train": "/api/model/train",
             "status": "/api/model/status",
-            "results": "/api/model/results",
-            "logstream": "/api/logstream"
+            "results": "/api/model/results"
         },
         "transcription": {
             "new": "/api/transcription/new",

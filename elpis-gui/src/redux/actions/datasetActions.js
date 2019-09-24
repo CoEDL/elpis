@@ -79,7 +79,7 @@ export function datasetList() {
     var responseData
     return async dispatch => {
         dispatch(datasetListStarted())
-        await axios.post(url)
+        await axios.get(url)
             .then(response => {
                 responseData = response.data
                 dispatch(datasetListSuccess(response))

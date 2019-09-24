@@ -79,7 +79,7 @@ export function pronDictList() {
     var responseData
     return async dispatch => {
         dispatch(pronDictListStarted())
-        await axios.post(url)
+        await axios.get(url)
             .then(response => {
                 responseData = response.data
                 dispatch(pronDictListSuccess(response))
@@ -142,11 +142,11 @@ const pronDictL2SFailure = error => ({
 /* * * * * * * * * * * *  BUILD LEXICON * * * * * * * * * * *  */
 
 export function pronDictBuildLexicon() {
-    const url = baseUrl + urls.api.pronDict.buildLexicon
+    const url = baseUrl + urls.api.pronDict.generateLexicon
     var responseData
     return async dispatch => {
         dispatch(pronDictBuildLexiconStarted())
-        await axios.post(url)
+        await axios.get(url)
             .then(response => {
                 responseData = response.data
                 dispatch(pronDictBuildLexiconSuccess(response))

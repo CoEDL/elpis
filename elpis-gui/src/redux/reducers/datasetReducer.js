@@ -26,6 +26,7 @@ const dataset = (state = initState, action) => {
             return {...state}
 
         case actionTypes.DATASET_NEW_SUCCESS:
+            console.log("reducer got", action)
             var { name } = action.response.data.data.config
             return { ...initState, name }
 

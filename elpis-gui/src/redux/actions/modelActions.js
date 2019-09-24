@@ -79,7 +79,7 @@ export function modelList() {
     var responseData
     return async dispatch => {
         dispatch(modelListStarted())
-        await axios.post(url)
+        await axios.get(url)
             .then(response => {
                 responseData = response.data
                 dispatch(modelListSuccess(response))
@@ -145,7 +145,7 @@ export function modelTrain() {
     var responseData
     return async dispatch => {
         dispatch(modelTrainStarted())
-        await axios.post(url)
+        await axios.get(url)
             .then(response => {
                 responseData = response.data
                 dispatch(modelTrainSuccess(response))
@@ -178,7 +178,7 @@ export function modelStatus() {
     var responseData
     return async dispatch => {
         dispatch(modelStatusStarted())
-        await axios.post(url)
+        await axios.get(url)
             .then(response => {
                 responseData = response.data
                 dispatch(modelStatusSuccess(response))
@@ -211,7 +211,7 @@ export function modelResults() {
     var responseData
     return async dispatch => {
         dispatch(modelResultsStarted())
-        await axios.post(url)
+        await axios.get(url)
             .then(response => {
                 responseData = response.data
                 dispatch(modelResultsSuccess(response))
