@@ -56,8 +56,13 @@ def files():
     if request.method == 'POST':
         for file in request.files.getlist("file"):
             dataset.add_fp(file, file.filename)
-    # TODO fix this to return a json wrapper
-    return jsonify(dataset.files)
+    data = {
+        "files": dataset.files
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 
 @bp.route("/settings", methods=['POST'])
