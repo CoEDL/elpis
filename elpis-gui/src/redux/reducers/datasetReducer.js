@@ -47,7 +47,6 @@ const dataset = (state = initState, action) => {
                 transcriptionFiles,
                 additionalTextFiles,
                 settings: { ...state.settings, tier },
-                tier: "",
                 wordlist: "",
             }
 
