@@ -25,14 +25,14 @@ class PronDict(FSObject):
         self.dataset: Dataset = None
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.l2s_path = self.path.joinpath('l2s.txt')
-        self.lexicon_txt = self.path.joinpath('lexicon.txt') #TODO change to lexicon_txt_path
+        self.lexicon_txt_path = self.path.joinpath('lexicon.txt') #TODO change to lexicon_txt_path
         self.config['l2s'] = None  # file has not been uploaded
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
         self.l2s_path = self.path.joinpath('l2s.txt')
-        self.lexicon_txt = self.path.joinpath('lexicon.txt')
+        self.lexicon_txt_path = self.path.joinpath('lexicon.txt')
         self.dataset = None
         return self
 
@@ -71,17 +71,17 @@ class PronDict(FSObject):
         # task make-prn-dict
         # TODO this file needs to be reflected in kaldi_data_local_dict
         generate_pronunciation_dictionary(word_list=f'{self.dataset.pathto.word_list_txt}',
-                                          pronunciation_dictionary=f'{self.lexicon_txt}',
+                                          pronunciation_dictionary=f'{self.lexicon_txt_path}',
                                           config_file=f'{self.l2s_path}')
-    @property
-    def lexicon(self):
-        with self.lexicon_txt.open(mode='rb') as fin:
-            return fin.read()
+    # @property
+    # def lexicon(self):
+    #     with self.lexicon_txt_path.open(mode='rb') as fin:
+    #         return fin.read()
 
 
     def get_lexicon_content(self):
         try:
-            with self.lexicon_txt.open(mode='r') as fin:
+            with self.lexicon_txt_path.open(mode='r') as fin:
                 return fin.read()
         except FileNotFoundError:
             return 'No lexicon yet'
@@ -92,8 +92,7 @@ class PronDict(FSObject):
         # write lexicon text to file
         print("lexicon", text)
         try:
-            with self.lexicon_txt.open(mode='w') as fout:
+            with self.lexicon_txt_path.open(mode='w') as fout:
                 fout.write(text)
         except FileNotFoundError:
             return 'No lexicon yet'
-        return self.lexicon

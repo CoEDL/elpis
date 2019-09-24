@@ -9,7 +9,7 @@ from elpis.wrappers.objects.dataset import Dataset
 bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
 
 
-@bp.route("/new", methods=['GET', 'POST'])
+@bp.route("/new", methods=['POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     pron_dict = kaldi.new_pron_dict(request.json['name'])
@@ -25,7 +25,7 @@ def new():
     })
 
 
-@bp.route("/load", methods=['GET', 'POST'])
+@bp.route("/load", methods=['POST'])
 def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     pron_dict = kaldi.get_pron_dict(request.json['name'])
@@ -42,23 +42,7 @@ def load():
     })
 
 
-@bp.route("/name", methods=['GET', 'POST'])
-def name():
-    pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
-    if pron_dict is None:
-        return '{"status":"error", "data": "No current pron dict exists (perhaps create one first)"}'
-    if request.method == 'POST':
-        pron_dict.name = request.json['name']
-    data = {
-        "name": pron_dict.name
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
-
-
-@bp.route("/list", methods=['GET', 'POST'])
+@bp.route("/list", methods=['GET'])
 def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     data = {
@@ -81,31 +65,25 @@ def l2s():
     # TODO fix this to return json wrapper
     return pron_dict.l2s
 
-@bp.route("/generate-lexicon", methods=['GET', 'POST'])
-@bp.route("/lexicon", methods=['GET', 'POST'])
+
+@bp.route("/generate-lexicon", methods=['GET'])
 def generate_lexicon():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
     pron_dict.generate_lexicon()
     # TODO fix this to return json wrapper
-    return pron_dict.lexicon
-
-@bp.route("/get-lexicon", methods=['GET', 'POST'])
-def get_lexicon():
-    pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
-    # TODO fix this to return json wrapper
-    return pron_dict.lexicon
+    return pron_dict.get_lexicon_content()
 
 
-@bp.route("/save-lexicon", methods=['GET', 'POST'])
+@bp.route("/save-lexicon", methods=['POST'])
 def save_lexicon():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
     if request.method == 'POST':
         lexicon = request.json['lexicon']
     pron_dict.save_lexicon(lexicon)
-    data = {
-        "config": pron_dict.config._load(),
-        "l2s": pron_dict.get_l2s_content(),
-        "lexicon": repr(pron_dict.lexicon)
-    }
+    # data = {
+    #     "config": pron_dict.config._load(),
+    #     "l2s": pron_dict.get_l2s_content(),
+    #     "lexicon": repr(pron_dict.get_lexicon_content())
+    # }
     # TODO fix this to return the json wrapper
     return lexicon
