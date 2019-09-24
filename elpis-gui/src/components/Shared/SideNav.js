@@ -80,7 +80,7 @@ class SideNav extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		steps: state.app.steps,
+		steps: state.sideNav.steps,
 		ownProps: ownProps
 	}
 }

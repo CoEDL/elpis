@@ -1,6 +1,6 @@
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import app from './reducers/appReducer';
+import sideNav from './reducers/sideNavReducer';
 import dataset from './reducers/datasetReducer';
 import pronDict from './reducers/pronDictReducer';
 import model from './reducers/modelReducer';
@@ -8,7 +8,7 @@ import transcription from './reducers/transcriptionReducer';
 import thunk from 'redux-thunk';
 
 const appReducer = combineReducers({
-    app,
+    sideNav,
     dataset,
     pronDict,
     model,

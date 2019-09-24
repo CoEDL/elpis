@@ -38,7 +38,7 @@ const initialStepModelState = {
 		]
 }
 
-const app = (state = initialStepModelState, action) => {
+const sideNav = (state = initialStepModelState, action) => {
 	let newSteps = []
 	let currentIndex = []
 
@@ -130,4 +130,4 @@ const app = (state = initialStepModelState, action) => {
 			return state
 	}
 }
-export default app;
+export default sideNav;
