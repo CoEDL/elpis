@@ -33,6 +33,7 @@ class Model(FSObject):
         self.config['ngram'] = 1 # default to 1 to make playing quicker
         self.config['status'] = 'untrained'
         self.status = 'untrained'
+        self.results = ''
 
     @classmethod
     def load(cls, base_path: Path):
@@ -102,7 +103,7 @@ class Model(FSObject):
             kaldi_local.mkdir(parents=True, exist_ok=True)
 
             # copy the pron dict
-            shutil.copy(f"{self.pron_dict.lexicon_txt}", f"{kaldi_data_local_dict.joinpath('lexicon.txt')}")
+            shutil.copy(f"{self.pron_dict.lexicon_txt_path}", f"{kaldi_data_local_dict.joinpath('lexicon.txt')}")
 
             # task generate-kaldi-configs
             path_file_path = kaldi_structure.path.joinpath('path.sh')
