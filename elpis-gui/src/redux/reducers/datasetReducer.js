@@ -77,8 +77,7 @@ const dataset = (state = initState, action) => {
                 additionalTextFiles
             }
 
-        case actionTypes.DATASET_SETTINGS:
-            console.log(action.response)
+        case actionTypes.DATASET_SETTINGS_SUCCESS:
             var { tier } = action.response.data.data
             return {
                 ...state,
