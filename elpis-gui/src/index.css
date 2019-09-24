@@ -1,24 +1,4 @@
-/* easier on the eyes for testing */
-.ui.styled.accordion,
-.ui.button,
-.ui.form input,
-.ui.label,
-.ui.message,
-.ui.segment,
-.ui.table,
-.ui.table thead th {
-    background: #ffffff40 !important
-}
-
-button.ui.basic.button,
-.ui.button,
 body {
-    color: #000 !important;
-}
-
-
-body {
-    /* background-color: #333; */
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
@@ -108,17 +88,6 @@ textarea.lexicon {
     float: right
 }
 
-.ui.styled.accordion > div {
-    /* border-bottom: 5px solid white; */
-}
-
-.ui.styled.accordion .content {
-    padding: 0 !important;
-}
-
-.ui.list .item {
-    padding: 0.5em 0 !important;
-}
-.ui.list .item > div {
-    padding-left: 1em !important;
+label.pad-right {
+    margin-right: 0.5em
 }
