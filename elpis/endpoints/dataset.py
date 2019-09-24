@@ -13,9 +13,12 @@ def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     dataset = kaldi.new_dataset(request.json['name'])
     app.config['CURRENT_DATASET'] = dataset
+    data = {
+        "config": dataset.config._load()
+    }
     return jsonify({
-        "status": "ok",
-        "data": dataset.config._load()
+        "status": 200,
+        "data": data
     })
 
 
@@ -24,9 +27,12 @@ def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     dataset = kaldi.get_dataset(request.json['name'])
     app.config['CURRENT_DATASET'] = dataset
+    data = {
+        "config": dataset.config._load()
+    }
     return jsonify({
-        "status": "ok",
-        "data": dataset.config._load()
+        "status": 200,
+        "data": data
     })
 
 
@@ -37,14 +43,17 @@ def name():
         return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
     if request.method == 'POST':
         dataset.name = request.json['name']
+    data = {
+        "name": dataset.name
+    }
     return jsonify({
-        "status": "ok",
-        "data": dataset.name})
+        "status": 200,
+        "data": data
+    })
 
 
 @bp.route("/settings", methods=['GET', 'POST'])
 def settings():
-    print("***** TIER", request.json['tier'])
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
         return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
@@ -54,7 +63,7 @@ def settings():
         "tier": dataset.tier
     }
     return jsonify({
-        "status": "ok",
+        "status": 200,
         "data": data
     })
 
@@ -62,9 +71,12 @@ def settings():
 @bp.route("/list", methods=['GET', 'POST'])
 def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
+    data = {
+        "list": kaldi.list_datasets()
+    }
     return jsonify({
-        "status": "ok",
-        "data": kaldi.list_datasets()
+        "status": 200,
+        "data": data
     })
 
 
@@ -74,11 +86,9 @@ def files():
     if dataset is None:
         return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
     if request.method == 'POST':
-        # TODO think about this below
-        # files_overwrite = request.form["filesOverwrite"]
-        # print('filesOverwrite:', files_overwrite)
         for file in request.files.getlist("file"):
             dataset.add_fp(file, file.filename)
+    # TODO fix this to return a json wrapper
     return jsonify(dataset.files)
 
 
@@ -89,4 +99,5 @@ def prepare():
         return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
     dataset.process()
     with dataset.pathto.word_count_json.open() as fin:
+        # TODO this returns file contents. fix this to return json wrapper
         return fin.read()
