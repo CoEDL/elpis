@@ -44,16 +44,19 @@ def name():
 
 @bp.route("/settings", methods=['GET', 'POST'])
 def settings():
+    print("***** TIER", request.json['tier'])
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
         return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
     if request.method == 'POST':
         dataset.tier = request.json['tier']
-        # TODO make this an optional parameter
+    data = {
+        "tier": dataset.tier
+    }
     return jsonify({
         "status": "ok",
-        # TODO formalise the setting of the dataset
-        "data": {"tier": dataset.tier}})
+        "data": data
+    })
 
 
 @bp.route("/list", methods=['GET', 'POST'])
