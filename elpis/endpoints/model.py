@@ -38,9 +38,11 @@ def new():
     model.link(dataset, pron_dict)
     model.build_kaldi_structure()
     app.config['CURRENT_MODEL'] = model
-    data = {"config": model.config._load()}
+    data = {
+        "config": model.config._load()
+    }
     return jsonify({
-        "status": "ok",
+        "status": 200,
         "data": data
     })
 
@@ -57,7 +59,7 @@ def load():
         "config": model.config._load()
     }
     return jsonify({
-        "status": "ok",
+        "status": 200,
         "data": data
     })
 
@@ -70,9 +72,12 @@ def name():
         return '{"status":"error", "data": "No current model exists (perhaps create one first)"}'
     if request.method == 'POST':
         model.name = request.json['name']
+    data = {
+        "name": model.name
+    }
     return jsonify({
-        "status": "ok",
-        "data": model.name
+        "status": 200,
+        "data": data
     })
 
 
@@ -85,11 +90,14 @@ def settings():
     if request.method == 'POST':
         model.ngram = request.json['ngram']
         # TODO make this an optional parameter
-    return jsonify({
-        "status": "ok",
-        "data": {
+    data = {
+        "settings":{
             "ngram": model.ngram
         }
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
     })
 
 
@@ -99,14 +107,16 @@ def list_existing():
     kaldi: KaldiInterface = app.config['INTERFACE']
     # TODO see the two todos below
     fake_results = {}
-    data = [{
-        'name': model['name'],
-        'results': fake_results,
-        'dataset_name': model['dataset_name'],
-        'pron_dict_name': model['pron_dict_name']
-        } for model in kaldi.list_models_verbose()]
+    data = {
+        "list": [{
+                'name': model['name'],
+                'results': fake_results,
+                'dataset_name': model['dataset_name'],
+                'pron_dict_name': model['pron_dict_name']
+                } for model in kaldi.list_models_verbose()]
+    }
     return jsonify({
-        "status": "ok",
+        "status": 200,
         "data": data
     })
 
@@ -117,9 +127,12 @@ def list_existing():
 @bp.route("/status", methods=['GET', 'POST'])
 def status():
     model: Model = app.config['CURRENT_MODEL']
+    data = {
+        "status": model.status
+    }
     return jsonify({
-        "status": "ok",
-        "data": model.status
+        "status": 200,
+        "data": data
     })
 
 
@@ -127,9 +140,12 @@ def status():
 def train():
     model: Model = app.config['CURRENT_MODEL']
     model.train(on_complete=lambda: print("Training complete!"))
+    data = {
+        "status": model.status
+    }
     return jsonify({
-        "status": "ok",
-        "data": model.status
+        "status": 200,
+        "data": data
     })
 
 
@@ -161,7 +177,10 @@ def results():
             sub_val = results_split[3].replace(' sub','').strip()
             results = {'wer':wer, 'count_val':count_val, 'ins_val':ins_val, 'del_val':del_val, 'sub_val':sub_val}
             print(results)
+    data = {
+        "results": results
+    }
     return jsonify({
-        "status": "ok",
-        "data": results
+        "status": 200,
+        "data": data
     })

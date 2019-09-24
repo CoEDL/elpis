@@ -15,7 +15,11 @@ def reset():
     app.config['CURRENT_DATASET'] = None # not okay for multi-user
     app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user
     app.config['CURRENT_MODEL'] = None # not okay for multi-user
-    return jsonify({
-        "status": "ok",
+    data = {
         "message": "reset ok"
+    }
+    print("doing reset")
+    return jsonify({
+        "status": 200,
+        "data": data
     })

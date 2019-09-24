@@ -18,9 +18,12 @@ def new():
     app.config['CURRENT_TRANSCRIPTION'] = transcription
     file = request.files['file']
     transcription.prepare_audio(file, on_complete=lambda: print('Prepared audio file!'))
-    data = {"status": transcription.status, "originalFilename": file.filename}
+    data = {
+        "status": transcription.status,
+        "originalFilename": file.filename
+    }
     return jsonify({
-        "status": "ok",
+        "status": 200,
         "data": data
     })
 
@@ -33,7 +36,7 @@ def transcribe():
         "type": transcription.type
     }
     return jsonify({
-        "status": "ok",
+        "status": 200,
         "data": data
     })
 
@@ -47,7 +50,7 @@ def transcribe_align():
         "type": transcription.type
     }
     return jsonify({
-        "status": "ok",
+        "status": 200,
         "data": data
     })
 
@@ -60,7 +63,7 @@ def status():
         "type": transcription.type
     }
     return jsonify({
-        "status": "ok",
+        "status": 200,
         "data": data
     })
 
@@ -68,9 +71,11 @@ def status():
 @bp.route("/text", methods=['POST'])
 def text():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
+    # TODO fix this to return json wrapper
     return transcription.text()
 
 @bp.route("/elan", methods=['POST'])
 def elan():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
+    # TODO fix this to return json wrapper
     return transcription.elan()
