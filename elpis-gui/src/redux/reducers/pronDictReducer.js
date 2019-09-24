@@ -10,6 +10,9 @@ const initState = {
     apiWaiting: {status: false, message: 'something'}
 }
 
+// If we want to check status code, use action.response.data
+// so then we need to access the properties at data.xyz etc
+
 const pronDict = (state = initState, action) => {
     switch (action.type) {
 
@@ -39,23 +42,32 @@ const pronDict = (state = initState, action) => {
 
 
         case actionTypes.PRON_DICT_L2S_SUCCESS:
-            return {
-                ...state,
-                l2s: action.response.data
+            var { data, status } = action.response.data
+            if (status==200) {
+                return {
+                    ...state,
+                    l2s: data.l2s
+                }
+            } else {
+                console.log("some error with l2s")
+                return { ...state }
             }
 
         case actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS:
-            return {
-                ...state,
-                lexicon: action.response.data
-            }
-
         case actionTypes.PRON_DICT_SAVE_LEXICON:
-            return {
-                ...state,
-                lexicon: action.response.data
+            var { data, status } = action.response.data
+            if (status==200){
+                return {
+                    ...state,
+                    lexicon: data.lexicon
+                }
+            } else {
+                console.log("some error building or saving lexicon")
+                return { ...state }
             }
 
+        // This doesn't use the API, just for the form
+        // .. could probably use local state
         case actionTypes.PRON_DICT_UPDATE_LEXICON:
             return {
                 ...state,
