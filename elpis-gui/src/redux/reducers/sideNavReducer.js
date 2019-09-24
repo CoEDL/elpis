@@ -127,7 +127,7 @@ const sideNav = (state = initialStepModelState, action) => {
 			return { steps: newSteps }
 
 		default:
-			return state
+			return { ...state }
 	}
 }
 export default sideNav;

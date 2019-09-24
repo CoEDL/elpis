@@ -63,7 +63,7 @@ const pronDict = (state = initState, action) => {
             }
 
         default:
-            return state;
+            return { ...state }
     }
 }
 

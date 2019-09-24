@@ -51,7 +51,7 @@ const model = (state = initState, action) => {
             return { ...state, results }
 
         default:
-            return state;
+            return { ...state }
     }
 }
 

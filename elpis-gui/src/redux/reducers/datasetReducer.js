@@ -103,7 +103,7 @@ const dataset = (state = initState, action) => {
             }
 
         default:
-            return state;
+            return { ...state }
     }
 }
 

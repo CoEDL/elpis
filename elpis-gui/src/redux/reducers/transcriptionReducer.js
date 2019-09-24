@@ -54,8 +54,8 @@ const transcription = (state = initState, action) => {
                 elan: action.response.data
             }
 
-            default:
-            return state;
+        default:
+            return { ...state }
     }
 }
 
