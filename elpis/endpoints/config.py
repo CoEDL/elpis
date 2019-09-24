@@ -18,7 +18,6 @@ def reset():
     data = {
         "message": "reset ok"
     }
-    print("doing reset")
     return jsonify({
         "status": 200,
         "data": data
