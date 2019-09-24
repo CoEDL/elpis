@@ -4,7 +4,7 @@ import { Button, Checkbox, Divider, Form, Grid, Header, Icon, Input, List, Messa
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik, ErrorMessage } from 'formik';
-import { datasetSettings, datasetPrepare } from 'redux/actions';
+import { datasetSettings, datasetPrepare } from 'redux/actions/datasetActions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import FileUpload from './FileUpload';
@@ -14,7 +14,8 @@ import urls from 'urls'
 class DatasetFiles extends Component {
 
     handleNextButton = () => {
-        this.props.history.push(urls.gui.dataset.prepare)
+        const { history, datasetPrepare} = this.props
+        datasetPrepare(history)
     }
 
     render() {
@@ -184,8 +185,11 @@ const mapDispatchToProps = dispatch => ({
     datasetSettings: postData => {
         dispatch(datasetSettings(postData));
     },
-    datasetPrepare: () => {
-        dispatch(datasetPrepare());
+    datasetPrepare: (history) => {
+        dispatch(datasetPrepare(history))
+            .then((response) => {
+                history.push(urls.gui.dataset.prepare)
+            })
     }
 })
 

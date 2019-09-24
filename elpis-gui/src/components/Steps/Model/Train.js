@@ -4,8 +4,7 @@ import { Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Mes
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import ReactTimeout from 'react-timeout'
-import { LazyLog, ScrollFollow } from 'react-lazylog/es5';
-import { triggerApiWaiting, modelTrain, modelStatus } from 'redux/actions';
+import { modelTrain, modelStatus } from 'redux/actions/modelActions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "./CurrentModelName";
@@ -16,7 +15,6 @@ class ModelTrain extends Component {
     statusInterval = null
 
     componentDidMount = () => {
-        // this.props.triggerApiWaiting('now training')
     }
 
     handleModelTrain = () => {
@@ -119,9 +117,6 @@ const mapStateToProps = state => {
     }
 }
 const mapDispatchToProps = dispatch => ({
-    triggerApiWaiting: message => {
-        dispatch(triggerApiWaiting(message))
-    },
     modelTrain: () => {
         dispatch(modelTrain())
     },

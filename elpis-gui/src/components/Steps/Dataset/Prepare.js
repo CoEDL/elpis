@@ -4,7 +4,7 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import arraySort from 'array-sort'
-import { datasetPrepare } from 'redux/actions';
+import { datasetPrepare } from 'redux/actions/datasetActions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentDatasetName from "./CurrentDatasetName";
@@ -18,8 +18,7 @@ class DatasetPrepare extends Component {
     }
 
     componentDidMount() {
-        const {name, datasetPrepare} = this.props
-        if (name) datasetPrepare()
+        this.props.datasetPrepare()
     }
 
     handleSort = (clickedColumn, data) => () => {
@@ -40,10 +39,10 @@ class DatasetPrepare extends Component {
     }
 
     render() {
-        const { t, list } = this.props
+        const { t, wordlist } = this.props
         const { column, direction } = this.state
 
-        const listEl = list.length > 0 ? (
+        const listEl = wordlist.length > 0 ? (
             <>
             <h2>{ t('dataset.prepare.header') }</h2>
             <p>{ t('dataset.prepare.description') }</p>
@@ -52,13 +51,13 @@ class DatasetPrepare extends Component {
                     <Table.Row>
                         <Table.HeaderCell
                             sorted={ column === 'name' ? direction : null }
-                            onClick={ this.handleSort('name', list) }
+                                onClick={this.handleSort('name', wordlist) }
                         >
                             Word
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'frequency' ? direction : null }
-                            onClick={ this.handleSort('frequency', list) }
+                                onClick={this.handleSort('frequency', wordlist) }
                         >
                             Frequency
                         </Table.HeaderCell>
@@ -66,7 +65,7 @@ class DatasetPrepare extends Component {
                 </Table.Header>
                 <Table.Body>
                     {
-                        list.map(word => {
+                        wordlist.map(word => {
                             return (
                                 <Table.Row key={ word.name }>
                                     <Table.Cell>
@@ -112,16 +111,10 @@ class DatasetPrepare extends Component {
 
 const mapStateToProps = state => {
     return {
-        list: state.dataset.wordlist,
-        name: state.dataset.name
+        wordlist: state.dataset.wordlist
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    datasetPrepare: () => {
-        dispatch(datasetPrepare());
-    }
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(DatasetPrepare))
+export default connect(mapStateToProps, { datasetPrepare })(translate('common')(DatasetPrepare))
 

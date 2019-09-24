@@ -3,7 +3,7 @@ import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { datasetList, datasetLoad } from 'redux/actions';
+import { datasetList, datasetLoad } from 'redux/actions/datasetActions';
 import arraySort from 'array-sort'
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
@@ -114,6 +114,11 @@ class DatasetDashboard extends Component {
                                     <Segment>
                                         {listEl}
                                     </Segment>
+
+                                    <Button as={Link} to={urls.gui.dataset.files} disabled={!name}>
+                                        {t('common.nextButton')}
+                                    </Button>
+
                                 </>
                             }
 
@@ -138,6 +143,10 @@ const mapDispatchToProps = dispatch => ({
     },
     datasetLoad: postData => {
         dispatch(datasetLoad(postData))
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => console.log("error", error))
     }
 })
 

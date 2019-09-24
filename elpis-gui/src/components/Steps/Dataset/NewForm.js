@@ -4,20 +4,20 @@ import { Formik, ErrorMessage } from 'formik';
 import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { datasetNew } from 'redux/actions';
+import { datasetNew } from 'redux/actions/datasetActions';
 import urls from 'urls'
 
 
 class NewForm extends Component {
 
-    render() {
+     render() {
         const { t, name, datasetNew } = this.props;
         return (
 
             <Formik
                 enableReinitialize
                 initialValues={{
-                    name: ''
+                    name: 'ds'
                 }}
                 validate={values => {
                     let errors = {};
@@ -32,8 +32,7 @@ class NewForm extends Component {
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                     const postData = { name: values.name }
-                    datasetNew(postData)
-                    this.props.history.push(urls.gui.dataset.files)
+                    datasetNew(postData, this.props.history)
                 }}
             >
                 {({
@@ -73,8 +72,12 @@ const mapStateToProps = state => {
     }
 }
 const mapDispatchToProps = dispatch => ({
-    datasetNew: name => {
-        dispatch(datasetNew(name))
+    datasetNew: (name, history) => {
+        dispatch(datasetNew(name, history))
+            .then(response => {
+                history.push(urls.gui.dataset.files)
+            })
+            .catch(error => console.log("error", error))
     }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewForm)));

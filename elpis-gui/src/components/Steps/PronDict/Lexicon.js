@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Divider, Form, Grid, Header, Message, Segment, TextArea } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictLexicon, pronDictGenerateLexicon, pronDictSaveLexicon, testUpdateLexicon } from 'redux/actions';
+import { pronDictBuildLexicon, pronDictSaveLexicon, pronDictUpdateLexicon } from 'redux/actions/pronDictActions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentPronDictName from "./CurrentPronDictName";
@@ -16,7 +16,7 @@ class PronDictLexicon extends Component {
     }
 
     generateLexicon = () => {
-        this.props.pronDictGenerateLexicon()
+        this.props.pronDictBuildLexicon()
     }
 
     saveLexicon = () => {
@@ -25,7 +25,7 @@ class PronDictLexicon extends Component {
     }
 
     handleChange = (event) => {
-        this.props.testUpdateLexicon( { "lexicon": event.target.value } )
+        this.props.pronDictUpdateLexicon( { "lexicon": event.target.value } )
     }
 
 
@@ -53,7 +53,7 @@ class PronDictLexicon extends Component {
                             <Message content={ t('pronDict.lexicon.description') } />
 
                             <Segment>
-                                <Form attached>
+                                <Form>
                                     <TextArea
                                         className="lexicon"
                                         onChange={this.handleChange}
@@ -87,17 +87,16 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    pronDictLexicon: () => {
-        dispatch(pronDictLexicon())
-    },
-    pronDictGenerateLexicon: () => {
-        dispatch(pronDictGenerateLexicon())
+    pronDictBuildLexicon: () => {
+        dispatch(pronDictBuildLexicon())
+            .then(response => console.log(response))
     },
     pronDictSaveLexicon: data => {
         dispatch(pronDictSaveLexicon(data))
+            .then(response => console.log(response))
     },
-    testUpdateLexicon: data => {
-        dispatch(testUpdateLexicon(data))
+    pronDictUpdateLexicon: data => {
+        dispatch(pronDictUpdateLexicon(data))
     }
 })
 

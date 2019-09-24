@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Divider, Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { modelResults } from 'redux/actions';
+import { modelResults } from 'redux/actions/modelActions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "./CurrentModelName";

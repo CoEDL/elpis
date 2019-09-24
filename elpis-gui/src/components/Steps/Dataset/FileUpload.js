@@ -4,26 +4,22 @@ import Dropzone from "react-dropzone";
 import { Button } from 'semantic-ui-react';
 import { fromEvent } from "file-selector";
 import { translate } from 'react-i18next';
-import { datasetFiles, datasetStatus } from 'redux/actions';
+import { datasetFiles } from 'redux/actions/datasetActions';
 import { connect } from 'react-redux';
 
 class FileUpload extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
-        console.log("files dropped:", acceptedFiles);
-
-        var formData = new FormData();
+        console.log("files dropped:", acceptedFiles)
+        var formData = new FormData()
         acceptedFiles.forEach(file => {
-            console.log(file)
-            formData.append('file', file);
+            formData.append('file', file)
         })
-        this.props.datasetStatus("loading");
-        this.props.datasetFiles(formData);
-    };
+        this.props.datasetFiles(formData)
+    }
 
     render() {
-        const { t } = this.props;
-
+        const { t } = this.props
         return (
             <div className="FileUpload">
 
@@ -44,22 +40,19 @@ class FileUpload extends Component {
                                 }
                                 <Button>{t('dataset.files.uploadButton')}</Button>
                             </div>
-                        );
+                        )
                     } }
                 </Dropzone>
             </div>
-        );
+        )
     }
 }
 
 
 const mapDispatchToProps = dispatch => ({
     datasetFiles: postData => {
-        dispatch(datasetFiles(postData));
-    },
-    datasetStatus: status => {
-        dispatch(datasetStatus(status));
+        dispatch(datasetFiles(postData))
     }
 })
 
-export default connect(null, mapDispatchToProps)(translate('common')(FileUpload));
+export default connect(null, mapDispatchToProps)(translate('common')(FileUpload))

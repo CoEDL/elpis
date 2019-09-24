@@ -3,15 +3,10 @@ import { Link } from "react-router-dom";
 import { Grid, Button, Header, Container, Segment, Placeholder } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { configReset } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import urls from 'urls'
 
 class StepWelcome extends Component {
-
-	reset = () => {
-		this.props.configReset()
-	}
 
 	render() {
 		const { t, list } = this.props
@@ -48,10 +43,6 @@ class StepWelcome extends Component {
 							</p>
 						</Segment>
 
-						<div>
-							<Button basic onClick={this.reset}>reset</Button>
-						</div>
-
 					</Grid.Column>
 				</Grid.Row>
 			</Grid>
@@ -59,15 +50,5 @@ class StepWelcome extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-	}
-}
-const mapDispatchToProps = dispatch => ({
-	configReset: postData => {
-		dispatch(configReset(postData))
-	}
-})
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepWelcome))
+export default translate('common')(StepWelcome)

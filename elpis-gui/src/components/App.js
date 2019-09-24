@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import './App.css'
+// import 'semantic-ui-css/semantic.min.css'
+import './semantic.solar.css'
 
 import {
     Welcome,
@@ -8,7 +10,6 @@ import {
     DatasetNew,
     DatasetFiles,
     DatasetPrepare,
-    DatasetPrepareError,
     PronDictDashboard,
     PronDictNew,
     PronDictL2S,
@@ -19,8 +20,7 @@ import {
     ModelTrain,
     ModelResults,
     ModelError,
-    NewTranscription,
-    NewTranscriptionResults
+    NewTranscription
 } from './Steps/index';
 import PageContainer from './PageContainer';
 import urls from 'urls'
@@ -38,7 +38,6 @@ class App extends Component {
                         <Route path={urls.gui.dataset.new} component={ DatasetNew } />
                         <Route path={urls.gui.dataset.files} component={ DatasetFiles } />
                         <Route path={urls.gui.dataset.prepare} exact component={ DatasetPrepare } />
-                        <Route path={urls.gui.dataset.prepareError} component={ DatasetPrepareError } />
 
                         <Route path={urls.gui.pronDict.index} exact component={PronDictDashboard} />
                         <Route path={urls.gui.pronDict.new} component={PronDictNew} />
@@ -53,7 +52,6 @@ class App extends Component {
                         <Route path={urls.gui.model.error} exact component={ ModelError } />
 
                         <Route path={urls.gui.transcription.new} component={ NewTranscription } />
-                        <Route path={urls.gui.transcription.results + '/:format'} component={ NewTranscriptionResults } />
                     </PageContainer>
                 </Router>
             </div>

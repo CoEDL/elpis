@@ -31,23 +31,19 @@ export default {
             "reset": "/api/config/reset"
         },
         "dataset": {
+            "new": "/api/dataset/new",
             "load": "/api/dataset/load",
             "list": "/api/dataset/list",
-            "name": "/api/dataset/name",
-            "new": "/api/dataset/new",
-            "name": "/api/dataset/name",
-            "settings": "/api/dataset/settings",
             "files": "/api/dataset/files",
+            "settings": "/api/dataset/settings",
             "prepare": "/api/dataset/prepare"
         },
         "pronDict": {
+            "new": "/api/pron-dict/new",
             "load": "/api/pron-dict/load",
             "list": "/api/pron-dict/list",
-            "name": "/api/pron-dict/name",
-            "new": "/api/pron-dict/new",
             "l2s": "/api/pron-dict/l2s",
-            "lexicon": "/api/pron-dict/lexicon",
-            "generateLexicon": "/api/pron-dict/generate-lexicon",
+            "buildLexicon": "/api/pron-dict/generate-lexicon",
             "saveLexicon": "/api/pron-dict/save-lexicon"
         },
         "model": {

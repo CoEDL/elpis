@@ -3,7 +3,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { Grid, Header, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictNew } from 'redux/actions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import NewForm from 'components/Steps/PronDict/NewForm';
@@ -14,7 +13,7 @@ class PronDictNew extends Component {
     componentDidMount() {}
 
     render() {
-        const { t, name, pronDictNew } = this.props;
+        const { t } = this.props;
         return (
             <div>
                 <Branding />
@@ -44,9 +43,5 @@ const mapStateToProps = state => {
         name: state.pronDict.name
     }
 }
-const mapDispatchToProps = dispatch => ({
-    pronDictNew: name => {
-        dispatch(pronDictNew(name))
-    }
-})
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(PronDictNew)));
+
+export default withRouter(connect(mapStateToProps)(translate('common')(PronDictNew)));

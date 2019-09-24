@@ -4,7 +4,7 @@ import { Button, Divider, Form, Grid, Header, Input, Message, Segment } from 'se
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Formik } from 'formik';
-import { modelSettings } from 'redux/actions';
+import { modelSettings } from 'redux/actions/modelActions';
 import Branding from 'components/Steps/Shared/Branding';
 import Informer from 'components/Steps/Shared/Informer';
 import CurrentModelName from "./CurrentModelName";
