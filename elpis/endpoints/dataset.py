@@ -8,7 +8,7 @@ from elpis.wrappers.objects.dataset import Dataset
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
 
-@bp.route("/new", methods=['GET', 'POST'])
+@bp.route("/new", methods=['POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     dataset = kaldi.new_dataset(request.json['name'])
@@ -22,7 +22,7 @@ def new():
     })
 
 
-@bp.route("/load", methods=['GET', 'POST'])
+@bp.route("/load", methods=['POST'])
 def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     dataset = kaldi.get_dataset(request.json['name'])
@@ -36,15 +36,11 @@ def load():
     })
 
 
-@bp.route("/name", methods=['GET', 'POST'])
-def name():
-    dataset: Dataset = app.config['CURRENT_DATASET']
-    if dataset is None:
-        return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
-    if request.method == 'POST':
-        dataset.name = request.json['name']
+@bp.route("/list", methods=['GET'])
+def list_existing():
+    kaldi: KaldiInterface = app.config['INTERFACE']
     data = {
-        "name": dataset.name
+        "list": kaldi.list_datasets()
     }
     return jsonify({
         "status": 200,
@@ -52,7 +48,19 @@ def name():
     })
 
 
-@bp.route("/settings", methods=['GET', 'POST'])
+@bp.route("/files", methods=['POST'])
+def files():
+    dataset: Dataset = app.config['CURRENT_DATASET']
+    if dataset is None:
+        return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
+    if request.method == 'POST':
+        for file in request.files.getlist("file"):
+            dataset.add_fp(file, file.filename)
+    # TODO fix this to return a json wrapper
+    return jsonify(dataset.files)
+
+
+@bp.route("/settings", methods=['POST'])
 def settings():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
@@ -68,31 +76,7 @@ def settings():
     })
 
 
-@bp.route("/list", methods=['GET', 'POST'])
-def list_existing():
-    kaldi: KaldiInterface = app.config['INTERFACE']
-    data = {
-        "list": kaldi.list_datasets()
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
-
-
-@bp.route("/files", methods=['GET', 'POST'])
-def files():
-    dataset: Dataset = app.config['CURRENT_DATASET']
-    if dataset is None:
-        return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
-    if request.method == 'POST':
-        for file in request.files.getlist("file"):
-            dataset.add_fp(file, file.filename)
-    # TODO fix this to return a json wrapper
-    return jsonify(dataset.files)
-
-
-@bp.route("/prepare", methods=['GET', 'POST'])
+@bp.route("/prepare", methods=['POST'])
 def prepare():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:

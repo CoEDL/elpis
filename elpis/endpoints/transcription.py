@@ -8,11 +8,11 @@ from elpis.wrappers.utilities import hasher
 
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 
-
+  # TODO transcriptions have no name
 @bp.route("/new", methods=['POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
-    transcription = kaldi.new_transcription(hasher.new())  # TODO transcriptions have no name
+    transcription = kaldi.new_transcription(hasher.new())
     model: Model = app.config['CURRENT_MODEL']
     transcription.link(model)
     app.config['CURRENT_TRANSCRIPTION'] = transcription
@@ -27,7 +27,7 @@ def new():
         "data": data
     })
 
-@bp.route("/transcribe", methods=['GET','POST'])
+@bp.route("/transcribe", methods=['GET'])
 def transcribe():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     transcription.transcribe(on_complete=lambda: print('Transcribed text!'))
@@ -41,7 +41,7 @@ def transcribe():
     })
 
 
-@bp.route("/transcribe-align", methods=['GET','POST'])
+@bp.route("/transcribe-align", methods=['GET'])
 def transcribe_align():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     transcription.transcribe_align(on_complete=lambda: print('Transcribed and aligned!'))
@@ -55,7 +55,7 @@ def transcribe_align():
     })
 
 
-@bp.route("/status", methods=['GET', 'POST'])
+@bp.route("/status", methods=['GET'])
 def status():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     data = {
@@ -68,13 +68,14 @@ def status():
     })
 
 
-@bp.route("/text", methods=['POST'])
+@bp.route("/text", methods=['GET'])
 def text():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     # TODO fix this to return json wrapper
     return transcription.text()
 
-@bp.route("/elan", methods=['POST'])
+
+@bp.route("/elan", methods=['GET'])
 def elan():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     # TODO fix this to return json wrapper

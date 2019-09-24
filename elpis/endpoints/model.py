@@ -25,7 +25,7 @@ def run(cmd: str) -> str:
     return process.stdout
 
 
-@bp.route("/new", methods=['GET', 'POST'])
+@bp.route("/new", methods=['POST'])
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     model = kaldi.new_model(request.json["name"])
@@ -47,7 +47,7 @@ def new():
     })
 
 
-@bp.route("/load", methods=['GET', 'POST'])
+@bp.route("/load", methods=['POST'])
 def load():
     kaldi: KaldiInterface = app.config['INTERFACE']
     model = kaldi.get_model(request.json["name"])
@@ -64,16 +64,18 @@ def load():
     })
 
 
-@bp.route("/name", methods=['GET', 'POST'])
-def name():
-    model = app.config['CURRENT_MODEL']
-    if model is None:
-        # TODO sending a string error back in incorrect, jsonify it.
-        return '{"status":"error", "data": "No current model exists (perhaps create one first)"}'
-    if request.method == 'POST':
-        model.name = request.json['name']
+@bp.route("/list", methods=['GET'])
+def list_existing():
+    kaldi: KaldiInterface = app.config['INTERFACE']
+    # TODO see the two todos below
+    fake_results = {}
     data = {
-        "name": model.name
+        "list": [{
+                'name': model['name'],
+                'results': fake_results,
+                'dataset_name': model['dataset_name'],
+                'pron_dict_name': model['pron_dict_name']
+                } for model in kaldi.list_models_verbose()]
     }
     return jsonify({
         "status": 200,
@@ -81,7 +83,7 @@ def name():
     })
 
 
-@bp.route("/settings", methods=['GET', 'POST'])
+@bp.route("/settings", methods=['POST'])
 def settings():
     model = app.config['CURRENT_MODEL']
     if model is None:
@@ -101,42 +103,7 @@ def settings():
     })
 
 
-
-@bp.route("/list", methods=['GET', 'POST'])
-def list_existing():
-    kaldi: KaldiInterface = app.config['INTERFACE']
-    # TODO see the two todos below
-    fake_results = {}
-    data = {
-        "list": [{
-                'name': model['name'],
-                'results': fake_results,
-                'dataset_name': model['dataset_name'],
-                'pron_dict_name': model['pron_dict_name']
-                } for model in kaldi.list_models_verbose()]
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
-
-    # TODO make this endpoint list-verbose or something like that
-    # TODO /names could list just the name and /list can be the descriptive verison
-
-
-@bp.route("/status", methods=['GET', 'POST'])
-def status():
-    model: Model = app.config['CURRENT_MODEL']
-    data = {
-        "status": model.status
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
-
-
-@bp.route("/train", methods=['GET', 'POST'])
+@bp.route("/train", methods=['GET'])
 def train():
     model: Model = app.config['CURRENT_MODEL']
     model.train(on_complete=lambda: print("Training complete!"))
@@ -149,7 +116,19 @@ def train():
     })
 
 
-@bp.route("/results", methods=['GET', 'POST'])
+@bp.route("/status", methods=['GET'])
+def status():
+    model: Model = app.config['CURRENT_MODEL']
+    data = {
+        "status": model.status
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
+
+@bp.route("/results", methods=['GET'])
 def results():
     model: Model = app.config['CURRENT_MODEL']
 
