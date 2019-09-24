@@ -62,7 +62,7 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_FILES_SUCCESS:
             // TODO, API should send a JSON wrapper
             var { data, status } = action.response.data
-            if (status==200) {
+            if (status === 200) {
                 // action.data is an array of filenames. parse this, split into separate lists
                 var audioFiles = data.files.filter(file => getFileExtension(file) === 'wav').sort()
                 var transcriptionFiles = data.files.filter(file => getFileExtension(file) === 'eaf').sort()
@@ -82,15 +82,20 @@ const dataset = (state = initState, action) => {
             }
 
         case actionTypes.DATASET_SETTINGS_SUCCESS:
-            var { tier } = action.response.data.data
-            return {
-                ...state,
-                settings: {...state.settings, tier}
+            var { data, status } = action.response.data
+            if (status === 200) {
+                return {
+                    ...state,
+                    settings: {...state.settings, tier:data.tier}
+                }
+            } else {
+                console.log(data)
+                return { ...state }
             }
 
         case actionTypes.DATASET_PREPARE_SUCCESS:
             var { data, status } = action.response.data
-            if ( status == 200 ) {
+            if (status === 200) {
                 // First decode the text we receive from the API
                 const wordlistObj = JSON.parse(data.wordlist)
                 const wordlist = Object.keys(wordlistObj).map( key => {

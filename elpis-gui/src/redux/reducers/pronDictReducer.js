@@ -42,7 +42,7 @@ const pronDict = (state = initState, action) => {
 
         case actionTypes.PRON_DICT_L2S_SUCCESS:
             var { data, status } = action.response.data
-            if (status==200) {
+            if (status === 200) {
                 return {
                     ...state,
                     l2s: data.l2s
@@ -55,7 +55,7 @@ const pronDict = (state = initState, action) => {
         case actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS:
         case actionTypes.PRON_DICT_SAVE_LEXICON:
             var { data, status } = action.response.data
-            if (status==200){
+            if (status === 200){
                 return {
                     ...state,
                     lexicon: data.lexicon

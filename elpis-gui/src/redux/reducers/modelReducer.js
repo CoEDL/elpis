@@ -36,16 +36,24 @@ const model = (state = initState, action) => {
             return { ...state, modelList: list }
 
         case actionTypes.MODEL_SETTINGS_SUCCESS:
-            var { settings } = action.response.data.data
-            return { ...state, settings }
+            var { data, status } = action.response.data
+            if (status == 200) {
+                return { ...state, settings:data.settings }
+            } else {
+                console.log(data)
+                return { ...state }
+            }
 
+        // crazy, there will be three layers of objects with status properties here!
         case actionTypes.MODEL_TRAIN_SUCCESS:
-            var { status } = action.response.data.data
-            return { ...state, status }
-
         case actionTypes.MODEL_STATUS_SUCCESS:
-            var { status } = action.response.data.data
-            return { ...state, status }
+            var { data, status } = action.response.data
+            if (status == 200) {
+                return { ...state, status: data.status }
+            } else {
+                console.log(data)
+                return { ...state }
+            }
 
         case actionTypes.MODEL_RESULTS_SUCCESS:
             var { data, status } = action.response.data
