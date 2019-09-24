@@ -52,7 +52,7 @@ def list_existing():
 def files():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
-        return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
+        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
         for file in request.files.getlist("file"):
             dataset.add_fp(file, file.filename)
@@ -64,7 +64,7 @@ def files():
 def settings():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
-        return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
+        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
         dataset.tier = request.json['tier']
     data = {
@@ -75,13 +75,21 @@ def settings():
         "data": data
     })
 
+# TODO prepare endpoint returns file contents as text.
+# Probably nicer to send back JSON data instead
 
 @bp.route("/prepare", methods=['POST'])
 def prepare():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
-        return '{"status":"error", "data": "No current dataset exists (perhaps create one first)"}'
+        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
     dataset.process()
     with dataset.pathto.word_count_json.open() as fin:
-        # TODO this returns file contents. fix this to return json wrapper
-        return fin.read()
+        wordlist = fin.read()
+    data = {
+        "wordlist": wordlist
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
