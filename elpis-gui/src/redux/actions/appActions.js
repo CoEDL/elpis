@@ -10,7 +10,6 @@ export const setCurrentStep = url => ({
     url
 })
 
-
 export const configReset = () => {
     console.log("actions configReset")
     const url = baseUrl + urls.api.config.reset
@@ -26,6 +25,7 @@ export const configReset = () => {
     }
 }
 
+// reducer for this is in store.js
 const datasetResetSuccess = response => ({
     type: actionTypes.APP_CONFIG_RESET,
     response: { ...response }
