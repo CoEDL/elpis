@@ -23,7 +23,7 @@ export function transcriptionNew(postData) {
                 dispatch(transcriptionNewFailure(error))
                 throw error
             })
-        return response
+        return responseData
     }
 }
 
@@ -56,7 +56,7 @@ export function transcriptionStatus() {
                 dispatch(transcriptionStatusFailure(error))
                 throw error
             })
-        return response
+        return responseData
     }
 }
 
@@ -90,7 +90,7 @@ export function transcriptionTranscribe() {
                 dispatch(transcriptionTranscribeFailure(error))
                 throw error
             })
-        return response
+        return responseData
     }
 }
 
@@ -123,7 +123,7 @@ export function transcriptionTranscribeAlign() {
                 dispatch(transcriptionTranscribeAlignFailure(error))
                 throw error
             })
-        return response
+        return responseData
     }
 }
 
@@ -156,7 +156,7 @@ export function transcriptionGetText() {
                 dispatch(transcriptionGetTextFailure(error))
                 throw error
             })
-        return response
+        return responseData
     }
 }
 
@@ -189,7 +189,7 @@ export function transcriptionGetElan() {
                 dispatch(transcriptionGetElanFailure(error))
                 throw error
             })
-        return response
+        return responseData
     }
 }
 

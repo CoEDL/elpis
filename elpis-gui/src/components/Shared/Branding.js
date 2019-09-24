@@ -9,7 +9,7 @@ class StepBranding extends Component {
 
     reset = () => {
         this.props.configReset()
-        window.location.href = "/dataset/new"
+        // window.location.href = "/dataset/new"
     }
 
     render() {
@@ -27,6 +27,7 @@ class StepBranding extends Component {
 const mapDispatchToProps = dispatch => ({
     configReset: postData => {
         dispatch(configReset(postData))
+            .then(response => console.log(response))
     }
 })
 

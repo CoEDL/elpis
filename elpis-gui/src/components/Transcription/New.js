@@ -26,13 +26,11 @@ class NewTranscription extends Component {
 
     statusInterval = null
 
-
     componentDidMount() {
         this.props.modelList()
     }
 
     triggerStatusCheck = () => {
-        console.log("trigger status check")
         this.statusInterval = setInterval(this.doStatusCheck, 1000)
     }
 
@@ -41,15 +39,11 @@ class NewTranscription extends Component {
 
         this.props.transcriptionStatus()
 
-        console.log("render status", status)
-        console.log("render type", type)
-
         // clear the status check
         if (status == 'transcribed') {
             clearInterval(this.statusInterval)
 
             if (type == 'elan') {
-                console.log("fire transcriptionGetElan")
                 transcriptionGetElan()
             }
         }
@@ -85,16 +79,13 @@ class NewTranscription extends Component {
     }
 
     handleSelectModel = (e, { value }) => {
-        console.log(value)
         const { list, modelLoad } = this.props
         // get the matching ds and pd values
         var selectedModel = list.filter(m => m.name==value)
-        console.log("selectedModel", selectedModel)
         // argh, this is weird, but reusing code from Model Dashboard
         const modelData = { name: selectedModel[0].name }
         const datasetData = { name: selectedModel[0].dataset_name }
         const pronDictData = { name: selectedModel[0].pron_dict_name }
-        console.log(modelData, datasetData, pronDictData)
         modelLoad(modelData, datasetData, pronDictData)
     }
 
@@ -102,12 +93,14 @@ class NewTranscription extends Component {
     render = () => {
         const { t, filename, list, status, type, text, elan, modelName } = this.props;
 
-        console.log("status", status)
+        console.log("render got status", status)
+
         const listOptions = list.map(model => ({"key": model.name, "value": model.name, "text": model.name}))
 
         // preven the buttnos from being clicked if we haven't got
         // an active model, or file to transcribe
-        let enableButtons = (modelName && filename && status=='ready') ? true : false
+        let enableButtons = (modelName && filename &&
+            (status == 'ready' || status == 'transcribed' )) ? true : false
 
         const loadingIcon = (status == 'transcribing') ? (
             <Icon name='circle notched' size="big" loading />
@@ -238,7 +231,6 @@ const mapDispatchToProps = dispatch => ({
                 // This is returned when the transcribe process is done,
                 // because this API call is syncronous.
                 // So we can safely request the text in this 'then'
-                console.log("mapDispatchToProps transcribe", response)
                 dispatch(transcriptionGetText())
             })
     },
@@ -247,15 +239,13 @@ const mapDispatchToProps = dispatch => ({
             .then(response => {
                 // This is returned immediately, because this API call runs in the background
                 // So we can't request the elan file. Use doStatusCheck above
-                console.log("mapDispatchToProps transcribeAlign", response)
                 triggerStatusCheck()
             })
     },
     transcriptionStatus: () => {
-        console.log("dispatch transcription status")
         dispatch(transcriptionStatus())
             .then(response => {
-                console.log("mapDispatchToProps status", response)
+                console.log("transcription status", response)
             })
     },
     transcriptionGetText: () => {

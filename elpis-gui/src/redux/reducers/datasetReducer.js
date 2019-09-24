@@ -26,12 +26,12 @@ const dataset = (state = initState, action) => {
             return {...state}
 
         case actionTypes.DATASET_NEW_SUCCESS:
-            var { name } = action.response.data.data
+            var { name } = action.response.data.data.config
             return { ...initState, name }
 
         case actionTypes.DATASET_LOAD_SUCCESS:
             // loading existing data set might have files and settings
-            var { name, tier, files } = action.response.data.data
+            var { name, tier, files } = action.response.data.data.config
             // action.data is an array of filenames. parse this, split into separate lists
             var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort()
             var transcriptionFiles = files.filter(file => getFileExtension(file) === 'eaf').sort()
@@ -51,17 +51,17 @@ const dataset = (state = initState, action) => {
                 wordlist: "",
             }
 
-
         case actionTypes.DATASET_LIST_SUCCESS:
             return {
                 ...state,
-                datasetList: action.response.data.data
+                datasetList: action.response.data.data.list
             }
 
         case actionTypes.DATASET_FILES_STARTED:
             return { ...state, status: "loading" }
 
         case actionTypes.DATASET_FILES_SUCCESS:
+            // TODO, API should send a JSON wrapper
             var { data } = action.response
             // action.data is an array of filenames. parse this, split into separate lists
             var audioFiles = data.filter(file => getFileExtension(file) === 'wav').sort()
@@ -71,7 +71,7 @@ const dataset = (state = initState, action) => {
             audioFiles = [...(new Set(audioFiles))];
             return {
                 ...state,
-                status: "done",
+                status: "loaded",
                 audioFiles,
                 transcriptionFiles,
                 additionalTextFiles

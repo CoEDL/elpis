@@ -14,13 +14,14 @@ const pronDict = (state = initState, action) => {
     switch (action.type) {
 
         case actionTypes.PRON_DICT_NEW_SUCCESS:
+            var { name } = action.response.data.data.config
             return {
                 ...initState,
-                name: action.response.data.data.config.name
+                name
             }
 
         case actionTypes.PRON_DICT_LOAD_SUCCESS:
-            var { config, datasetName, l2s, lexicon } = action.response.data.data
+            var { config, l2s, lexicon } = action.response.data.data
             return {
                 ...state,
                 name: config.name,
@@ -30,9 +31,10 @@ const pronDict = (state = initState, action) => {
             }
 
         case actionTypes.PRON_DICT_LIST_SUCCESS:
+            var { list } = action.response.data.data
             return {
                 ...state,
-                pronDictList: action.response.data.data
+                pronDictList: list
             }
 
 
@@ -59,7 +61,6 @@ const pronDict = (state = initState, action) => {
                 ...state,
                 lexicon: action.data.lexicon
             }
-
 
         default:
             return state;

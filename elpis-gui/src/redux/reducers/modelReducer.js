@@ -5,15 +5,11 @@ const initState = {
     name: '',
     datasetName: '',
     pronDictName: '',
-    date: null,
-    l2s: '',
-    lexicon: '',
     results: null,
     settings: {
         ngram: 1
     },
-    status: 'ready',
-    apiWaiting: {status: false, message: 'something'}
+    status: 'ready'
 }
 
 const model = (state = initState, action) => {
@@ -24,47 +20,36 @@ const model = (state = initState, action) => {
             return { ...initState, name }
 
         case actionTypes.MODEL_LOAD_SUCCESS:
-            var { config, l2s } = action.response.data.data
+            var { config } = action.response.data.data
             return {
-                ...state,
+                ...initState,
                 name: config.name,
-                l2s,
-                status: 'ready',
-                lexicon: 'No lexicon yet',
                 datasetName: config.dataset_name,
                 pronDictName: config.pron_dict_name,
-                settings: {...state.settings, ngram: config.ngram}
+                settings: {...state.settings, ngram: config.ngram},
+                // TODO load the results too
             }
 
         case actionTypes.MODEL_LIST_SUCCESS:
-            return {
-                ...state,
-                modelList: action.response.data.data
-            }
+            var { list } = action.response.data.data
+            return { ...state, modelList: list }
 
         case actionTypes.MODEL_SETTINGS_SUCCESS:
-            return {
-                ...state,
-                settings: action.response.data.data
-            }
+            var { settings } = action.response.data.data
+            return { ...state, settings }
 
         case actionTypes.MODEL_TRAIN_SUCCESS:
-            return {
-                ...state,
-                status: action.response.data.data
-            }
+            var { status } = action.response.data.data
+            return { ...state, status }
 
         case actionTypes.MODEL_STATUS_SUCCESS:
-            return {
-                ...state,
-                status: action.response.data.data
-            }
+            var { status } = action.response.data.data
+            return { ...state, status }
 
         case actionTypes.MODEL_RESULTS_SUCCESS:
-            return {
-                ...state,
-                results: action.response.data.data
-            }
+            var { results } = action.response.data.data
+            return { ...state, results }
+
         default:
             return state;
     }

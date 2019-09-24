@@ -35,7 +35,7 @@ class ModelTrain extends Component {
     }
 
     render() {
-        const { t, settings, apiWaiting, status } = this.props;
+        const { t, settings, status } = this.props;
 
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />
@@ -98,11 +98,6 @@ class ModelTrain extends Component {
                     </Grid>
                 </Segment>
 
-                {/* temporarily disable with 'false &&' */}
-                <Dimmer active={ false && apiWaiting.status }>
-                    <Loader size="massive"  content={apiWaiting.message} />
-                </Dimmer>
-
             </div>
         );
     }
@@ -112,7 +107,6 @@ const mapStateToProps = state => {
     return {
         name: state.model.name,
         settings: state.model.settings,
-        apiWaiting: state.model.apiWaiting,
         status: state.model.status
     }
 }
