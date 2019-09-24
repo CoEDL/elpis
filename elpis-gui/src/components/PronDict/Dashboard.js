@@ -121,9 +121,15 @@ class PronDictDashboard extends Component {
                                         as={Link}
                                         to={urls.gui.pronDict.new} />
                                     </Segment>
+
                                     <Segment>
                                         {listEl}
                                     </Segment>
+
+                                    <Button as={Link} to={urls.gui.pronDict.l2s} disabled={!name}>
+                                        {t('common.nextButton')}
+                                    </Button>
+
                                 </>
                             }
 
