@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Divider, Form, Grid, Header, Input, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import { modelSettings } from 'redux/actions/modelActions';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
@@ -67,15 +67,17 @@ class ModelSettings extends Component {
                                     isSubmitting,
                                     /* and other goodies */
                                 }) => (
-                                        <Form onSubmit={ handleSubmit }>
-                                            <Form.Field>
-                                                <Input
-                                                    label={ t('model.settings.ngramLabel') }
-                                                    value={ values.ngram }
-                                                    name="ngram"
-                                                    type="text"
-                                                    onChange={ handleChange } />
-                                            </Form.Field>
+                                        <Form onSubmit={handleChange }>
+                                            <Field component="select" name="ngram">
+                                                <option key="1" value="1">1</option>
+                                                <option key="2" value="2">2</option>
+                                                <option key="3" value="3">3</option>
+                                                <option key="4" value="4">4</option>
+                                                <option key="5" value="5">5</option>
+                                            </Field>
+
+                                            <Divider />
+
                                             <Button type="button" onClick={ handleSubmit } >
                                                 { t('common.nextButton') }
                                             </Button>
