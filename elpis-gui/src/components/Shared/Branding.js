@@ -9,7 +9,7 @@ class StepBranding extends Component {
 
     reset = () => {
         this.props.configReset()
-        // window.location.href = "/dataset/new"
+        window.location.href = "/dataset/new"
     }
 
     render() {
