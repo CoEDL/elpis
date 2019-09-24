@@ -23,7 +23,6 @@ class FileUpload extends Component {
         const { t, name } = this.props
 
         const interactionDisabled = name ? false : true
-        console.log("interactionDisabled", interactionDisabled)
 
         return (
             <div className="FileUpload">

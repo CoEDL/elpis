@@ -12,7 +12,7 @@ import urls from 'urls'
 
 class ModelSettings extends Component {
     render() {
-        const { t, settings, modelSettings } = this.props;
+        const { t, settings, modelSettings, name } = this.props;
         return (
             <div>
                 <Branding />
@@ -78,7 +78,7 @@ class ModelSettings extends Component {
 
                                             <Divider />
 
-                                            <Button type="button" onClick={ handleSubmit } >
+                                            <Button type="button" onClick={handleSubmit} disabled={!name}>
                                                 { t('common.nextButton') }
                                             </Button>
                                         </Form>

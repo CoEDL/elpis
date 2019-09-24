@@ -24,8 +24,7 @@
             "tierLabel": "tier name",
             "settingsDescription": "What is the name of the Elan tier that your transcriptions are on?",
             "uploadButton": "Upload",
-            "saveButton": "Save Settings",
-            "nextButtonError": "(Simulate a file input error)"
+            "saveButton": "Save Settings"
         },
         "fileUpload": {
             "audioLabel": "Audio files:",
@@ -43,10 +42,6 @@
             "wordlistHeader": "Wordlist",
             "frequencyHeader": "Frequency",
             "noWords": "No words found, please upload some files."
-        },
-        "prepareError": {
-            "title": "File preparation error",
-            "backButton": "Back to add files"
         }
     },
     "pronDict": {
@@ -113,8 +108,7 @@
             "logsHeader": "Logs",
             "logsDescription": "gory detail from Kaldi (coming soon)",
             "trainButton": "Start training",
-            "statusButton": "Check progress",
-            "nextButtonError": "(Simulate an error training model)"
+            "statusButton": "Check progress"
         },
         "results": {
             "title": "Results",
@@ -123,12 +117,9 @@
             "downloadModalHeader": "Your files and settings are being compiled",
             "downloadModalContent": "Click Save on your browser's download dialog",
             "downloadOkButton": "OK",
-            "newTranscribeButton": "Transcribe new audio"
-        },
-        "error": {
-            "title": "Error occured while training",
-            "errorLogHeader": "Error Log",
-            "contactButton": "Contact a Tech-person"
+            "newTranscribeButton": "Transcribe new audio",
+            "oops": "Oops, this is showing the most recently trained results, not necessarily for the selected model.",
+            "noResults": "No results found"
         }
     },
     "transcription": {
@@ -149,7 +140,6 @@
         "results": {
             "title": "Transcribed results",
             "usingAudio": "For {{filename}}",
-            "errorLogHeader": "Error Log",
             "resultsHeader": "Transcription as text",
             "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
             "downloadButton": "Download file"

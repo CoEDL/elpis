@@ -27,7 +27,8 @@ class StepBranding extends Component {
 const mapDispatchToProps = dispatch => ({
     configReset: postData => {
         dispatch(configReset(postData))
-            .then(response => console.log(response))
+            .then(response => console.log("reset OK", response))
+            .catch(error => console.log("reset failed", error))
     }
 })
 

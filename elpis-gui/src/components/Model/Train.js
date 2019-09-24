@@ -35,14 +35,14 @@ class ModelTrain extends Component {
     }
 
     render() {
-        const { t, settings, status } = this.props;
+        const { t, name, settings, status } = this.props;
 
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />
         ) : null
 
         const trainingButton = (status === 'ready') ? (
-            <Button onClick={this.handleModelTrain}>
+            <Button onClick={this.handleModelTrain} disabled={!name}>
                 { t('model.train.trainButton') }
             </Button>
         ) : null

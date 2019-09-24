@@ -61,19 +61,24 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_FILES_SUCCESS:
             // TODO, API should send a JSON wrapper
-            var { data } = action.response
-            // action.data is an array of filenames. parse this, split into separate lists
-            var audioFiles = data.filter(file => getFileExtension(file) === 'wav').sort()
-            var transcriptionFiles = data.filter(file => getFileExtension(file) === 'eaf').sort()
-            var additionalTextFiles = data.filter(file => getFileExtension(file) === 'txt').sort()
-            // remove duplicates
-            audioFiles = [...(new Set(audioFiles))];
-            return {
-                ...state,
-                status: "loaded",
-                audioFiles,
-                transcriptionFiles,
-                additionalTextFiles
+            var { data, status } = action.response.data
+            if (status==200) {
+                // action.data is an array of filenames. parse this, split into separate lists
+                var audioFiles = data.files.filter(file => getFileExtension(file) === 'wav').sort()
+                var transcriptionFiles = data.files.filter(file => getFileExtension(file) === 'eaf').sort()
+                var additionalTextFiles = data.files.filter(file => getFileExtension(file) === 'txt').sort()
+                // remove duplicates
+                audioFiles = [...(new Set(audioFiles))];
+                return {
+                    ...state,
+                    status: "loaded",
+                    audioFiles,
+                    transcriptionFiles,
+                    additionalTextFiles
+                }
+            } else {
+                console.log(data)
+                return { ...state, status: 'ready' }
             }
 
         case actionTypes.DATASET_SETTINGS_SUCCESS:
@@ -88,14 +93,11 @@ const dataset = (state = initState, action) => {
             if ( status == 200 ) {
                 // First decode the text we receive from the API
                 const wordlistObj = JSON.parse(data.wordlist)
-
                 const wordlist = Object.keys(wordlistObj).map( key => {
                     return ({ name: key, frequency: wordlistObj[key] })
                 })
-
                 if (wordlist.length > 0) return { ...state, wordlist }
-                else console.log("no words")
-
+                else return { ...state }
             } else {
                 // Errors are formatted as { status: code, data: message }
                 console.log( data )

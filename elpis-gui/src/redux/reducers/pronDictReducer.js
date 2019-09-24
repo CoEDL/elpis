@@ -40,7 +40,6 @@ const pronDict = (state = initState, action) => {
                 pronDictList: list
             }
 
-
         case actionTypes.PRON_DICT_L2S_SUCCESS:
             var { data, status } = action.response.data
             if (status==200) {

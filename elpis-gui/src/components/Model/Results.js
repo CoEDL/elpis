@@ -16,6 +16,7 @@ class ModelResults extends Component {
 
     render() {
         const { t, results } = this.props;
+
         const resultsEl = results ? (
             <Segment>
 
@@ -31,11 +32,13 @@ class ModelResults extends Component {
                     </Table.Body>
                 </Table>
                 <p className="bug">
-                    Oops, this is showing the most recently trained results, not necessarily for the selected model.
+                    {t('model.results.oops')}
                 </p>
 
             </Segment>
-        ) : null
+        ) : (
+            <p>{t('model.results.noResults')}</p>
+        )
 
         return (
             <div>

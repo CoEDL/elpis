@@ -131,9 +131,15 @@ class ModelDashboard extends Component {
                                             as={Link}
                                             to={urls.gui.model.new} />
                                     </Segment>
+
                                     <Segment>
                                         {listEl}
                                     </Segment>
+
+                                    <Button as={Link} to={urls.gui.model.settings} disabled={!name}>
+                                        {t('common.nextButton')}
+                                    </Button>
+
                                 </>
                             }
 
