@@ -7,13 +7,13 @@
 .ui.segment,
 .ui.table,
 .ui.table thead th {
-    background: #ffffff40 !important
+    /* background: #ffffff40 !important */
 }
 
 button.ui.basic.button,
 .ui.button,
 body {
-    color: #000 !important;
+    /* color: #000 !important; */
 }
 
 
@@ -108,17 +108,12 @@ textarea.lexicon {
     float: right
 }
 
-.ui.styled.accordion > div {
-    /* border-bottom: 5px solid white; */
-}
+/*
 
-.ui.styled.accordion .content {
-    padding: 0 !important;
-}
-
-.ui.list .item {
-    padding: 0.5em 0 !important;
-}
 .ui.list .item > div {
     padding-left: 1em !important;
+} */
+
+label.pad-right {
+    margin-right: 0.5em
 }
