@@ -57,33 +57,47 @@ def list_existing():
 @bp.route("/l2s", methods=['POST'])
 def l2s():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
+    if pron_dict is None:
+        return jsonify({"status":404, "data": "No current pron dict exists (perhaps create one first)"})
     if request.method == 'POST':
         file = request.files['file']
-        if pron_dict is None:
-            return '{"status":"error", "data": "No current pron dict exists (perhaps create one first)"}'
         pron_dict.set_l2s_fp(file)
-    # TODO fix this to return json wrapper
-    return pron_dict.l2s
+    data = {
+        "l2s": pron_dict.get_l2s()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 
 @bp.route("/generate-lexicon", methods=['GET'])
 def generate_lexicon():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
+    if pron_dict is None:
+        return jsonify({"status":404, "data": "No current pron dict exists (perhaps create one first)"})
     pron_dict.generate_lexicon()
-    # TODO fix this to return json wrapper
-    return pron_dict.get_lexicon_content()
+    data = {
+        "lexicon": pron_dict.get_lexicon_content()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 
 @bp.route("/save-lexicon", methods=['POST'])
 def save_lexicon():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
+    if pron_dict is None:
+        return jsonify({"status":404, "data": "No current pron dict exists (perhaps create one first)"})
     if request.method == 'POST':
         lexicon = request.json['lexicon']
     pron_dict.save_lexicon(lexicon)
-    # data = {
-    #     "config": pron_dict.config._load(),
-    #     "l2s": pron_dict.get_l2s_content(),
-    #     "lexicon": repr(pron_dict.get_lexicon_content())
-    # }
-    # TODO fix this to return the json wrapper
-    return lexicon
+    data = {
+        "lexicon": pron_dict.get_lexicon_content()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })

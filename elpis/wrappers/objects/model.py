@@ -63,7 +63,6 @@ class Model(FSObject):
     def ngram(self, value: int) -> None:
         self.config['ngram'] = value
 
-
     def build_kaldi_structure(self):
         # task json-to-kaldi
         output_path = self.path.joinpath('output')
@@ -102,7 +101,7 @@ class Model(FSObject):
             kaldi_local.mkdir(parents=True, exist_ok=True)
 
             # copy the pron dict
-            shutil.copy(f"{self.pron_dict.lexicon_txt}", f"{kaldi_data_local_dict.joinpath('lexicon.txt')}")
+            shutil.copy(f"{self.pron_dict.lexicon_txt_path}", f"{kaldi_data_local_dict.joinpath('lexicon.txt')}")
 
             # task generate-kaldi-configs
             path_file_path = kaldi_structure.path.joinpath('path.sh')
