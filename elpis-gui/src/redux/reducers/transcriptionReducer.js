@@ -43,15 +43,17 @@ const transcription = (state = initState, action) => {
             return { ...state, status, type }
 
         case actionTypes.TRANSCRIPTION_GET_TEXT_SUCCESS:
+            var { data } = action.response
             // TODO: do this on the backend
-            var text = action.response.data
-            text = text.split(' ').slice(1).join(' ')
+            // removes the hash from start of file
+            const text = data.split(' ').slice(1).join(' ')
             return { ...state, text }
 
         case actionTypes.TRANSCRIPTION_GET_ELAN_SUCCESS:
+            var { data } = action.response
             return {
                 ...state,
-                elan: action.response.data
+                elan: data
             }
 
         default:

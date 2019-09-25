@@ -47,13 +47,6 @@ class ModelTrain extends Component {
             </Button>
         ) : null
 
-        const checkStatusButton = (status === 'training') ? (
-            <Button onClick={this.handleModelStatus}>
-                { t('model.train.statusButton') }
-            </Button>
-        ) : null
-
-
         return (
             <div>
                 <Branding />
@@ -79,7 +72,6 @@ class ModelTrain extends Component {
                             {status !== "trained" &&
                                 <Segment>
                                     {trainingButton}
-                                    {checkStatusButton}
                                 </Segment>
                             }
 
@@ -90,7 +82,7 @@ class ModelTrain extends Component {
                                 </Message.Content>
                             </Message>
 
-                            <Button as={Link} to={urls.gui.model.results} disabled={status === 'ready'}>
+                            <Button as={Link} to={urls.gui.model.results} disabled={status === 'ready' || status === "training" }>
                                 { t('common.nextButton') }
                             </Button>
 
