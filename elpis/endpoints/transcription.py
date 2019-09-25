@@ -71,12 +71,13 @@ def status():
 @bp.route("/text", methods=['GET'])
 def text():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
-    # TODO fix this to return json wrapper
+    # OK to send these files as binary i guess
     return transcription.text()
+
 
 
 @bp.route("/elan", methods=['GET'])
 def elan():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
-    # TODO fix this to return json wrapper
+    # OK to send these files as binary i guess
     return transcription.elan()
