@@ -2,15 +2,14 @@ import os
 from flask import redirect
 from . import endpoints
 from .app import Flask
-
-from .paths import GUI_STATIC_DIR, GUI_PUBLIC_DIR
-
 from elpis.wrappers.objects.interface import KaldiInterface
 from pathlib import Path
 
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
+
+    GUI_PUBLIC_DIR = os.path.join(os.getcwd(), "elpis-gui/build")
 
     # Setup static resources
     # create and configure the app
