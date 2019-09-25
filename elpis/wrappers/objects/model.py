@@ -33,7 +33,6 @@ class Model(FSObject):
         self.config['ngram'] = 1 # default to 1 to make playing quicker
         self.config['status'] = 'untrained'
         self.status = 'untrained'
-        self.results = ''
 
     @classmethod
     def load(cls, base_path: Path):
