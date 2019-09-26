@@ -142,7 +142,8 @@
             "usingAudio": "For {{filename}}",
             "resultsHeader": "Transcription as text",
             "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
-            "downloadButton": "Download file"
+            "downloadTextButton": "Download text file",
+            "downloadElanButton": "Download Elan file"
         }
     },
     "common": {

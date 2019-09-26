@@ -184,7 +184,7 @@ class NewTranscription extends Component {
                                 <Segment>
                                     <p>{text}</p>
                                     <Button onClick={this.handleDownloadText}>
-                                        {t('transcription.results.downloadButton')}
+                                        {t('transcription.results.downloadTextButton')}
                                     </Button>
                                 </Segment>
                             }
@@ -192,7 +192,7 @@ class NewTranscription extends Component {
                             {elan &&
                                 <Segment>
                                     <Button onClick={this.handleDownloadElan}>
-                                        {t('transcription.results.downloadButton')}
+                                        {t('transcription.results.downloadElanButton')}
                                     </Button>
                                 </Segment>
                             }
