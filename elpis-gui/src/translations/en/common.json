@@ -147,6 +147,7 @@
         }
     },
     "common": {
+        "addNewButton": "Add New",
         "nextButton": "Next",
         "newButton": "New",
         "selectOneBelow": "Make a new one, or select one from the list below.",

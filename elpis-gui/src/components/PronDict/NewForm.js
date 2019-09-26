@@ -81,7 +81,7 @@ class NewForm extends Component {
                             <Divider />
 
                             <Button type="button" onClick={handleSubmit}>
-                                {t('common.nextButton')}
+                                {t('common.addNewButton')}
                             </Button>
                         </Form>
                     )}
