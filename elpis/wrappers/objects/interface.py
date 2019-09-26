@@ -56,7 +56,6 @@ class KaldiInterface(FSObject):
         self.pron_dicts = {}
         for hash_dir in os.listdir(f'{self.pron_dicts_path}'):
             if not hash_dir.startswith('.'):
-                print(hash_dir)
                 with self.pron_dicts_path.joinpath(hash_dir, PronDict._config_file).open() as fin:
                     data = json.load(fin)
                     self.pron_dicts[data["name"]] = data["hash"]
@@ -72,9 +71,6 @@ class KaldiInterface(FSObject):
                 with self.transcriptions_path.joinpath(hash_dir, Transcription._config_file).open() as fin:
                     data = json.load(fin)
                     self.transcriptions[data["name"]] = data["hash"]
-        print(self.datasets)
-        print(self.pron_dicts)
-        print(self.models)
         return self
 
     @classmethod
