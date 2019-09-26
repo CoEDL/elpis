@@ -17,6 +17,7 @@ class KaldiInterface(FSObject):
 
     def __init__(self, path: Path = None):
         if path is None:
+            # Create empty state objects
             name = hasher.new()
             super().__init__(
                 parent_path=Path(user_data_dir('elpis')),
@@ -24,37 +25,87 @@ class KaldiInterface(FSObject):
                 pre_allocated_hash=name,
                 name=name
             )
+            self.create_object_dirs()
+            self.init_state_objects()
         else:
+            # Read existing state objects
             path = Path(path).absolute()
             super().__init__(
                 parent_path=path.parent,
                 dir_name=path.name
             )
-        # ensure object directories exist
-        self.datasets_path = self.path.joinpath('datasets')
-        self.datasets_path.mkdir(parents=True, exist_ok=True)
-        self.pron_dicts_path = self.path.joinpath('pron_dicts')
-        self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
-        self.models_path = self.path.joinpath('models')
-        self.models_path.mkdir(parents=True, exist_ok=True)
-        self.loggers_path = self.path.joinpath('loggers')
-        self.loggers_path.mkdir(parents=True, exist_ok=True)
-        self.transcriptions_path = self.path.joinpath('transcriptions')
-        # config objects
+            self.create_object_dirs(path)
+            self.read_state_objects()
+            self.config['loggers'] = []
+            self.config['datasets'] = self.datasets
+            self.config['pron_dicts'] = self.pron_dicts
+            self.config['models'] = self.models
+            self.config['transcriptions'] = self.transcriptions
+
+
+    @classmethod
+    def read_state_objects(self):
+        self.loggers = []
+        self.datasets = {}
+        for hash_dir in os.listdir(f'{self.datasets_path}'):
+            # next line is to avoid issues with DS_STORE files on mac
+            if not hash_dir.startswith('.'):
+                with self.datasets_path.joinpath(hash_dir, Dataset._config_file).open() as fin:
+                    data = json.load(fin)
+                    self.datasets[data["name"]] = data["hash"]
+        self.pron_dicts = {}
+        for hash_dir in os.listdir(f'{self.pron_dicts_path}'):
+            if not hash_dir.startswith('.'):
+                print(hash_dir)
+                with self.pron_dicts_path.joinpath(hash_dir, PronDict._config_file).open() as fin:
+                    data = json.load(fin)
+                    self.pron_dicts[data["name"]] = data["hash"]
+        self.models = {}
+        for hash_dir in os.listdir(f'{self.models_path}'):
+            if not hash_dir.startswith('.'):
+                with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
+                    data = json.load(fin)
+                    self.models[data["name"]] = data["hash"]
+        self.transcriptions = {}
+        for hash_dir in os.listdir(f'{self.transcriptions_path}'):
+            if not hash_dir.startswith('.'):
+                with self.transcriptions_path.joinpath(hash_dir, Transcription._config_file).open() as fin:
+                    data = json.load(fin)
+                    self.transcriptions[data["name"]] = data["hash"]
+        print(self.datasets)
+        print(self.pron_dicts)
+        print(self.models)
+        return self
+
+    @classmethod
+    def init_state_objects(self):
         self.loggers = []
         self.datasets = {}
         self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
-
         self.config['loggers'] = []
         self.config['datasets'] = {}
         self.config['pron_dicts'] = {}
         self.config['models'] = {}
         self.config['transcriptions'] = {}
-
-        # make a default logger
         self.new_logger(default=True)
+        return self
+
+    @classmethod
+    def create_object_dirs(self, path):
+        # ensure object directories exist
+        self.datasets_path = path.joinpath('datasets')
+        self.datasets_path.mkdir(parents=True, exist_ok=True)
+        self.pron_dicts_path = path.joinpath('pron_dicts')
+        self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
+        self.models_path = path.joinpath('models')
+        self.models_path.mkdir(parents=True, exist_ok=True)
+        self.loggers_path = path.joinpath('loggers')
+        self.loggers_path.mkdir(parents=True, exist_ok=True)
+        self.transcriptions_path = path.joinpath('transcriptions')
+        self.transcriptions_path.mkdir(parents=True, exist_ok=True)
+        return self
 
     @classmethod
     def load(cls, base_path: Path):
