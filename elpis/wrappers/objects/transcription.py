@@ -44,7 +44,7 @@ class Transcription(FSObject):
     def _cook_generate_infer_files(self):
         # cook the infer file generator
         # TODO fix below
-        with open('/elpis/elpis/wrappers/inference/generate-infer-files.sh', 'r') as fin:
+        with open('/workspaces/elpis/elpis/wrappers/inference/generate-infer-files.sh', 'r') as fin:
             generator: str = fin.read()
         generator = generator.replace('working_dir/input/infer', f'{self.path}')
         generator = generator.replace('working_dir/input/output/kaldi/data/test',
@@ -72,12 +72,12 @@ class Transcription(FSObject):
         resample(tmp_file_path, self.path.joinpath('audio.wav'))
 
     def _bake_gmm_decode_align(self):
-        with open('/elpis/elpis/wrappers/inference/gmm-decode-align.sh', 'r') as fin:
+        with open('/workspaces/elpis/elpis/wrappers/inference/gmm-decode-align.sh', 'r') as fin:
             content: str = fin.read()
         content = content.replace('../../../../kaldi_helpers/output/ctm_to_textgrid.py',
-                                  '/elpis/elpis/wrappers/output/ctm_to_textgrid.py')
+                                  '/workspaces/elpis/elpis/wrappers/output/ctm_to_textgrid.py')
         content = content.replace('../../../../kaldi_helpers/output/textgrid_to_elan.py',
-                                  '/elpis/elpis/wrappers/output/textgrid_to_elan.py')
+                                  '/workspaces/elpis/elpis/wrappers/output/textgrid_to_elan.py')
         decode_file_path = self.path.joinpath('gmm-decode-align.sh')
         with decode_file_path.open(mode='w') as file_:
             file_.write(content)
@@ -95,7 +95,7 @@ class Transcription(FSObject):
         distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
 
-        subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode.sh'.split(),
+        subprocess.run('sh /workspaces/elpis/elpis/wrappers/inference/gmm-decode.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
 
         # move results

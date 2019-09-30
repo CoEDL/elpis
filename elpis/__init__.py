@@ -39,11 +39,15 @@ def create_app(test_config=None):
         SECRET_KEY='dev'
     )
 
+    elpis_path = Path(os.getcwd())
+    app.config['ELPIS_PATH'] = elpis_path
+    print("elpis_path:", elpis_path)
+
     # For a single user, storing the Kaldi interface object is okay to do in
     # the app.config, however, this would need to change for multi-user.
     # Each user would require a unique KaldiInterface. One KaldiInterface
     # stores all the artifacts that user has generated.
-    interface_path = Path('/elpis/state')
+    interface_path = Path(os.path.join(elpis_path, '/state'))
     if not interface_path.exists():
         app.config['INTERFACE'] = KaldiInterface(interface_path)
     else:
