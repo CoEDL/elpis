@@ -15,6 +15,7 @@ node_modules/
 *.xml
 *.iml
 .idea/
+.devcontainer/
 
 # Server
 log.txt
@@ -22,6 +23,7 @@ state/
 
 #testing
 abui_toy_corpus/
+recordings/
 
 # mac files
 .DS_Store

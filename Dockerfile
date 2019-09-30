@@ -119,17 +119,18 @@ RUN echo "ZSH_THEME=\"agnoster\"" >> ~/.zshhrc
 # Add random number generator to skip Docker building cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
-# Elpis
-WORKDIR /
-RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
+# # Elpis
+# WORKDIR /
+# RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 
-# Elpis GUI
-WORKDIR /elpis
-RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
+# # Elpis GUI
+# WORKDIR /elpis
+# RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
 
-# Example data
-WORKDIR /tmp
-RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
+# # Example data
+# WORKDIR /tmp
+# RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
+
 
 RUN echo "FLASK_ENV=development" >> ~/.zshrc
 RUN echo "FLASK_APP=elpis" >> ~/.zshrc
@@ -142,17 +143,19 @@ ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-WORKDIR /elpis/elpis-gui
-RUN npm install && \
-    npm run build
+# WORKDIR /elpis/elpis-gui
+# RUN npm install && \
+#     npm run build
 
-WORKDIR /elpis
-ENV VIRTUAL_ENV=/elpis/venv
+WORKDIR /workspaces/elpis
+ENV VIRTUAL_ENV=/workspaces/elpis/venv
 RUN /usr/bin/python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip3.6 install wheel && python setup.py develop
+RUN pip install wheel && pip install pylint
+# && pip install -r requirements.txt && python setup.py develop
+# RUN pip3.6 install wheel && python setup.py develop
 
-ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
+# ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
