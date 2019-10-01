@@ -107,6 +107,9 @@ class KaldiInterface(FSObject):
             dataset and not a new, blank one. Cannot be true with the override
             argument.
         :returns: Requested dataset.
+        :raises:
+            ValueError: if arguments "override" and "use_existing" are both True.
+            KaldiError: if name already exist without "override" or "use_existing" set to True.
         """
         if override and use_existing:
             raise ValueError('Argguments "override" and "use_existing" cannot both be True at the same time.')
@@ -149,12 +152,43 @@ class KaldiInterface(FSObject):
             # Remove the dataset (name, hash) entry
             datasets: Dict[str, str] = self.config['datasets']
             datasets.pop(dsname)
+            self.config['datasets'] = datasets
 
     def list_datasets(self):
         names = [name for name in self.config['datasets'].keys()]
         return names
 
-    def new_pron_dict(self, pdname):
+    def new_pron_dict(self, pdname, override=False, use_existing=False):
+        """
+        Create a new pron dict object under this interface.
+
+        :param pdname: String name to assign the pron dict.
+        :param override: (defualt False) If True then if the name exists, the
+            old pron dict under that name will be deleted in favor for the new
+            name. Cannot be true with the use_existing argument.
+        :param use_existing: (default False) If True and a pron dict already
+            exist with this name, then the pron dict returned will be that
+            pron dict and not a new, blank one. Cannot be true with the override
+            argument.
+        :returns: Requested pron dict.
+        :raises:
+            ValueError: if arguments "override" and "use_existing" are both True.
+            KaldiError: if name already exist without "override" or "use_existing" set to True.
+        """
+        if override and use_existing:
+            raise ValueError('Argguments "override" and "use_existing" cannot both be True at the same time.')
+        existing_names = self.list_datasets()
+        if pdname in self.config['pron_dicts'].keys():
+            if override:
+                self.delete_pron_dict(pdname)
+            elif use_existing:
+                return self.get_pron_dict(pdname)
+            else:
+                raise KaldiError(
+                    f'Tried adding \'{pdname}\' which is already in {existing_names} with hash {self.config["pron_dicts"][pdname]}.',
+                    human_message=f'pronunciation dictionary with name "{pdname}" already exists'
+                )
+        
         pd = PronDict(parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
         pron_dicts = self.config['pron_dicts']
         pron_dicts[pdname] = pd.hash
@@ -183,8 +217,9 @@ class KaldiInterface(FSObject):
             hash_path: Path = self.pron_dicts_path.joinpath(hash_dir)
             rmtree(hash_path)
             # Remove the pron dict (name, hash) entry
-            datasets: Dict[str, str] = self.config['pron_dicts']
-            datasets.pop(pdname)
+            pron_dicts: Dict[str, str] = self.config['pron_dicts']
+            pron_dicts.pop(pdname)
+            self.config['pron_dicts'] = pron_dicts
 
     def list_pron_dicts(self):
         names = [name for name in self.config['pron_dicts'].keys()]
@@ -199,7 +234,37 @@ class KaldiInterface(FSObject):
         return pron_dicts
 
 
-    def new_model(self, mname):
+    def new_model(self, mname, override=False, use_existing=False):
+        """
+        Create a new model object under this interface.
+
+        :param mname: String name to assign the model.
+        :param override: (defualt False) If True then if the name exists, the
+            old model under that name will be deleted in favor for the new
+            name. Cannot be true with the use_existing argument.
+        :param use_existing: (default False) If True and a model already
+            exist with this name, then the model returned will be that
+            model and not a new, blank one. Cannot be true with the override
+            argument.
+        :returns: Requested model.
+        :raises:
+            ValueError: if arguments "override" and "use_existing" are both True.
+            KaldiError: if name already exist without "override" or "use_existing" set to True.
+        """
+        if override and use_existing:
+            raise ValueError('Argguments "override" and "use_existing" cannot both be True at the same time.')
+        existing_names = self.list_datasets()
+        if mname in self.config['models'].keys():
+            if override:
+                self.delete_model(mname)
+            elif use_existing:
+                return self.get_model(mname)
+            else:
+                raise KaldiError(
+                    f'Tried adding \'{mname}\' which is already in {existing_names} with hash {self.config["models"][mname]}.',
+                    human_message=f'model with name "{mname}" already exists'
+                )
+
         m = Model(parent_path=self.models_path, name=mname, logger=self.logger)
         models = self.config['models']
         models[mname] = m.hash
@@ -214,6 +279,24 @@ class KaldiInterface(FSObject):
         m.dataset = self.get_dataset(m.config['dataset_name'])
         m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
         return m
+
+    def delete_model(self, mname: str):
+        """
+        Deletes the model with the given name. If the model does not
+        exist, then nothing is done.
+
+        :param mname: String name of model to delete.
+        """
+        existing_names = self.list_models()
+        if mname in existing_names:
+            hash_dir = self.config['models'][mname]
+            # Remove the model hashed directory
+            hash_path: Path = self.models_path.joinpath(hash_dir)
+            rmtree(hash_path)
+            # Remove the model (name, hash) entry
+            models: Dict[str, str] = self.config['models']
+            models.pop(mname)
+            self.config['models'] = models
 
     def list_models(self):
         models = []
@@ -238,7 +321,37 @@ class KaldiInterface(FSObject):
                     models.append(model)
         return models
 
-    def new_transcription(self, tname):
+    def new_transcription(self, tname, override=False, use_existing=False):
+        """
+        Create a new transcription object under this interface.
+
+        :param tname: String name to assign the transcription.
+        :param override: (defualt False) If True then if the name exists, the
+            old transcription under that name will be deleted in favor for the new
+            name. Cannot be true with the use_existing argument.
+        :param use_existing: (default False) If True and a transcription already
+            exist with this name, then the transcription returned will be that
+            transcription and not a new, blank one. Cannot be true with the override
+            argument.
+        :returns: Requested transcription.
+        :raises:
+            ValueError: if arguments "override" and "use_existing" are both True.
+            KaldiError: if name already exist without "override" or "use_existing" set to True.
+        """
+        if override and use_existing:
+            raise ValueError('Argguments "override" and "use_existing" cannot both be True at the same time.')
+        existing_names = self.list_datasets()
+        if tname in self.config['transcriptions'].keys():
+            if override:
+                self.delete_transcription(tname)
+            elif use_existing:
+                return self.get_transcription(tname)
+            else:
+                raise KaldiError(
+                    f'Tried adding \'{tname}\' which is already in {existing_names} with hash {self.config["transcriptions"][tname]}.',
+                    human_message=f'transcription with name "{tname}" already exists'
+                )
+
         t = Transcription(parent_path=self.transcriptions_path, name=tname, logger=self.logger)
         transcriptions = self.config['transcriptions']
         transcriptions[tname] = t.hash
@@ -252,6 +365,24 @@ class KaldiInterface(FSObject):
         t = Transcription.load(self.transcriptions_path.joinpath(hash_dir))
         t.model = self.get_model(t.config['model_name'])
         return t
+
+    def delete_transcription(self, tname: str):
+        """
+        Deletes the transcription with the given name. If the transcription does not
+        exist, then nothing is done.
+
+        :param tname: String name of transcription to delete.
+        """
+        existing_names = self.list_transcriptions()
+        if tname in existing_names:
+            hash_dir = self.config['transcriptions'][tname]
+            # Remove the transcription hashed directory
+            hash_path: Path = self.transcriptions_path.joinpath(hash_dir)
+            rmtree(hash_path)
+            # Remove the transcription (name, hash) entry
+            transcriptions: Dict[str, str] = self.config['transcriptions']
+            transcriptions.pop(tname)
+            self.config['transcriptions'] = transcriptions
 
     def list_transcriptions(self):
         names = []
