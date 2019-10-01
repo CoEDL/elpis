@@ -1,5 +1,6 @@
 import os
 import importlib
+from typing import Dict
 
 class DataTransformer:
     """
@@ -29,6 +30,11 @@ class DataTransformer:
         self._ext_exp_hints = []
         self._import_filtered = False
         self._import_filter_type_set = False
+
+
+        # TODO: describe what these are: name to annotation dict, name to audio dict, must have name in both, cannot exist only in one.
+        self._annotation_store = {}
+        self._audio_store = []
 
     def can_import(self) -> bool:
         '''
@@ -72,8 +78,18 @@ class DataTransformer:
 
     def importer(self, f):
         pass
-    def importer_for(self, f):
-        pass
+    def importer_for(self, *args):
+        def decorator(f):
+            def wrapped_f(*args):
+                f(*args)
+            return wrapped_f
+        return decorator
+
+    def add_annotation(self, name: str, annotation: Dict[str, str]):
+        if name not in self._annotation_store.keys():
+            self._annotation_store[name] = []
+        self._annotation_store[name].append(annotation)
+        
     
 
 # print('AHHH!')

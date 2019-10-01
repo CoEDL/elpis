@@ -86,42 +86,6 @@ class Dataset(FSObject):
     def files(self):
         return self.config['files']
 
-    def add_elan_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
-
-    def add_textgrid_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
-
-    def add_transcriber_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
-
-    def add_wave_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
-
-    def add_other_audio_type_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
-
-    def list_audio_files(self) -> List[str]:
-        # TODO: unimplemented!
-        return []
-
-    def list_transcription_files(self) -> List[str]:
-        # TODO: unimplemented!
-        return []
-
-    def list_all_files(self) -> List[str]:
-        # TODO: unimplemented!
-        return []
-
-    def remove_file(self, filename) -> None:
-        # TODO: unimplemented!
-        return
-
     def add_fp(self, fp: BufferedIOBase, fname: str):
         path: Path = self.pathto.original.joinpath(fname)
         with path.open(mode='wb') as fout:

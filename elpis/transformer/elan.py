@@ -1,10 +1,31 @@
+#!/usr/bin/python3
+
+"""
+Copyright: University of Queensland, 2019
+Contributors:
+              Josh Arnold - (The University of Queensland, 2017)
+              Ben Foley - (The University of Queensland, 2018)
+              Nicholas Lambourne - (The University of Queensland, 2019)
+              Nicholas Buckeridge - (The University of Queensland, 2019)
+"""
+
+import re
+import string
+import sys
+import os
+import nltk
+from pympi.Elan import Eaf
+from langid.langid import LanguageIdentifier, model
+from nltk.corpus import words
+from typing import Dict, List, Set
+
 from elpis.transformer import DataTransformer
 
 elan = DataTransformer('Elan')
 
 
-elan.set_importing_exts(['eaf', 'wav'])
-elan.set_exporting_ext('eaf')
+# elan.set_importing_exts(['eaf', 'wav'])
+# elan.set_exporting_ext('eaf')
 
 DEFAULT_TIER = 'Phrase'
 GRAPHIC_RESOURCE_NAME = 'elan.png'
@@ -15,16 +36,29 @@ elan.context = {
 }
 
 
-@elan.importer
-def importer(paths):
-    """
-    :param paths: List of file paths
-    """
-    # handle each file given in the paths individually
-    pass
+# @elan.file_importer
+# def importer(paths):
+#     """
+#     :param paths: List of file paths
+#     """
+#     # handle each file given in the paths individually
+#     pass
 
-@elan.importer_for('wav', 'eaf')
-def importer_for_wav_eaf(wav_paths, eaf_paths):
+# @elan.file_importer_for('wav', 'eaf')
+# def importer_for_wav_eaf(wav_paths, eaf_paths):
+#     """
+#     Import handler for processing all .wav and .eaf files.
+
+#     :param wav_paths: List of string paths to Wave files.
+#     :param eaf_paths: List of string paths to Elan files.
+#     """
+
+#     # handle only files that are specified (audio should have a hidden handler)
+#     pass
+
+
+@elan.file_importer_for('eaf')
+def importer_for_eaf(eaf_paths):
     """
     Import handler for processing all .wav and .eaf files.
 
@@ -32,18 +66,190 @@ def importer_for_wav_eaf(wav_paths, eaf_paths):
     :param eaf_paths: List of string paths to Elan files.
     """
 
+    """
+    Import handler for processing all .eaf files.
+
+    Method to process a particular tier in an eaf file (ELAN Annotation Format). It stores the transcriptions in the 
+    following format:
+                    {'speaker_id': <speaker_id>,
+                    'audio_file_name': <file_name>,
+                    'transcript': <transcription_label>,
+                    'start_ms': <start_time_in_milliseconds>,
+                    'stop_ms': <stop_time_in_milliseconds>}
+
+    :param eaf_paths: List of string paths to Elan files.
+    :return: a list of dictionaries, where each dictionary is an annotation
+    """
+    
+    for input_elan_file in eaf_paths:
+        # Get paths to files
+        input_directory, full_file_name = os.path.split(input_elan_file)
+        file_name, extension = os.path.splitext(full_file_name)
+
+        input_eaf = Eaf(input_elan_file)
+
+        # Look for wav file matching the eaf file in same directory
+        if os.path.isfile(os.path.join(input_directory, file_name + ".wav")):
+            print("WAV file found for " + file_name, file=sys.stderr)
+        else:
+            raise ValueError(f"WAV file not found for {full_file_name}. "
+                            f"Please put it next to the eaf file in {input_directory}.")
+
+        # Get annotations and parameters (things like speaker id) on the target tier
+        tier_name = elan.context['tire']
+        annotations = sorted(input_eaf.get_annotation_data_for_tier(tier_name))
+        parameters = input_eaf.get_parameters_for_tier(tier_name)
+        speaker_id = parameters.get("PARTICIPANT", "")
+
+        annotations_data = []
+
+        for annotation in annotations:
+            start = annotation[0]
+            end = annotation[1]
+            annotation = annotation[2]
+
+            # print("processing annotation: " + annotation, start, end)
+            obj = {
+                "audio_file_name": f"{file_name}.wav",
+                "transcript": annotation,
+                "start_ms": start,
+                "stop_ms": end
+            }
+            if "PARTICIPANT" in parameters:
+                obj["speaker_id"] = speaker_id
+            utterance = clean_json(obj)
+            elan.add_annotation(file_name, utterance)
+
+
     # handle only files that are specified (audio should have a hidden handler)
     pass
 
 
-@elan.exporter
-def exporter(audio_file_paths):
-    """
-    :param files: list of tuples representing
-    """
-    pass # TODO: 
-    return (name, content)
+# @elan.audio_exporter
+# def exporter(audio_file_paths):
+#     """
+#     :param files: list of tuples representing
+#     """
+#     pass # TODO: 
+#     return (name, content)
 
-@elan.add_setting('textbox', label='Tier', default=DEFAULT_TIER)
-def change_tier(text):
-    elan.context['tier'] = text
+# @elan.add_setting('textbox', label='Tier', default=DEFAULT_TIER)
+# def change_tier(text):
+#     elan.context['tier'] = text
+
+def get_english_words() -> Set[str]:
+    """
+    Gets a list of English words from the nltk corpora (~235k words).
+    N.B: will download the word list if not already available (~740kB), requires internet.
+    :return: a set containing the English words
+    """
+    nltk.download("words")  # Will only download if not locally available.
+    return set(words.words())
+
+
+def clean_utterance(utterance: Dict[str, str],
+                    remove_english: bool = False,
+                    english_words: set = None,
+                    punctuation: str = None,
+                    special_cases: List[str] = None) -> (List[str], int):
+    """
+    Takes an utterance and cleans it based on the rules established by the provided parameters.
+    :param utterance: a dictionary with a "transcript" key-value pair.
+    :param remove_english: whether or not to remove English dirty_words.
+    :param english_words: a list of english dirty_words to remove from the transcript (we suggest the nltk dirty_words corpora).
+    :param punctuation: list of punctuation symbols to remove from the transcript.
+    :param special_cases: a list of dirty_words to always remove from the output.
+    :return: a tuple with a list of 'cleaned' dirty_words and a number representing the number of English dirty_words to remove.
+    """
+    translation_tags = {"@eng@", "<ind:", "<eng:"}
+    utterance_string = utterance.get("transcript").lower()
+    dirty_words = utterance_string.split()
+    clean_words = []
+    english_word_count = 0
+    for word in dirty_words:
+        if special_cases and word in special_cases:
+            continue
+        if word in translation_tags:  # Translations / ignore
+            return [], 0
+        # If a word contains a digit, throw out whole utterance
+        if bool(re.search(r"\d", word)) and not word.isdigit():
+            return [], 0
+        if punctuation:
+            for mark in punctuation:
+                word = word.replace(mark, "")
+        if remove_english and len(word) > 3 and word in english_words:
+            english_word_count += 1
+            continue
+        clean_words.append(word)
+    return clean_words, english_word_count
+
+
+def is_valid_utterance(clean_words: List[str],
+                       english_word_count: int,
+                       remove_english: bool,
+                       use_langid: bool,
+                       langid_identifier: LanguageIdentifier) -> bool:
+    """
+    Determines whether a cleaned utterance (list of words) is valid based on the provided parameters.
+    :param clean_words: a list of clean word strings.
+    :param english_word_count: the number of english words removed from the string during cleaning.
+    :param remove_english: whether or not to remove english words.
+    :param use_langid: whether or not to use the langid library to determine if a word is English.
+    :param langid_identifier: language identifier object to use with langid library.
+    :return: True if utterance is valid, false otherwise.
+    """
+    # Exclude utterance if empty after cleaning
+    cleaned_transcription = " ".join(clean_words).strip()
+    if cleaned_transcription == "":
+        return False
+
+    # Exclude utterance if > 10% english
+    if remove_english and len(clean_words) > 0 and english_word_count / len(clean_words) > 0.1:
+        # print(round(english_word_count / len(clean_words)), trans, file=sys.stderr)
+        return False
+
+    # Exclude utterance if langid thinks its english
+    if remove_english and use_langid:
+        lang, prob = langid_identifier.classify(cleaned_transcription)
+        if lang == "en" and prob > 0.5:
+            return False
+    return True
+
+
+def clean_json(utterance: Dict[str, str],
+                    remove_english: bool = False,
+                    use_langid: bool = False) -> Dict[str, str]:
+    """
+    Clean a utterances (Python dictionaries) based on the given parameters.
+    :param utterance: a 'transcription' key-value utterance.
+    :param remove_english: whether or not to remove English from the utterances.
+    :param use_langid: whether or not to use the langid library to identify English to remove.
+    :return: cleaned utterances.
+    """
+    punctuation_to_remove = string.punctuation + "…’“–”‘°"
+    special_cases = ["<silence>"]  # Any words you want to ignore
+    langid_identifier = None
+
+    if remove_english:
+        english_words = get_english_words()  # pre-load English corpus
+        if use_langid:
+            langid_identifier = LanguageIdentifier.from_modelstring(model,
+                                                                    norm_probs=True)
+    else:
+        english_words = set()
+
+    clean_words, english_word_count = clean_utterance(utterance=utterance,
+                                                        remove_english=remove_english,
+                                                        english_words=english_words,
+                                                        punctuation=punctuation_to_remove,
+                                                        special_cases=special_cases)
+
+    if is_valid_utterance(clean_words,
+                            english_word_count,
+                            remove_english,
+                            use_langid,
+                            langid_identifier):
+        cleaned_transcript = " ".join(clean_words).strip()
+        utterance["transcript"] = cleaned_transcript
+
+    return utterance
