@@ -1,5 +1,7 @@
 import os
 import json
+from shutil import rmtree
+from typing import Dict
 from elpis.wrappers.utilities import hasher
 from pathlib import Path
 from appdirs import user_data_dir
@@ -15,7 +17,15 @@ from elpis.wrappers.objects.fsobject import FSObject
 class KaldiInterface(FSObject):
     _config_file = 'interface.json'
 
-    def __init__(self, path: Path = None):
+    def __init__(self, path: Path = None, use_existing=True):
+        """
+        Constructor for a KaldiInterface object.
+
+        :param path: Path to the object directory on the filesystem.
+        :param use_existing: If True and if the object already exists at the
+            path, then use the interface object that already exists.
+        """
+
         if path is None:
             name = hasher.new()
             super().__init__(
@@ -26,54 +36,55 @@ class KaldiInterface(FSObject):
             )
         else:
             path = Path(path).absolute()
+            # check if already exists
+            interface_json_path: Path = path.joinpath('interface.json')
+            temp_config = None
+            if use_existing and interface_json_path.is_file():
+                temp_config = KaldiInterface.load(path).config._load()
             super().__init__(
                 parent_path=path.parent,
                 dir_name=path.name
             )
+            if temp_config is not None:
+                self.config._save(temp_config)
+
         # ensure object directories exist
-        self.datasets_path = self.path.joinpath('datasets')
+        self.datasets_path: Path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
-        self.pron_dicts_path = self.path.joinpath('pron_dicts')
+        self.pron_dicts_path: Path = self.path.joinpath('pron_dicts')
         self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
-        self.models_path = self.path.joinpath('models')
+        self.models_path: Path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
-        self.loggers_path = self.path.joinpath('loggers')
+        self.loggers_path: Path = self.path.joinpath('loggers')
         self.loggers_path.mkdir(parents=True, exist_ok=True)
         self.transcriptions_path = self.path.joinpath('transcriptions')
         # config objects
         self.loggers = []
-        self.datasets = {}
-        self.pron_dicts = {}
-        self.models = {}
-        self.transcriptions = {}
 
-        self.config['loggers'] = []
-        self.config['datasets'] = {}
-        self.config['pron_dicts'] = {}
-        self.config['models'] = {}
-        self.config['transcriptions'] = {}
+        if temp_config is None:
+            self.config['loggers'] = []
+            self.config['datasets'] = {}
+            self.config['pron_dicts'] = {}
+            self.config['models'] = {}
+            self.config['transcriptions'] = {}
 
-        # make a default logger
-        self.new_logger(default=True)
+            # make a default logger
+            self.new_logger(default=True)
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
-        self.datasets_path = self.path.joinpath('datasets')
+        self.datasets_path: Path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
-        self.pron_dicts_path = self.path.joinpath('pron_dicts')
+        self.pron_dicts_path: Path = self.path.joinpath('pron_dicts')
         self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
-        self.models_path = self.path.joinpath('models')
+        self.models_path: Path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
-        self.loggers_path = self.path.joinpath('loggers')
+        self.loggers_path: Path = self.path.joinpath('loggers')
         self.loggers_path.mkdir(parents=True, exist_ok=True)
         self.transcriptions_path = self.path.joinpath('transcriptions')
         # config objects
         self.loggers = []
-        self.datasets = {}
-        self.pron_dicts = {}
-        self.models = {}
-        self.transcriptions = {}
         return self
 
     def new_logger(self, default=False):
@@ -83,13 +94,33 @@ class KaldiInterface(FSObject):
             self.logger = logger
         return logger
 
-    def new_dataset(self, dsname):
+    def new_dataset(self, dsname, override=False, use_existing=False):
+        """
+        Create a new dataset object under this interface.
+
+        :param dsname: String name to assign the dataset.
+        :param override: (defualt False) If True then if the name exists, the
+            old dataset under that name will be deleted in favor for the new
+            name. Cannot be true with the use_existing argument.
+        :param use_existing: (default False) If True and a dataset already
+            exist with this name, then the dataset returned will be that
+            dataset and not a new, blank one. Cannot be true with the override
+            argument.
+        :returns: Requested dataset.
+        """
+        if override and use_existing:
+            raise ValueError('Argguments "override" and "use_existing" cannot both be True at the same time.')
         existing_names = self.list_datasets()
         if dsname in self.config['datasets'].keys():
-            raise KaldiError(
-                f'Tried adding \'{dsname}\' which is already in {existing_names} with hash {self.config["datasets"][dsname]}.',
-                human_message=f'data set with name "{dsname}" already exists'
-            )
+            if override:
+                self.delete_dataset(dsname)
+            elif use_existing:
+                return self.get_dataset(dsname)
+            else:
+                raise KaldiError(
+                    f'Tried adding \'{dsname}\' which is already in {existing_names} with hash {self.config["datasets"][dsname]}.',
+                    human_message=f'data set with name "{dsname}" already exists'
+                )
         ds = Dataset(parent_path=self.datasets_path, name=dsname, logger=self.logger)
         datasets = self.config['datasets']
         datasets[dsname] = ds.hash
@@ -102,11 +133,26 @@ class KaldiInterface(FSObject):
         hash_dir = self.config['datasets'][dsname]
         return Dataset.load(self.datasets_path.joinpath(hash_dir))
 
+    def delete_dataset(self, dsname: str):
+        """
+        Deletes the dataset with the given name. If the dataset does not
+        exist, then nothing is done.
+
+        :param dsname: String name of dataset to delete.
+        """
+        existing_names = self.list_datasets()
+        if dsname in existing_names:
+            hash_dir = self.config['datasets'][dsname]
+            # Remove the dataset hashed directory
+            hash_path: Path = self.datasets_path.joinpath(hash_dir)
+            rmtree(hash_path)
+            # Remove the dataset (name, hash) entry
+            datasets: Dict[str, str] = self.config['datasets']
+            datasets.pop(dsname)
+
     def list_datasets(self):
         names = [name for name in self.config['datasets'].keys()]
         return names
-
-
 
     def new_pron_dict(self, pdname):
         pd = PronDict(parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
@@ -122,6 +168,23 @@ class KaldiInterface(FSObject):
         pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
         pd.dataset = self.get_dataset(pd.config['dataset_name'])
         return pd
+    
+    def delete_pron_dict(self, pdname: str):
+        """
+        Deletes the pron dict with the given name. If the pron dict does not
+        exist, then nothing is done.
+
+        :param pdname: String name of pron dict to delete.
+        """
+        existing_names = self.list_pron_dicts()
+        if pdname in existing_names:
+            hash_dir = self.config['pron_dicts'][pdname]
+            # Remove the pron dict hashed directory
+            hash_path: Path = self.pron_dicts_path.joinpath(hash_dir)
+            rmtree(hash_path)
+            # Remove the pron dict (name, hash) entry
+            datasets: Dict[str, str] = self.config['pron_dicts']
+            datasets.pop(pdname)
 
     def list_pron_dicts(self):
         names = [name for name in self.config['pron_dicts'].keys()]
