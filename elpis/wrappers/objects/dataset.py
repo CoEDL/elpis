@@ -11,8 +11,8 @@ from multiprocessing.dummy import Pool
 from shutil import move
 
 from .fsobject import FSObject
+from elpis.transformer import DataTransformer
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
-
 from elpis.wrappers.input.elan_to_json import process_eaf
 from elpis.wrappers.input.clean_json import clean_json_data
 from elpis.wrappers.input.resample_audio import process_item
@@ -81,6 +81,19 @@ class Dataset(FSObject):
     @tier.setter
     def tier(self, value: str):
         self.config['tier'] = value
+
+    def import_with(self,name: str):
+        """
+        Selects data transformer to use as importer.
+        :param name: name of the data transformer to use.
+        :returns: An instanciated data transformer corrosponding to the name. If no name exists, ValueError is raised.
+        :raises:
+            ValueError: if name does not corrospond to any existing data transformers.
+        """
+        transformer = DataTransformer.get_transformer(name)
+        transformer.set_original_path(self.pathto.original)
+        transformer.set_resampled_path(self.pathto.resampled)
+        return transformer
 
     @property
     def files(self):

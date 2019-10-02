@@ -57,7 +57,7 @@ elan.context = {
 #     pass
 
 
-@elan.file_importer_for('eaf')
+@elan.handle('eaf')
 def importer_for_eaf(eaf_paths):
     """
     Import handler for processing all .wav and .eaf files.
