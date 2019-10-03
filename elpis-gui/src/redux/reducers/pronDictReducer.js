@@ -53,7 +53,7 @@ const pronDict = (state = initState, action) => {
             }
 
         case actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS:
-        //case actionTypes.PRON_DICT_SAVE_LEXICON:
+        case actionTypes.PRON_DICT_SAVE_LEXICON_SUCCESS:
             var { data, status } = action.response.data
             if (status === 200){
                 return {
