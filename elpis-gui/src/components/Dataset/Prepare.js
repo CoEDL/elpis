@@ -44,7 +44,7 @@ class DatasetPrepare extends Component {
 
         const { column, direction } = this.state
 
-        const interactionDisabled = (name && wordlist.length > 0) ? false : true
+        const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true
 
         const listEl = wordlist.length > 0 ? (
             <>
