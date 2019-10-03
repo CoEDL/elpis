@@ -19,9 +19,10 @@ from langid.langid import LanguageIdentifier, model
 from nltk.corpus import words
 from typing import Dict, List, Set
 
-from elpis.transformer import DataTransformer
+from elpis.transformer import DataTransformerAbstractFactory
 
-elan = DataTransformer('Elan')
+elan = DataTransformerAbstractFactory('Elan')
+
 
 
 # elan.set_importing_exts(['eaf', 'wav'])
@@ -30,35 +31,15 @@ elan = DataTransformer('Elan')
 DEFAULT_TIER = 'Phrase'
 GRAPHIC_RESOURCE_NAME = 'elan.png'
 
-elan.context = {
+elan.make_default_context({
     'tier': DEFAULT_TIER,
     'graphic': GRAPHIC_RESOURCE_NAME
-}
+})
 
 
-# @elan.file_importer
-# def importer(paths):
-#     """
-#     :param paths: List of file paths
-#     """
-#     # handle each file given in the paths individually
-#     pass
 
-# @elan.file_importer_for('wav', 'eaf')
-# def importer_for_wav_eaf(wav_paths, eaf_paths):
-#     """
-#     Import handler for processing all .wav and .eaf files.
-
-#     :param wav_paths: List of string paths to Wave files.
-#     :param eaf_paths: List of string paths to Elan files.
-#     """
-
-#     # handle only files that are specified (audio should have a hidden handler)
-#     pass
-
-
-@elan.handle('eaf')
-def importer_for_eaf(eaf_paths):
+@elan.import_files('eaf')
+def import_eaf_file(eaf_paths, context, add_annotation):
     """
     Import handler for processing all .wav and .eaf files.
 
@@ -80,7 +61,6 @@ def importer_for_eaf(eaf_paths):
     :param eaf_paths: List of string paths to Elan files.
     :return: a list of dictionaries, where each dictionary is an annotation
     """
-    
     for input_elan_file in eaf_paths:
         # Get paths to files
         input_directory, full_file_name = os.path.split(input_elan_file)
@@ -96,7 +76,7 @@ def importer_for_eaf(eaf_paths):
                             f"Please put it next to the eaf file in {input_directory}.")
 
         # Get annotations and parameters (things like speaker id) on the target tier
-        tier_name = elan.context['tire']
+        tier_name = context['tire']
         annotations = sorted(input_eaf.get_annotation_data_for_tier(tier_name))
         parameters = input_eaf.get_parameters_for_tier(tier_name)
         speaker_id = parameters.get("PARTICIPANT", "")
@@ -118,24 +98,12 @@ def importer_for_eaf(eaf_paths):
             if "PARTICIPANT" in parameters:
                 obj["speaker_id"] = speaker_id
             utterance = clean_json(obj)
-            elan.add_annotation(file_name, utterance)
+            add_annotation(file_name, utterance)
 
-
-    # handle only files that are specified (audio should have a hidden handler)
-    pass
-
-
-# @elan.audio_exporter
-# def exporter(audio_file_paths):
-#     """
-#     :param files: list of tuples representing
-#     """
-#     pass # TODO: 
-#     return (name, content)
 
 # @elan.add_setting('textbox', label='Tier', default=DEFAULT_TIER)
-# def change_tier(text):
-#     elan.context['tier'] = text
+# def change_tier(text, context):
+#     context['tier'] = text
 
 def get_english_words() -> Set[str]:
     """
@@ -253,3 +221,10 @@ def clean_json(utterance: Dict[str, str],
         utterance["transcript"] = cleaned_transcript
 
     return utterance
+
+
+elan.audio_media_extention('wav')
+
+@elan.replace_reprocess_audio
+def process_audio(audio_paths, context, add_audio_file):
+    pass

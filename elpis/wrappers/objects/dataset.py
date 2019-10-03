@@ -11,7 +11,7 @@ from multiprocessing.dummy import Pool
 from shutil import move
 
 from .fsobject import FSObject
-from elpis.transformer import DataTransformer
+from elpis.transformer import make_data_transformer
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
 from elpis.wrappers.input.elan_to_json import process_eaf
 from elpis.wrappers.input.clean_json import clean_json_data
@@ -90,9 +90,7 @@ class Dataset(FSObject):
         :raises:
             ValueError: if name does not corrospond to any existing data transformers.
         """
-        transformer = DataTransformer.get_transformer(name)
-        transformer.set_original_path(self.pathto.original)
-        transformer.set_resampled_path(self.pathto.resampled)
+        transformer = make_data_transformer(name, self.pathto.original, self.pathto.resampled, "")
         return transformer
 
     @property
