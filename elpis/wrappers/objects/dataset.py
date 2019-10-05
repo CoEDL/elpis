@@ -90,7 +90,18 @@ class Dataset(FSObject):
         :raises:
             ValueError: if name does not corrospond to any existing data transformers.
         """
-        transformer = make_data_transformer(name, self.pathto.original, self.pathto.resampled, "")
+        temporary_directory_path = f'/tmp/{self.hash}/working'
+        transcription_json_file_path = f'{self.pathto.filtered_json}'
+        transformer = make_data_transformer(name, self.pathto.original, self.pathto.resampled, temporary_directory_path, transcription_json_file_path)
+        transformer.process()
+
+
+        # task make-wordlist
+        generate_word_list(transcription_file=f'{self.pathto.filtered_json}',
+                           output_file=f'{self.pathto.word_list_txt}',
+                           additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
+                           additional_corpus_file=f'{self.pathto.corpus_txt}'
+                           )
         return transformer
 
     @property

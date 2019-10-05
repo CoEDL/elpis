@@ -1,17 +1,35 @@
+#!/usr/bin/python3
+
+"""
+Copyright: University of Queensland, 2019
+Contributors:
+              Nicholas Buckeridge - (The University of Queensland, 2019)
+"""
+
 import os
 import importlib
 import json
+import shutil
+import threading
+
+from multiprocessing.dummy import Pool
 from typing import List, Dict, Callable
 from pathlib import Path
+
+from elpis.wrappers.input.resample_audio import process_item
 
 # A json_str is the same as a normal string except must always be deserializable into JSON as an invariant.
 json_str = str
 
 AnnotationFunction = Callable[[Dict], None]
-FileImporterType = Callable[[List[str], Dict, AnnotationFunction], None]
-DirImporterType = Callable[[str, Dict, AnnotationFunction], None]
 AddAudioFunction = Callable[[str, str], None]
+FileImporterType = Callable[[List[str], Dict, AnnotationFunction], None]
+DirImporterType = Callable[[str, Dict, AnnotationFunction, AddAudioFunction], None]
 AudioProcessingFunction = Callable[[List[str], Dict, AddAudioFunction], None]
+
+
+PathList = List[str] # a list of paths to file
+FilteredPathList = Dict[str, PathList]
 
 # WARNING: All other python files in this directory with the exception of this one should be a data transformer.
 
@@ -39,7 +57,7 @@ class DataTransformer:
         self._context: Dict = context
 
         # Path to directory containing original audio and transcription files
-        self._collection_path: str = collection_path
+        self._collection_path: str = collection_path # TODO: Remove this line
 
         # Path to directory containing resampled audio files
         self._resampled_path: str = resampled_path
@@ -49,7 +67,7 @@ class DataTransformer:
         self._temporary_directory_path: str = temporary_directory_path
 
         # Callback to transcription data importing function, requires contents
-        # directoru, contect and add_annotaion parameters.
+        # directoru, contect and add_annotation parameters.
         self._importing_function: DirImporterType = importing_function
 
         # Target media audio file extention
@@ -64,12 +82,7 @@ class DataTransformer:
         self._audio_store = {}
 
     def process(self):
-        # Process audio first to create IDS.
-        # Process transcription data structures.
-
-        add_annotation = lambda id, obj: self._annotation_store[id].append(obj)
-        self._importing_function(self, self._collection_path, self._context, add_annotation)
-
+        self._importing_function(self, self._context)
 
 
 
@@ -103,7 +116,6 @@ class DataTransformerAbstractFactory:
         if name in self._transformer_factories:
             raise ValueError(f'DataTransformerAbstractFactory with name "{name}" already exists')
         self._transformer_factories[name] = self
-
 
     def import_files(self, extention: str):
         """
@@ -220,51 +232,89 @@ class DataTransformerAbstractFactory:
         """"""
         pass
 
-    def build(self, collection_path: str, resampled_path: str, temporary_directory_path: str):
+    def build(self, collection_path: str, resampled_path: str, temporary_directory_path: str, transcription_json_file_path: str):
         """"""
         # Prepare a copy of the context object.
         context = json.loads(self._default_context)
 
-        # Choose an importing methodology and prepare it.
-        # Note: This function calls the audio
-        importing_function = None
-        def _import_files(dt: DataTransformer, dir_path, context, add_annotation):
-            dir_path = Path(dir_path)
-            extention_to_files = {}
-            for file_path in dir_path.iterdir():
-                if '.' not in file_path.name:
-                    # skip extentionless files
-                    continue
-                if file_path.is_dir():
-                    # skip directories
-                    continue
-                extention = file_path.name.split('.')[-1]
-                # Make dictionary of files separated by 
-                if extention not in extention_to_files:
-                    extention_to_files[extention] = [f'{file_path}']
-                else:
-                    extention_to_files[extention].append(f'{file_path}')
-
-                # process audio first to generate IDs
-                for file_path in extention_to_files[self._audio_ext_filter]:
-                    id = file_path.split('/')[-1][:-1-len(self._audio_ext_filter)]
-                    dt._audio_store[id] = file_path###???
-                    # prepare list of annotations per id
-                    dt._annotation_store[id] = []
-                
+        # Choose an importing methodology and prepare it. Options:
+        #   _import_files
+        #   _import_directory
+        # Note: This function calls the audio processing callback
+        importing_method = None
 
 
-        def _import_directory(dt: DataTransformer, dir_path, context, add_annotation):
+        def _import_directory(dt: DataTransformer, dir_path:str, context, add_annotation, add_audio):
+
+            #
+            # TODO: Extract audio and transcription data here
+            #
             pass
+            
+        
+        def _import_files(dt: DataTransformer, _, context, add_annotation, add_audio):
+            extention_to_files: FilteredPathList = _filter_files_by_extention(collection_path)
+            audio_paths: PathList = extention_to_files.pop(dt._audio_ext_filter)
+            # process audio
+            dt._audio_processing_callback(audio_paths, temporary_directory_path, resampled_path, add_audio)
+            # process transcription data
+            for extention, file_paths in extention_to_files.items():
+                # only process the file type collection if a handler exists for it
+                callback = self._import_extension_callbacks.get(extention, None)
+                if callback is not None:
+                    callback(file_paths, dt._context, add_annotation)
+            
+            # save transcription data to file
+            with Path(transcription_json_file_path).open(mode='w') as fout:
+                annotations = []
+                for id in dt._annotation_store:
+                    annotations.extend(dt._annotation_store[id])
+                fout.write(json.dumps(annotations))
+            return # _import_files
+
+
+            
         if self._import_directory_callback is not None:
-            importing_function = _import_directory
+            importing_method = _import_directory
         else:
-            importing_function = _import_files
+            importing_method = _import_files
+        def _importing_closure(dt: DataTransformer, context: Dict):
+            """
+            A closure that prepares the call to the decided function, calls that function then saves the json result to file.
+            """
+            # Clean up from possible previous imports
+            dt._annotation_store = {}
+            dt._audio_store = {}
+
+            # Callbacks to add data to the internal stores
+            def add_annotation(id, obj):
+                if id in dt._annotation_store:
+                    dt._annotation_store[id].append(obj)
+                else:
+                    dt._annotation_store[id] = [obj]
+                return # from add_annotation
+            add_audio = lambda id, audio_path: dt._audio_store.update({id: audio_path})
+
+            # Extract audio and transcription data here
+            importing_method(dt, collection_path, context, add_annotation, add_audio)
+
+            # save transcription data to file
+            with Path(transcription_json_file_path).open(mode='w') as fout:
+                annotations = []
+                for id in dt._annotation_store:
+                    annotations.extend(dt._annotation_store[id])
+                fout.write(json.dumps(annotations))
+            return # from process
+        importing_function = _importing_closure
+            
+
+                
 
         # Prepare the audio function or use the replacement one
         audio_processing_callback = None
         def default_audio_processing():
             pass
+        audio_processing_callback = _default_audio_resampler
 
         # Note: the symbol dt is used in functions above it's definition, this
         # is intended as dt above is meant to be a pesudo-self argument which
@@ -275,7 +325,7 @@ class DataTransformerAbstractFactory:
 
 
 
-def make_data_transformer(name: str, collection_path: str, resampled_path: str, temporary_directory_path: str):
+def make_data_transformer(name: str, collection_path: str, resampled_path: str, temporary_directory_path: str, transcription_json_file_path: str) -> DataTransformer:
     """
     Creates a concrete data transformer.
 
@@ -283,12 +333,72 @@ def make_data_transformer(name: str, collection_path: str, resampled_path: str, 
     :param collection_path: path to the original file collection.
     :param resampled_path: path to put resampled audio into.
     :param temporary_directory_path: path to store and operate on temporary data.
+    :param transcription_json_file_path: path to save json file for transcription output data to.
     :returns: a DataTransformer of the requested type if it exists, else an error is raised.
     :raises:
         ValueError: if the requested data transformer does not exist.
     """
-    pass
-    # ensure the data transformer factory does not already exist.
+    
+
+    dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[name]
+    dt = dtaf.build(collection_path, resampled_path, temporary_directory_path, transcription_json_file_path)
+    return dt
+
+def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
+    """
+    Separate all files into lists by file extention.
+
+    :param dir_path: Filesystem path to contents directory.
+    :return: Dictionary of extentions as keys and lists of assocciated paths as values.
+    """
+    dir_path = Path(dir_path)
+    extention_to_files = {}
+    for file_path in dir_path.iterdir():
+        if '.' not in file_path.name:
+            # skip extentionless files
+            continue
+        if file_path.is_dir():
+            # skip directories
+            continue
+        extention = file_path.name.split('.')[-1]
+        # Make dictionary of files separated by 
+        if extention not in extention_to_files:
+            extention_to_files[extention] = [f'{file_path}']
+        else:
+            extention_to_files[extention].append(f'{file_path}')
+    return extention_to_files
+
+def _default_audio_resampler(audio_paths: List[str], temp_dir_path: str, resampled_dir_path: str, add_audio: AddAudioFunction):
+    temp_dir_path = Path(temp_dir_path)
+    resampled_dir_path = Path(resampled_dir_path)
+
+    # Empty resampled contents
+    if temp_dir_path.exists():
+        shutil.rmtree(f'{temp_dir_path}')
+    if resampled_dir_path.exists():
+        shutil.rmtree(f'{resampled_dir_path}')
+    temp_dir_path.mkdir(parents=True, exist_ok=True)
+    resampled_dir_path.mkdir(parents=True, exist_ok=True)
+
+    process_lock = threading.Lock()
+    temporary_directories = set()
+    map_arguments = [(index, audio_path, process_lock, temporary_directories, temp_dir_path)
+                     for index, audio_path in enumerate(audio_paths)]
+    # Multi-Threaded Audio Re-sampling
+    with Pool() as pool:
+        outputs = pool.map(process_item, map_arguments)
+        for audio_file in outputs:
+            shutil.move(audio_file, resampled_dir_path)
+            file_name = Path(audio_file).name
+            id = '.'.join(file_name.split('.')[:-1])
+            resampled_file_path = f'{resampled_dir_path.joinpath(file_name)}'
+            add_audio(id, resampled_file_path)
+
+
+        # Clean up tmp folders
+        for d in temporary_directories:
+            os.rmdir(d)
+    
 
 # import other python files in this directory as data transformers.
 def _import_instanciated_data_transformers():

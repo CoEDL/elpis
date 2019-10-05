@@ -23,11 +23,6 @@ from elpis.transformer import DataTransformerAbstractFactory
 
 elan = DataTransformerAbstractFactory('Elan')
 
-
-
-# elan.set_importing_exts(['eaf', 'wav'])
-# elan.set_exporting_ext('eaf')
-
 DEFAULT_TIER = 'Phrase'
 GRAPHIC_RESOURCE_NAME = 'elan.png'
 
@@ -35,8 +30,6 @@ elan.make_default_context({
     'tier': DEFAULT_TIER,
     'graphic': GRAPHIC_RESOURCE_NAME
 })
-
-
 
 @elan.import_files('eaf')
 def import_eaf_file(eaf_paths, context, add_annotation):
@@ -76,7 +69,7 @@ def import_eaf_file(eaf_paths, context, add_annotation):
                             f"Please put it next to the eaf file in {input_directory}.")
 
         # Get annotations and parameters (things like speaker id) on the target tier
-        tier_name = context['tire']
+        tier_name = context['tier']
         annotations = sorted(input_eaf.get_annotation_data_for_tier(tier_name))
         parameters = input_eaf.get_parameters_for_tier(tier_name)
         speaker_id = parameters.get("PARTICIPANT", "")
