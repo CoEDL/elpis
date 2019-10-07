@@ -46,6 +46,22 @@ FilteredPathList = Dict[str, PathList]
 # callback (add_annotation) that appends an anotaion dictiornary to the IDs
 # list.
 
+class Functional:
+    """Support class to keep a reference to an object containing a function."""
+    def __init__(self, f):
+        self._callback = f
+
+    def __call__(self, *args, **kwargs):
+        self._callback(*args, **kwargs)
+
+    @property
+    def callback(self):
+        return self._callback
+
+    @callback.setter
+    def callback(self, f):
+        self._callback = f
+
 
 class DataTransformer:
     """
@@ -62,9 +78,13 @@ class DataTransformer:
         # Path to directory containing resampled audio files
         self._resampled_path: str = resampled_path
 
-        # Path to a temporary directory for resampled files. Could be deleted
-        # after running process().
+        # Path to a temporary directory for generic use. Intended uses include
+        # resampled files and processing exported data. After construction,
+        # the temporary directory will exist and be empty. Etiquette to using
+        # this directory is to use the _clean_tmp_dir function after each use
+        # of the temporary directory.
         self._temporary_directory_path: str = temporary_directory_path
+        self._clean_tmp_dir() # ensure it exists and is empty
 
         # Callback to transcription data importing function, requires contents
         # directoru, contect and add_annotation parameters.
@@ -83,6 +103,17 @@ class DataTransformer:
 
     def process(self):
         self._importing_function(self, self._context)
+    
+    def _clean_tmp_dir(self):
+        """
+        Deletes and remakes the temporary directory.
+        """
+        path = Path(self._temporary_directory_path)
+        if path.exists():
+            shutil.rmtree(self._temporary_directory_path)
+        path.mkdir(parents=True)
+
+
 
 
 
@@ -112,6 +143,8 @@ class DataTransformerAbstractFactory:
         # Abstract functions
         self._import_extension_callbacks: Dict[str, FileImporterType] = {}
         self._import_directory_callback: Callable = None
+
+        self._functions_using_tempdir: List[Functional] = []
 
         if name in self._transformer_factories:
             raise ValueError(f'DataTransformerAbstractFactory with name "{name}" already exists')
@@ -224,13 +257,28 @@ class DataTransformerAbstractFactory:
         """"""
         pass
 
-    def export_file(self, f):
+    def export_files(self, f):
         """"""
         pass
 
     def export_directory(self, f):
         """"""
         pass
+
+    def use_temporary_directory(self, f):
+        """
+        Python decotator.
+
+        Postpends an argument containing the path to a temporary directory (before kwargs).
+
+        :param f: function to be decorated.
+        :return: Callable object containing the function.
+        """
+        
+        functional = Functional(f)
+        self._functions_using_tempdir.append(functional)
+
+        return functional
 
     def build(self, collection_path: str, resampled_path: str, temporary_directory_path: str, transcription_json_file_path: str):
         """"""
@@ -311,15 +359,31 @@ class DataTransformerAbstractFactory:
                 
 
         # Prepare the audio function or use the replacement one
-        audio_processing_callback = None
-        def default_audio_processing():
-            pass
-        audio_processing_callback = _default_audio_resampler
+        audio_processing_callback = Functional(_default_audio_resampler)
+        # register the default callback to have it's function restructured
+        self._functions_using_tempdir.append(audio_processing_callback)
 
         # Note: the symbol dt is used in functions above it's definition, this
         # is intended as dt above is meant to be a pesudo-self argument which
         # will be the instance dt later.
         dt = DataTransformer(context, collection_path, resampled_path, temporary_directory_path, importing_function, audio_processing_callback)
+
+        # restructure functions that require a temporary directory
+        for functional in self._functions_using_tempdir:
+            original_f = functional.callback
+            def wrapper(*args, **kwargs):
+                # Ensure the directory is empty
+                path = Path(temporary_directory_path)
+                if path.exists():
+                    shutil.rmtree(temporary_directory_path)
+                path.mkdir(parents=True)
+
+                # run the function with the clean directory
+                original_f(*args, temporary_directory_path, **kwargs)
+
+                # delete the temporary directory
+                shutil.rmtree(temporary_directory_path)
+            functional.callback = wrapper
 
         return dt
 
@@ -343,6 +407,7 @@ def make_data_transformer(name: str, collection_path: str, resampled_path: str, 
     dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[name]
     dt = dtaf.build(collection_path, resampled_path, temporary_directory_path, transcription_json_file_path)
     return dt
+
 
 def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
     """
@@ -368,7 +433,9 @@ def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
             extention_to_files[extention].append(f'{file_path}')
     return extention_to_files
 
-def _default_audio_resampler(audio_paths: List[str], temp_dir_path: str, resampled_dir_path: str, add_audio: AddAudioFunction):
+def _default_audio_resampler(self, audio_paths: List[str], resampled_dir_path: str, add_audio: AddAudioFunction, temp_dir_path: str):
+    # TODO: Doc str, need temp_dir var at back of parameters list
+    
     temp_dir_path = Path(temp_dir_path)
     resampled_dir_path = Path(resampled_dir_path)
 
@@ -383,7 +450,7 @@ def _default_audio_resampler(audio_paths: List[str], temp_dir_path: str, resampl
     process_lock = threading.Lock()
     temporary_directories = set()
     map_arguments = [(index, audio_path, process_lock, temporary_directories, temp_dir_path)
-                     for index, audio_path in enumerate(audio_paths)]
+                        for index, audio_path in enumerate(audio_paths)]
     # Multi-Threaded Audio Re-sampling
     with Pool() as pool:
         outputs = pool.map(process_item, map_arguments)
@@ -394,11 +461,9 @@ def _default_audio_resampler(audio_paths: List[str], temp_dir_path: str, resampl
             resampled_file_path = f'{resampled_dir_path.joinpath(file_name)}'
             add_audio(id, resampled_file_path)
 
-
         # Clean up tmp folders
         for d in temporary_directories:
             os.rmdir(d)
-    
 
 # import other python files in this directory as data transformers.
 def _import_instanciated_data_transformers():
