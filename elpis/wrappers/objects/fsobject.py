@@ -1,5 +1,6 @@
 import json
 import time
+from abc import ABC, abstractclassmethod, abstractmethod
 from pathlib import Path
 from elpis.wrappers.utilities import hasher
 
@@ -17,7 +18,7 @@ from elpis.wrappers.utilities import hasher
 # and KaldiInterface.
 
 
-class FSObject(object):
+class FSObject(ABC):
     def __init__(self,
                  parent_path: Path = None,
                  dir_name: str = None,
@@ -29,8 +30,7 @@ class FSObject(object):
             raise NotImplementedError('Must inherit FSObject, not instantiate it.')
 
         # Must have a _config_file variable
-        if getattr(self, '_config_file', None) is None:
-            raise NotImplementedError('missing _config_file class variable')
+        self._config_file
         
         # _config_file must be a JSON file
         if not self._config_file.endswith('.json'):
@@ -60,6 +60,8 @@ class FSObject(object):
     def _initial_config(self, config):
         self.ConfigurationInterface(self)._save(config)
 
+    
+
     @classmethod
     def load(cls, base_path: Path):
         """
@@ -71,6 +73,12 @@ class FSObject(object):
         self = cls.__new__(cls)
         self.__path = Path(base_path)
         return self
+    
+    @property
+    @abstractmethod
+    def _config_file(self) -> str:
+        raise NotImplementedError('no _config_file has been defined for this class')
+        return 'NotImplemented'
 
     @property
     def path(self) -> Path:

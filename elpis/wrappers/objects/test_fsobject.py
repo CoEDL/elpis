@@ -7,7 +7,7 @@ def test_base_class_creation(tmpdir):
     """
     Creation of a base class without being inherited must fail.
     """
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(TypeError):
         obj = FSObject()
     return
 
@@ -34,8 +34,8 @@ def test_missing_config_file_var(tmpdir):
     class A(FSObject):
         def __init__(self,**kwargs):
             super().__init__(**kwargs)
-    with pytest.raises(NotImplementedError):
-        a = A(parent_path=tmpdir, name='a')
+    with pytest.raises(TypeError):
+        A(parent_path=tmpdir, name='a')
     return
 
 
