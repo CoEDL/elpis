@@ -1,5 +1,6 @@
 from pathlib import Path
 from elpis.wrappers.input.resample import resample
+from elpis.wrappers.inference.generate_infer_files import generate_files
 from elpis.wrappers.objects.command import run
 from elpis.wrappers.objects.fsobject import FSObject
 # import shutil
@@ -39,24 +40,6 @@ class Transcription(FSObject):
     @status.setter
     def status(self, value: str):
         self.config['status'] = value
-
-    # builds the infer files in the state transcription dir,
-    def _cook_generate_infer_files(self):
-        # cook the infer file generator
-        # TODO fix below
-        with open('/workspaces/elpis/elpis/wrappers/inference/generate-infer-files.sh', 'r') as fin:
-            generator: str = fin.read()
-        generator = generator.replace('working_dir/input/infer', f'{self.path}')
-        generator = generator.replace('working_dir/input/output/kaldi/data/test',
-                                      f"{self.model.path.joinpath('kaldi', 'data', 'test')}")
-        generator = generator.replace('working_dir/input/output/kaldi/data/infer',
-                                      f"{self.model.path.joinpath('kaldi', 'data', 'infer')}")
-        generator_file_path = self.path.joinpath('gen-infer-files.sh')
-        with generator_file_path.open(mode='w') as fout:
-            fout.write(generator)
-        run(f'chmod +x {generator_file_path}')
-        run(f'{generator_file_path}')
-        print("")
 
     def _process_audio_file(self, audio):
         # copy audio to the tmp folder for resampling
@@ -141,7 +124,7 @@ class Transcription(FSObject):
 
     def prepare_audio(self, audio, on_complete: Callable=None):
         self._process_audio_file(audio)
-        self._cook_generate_infer_files()
+        generate_files(self)
         if on_complete is not None:
             on_complete()
 
