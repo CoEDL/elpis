@@ -3,6 +3,7 @@
 venv_test/
 *.pyc
 __pycache__/
+.pytest_cache/
 *.egg-info/
 ./elpis.egg-info/
 

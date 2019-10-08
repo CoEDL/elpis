@@ -8,8 +8,10 @@ from elpis.wrappers.utilities import hasher
 # operating system, this single class was made to provide some common
 # functionality and a standard of operation for these classes. The alternative
 # to using this method of storing everything on disk (using the file system
-# directly) was to implement a database, however, kaldi required access to
-# files and a specific file structure. This was the constrain that lead to the FSObject.
+# directly) is to implement a database, however, kaldi requires access to
+# files and a specific file structure. This was the constrain that lead to the
+# FSObject.
+
 
 # The classes that use FSObject as a base are: Dataset, Model, Transcription
 # and KaldiInterface.
@@ -22,10 +24,25 @@ class FSObject(object):
                  name: str = None,
                  pre_allocated_hash: str = None
                  ):
+        # Not allowed to instantiate this base class
+        if type(self) == FSObject:
+            raise NotImplementedError('Must inherit FSObject, not instantiate it.')
+
+        # Must have a _config_file variable
+        if getattr(self, '_config_file', None) is None:
+            raise NotImplementedError('missing _config_file class variable')
+        
+        # _config_file must be a JSON file
+        if not self._config_file.endswith('.json'):
+            raise ValueError('_config_file must be a JSON file (ends with ".json")')
+
+        # Optional arg: pre_allocated_hash
         if pre_allocated_hash is None:
             h = hasher.new()
         else:
             h = pre_allocated_hash
+
+        # Optional arg: dir_name
         if dir_name is None:
             dir_name = h
 
