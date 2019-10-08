@@ -3,7 +3,6 @@ import json
 from pathlib import Path
 
 from elpis.wrappers.objects.interface import KaldiInterface
-from elpis.wrappers.objects.errors import KaldiError
 
 from .dataset import Dataset
 
@@ -98,7 +97,7 @@ def test_two_new_datasets_with_same_name(tmpdir):
 
 def test_existing_dataset_using_use_existing(tmpdir):
     """
-    Use the use_existing parameter to load configurations from 
+    Use the use_existing parameter to load configurations from existing dataset.
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds1 = kaldi.new_dataset('dataset_x')
@@ -222,3 +221,57 @@ def test_add_directory(tmpdir):
         "importer": null
     }}
     """)
+
+
+def test_load(tmpdir):
+    """
+    Load an already existing dataset.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds1 = kaldi.new_dataset('dataset_x')
+    ds2 = Dataset.load(ds1.path)
+    
+    assert ds2.importer is None
+    assert ds2.has_been_processed == False
+
+def test_load_with_add_directory(tmpdir):
+    """
+    Add all files in a directory and see the state change.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds1 = kaldi.new_dataset('dataset_x')
+    ds1.add_directory('/recordings/transcribed')
+    ds2 = Dataset.load(ds1.path)
+
+    assert ds2.importer is not None
+    assert ds2.has_been_processed == True
+    assert ds2.files == [
+        "w_1_1.wav",
+        "w_1_1.eaf",
+        "w_1_2.wav",
+        "w_1_2.eaf",
+        "w_1_3.wav",
+        "w_1_3.eaf",
+        "w_1_4.wav",
+        "w_1_4.eaf"
+    ]
+    assert ds2.state == json.loads(f"""
+    {{
+        "name": "dataset_x",
+        "hash": "{ds1.hash}",
+        "date": "{ds1.date}",
+        "has_been_processed": false,
+        "files": [
+            "w_1_1.wav",
+            "w_1_1.eaf",
+            "w_1_2.wav",
+            "w_1_2.eaf",
+            "w_1_3.wav",
+            "w_1_3.eaf",
+            "w_1_4.wav",
+            "w_1_4.eaf"
+        ],
+        "importer": null
+    }}
+    """)
+
