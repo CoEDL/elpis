@@ -8,7 +8,6 @@ from appdirs import user_data_dir
 from elpis.wrappers.objects.errors import KaldiError
 from elpis.wrappers.objects.dataset import Dataset
 from elpis.wrappers.objects.pron_dict import PronDict
-from elpis.wrappers.objects.logger import Logger
 from elpis.wrappers.objects.model import Model
 from elpis.wrappers.objects.transcription import Transcription
 from elpis.wrappers.objects.fsobject import FSObject
@@ -55,21 +54,14 @@ class KaldiInterface(FSObject):
         self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
         self.models_path: Path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
-        self.loggers_path: Path = self.path.joinpath('loggers')
-        self.loggers_path.mkdir(parents=True, exist_ok=True)
         self.transcriptions_path = self.path.joinpath('transcriptions')
-        # config objects
-        self.loggers = []
 
+        # config objects
         if temp_config is None:
-            self.config['loggers'] = []
             self.config['datasets'] = {}
             self.config['pron_dicts'] = {}
             self.config['models'] = {}
             self.config['transcriptions'] = {}
-
-            # make a default logger
-            self.new_logger(default=True)
 
     @classmethod
     def load(cls, base_path: Path):
@@ -80,19 +72,8 @@ class KaldiInterface(FSObject):
         self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
         self.models_path: Path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
-        self.loggers_path: Path = self.path.joinpath('loggers')
-        self.loggers_path.mkdir(parents=True, exist_ok=True)
         self.transcriptions_path = self.path.joinpath('transcriptions')
-        # config objects
-        self.loggers = []
         return self
-
-    def new_logger(self, default=False):
-        logger = Logger(self.loggers_path)
-        self.config['loggers'] += [logger.hash]
-        if default:
-            self.logger = logger
-        return logger
 
     def new_dataset(self, dsname, override=False, use_existing=False):
         """
@@ -124,7 +105,7 @@ class KaldiInterface(FSObject):
                     f'Tried adding \'{dsname}\' which is already in {existing_names} with hash {self.config["datasets"][dsname]}.',
                     human_message=f'data set with name "{dsname}" already exists'
                 )
-        ds = Dataset(parent_path=self.datasets_path, name=dsname, logger=self.logger)
+        ds = Dataset(parent_path=self.datasets_path, name=dsname)
         datasets = self.config['datasets']
         datasets[dsname] = ds.hash
         self.config['datasets'] = datasets
@@ -189,7 +170,7 @@ class KaldiInterface(FSObject):
                     human_message=f'pronunciation dictionary with name "{pdname}" already exists'
                 )
         
-        pd = PronDict(parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
+        pd = PronDict(parent_path=self.pron_dicts_path, name=pdname)
         pron_dicts = self.config['pron_dicts']
         pron_dicts[pdname] = pd.hash
         self.config['pron_dicts'] = pron_dicts
@@ -265,7 +246,7 @@ class KaldiInterface(FSObject):
                     human_message=f'model with name "{mname}" already exists'
                 )
 
-        m = Model(parent_path=self.models_path, name=mname, logger=self.logger)
+        m = Model(parent_path=self.models_path, name=mname)
         models = self.config['models']
         models[mname] = m.hash
         self.config['models'] = models
@@ -352,7 +333,7 @@ class KaldiInterface(FSObject):
                     human_message=f'transcription with name "{tname}" already exists'
                 )
 
-        t = Transcription(parent_path=self.transcriptions_path, name=tname, logger=self.logger)
+        t = Transcription(parent_path=self.transcriptions_path, name=tname)
         transcriptions = self.config['transcriptions']
         transcriptions[tname] = t.hash
         self.config['transcriptions'] = transcriptions

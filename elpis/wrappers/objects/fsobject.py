@@ -2,7 +2,6 @@ import json
 import time
 from pathlib import Path
 from elpis.wrappers.utilities import hasher
-from elpis.wrappers.objects.logger import Logger
 
 # Design constraint
 # Since there are four classes that must have their states saved to the
@@ -21,7 +20,6 @@ class FSObject(object):
                  parent_path: Path = None,
                  dir_name: str = None,
                  name: str = None,
-                 logger: Logger = None,
                  pre_allocated_hash: str = None
                  ):
         if pre_allocated_hash is None:
@@ -34,7 +32,6 @@ class FSObject(object):
         # path to the object
         self.__path = Path(parent_path).joinpath(dir_name)
         self.path.mkdir(parents=True, exist_ok=True)
-        self.logger = logger
         #  if no config, then create it
         config_file_path = Path(f'{self.__path}/{self._config_file}')
         if not config_file_path.exists():
@@ -42,11 +39,6 @@ class FSObject(object):
         self.config['name'] = name
         self.config['hash'] = h
         self.config['date'] = str(time.time())
-
-        if logger is None:
-            self.config['logger'] = None
-        else:
-            self.config['logger'] = logger.hash
 
     def _initial_config(self, config):
         self.ConfigurationInterface(self)._save(config)
@@ -61,7 +53,6 @@ class FSObject(object):
         """
         self = cls.__new__(cls)
         self.__path = Path(base_path)
-        self.logger = None # TODO: use get_logger when implemented
         return self
 
     @property
