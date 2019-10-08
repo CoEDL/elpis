@@ -34,7 +34,6 @@ FilteredPathList = Dict[str, PathList]
 # WARNING: All other python files in this directory with the exception of this one should be a data transformer.
 
 # Note: An instanciated data transformer can be used for on multiple datasets so a data transformer can be told to clean up it's variables for the next run by calling the clean_up function. can use @dt.on_cleanup to attach anything to this process.
-# Note: 
 
 # Audio and Annotaion data
 # ========================
@@ -78,14 +77,6 @@ class DataTransformer:
         # Path to directory containing resampled audio files
         self._resampled_path: str = resampled_path
 
-        # Path to a temporary directory for generic use. Intended uses include
-        # resampled files and processing exported data. After construction,
-        # the temporary directory will exist and be empty. Etiquette to using
-        # this directory is to use the _clean_tmp_dir function after each use
-        # of the temporary directory.
-        self._temporary_directory_path: str = temporary_directory_path
-        self._clean_tmp_dir() # ensure it exists and is empty
-
         # Callback to transcription data importing function, requires contents
         # directoru, contect and add_annotation parameters.
         self._importing_function: DirImporterType = importing_function
@@ -103,15 +94,6 @@ class DataTransformer:
 
     def process(self):
         self._importing_function(self, self._context)
-    
-    def _clean_tmp_dir(self):
-        """
-        Deletes and remakes the temporary directory.
-        """
-        path = Path(self._temporary_directory_path)
-        if path.exists():
-            shutil.rmtree(self._temporary_directory_path)
-        path.mkdir(parents=True)
 
 
 
@@ -291,7 +273,6 @@ class DataTransformerAbstractFactory:
         # Note: This function calls the audio processing callback
         importing_method = None
 
-
         def _import_directory(dt: DataTransformer, dir_path:str, context, add_annotation, add_audio):
 
             #
@@ -304,7 +285,7 @@ class DataTransformerAbstractFactory:
             extention_to_files: FilteredPathList = _filter_files_by_extention(collection_path)
             audio_paths: PathList = extention_to_files.pop(dt._audio_ext_filter)
             # process audio
-            dt._audio_processing_callback(audio_paths, temporary_directory_path, resampled_path, add_audio)
+            dt._audio_processing_callback(audio_paths, resampled_path, add_audio)
             # process transcription data
             for extention, file_paths in extention_to_files.items():
                 # only process the file type collection if a handler exists for it
@@ -320,8 +301,6 @@ class DataTransformerAbstractFactory:
                 fout.write(json.dumps(annotations))
             return # _import_files
 
-
-            
         if self._import_directory_callback is not None:
             importing_method = _import_directory
         else:
@@ -355,8 +334,6 @@ class DataTransformerAbstractFactory:
             return # from process
         importing_function = _importing_closure
             
-
-                
 
         # Prepare the audio function or use the replacement one
         audio_processing_callback = Functional(_default_audio_resampler)
@@ -433,18 +410,25 @@ def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
             extention_to_files[extention].append(f'{file_path}')
     return extention_to_files
 
-def _default_audio_resampler(self, audio_paths: List[str], resampled_dir_path: str, add_audio: AddAudioFunction, temp_dir_path: str):
-    # TODO: Doc str, need temp_dir var at back of parameters list
+def _default_audio_resampler(audio_paths: List[str], resampled_dir_path: str, add_audio: AddAudioFunction, temp_dir_path: str):
+    """
+    A default audio resampler that converts any media accepted by sox to a
+    standard format specified in process_item.
+
+    :param audio_paths: list of paths to audio files to resample.
+    :param resampled_dir_path: path to a directory to save the resampled files to.
+    :param add_audio: callback to register the audio with the importer.
+    :param temp_dir_path: path to a temporary directory, will exist before the
+        function runs and will be deleted immediately after the function ends.
+        Must be the last parameter as this path is prepended on build().
+    """
     
     temp_dir_path = Path(temp_dir_path)
     resampled_dir_path = Path(resampled_dir_path)
 
     # Empty resampled contents
-    if temp_dir_path.exists():
-        shutil.rmtree(f'{temp_dir_path}')
     if resampled_dir_path.exists():
         shutil.rmtree(f'{resampled_dir_path}')
-    temp_dir_path.mkdir(parents=True, exist_ok=True)
     resampled_dir_path.mkdir(parents=True, exist_ok=True)
 
     process_lock = threading.Lock()
@@ -460,10 +444,6 @@ def _default_audio_resampler(self, audio_paths: List[str], resampled_dir_path: s
             id = '.'.join(file_name.split('.')[:-1])
             resampled_file_path = f'{resampled_dir_path.joinpath(file_name)}'
             add_audio(id, resampled_file_path)
-
-        # Clean up tmp folders
-        for d in temporary_directories:
-            os.rmdir(d)
 
 # import other python files in this directory as data transformers.
 def _import_instanciated_data_transformers():

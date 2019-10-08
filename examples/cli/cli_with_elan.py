@@ -50,7 +50,7 @@ t = kaldi.new_transcription('tx', override=True)
 t.link(m)
 with open('/recordings/untranscribed/audio.wav', 'rb') as faudio:
     t.prepare_audio(faudio)
-# t.transcribe_align()
+t.transcribe_align()
 t.transcribe()
 t.export_as('Elan')
 # print(t.elan().decode('utf-8'))
