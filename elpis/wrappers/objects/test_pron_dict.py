@@ -48,21 +48,21 @@ def test_new_pron_dict_using_override(tmpdir):
     return
 
 
-def test_new_dataset_using_use_existing(tmpdir):
+def test_new_pron_dict_using_use_existing(tmpdir):
     """
-    Using the use_existing when an existing dataset does not exist will
+    Using the use_existing when an existing pron dict does not exist will
     produce a RuntimeError.
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     with pytest.raises(RuntimeError):
-        kaldi.new_dataset('dataset_x', use_existing=True)
+        kaldi.new_pron_dict('p', use_existing=True)
     return
 
 
 def test_existing_pron_dict_using_override(tmpdir):
     """
     Use override to delete a pron dict with the same name and create a totally
-    new dataset with the same name.
+    new pron dict with the same name.
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     pd1 = kaldi.new_pron_dict('pronunciation dictionary')
@@ -210,6 +210,20 @@ def test_lexicon(tmpdir):
     return
 
 
+def test_lexicon_before_linking(tmpdir):
+    """
+    Must link to a dataset before attempting to generate the lexicon,
+    otherwise an error is produced.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    pd = kaldi.new_pron_dict('pronunciation dictionary')
+    pd.set_l2s_path('/recordings/letter_to_sound.txt')
+    with pytest.raises(RuntimeError):
+        pd.generate_lexicon()
+    return
+
+
 def test_lexicon_without_l2s(tmpdir):
     """
     Attempt to generate lexicon without letters to sound will result in error.
@@ -273,7 +287,7 @@ def test_loads_minimal(tmpdir):
     pd1.link(ds)
     pd1.set_l2s_path('/recordings/letter_to_sound.txt')
     pd1.generate_lexicon()
-    pd2 = PronDict.loads(pd1.path)
+    pd2 = PronDict.load(pd1.path)
 
     assert pd2.state == json.loads(f"""
     {{

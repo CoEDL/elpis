@@ -124,3 +124,31 @@ def test_loading(tmpdir):
     assert b.hash == a.hash
     assert b.date == a.date
 
+
+def test_protected_variables(tmpdir):
+    """
+    Test that an error is raised when writing to the variables:
+        name
+        date
+        hash
+        path
+    """
+    class A(FSObject):
+        _config_file = 'a.json'
+        def __init__(self,**kwargs):
+            super().__init__(**kwargs)
+    @classmethod
+    def load(cls, base_path: Path):
+        self = super().load(base_path)
+        return self
+
+    a = A(parent_path=tmpdir, name='a')
+    with pytest.raises(NotImplementedError):
+        a.name = "Name"
+    with pytest.raises(NotImplementedError):
+        a.date = "1.1"
+    with pytest.raises(NotImplementedError):
+        a.hash = "abcd1234"
+    with pytest.raises(NotImplementedError):
+        a.path = "/"
+        
