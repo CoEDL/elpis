@@ -92,7 +92,7 @@ def test_existing_pron_dict_using_use_existing(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     pd1 = kaldi.new_pron_dict('x')
-    pd1_hash = ds1.hash
+    pd1_hash = pd1.hash
     pd2 = kaldi.new_pron_dict('x', use_existing=True)
     assert len(kaldi.list_pron_dicts()) == 1
     assert pd1_hash != pd2.hash
@@ -148,11 +148,12 @@ def test_set_l2s_content(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     pd = kaldi.new_pron_dict('pronunciation dictionary')
-    with open('/recordings/letter_to_sound.txt', 'r') as fin():
+    with open('/recordings/letter_to_sound.txt', 'r') as fin:
         content = fin.read()
         pd.set_l2s_content(content)
     
     assert pd.get_lexicon_content() != 'No lexicon yet'
+    assert Path(f'{pd.path}/l2s.txt').is_file()
     assert pd.state == json.loads(f"""
     {{
         "name": "pronunciation dictionary",
@@ -196,6 +197,7 @@ def test_lexicon(tmpdir):
     pd.set_l2s_path('/recordings/letter_to_sound.txt')
     pd.generate_lexicon()
 
+    assert Path(f'{pd.path}/lexicon.txt').is_file()
     assert pd.state == json.loads(f"""
     {{
         "name": "pronunciation dictionary",
@@ -267,11 +269,11 @@ def test_loads_minimal(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
-    pd = kaldi.new_pron_dict('pronunciation dictionary')
-    pd.link(ds)
-    pd.set_l2s_path('/recordings/letter_to_sound.txt')
-    pd.generate_lexicon()
-    pd2.loads(pd1.path)
+    pd1 = kaldi.new_pron_dict('pronunciation dictionary')
+    pd1.link(ds)
+    pd1.set_l2s_path('/recordings/letter_to_sound.txt')
+    pd1.generate_lexicon()
+    pd2 = PronDict.loads(pd1.path)
 
     assert pd2.state == json.loads(f"""
     {{
