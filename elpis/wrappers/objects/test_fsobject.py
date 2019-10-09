@@ -34,6 +34,26 @@ def test_missing_config_file_var(tmpdir):
     class A(FSObject):
         def __init__(self,**kwargs):
             super().__init__(**kwargs)
+        @property
+        def state(self) -> dict:
+            return {}
+    with pytest.raises(TypeError):
+        A(parent_path=tmpdir, name='a')
+    return
+
+
+def test_missing_state_property(tmpdir):
+    """
+    Creation of an object without _config_file class variable.
+
+    An instance of FSObject must have the class attribute `self._config_file`
+    which points to the file containing the objects persistant variables.
+    """
+    # Black-box
+    class A(FSObject):
+        _config_file = 'a.json'
+        def __init__(self,**kwargs):
+            super().__init__(**kwargs)
     with pytest.raises(TypeError):
         A(parent_path=tmpdir, name='a')
     return
@@ -48,6 +68,9 @@ def test_invalid_config_file_type(tmpdir):
         _config_file = 'a'
         def __init__(self,**kwargs):
             super().__init__(**kwargs)
+        @property
+        def state(self) -> dict:
+            return {}
     with pytest.raises(ValueError):
         a = A(parent_path=tmpdir, name='a')
     return
@@ -62,6 +85,9 @@ def test_no_optional_args(tmpdir):
         _config_file = 'a.json'
         def __init__(self,**kwargs):
             super().__init__(**kwargs)
+        @property
+        def state(self) -> dict:
+            return {}
 
     A(parent_path=tmpdir, name='a')
     # No exceptions should occure
@@ -77,6 +103,9 @@ def test_dir_name(tmpdir):
         _config_file = 'a.json'
         def __init__(self,**kwargs):
             super().__init__(**kwargs)
+        @property
+        def state(self) -> dict:
+            return {}
 
     a = A(parent_path=tmpdir, name='a', dir_name='a_dir')
 
@@ -95,6 +124,9 @@ def test_pre_allocated_hash(tmpdir):
         _config_file = 'a.json'
         def __init__(self,**kwargs):
             super().__init__(**kwargs)
+        @property
+        def state(self) -> dict:
+            return {}
 
     a = A(parent_path=tmpdir, name='a', pre_allocated_hash='a0b1c2d3')
 
@@ -112,10 +144,13 @@ def test_loading(tmpdir):
         _config_file = 'a.json'
         def __init__(self,**kwargs):
             super().__init__(**kwargs)
-    @classmethod
-    def load(cls, base_path: Path):
-        self = super().load(base_path)
-        return self
+        @property
+        def state(self) -> dict:
+            return {}
+        @classmethod
+        def load(cls, base_path: Path):
+            self = super().load(base_path)
+            return self
 
     a = A(parent_path=tmpdir, name='a')
 
@@ -137,18 +172,23 @@ def test_protected_variables(tmpdir):
         _config_file = 'a.json'
         def __init__(self,**kwargs):
             super().__init__(**kwargs)
-    @classmethod
-    def load(cls, base_path: Path):
-        self = super().load(base_path)
-        return self
+        @property
+        def state(self) -> dict:
+            return {}
+        @classmethod
+        def load(cls, base_path: Path):
+            self = super().load(base_path)
+            return self
 
     a = A(parent_path=tmpdir, name='a')
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         a.name = "Name"
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         a.date = "1.1"
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         a.hash = "abcd1234"
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         a.path = "/"
+    with pytest.raises(AttributeError):
+        a.state = {}
         

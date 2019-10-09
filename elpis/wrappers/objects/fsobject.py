@@ -78,7 +78,12 @@ class FSObject(ABC):
     @abstractmethod
     def _config_file(self) -> str:
         raise NotImplementedError('no _config_file has been defined for this class')
-        return 'NotImplemented'
+
+    @property
+    @abstractmethod
+    def state(self) -> dict:
+        raise NotImplementedError('no state has been defined for this class')
+    
 
     @property
     def path(self) -> Path:
@@ -88,10 +93,7 @@ class FSObject(ABC):
     @property
     def name(self) -> str:
         return self.config['name']
-
-    @name.setter
-    def name(self, value: str):
-        self.config['name'] = value
+    # Must change name in the KaldiInterface object.
 
     @property
     def hash(self) -> str:
