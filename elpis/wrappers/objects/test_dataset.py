@@ -31,7 +31,6 @@ def test_new_dataset(tmpdir):
         "importer": null
     }}
     """)
-    return
 
     # White-box testing, contains empty child directories "original" and
     # "resampled".
@@ -41,6 +40,26 @@ def test_new_dataset(tmpdir):
     path_to_resampled = Path(f'{tmpdir}/state/{ds.hash}/resampled')
     assert path_to_resampled.is_dir()
     assert [n for n in path_to_resampled.iterdir()] == []
+    return
+
+def test_protected_properties(tmpdir):
+    """
+    An error is raised when there is an attempt to write to a protected
+    property making these properties read-only.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+
+    with pytest.raises(NotImplementedError):
+        ds.has_been_processed = True
+    with pytest.raises(NotImplementedError):
+        ds.annotations = "{}"
+    with pytest.raises(NotImplementedError):
+        ds.processed_labels = []
+    with pytest.raises(NotImplementedError):
+        ds.importer = "Not a importer"
+    with pytest.raises(NotImplementedError):
+        ds.files = []
     return
 
 
@@ -385,10 +404,38 @@ def test_process(tmpdir):
     assert ds.state["has_been_processed"] == True
 
     # Whitebox tests
-    annotaions_path = Path(f'{ds.path}/annotaions.json')
-    assert annotaions_path.is_file()
+    annotations_path = Path(f'{ds.path}/annotations.json')
+    assert annotations_path.is_file()
     wordlist_path = Path(f'{ds.path}/wordlist.txt')
     assert wordlist_path.is_file()
+    return
+
+def test_annotations_before_processing(tmpdir):
+    """
+    If there is an attempt to collect the annotations before processing the
+    data (annotationts cannot exist), an error will be raised,
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    ds.add_directory('/recordings/transcribed')
+    ds.select_importer('Elan')
+    with pytest.raises(RuntimeError):
+        _ = ds.annotations
+    return
+
+def test_annotations_after_processing(tmpdir):
+    """
+    Ensure annotations are retrievable.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    ds.add_directory('/recordings/transcribed')
+    ds.select_importer('Elan')
+    ds.process()
+    annotations = ds.annotations
+    # ensure no errors are raised. annotations is JSONable
+    assert json.dumps(annotations) is str
+    assert len(annotations) != 0
     return
 
 
@@ -411,7 +458,7 @@ def test_process_with_failing_importer(tmpdir):
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
     ds.add_directory('/recordings/transcribed')
-    ds.select_importer('Test_importer_must_fail')
+    ds.select_importer('Test_must_fail')
     with pytest.raises(RuntimeError):
         ds.process()
     return
@@ -461,5 +508,32 @@ def test_mismatched_audio_and_transcription_files(tmpdir):
     ds.process()
     assert ds.has_been_processed == True
     assert set(ds.processed_labels) == {"w_1_2"}
+    return
+
+
+def test_selecting_importer_chages_state(tmpdir):
+    """
+    If the importer is changed, the dataset is considered unprocessed.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    ds.add_directory('/recordings/transcribed')
+    ds.select_importer('Elan')
+    ds.process()
+    assert ds.has_been_processed == True
+    ds.select_importer('Test_import_only')
+    assert ds.has_been_processed == False
+    return
+
+
+def test_selecting_importer_export_only(tmpdir):
+    """
+    Selecting a data transformer that is marked export only will raise an error.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    ds.add_directory('/recordings/transcribed')
+    with pytest.raises(RuntimeError):
+        ds.select_importer('Test_export_only')
     return
 

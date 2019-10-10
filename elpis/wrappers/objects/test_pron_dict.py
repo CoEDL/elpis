@@ -186,12 +186,11 @@ def test_set_l2s_path(tmpdir):
     """)
     return
 
-def test_lexicon(tmpdir):
+def test_lexicon(pipeline_upto_step_1):
     """
     Generate lexicon.
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    ds = kaldi.new_dataset('dataset_x')
+    kaldi, ds = pipeline_upto_step_1
     pd = kaldi.new_pron_dict('pronunciation dictionary')
     pd.link(ds)
     pd.set_l2s_path('/recordings/letter_to_sound.txt')
@@ -216,7 +215,6 @@ def test_lexicon_before_linking(tmpdir):
     otherwise an error is produced.
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
-    ds = kaldi.new_dataset('dataset_x')
     pd = kaldi.new_pron_dict('pronunciation dictionary')
     pd.set_l2s_path('/recordings/letter_to_sound.txt')
     with pytest.raises(RuntimeError):
@@ -224,12 +222,24 @@ def test_lexicon_before_linking(tmpdir):
     return
 
 
-def test_lexicon_without_l2s(tmpdir):
+def test_lexicon_before_dataset_processing(tmpdir):
     """
-    Attempt to generate lexicon without letters to sound will result in error.
+    An attempt to generate lexicon before processing the dataset will raise an
+    error.
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
+    pd = kaldi.new_pron_dict('pronunciation dictionary')
+    pd.link(ds)
+    pd.set_l2s_path('/recordings/letter_to_sound.txt')
+    with pytest.raises(RuntimeError):
+        pd.generate_lexicon()
+
+def test_lexicon_without_l2s(pipeline_upto_step_1):
+    """
+    Attempt to generate lexicon without letters to sound will result in error.
+    """
+    kaldi, ds = pipeline_upto_step_1
     pd = kaldi.new_pron_dict('pronunciation dictionary')
     pd.link(ds)
 
@@ -277,7 +287,7 @@ def test_loads_minimal(tmpdir):
     return
 
 
-def test_loads_minimal(tmpdir):
+def test_loads_all(tmpdir):
     """
     Use load class method to load a pron dict from existing configuration. All variables set.
     """

@@ -26,4 +26,10 @@ def test_model_training(tmpdir):
     items_in_models_dir = {n for n in m.path.iterdir()}
     assert items_in_models_dir == {'kaldi', 'output', 'text_corpus'}
 
+
+def test_train_with_unprocessed_dataset():
+    pass
+
+def test_train_without_lexicon():
+    pass
 # TODO: Determine how to achieve further testing without wasting time (training takes a while).
