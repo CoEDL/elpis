@@ -215,6 +215,55 @@ def test_add_directory(tmpdir):
     return
 
 
+def test_remove_file(tmpdir):
+    """
+    Test that a file can be removed.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    ds.add_directory('/recordings/transcribed')
+    ds.remove_file("w_1_1.wav")
+    assert set(ds.files) == {
+        "w_1_1.eaf",
+        "w_1_2.wav",
+        "w_1_2.eaf",
+        "w_1_3.wav",
+        "w_1_3.eaf",
+        "w_1_4.wav",
+        "w_1_4.eaf"
+    }
+    return
+
+
+def test_process_then_delete_file(tmpdir):
+    """
+    Test when a file is removed, that the has_been_processed flag is
+    switched to false as the dataset has changed.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    ds.add_directory('/recordings/transcribed')
+    ds.select_importer('Elan')
+    ds.process()
+    ds.remove_file("w_1_1.wav")
+    assert ds.has_been_processed == False
+    return
+
+def test_label_reset(tmpdir):
+    """
+    Test when a file is removed, and the has_been_processed flag is
+    switched to false, that the labels are also removed.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    ds.add_directory('/recordings/transcribed')
+    ds.select_importer('Elan')
+    ds.process()
+    ds.remove_file("w_1_1.wav")
+    assert ds.processed_labels == []
+    return
+
+
 def test_load(tmpdir):
     """
     Load an already existing dataset.
@@ -537,3 +586,4 @@ def test_selecting_importer_export_only(tmpdir):
         ds.select_importer('Test_export_only')
     return
 
+# TODO: White-box test the state of the annotations.json file and how it is accessed.

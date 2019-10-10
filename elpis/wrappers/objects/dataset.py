@@ -59,28 +59,22 @@ class Dataset(FSObject):
         super().__init__(**kwargs)
         self.__files: List[Path] = []
         self.pathto = DSPaths(self.path)
-        self.has_been_processed = False
+        self._has_been_processed = False
+        self._importer = None
 
         # config
-        self.config['tier'] = DEFAULT_TIER
         self.config['has_been_processed'] = False
         self.config['files'] = []
+        self.config['importer'] = None
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
         self.__files = [Path(path) for path in self.config['files']]
         self.pathto = DSPaths(self.path)
-        self.has_been_processed = self.config['has_been_processed']
+        self._has_been_processed = self.config['has_been_processed']
+        self._importer = self.config['importer']
         return self
-
-    @property
-    def tier(self) -> str:
-        return self.config['tier']
-
-    @tier.setter
-    def tier(self, value: str):
-        self.config['tier'] = value
 
     def import_with(self,name: str):
         """
@@ -105,15 +99,47 @@ class Dataset(FSObject):
         return transformer
 
     @property
-    def files(self):
+    def files(self) -> List[str]:
+        """
+        Gives list of currently held files.
+
+        :returns: a list of file paths internal to this structure.
+        """
         return self.config['files']
+    
+    @property
+    def has_been_processed(self) -> bool:
+        """
+        Boolean flag that is true if the process function has been run and the
+        dataset has not been chaged since. 
+
+        :return: True if the process function has been run and the
+        dataset has not been chaged since, otherwise false.
+        """
+        return self.config['has_been_processed']
 
     def add_fp(self, fp: BufferedIOBase, fname: str):
+        """
+        Saves a copy of the file pointer contents in the internal datastructure
+        at `self.pathto.original`. This method enforces a copy to be made and
+        ensures the original files remain untouched. All file adding methods
+        such as add_file and add_directory use this to add individual files.
+
+        :param fp: Python file BufferedIOBase object usually from open().
+        :param fname: name of the file.
+        """
         path: Path = self.pathto.original.joinpath(fname)
         with path.open(mode='wb') as fout:
             fout.write(fp.read())
         self.__files.append(path)
         self.config['files'] = [f'{f.name}' for f in self.__files]
+    
+    def add_file(self, file_path: str):
+        file_path = Path(file_path)
+        if not file_path.is_file():
+            raise ValueError(f'"{file_path}" is not a valid path to file"')
+        with file_path.open(mode='rb') as fin:
+            self.add_fp(fin, file_path.name)
 
     def add_directory(self, path, filter=[]):
         """Add all the contents of the given directory to the dataset."""
@@ -124,6 +150,25 @@ class Dataset(FSObject):
                     continue
             file_pointer = filepath.open(mode='rb')
             self.add_fp(file_pointer, filepath.name)
+    
+    @property
+    def state(self):
+        """
+        An API fiendly state representation of the object.
+
+        Invarient: The returned object can be converted to JSON using json.load(...).
+
+        :returns: the objects state.
+        """
+        config = self.config._load()
+        return {
+            'name': config['name'],
+            'hash': config['hash'],
+            'date': config['date'],
+            'has_been_processed': config['has_been_processed'],
+            'files': config['files'],
+            'importer': config['importer']
+        }
 
     def process(self):
         # remove existing file in resampled

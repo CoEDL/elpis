@@ -31,7 +31,7 @@ class KaldiInterface(FSObject):
                 parent_path=Path(user_data_dir('elpis')),
                 dir_name = name,
                 pre_allocated_hash=name,
-                name=name
+                name='Kaldi'
             )
         else:
             path = Path(path).absolute()
@@ -47,7 +47,7 @@ class KaldiInterface(FSObject):
             if temp_config is not None:
                 self.config._save(temp_config)
 
-        # ensure object directories exist
+        # ensure object directories exist (static sub-paths)
         self.datasets_path: Path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
         self.pron_dicts_path: Path = self.path.joinpath('pron_dicts')
@@ -55,6 +55,7 @@ class KaldiInterface(FSObject):
         self.models_path: Path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
         self.transcriptions_path = self.path.joinpath('transcriptions')
+        self.transcriptions_path.mkdir(parents=True, exist_ok=True)
 
         # config objects
         if temp_config is None:
@@ -73,6 +74,7 @@ class KaldiInterface(FSObject):
         self.models_path: Path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
         self.transcriptions_path = self.path.joinpath('transcriptions')
+        self.transcriptions_path.mkdir(parents=True, exist_ok=True)
         return self
 
     def new_dataset(self, dsname, override=False, use_existing=False):
@@ -110,6 +112,10 @@ class KaldiInterface(FSObject):
         datasets[dsname] = ds.hash
         self.config['datasets'] = datasets
         return ds
+    
+    @property
+    def state(self):
+        raise NotImplementedError()
 
     def get_dataset(self, dsname):
         if dsname not in self.list_datasets():

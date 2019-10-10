@@ -90,7 +90,6 @@ class PronDict(FSObject):
     def save_lexicon(self, text):
         # open pron dict file
         # write lexicon text to file
-        print("lexicon", text)
         try:
             with self.lexicon_txt_path.open(mode='w') as fout:
                 fout.write(text)
