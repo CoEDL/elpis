@@ -87,12 +87,13 @@ class KaldiInterface(FSObject):
             name. Cannot be true with the use_existing argument.
         :param use_existing: (default False) If True and a dataset already
             exist with this name, then the dataset returned will be that
-            dataset and not a new, blank one. Cannot be true with the override
+            dataset and not a new, blank one. If there is no existing dataset,
+            a new one will be created. Cannot be true with the override
             argument.
         :returns: Requested dataset.
         :raises:
             ValueError: if arguments "override" and "use_existing" are both True.
-            KaldiError: if name already exist without "override" or "use_existing" set to True.
+            ValueError: if name already exist without "override" or "use_existing" set to True.
         """
         if override and use_existing:
             raise ValueError('Argguments "override" and "use_existing" cannot both be True at the same time.')
@@ -103,10 +104,7 @@ class KaldiInterface(FSObject):
             elif use_existing:
                 return self.get_dataset(dsname)
             else:
-                raise KaldiError(
-                    f'Tried adding \'{dsname}\' which is already in {existing_names} with hash {self.config["datasets"][dsname]}.',
-                    human_message=f'data set with name "{dsname}" already exists'
-                )
+                raise ValueError(f'data set with name "{dsname}" already exists')
         ds = Dataset(parent_path=self.datasets_path, name=dsname)
         datasets = self.config['datasets']
         datasets[dsname] = ds.hash

@@ -34,10 +34,10 @@ def test_new_dataset(tmpdir):
 
     # White-box testing, contains empty child directories "original" and
     # "resampled".
-    path_to_original = Path(f'{tmpdir}/state/{ds.hash}/original')
+    path_to_original = Path(f'{tmpdir}/state/datasets/{ds.hash}/original')
     assert path_to_original.is_dir()
     assert [n for n in path_to_original.iterdir()] == []
-    path_to_resampled = Path(f'{tmpdir}/state/{ds.hash}/resampled')
+    path_to_resampled = Path(f'{tmpdir}/state/datasets/{ds.hash}/resampled')
     assert path_to_resampled.is_dir()
     assert [n for n in path_to_resampled.iterdir()] == []
     return
@@ -50,15 +50,15 @@ def test_protected_properties(tmpdir):
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         ds.has_been_processed = True
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         ds.annotations = "{}"
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         ds.processed_labels = []
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         ds.importer = "Not a importer"
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AttributeError):
         ds.files = []
     return
 
@@ -73,10 +73,10 @@ def test_new_dataset_using_override(tmpdir):
 
     # White-box testing, contains empty child directories "original" and
     # "resampled".
-    path_to_original = Path(f'{tmpdir}/state/{ds.hash}/original')
+    path_to_original = Path(f'{tmpdir}/state/datasets/{ds.hash}/original')
     assert path_to_original.is_dir()
     assert [n for n in path_to_original.iterdir()] == []
-    path_to_resampled = Path(f'{tmpdir}/state/{ds.hash}/resampled')
+    path_to_resampled = Path(f'{tmpdir}/state/datasets/{ds.hash}/resampled')
     assert path_to_resampled.is_dir()
     assert [n for n in path_to_resampled.iterdir()] == []
     # Interface only has record of one dataset
@@ -86,12 +86,28 @@ def test_new_dataset_using_override(tmpdir):
 
 def test_new_dataset_using_use_existing(tmpdir):
     """
-    Using the use_existing when an existing dataset does not exist will
-    produce a RuntimeError.
+    Using the use_existing when an existing dataset does not exist is okay.
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
-    with pytest.raises(RuntimeError):
-        kaldi.new_dataset('dataset_x', use_existing=True)
+    ds = kaldi.new_dataset('dataset_x', use_existing=True)
+
+    # Black-box property testing
+    assert ds.files == []
+    assert ds.processed_labels == []
+    assert ds.importer is None
+    assert ds.has_been_processed == False
+
+    assert ds.state == json.loads(f"""
+    {{
+        "name": "dataset_x",
+        "hash": "{ds.hash}",
+        "date": "{ds.date}",
+        "has_been_processed": false,
+        "files": [],
+        "processed_labels": [],
+        "importer": null
+    }}
+    """)
     return
 
 
@@ -131,7 +147,7 @@ def test_existing_dataset_using_use_existing(tmpdir):
     ds1_hash = ds1.hash
     ds2 = kaldi.new_dataset('dataset_x', use_existing=True)
     assert len(kaldi.list_datasets()) == 1
-    assert ds1_hash != ds2.hash
+    assert ds1_hash == ds2.hash
     assert ds1.path == ds2.path
     return
 
@@ -152,20 +168,19 @@ def test_add_file(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
-    ds.add_file('/recordings/transcribed/w_1_1.wav')
-    ds.add_file('/recordings/transcribed/w_1_1.eaf')
-    ds.add_file('/recordings/transcribed/w_1_2.wav')
-    ds.add_file('/recordings/transcribed/w_1_2.eaf')
-    assert ds.importer is not None
-    assert ds.has_been_processed == True
-    assert ds.files == ["w_1_1.wav", "w_1_1.eaf", "w_1_2.wav", "w_1_2.eaf"]
+    ds.add_file('/recordings/transcribed/1_1_1.wav')
+    ds.add_file('/recordings/transcribed/1_1_1.eaf')
+    ds.add_file('/recordings/transcribed/1_1_2.wav')
+    ds.add_file('/recordings/transcribed/1_1_2.eaf')
+    assert ds.files == ["1_1_1.wav", "1_1_1.eaf", "1_1_2.wav", "1_1_2.eaf"]
     assert ds.state == json.loads(f"""
     {{
         "name": "dataset_x",
         "hash": "{ds.hash}",
         "date": "{ds.date}",
         "has_been_processed": false,
-        "files": ["w_1_1.wav", "w_1_1.eaf", "w_1_2.wav", "w_1_2.eaf"],
+        "files": ["1_1_1.wav", "1_1_1.eaf", "1_1_2.wav", "1_1_2.eaf"],
+        "processed_labels": [],
         "importer": null
     }}
     """)
@@ -179,39 +194,28 @@ def test_add_directory(tmpdir):
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
     ds.add_directory('/recordings/transcribed')
-    assert ds.importer is not None
-    assert ds.has_been_processed == True
-    assert set(ds.processed_labels) == {"w_1_1", "w_1_2", "w_1_3", "w_1_4"}
-    assert ds.files == [
-        "w_1_1.wav",
-        "w_1_1.eaf",
-        "w_1_2.wav",
-        "w_1_2.eaf",
-        "w_1_3.wav",
-        "w_1_3.eaf",
-        "w_1_4.wav",
-        "w_1_4.eaf"
+    assert set(ds.files) == {
+        "1_1_1.wav",
+        "1_1_1.eaf",
+        "1_1_2.wav",
+        "1_1_2.eaf",
+        "1_1_3.wav",
+        "1_1_3.eaf",
+        "1_1_4.wav",
+        "1_1_4.eaf"
+    }
+    assert set(ds.state['files']) == set(json.loads(f"""
+    [
+        "1_1_1.wav",
+        "1_1_1.eaf",
+        "1_1_2.wav",
+        "1_1_2.eaf",
+        "1_1_3.wav",
+        "1_1_3.eaf",
+        "1_1_4.wav",
+        "1_1_4.eaf"
     ]
-    assert ds.state == json.loads(f"""
-    {{
-        "name": "dataset_x",
-        "hash": "{ds.hash}",
-        "date": "{ds.date}",
-        "has_been_processed": false,
-        "files": [
-            "w_1_1.wav",
-            "w_1_1.eaf",
-            "w_1_2.wav",
-            "w_1_2.eaf",
-            "w_1_3.wav",
-            "w_1_3.eaf",
-            "w_1_4.wav",
-            "w_1_4.eaf"
-        ],
-        "processed_labels": ["w_1_1", "w_1_2", "w_1_3", "w_1_4"],
-        "importer": null
-    }}
-    """)
+    """))
     return
 
 
@@ -222,16 +226,28 @@ def test_remove_file(tmpdir):
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
     ds.add_directory('/recordings/transcribed')
-    ds.remove_file("w_1_1.wav")
+    ds.remove_file("1_1_1.wav")
     assert set(ds.files) == {
-        "w_1_1.eaf",
-        "w_1_2.wav",
-        "w_1_2.eaf",
-        "w_1_3.wav",
-        "w_1_3.eaf",
-        "w_1_4.wav",
-        "w_1_4.eaf"
+        "1_1_1.eaf",
+        "1_1_2.wav",
+        "1_1_2.eaf",
+        "1_1_3.wav",
+        "1_1_3.eaf",
+        "1_1_4.wav",
+        "1_1_4.eaf"
     }
+    return
+
+
+def test_remove_file_that_does_not_exist(tmpdir):
+    """
+    Raise an error when there is an attempt to remove a file that has not been
+    added.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds = kaldi.new_dataset('dataset_x')
+    with pytest.raises(ValueError):
+        ds.remove_file("1_1_1.wav")
     return
 
 
@@ -245,7 +261,7 @@ def test_process_then_delete_file(tmpdir):
     ds.add_directory('/recordings/transcribed')
     ds.select_importer('Elan')
     ds.process()
-    ds.remove_file("w_1_1.wav")
+    ds.remove_file("1_1_1.wav")
     assert ds.has_been_processed == False
     return
 
@@ -259,7 +275,7 @@ def test_label_reset(tmpdir):
     ds.add_directory('/recordings/transcribed')
     ds.select_importer('Elan')
     ds.process()
-    ds.remove_file("w_1_1.wav")
+    ds.remove_file("1_1_1.wav")
     assert ds.processed_labels == []
     return
 
@@ -289,14 +305,14 @@ def test_load_with_add_directory(tmpdir):
     assert ds2.importer is not None
     assert ds2.has_been_processed == True
     assert set(ds2.files) == {
-        "w_1_1.wav",
-        "w_1_1.eaf",
-        "w_1_2.wav",
-        "w_1_2.eaf",
-        "w_1_3.wav",
-        "w_1_3.eaf",
-        "w_1_4.wav",
-        "w_1_4.eaf"
+        "1_1_1.wav",
+        "1_1_1.eaf",
+        "1_1_2.wav",
+        "1_1_2.eaf",
+        "1_1_3.wav",
+        "1_1_3.eaf",
+        "1_1_4.wav",
+        "1_1_4.eaf"
     }
     assert ds2.state == json.loads(f"""
     {{
@@ -305,16 +321,16 @@ def test_load_with_add_directory(tmpdir):
         "date": "{ds1.date}",
         "has_been_processed": false,
         "files": [
-            "w_1_1.wav",
-            "w_1_1.eaf",
-            "w_1_2.wav",
-            "w_1_2.eaf",
-            "w_1_3.wav",
-            "w_1_3.eaf",
-            "w_1_4.wav",
-            "w_1_4.eaf"
+            "1_1_1.wav",
+            "1_1_1.eaf",
+            "1_1_2.wav",
+            "1_1_2.eaf",
+            "1_1_3.wav",
+            "1_1_3.eaf",
+            "1_1_4.wav",
+            "1_1_4.eaf"
         ],
-        "processed_labels": ["w_1_1", "w_1_2", "w_1_3", "w_1_4"],
+        "processed_labels": ["1_1_1", "1_1_2", "1_1_3", "1_1_4"],
         "importer": null
     }}
     """)
@@ -520,15 +536,15 @@ def test_add_directory_after_process(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
-    ds.add_file('/recordings/transcribed/w_1_1.wav')
-    ds.add_file('/recordings/transcribed/w_1_1.eaf')
+    ds.add_file('/recordings/transcribed/1_1_1.wav')
+    ds.add_file('/recordings/transcribed/1_1_1.eaf')
     ds.select_importer('Elan')
     ds.process()
     assert ds.has_been_processed == True
-    ds.add_file('/recordings/transcribed/w_1_2.wav')
-    ds.add_file('/recordings/transcribed/w_1_2.eaf')
+    ds.add_file('/recordings/transcribed/1_1_2.wav')
+    ds.add_file('/recordings/transcribed/1_1_2.eaf')
     assert ds.has_been_processed == False
-    assert set(ds.processed_labels) == {"w_1_1"}
+    assert set(ds.processed_labels) == {"1_1_1"}
     return
 
 
@@ -549,14 +565,14 @@ def test_mismatched_audio_and_transcription_files(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
-    ds.add_file('/recordings/transcribed/w_1_1.wav')
-    ds.add_file('/recordings/transcribed/w_1_2.wav')
-    ds.add_file('/recordings/transcribed/w_1_2.eaf')
-    ds.add_file('/recordings/transcribed/w_1_3.eaf')
+    ds.add_file('/recordings/transcribed/1_1_1.wav')
+    ds.add_file('/recordings/transcribed/1_1_2.wav')
+    ds.add_file('/recordings/transcribed/1_1_2.eaf')
+    ds.add_file('/recordings/transcribed/1_1_3.eaf')
     ds.select_importer('Elan')
     ds.process()
     assert ds.has_been_processed == True
-    assert set(ds.processed_labels) == {"w_1_2"}
+    assert set(ds.processed_labels) == {"1_1_2"}
     return
 
 
