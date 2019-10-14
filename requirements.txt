@@ -1,6 +1,5 @@
 appdirs
 Flask
-kaldi-helpers
 langid
 nltk
 numpy
