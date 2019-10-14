@@ -54,20 +54,6 @@ class Transcription(FSObject):
         # resample the audio file
         resample(tmp_file_path, self.path.joinpath('audio.wav'))
 
-    def _bake_gmm_decode_align(self):
-        with open('/elpis/elpis/wrappers/inference/gmm-decode-align.sh', 'r') as fin:
-            content: str = fin.read()
-        content = content.replace('../../../../kaldi_helpers/output/ctm_to_textgrid.py',
-                                  '/elpis/elpis/wrappers/output/ctm_to_textgrid.py')
-        content = content.replace('../../../../kaldi_helpers/output/textgrid_to_elan.py',
-                                  '/elpis/elpis/wrappers/output/textgrid_to_elan.py')
-        decode_file_path = self.path.joinpath('gmm-decode-align.sh')
-        with decode_file_path.open(mode='w') as file_:
-            file_.write(content)
-        run(f'chmod +x {decode_file_path}')
-
-        p = subprocess.run(f'sh {decode_file_path}'.split(), cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
-
     def transcribe(self, on_complete: Callable=None):
         self.status = "transcribing"
         self.type = "text"
@@ -77,7 +63,6 @@ class Transcription(FSObject):
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-
         subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
 
@@ -97,16 +82,8 @@ class Transcription(FSObject):
             os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
             distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
             distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-
-            self._bake_gmm_decode_align()
-            # p = subprocess.run('sh /kaldi-helpers/kaldi_helpers/inference/gmm-decode-align.sh'.split(),
-            # cwd=f'{self.model.path.joinpath("kaldi")}')
-
-            # move results
-            # cmd = f"cp {kaldi_infer_path}/one-best-hypothesis.txt {self.path}/ && "
-            # cmd += f"infer_audio_filename=$(head -n 1 {kaldi_test_path}/wav.scp | awk '{{print $2}}' |  cut -c 3- ) && "
-            # cmd += f"cp \"{kaldi_path}/$infer_audio_filename\" {self.path}"
-            # run(cmd)
+            subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-align.sh'.split(),
+                           cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
             distutils.file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
             self.status = "transcribed"
 
