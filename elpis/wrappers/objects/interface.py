@@ -40,13 +40,18 @@ class KaldiInterface(FSObject):
         self.loggers_path = self.path.joinpath('loggers')
         self.loggers_path.mkdir(parents=True, exist_ok=True)
         self.transcriptions_path = self.path.joinpath('transcriptions')
-
-        # self.config['loggers'] = []
-        # self.config['datasets'] = {}
-        # self.config['pron_dicts'] = {}
-        # self.config['models'] = {}
-        # self.config['transcriptions'] = {}
-
+        # config objects
+        self.loggers = []
+        self.datasets = {}
+        self.pron_dicts = {}
+        self.models = {}
+        self.transcriptions = {}
+        # TODO: check these
+        self.config['loggers'] = []
+        self.config['datasets'] = {}
+        self.config['pron_dicts'] = {}
+        self.config['models'] = {}
+        self.config['transcriptions'] = {}
         # make a default logger
         self.new_logger(default=True)
 
