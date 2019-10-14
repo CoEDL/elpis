@@ -1,11 +1,12 @@
-language: python
-python:
-  - "2.7"
-  - "3.6.6"
-# command to install dependencies
-install:
-  - pip install -r requirements.txt
-# command to run tests
+language: ruby
+services:
+  - docker
+
+before_install:
+  - docker pull coedl/elpis:interspeech-19
+
 script:
-  - echo "Code now! Test later!"
-  # - bash ./test.sh
+  - ls
+  - pwd
+  - docker run --rm --entrypoint='' coedl/elpis:interspeech-19 sh -c "git pull origin cnc; pip install python-coveralls pytest-cov; py.test -v --cov=coveralls --cov-report=term-missing; export COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN; coveralls"
+
