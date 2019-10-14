@@ -1,5 +1,8 @@
 # Elpis (Accelerated Transcription for Linguists) <img src="docs/img/elpis.png" align="right" width="250px"/>
 
+[![Build Status](https://travis-ci.org/CoEDL/elpis.svg?branch=master)](https://travis-ci.org/CoEDL/elpis)
+[![Coverage Status](https://coveralls.io/repos/github/CoEDL/elpis/badge.svg?branch=master)](https://coveralls.io/github/CoEDL/elpis?branch=master)
+
 ## What is Elpis?
 
 Elpis is a tool which allows language workers with minimal computational experience to build their own speech models 
