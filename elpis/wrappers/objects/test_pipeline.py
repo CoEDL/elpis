@@ -2,6 +2,7 @@ import pytest
 
 from elpis.wrappers.objects.interface import KaldiInterface
 
+# TODO: this file is broken, solution is to fix it or create mock objects
 
 @pytest.fixture(scope="session")
 def pipeline_upto_step_0(tmpdir_factory):

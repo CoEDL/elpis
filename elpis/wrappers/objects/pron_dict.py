@@ -23,7 +23,7 @@ class PronDict(FSObject):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.dataset: Dataset = None
-        self.config['dataset'] = None  # dataset hash has not been linked
+        self.config['dataset'] = None  # dataset hash has not been linked # TODO: change 'dataset' to 'dataset_name'
         self.l2s_path = self.path.joinpath('l2s.txt')
         self.lexicon_txt_path = self.path.joinpath('lexicon.txt') #TODO change to lexicon_txt_path
         self.config['l2s'] = False  # file has not been uploaded

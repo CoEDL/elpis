@@ -331,10 +331,7 @@ class KaldiInterface(FSObject):
             elif use_existing:
                 return self.get_transcription(tname)
             else:
-                raise KaldiError(
-                    f'Tried adding \'{tname}\' which is already in {existing_names} with hash {self.config["transcriptions"][tname]}.',
-                    human_message=f'transcription with name "{tname}" already exists'
-                )
+                raise ValueError(f'transcription with name "{tname}" already exists')
 
         t = Transcription(parent_path=self.transcriptions_path, name=tname)
         transcriptions = self.config['transcriptions']
