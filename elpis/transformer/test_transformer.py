@@ -1,5 +1,6 @@
 import pytest
 import json
+import shutil
 from pathlib import Path
 
 from . import DataTransformer, DataTransformerAbstractFactory
@@ -158,7 +159,7 @@ def test_factory_import_files(tdtaf):
     Test if the import_files fucntion can be registerd.
     """
     @tdtaf.import_files('test')
-    def import_test_files(file_paths, context, add_annotation):
+    def import_test_files(file_paths, context, add_annotation, temp_dir):
         pass
     # White-box testing
     assert 'import_test_files' in tdtaf._attributes
@@ -174,7 +175,7 @@ def test_factory_import_files_correct_arguments(tdtaf):
     """
     with pytest.raises(RuntimeError):
         @tdtaf.import_files('test')
-        def import_test_files(must, have, three, arguments, only): # pylint: disable=unused-variable
+        def import_test_files(must, have, four, arguments, only): # pylint: disable=unused-variable
             pass
     return
 
@@ -186,11 +187,11 @@ def test_factory_import_files_twice(tdtaf):
 
     # Black-box testing
     @tdtaf.import_files('test1')
-    def import_test1_files(file_paths, context, add_annotation): # pylint: disable=unused-variable
+    def import_test1_files(file_paths, context, add_annotation, temp_dir): # pylint: disable=unused-variable
         pass
 
     @tdtaf.import_files('test2')
-    def import_test2_files(file_paths, context, add_annotation): # pylint: disable=unused-variable
+    def import_test2_files(file_paths, context, add_annotation, temp_dir): # pylint: disable=unused-variable
         pass
 
     # White-box testing
@@ -207,12 +208,12 @@ def test_factory_import_files_twice_same_ext(tdtaf):
     file extentions, an error is raised.
     """
     @tdtaf.import_files('test')
-    def import_test_files1(a, b, c): # pylint: disable=unused-variable
+    def import_test_files1(a, b, c, d): # pylint: disable=unused-variable
         pass
 
     with pytest.raises(RuntimeError):
         @tdtaf.import_files('test')
-        def import_test_files2(a, b, c): # pylint: disable=unused-variable
+        def import_test_files2(a, b, c, d): # pylint: disable=unused-variable
             pass
     return
 
@@ -222,7 +223,7 @@ def test_factory_import_directory(tdtaf):
     Test if the import_directory fucntion can be registerd.
     """
     @tdtaf.import_directory
-    def import_test_dir(dir_path, context, add_annotation, add_audio):
+    def import_test_dir(dir_path, context, add_annotation, add_audio, temp_dir):
         pass
     # White-box testing
     assert 'import_test_dir' in tdtaf._attributes
@@ -237,7 +238,7 @@ def test_factory_import_directory_correct_arguments(tdtaf):
     """
     with pytest.raises(RuntimeError):
         @tdtaf.import_directory
-        def import_test_dir(must, have, four, arguments, only): # pylint: disable=unused-variable
+        def import_test_dir(must, have, five, arguments, only, no, more, no_, less): # pylint: disable=unused-variable
             pass
     return
 
@@ -248,12 +249,12 @@ def test_factory_import_directory_twice(tdtaf):
     importing a directory, it would be ambiguous as to which funciton to use.
     """
     @tdtaf.import_directory
-    def f1(a, b, c, d): # pylint: disable=unused-variable
+    def f1(a, b, c, d, e): # pylint: disable=unused-variable
         pass
     
     with pytest.raises(RuntimeError):
         @tdtaf.import_directory
-        def f2(a, b, c, d): # pylint: disable=unused-variable
+        def f2(a, b, c, d, e): # pylint: disable=unused-variable
             pass
     return
 
@@ -264,12 +265,12 @@ def test_factory_import_files_import_directory(tdtaf):
     raise an error. It becomes ambiguous as to which one to use.
     """
     @tdtaf.import_files('test')
-    def f1(a, b, c): # pylint: disable=unused-variable
+    def f1(a, b, c, d): # pylint: disable=unused-variable
         pass
     
     with pytest.raises(RuntimeError):
         @tdtaf.import_directory
-        def f2(a, b, c, d): # pylint: disable=unused-variable
+        def f2(a, b, c, d, e): # pylint: disable=unused-variable
             pass
     return
 
@@ -281,12 +282,12 @@ def test_factory_import_directory_import_files(tdtaf):
     way to test_factory_import_files_import_directory.
     """
     @tdtaf.import_directory
-    def f1(a, b, c, d): # pylint: disable=unused-variable
+    def f1(a, b, c, d, e): # pylint: disable=unused-variable
         pass
     
     with pytest.raises(RuntimeError):
         @tdtaf.import_files('test')
-        def f2(a, b, c): # pylint: disable=unused-variable
+        def f2(a, b, c, d): # pylint: disable=unused-variable
             pass
     return
 
@@ -300,7 +301,7 @@ def test_factory_export(tdtaf):
     Test if a function using the export decorator can be registerd.
     """
     @tdtaf.export
-    def export(annotations, context, output_dir):
+    def export(annotations, context, output_dir, temp_dir):
         pass
     # White-box testing
     assert 'export' in tdtaf._attributes
@@ -316,12 +317,12 @@ def test_factory_export_files_twice(tdtaf):
     """
 
     @tdtaf.export
-    def export1(annotations, context, output_dir): # pylint: disable=unused-variable
+    def export1(annotations, context, output_dir, temp_dir): # pylint: disable=unused-variable
         pass
 
     with pytest.raises(RuntimeError):
         @tdtaf.export
-        def export2(annotations, context, output_dir): # pylint: disable=unused-variable
+        def export2(annotations, context, output_dir, temp_dir): # pylint: disable=unused-variable
             pass
     return
 
@@ -457,7 +458,7 @@ def test_factory_import_files_import_capable(tdtaf):
     import capable.
     """
     @tdtaf.import_files('test')
-    def import_test_files(a, b, c): # pylint: disable=unused-variable
+    def import_test_files(a, b, c, d): # pylint: disable=unused-variable
         pass
     assert tdtaf.is_import_capable() == True
     return
@@ -469,7 +470,7 @@ def test_factory_import_directory_import_capable(tdtaf):
     import capable.
     """
     @tdtaf.import_directory
-    def import_test_dir(a, b, c): # pylint: disable=unused-variable
+    def import_test_dir(a, b, c, d, e): # pylint: disable=unused-variable
         pass
     assert tdtaf.is_import_capable() == True
     return
@@ -606,7 +607,7 @@ def test_factory_export_export_capable(tdtaf):
     export capable.
     """
     @tdtaf.export
-    def export(a, b, c): # pylint: disable=unused-variable
+    def export(a, b, c, d): # pylint: disable=unused-variable
         pass
     assert tdtaf.is_export_capable() == True
     return
@@ -803,6 +804,7 @@ def test_factory_default_ui_configs(tdtaf):
     assert tdtaf._export_ui_config == {}
     return
 
+# TODO: Extensive testing needs to be done here.
 
 ###############################################################################
 ####                      Test Reprocess Audio Decorators                  ####
@@ -837,121 +839,41 @@ def test_factory_replace_reprocess_audio_twice(tdtaf):
 
 
 ###############################################################################
-####                         Test Temp Dir Decorators                      ####
-###############################################################################
-
-
-def test_factory_use_temporary_directory(tdtaf):
-    """
-    Check if use_temporary_directory is registered.
-    """
-    # White-box testing
-    assert len(tdtaf._functions_using_tempdir) == 0
-    @tdtaf.use_temporary_directory
-    def f(temp_dir): # pylint: disable=unused-variable
-        pass
-    assert len(tdtaf._functions_using_tempdir) == 1
-    return
-
-
-def test_factory_use_temporary_directory_twice(tdtaf):
-    """
-    Check if use_temporary_directory is registered twice.
-    """
-    # White-box testing
-    assert len(tdtaf._functions_using_tempdir) == 0
-    @tdtaf.use_temporary_directory
-    def f(temp_dir): # pylint: disable=unused-variable
-        pass
-    @tdtaf.use_temporary_directory
-    def g(temp_dir): # pylint: disable=unused-variable
-        pass
-    assert len(tdtaf._functions_using_tempdir) == 2
-    return
-
-
-def test_factory_double_use_temporary_directory(tdtaf):
-    """
-    Avoid complecated code by raising an error when nesting temporary
-    directories.
-    """
-    with pytest.raises(RuntimeError):
-        @tdtaf.use_temporary_directory
-        @tdtaf.use_temporary_directory
-        def f(temp_dir): # pylint: disable=unused-variable
-            pass
-    return
-
-
-def test_factory_use_temporary_directory_import_files(tdtaf):
-    """
-    Use use_temporary_directory on import_files.
-    """
-    @tdtaf.import_files('test')
-    @tdtaf.use_temporary_directory
-    def f(a, b, c, temp_dir): # pylint: disable=unused-variable
-        pass
-    return
-
-
-def test_factory_use_temporary_directory_import_directory(tdtaf):
-    """
-    Use use_temporary_directory on import_directory.
-    """
-    @tdtaf.import_directory
-    @tdtaf.use_temporary_directory
-    def f(a, b, c, temp_dir): # pylint: disable=unused-variable
-        pass
-    return
-
-
-def test_factory_use_temporary_directory_export(tdtaf):
-    """
-    Use use_temporary_directory on export.
-    """
-    @tdtaf.export
-    @tdtaf.use_temporary_directory
-    def f(a, b, c, temp_dir): # pylint: disable=unused-variable
-        pass
-    return
-
-
-###############################################################################
 ####                     Test Factory Decorator Attributes                 ####
 ###############################################################################
 
-def test_factory_attr_name_is_existing_name_import_file():
+def test_factory_attr_name_is_existing_name_import_file(tdtaf):
     """
     Raise an error when a function has the name of an arrtibute in the
     DataTransformer object.
     """
     with pytest.raises(NameError):
-        @tdtaf.import_file('.test')
-        def __doc__(a,b,c): # pylint: disable=unused-variable
+        @tdtaf.import_files('test')
+        def __doc__(a,b,c,d): # pylint: disable=unused-variable
             pass
     return
 
 
-def test_factory_attr_name_is_existing_name_import_directory():
+def test_factory_attr_name_is_existing_name_import_directory(tdtaf):
     """
     Raise an error when a function has the name of an arrtibute in the
     DataTransformer object.
     """
     with pytest.raises(NameError):
         @tdtaf.import_directory
-        def __doc__(a,b,c): # pylint: disable=unused-variable
+        def __doc__(a,b,c,d): # pylint: disable=unused-variable
             pass
     return
 
 
-def test_factory_attr_name_is_existing_name_export():
+def test_factory_attr_name_is_existing_name_export(tdtaf):
     """
     Raise an error when a function has the name of an arrtibute in the
     DataTransformer object.
     """
     with pytest.raises(NameError):
         @tdtaf.export
-        def __doc__(a,b,c): # pylint: disable=unused-variable
+        def __doc__(a,b,c,d): # pylint: disable=unused-variable
             pass
     return
 
@@ -961,12 +883,12 @@ def test_factory_two_attributes_with_same_name(tdtaf):
     If two functions are defined with the same name then raise an error.
     """
     @tdtaf.import_files('test1')
-    def f(a,b,c): # pylint: disable=unused-variable
+    def f(a,b,c,d): # pylint: disable=unused-variable
         pass
 
     with pytest.raises(NameError):
         @tdtaf.import_files('test2')
-        def f(a,b,c): # pylint: disable=function-redefined
+        def f(a,b,c,d): # pylint: disable=function-redefined
             pass
     return
 
@@ -983,7 +905,7 @@ def test_build_importer(tdtaf, tmpdir):
     import capable.
     """
     @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
         pass
 
     dt = tdtaf.build_importer(
@@ -1003,14 +925,21 @@ def test_build_exporter(tdtaf, tmpdir):
     export capable.
     """
     @tdtaf.export
-    def ex(path, ctx, add_anno): # pylint: disable=unused-variable
+    def ex(path, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
         pass
 
+    path_to_ctm_file = tmpdir.join('f.ctm')
+    path_to_ctm_file.write('')
+    path_to_audio_file = tmpdir.join('f.wav')
+    path_to_audio_file.write('')
+    path_to_output_file = tmpdir.join('f.output')
+    path_to_output_file.write('')
+
     dt = tdtaf.build_exporter(
-        str(tmpdir.mkdir('collection')),
-        str(tmpdir.mkdir('resampled')),
+        str(path_to_ctm_file),
+        str(path_to_audio_file),
+        str(path_to_output_file),
         str(tmpdir.mkdir('temporary')),
-        str(tmpdir.join('annotaions.json')),
         lambda ctx: None,
     )
     assert type(dt) == DataTransformer
@@ -1022,7 +951,7 @@ def test_make_importer(tdtaf, tmpdir):
     Use the make_importer function to create an importer data transformer.
     """
     @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
         pass
 
     dt = make_importer( # pylint: disable=unused-variable
@@ -1061,7 +990,7 @@ def test_make_importer_from_export_only(tdtaf, tmpdir):
     exporter.
     """
     @tdtaf.export
-    def ex(path, ctx, add_anno): # pylint: disable=unused-variable
+    def ex(path, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
         pass
 
     with pytest.raises(ValueError):
@@ -1083,7 +1012,7 @@ def test_make_exporter_from_import_only(tdtaf, tmpdir):
     importer.
     """
     @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
         pass
     
     with pytest.raises(ValueError):
@@ -1104,7 +1033,7 @@ def test_make_exporter(tdtaf, tmpdir):
     Use the make_exporter function to create an importer data transformer.
     """
     @tdtaf.export
-    def ex(path, ctx, add_anno): # pylint: disable=unused-variable
+    def ex(path, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
         pass
 
     dt = make_exporter(
@@ -1147,7 +1076,7 @@ def test_dt_name(tdtaf, tmpdir):
     Check that the DataTransformer has the name specified.
     """
     @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
         pass
 
     dt = make_importer(
@@ -1164,35 +1093,13 @@ def test_dt_name(tdtaf, tmpdir):
     return
 
 
-def test_dt_get_audio_extention(tdtaf, tmpdir):
-    """
-    Check that that DataTransformer has the audio extention specified by the
-    DataTransformerAbstractFactory.
-    """
-    @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
-        pass
-
-    dt = make_importer(
-        TEST_FACTORY_TDTAF,
-        str(tmpdir.mkdir('collection')),
-        str(tmpdir.mkdir('resampled')),
-        str(tmpdir.mkdir('temporary')),
-        str(tmpdir.join('annotaions.json')),
-        lambda ctx: None
-    )
-
-    assert dt.get_audio_extention() == '.wav'
-    return
-
-
 def test_dt_change_setting_callback(tdtaf, tmpdir):
     """
     When a setting (context) is changed, the callback is triggered and
     notifying external objects of the change.
     """
     @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
         pass
 
     tdtaf.general_setting('field', str)
@@ -1201,6 +1108,8 @@ def test_dt_change_setting_callback(tdtaf, tmpdir):
     callback_field = None
     
     def callback(ctx):
+        nonlocal callback_called
+        nonlocal callback_field
         callback_called = True        # pylint: disable=unused-variable
         callback_field = ctx['field'] # pylint: disable=unused-variable
 
@@ -1233,7 +1142,8 @@ def test_dt_import_files_direct_call(tdtaf, tmpdir):
         collection.join(f'file{i}.test').write('')
 
     @tdtaf.import_files('test')
-    def import_test_files(paths, ctx, add_anno): # pylint: disable=unused-variable
+    def import_test_files(paths, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
+        nonlocal ran_importer
         assert paths == file_list
         ran_importer = True # pylint: disable=unused-variable
 
@@ -1261,10 +1171,12 @@ def test_dt_import_files_called_by_importer(tdtaf, tmpdir):
     file_list = [ str(collection.join(f'file{i}.test')) for i in range(3) ]
     for i in range(3):
         collection.join(f'file{i}.test').write('')
+    shutil.copyfile('/recordings/transcribed/1_1_1.wav', f'{collection}/1_1_1.wav')
 
     @tdtaf.import_files('test')
-    def import_test_files(paths, ctx, add_anno): # pylint: disable=unused-variable
-        assert paths == file_list
+    def import_test_files(paths, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
+        nonlocal ran_importer
+        assert set(paths) == set(file_list)
         ran_importer = True # pylint: disable=unused-variable
 
     dt = make_importer(
@@ -1294,9 +1206,10 @@ def test_dt_import_directory_direct_call(tdtaf, tmpdir):
         collection.join(f'file{i}.test').write('')
 
     @tdtaf.import_directory
-    def import_test_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_test_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
+        nonlocal ran_importer
         path = Path(path)
-        assert { f for f in path.iterdir() } == file_set
+        assert { f.name for f in path.iterdir() } == file_set
         ran_importer = True # pylint: disable=unused-variable
 
     dt = make_importer(
@@ -1325,9 +1238,10 @@ def test_dt_import_directory_called_by_importer(tdtaf, tmpdir):
         collection.join(f'file{i}.test').write('')
 
     @tdtaf.import_directory
-    def import_test_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_test_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
+        nonlocal ran_importer
         path = Path(path)
-        assert { f for f in path.iterdir() } == file_set
+        assert { f.name for f in path.iterdir() } == file_set
         ran_importer = True # pylint: disable=unused-variable
 
     dt = make_importer(
@@ -1355,7 +1269,8 @@ def test_dt_import_only_dirs(tdtaf, tmpdir):
         # These are directories!
 
     @tdtaf.import_files('test')
-    def import_test_files(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_test_files(path, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
+        nonlocal ran_importer
         #should never run
         ran_importer = True # pylint: disable=unused-variable
 
@@ -1379,7 +1294,7 @@ def test_dt_import_path_non_existant(tdtaf, tmpdir):
     """
 
     @tdtaf.import_files('test')
-    def import_test_files(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_test_files(path, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
         pass
 
     collection = tmpdir.join('collection')
@@ -1400,7 +1315,7 @@ def test_dt_import_missing_resampled(tdtaf, tmpdir):
     """
 
     @tdtaf.import_files('test')
-    def import_test_files(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_test_files(path, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
         pass
 
     with pytest.raises(RuntimeError):
@@ -1421,7 +1336,7 @@ def test_dt_import_missing_temporary(tdtaf, tmpdir):
     """
 
     @tdtaf.import_files('test')
-    def import_test_files(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_test_files(path, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
         pass
 
     with pytest.raises(RuntimeError):
@@ -1446,7 +1361,8 @@ def test_dt_import_files_has_context(tdtaf, tmpdir):
     collection.join(f'file0.test').write('')
 
     @tdtaf.import_files('test')
-    def import_f(paths, ctx, add_anno): # pylint: disable=unused-variable
+    def import_f(paths, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
+        nonlocal ran_importer
         assert 'field' in ctx
         ran_importer = True # pylint: disable=unused-variable
 
@@ -1476,7 +1392,8 @@ def test_dt_import_files_add_annotaion(tdtaf, tmpdir):
     collection.join(f'file0.test').write('')
 
     @tdtaf.import_files('test')
-    def import_test_files(paths, ctx, add_anno): # pylint: disable=unused-variable
+    def import_test_files(paths, ctx, add_anno, temp_dir): # pylint: disable=unused-variable
+        nonlocal ran_importer
         add_anno('some_file', {
             'audio_file_name': 'some_file.wav',
             'transcript': 'la la la',
@@ -1497,12 +1414,12 @@ def test_dt_import_files_add_annotaion(tdtaf, tmpdir):
     dt.process()
     assert ran_importer == True
     assert 'some_file' in dt._annotation_store
-    assert dt._annotation_store['some_file'] == {
+    assert dt._annotation_store['some_file'] == [{
             'audio_file_name': 'some_file.wav',
             'transcript': 'la la la',
             'start_ms': 0,
             'stop_ms': 1100
-        }
+        }]
     return
 
 
@@ -1514,7 +1431,8 @@ def test_dt_import_directory_has_context(tdtaf, tmpdir):
     ran_importer = False
 
     @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
+        nonlocal ran_importer
         assert 'field' in ctx
         ran_importer = True # pylint: disable=unused-variable
 
@@ -1540,7 +1458,7 @@ def test_dt_import_directory_add_annotaion(tdtaf, tmpdir):
     Check that annotaions are added when the callback is used.
     """
     @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
         add_anno('some_file', {
             'audio_file_name': 'some_file.wav',
             'transcript': 'la la la',
@@ -1559,12 +1477,12 @@ def test_dt_import_directory_add_annotaion(tdtaf, tmpdir):
 
     dt.process()
     assert 'some_file' in dt._annotation_store
-    assert dt._annotation_store['some_file'] == {
+    assert dt._annotation_store['some_file'] == [{
             'audio_file_name': 'some_file.wav',
             'transcript': 'la la la',
             'start_ms': 0,
             'stop_ms': 1100
-        }
+        }]
     return
 
 
@@ -1574,7 +1492,7 @@ def test_dt_add_annotaion_wrong_type(tdtaf, tmpdir):
     incorrect field or missing a field.
     """
     @tdtaf.import_directory
-    def import_dir(path, ctx, add_anno): # pylint: disable=unused-variable
+    def import_dir(path, ctx, add_anno, add_audio, temp_dir): # pylint: disable=unused-variable
         add_anno('some_file', {
             'wrong': 'some_file.wav',
             'transcript': 'la la la',
@@ -1591,7 +1509,7 @@ def test_dt_add_annotaion_wrong_type(tdtaf, tmpdir):
         lambda ctx: None
     )
 
-    with pytest.raises(RuntimeError):
+    with pytest.raises(TypeError):
         dt.process()
     return
 

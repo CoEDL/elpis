@@ -48,6 +48,16 @@ FilteredPathList = Dict[str, PathList]
 # callback (add_annotation) that appends an anotaion dictiornary to the IDs
 # list.
 
+def copyJSONable(obj):
+    """
+    Creates a copy of obj and ensures it is JSONable.
+
+    :return: copy of obj.
+    :raises:
+        TypeError: if the obj is not JSONable.
+    """
+    return json.loads(json.dumps(obj))
+
 class Functional:
     """
     Support class to keep a reference to an object containing a function. Use
@@ -78,27 +88,11 @@ class DataTransformer:
     Elpis pipeline system.
     """
 
-    def __init__(self, context: Dict, collection_path: str, resampled_path: str, temporary_directory_path: str, importing_function: DirImporterType, audio_processing_callback: AudioProcessingFunction, context_change_callback: CtxChangeCallback):
-        # self._context: Dict = context TODO: remove this line
-        self._import_context: Dict = context
-        self._export_context: Dict = context
+    def __init__(self, name: str, context: Dict, context_change_callback: CtxChangeCallback, process_callback: Callable):
+        self._name = name
+        self._context = context
         self._context_change_callback = context_change_callback
-
-        # Path to directory containing original audio and transcription files
-        self._collection_path: str = collection_path # TODO: Remove this line
-
-        # Path to directory containing resampled audio files
-        self._resampled_path: str = resampled_path
-
-        # Callback to transcription data importing function, requires contents
-        # directoru, contect and add_annotation parameters.
-        self._importing_function: DirImporterType = importing_function
-
-        # Target media audio file extention
-        self._audio_ext_filter: str = 'wav' # default to wav
-
-        # Callback to audio importing function.
-        self._audio_processing_callback: AudioProcessingFunction = audio_processing_callback
+        self._process_callback = process_callback
 
         # annotation_store: collection of (ID -> List[annotaion obj]) pairs
         self._annotation_store = {}
@@ -106,11 +100,37 @@ class DataTransformer:
         self._audio_store = {}
 
     def process(self):
-        self._importing_function(self, self._import_context)
+        """
+        To be overriden.
+        """
+        pass
+    
+    def get_name(self) -> str:
+        return self._name
+    
+    def get_state(self) -> str:
+        return {
+            'name': self._name,
+        }
+    
+    @property
+    def context(self):
+        return self.Context(self)
 
+    class Context(object):
+        """
+        Ensures the callback is called when the context is modified.
+        """
+        def __init__(self, dt):
+            self.dt = dt
 
+        def __getitem__(self, key: str):
+            return copyJSONable(self.dt._context[key])
 
-
+        def __setitem__(self, key, value):
+            value = copyJSONable(value)
+            self.dt._context[key] = value
+            self.dt._context_change_callback(copyJSONable(self.dt._context))
 
 class DataTransformerAbstractFactory:
     """
@@ -134,9 +154,10 @@ class DataTransformerAbstractFactory:
             ValueError: if DataTransformerAbstractFactory with name already
                 exists.
         """
-
+        self._name = name
         self._audio_extention = 'wav'
         self._default_context_already_set = False
+        self._decorating_temp_dir = False
 
         # Ensure only one name exists per DataTransformerAbstractFactory
         if name in self._transformer_factories:
@@ -147,12 +168,23 @@ class DataTransformerAbstractFactory:
         self._import_context = {}
         self._export_context = {}
 
-        # Concrete import function collection
+        # GUI configurations
+        self._import_ui_config = {}
+        self._export_ui_config = {}
+
+        # Concrete import/export function collection
         self._import_extension_callbacks: Dict[str, FileImporterType] = {}
         self._import_directory_callback: Callable = None
+        self._export_callback: Callable = None
+        self._audio_processing_callback: Callable = None
 
-        self._functions_using_tempdir: List[Functional] = []
         self._attributes = {}
+        self._obj_to_attr_name = {}
+
+        self._type_to_label = {
+            str: 'str',
+            int: 'int'
+        }
     
     def set_audio_extention(self, ext: str):
         """
@@ -195,12 +227,13 @@ class DataTransformerAbstractFactory:
 
         Store the decorated function as a callback to process files with the
         given extention. The parameter to the decorator is the file extention.
-        The decorated function (f) should always have three parameters, being:
+        The decorated function (f) should always have four parameters, being:
             1. List containing the file paths of all the files in the import
                 directory with the specified extention.
             2. A dictionary context variable that can be used to access
                 specialised settings.
             3. A callback to add annotaion data to audio files.
+            4. Path to a temporary directory
         
         This decorator is indended for the (audio file, transcription file)
         unique distinct pair usecase.
@@ -218,7 +251,7 @@ class DataTransformerAbstractFactory:
         :raises:
             RuntimeError: if import_directory is already used.
             RuntimeError: if the extention is aleady registers.
-            RuntimeError: if the decorated function name is repeated.
+            NameError: if the decorated function name is repeated or invalid.
             RuntimeError: if the decorated function does not have three parameters.
         """
         if self._import_directory_callback is not None:
@@ -228,224 +261,399 @@ class DataTransformerAbstractFactory:
 
         def decorator(f: Callable):
             if f.__name__ in self._attributes:
-                raise RuntimeError('bad function name. Already used')
+                raise NameError('bad function name. Already used')
             if f.__name__ in dir(DataTransformer):
-                raise RuntimeError('bad function name. Name is attribute of DataTransformer')
+                raise NameError('bad function name. Name is attribute of DataTransformer')
 
             sig = signature(f)
-            if len(sig.parameters) != 3:
-                raise RuntimeError(f'function "{f.__name__}" must have three parameters, currently has f{len(sig.parameters)}')
+            if len(sig.parameters) != 4:
+                raise RuntimeError(f'import function "{f.__name__}" must have four parameters, currently has {len(sig.parameters)}')
 
             # Store the closure by file extention
             self._import_extension_callbacks[extention] = f
             # Store attribute
             self._attributes[f.__name__] = f
+            self._obj_to_attr_name[f] = f.__name__
             return f
         return decorator
     
-    def import_directory(self, f):
+    def import_directory(self, f: Callable):
         """
         Python Decorator (no arguments)
 
         Store the decorated function as a callback to process files of the
-        given type. The decorated function (f) should always have four
+        given type. The decorated function (f) should always have five
         parameters, being:
             1. Directory path containing files/directories of interest.
             2. A Dictionary context variable that can be used to access
                 specialised settings.
             3. A callback to add annotaion data to audio files.
             4. A callback to add audio files.
+            5. Path to a temporary directory.
         
         The callback is used either when the DataTransformer process() function
-        is called or the if the function is called directly from the
-        DataTransformer object.
+        is called or the if the function is called directly (without passing
+        patameters) from the DataTransformer object.
 
         This decorator cannot be used with the import_file decorator.
 
-        :return: a python decorator
+        :return: the function
         :raises:
             RuntimeError: if the callback has already been specified.
             RuntimeError: if import_files had already been specified.
+            RuntimeError: if the decorated function name is repeated or invalid.
+            RuntimeError: if the decorated function does not have four parameters.
         """
         if self._import_directory_callback is not None:
             raise RuntimeError('import_directory already specified')
         if len(self._import_extension_callbacks) != 0:
             raise RuntimeError('import_files used, therefore cannot use import_directory')
         if f.__name__ in self._attributes:
-            raise RuntimeError('bad function name. Already used')
+            raise NameError('bad function name. Already used')
         if f.__name__ in dir(DataTransformer):
-            raise RuntimeError('bad function name. Name is attribute of DataTransformer')
+            raise NameError('bad function name. Name is attribute of DataTransformer')
 
         sig = signature(f)
-        if len(sig.parameters) != 4:
-            raise RuntimeError(f'function "{f.__name__}" must have four parameters, currently has f{len(sig.parameters)}')
+        if len(sig.parameters) != 5:
+            raise RuntimeError(f'import function "{f.__name__}" must have five parameters, currently has f{len(sig.parameters)}')
         
         # Store the closure by file extention
         self._import_directory_callback = f
         self._attributes[f.__name__] = f
+        self._obj_to_attr_name[f] = f.__name__
         return f
 
-    def make_default_context(self, ctx: Dict):
+    def export(self, f: Callable):
         """
-        Define a default context for the data transformer.
+        Python Decorator (no arguments).
 
-        :param ctx: dictionary of jsonable values.
+        Store the decorated function as a callback to export a transcription
+        file given an audio file.
+        The decorated function (f) should always have four parameters, being:
+            1. Annotataions dictionary.
+            2. A dictionary context variable that can be used to access
+                specialised settings.
+            3. Output directory.
+            4. Path to a temporary directory
+        
+        This decorator is indended for the (audio file, transcription file)
+        unique distinct pair usecase.
+        
+        The callback is used by directly calling it from the DataTransformer
+        object. If called directly, then only the annotations and the
+        output_dir arguments should be passed to the function as the
+        DataTransformer automatically passes context.
+
+        :return: the function
+        :raises:
+            RuntimeError: if export is already used.
+            RuntimeError: if the decorated function name is repeated or invalid.
+            RuntimeError: if the decorated function does not have three parameters.
         """
-        self._default_context = json.dumps(ctx)
-        return
+        if self._export_callback != None:
+            raise RuntimeError('export used, therefore cannot use export')
+        if f.__name__ in self._attributes:
+            raise NameError('bad function name. Already used')
+        if f.__name__ in dir(DataTransformer):
+            raise NameError('bad function name. Name is attribute of DataTransformer')
+
+        sig = signature(f)
+        if len(sig.parameters) != 4:
+            raise RuntimeError(f'export function "{f.__name__}" must have four parameters, currently has f{len(sig.parameters)}')
+        self._attributes[f.__name__] = f
+        self._export_callback = f
+        self._obj_to_attr_name[f] = f.__name__
+        return f
+
+    def import_setting(self, key, type, default=None, ui=None):
+        """
+        Add a field to the import context.
+
+        :param key: the name of the field.
+        :param type: the type of the field (must be JSONable)
+        :param default: (Optional) default value of the field.
+        :param ui: (Optional) ui configuration
+        :raises:
+            RuntimeError: if the key has already been specified as an import setting or in the default context.
+        """
+        if key in self._import_context:
+            raise ValueError(f'key "{key}" already in the import context')
+        self._import_context[key] = default
+        self._import_ui_config[key] = {
+            'type': self._type_to_label[type],
+            'ui': ui
+        }
     
-    def audio_media_extention(self, extention: str):
+    def export_setting(self, key, type, default=None, ui=None):
         """
-        Target media file type to process by file extention.
+        Add a field to the export context.
 
-        :param extention: Extention part of file name.
+        :param key: the name of the field.
+        :param type: the type of the field (must be JSONable)
+        :param default: (Optional) default value of the field.
+        :param ui: (Optional) ui configuration
+        :raises:
+            RuntimeError: if the key has already been specified as an export setting or in the default context.
         """
-        self._audio_ext_filter = extention
-        return
+        if key in self._export_context:
+            raise ValueError(f'key "{key}" already in the export context')
+        self._export_context[key] = default
+        self._export_ui_config[key] = {
+            'type': self._type_to_label[type],
+            'ui': ui
+        }
 
-    def add_setting(self, figure, out, what, params):
-        """"""
-        pass
+    def general_setting(self, key, type, default=None, ui=None):
+        """
+        Add a field to the both import and export context.
+
+        :param key: the name of the field.
+        :param type: the type of the field (must be JSONable)
+        :param default: (Optional) default value of the field.
+        :param ui: (Optional) ui configuration
+        :raises:
+            RuntimeError: if the key has already been specified as an import or export setting, or in the default context.
+        """
+        if key in self._import_context:
+            raise ValueError(f'key "{key}" already in the import context')
+        if key in self._export_context:
+            raise ValueError(f'key "{key}" already in the export context')
+        self.import_setting(key, type, default=default, ui=ui)
+        self.export_setting(key, type, default=default, ui=ui)
+    
+    def is_import_capable(self):
+        if self._import_directory_callback != None:
+            return True
+        if len(self._import_extension_callbacks) != 0:
+            return True
+        return False
+    
+    def is_export_capable(self):
+        return self._export_callback != None
 
     def replace_reprocess_audio(self, f):
         """"""
-        pass
+        if self._audio_processing_callback != None:
+            raise RuntimeError('replace_reprocess_audio can only be specified once')
+        self._audio_processing_callback = f
+        return f
 
-    def export_files(self, f):
-        """"""
-        pass
+    def build_importer(self,
+                        collection_path: str,
+                        resampled_path: str,
+                        temporary_directory_path: str,
+                        transcription_json_file_path: str,
+                        context_change_callback: CtxChangeCallback
+                    ) -> DataTransformer:
 
-    def export_directory(self, f):
-        """"""
-        pass
+        # check arguments
+        if not Path(collection_path).is_dir():
+            raise RuntimeError('path to collection does not exist')
+        if not Path(resampled_path).is_dir():
+            raise RuntimeError('path to the resampled directory does not exist')
+        if not Path(temporary_directory_path).is_dir():
+            raise RuntimeError('path to temporary directory does not exist')
 
-    def use_temporary_directory(self, f):
-        """
-        Python decotator.
-
-        Postpends an argument containing the path to a temporary directory (before kwargs).
-
-        :param f: function to be decorated.
-        :return: Callable object containing the function.
-        """
-        
-        functional = Functional(f)
-        self._functions_using_tempdir.append(functional)
-
-        return functional
-
-    def build(self, collection_path: str, resampled_path: str, temporary_directory_path: str, transcription_json_file_path: str, context_change_callback: CtxChangeCallback):
-        """"""
         # Prepare a copy of the context object.
-        context = json.loads(self._default_context)
+        context = json.loads(json.dumps(self._import_context))
 
-        # Choose an importing methodology and prepare it. Options:
-        #   _import_files
-        #   _import_directory
-        # Note: This function calls the audio processing callback
-        importing_method = None
+        dt = DataTransformer(
+            self._name,
+            context,
+            context_change_callback,
+            lambda: None
+        )
 
-        def _import_directory(dt: DataTransformer, dir_path:str, context, add_annotation, add_audio):
+        # Callbacks to add data to the internal stores
+        def add_annotation(id, obj):
+            nonlocal dt
+            # check the object type
+            if type(obj) != dict:
+                raise TypeError('annotation top level variable must be a dictionary')
+            fields = { 'audio_file_name', 'transcript', 'start_ms', 'stop_ms' }
+            if set(obj.keys()) != fields:
+                raise TypeError('annotation object contains an incorrect field name')
+            # add the annotation
+            if id in dt._annotation_store:
+                dt._annotation_store[id].append(obj)
+            else:
+                dt._annotation_store[id] = [obj]
+            return # from add_annotation
+        add_audio = lambda id, audio_path: dt._audio_store.update({id: audio_path})
 
-            #
-            # TODO: Extract audio and transcription data here
-            #
-            pass
-            
-        
-        def _import_files(dt: DataTransformer, _, add_annotation, add_audio):
-            extention_to_files: FilteredPathList = _filter_files_by_extention(collection_path)
-            audio_paths: PathList = extention_to_files.pop(dt._audio_ext_filter)
-            # process audio
-            dt._audio_processing_callback(audio_paths, resampled_path, add_audio)
-            # process transcription data
-            for extention, file_paths in extention_to_files.items():
-                # only process the file type collection if a handler exists for it
-                callback = self._import_extension_callbacks.get(extention, None)
-                if callback is not None:
-                    callback(file_paths, dt._import_context, add_annotation)
-            
-            # save transcription data to file
-            with Path(transcription_json_file_path).open(mode='w') as fout:
-                annotations = []
-                for id in dt._annotation_store:
-                    annotations.extend(dt._annotation_store[id])
-                fout.write(json.dumps(annotations))
-            return # _import_files
+        # Make attributes for dt to be called directly.
+        if self._import_directory_callback != None:
+            # Make wrapper for import_directory_callback
+            f = self._import_directory_callback
+            def wrapper():
 
-        if self._import_directory_callback is not None:
-            importing_method = _import_directory
+                nonlocal dt
+                nonlocal f
+                nonlocal collection_path
+                nonlocal add_annotation
+                nonlocal add_audio
+                nonlocal temporary_directory_path
+                return f(
+                    collection_path,
+                    # resampled_path, # TODO: this line needs to be here so add the parameter to tests
+                    copyJSONable(dt._context),
+                    add_annotation,
+                    add_audio,
+                    temporary_directory_path
+                )
+            setattr(dt, self._obj_to_attr_name[f], wrapper)
+            # Construct the process function
+            obj_to_attr_name = self._obj_to_attr_name
+            def import_directory_process():
+                # do not reference self in this closure
+                nonlocal dt
+                nonlocal collection_path
+                nonlocal resampled_path
+                nonlocal add_annotation
+                nonlocal add_audio
+                nonlocal temporary_directory_path
+                nonlocal f
+                nonlocal obj_to_attr_name
+
+                # import directory contents
+                callback_name = obj_to_attr_name[f]
+                callback = getattr(dt, callback_name)
+                callback()
+
+                # save transcription data to file
+                with Path(transcription_json_file_path).open(mode='w') as fout:
+                    annotations = []
+                    for id in dt._annotation_store:
+                        annotations.extend(dt._annotation_store[id])
+                    fout.write(json.dumps(annotations))
+                return # import_directory_process
+            setattr(dt, 'process', import_directory_process) # Override this function
         else:
-            importing_method = _import_files
-        def _importing_closure(dt: DataTransformer, context: Dict):
-            """
-            A closure that prepares the call to the decided function, calls that function then saves the json result to file.
-            """
-            # Clean up from possible previous imports
-            dt._annotation_store = {}
-            dt._audio_store = {}
+            # make wrapper for import_files (accepts one argument)
+            for _ext, f in self._import_extension_callbacks.items():
+                def wrapper(file_paths: str):
+                    """
+                    Attribute that is assigned to the DataTransformer. This
+                    Handler must only import the given files.
+                    """
+                    nonlocal dt
+                    nonlocal f
+                    nonlocal add_annotation
+                    nonlocal temporary_directory_path
+                    return f(
+                        file_paths,
+                        copyJSONable(dt._context),
+                        add_annotation,
+                        temporary_directory_path
+                    )
+                setattr(dt, self._obj_to_attr_name[f], wrapper)
+            # Construct the process function
+            audio_processing_callback = self._audio_processing_callback
+            if audio_processing_callback == None:
+                audio_processing_callback = _default_audio_resampler
+            import_extension_callbacks = self._import_extension_callbacks
+            audio_extention = self._audio_extention
+            def import_files_process():
+                """
+                Handler that is set to the .process() function.
+                """
+                # do not reference self in this closure
+                nonlocal dt
+                nonlocal collection_path
+                nonlocal resampled_path
+                nonlocal add_annotation
+                nonlocal add_audio
+                nonlocal temporary_directory_path
+                nonlocal audio_processing_callback
+                nonlocal import_extension_callbacks
+                nonlocal audio_extention
 
-            # Callbacks to add data to the internal stores
-            def add_annotation(id, obj):
-                if id in dt._annotation_store:
-                    dt._annotation_store[id].append(obj)
-                else:
-                    dt._annotation_store[id] = [obj]
-                return # from add_annotation
-            add_audio = lambda id, audio_path: dt._audio_store.update({id: audio_path})
+                extention_to_files: FilteredPathList = _filter_files_by_extention(collection_path)
 
-            # Extract audio and transcription data here
-            importing_method(dt, collection_path, context, add_annotation, add_audio)
+                # process audio
+                if audio_extention in extention_to_files: # skip if there are no audio files to process
+                    audio_paths: PathList = extention_to_files.pop(audio_extention)
+                    audio_processing_callback(audio_paths, resampled_path, add_audio, temporary_directory_path)
 
-            # save transcription data to file
-            with Path(transcription_json_file_path).open(mode='w') as fout:
-                annotations = []
-                for id in dt._annotation_store:
-                    annotations.extend(dt._annotation_store[id])
-                fout.write(json.dumps(annotations))
-            return # from process
-        importing_function = _importing_closure
-            
+                # process transcription data
+                for extention, file_paths in extention_to_files.items():
+                    # only process the file type collection if a handler exists for it
+                    callback = import_extension_callbacks.get(extention, None)
+                    if callback is not None:
+                        callback(file_paths, dt._context, add_annotation, temporary_directory_path)
 
-        # Prepare the audio function or use the replacement one
-        audio_processing_callback = Functional(_default_audio_resampler)
-        # register the default callback to have it's function restructured
-        self._functions_using_tempdir.append(audio_processing_callback)
-
-        # Note: the symbol dt is used in functions above it's definition, this
-        # is intended as dt above is meant to be a pesudo-self argument which
-        # will be the instance dt later.
-        dt = DataTransformer(context, collection_path, resampled_path, temporary_directory_path, importing_function, audio_processing_callback, context_change_callback)
-
-        # restructure functions that require a temporary directory
-        for functional in self._functions_using_tempdir:
-            original_f = functional.callback
-            def wrapper(*args, **kwargs):
-                # Ensure the directory is empty
-                path = Path(temporary_directory_path)
-                if path.exists():
-                    shutil.rmtree(temporary_directory_path)
-                path.mkdir(parents=True)
-
-                # run the function with the clean directory
-                original_f(*args, temporary_directory_path, **kwargs)
-
-                # delete the temporary directory
-                shutil.rmtree(temporary_directory_path)
-            functional.callback = wrapper
+                # save transcription data to file
+                with Path(transcription_json_file_path).open(mode='w') as fout:
+                    annotations = []
+                    for id in dt._annotation_store:
+                        annotations.extend(dt._annotation_store[id])
+                    fout.write(json.dumps(annotations))
+                return # import_files_process
+            setattr(dt, 'process', import_files_process) # Override this function
 
         return dt
+    
+    def build_exporter(self,
+                        path_to_ctm_file: str,
+                        path_to_audio_file: str,
+                        path_to_output_file: str,
+                        temporary_directory_path: str,
+                        context_change_callback: CtxChangeCallback
+                    ) -> DataTransformer:
+        # Prepare a copy of the context object.
+        context = json.loads(json.dumps(self._export_context))
+        dt = DataTransformer(
+            self._name,
+            context,
+            context_change_callback,
+            lambda: None
+        )
+        return dt
 
+def _default_ctx_change_callback(ctx):
+    pass
 
-def _default_ctx_change_callback(ctx1, ctx2):
-    """Does nothing."""
-    return
+def make_importer(name: str,
+                    collection_path: str,
+                    resampled_path: str,
+                    temporary_directory_path: str,
+                    transcription_json_file_path: str,
+                    context_change_callback=_default_ctx_change_callback
+                ) -> DataTransformer:
+    if name not in DataTransformerAbstractFactory._transformer_factories:
+        raise ValueError(f'data transformer factory with name "{name}" not found')
+    dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[name]
+    if not dtaf.is_import_capable():
+        raise ValueError(f'data transformer factory with name "{name}" cannot import')
+    dt = dtaf.build_importer(
+        collection_path,
+        resampled_path,
+        temporary_directory_path,
+        transcription_json_file_path,
+        context_change_callback
+    )
+    return dt
 
-def make_importer(n, c, r, tmp, t, ctx):
-    return None
-
-def make_exporter(n, c, r, tmp, t, ctx):
-    return None
+def make_exporter(name: str,
+                    collection_path: str,
+                    resampled_path: str,
+                    temporary_directory_path: str,
+                    transcription_json_file_path: str,
+                    context_change_callback=_default_ctx_change_callback
+                ) -> DataTransformer:
+    if name not in DataTransformerAbstractFactory._transformer_factories:
+        raise ValueError(f'data transformer factory with name "{name}" not found')
+    dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[name]
+    if not dtaf.is_export_capable():
+        raise ValueError(f'data transformer factory with name "{name}" cannot export')
+    dt = dtaf.build_exporter(
+        collection_path,
+        resampled_path,
+        temporary_directory_path,
+        transcription_json_file_path,
+        context_change_callback
+    )
+    return dt
 
 def make_data_transformer(name: str,
                             collection_path: str,
