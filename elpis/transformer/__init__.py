@@ -655,32 +655,6 @@ def make_exporter(name: str,
     )
     return dt
 
-def make_data_transformer(name: str,
-                            collection_path: str,
-                            resampled_path: str,
-                            temporary_directory_path: str,
-                            transcription_json_file_path: str,
-                            context_change_callback=_default_ctx_change_callback
-                        ) -> DataTransformer:
-    """
-    Creates a concrete data transformer.
-
-    :param name: type of requested data transformer.
-    :param collection_path: path to the original file collection.
-    :param resampled_path: path to put resampled audio into.
-    :param temporary_directory_path: path to store and operate on temporary data.
-    :param transcription_json_file_path: path to save json file for transcription output data to.
-    :param context_change_callback: When the context is changed, this callback is called with the new context.
-    :returns: a DataTransformer of the requested type if it exists, else an error is raised.
-    :raises:
-        ValueError: if the requested data transformer does not exist.
-    """
-    
-
-    dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[name]
-    dt = dtaf.build(collection_path, resampled_path, temporary_directory_path, transcription_json_file_path, context_change_callback)
-    return dt
-
 
 def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
     """

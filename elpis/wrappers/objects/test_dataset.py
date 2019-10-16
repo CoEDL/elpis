@@ -302,8 +302,8 @@ def test_load_with_add_directory(tmpdir):
     ds1.add_directory('/recordings/transcribed')
     ds2 = Dataset.load(ds1.path)
 
-    assert ds2.importer is not None
-    assert ds2.has_been_processed == True
+    assert ds2.importer == None
+    assert ds2.has_been_processed == False
     assert set(ds2.files) == {
         "1_1_1.wav",
         "1_1_1.eaf",
@@ -314,26 +314,23 @@ def test_load_with_add_directory(tmpdir):
         "1_1_4.wav",
         "1_1_4.eaf"
     }
-    assert ds2.state == json.loads(f"""
-    {{
-        "name": "dataset_x",
-        "hash": "{ds1.hash}",
-        "date": "{ds1.date}",
-        "has_been_processed": false,
-        "files": [
-            "1_1_1.wav",
-            "1_1_1.eaf",
-            "1_1_2.wav",
-            "1_1_2.eaf",
-            "1_1_3.wav",
-            "1_1_3.eaf",
-            "1_1_4.wav",
-            "1_1_4.eaf"
-        ],
-        "processed_labels": ["1_1_1", "1_1_2", "1_1_3", "1_1_4"],
-        "importer": null
-    }}
-    """)
+    return
+
+
+def test_load_processed(tmpdir):
+    """
+    Load a processed dataset.
+    """
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+    ds1 = kaldi.new_dataset('dataset_x')
+    ds1.add_directory('/recordings/transcribed')
+    ds1.select_importer('Elan')
+    ds1.process()
+    ds2 = Dataset.load(ds1.path)
+
+    assert ds2.importer is not None
+    assert ds2.has_been_processed == True
+    assert set(ds2.processed_labels) == set(["1_1_1", "1_1_2", "1_1_3", "1_1_4"])
     return
 
 
@@ -344,7 +341,7 @@ def test_select_nonexistant_importer(tmpdir):
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
     with pytest.raises(ValueError):
-        ds.import_with('this_importer_name_does_not_exist')
+        ds.select_importer('this_importer_name_does_not_exist')
     return
 
 
@@ -367,11 +364,7 @@ def test_select_importer(tmpdir):
         "processed_labels": [],
         "importer": {{
             "name": "Elan",
-            "import_context": {{
-                "tier": "Phrase",
-                "graphic": "elan.png"
-            }},
-            "export_context": {{
+            "context": {{
                 "tier": "Phrase",
                 "graphic": "elan.png"
             }}
@@ -387,7 +380,7 @@ def test_change_importer_setting(tmpdir):
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
     ds.select_importer('Elan')
-    ds.importer.change_tier("Shift")
+    ds.importer.context["tier"] = "Shift"
     assert ds.state == json.loads(f"""
     {{
         "name": "dataset_x",
@@ -398,11 +391,7 @@ def test_change_importer_setting(tmpdir):
         "processed_labels": [],
         "importer": {{
             "name": "Elan",
-            "import_context": {{
-                "tier": "Shift",
-                "graphic": "elan.png"
-            }},
-            "export_context": {{
+            "context": {{
                 "tier": "Shift",
                 "graphic": "elan.png"
             }}
@@ -418,7 +407,7 @@ def test_select_importer_when_already_selected(tmpdir):
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
     ds.select_importer('Elan')
-    ds.importer.change_tier("Shift")
+    ds.importer.context["tier"] = "Shift"
     ds.select_importer('Elan')
     assert ds.state == json.loads(f"""
     {{
@@ -430,11 +419,7 @@ def test_select_importer_when_already_selected(tmpdir):
         "processed_labels": [],
         "importer": {{
             "name": "Elan",
-            "import_context": {{
-                "tier": "Phrase",
-                "graphic": "elan.png"
-            }},
-            "export_context": {{
+            "context": {{
                 "tier": "Phrase",
                 "graphic": "elan.png"
             }}
@@ -450,8 +435,8 @@ def test_change_setting_before_selecting_importer(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
-    with pytest.raises(RuntimeError):
-        ds.importer.change_tier("Shift")
+    with pytest.raises(AttributeError): # importer is None
+        ds.importer.context["tier"] = "Shift"
     return
 
 def test_process(tmpdir):
@@ -471,8 +456,8 @@ def test_process(tmpdir):
     # Whitebox tests
     annotations_path = Path(f'{ds.path}/annotations.json')
     assert annotations_path.is_file()
-    wordlist_path = Path(f'{ds.path}/wordlist.txt')
-    assert wordlist_path.is_file()
+    word_list_path = Path(f'{ds.path}/word_list.txt')
+    assert word_list_path.is_file()
     return
 
 def test_annotations_before_processing(tmpdir):
@@ -499,7 +484,6 @@ def test_annotations_after_processing(tmpdir):
     ds.process()
     annotations = ds.annotations
     # ensure no errors are raised. annotations is JSONable
-    assert json.dumps(annotations) is str
     assert len(annotations) != 0
     return
 
@@ -511,19 +495,6 @@ def test_process_without_importer(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
-    with pytest.raises(RuntimeError):
-        ds.process()
-    return
-
-
-def test_process_with_failing_importer(tmpdir):
-    """
-    Process the dataset with an importer designed to fail and get a RuntimeError on process().
-    """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    ds = kaldi.new_dataset('dataset_x')
-    ds.add_directory('/recordings/transcribed')
-    ds.select_importer('Test_must_fail')
     with pytest.raises(RuntimeError):
         ds.process()
     return
@@ -544,19 +515,18 @@ def test_add_directory_after_process(tmpdir):
     ds.add_file('/recordings/transcribed/1_1_2.wav')
     ds.add_file('/recordings/transcribed/1_1_2.eaf')
     assert ds.has_been_processed == False
-    assert set(ds.processed_labels) == {"1_1_1"}
+    assert set(ds.processed_labels) == set()
     return
 
 
 def test_process_empty_dataset(tmpdir):
     """
-    Attempting to process a dataset with no files will produce an error.
+    Attempting to process a dataset with no files will not produce an error.
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     ds = kaldi.new_dataset('dataset_x')
     ds.select_importer('Elan')
-    with pytest.raises(RuntimeError):
-        ds.process()
+    ds.process()
     return
 
 def test_mismatched_audio_and_transcription_files(tmpdir):
@@ -573,33 +543,6 @@ def test_mismatched_audio_and_transcription_files(tmpdir):
     ds.process()
     assert ds.has_been_processed == True
     assert set(ds.processed_labels) == {"1_1_2"}
-    return
-
-
-def test_selecting_importer_chages_state(tmpdir):
-    """
-    If the importer is changed, the dataset is considered unprocessed.
-    """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    ds = kaldi.new_dataset('dataset_x')
-    ds.add_directory('/recordings/transcribed')
-    ds.select_importer('Elan')
-    ds.process()
-    assert ds.has_been_processed == True
-    ds.select_importer('Test_import_only')
-    assert ds.has_been_processed == False
-    return
-
-
-def test_selecting_importer_export_only(tmpdir):
-    """
-    Selecting a data transformer that is marked export only will raise an error.
-    """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    ds = kaldi.new_dataset('dataset_x')
-    ds.add_directory('/recordings/transcribed')
-    with pytest.raises(RuntimeError):
-        ds.select_importer('Test_export_only')
     return
 
 # TODO: White-box test the state of the annotations.json file and how it is accessed.

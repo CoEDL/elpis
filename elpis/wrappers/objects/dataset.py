@@ -11,7 +11,7 @@ from multiprocessing.dummy import Pool
 from shutil import move
 
 from .fsobject import FSObject
-from elpis.transformer import make_data_transformer
+from elpis.transformer import make_importer
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
 from elpis.wrappers.input.elan_to_json import process_eaf
 from elpis.wrappers.input.clean_json import clean_json_data
@@ -32,7 +32,7 @@ class DSPaths(object):
         ensure_paths_exist(self, attrs)
 
         # files
-        self.annotation_json: Path = self.basepath.joinpath('annotation.json')
+        self.annotation_json: Path = self.basepath.joinpath('annotations.json')
         self.word_count_json: Path = self.basepath.joinpath('word_count.json')
         self.word_list_txt: Path = self.basepath.joinpath('word_list.txt')
         # \/ user uploaded addional words
@@ -68,7 +68,10 @@ class Dataset(FSObject):
         self = super().load(base_path)
         self.__files = [Path(path) for path in self.config['files']]
         self.pathto = DSPaths(self.path)
-        # TODO: self._importer = ...
+        self._importer = self.config['importer']
+        if self._importer != None:
+            importer_name = self._importer['name']
+            self.select_importer(importer_name)
         return self
 
     def select_importer(self, name: str):
@@ -85,19 +88,21 @@ class Dataset(FSObject):
             ValueError: if name does not corrospond to any existing data transformers.
         """
 
-        def context_change_callback(import_ctx, export_ctx):
+        def context_change_callback(ctx):
             """
             Generate the JSON importer (data transformer) state variable.
             """
+            nonlocal name
             self.config['importer'] = {
-                'import': import_ctx,
-                'export': export_ctx
+                'name': name,
+                'context': ctx
             }
             return 
 
         temporary_directory_path = f'/tmp/{self.hash}/working'
+        Path(temporary_directory_path).mkdir(parents=True, exist_ok=True) # TODO: what if two importers are used on this directory?
         transcription_json_file_path = f'{self.pathto.annotation_json}'
-        self._importer = make_data_transformer(
+        self._importer = make_importer(
             name,
             self.pathto.original,
             self.pathto.resampled,
@@ -105,6 +110,11 @@ class Dataset(FSObject):
             transcription_json_file_path,
             context_change_callback=context_change_callback
         )
+
+        self.config['importer'] = {
+            'name': name,
+            'context': self._importer._context
+        }
         return
 
     @property
@@ -157,18 +167,26 @@ class Dataset(FSObject):
 
         :return: A DataTransformer if one has been assigned using the select_importer(...) method, otherwise None.
         """
+
         return self._importer
     
     @property
-    def annotations(self) -> str:
+    def annotations(self) -> dict:
         """
         Returns the contents of the annotaions.json object. This is the file
         where the data transformer puts processed annotations.
 
         As a property, this attribute is read-only.
 
-        :return: the annotations json string.
+        :return: the annotations json object.
+        :raises:
+            RuntimeError: if there is an attempt to get the annotation object before process().
         """
+        if self.config['has_been_processed'] == False:
+            raise RuntimeError('cannot get annotations wihtout runnint .process()')
+        with self.pathto.annotation_json.open(mode='r') as fin:
+            return json.loads(fin.read())
+        
 
     def add_fp(self, fp: BufferedIOBase, fname: str):
         """
@@ -266,72 +284,20 @@ class Dataset(FSObject):
         """
         config = self.config._load()
         return {
-            'name': config['name'],
-            'hash': config['hash'],
-            'date': config['date'],
-            'has_been_processed': config['has_been_processed'],
-            'files': config['files'],
-            'processed_labels': config['processed_labels'],
-            'importer': config['importer']
+            'name': self.config['name'],
+            'hash': self.config['hash'],
+            'date': self.config['date'],
+            'has_been_processed': self.config['has_been_processed'],
+            'files': self.config['files'],
+            'processed_labels': self.config['processed_labels'],
+            'importer': self.config['importer']
         }
 
     def process(self):
         transformer = self._importer
+        if transformer == None:
+            raise RuntimeError('must select importer before processing')
         transformer.process()
-        
-        # # remove existing file in resampled
-        # # TODO check what other files need removing
-        # shutil.rmtree(f'{self.pathto.resampled}')
-        # self.pathto.resampled.mkdir(parents=True, exist_ok=True)
-        # # process files
-        # dirty = []
-        # for file in self.__files:
-        #     if file.name.endswith('.eaf'):
-        #         obj = process_eaf(f'{self.pathto.original.joinpath(file)}', self.tier)
-        #         dirty.extend(obj)
-        # # TODO other options for command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
-        # filtered = clean_json_data(json_data=dirty)
-        # with self.pathto.annotation_json.open(mode='w') as fout:
-        #     json.dump(filtered, fout)
-        #     with self.pathto.word_count_json.open(mode='w') as f_word_count:
-        #         wordlist = {}
-        #         for transcription in filtered:
-        #             words = transcription['transcript'].split()
-        #             for word in words:
-        #                 if word in wordlist:
-        #                     wordlist[word] += 1
-        #                 else:
-        #                     wordlist[word] = 1
-        #         json.dump(wordlist, f_word_count)
-
-        # base_directory = f'{self.pathto.original}'
-        # audio_extensions = {"*.wav"}
-        # temporary_directory_path = Path(f'/tmp/{self.hash}/working')
-        # temporary_directory_path.mkdir(parents=True, exist_ok=True)
-        # temporary_directory = f'{temporary_directory_path}'
-
-        # all_files_in_dir = glob.glob(os.path.join(
-        #     base_directory, "**"), recursive=True)
-        # input_audio = [
-        #     file_ for file_ in all_files_in_dir if file_.endswith(".wav")]
-        # process_lock = threading.Lock()
-        # temporary_directories = set()
-
-        # map_arguments = [(index, audio_path, process_lock, temporary_directories, temporary_directory)
-        #                  for index, audio_path in enumerate(input_audio)]
-        # # Multi-Threaded Audio Re-sampling
-        # with Pool() as pool:
-        #     outputs = pool.map(process_item, map_arguments)
-        #     # TODO: overwrite?
-        #     # Replace original files
-        #     for audio_file in outputs:
-        #         move(audio_file, self.pathto.resampled)
-        #         # file_name = os.path.basename(audio_file)
-        #         # parent_directory = os.path.dirname(os.path.dirname(audio_file))
-        #         # move(audio_file, os.path.join(parent_directory, file_name))
-        #     # Clean up tmp folders
-        #     for d in temporary_directories:
-        #         os.rmdir(d)
 
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.annotation_json}',
@@ -341,3 +307,8 @@ class Dataset(FSObject):
                            )
 
         self.config['has_been_processed'] = True
+
+        annotation_labels_set = set(self._importer._annotation_store.keys())
+        audio_labels_set = set(self._importer._audio_store.keys())
+        processed_labels = annotation_labels_set.intersection(audio_labels_set)
+        self.config['processed_labels'] = list(processed_labels)

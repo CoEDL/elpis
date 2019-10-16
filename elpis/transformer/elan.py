@@ -27,16 +27,19 @@ from elpis.transformer import DataTransformerAbstractFactory
 
 elan = DataTransformerAbstractFactory('Elan')
 
+
+elan.set_audio_extention('wav')
+
 DEFAULT_TIER = 'Phrase'
 GRAPHIC_RESOURCE_NAME = 'elan.png'
 
-elan.make_default_context({
+elan.set_default_context({
     'tier': DEFAULT_TIER,
     'graphic': GRAPHIC_RESOURCE_NAME
 })
 
 @elan.import_files('eaf')
-def import_eaf_file(eaf_paths, context, add_annotation):
+def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
     """
     Import handler for processing all .wav and .eaf files.
 
@@ -65,12 +68,13 @@ def import_eaf_file(eaf_paths, context, add_annotation):
 
         input_eaf = Eaf(input_elan_file)
 
-        # Look for wav file matching the eaf file in same directory
-        if os.path.isfile(os.path.join(input_directory, file_name + ".wav")):
-            print("WAV file found for " + file_name, file=sys.stderr)
-        else:
-            raise ValueError(f"WAV file not found for {full_file_name}. "
-                            f"Please put it next to the eaf file in {input_directory}.")
+        # TODO: Check if this is necessary? It is possible to process transcription and audio file separately.
+        # # Look for wav file matching the eaf file in same directory
+        # if os.path.isfile(os.path.join(input_directory, file_name + ".wav")):
+        #     print("WAV file found for " + file_name, file=sys.stderr)
+        # else:
+        #     raise ValueError(f"WAV file not found for {full_file_name}. "
+        #                     f"Please put it next to the eaf file in {input_directory}.")
 
         # Get annotations and parameters (things like speaker id) on the target tier
         tier_name = context['tier']
@@ -92,8 +96,9 @@ def import_eaf_file(eaf_paths, context, add_annotation):
                 "start_ms": start,
                 "stop_ms": end
             }
-            if "PARTICIPANT" in parameters:
-                obj["speaker_id"] = speaker_id
+            # TODO: prehaps re-enable later
+            # if "PARTICIPANT" in parameters:
+            #     obj["speaker_id"] = speaker_id
             utterance = clean_json(obj)
             add_annotation(file_name, utterance)
 
@@ -101,18 +106,6 @@ def import_eaf_file(eaf_paths, context, add_annotation):
 # @elan.add_setting('textbox', label='Tier', default=DEFAULT_TIER)
 # def change_tier(text, context):
 #     context['tier'] = text
-
-
-elan.audio_media_extention('wav')
-
-@elan.replace_reprocess_audio
-def process_audio(audio_paths, context, add_audio_file):
-    pass
-
-@elan.export_files
-@elan.use_temporary_directory
-def export_eaf_files(audio_paths: List[str], context: Dict, output_dir_path: str, temporary_dir_path: str):
-    pass
 
 
 def get_english_words() -> Set[str]:
