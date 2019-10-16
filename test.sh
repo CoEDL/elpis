@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Exit with fail if any command in this script fails
-set -e
 
-cd /elpis
-apt-get install python3-venv
-python3 -m venv venv_test
-source venv_test/bin/activate
-pip install pytest
-pip install -r requirements.txt
-alias pytest=venv_test/bin/pytest
-pytest
+git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
+p=$(pwd)
+mv toy-corpora/abui-recordings-elan /recordings
 
-# Test React and Javascript code
+mv /recordings/transcribed/abui_1.eaf /recordings/transcribed/1_1_1.eaf
+mv /recordings/transcribed/abui_1.wav /recordings/transcribed/1_1_1.wav
+mv /recordings/transcribed/abui_2.eaf /recordings/transcribed/1_1_2.eaf
+mv /recordings/transcribed/abui_2.wav /recordings/transcribed/1_1_2.wav
+mv /recordings/transcribed/abui_3.eaf /recordings/transcribed/1_1_3.eaf
+mv /recordings/transcribed/abui_3.wav /recordings/transcribed/1_1_3.wav
+mv /recordings/transcribed/abui_4.eaf /recordings/transcribed/1_1_4.eaf
+mv /recordings/transcribed/abui_4.wav /recordings/transcribed/1_1_4.wav
 
-echo 'Testing done.'
+cd $p
