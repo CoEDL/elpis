@@ -67,7 +67,7 @@ def test_factory_same_name(remove_dtaf):
     Raise an error when a new factory is created with an existing name.
     """
     DataTransformerAbstractFactory('__TEST_FACTORY_SAME_NAME')
-    with pytest.raises(RuntimeError):
+    with pytest.raises(ValueError):
         DataTransformerAbstractFactory('__TEST_FACTORY_SAME_NAME')
     return
 
@@ -76,9 +76,9 @@ def test_factory_audio_extention(tdtaf):
     """
     Check the setting and getting of the audio extentions.
     """
-    assert tdtaf.get_audio_extention() == '.wav'
-    tdtaf.set_audio_extention('.mp3')
-    assert tdtaf.get_audio_extention() == '.wav'
+    assert tdtaf.get_audio_extention() == 'wav'
+    tdtaf.set_audio_extention('mp3')
+    assert tdtaf.get_audio_extention() == 'mp3'
     return
 
 
@@ -149,34 +149,6 @@ def test_factory_set_default_context_non_json(tdtaf):
     return
 
 
-def test_factory_set_default_import_context(tdtaf):
-    """
-    Check the setting of the default context for importers only.
-    """
-    tdtaf.set_default_import_context({
-        'field': 'value'
-    })
-    assert tdtaf._import_context == {
-        'field': 'value'
-    }
-    assert tdtaf._export_context == {}
-    return
-
-
-def test_factory_set_default_exportcontext(tdtaf):
-    """
-    Check the setting of the default context for exporters only.
-    """
-    tdtaf.set_default_export_context({
-        'field': 'value'
-    })
-    assert tdtaf._import_context == {}
-    assert tdtaf._export_context == {
-        'field': 'value'
-    }
-    return
-
-
 ###############################################################################
 ####                          Test Import Decorators                       ####
 ###############################################################################
@@ -190,7 +162,7 @@ def test_factory_import_files(tdtaf):
         pass
     # White-box testing
     assert 'import_test_files' in tdtaf._attributes
-    assert '.test' in tdtaf._import_extension_callbacks
+    assert 'test' in tdtaf._import_extension_callbacks
     assert tdtaf._attributes['import_test_files'] is import_test_files
     return
 
@@ -206,7 +178,7 @@ def test_factory_import_files_correct_arguments(tdtaf):
             pass
     return
 
-def test_factory_import_files_twice():
+def test_factory_import_files_twice(tdtaf):
     """
     Test if the import_files fucntion can be registerd twice on different file
     extentions.
@@ -224,12 +196,12 @@ def test_factory_import_files_twice():
     # White-box testing
     assert 'import_test1_files' in tdtaf._attributes
     assert 'import_test2_files' in tdtaf._attributes
-    assert '.test1' in tdtaf._import_extension_callbacks
-    assert '.test2' in tdtaf._import_extension_callbacks
+    assert 'test1' in tdtaf._import_extension_callbacks
+    assert 'test2' in tdtaf._import_extension_callbacks
     return
 
 
-def test_factory_import_files_twice_same_ext():
+def test_factory_import_files_twice_same_ext(tdtaf):
     """
     Test if when the import_files fucntion can be registerd twice on the same
     file extentions, an error is raised.
@@ -245,12 +217,12 @@ def test_factory_import_files_twice_same_ext():
     return
 
 
-def test_factory_import_directory():
+def test_factory_import_directory(tdtaf):
     """
     Test if the import_directory fucntion can be registerd.
     """
     @tdtaf.import_directory
-    def import_test_dir(dir_path, context, add_annotation):
+    def import_test_dir(dir_path, context, add_annotation, add_audio):
         pass
     # White-box testing
     assert 'import_test_dir' in tdtaf._attributes
@@ -265,7 +237,7 @@ def test_factory_import_directory_correct_arguments(tdtaf):
     """
     with pytest.raises(RuntimeError):
         @tdtaf.import_directory
-        def import_test_dir(must, have, three, arguments, only): # pylint: disable=unused-variable
+        def import_test_dir(must, have, four, arguments, only): # pylint: disable=unused-variable
             pass
     return
 
@@ -276,12 +248,12 @@ def test_factory_import_directory_twice(tdtaf):
     importing a directory, it would be ambiguous as to which funciton to use.
     """
     @tdtaf.import_directory
-    def f1(a, b, c): # pylint: disable=unused-variable
+    def f1(a, b, c, d): # pylint: disable=unused-variable
         pass
     
     with pytest.raises(RuntimeError):
         @tdtaf.import_directory
-        def f2(a, b, c): # pylint: disable=unused-variable
+        def f2(a, b, c, d): # pylint: disable=unused-variable
             pass
     return
 
@@ -297,7 +269,7 @@ def test_factory_import_files_import_directory(tdtaf):
     
     with pytest.raises(RuntimeError):
         @tdtaf.import_directory
-        def f2(a, b, c): # pylint: disable=unused-variable
+        def f2(a, b, c, d): # pylint: disable=unused-variable
             pass
     return
 
@@ -309,7 +281,7 @@ def test_factory_import_directory_import_files(tdtaf):
     way to test_factory_import_files_import_directory.
     """
     @tdtaf.import_directory
-    def f1(a, b, c): # pylint: disable=unused-variable
+    def f1(a, b, c, d): # pylint: disable=unused-variable
         pass
     
     with pytest.raises(RuntimeError):
@@ -317,7 +289,6 @@ def test_factory_import_directory_import_files(tdtaf):
         def f2(a, b, c): # pylint: disable=unused-variable
             pass
     return
-
 
 
 ###############################################################################
