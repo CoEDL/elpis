@@ -44,6 +44,14 @@ class Model(FSObject):
     @property
     def status(self):
         return self.config['status']
+    
+    @property
+    def state(self):
+        # TODO: fix this
+        return {}
+
+    def has_been_trained(self):
+        return self.status == 'trained'
 
     @status.setter
     def status(self, value: str):
@@ -71,7 +79,7 @@ class Model(FSObject):
         text_corpus_path.mkdir(parents=True, exist_ok=True)
         corpus_file_path = self.path.joinpath('corpus.txt')
         create_kaldi_structure(
-            input_json=f'{self.dataset.pathto.filtered_json}',
+            input_json=f'{self.dataset.pathto.annotation_json}',
             output_folder=f'{output_path}',
             silence_markers=None,
             text_corpus=f'{text_corpus_path}',
@@ -230,7 +238,7 @@ class Model(FSObject):
             ######################################################################
 
             # task _test-train
-            tmp_log_path = '/elpis/state/tmp_log.txt'
+            tmp_log_path = '/tmp/tmp_log.txt'
             if os.path.isfile(tmp_log_path):
                 os.remove(tmp_log_path)
             p = run(f"cd {local_kaldi_path}; ./run.sh > {tmp_log_path}")

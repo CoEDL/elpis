@@ -2,16 +2,33 @@ import pytest
 
 from elpis.wrappers.objects.interface import KaldiInterface
 
-@pytest.fixture(scope="session")
-def pipeline():
-    pass
+@pytest.fixture
+def pipeline_upto_step_1(tmpdir):
+    """
+    PyTest Fixture: returns a pipeline that executes once per session up to step 1.
+    """
 
-def test_model_training(tmpdir):
+    # Step 0
+    # ======
+    # Create a Kaldi interface directory (where all the associated files/objects
+    # will be stored).
+    kaldi = KaldiInterface(f'{tmpdir}/state')
+
+    # Step 1
+    # ======
+    # Setup a dataset to to train data on.
+    ds = kaldi.new_dataset('dataset_x')
+    ds.add_directory('/recordings/transcribed')
+    ds.select_importer('Elan')
+    ds.process()
+
+    return (kaldi, ds)
+
+def test_model_training(pipeline_upto_step_1):
     """
     Test training the model
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    ds = kaldi.new_dataset('dataset_x')
+    kaldi, ds = pipeline_upto_step_1
     pd = kaldi.new_pron_dict('pron_dict_y')
     pd.link(ds)
     pd.set_l2s_path('/recordings/letter_to_sound.txt')
@@ -20,16 +37,9 @@ def test_model_training(tmpdir):
     m = kaldi.new_model('model_z')
     m.link(ds, pd)
     assert m.has_been_trained() == False
+    m.build_kaldi_structure()
     m.train()
-    assert m.has_been_trained == True
+    assert m.has_been_trained() == True
+    return
 
-    items_in_models_dir = {n for n in m.path.iterdir()}
-    assert items_in_models_dir == {'kaldi', 'output', 'text_corpus'}
-
-
-def test_train_with_unprocessed_dataset():
-    pass
-
-def test_train_without_lexicon():
-    pass
 # TODO: Determine how to achieve further testing without wasting time (training takes a while).

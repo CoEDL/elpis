@@ -116,8 +116,10 @@ class KaldiInterface(FSObject):
         raise NotImplementedError()
 
     def get_dataset(self, dsname):
+        if dsname == None:
+            return None
         if dsname not in self.list_datasets():
-            raise KaldiError(f'Tried to load a dataset called "{dsname}" that does not exist')
+            raise ValueError(f'Tried to load a dataset called "{dsname}" that does not exist')
         hash_dir = self.config['datasets'][dsname]
         return Dataset.load(self.datasets_path.joinpath(hash_dir))
 
@@ -169,10 +171,7 @@ class KaldiInterface(FSObject):
             elif use_existing:
                 return self.get_pron_dict(pdname)
             else:
-                raise KaldiError(
-                    f'Tried adding \'{pdname}\' which is already in {existing_names} with hash {self.config["pron_dicts"][pdname]}.',
-                    human_message=f'pronunciation dictionary with name "{pdname}" already exists'
-                )
+                raise ValueError(f'pronunciation dictionary with name "{pdname}" already exists')
         
         pd = PronDict(parent_path=self.pron_dicts_path, name=pdname)
         pron_dicts = self.config['pron_dicts']
@@ -185,7 +184,7 @@ class KaldiInterface(FSObject):
             raise KaldiError(f'Tried to load a pron dict called "{pdname}" that does not exist')
         hash_dir = self.config['pron_dicts'][pdname]
         pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
-        pd.dataset = self.get_dataset(pd.config['dataset_name'])
+        pd.dataset = self.get_dataset(pd.config['dataset'])
         return pd
     
     def delete_pron_dict(self, pdname: str):
