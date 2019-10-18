@@ -32,9 +32,9 @@ gmm-latgen-faster \
 /kaldi/src/featbin/compute-cmvn-stats ark:data/infer/delta-feats.ark cmvn.scp
 
 /kaldi/src/online2bin/online2-wav-gmm-latgen-faster \
-    --model=exp/tri/final.mdl \
+    --model=exp/tri_online/final.mdl \
     --global-cmvn-stats=cmvn.scp \
     exp/tri/graph/HCLG.fst \
     ark:data/infer/spk2utt \
-    scp:wav.scp \
+    scp:data/infer/wav.scp \
     ark:data/infer/lattices.ark
