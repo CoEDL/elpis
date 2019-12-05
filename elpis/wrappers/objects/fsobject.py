@@ -4,7 +4,7 @@ from pathlib import Path
 from elpis.wrappers.utilities import hasher
 from elpis.wrappers.objects.logger import Logger
 
-# Desing constraint
+# Design constraint
 # Since there are four classes that must have their states saved to the
 # operating system, this single class was made to provide some common
 # functionality and a standard of operation for these classes. The alternative
@@ -35,7 +35,10 @@ class FSObject(object):
         self.__path = Path(parent_path).joinpath(dir_name)
         self.path.mkdir(parents=True, exist_ok=True)
         self.logger = logger
-        self.ConfigurationInterface(self)._save({})
+        #  if no config, then create it
+        config_file_path = Path(f'{self.__path}/{self._config_file}')
+        if not config_file_path.exists():
+            self.ConfigurationInterface(self)._save({})
         self.config['name'] = name
         self.config['hash'] = h
         self.config['date'] = str(time.time())

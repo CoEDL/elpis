@@ -46,13 +46,17 @@ class KaldiInterface(FSObject):
         self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
-
-        self.config['loggers'] = []
-        self.config['datasets'] = {}
-        self.config['pron_dicts'] = {}
-        self.config['models'] = {}
-        self.config['transcriptions'] = {}
-
+        """
+        TODO: temporarily don't set config here while we are still doing
+        hacky mode of checking ig config_file_path.exists() in fsobject.py
+        because this is wiping exising object info from interface.json.
+        When we are happy with proper way of using existing state, change this.
+        """
+        # self.config['loggers'] = []
+        # self.config['datasets'] = {}
+        # self.config['pron_dicts'] = {}
+        # self.config['models'] = {}
+        # self.config['transcriptions'] = {}
         # make a default logger
         self.new_logger(default=True)
 

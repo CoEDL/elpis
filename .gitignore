@@ -5,6 +5,7 @@ venv_test/
 __pycache__/
 *.egg-info/
 ./elpis.egg-info/
+.pytest_cache
 
 # Node
 package-lock.json
