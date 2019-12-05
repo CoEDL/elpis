@@ -135,7 +135,7 @@ class Transcription(FSObject):
             os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
             distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
             distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-            subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-align.sh'.split(),
+            subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-long.sh'.split(),
                            cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
             distutils.file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
             self.status = "transcribed"
@@ -157,8 +157,6 @@ class Transcription(FSObject):
         self._generate_inference_files()
         if on_complete is not None:
             on_complete()
-
-
 
     def text(self):
         with open(f'{self.path}/one-best-hypothesis.txt', 'rb') as fin:
