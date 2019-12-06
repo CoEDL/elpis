@@ -7,7 +7,7 @@ FROM ubuntu:18.04
 
 ########################## BEGIN INSTALLATION #########################
 
-RUN apt-get update && apt-get install -y  \
+RUN apt-get update && apt-get install -y --fix-missing  \
     autoconf \
     automake \
     libtool-bin \
@@ -53,7 +53,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /
 
 RUN echo "===> install Kaldi (latest from source)"  && \
-    git clone https://github.com/kaldi-asr/kaldi && \
+    git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
     make && \
     ./install_portaudio.sh && \

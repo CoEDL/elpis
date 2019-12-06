@@ -2,14 +2,14 @@ from pathlib import Path
 from elpis.wrappers.input.resample import resample
 from elpis.wrappers.objects.command import run
 from elpis.wrappers.objects.fsobject import FSObject
-# import shutil
 import threading
 import subprocess
 from typing import Callable
 import os
-import distutils.dir_util
+from distutils import dir_util, file_util
 import wave
 import contextlib
+
 
 class Transcription(FSObject):
     _config_file = "transcription.json"
@@ -106,16 +106,15 @@ class Transcription(FSObject):
         self._build_wav_scp_file(rec_id, rel_audio_file_path)
         print("done generate_files")
 
-
-    def transcribe(self, on_complete: Callable=None):
+    def transcribe(self, on_complete: Callable = None):
         self.status = "transcribing"
         self.type = "text"
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
         kaldi_test_path = self.model.path.joinpath('kaldi', 'data', 'test')
         kaldi_path = self.model.path.joinpath('kaldi')
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
-        distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
-        distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
+        dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
+        file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
         subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
 
@@ -128,16 +127,16 @@ class Transcription(FSObject):
         if on_complete is not None:
             on_complete()
 
-    def transcribe_align(self, on_complete: Callable=None):
+    def transcribe_align(self, on_complete: Callable = None):
 
         def transcribe():
             kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
             os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
-            distutils.dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
-            distutils.file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-            subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-long.sh'.split(),
+            dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
+            file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
+            subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-align.sh'.split(),
                            cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
-            distutils.file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
+            file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
             self.status = "transcribed"
 
         def transcribe_in_background():
