@@ -47,16 +47,19 @@ class KaldiInterface(FSObject):
         self.models = {}
         self.transcriptions = {}
         """
-        TODO: temporarily don't set config here while we are still doing
-        hacky mode of checking ig config_file_path.exists() in fsobject.py
-        because this is wiping exising object info from interface.json.
-        When we are happy with proper way of using existing state, change this.
+        TODO: fix this.
+        Setting the config objects here wipes existing objects from the interface file.
+        This means the CLI transcription script can't be run seperately from the CLI training script,
+        because this is run whenever the KaldiInterface is initialised.
+        However, if we don't set them, we get config KeyErrors (see issue #69).
+        KI needs a flag to know whether to set these objects or skip initialising them.
+        For now, explicitly set them... sorry CLI.
         """
-        # self.config['loggers'] = []
-        # self.config['datasets'] = {}
-        # self.config['pron_dicts'] = {}
-        # self.config['models'] = {}
-        # self.config['transcriptions'] = {}
+        self.config['loggers'] = []
+        self.config['datasets'] = {}
+        self.config['pron_dicts'] = {}
+        self.config['models'] = {}
+        self.config['transcriptions'] = {}
         # make a default logger
         self.new_logger(default=True)
 
