@@ -1,7 +1,6 @@
 import pystache
 import os
 import shutil
-from io import BufferedIOBase
 from pathlib import Path
 from typing import Callable
 import threading
@@ -14,14 +13,12 @@ from elpis.wrappers.objects.path_structure import KaldiPathStructure
 from collections import OrderedDict
 
 
-
 class ModelFiles(object):
     def __init__(self, basepath: Path):
         self.kaldi = KaldiPathStructure(basepath)
 
 
-# TODO not thread safe
-class Model(FSObject):
+class Model(FSObject):  # TODO not thread safe
     _config_file = 'model.json'
 
     def __init__(self, **kwargs):
@@ -30,7 +27,7 @@ class Model(FSObject):
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.pron_dict: PronDict = None
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
-        self.config['ngram'] = 1 # default to 1 to make playing quicker
+        self.config['ngram'] = 1  # default to 1 to make playing quicker
         self.config['status'] = 'untrained'
         self.status = 'untrained'
 

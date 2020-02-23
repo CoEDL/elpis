@@ -32,28 +32,12 @@ def transcribe():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     transcription.transcribe(on_complete=lambda: print('Transcribed text!'))
     data = {
-        "status": transcription.status,
-        "type": transcription.type
+        "status": transcription.status
     }
     return jsonify({
         "status": 200,
         "data": data
     })
-
-
-@bp.route("/transcribe-align", methods=['GET'])
-def transcribe_align():
-    transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
-    transcription.transcribe_align(on_complete=lambda: print('Transcribed and aligned!'))
-    data = {
-        "status": transcription.status,
-        "type": transcription.type
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
-
 
 @bp.route("/status", methods=['GET'])
 def status():
@@ -67,13 +51,11 @@ def status():
         "data": data
     })
 
-
 @bp.route("/text", methods=['GET'])
 def text():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     # TODO fix this to return json wrapper
     return transcription.text()
-
 
 @bp.route("/elan", methods=['GET'])
 def elan():
