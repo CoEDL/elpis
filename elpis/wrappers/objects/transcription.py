@@ -104,12 +104,6 @@ class Transcription(FSObject):
         self._build_utt2spk_file(utt_id, spk_id)
         self._build_segments_file(utt_id, rec_id, start_ms, stop_ms)
         self._build_wav_scp_file(rec_id, rel_audio_file_path)
-        print("********")
-        print("self.hash", self.hash)
-        print("spk_id", spk_id)
-        print("utt_id", utt_id)
-        print("rec_id", rec_id)
-        print("done _generate_inference_files")
 
     def transcribe(self, on_complete: Callable = None):
         self.status = "transcribing"

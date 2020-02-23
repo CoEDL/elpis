@@ -46,7 +46,7 @@ recid="decode"
 
 # Prepare the split dir
 splitDir=./data/infer/split1/
-if [ -d $splitDir ]; then rm -r $splitDir; fi
+if [[ -d $splitDir ]]; then rm -r $splitDir; fi
 mkdir -p "$splitDir/1"
 
 # Argh.. the wav.scp file here should be in {utterance_id} to {audio_file} form
