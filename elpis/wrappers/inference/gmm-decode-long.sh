@@ -34,19 +34,30 @@ echo "# dummy file" > ./conf/online_cmvn.conf
     exp/tri1 \
     exp/tri1_online
 
+# Assuming we are decoding a single utterance still
+
 # Manipulate the wav.scp file in the first (and only) split
 line=$(head -n 1 ./data/infer/spk2utt)
 utt=` echo ${line} | cut -d ' ' -f 2`
-seg=` echo ${line} | cut -d ' ' -f 1`
+spk=` echo ${line} | cut -d ' ' -f 1` # this was seg
 audio="audio.wav"
 length=`sox --i -D ${audio}`
+recid="decode"
 
-echo "${utt} ${audio}" > ./data/infer/split1/1/wav.scp
+# Prepare the split dir
+splitDir=./data/infer/split1/
+if [ -d $splitDir ]; then rm -r $splitDir; fi
+mkdir -p "$splitDir/1"
 
-echo "${utt} ${seg} 0.00 ${length}" > ./data/infer/split1/1/segments
+# Argh.. the wav.scp file should be utt to audio (not in segment style which is)
+echo "${utt} data/infer/${audio}" > ./data/infer/split1/1/wav.scp
+echo "${utt} ${spk}" > ./data/infer/split1/1/utt2spk
+echo "${spk} ${utt}" > ./data/infer/split1/1/spk2utt
+echo "${utt} ${recid} 0.00 ${length}" > ./data/infer/split1/1/segments
 
 # Decodes all audio in the wav.scp path specified above
 echo "==== Decoding (Transcription) ===="
+
 steps/online/decode.sh \
     --config conf/decode.config \
     --cmd "$decode_cmd" \
@@ -85,7 +96,7 @@ utils/int2sym.pl -f 5- \
 # Activate Python 3.6.3 virtual environment
 source /elpis/venv/bin/activate
 
-echo "${seg} ${audio}" > ./data/infer/split1/1/wav.scp
+# echo "${seg} ${audio}" > ./data/infer/split1/1/wav.scp
 
 echo "==== Converting CTM to Textgrid ===="
 # python /kaldi-helpers/kaldi_helpers/output_scripts/ctm_to_textgrid.py \
