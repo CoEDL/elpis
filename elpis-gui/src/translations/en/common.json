@@ -131,9 +131,7 @@
             "addAudioButton": "Add Audio",
             "chooseModelHeader": "Choose a training session",
             "usingAudio": "Uploaded {{filename}}",
-            "format": "Format ",
-            "resultsText": "Text",
-            "resultsElan": "Elan",
+            "transcribe": "Transcribe",
             "nextButton": "Go",
             "uploadButton": "Upload"
         },
@@ -142,8 +140,9 @@
             "usingAudio": "For {{filename}}",
             "resultsHeader": "Transcription as text",
             "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
-            "downloadTextButton": "Download text file",
-            "downloadElanButton": "Download Elan file"
+            "downloadLabel": "Download",
+            "downloadTextButton": "text file",
+            "downloadElanButton": "Elan file"
         }
     },
     "common": {

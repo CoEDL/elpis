@@ -88,6 +88,11 @@ textarea.lexicon {
     float: right
 }
 
-label.pad-right {
+label.pad-right,
+.label.pad-right {
     margin-right: 0.5em
+}
+
+.label {
+    float: left;
 }

@@ -161,43 +161,31 @@ class NewTranscription extends Component {
                                 <Segment>{t('transcription.new.usingAudio', { filename })} </Segment>
                             }
 
-                            <Divider />
-
                             <Segment>
-
-                                {t('transcription.new.format')}
 
                                 <Button onClick={this.handleTranscribe} disabled={!enableButtons} >
-                                    {t('transcription.new.resultsText')}
+                                    {t('transcription.new.transcribe')}
                                 </Button>
 
-                                <Button onClick={this.handleTranscribeAlign} disabled={!enableButtons} >
-                                    {t('transcription.new.resultsElan')}
-                                </Button>
                             </Segment>
 
                             <Segment>
-                                {loadingIcon} {status} {type}
+                                {loadingIcon} {status}
                             </Segment>
 
-                            {text &&
+                            {status=='transcribed' &&
                                 <Segment>
                                     <p>{text}</p>
+
+                                    <p class="label pad-right">{t('transcription.results.downloadLabel')}</p>
                                     <Button onClick={this.handleDownloadText}>
                                         {t('transcription.results.downloadTextButton')}
                                     </Button>
-                                </Segment>
-                            }
-
-                            {elan &&
-                                <Segment>
                                     <Button onClick={this.handleDownloadElan}>
                                         {t('transcription.results.downloadElanButton')}
                                     </Button>
                                 </Segment>
                             }
-
-
 
                         </Grid.Column>
                     </Grid>
