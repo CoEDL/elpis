@@ -42,7 +42,6 @@ class NewTranscription extends Component {
         }
     }
 
-
     handleTranscribe = () => {
         // pass in the status check function
         // so we can fire it in .then after the dispatch is done
@@ -73,7 +72,6 @@ class NewTranscription extends Component {
         const pronDictData = { name: selectedModel[0].pron_dict_name }
         modelLoad(modelData, datasetData, pronDictData)
     }
-
 
     render = () => {
         const { t, filename, list, status, text, modelName } = this.props;
@@ -147,11 +145,9 @@ class NewTranscription extends Component {
                             }
 
                             <Segment>
-
                                 <Button onClick={this.handleTranscribe} disabled={!enableButtons} >
                                     {t('transcription.new.transcribe')}
                                 </Button>
-
                             </Segment>
 
                             <Segment>
@@ -200,20 +196,12 @@ const mapDispatchToProps = dispatch => ({
             .then(response =>{
                 // This is returned when the transcribe process is done,
                 // because this API call is syncronous.
-                // So we can safely request the text in this 'then'
+                // So we can safely request the text and elan files here
                 dispatch(transcriptionGetText())
                 dispatch(transcriptionGetElan())
                 console.log("transcribe is done")
             })
     },
-    // transcriptionTranscribeAlign: triggerStatusCheck => {
-    //     dispatch(transcriptionTranscribeAlign())
-    //         .then(response => {
-    //             // This is returned immediately, because this API call runs in the background
-    //             // So we can't request the elan file. Use doStatusCheck above
-    //             triggerStatusCheck()
-    //         })
-    // },
     transcriptionStatus: () => {
         dispatch(transcriptionStatus())
             .then(response => console.log(response))
