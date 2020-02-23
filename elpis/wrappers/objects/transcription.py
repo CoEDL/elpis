@@ -104,9 +104,15 @@ class Transcription(FSObject):
         self._build_utt2spk_file(utt_id, spk_id)
         self._build_segments_file(utt_id, rec_id, start_ms, stop_ms)
         self._build_wav_scp_file(rec_id, rel_audio_file_path)
-        print("done generate_files")
+        print("********")
+        print("self.hash", self.hash)
+        print("spk_id", spk_id)
+        print("utt_id", utt_id)
+        print("rec_id", rec_id)
+        print("done _generate_inference_files")
 
     def transcribe(self, on_complete: Callable = None):
+        print("*** transcribe using long")
         self.status = "transcribing"
         self.type = "text"
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
@@ -115,9 +121,8 @@ class Transcription(FSObject):
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-        subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode.sh'.split(),
+        subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-long.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
-
         # move results
         cmd = f"cp {kaldi_infer_path}/one-best-hypothesis.txt {self.path}/ && "
         cmd += f"infer_audio_filename=$(head -n 1 {kaldi_test_path}/wav.scp | awk '{{print $2}}' |  cut -c 3- ) && "
@@ -130,11 +135,12 @@ class Transcription(FSObject):
     def transcribe_align(self, on_complete: Callable = None):
 
         def transcribe():
+            print("*** transcribe align using long")
             kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
             os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
             dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
             file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-            subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-align.sh'.split(),
+            subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-long.sh'.split(),
                            cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
             file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
             self.status = "transcribed"

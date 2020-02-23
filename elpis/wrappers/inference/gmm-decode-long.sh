@@ -49,8 +49,10 @@ splitDir=./data/infer/split1/
 if [ -d $splitDir ]; then rm -r $splitDir; fi
 mkdir -p "$splitDir/1"
 
-# Argh.. the wav.scp file should be utt to audio (not in segment style which is)
-echo "${utt} data/infer/${audio}" > ./data/infer/split1/1/wav.scp
+# Argh.. the wav.scp file here should be in {utterance_id} to {audio_file} form
+# unlike other usage which requires {audio_id} to {audio_file} format
+# (such as below when we convert ctm to textgrid)
+echo "${utt} ${audio}" > ./data/infer/split1/1/wav.scp
 echo "${utt} ${spk}" > ./data/infer/split1/1/utt2spk
 echo "${spk} ${utt}" > ./data/infer/split1/1/spk2utt
 echo "${utt} ${recid} 0.00 ${length}" > ./data/infer/split1/1/segments
@@ -96,7 +98,9 @@ utils/int2sym.pl -f 5- \
 # Activate Python 3.6.3 virtual environment
 source /elpis/venv/bin/activate
 
-# echo "${seg} ${audio}" > ./data/infer/split1/1/wav.scp
+# Now, wav.scp needs to be in segment form
+# eg audio_id filename
+echo "${recid} ${audio}" > ./data/infer/split1/1/wav.scp
 
 echo "==== Converting CTM to Textgrid ===="
 # python /kaldi-helpers/kaldi_helpers/output_scripts/ctm_to_textgrid.py \
@@ -116,3 +120,6 @@ python /elpis/elpis/wrappers/output/textgrid_to_elan.py \
 # REPORT OUTPUT (CTM is the only concise format)
 echo "CTM output:"
 cat ./data/infer/align-words-best-wordkeys.ctm
+
+echo "==== Output the words from the CTM file as plain text ===="
+awk 'BEGIN { ORS=" " }; { print $NF }' data/infer/align-words-best-wordkeys.ctm > data/infer/one-best-hypothesis.txt
