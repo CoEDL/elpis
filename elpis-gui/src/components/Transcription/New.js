@@ -35,19 +35,11 @@ class NewTranscription extends Component {
     }
 
     doStatusCheck = () => {
-        const { status, type, transcriptionGetElan } = this.props;
-
+        const { status } = this.props;
         this.props.transcriptionStatus()
-
-        // clear the status check
         if (status == 'transcribed') {
             clearInterval(this.statusInterval)
-
-            if (type == 'elan') {
-                transcriptionGetElan()
-            }
         }
-
     }
 
 
@@ -56,13 +48,6 @@ class NewTranscription extends Component {
         // so we can fire it in .then after the dispatch is done
         this.props.transcriptionTranscribe(this.triggerStatusCheck)
     }
-
-    handleTranscribeAlign = () => {
-        // pass in the status check function
-        // so we can fire it in .then after the dispatch is done
-        this.props.transcriptionTranscribeAlign(this.triggerStatusCheck)
-    }
-
 
     handleDownloadText = () => {
         downloadjs(this.props.text, 'text.txt', 'text/txt');
@@ -91,7 +76,7 @@ class NewTranscription extends Component {
 
 
     render = () => {
-        const { t, filename, list, status, type, text, elan, modelName } = this.props;
+        const { t, filename, list, status, text, modelName } = this.props;
 
         const listOptions = list.map(model => ({"key": model.name, "value": model.name, "text": model.name}))
 
@@ -177,7 +162,7 @@ class NewTranscription extends Component {
                                 <Segment>
                                     <p>{text}</p>
 
-                                    <p class="label pad-right">{t('transcription.results.downloadLabel')}</p>
+                                    <p className="label pad-right">{t('transcription.results.downloadLabel')}</p>
                                     <Button onClick={this.handleDownloadText}>
                                         {t('transcription.results.downloadTextButton')}
                                     </Button>
@@ -201,7 +186,6 @@ const mapStateToProps = state => {
         modelName: state.model.name,
         filename: state.transcription.filename,
         status: state.transcription.status,
-        type: state.transcription.type,
         text: state.transcription.text,
         elan: state.transcription.elan
     }
@@ -218,16 +202,18 @@ const mapDispatchToProps = dispatch => ({
                 // because this API call is syncronous.
                 // So we can safely request the text in this 'then'
                 dispatch(transcriptionGetText())
+                dispatch(transcriptionGetElan())
+                console.log("transcribe is done")
             })
     },
-    transcriptionTranscribeAlign: triggerStatusCheck => {
-        dispatch(transcriptionTranscribeAlign())
-            .then(response => {
-                // This is returned immediately, because this API call runs in the background
-                // So we can't request the elan file. Use doStatusCheck above
-                triggerStatusCheck()
-            })
-    },
+    // transcriptionTranscribeAlign: triggerStatusCheck => {
+    //     dispatch(transcriptionTranscribeAlign())
+    //         .then(response => {
+    //             // This is returned immediately, because this API call runs in the background
+    //             // So we can't request the elan file. Use doStatusCheck above
+    //             triggerStatusCheck()
+    //         })
+    // },
     transcriptionStatus: () => {
         dispatch(transcriptionStatus())
             .then(response => console.log(response))
