@@ -23,21 +23,6 @@ const transcription = (state = initState, action) => {
                 status: 'transcribing'
             }
 
-        case actionTypes.TRANSCRIPTION_TRANSCRIBE_ALIGN_STARTED:
-            return {
-                ...state,
-                type: 'elan',
-                status: 'transcribing'
-            }
-
-        case actionTypes.TRANSCRIPTION_TRANSCRIBE_SUCCESS:
-            var { status, type } = action.response.data.data
-            return { ...state, status, type }
-
-        case actionTypes.TRANSCRIPTION_TRANSCRIBE_ALIGN_SUCCESS:
-            var { status, type } = action.response.data.data
-            return { ...state, status, type }
-
         case actionTypes.TRANSCRIPTION_STATUS_SUCCESS:
             var { status, type } = action.response.data.data
             return { ...state, status, type }

@@ -74,39 +74,6 @@ const transcriptionTranscribeFailure = error => ({
 })
 
 
-/* * * * * * * * * * * *  TRANSCRIBE ALIGN * * * * * * * * * * *  */
-
-export function transcriptionTranscribeAlign() {
-    const url = baseUrl + urls.api.transcription.transcribe_align
-    var responseData
-    return async dispatch => {
-        dispatch(transcriptionTranscribeAlignStarted())
-        await axios.get(url)
-            .then(response => {
-                responseData = response.data
-                dispatch(transcriptionTranscribeAlignSuccess(response))
-            })
-            .catch(error => {
-                dispatch(transcriptionTranscribeAlignFailure(error))
-                throw error
-            })
-        return responseData
-    }
-}
-
-const transcriptionTranscribeAlignStarted = () => ({
-    type: actionTypes.TRANSCRIPTION_TRANSCRIBE_ALIGN_STARTED
-})
-const transcriptionTranscribeAlignSuccess = response => ({
-    type: actionTypes.TRANSCRIPTION_TRANSCRIBE_ALIGN_SUCCESS,
-    response: { ...response }
-})
-const transcriptionTranscribeAlignFailure = error => ({
-    type: actionTypes.TRANSCRIPTION_TRANSCRIBE_ALIGN_FAILURE,
-    response: { error }
-})
-
-
 /* * * * * * * * * * * *  STATUS * * * * * * * * * * *  */
 
 export function transcriptionStatus() {
