@@ -147,8 +147,8 @@ WORKDIR /elpis/elpis-gui
 RUN npm install && \
     npm run build
 
-WORKDIR /workspaces/elpis
-ENV VIRTUAL_ENV=/workspaces/elpis/venv
+WORKDIR /elpis
+ENV VIRTUAL_ENV=/elpis/venv
 RUN /usr/bin/python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
