@@ -6,6 +6,7 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 ./elpis.egg-info/
+.pytest_cache
 
 # Node
 package-lock.json

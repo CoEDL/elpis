@@ -5,60 +5,21 @@
 [![Build Status](https://travis-ci.org/CoEDL/elpis.svg?branch=master)](https://travis-ci.org/CoEDL/elpis)
 [![Coverage Status](https://coveralls.io/repos/github/CoEDL/elpis/badge.svg?branch=master)](https://coveralls.io/github/CoEDL/elpis?branch=master)
 
-## What is Elpis?
+This project is under construction and not yet ready for everyday use. Please contact us by email at `elpis.asr@gmail.com` to be informed when a stable version is ready.
 
-Elpis is a tool which allows language workers with minimal computational experience to build their own speech models 
-for use in automatically transcribing audio. It relies on the [Kaldi](http://kaldi-asr.org) automatic speech recognition 
-(ASR) library. Kaldi is notorious for being difficult to build, use and navigate - even for trained computer scientists. 
+---
+
+Elpis is a tool which allows language workers with minimal computational experience to build their own speech recognition models 
+to automatically transcribe audio. It relies on the [Kaldi](http://kaldi-asr.org) automatic speech recognition 
+(ASR) toolkit. Kaldi is notorious for being difficult to build, use and navigate - even for trained computer scientists. 
 The goal of Elpis is to expose the power of Kaldi to linguists and language workers by abstracting away much of the 
 needless technical complexity.
-
-Elpis grew out of the [kaldi_helpers](https://github.com/CoEDL/kaldi_helpers) project, a collection of 
-Python and shell scripts designed to prepare data for use with Kaldi and convert between the various time-aligned 
-transcription formats that linguists work with. These scripts now make up the core of Elpis' input preparation and output
-conversion engines.
-
-![Elpis Pathway](./docs/img/elpis-pipeline.svg)
-
-## How Does It Work?
-
-Elpis uses [Docker](https://www.docker.com/), specifically an [Ubuntu Linux](https://www.ubuntu.com/) image, to install
-Kaldi and its (many) dependencies in an Ubuntu linux environment. Elpis itself consists of wrappers around Kaldi file 
-system objects, a [Flask](http://flask.pocoo.org/) server, and a web-based graphical user interface written in 
-[React](https://reactjs.org/) (maintained in a separate repository [here](https://github.com/CoEDL/elpis-gui)).
-
-![Elpis GUI](./docs/img/elpis-gui.png)
-
-## How Do I Use It?
-
-Please check the [wiki](https://github.com/CoEDL/elpis/wiki/) pages for a step-by-step guide to
-using Elpis on your data. 
-
-If you want to play around with Elpis' internals, or contribute to development we recommend
-cloning this repository and building the Docker image, but without the Docker `ENTRYPOINT` (you can simply comment it 
-out or pass the argument `--entrypoint="bin/bash"` when starting up the Docker image).
-
-### Requirements
-
-All of the required dependencies are included in the Docker image provided, including Kaldi, Python 3 etc.
-
-## Why Is It Called Elpis?
-
-Elpis is the Greek goddess of hope. For us Elpis represents our hope that one day everyone will have access to 
-the power of ASR without having to interact directly with the [Kaldi codebase](https://github.com/kaldi-asr/kaldi).
-We've also backronymed it to stand for "Endangered Language Pipeline and Inference System," as much of our motivation 
-for this project derives from our desire to assist in documentation and revitalisation efforts for the world's many
-endangered languages - including many in Australia, where most of Elpis' development has occurred.
-
-## I'm having trouble!
-This project is under construction and not yet stable. Please contact us by email at `elpis.asr@gmail.com` 
-for project status information and support getting started.
 
 ## I'm An Academic, How Do I Cite This In My Research?
 
 This software is the product of academic research funded by the Australian Research Council 
 [Centre of Excellence for the Dynamics of Language](http://www.dynamicsoflanguage.edu.au/). If you use the software in 
-an academic setting, please be sure to cite it appropriately as follows:
+an academic setting, please cite it appropriately as follows:
 
 > Foley, B., Arnold, J., Coto-Solano, R., Durantin, G., Ellison, T. M., van Esch, D., Heath, S., Kratochvíl, F.,
 Maxwell-Smith, Z., Nash, D., Olsson, O., Richards, M., San, N., Stoakes, H., Thieberger, N. & Wiles,
