@@ -88,6 +88,7 @@ def prepare():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
         return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+    dataset.select_importer('Elan')
     dataset.process()
     with dataset.pathto.word_count_json.open() as fin:
         wordlist = fin.read()

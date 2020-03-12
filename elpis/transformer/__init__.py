@@ -205,9 +205,9 @@ class DataTransformerAbstractFactory:
             RuntimeError: if either the import or export context already contains values.
         """
         if self._import_context != {}:
-            raise RuntimeError('import context contains settings. Set defautl context at start of script')
+            raise RuntimeError('import context contains settings. Set default context at start of script')
         elif self._export_context != {}:
-            raise RuntimeError('export context contains settings. Set defautl context at start of script')
+            raise RuntimeError('export context contains settings. Set default context at start of script')
         elif self._default_context_already_set:
             raise RuntimeError('Have multiple calls to set_default_context, only allowed one')
         self._default_context_already_set = True
@@ -232,7 +232,7 @@ class DataTransformerAbstractFactory:
                 directory with the specified extention.
             2. A dictionary context variable that can be used to access
                 specialised settings.
-            3. A callback to add annotaion data to audio files.
+            3. A callback to add annotation data to audio files.
             4. Path to a temporary directory
         
         This decorator is indended for the (audio file, transcription file)
@@ -455,7 +455,7 @@ class DataTransformerAbstractFactory:
             raise RuntimeError('path to temporary directory does not exist')
 
         # Prepare a copy of the context object.
-        context = json.loads(json.dumps(self._import_context))
+        context = copyJSONable(self._import_context)
 
         dt = DataTransformer(
             self._name,
