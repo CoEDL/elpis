@@ -148,7 +148,7 @@ utils/int2sym.pl -f 5- \
     data/infer/align-words-best-intkeys.ctm \
     > data/infer/align-words-best-wordkeys.ctm
 
-./elpis/venv/bin/activate
+./venv/bin/activate
 
 # BEST PATH WORDS (CTM) --> TEXTGRID
 echo "==== Converting CTM to Textgrid ===="
