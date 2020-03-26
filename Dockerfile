@@ -124,7 +124,7 @@ WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 
 # Elpis GUI
-WORKDIR /elpis
+WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
 
 # Example data
@@ -143,16 +143,16 @@ ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-WORKDIR /elpis/elpis-gui
+WORKDIR /elpis-gui
 RUN npm install && \
     npm run build
 
 WORKDIR /elpis
-ENV VIRTUAL_ENV=/elpis/venv
+ENV VIRTUAL_ENV=/venv
 RUN /usr/bin/python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip3.6 install wheel && python setup.py develop
+RUN pip3.6 install wheel pytest pylint && python setup.py develop
 
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 

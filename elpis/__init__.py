@@ -9,7 +9,7 @@ from pathlib import Path
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
 
-    GUI_PUBLIC_DIR = os.path.join(os.getcwd(), "elpis-gui/build")
+    GUI_PUBLIC_DIR = "/elpis-gui/build"
 
     # Setup static resources
     # create and configure the app
