@@ -151,7 +151,7 @@ ENV VIRTUAL_ENV=/venv
 RUN /usr/bin/python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip3.6 install wheel && python setup.py develop
+RUN pip3.6 install wheel pytest pylint && python setup.py develop
 
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 

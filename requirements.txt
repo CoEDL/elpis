@@ -7,6 +7,5 @@ praatio
 pydub
 pympi-ling
 pystache
-pytest
 setuptools
 werkzeug

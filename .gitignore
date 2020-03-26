@@ -13,6 +13,7 @@ node_modules/
 
 # Editors
 .vscode/
+.devcontainer/
 *.xml
 *.iml
 .idea/
