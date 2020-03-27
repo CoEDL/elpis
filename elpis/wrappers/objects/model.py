@@ -114,7 +114,7 @@ class Model(FSObject):  # TODO not thread safe
             decode_config_file_path = kaldi_structure.conf.joinpath('decode.config')
 
             # TODO: remove reference to fixed path below
-            template_path = Path('/workspaces/elpis/elpis/wrappers/templates')
+            template_path = Path('/elpis/elpis/wrappers/templates')
             path_resource = template_path.joinpath('path.sh')
             mfcc_resource = template_path.joinpath('mfcc.conf')
             decode_config_resource = template_path.joinpath('decode.config')

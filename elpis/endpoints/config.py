@@ -9,9 +9,9 @@ bp = Blueprint("config", __name__, url_prefix="/config")
 
 @bp.route("/reset", methods=['GET', 'POST'])
 def reset():
-    interface_path = Path('/elpis/state')
-    shutil.rmtree(interface_path)
-    app.config['INTERFACE'] = KaldiInterface(interface_path)
+    current_interface_path = app.config['INTERFACE'].path
+    shutil.rmtree(current_interface_path)
+    app.config['INTERFACE'] = KaldiInterface(current_interface_path)
     app.config['CURRENT_DATASET'] = None # not okay for multi-user
     app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user
     app.config['CURRENT_MODEL'] = None # not okay for multi-user

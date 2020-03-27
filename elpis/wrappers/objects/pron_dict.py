@@ -108,7 +108,7 @@ class PronDict(FSObject):
 
     def get_lexicon_content(self) -> bytes:
         try:
-            with self.lexicon_txt_path.open(mode='rb') as fin:
+            with self.lexicon_txt_path.open(mode='r') as fin:
                 return fin.read()
         except FileNotFoundError:
             return None
@@ -117,6 +117,6 @@ class PronDict(FSObject):
     def save_lexicon(self, bytestring):
         # open pron dict file
         # write lexicon text to file
-        with self.lexicon_txt_path.open(mode='wb') as fout:
+        with self.lexicon_txt_path.open(mode='w') as fout:
             fout.write(bytestring)
         self.config['lexicon'] = True

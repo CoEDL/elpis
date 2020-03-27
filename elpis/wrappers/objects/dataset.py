@@ -5,11 +5,12 @@ import os
 import threading
 
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 from io import BufferedIOBase
 from multiprocessing.dummy import Pool
 from shutil import move
 
+from ..utilities import load_json_file
 from .fsobject import FSObject
 from elpis.transformer import make_importer
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
@@ -305,6 +306,19 @@ class Dataset(FSObject):
                            additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
                            additional_corpus_file=f'{self.pathto.corpus_txt}'
                            )
+
+        # make word count
+        annotations: List[Dict[str, str]] = load_json_file(f'{self.pathto.annotation_json}')
+        with self.pathto.word_count_json.open(mode='w') as f_word_count:
+            wordlist = {}
+            for transcription in annotations:
+                words = transcription['transcript'].split()
+                for word in words:
+                    if word in wordlist:
+                        wordlist[word] += 1
+                    else:
+                        wordlist[word] = 1
+            json.dump(wordlist, f_word_count)
 
         self.config['has_been_processed'] = True
 
