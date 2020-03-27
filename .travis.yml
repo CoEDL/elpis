@@ -11,8 +11,8 @@ script:
       export GIT_BRANCH=cnc;
       export COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN;
       ls /;
-      git pull origin $GIT_BRANCH; 
-      git checkout -b $GIT_BRANCH;
+      git pull origin cnc; 
+      git checkout -b cnc;
       sh ./test.sh;
       pwd;
       ls;
