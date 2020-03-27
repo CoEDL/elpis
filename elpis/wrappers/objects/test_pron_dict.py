@@ -278,8 +278,8 @@ def test_save_lexicon(tmpdir):
     """
     kaldi = KaldiInterface(f'{tmpdir}/state')
     pd = kaldi.new_pron_dict('pronunciation dictionary')
-    pd.save_lexicon(b'This is the new lexicon')
-    assert pd.get_lexicon_content() == b'This is the new lexicon'
+    pd.save_lexicon('This is the new lexicon')
+    assert pd.get_lexicon_content() == 'This is the new lexicon'
     assert pd.state == json.loads(f"""
     {{
         "name": "pronunciation dictionary",

@@ -25,6 +25,7 @@ class Transcription(FSObject):
         self.type = None
         self._exporter = None
         self.config['exporter'] = None
+        self.config['has_been_transcribed'] = False
 
     @classmethod
     def load(cls, base_path: Path):
@@ -53,8 +54,13 @@ class Transcription(FSObject):
             'hash': self.config['hash'],
             'date': self.config['date'],
             'model': self.config['model_name'],
+            'has_been_transcribed': self.config['has_been_transcribed'],
             'exporter': self.config['exporter']
         }
+    
+    @property
+    def has_been_transcribed(self):
+        return self.config['has_been_transcribed']
     
     @property
     def exporter(self):

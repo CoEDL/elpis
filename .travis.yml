@@ -3,8 +3,23 @@ services:
   - docker
 
 before_install:
-  - docker pull coedl/elpis:interspeech-19
+  - docker pull coedl/elpis:latest
 
 script:
-  - docker run --rm --entrypoint='' coedl/elpis:interspeech-19 sh -c "ls /;git pull origin cnc; git checkout -b cnc; sh ./test.sh; pwd; ls; echo 'Now installing things'; pip install coveralls pytest-cov; py.test -v --cov=elpis --cov-report=term-missing; export RESULT=\$?; export GIT_BRANCH=cnc; export COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN; coveralls; exit \$RESULT"
+  - docker run --rm --entrypoint='' coedl/elpis:latest sh -c "
+      export RESULT=\$?;
+      export GIT_BRANCH=cnc;
+      export COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN;
+      ls /;
+      git pull origin $GIT_BRANCH; 
+      git checkout -b $GIT_BRANCH;
+      sh ./test.sh;
+      pwd;
+      ls;
+      echo 'Now installing things';
+      pip install coveralls pytest-cov;
+      py.test -v --cov=elpis --cov-report=term-missing;
+      coveralls;
+      exit \$RESULT
+    "
 

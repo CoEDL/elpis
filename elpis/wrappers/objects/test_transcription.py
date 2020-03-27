@@ -166,18 +166,19 @@ def test_linking(mock_model, tmpdir):
     return
 
 
-def test_transcribe_before_linking(tmpdir):
-    """
-    Generating an inference file before linking is not permitted and produces
-    an error.
-    """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    t = kaldi.new_transcription('transcription_w')
-    with pytest.raises(RuntimeError):
-        t.transcribe_to_text('/recordings/untranscribed/audio.wav')
-    with pytest.raises(RuntimeError):
-        t.transcribe_align('/recordings/untranscribed/audio.wav')
-    return
+# def test_transcribe_before_linking(tmpdir):
+#     """
+#     Generating an inference file before linking is not permitted and produces
+#     an error.
+#     """
+#     kaldi = KaldiInterface(f'{tmpdir}/state')
+#     t = kaldi.new_transcription('transcription_w')
+#     with pytest.raises(RuntimeError):
+#         with open('/recordings/untranscribed/audio.wav', 'rb') as fin:
+#             t.prepare_audio(fin)
+#     return
+
+# TODO: Test using .prepare_audio and .transcribe in different situations
 
 # TODO: Disabled rest of unit tests, more time required
 
