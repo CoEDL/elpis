@@ -235,6 +235,7 @@ class Model(FSObject):  # TODO not thread safe
             ######################################################################
 
             # task _test-train
+            # TODO: Standardise logging system & Store results with model object
             tmp_log_path = '/tmp/tmp_log.txt'
             if os.path.isfile(tmp_log_path):
                 os.remove(tmp_log_path)

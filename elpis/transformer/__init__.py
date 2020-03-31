@@ -108,6 +108,7 @@ class DataTransformer:
     def get_name(self) -> str:
         return self._name
     
+    # TODO: add import/export settings to the state
     def get_state(self) -> str:
         return {
             'name': self._name,

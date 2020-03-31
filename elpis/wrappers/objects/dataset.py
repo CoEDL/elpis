@@ -12,7 +12,7 @@ from shutil import move
 
 from ..utilities import load_json_file
 from .fsobject import FSObject
-from elpis.transformer import make_importer
+from elpis.transformer import make_importer, DataTransformer
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
 from elpis.wrappers.input.elan_to_json import process_eaf
 from elpis.wrappers.input.clean_json import clean_json_data
@@ -160,7 +160,7 @@ class Dataset(FSObject):
         return self.config['processed_labels']
 
     @property
-    def importer(self):
+    def importer(self) -> DataTransformer:
         """
         Access the data transformer assigned to this dataset.
 

@@ -12,6 +12,7 @@ bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     dataset = kaldi.new_dataset(request.json['name'])
+    dataset.select_importer('Elan')
     app.config['CURRENT_DATASET'] = dataset
     data = {
         "config": dataset.config._load()
@@ -71,9 +72,9 @@ def settings():
     if dataset is None:
         return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
-        dataset.tier = request.json['tier']
+        dataset.importer.context['tier'] = request.json['tier']
     data = {
-        "tier": dataset.tier
+        "tier": dataset.importer.context['tier']
     }
     return jsonify({
         "status": 200,
@@ -88,7 +89,6 @@ def prepare():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
         return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
-    dataset.select_importer('Elan')
     dataset.process()
     with dataset.pathto.word_count_json.open() as fin:
         wordlist = fin.read()
