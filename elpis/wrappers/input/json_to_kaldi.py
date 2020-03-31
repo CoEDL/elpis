@@ -249,7 +249,7 @@ def create_kaldi_structure(input_json: str,
         only_text = []
         for file_ in all_files_in_dir:
             file_name, extension = os.path.splitext(file_)
-            print(f"file {file_name}")
+            print(f"file {file_name} {extension}")
             if extension == ".txt":
                 only_text.append(file_)
         for corpora_file in only_text:
