@@ -65,7 +65,7 @@ class Model(FSObject):  # TODO not thread safe
         output_path = self.path.joinpath('output')
         output_path.mkdir(parents=True, exist_ok=True)
         # gui only handles one corpus file of extra words for language model training
-        # because it is matching explicilty on a filename (corpus.txt)
+        # because it is matching file uploads explicilty on a filename (corpus.txt)
         # but create_kaldi_structure can read content from multiple files in the model/XX/text_corpus dir
         original_text_corpus_path = self.dataset.path.joinpath('original', 'corpus.txt')
         text_corpus_path = self.path.joinpath('text_corpus')
