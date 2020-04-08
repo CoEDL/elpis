@@ -64,22 +64,15 @@ class Model(FSObject):  # TODO not thread safe
         # task json-to-kaldi
         output_path = self.path.joinpath('output')
         output_path.mkdir(parents=True, exist_ok=True)
-        # gui only handles one corpus file of extra words for language model training
-        # because it is matching file uploads explicilty on a filename (corpus.txt)
-        # but create_kaldi_structure can read content from multiple files in the model/XX/text_corpus dir
-        original_text_corpus_path = self.dataset.path.joinpath('original', 'corpus.txt')
-        text_corpus_path = self.path.joinpath('text_corpus')
-        text_corpus_path.mkdir(parents=True, exist_ok=True)
-        if os.path.exists(original_text_corpus_path):
-            shutil.copy(f"{original_text_corpus_path}", f"{text_corpus_path}")
-        # content from uploaded corpus file(s) will be written to file at corpus_file_path
-        corpus_file_path = self.path.joinpath('corpus.txt')
-        create_kaldi_structure(
-            input_json=f'{self.dataset.pathto.filtered_json}',
+        # Copy cleaned corpus from dataset to the model
+        dataset_corpus_txt = self.dataset.path.joinpath('cleaned', 'corpus.txt')
+        model_corpus_txt = self.path.joinpath('corpus.txt')
+        if os.path.exists(dataset_corpus_txt):
+            shutil.copy(f"{dataset_corpus_txt}", f"{model_corpus_txt}")
+        create_kaldi_structure(input_json=f'{self.dataset.pathto.filtered_json}',
             output_folder=f'{output_path}',
             silence_markers=None,
-            text_corpus=f'{text_corpus_path}',
-            corpus_file=f'{corpus_file_path}'
+            corpus_txt=f'{model_corpus_txt}'
         )
 
     def train(self, on_complete:Callable=None):

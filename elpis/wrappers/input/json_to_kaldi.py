@@ -28,40 +28,6 @@ from typing import Dict, List
 from _io import TextIOWrapper
 
 
-def extract_additional_corpora(file_name: str, kaldi_corpus: str) -> None:
-    """
-    Takes a text file, extracts all sentences and writes them to the corpus file.
-    :param file_name: the path to a plaintext file to extract additional sentences/lines from
-    :param kaldi_corpus: the path to kaldi corpus.txt file created by json_to_kaldi.py.
-    """
-    if os.path.exists(kaldi_corpus):
-        append_write = 'a'  # append if already exists
-    else:
-        append_write = 'w'  # make a new file if not
-    with open(kaldi_corpus, append_write) as kaldi_corpus_file:
-        if os.path.exists(file_name):
-            print(f"Extracting corpus examples from: {file_name}")
-            with open(file_name, "r", encoding="utf-8", ) as file_:
-                for line in file_.readlines():
-                    kaldi_corpus_file.writelines(re.sub(r"[^a-zA-Z0-9\s]", "", line))
-        else:
-            print(f"Provided additional text corpus file path invalid: {file_name}")
-
-
-def clean_corpus_file(corpus_file_path: str) -> List[str]:
-    """
-    Opens the given file, removes punctuation and returns a list of cleaned lines.
-    :param corpus_file_path: file path to additional corpus examples
-    :return: a list of cleaned corpus examples
-    """
-    examples = []
-    with open(corpus_file_path, "r") as file_:
-        for line in file_.readlines():
-            clean_line = re.sub(r"[^a-zA-Z0-9\s]", "", line)
-            examples.append(clean_line)
-    return examples
-
-
 class KaldiInput:
     """
     Class to store information for the training and testing data sets.
@@ -88,7 +54,7 @@ class KaldiInput:
         self.speakers_file: TextIOWrapper = open(f"{output_folder}/spk2gender", "w", encoding="utf-8")
         self.recordings_file: TextIOWrapper = open(f"{output_folder}/wav.scp", "w", encoding="utf-8")
         self.utt2spk_file: TextIOWrapper = open(f"{output_folder}/utt2spk", "w", encoding="utf-8")
-        self.corpus_file: TextIOWrapper = open(f"{output_folder}/corpus.txt", "w", encoding="utf-8")
+        self.corpus_txt: TextIOWrapper = open(f"{output_folder}/corpus.txt", "w", encoding="utf-8")
 
     def add_speaker(self, speaker_id: str) -> str:
         """
@@ -167,8 +133,8 @@ class KaldiInput:
         self.utt2spk_file.close()
 
         self.corpus_list.sort()
-        self.corpus_file.write("".join(self.corpus_list))
-        self.corpus_file.close()
+        self.corpus_txt.write("".join(self.corpus_list))
+        self.corpus_txt.close()
 
 
 def extract_transcript(input_set: KaldiInput,
@@ -207,16 +173,14 @@ def extract_transcript(input_set: KaldiInput,
 def create_kaldi_structure(input_json: str,
                            output_folder: str,
                            silence_markers: bool,
-                           text_corpus: str,
-                           corpus_file: str) -> None:
+                           corpus_txt: str) -> None:
     """
     Create a full Kaldi input structure based upon a json list of transcriptions and an optional
     text corpus.
     :param input_json: the path to a json file with a list of transcriptions
     :param output_folder: the folder in which to create the kaldi file stucture
     :param silence_markers: boolean condition indicating whether to include silence markers
-    :param text_corpus: path to the directory containing the text corpus
-    :param corpus_file: the path to the file to write all corpus examples to
+    :param corpus_txt: the path to the file to write all corpus examples to
     """
     testing_input = KaldiInput(output_folder=f"{output_folder}/testing")
     training_input = KaldiInput(output_folder=f"{output_folder}/training")
@@ -241,20 +205,11 @@ def create_kaldi_structure(input_json: str,
                                json_transcript=json_transcript,
                                silence_markers=silence_markers)
 
-    if text_corpus:
-        text_corpus_directory = text_corpus
-        print(f"Will use any additional text corpus in {text_corpus_directory}")
-        all_files_in_dir = set(glob.glob(os.path.join(text_corpus_directory, "**"), recursive=True))
-        print(f"num files in {text_corpus}: {len(all_files_in_dir)}")
-        only_text = []
-        for file_ in all_files_in_dir:
-            file_name, extension = os.path.splitext(file_)
-            print(f"file {file_name} {extension}")
-            if extension == ".txt":
-                only_text.append(file_)
-        for corpora_file in only_text:
-            extract_additional_corpora(corpora_file, corpus_file)
-            training_input.corpus_list.extend(clean_corpus_file(corpora_file))
+    if os.path.exists(corpus_txt):
+        # Append the corpus text to the training data (it was cleaned in dataset step)
+        with open(corpus_txt, "r") as file_:
+            for line in file_.readlines():
+                training_input.corpus_list.append(line)
     else:
         print("No additional text corpus provided.")
 
@@ -266,7 +221,7 @@ def main() -> None:
     """
     Run the entire json_to_kaldi.py as a command line utility.
 
-    Usage: python3 json_to_kaldi.py -i INPUT_JSON -o OUTPUT_FOLDER [-s] [-t TEXT_CORPUS] [-c CORPUS_FILE]
+    Usage: python3 json_to_kaldi.py -i INPUT_JSON -o OUTPUT_FOLDER [-s] [-c CORPUS_TXT]
     """
     parser = argparse.ArgumentParser(description="Convert json from stdin to Kaldi input files "
                                                  "(in output-folder).")
@@ -282,10 +237,7 @@ def main() -> None:
                         action="store_true",
                         help="The input json file",
                         required=False)
-    parser.add_argument("-t", "--text_corpus",
-                        help="File path to a folder of text-only corpus files to include in corpus.txt.",
-                        required=False)
-    parser.add_argument("-c", "--corpus_file",
+    parser.add_argument("-c", "--corpus_txt",
                         type=str,
                         help="Path to the corpus.txt file to write text examples to",
                         required=False)
@@ -294,8 +246,7 @@ def main() -> None:
     create_kaldi_structure(input_json=arguments.input_json,
                            output_folder=arguments.output_folder,
                            silence_markers=arguments.silence_markers,
-                           text_corpus=arguments.text_corpus,
-                           corpus_file=arguments.corpus_file)
+                           corpus_txt=arguments.corpus_txt)
 
 
 if __name__ == "__main__":

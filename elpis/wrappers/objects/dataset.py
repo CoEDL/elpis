@@ -3,6 +3,7 @@ import shutil
 import glob
 import os
 import threading
+import string
 
 from pathlib import Path
 from typing import List
@@ -14,7 +15,7 @@ from .fsobject import FSObject
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
 
 from elpis.wrappers.input.elan_to_json import process_eaf
-from elpis.wrappers.input.clean_json import clean_json_data
+from elpis.wrappers.input.clean_json import clean_json_data, extract_additional_corpora
 from elpis.wrappers.input.resample_audio import process_item
 from elpis.wrappers.input.make_wordlist import generate_word_list
 
@@ -32,7 +33,9 @@ class DSPaths(object):
         attrs = existing_attributes(self)
         self.basepath = basepath
         self.original = self.basepath.joinpath('original')
+        self.cleaned = self.basepath.joinpath('cleaned')
         self.resampled = self.basepath.joinpath('resampled')
+        self.text_corpora = self.original.joinpath('text_corpora')
         ensure_paths_exist(self, attrs)
 
         # files
@@ -41,8 +44,8 @@ class DSPaths(object):
         self.word_list_txt: Path = self.basepath.joinpath('word_list.txt')
         # \/ user uploaded addional words
         self.additional_word_list_txt = self.original.joinpath('additional_word_list.txt')
-        # \/ user uploaded additional text (e.g. paragraphs or sentences)
-        self.corpus_txt = self.original.joinpath('corpus.txt')
+        # \/ compile the uploaded corpora into this single file
+        self.corpus_txt = self.cleaned.joinpath('corpus.txt')
 
 
 class Dataset(FSObject):
@@ -65,6 +68,11 @@ class Dataset(FSObject):
         self.config['tier'] = DEFAULT_TIER
         self.config['has_been_processed'] = False
         self.config['files'] = []
+        # It's OK to have chars in the collapse list that are also in the explode list
+        # because explode will be done first, removing them from the text,
+        # thus they won't match during the collapse step
+        self.config['punctuation_to_collapse_by'] = string.punctuation + ",…‘’“”°"
+        self.config['punctuation_to_explode_by'] = "-"
 
     @classmethod
     def load(cls, base_path: Path):
@@ -122,8 +130,15 @@ class Dataset(FSObject):
         # TODO: unimplemented!
         return
 
-    def add_fp(self, fp: BufferedIOBase, fname: str):
-        path: Path = self.pathto.original.joinpath(fname)
+    def add_fp(self, fp: BufferedIOBase, fname: str, destination: str = 'original'):
+        # TODO
+        # change this after adding a seperate file upload widget in gui for additional corpora files
+        # then we can determine where to write the files by destination value instead of by name
+        if "corpus" in fname:
+            path: Path = self.pathto.text_corpora.joinpath(fname)
+        else:
+            path: Path = self.pathto.original.joinpath(fname)
+
         with path.open(mode='wb') as fout:
             fout.write(fp.read())
         self.__files.append(path)
@@ -137,7 +152,7 @@ class Dataset(FSObject):
                 if filepath.name.split('.')[-1] not in filter:
                     continue
             file_pointer = filepath.open(mode='rb')
-            self.add_fp(file_pointer, filepath.name)
+            self.add_fp(fp=file_pointer, fname=filepath.name)
 
     def process(self):
         # remove existing file in resampled
@@ -151,9 +166,13 @@ class Dataset(FSObject):
                 obj = process_eaf(f'{self.pathto.original.joinpath(file)}', self.tier)
                 dirty.extend(obj)
         # TODO other options for command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
-        filtered = clean_json_data(json_data=dirty)
+        # Clean punctuation
+        filtered = clean_json_data(json_data=dirty,
+                                   punctuation_to_collapse_by=self.config['punctuation_to_collapse_by'],
+                                   punctuation_to_explode_by=self.config['punctuation_to_explode_by'])
         with self.pathto.filtered_json.open(mode='w') as fout:
             json.dump(filtered, fout)
+            # Write a file with word counts for just the transcription content
             with self.pathto.word_count_json.open(mode='w') as f_word_count:
                 wordlist = {}
                 for transcription in filtered:
@@ -166,7 +185,6 @@ class Dataset(FSObject):
                 json.dump(wordlist, f_word_count)
 
         base_directory = f'{self.pathto.original}'
-        audio_extensions = {"*.wav"}
         temporary_directory_path = Path(f'/tmp/{self.hash}/working')
         temporary_directory_path.mkdir(parents=True, exist_ok=True)
         temporary_directory = f'{temporary_directory_path}'
@@ -194,11 +212,31 @@ class Dataset(FSObject):
             for d in temporary_directories:
                 os.rmdir(d)
 
+        # Reset the target corpus file so re-processing doesn't append
+        with open(self.pathto.corpus_txt, "w") as file_:
+            file_.truncate(0)
+
+        # Compile text corpora from original/text_corpora dir into one file
+        all_files_in_dir = set(glob.glob(os.path.join(
+            self.pathto.text_corpora, "**"), recursive=True))
+        corpus_files = []
+        for file_ in all_files_in_dir:
+            file_name, extension = os.path.splitext(file_)
+            if extension == ".txt":
+                corpus_files.append(file_)
+        print(f"corpus_files {corpus_files}")
+        # Compile and clean the additional corpora content into a single file
+        for additional_corpus in corpus_files:
+            extract_additional_corpora(additional_corpus=additional_corpus,
+                                       corpus_txt=f'{self.pathto.corpus_txt}',
+                                       punctuation_to_collapse_by=self.config['punctuation_to_collapse_by'],
+                                       punctuation_to_explode_by=self.config['punctuation_to_explode_by'])
+
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.filtered_json}',
                            output_file=f'{self.pathto.word_list_txt}',
                            additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
-                           additional_corpus_file=f'{self.pathto.corpus_txt}'
+                           additional_corpus_txt=f'{self.pathto.corpus_txt}'
                            )
 
         self.config['has_been_processed'] = True

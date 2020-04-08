@@ -67,7 +67,7 @@ def extract_additional_words(file_name: str) -> List[str]:
 def generate_word_list(transcription_file: str,
                        output_file: str,
                        additional_word_list_file: str,
-                       additional_corpus_file: str
+                       additional_corpus_txt: str
                        ) -> None:
     """
     Generates the wordlist.txt file used to populate the Kaldi file structure and generate
@@ -75,7 +75,7 @@ def generate_word_list(transcription_file: str,
     :param transcription_file: path to the json file containing the transcriptions
     :param output_file: the path of the file to write the word list to
     :param additional_word_list_file: file path to additional wordlist text
-    :param additional_corpus_file: file path to the additional corpus text
+    :param additional_corpus_txt: file path to the additional corpus text
     :return:
     """
     json_data: List[Dict[str, str]] = load_json_file(transcription_file)
@@ -90,9 +90,9 @@ def generate_word_list(transcription_file: str,
         additional_words = extract_additional_words(additional_word_list_file)
         word_list.extend(additional_words)
 
-    if additional_corpus_file:
-        corpus_file_words = extract_additional_words(additional_corpus_file)
-        word_list.extend(corpus_file_words)
+    if additional_corpus_txt:
+        corpus_txt_words = extract_additional_words(additional_corpus_txt)
+        word_list.extend(corpus_txt_words)
 
     # Remove duplicates
     word_list = list(set(word_list))
@@ -122,7 +122,7 @@ def main():
                         type=str,
                         required=False,
                         help="File path to an optional additional word list.")
-    parser.add_argument("-c", "--additional_corpus_file",
+    parser.add_argument("-c", "--additional_corpus_txt",
                         type=str,
                         help="File path to the corpus.txt .",
                         required=True)
@@ -131,7 +131,7 @@ def main():
     generate_word_list(transcription_file=arguments.infile,
                        output_file=arguments.outfile,
                        additional_word_list_file=arguments.additional_word_list_file,
-                       additional_corpus_file=arguments.additional_corpus_file
+                       additional_corpus_txt=arguments.additional_corpus_txt
                        )
 
     print("Done.", file=sys.stderr)
