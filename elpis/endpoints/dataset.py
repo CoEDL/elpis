@@ -55,7 +55,8 @@ def list_existing():
 def files():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
-        return jsonify({"status": 404, "data": "No current dataset exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
         for file in request.files.getlist("file"):
             dataset.add_fp(fp=file, fname=file.filename, destination='original')

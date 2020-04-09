@@ -46,10 +46,13 @@ def clean_utterance(utterance: Dict[str, str],
     Takes an utterance and cleans it based on the rules established by the provided parameters.
     :param utterance: a dictionary with a "transcript" key-value pair.
     :param remove_english: whether or not to remove English dirty_words.
-    :param english_words: a list of english dirty_words to remove from the transcript (we suggest the nltk dirty_words corpora).
-    :param punctuation: list of punctuation symbols to remove from the transcript.
+    :param english_words: a list of english dirty_words to remove from the transcript
+                          (we suggest the nltk dirty_words corpora).
+    :param punctuation_to_collapse_by: punctuation marks to strip
+    :param punctuation_to_explode_by: punctuation marks to replace with spaces
     :param special_cases: a list of dirty_words to always remove from the output.
-    :return: a tuple with a list of 'cleaned' dirty_words and a number representing the number of English dirty_words to remove.
+    :return: a tuple with a list of 'cleaned' dirty_words and a number representing the number of
+             English dirty_words to remove.
     """
     print("*** clean_utterance")
     # TODO interface to include user specific tags
@@ -120,6 +123,8 @@ def clean_json_data(json_data: List[Dict[str, str]],
     :param json_data: list of Python dictionaries, each must have a 'transcription' key-value.
     :param remove_english: whether or not to remove English from the utterances.
     :param use_langid: whether or not to use the langid library to identify English to remove.
+    :param punctuation_to_collapse_by: punctuation marks to strip
+    :param punctuation_to_explode_by: punctuation marks to replace with spaces
     :return: cleaned list of utterances (list of dictionaries).
     """
     special_cases = ["<silence>"]  # Any words you want to ignore
@@ -135,12 +140,13 @@ def clean_json_data(json_data: List[Dict[str, str]],
 
     cleaned_data = []
     for utterance in json_data:
-        clean_words, english_word_count = clean_utterance(utterance=utterance,
-                                                          remove_english=remove_english,
-                                                          english_words=english_words,
-                                                          punctuation_to_collapse_by=punctuation_to_collapse_by,
-                                                          punctuation_to_explode_by=punctuation_to_explode_by,
-                                                          special_cases=special_cases)
+        clean_words, english_word_count = \
+            clean_utterance(utterance=utterance,
+                            remove_english=remove_english,
+                            english_words=english_words,
+                            punctuation_to_collapse_by=punctuation_to_collapse_by,
+                            punctuation_to_explode_by=punctuation_to_explode_by,
+                            special_cases=special_cases)
 
         if is_valid_utterance(clean_words,
                               english_word_count,
@@ -176,13 +182,14 @@ def extract_additional_corpora(additional_corpus: str = '',
             with open(additional_corpus, "r", encoding="utf-8", ) as file_:
                 for line in file_.readlines():
                     # clean the text along the way
-                    line = deal_with_punctuation(text=line,
-                                                 punctuation_to_collapse_by=punctuation_to_collapse_by,
-                                                 punctuation_to_explode_by=punctuation_to_explode_by)
+                    line = \
+                        deal_with_punctuation(text=line,
+                                              punctuation_to_collapse_by=punctuation_to_collapse_by,
+                                              punctuation_to_explode_by=punctuation_to_explode_by)
                     corpus_txt_file.writelines(line)
         else:
-            print(
-                f"Provided additional text additional_corpus file path invalid: {additional_corpus}")
+            print(f"Provided additional text additional_corpus file path invalid: "
+                  f"{additional_corpus}")
 
 
 def deal_with_punctuation(text: str = '',
@@ -197,9 +204,9 @@ def deal_with_punctuation(text: str = '',
     """
     pattern_to_collapse_by = re.escape(punctuation_to_collapse_by)
     pattern_to_explode_by = re.escape(punctuation_to_explode_by)
-    # Prioritise exploding first, this is set of punct marks that the user adds
+    # Prioritise exploding first, this is set of punctuation marks that the user adds
     new_text: str = re.sub(rf"[{pattern_to_explode_by}]", " ", text)
-    # then strip the rest
+    # Then strip the rest
     new_text = re.sub(rf"[{pattern_to_collapse_by}]", "", new_text)
     print(f"{text} {new_text}")
     return new_text

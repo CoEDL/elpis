@@ -6,7 +6,7 @@ import threading
 import string
 
 from pathlib import Path
-from typing import List
+from typing import List, Union, BinaryIO
 from io import BufferedIOBase
 from multiprocessing.dummy import Pool
 from shutil import move
@@ -130,7 +130,9 @@ class Dataset(FSObject):
         # TODO: unimplemented!
         return
 
-    def add_fp(self, fp: BufferedIOBase, fname: str, destination: str = 'original'):
+    def add_fp(self, fp: Union[BufferedIOBase, BinaryIO],
+               fname: str,
+               destination: str = 'original'):
         # TODO
         # change this after adding a seperate file upload widget in gui for additional corpora files
         # then we can determine where to write the files by destination value instead of by name
@@ -144,12 +146,14 @@ class Dataset(FSObject):
         self.__files.append(path)
         self.config['files'] = [f'{f.name}' for f in self.__files]
 
-    def add_directory(self, path, filter=[]):
+    def add_directory(self, path, filter_=None):
+        if not filter_:
+            filter_ = []
         """Add all the contents of the given directory to the dataset."""
         path: Path = Path(path)
         for filepath in path.iterdir():
-            if len(filter) != 0:
-                if filepath.name.split('.')[-1] not in filter:
+            if len(filter_) != 0:
+                if filepath.name.split('.')[-1] not in filter_:
                     continue
             file_pointer = filepath.open(mode='rb')
             self.add_fp(fp=file_pointer, fname=filepath.name)

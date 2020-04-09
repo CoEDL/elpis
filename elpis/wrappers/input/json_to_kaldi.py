@@ -19,13 +19,10 @@ Contributors:
 """
 
 import argparse
-import glob
 import json
 import os
-import re
 import uuid
-from typing import Dict, List
-from _io import TextIOWrapper
+from typing import Dict, List, TextIO
 
 
 class KaldiInput:
@@ -49,12 +46,12 @@ class KaldiInput:
         self.utt2spk_list: List[str] = []
         self.corpus_list: List[str] = []
 
-        self.segments_file: TextIOWrapper = open(f"{output_folder}/segments", "w", encoding="utf-8")
-        self.transcripts_file: TextIOWrapper = open(f"{output_folder}/text", "w", encoding="utf-8")
-        self.speakers_file: TextIOWrapper = open(f"{output_folder}/spk2gender", "w", encoding="utf-8")
-        self.recordings_file: TextIOWrapper = open(f"{output_folder}/wav.scp", "w", encoding="utf-8")
-        self.utt2spk_file: TextIOWrapper = open(f"{output_folder}/utt2spk", "w", encoding="utf-8")
-        self.corpus_txt: TextIOWrapper = open(f"{output_folder}/corpus.txt", "w", encoding="utf-8")
+        self.segments_file: TextIO = open(f"{output_folder}/segments", "w", encoding="utf-8")
+        self.transcripts_file: TextIO = open(f"{output_folder}/text", "w", encoding="utf-8")
+        self.speakers_file: TextIO = open(f"{output_folder}/spk2gender", "w", encoding="utf-8")
+        self.recordings_file: TextIO = open(f"{output_folder}/wav.scp", "w", encoding="utf-8")
+        self.utt2spk_file: TextIO = open(f"{output_folder}/utt2spk", "w", encoding="utf-8")
+        self.corpus_txt: TextIO = open(f"{output_folder}/corpus.txt", "w", encoding="utf-8")
 
     def add_speaker(self, speaker_id: str) -> str:
         """
