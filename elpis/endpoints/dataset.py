@@ -47,15 +47,19 @@ def list_existing():
         "data": data
     })
 
-
+# Handle file uploads. For now, default to the "original" dir
+# dataset.add_fp() will check file names, moving corpora files to own dir
+# later we might have a separate GUI widget for corpora files
+# which could have a different route with a different destination
 @bp.route("/files", methods=['POST'])
 def files():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
-        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
         for file in request.files.getlist("file"):
-            dataset.add_fp(file, file.filename)
+            dataset.add_fp(fp=file, fname=file.filename, destination='original')
     data = {
         "files": dataset.files
     }
@@ -72,8 +76,10 @@ def settings():
         return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
         dataset.tier = request.json['tier']
+        dataset.config['punctuation_to_explode_by'] = request.json['punctuation_to_explode_by']
     data = {
-        "tier": dataset.tier
+        "tier": dataset.tier,
+        "punctuation_to_explode_by": dataset.config['punctuation_to_explode_by']
     }
     return jsonify({
         "status": 200,
