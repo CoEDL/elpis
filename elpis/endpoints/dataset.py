@@ -47,10 +47,11 @@ def list_existing():
         "data": data
     })
 
-# Handle file uploads. For now, default to the "original" dir
-# dataset.add_fp() will check file names, moving corpora files to own dir
+# Handle file uploads. For now, default to the "original" dir.
+# Dataset.add_fp() will check file names, moving corpora files to own dir
 # later we might have a separate GUI widget for corpora files
-# which could have a different route with a different destination
+# which could have a different route with a different destination.
+# add_fp scans the uploaded files and returns lists of all tier types and tier names for eafs
 @bp.route("/files", methods=['POST'])
 def files():
     dataset: Dataset = app.config['CURRENT_DATASET']
@@ -60,8 +61,13 @@ def files():
     if request.method == 'POST':
         for file in request.files.getlist("file"):
             dataset.add_fp(fp=file, fname=file.filename, destination='original')
+        dataset.get_elan_tier_attributes(dataset.pathto.original)
+        print(dataset.tier_types, dataset.tier_names)
+
     data = {
-        "files": dataset.files
+        "files": dataset.files,
+        "tier_types": dataset.tier_types,
+        "tier_names": dataset.tier_names
     }
     return jsonify({
         "status": 200,
@@ -75,10 +81,13 @@ def settings():
     if dataset is None:
         return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
-        dataset.tier = request.json['tier']
+        dataset.tier_type = request.json['tier_type']
+        dataset.tier_name = request.json['tier_name']
         dataset.config['punctuation_to_explode_by'] = request.json['punctuation_to_explode_by']
+    print(f"saving settings {dataset.tier_type} {dataset.tier_name}")
     data = {
-        "tier": dataset.tier,
+        "tier_type": dataset.tier_type,
+        "tier_name": dataset.tier_name,
         "punctuation_to_explode_by": dataset.config['punctuation_to_explode_by']
     }
     return jsonify({

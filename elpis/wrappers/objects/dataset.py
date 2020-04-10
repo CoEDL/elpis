@@ -6,10 +6,11 @@ import threading
 import string
 
 from pathlib import Path
-from typing import List, Union, BinaryIO
+from typing import List, Union, BinaryIO, Set
 from io import BufferedIOBase
 from multiprocessing.dummy import Pool
 from shutil import move
+from pympi.Elan import Eaf
 
 from .fsobject import FSObject
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
@@ -21,7 +22,8 @@ from elpis.wrappers.input.make_wordlist import generate_word_list
 
 
 # TODO: this is very ELAN specific code...
-DEFAULT_TIER = 'Phrase'
+DEFAULT_TIER_TYPE = 'default-lt'
+DEFAULT_TIER_NAME = 'Phrase'
 
 
 class DSPaths(object):
@@ -39,6 +41,7 @@ class DSPaths(object):
         ensure_paths_exist(self, attrs)
 
         # files
+        self.corpus_tiers: Path = self.basepath.joinpath('corpus_tiers.json')
         self.filtered_json: Path = self.basepath.joinpath('filtered.json')
         self.word_count_json: Path = self.basepath.joinpath('word_count.json')
         self.word_list_txt: Path = self.basepath.joinpath('word_list.txt')
@@ -65,7 +68,6 @@ class Dataset(FSObject):
         self.has_been_processed = False
 
         # config
-        self.config['tier'] = DEFAULT_TIER
         self.config['has_been_processed'] = False
         self.config['files'] = []
         # It's OK to have chars in the collapse list that are also in the explode list
@@ -73,6 +75,13 @@ class Dataset(FSObject):
         # thus they won't match during the collapse step
         self.config['punctuation_to_collapse_by'] = string.punctuation + ",…‘’“”°"
         self.config['punctuation_to_explode_by'] = "-"
+
+        # All tier types and names for entire dataset
+        # This is also very Elan-specific!
+        self.config['tier_type'] = DEFAULT_TIER_TYPE
+        self.config['tier_name'] = DEFAULT_TIER_NAME
+        self.config['tier_types'] = []
+        self.config['tier_names'] = []
 
     @classmethod
     def load(cls, base_path: Path):
@@ -83,16 +92,64 @@ class Dataset(FSObject):
         return self
 
     @property
-    def tier(self) -> str:
-        return self.config['tier']
-
-    @tier.setter
-    def tier(self, value: str):
-        self.config['tier'] = value
-
-    @property
     def files(self):
         return self.config['files']
+
+    @property
+    def tier_type(self) -> str:
+        return self.config['tier_type']
+
+    @tier_type.setter
+    def tier_type(self, value: str):
+        self.config['tier_type'] = value
+
+    @property
+    def tier_types(self) -> List[str]:
+        return self.config['tier_types']
+
+    @tier_types.setter
+    def tier_types(self, value: List[str]):
+        self.config['tier_types'] = value
+
+    @property
+    def tier_name(self) -> str:
+        return self.config['tier_name']
+
+    @tier_name.setter
+    def tier_name(self, value: str):
+        self.config['tier_name'] = value
+
+    @property
+    def tier_names(self) -> List[str]:
+        return self.config['tier_names']
+
+    @tier_names.setter
+    def tier_names(self, value: List[str]):
+        self.config['tier_names'] = value
+
+    def get_elan_tier_attributes(self, input_dir: Path = Path('.')):
+        """
+        Iterate a dir of elan files and compile two sets:
+        one of unique tier types, another of unique tier names
+        """
+        # Use sets internally for easy uniqueness, conver to lists when done
+        _tier_types: Set[str] = set()
+        _tier_names: Set[str] = set()
+        all_files_in_directory: Set[str] = set(
+            glob.glob(os.path.join(input_dir, "**"), recursive=True))
+        input_eafs_files: List[str] = [
+            file_ for file_ in all_files_in_directory if file_.endswith(".eaf")]
+        for file_ in input_eafs_files:
+            input_eaf = Eaf(file_)
+            for tier_type in list(input_eaf.get_linguistic_type_names()):
+                _tier_types.add(tier_type)
+                tier_ids: List[str] = input_eaf.get_tier_ids_for_linguistic_type(
+                    tier_type)
+                for tier_id in tier_ids:
+                    _tier_names.add(tier_id)
+        self.tier_types = list(_tier_types)
+        self.tier_names = list(_tier_names)
+
 
     def add_elan_file(self, filename, content) -> None:
         # TODO: unimplemented!
@@ -163,11 +220,20 @@ class Dataset(FSObject):
         # TODO check what other files need removing
         shutil.rmtree(f'{self.pathto.resampled}')
         self.pathto.resampled.mkdir(parents=True, exist_ok=True)
+        # Reset the target corpus file so re-processing doesn't append
+        open(self.pathto.corpus_txt, 'w').close()
+        # Reset the corpus tier metadata file
+        open(self.pathto.corpus_tiers, 'w').close()
+
         # process files
         dirty = []
         for file in self.__files:
             if file.name.endswith('.eaf'):
-                obj = process_eaf(f'{self.pathto.original.joinpath(file)}', self.tier)
+                obj = process_eaf(input_elan_file=f'{self.pathto.original.joinpath(file)}',
+                                  tier_type=self.tier_type,
+                                  tier_name=self.tier_name,
+                                  corpus_tiers_file=f'{self.pathto.corpus_tiers}'
+                                  )
                 dirty.extend(obj)
         # TODO other options for command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
         # Clean punctuation
@@ -216,9 +282,6 @@ class Dataset(FSObject):
             for d in temporary_directories:
                 os.rmdir(d)
 
-        # Reset the target corpus file so re-processing doesn't append            
-        open(self.pathto.corpus_txt, 'w').close()
-
         # Compile text corpora from original/text_corpora dir into one file
         all_files_in_dir = set(glob.glob(os.path.join(
             self.pathto.text_corpora, "**"), recursive=True))
@@ -241,5 +304,4 @@ class Dataset(FSObject):
                            additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
                            additional_corpus_txt=f'{self.pathto.corpus_txt}'
                            )
-
         self.config['has_been_processed'] = True
