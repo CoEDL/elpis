@@ -64,7 +64,7 @@ def create_textgrid(wav_dictionary: Dict[str, str],
                     output_directory: str) -> None:
     for index, utterance_id in enumerate(wav_dictionary.keys()):
         textgrid = tgio.Textgrid()
-        tier = tgio.IntervalTier(name='phones',
+        tier = tgio.IntervalTier(name='default',
                                  entryList=ctm_dictionary[utterance_id],
                                  minT=0,
                                  pairedWav=str(Path(wav_dictionary[utterance_id])))
