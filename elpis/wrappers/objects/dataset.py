@@ -216,9 +216,8 @@ class Dataset(FSObject):
             for d in temporary_directories:
                 os.rmdir(d)
 
-        # Reset the target corpus file so re-processing doesn't append
-        with open(self.pathto.corpus_txt, "w") as file_:
-            file_.truncate(0)
+        # Reset the target corpus file so re-processing doesn't append            
+        open(self.pathto.corpus_txt, 'w').close()
 
         # Compile text corpora from original/text_corpora dir into one file
         all_files_in_dir = set(glob.glob(os.path.join(
