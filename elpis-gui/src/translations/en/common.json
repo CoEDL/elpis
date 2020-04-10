@@ -13,7 +13,7 @@
         },
         "new": {
             "title": "New group of recordings",
-            "nameLabel": "name",
+            "nameLabel": "Name",
             "namePlaceholder": "Name"
         },
         "files": {
@@ -21,8 +21,9 @@
             "description": "Upload your language recording and transcription files here. \n Please use 44.1kHz WAV format audio, and .eaf Elan transcription files. \n Audio files and transcription files need to have matching filenames. \n You can also upload text files like wordlists or stories that don't have audio.",
             "filesHeader": "Uploaded files",
             "settingsHeader": "Settings",
-            "tierLabel": "tier name",
-            "settingsDescription": "What is the name of the Elan tier that your transcriptions are on?",
+            "tierLabel": "Tier name",
+            "puncLabel": "Expand words by these marks",
+            "settingsDescription": "The tier name setting is used to get training transcriptions from Elan files. \n Punctuation will be removed from the transcriptions. Add punctuation marks here that you want to be replaced by spaces when removed.",
             "uploadButton": "Upload",
             "saveButton": "Save Settings"
         },
@@ -56,7 +57,7 @@
         },
         "new": {
             "title": "New pronunciation dictionary",
-            "nameLabel": "name",
+            "nameLabel": "Name",
             "namePlaceholder": "Name"
         },
         "l2s": {
@@ -84,7 +85,7 @@
         },
         "new": {
             "title": "New training session",
-            "nameLabel": "name",
+            "nameLabel": "Name",
             "namePlaceholder": "Name",
             "selectDatasetLabel": "Select recordings for this session",
             "selectPronDictLabel": "Select a pronunciation dictionary for this session"

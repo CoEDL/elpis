@@ -9,7 +9,8 @@ const initState = {
     transcriptionFiles: [],
     additionalTextFiles: [],
     settings: {
-        tier: 'Phrase'
+        tier: "",
+        punctuation_to_explode_by: ""
     },
     wordlist: {}
 }
@@ -26,12 +27,14 @@ const dataset = (state = initState, action) => {
             return {...state}
 
         case actionTypes.DATASET_NEW_SUCCESS:
-            var { name } = action.response.data.data.config
-            return { ...initState, name }
+            var { name, tier, punctuation_to_explode_by } = action.response.data.data.config
+            console.log("tier", tier)
+            console.log("punctuation_to_explode_by", punctuation_to_explode_by)
+            return { ...initState, name, settings: { ...state.settings, tier, punctuation_to_explode_by }, }
 
         case actionTypes.DATASET_LOAD_SUCCESS:
             // loading existing data set might have files and settings
-            var { name, tier, files } = action.response.data.data.config
+            var { name, tier, punctuation_to_explode_by, files } = action.response.data.data.config
             // action.data is an array of filenames. parse this, split into separate lists
             var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort()
             var transcriptionFiles = files.filter(file => getFileExtension(file) === 'eaf').sort()
@@ -46,7 +49,7 @@ const dataset = (state = initState, action) => {
                 audioFiles,
                 transcriptionFiles,
                 additionalTextFiles,
-                settings: { ...state.settings, tier },
+                settings: { ...state.settings, tier, punctuation_to_explode_by },
                 wordlist: "",
             }
 
@@ -86,7 +89,7 @@ const dataset = (state = initState, action) => {
             if (status === 200) {
                 return {
                     ...state,
-                    settings: {...state.settings, tier:data.tier}
+                    settings: { ...state.settings, tier: data.tier, punctuation_to_explode_by: data.punctuation_to_explode_by}
                 }
             } else {
                 console.log(data)

@@ -16,6 +16,7 @@ class DatasetFiles extends Component {
     handleNextButton = () => {
         const { history, datasetPrepare} = this.props
         datasetPrepare(history)
+        history.push(urls.gui.dataset.prepare)
     }
 
     render() {
@@ -111,7 +112,8 @@ class DatasetFiles extends Component {
                                     className="attached"
                                     enableReinitialize
                                     initialValues={ {
-                                        tier: settings.tier
+                                        tier: settings.tier,
+                                        punctuation_to_explode_by: settings.punctuation_to_explode_by
                                     } }
                                     validate={ values => {
                                         let errors = {};
@@ -125,7 +127,10 @@ class DatasetFiles extends Component {
                                         return errors;
                                     } }
                                     onSubmit={ (values, { setSubmitting }) => {
-                                        const postData = { tier: values.tier }
+                                        const postData = {
+                                            tier: values.tier,
+                                            punctuation_to_explode_by: values.punctuation_to_explode_by
+                                        }
                                         datasetSettings(postData)
                                     } }
                                 >
@@ -148,6 +153,14 @@ class DatasetFiles extends Component {
                                                         type="text"
                                                         onChange={ handleChange } />
                                                     <ErrorMessage component="div" className="error" name="tier" />
+                                                </Form.Field>
+                                                <Form.Field>
+                                                    <Input
+                                                        label={ t('dataset.files.puncLabel') }
+                                                        value={values.punctuation_to_explode_by }
+                                                        name="punctuation_to_explode_by"
+                                                        type="text"
+                                                        onChange={ handleChange } />
                                                 </Form.Field>
                                                 <Button type="button" onClick={handleSubmit} disabled={interactionDisabled}>
                                                     { t('dataset.files.saveButton') }
