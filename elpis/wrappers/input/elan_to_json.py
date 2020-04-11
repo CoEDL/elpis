@@ -20,7 +20,10 @@ from typing import List, Dict, Tuple, Union
 from ..utilities import load_json_file, write_data_to_json_file
 
 
-def log_tier_info(input_eaf: Eaf = None, file_name: str = '', tier_types: List = [], corpus_tiers_file: str = 'corpus_tiers.json'):
+def log_tier_info(input_eaf: Eaf = None,
+                  file_name: str = '',
+                  tier_types: List = [],
+                  corpus_tiers_file: str = 'corpus_tiers.json'):
     tiers = []
     for tier_type in tier_types:
         tier_names = input_eaf.get_tier_ids_for_linguistic_type(tier_type)
@@ -32,9 +35,21 @@ def log_tier_info(input_eaf: Eaf = None, file_name: str = '', tier_types: List =
                             output=corpus_tiers_file)
 
 
-def process_eaf(input_elan_file: str = '', tier_type: str = '', tier_name: str = '', corpus_tiers_file: str = '') -> List[dict]:
+def process_eaf(input_elan_file: str = '',
+                tier_order: int = 0,
+                tier_type: str = '',
+                tier_name: str = '',
+                corpus_tiers_file: str = '') -> List[dict]:
     """
     Method to process a particular tier in an eaf file (ELAN Annotation Format).
+    Transcriptions are read from an elan file tier.
+    Tiers are nodes from the tree structure in the .eaf file.
+    The tier to read from is determined by tier order (eg top tier would be order 1),
+    tier type (eg default-lt) or tier name (eg Phrase).
+    If tier type is used, the first tier matching this type is used.
+    Elan can have multiple tiers of same type, future work would support reading data
+    from multiple tiers of the selected type.
+
     It stores the transcriptions in the following format:
                     {'speaker_id': <speaker_id>,
                     'audio_file_name': <file_name>,
@@ -43,10 +58,13 @@ def process_eaf(input_elan_file: str = '', tier_type: str = '', tier_name: str =
                     'stop_ms': <stop_time_in_milliseconds>}
 
     :param input_elan_file: name of input elan file
-    :param tier_name: name of the elan tier to process. these tiers are nodes from the tree structure in the .eaf file.
+    :param tier_order: index of the elan tier to process
+    :param tier_type:  type of the elan tier to process
+    :param tier_name:  name of the elan tier to process
     :return: a list of dictionaries, where each dictionary is an annotation
     """
-    print(f"process_eaf {input_elan_file} using {tier_type} {tier_name}")
+
+    print(f"processing eaf {input_elan_file} using {tier_order} {tier_type} {tier_name}")
 
     # Get paths to files
     input_directory, full_file_name = os.path.split(input_elan_file)
@@ -74,14 +92,26 @@ def process_eaf(input_elan_file: str = '', tier_type: str = '', tier_name: str =
     annotations: List[Tuple[str, str, str]] = []
     annotations_data: List[dict] = []
 
-    if tier_type in tier_types:
-        print(f"found tier type {tier_type}")
-        tier_names = input_eaf.get_tier_ids_for_linguistic_type(tier_type)
-        tier_name = tier_names[0]
-        if tier_name:
-            print(f"found tier name {tier_name}")
+    # First try using tier order to get tier name
+    if tier_order:
+        # Watch out for files that may not have this many tiers
+        # tier_order is 1-index but List indexing is 0-index
+        try:
+            tier_name = tier_names[tier_order-1]
+            print(f"using tier order {tier_order} to get tier name {tier_name}")
+        except IndexError:
+            print("couldn't find a tier")
+            pass
     else:
-        print("tier type not found in this file")
+        # else use tier type to get a tier name
+        if tier_type in tier_types:
+            print(f"found tier type {tier_type}")
+            tier_names = input_eaf.get_tier_ids_for_linguistic_type(tier_type)
+            tier_name = tier_names[0]
+            if tier_name:
+                print(f"found tier name {tier_name}")
+        else:
+            print("tier type not found in this file")
 
     if tier_name in tier_names:
         print(f"using tier name {tier_name}")

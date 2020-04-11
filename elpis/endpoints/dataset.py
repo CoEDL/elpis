@@ -62,10 +62,9 @@ def files():
         for file in request.files.getlist("file"):
             dataset.add_fp(fp=file, fname=file.filename, destination='original')
         dataset.get_elan_tier_attributes(dataset.pathto.original)
-        print(dataset.tier_types, dataset.tier_names)
-
     data = {
         "files": dataset.files,
+        "tier_max_count": dataset.tier_max_count,
         "tier_types": dataset.tier_types,
         "tier_names": dataset.tier_names
     }
@@ -81,11 +80,12 @@ def settings():
     if dataset is None:
         return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
+        dataset.tier_order = int(request.json['tier_order'] or 0)
         dataset.tier_type = request.json['tier_type']
         dataset.tier_name = request.json['tier_name']
         dataset.config['punctuation_to_explode_by'] = request.json['punctuation_to_explode_by']
-    print(f"saving settings {dataset.tier_type} {dataset.tier_name}")
     data = {
+        "tier_order": dataset.tier_order,
         "tier_type": dataset.tier_type,
         "tier_name": dataset.tier_name,
         "punctuation_to_explode_by": dataset.config['punctuation_to_explode_by']

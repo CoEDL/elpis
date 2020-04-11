@@ -78,10 +78,12 @@ class Dataset(FSObject):
 
         # All tier types and names for entire dataset
         # This is also very Elan-specific!
-        self.config['tier_type'] = DEFAULT_TIER_TYPE
-        self.config['tier_name'] = DEFAULT_TIER_NAME
+        self.config['tier_max_count'] = 1
         self.config['tier_types'] = []
         self.config['tier_names'] = []
+        self.config['tier_order'] = 1
+        self.config['tier_type'] = ""
+        self.config['tier_name'] = ""
 
     @classmethod
     def load(cls, base_path: Path):
@@ -96,12 +98,20 @@ class Dataset(FSObject):
         return self.config['files']
 
     @property
-    def tier_type(self) -> str:
-        return self.config['tier_type']
+    def tier_max_count(self) -> int:
+        return self.config['tier_max_count']
 
-    @tier_type.setter
-    def tier_type(self, value: str):
-        self.config['tier_type'] = value
+    @tier_max_count.setter
+    def tier_max_count(self, value: int):
+        self.config['tier_max_count'] = value
+
+    @property
+    def tier_order(self) -> int:
+        return self.config['tier_order']
+
+    @tier_order.setter
+    def tier_order(self, value: int):
+        self.config['tier_order'] = value
 
     @property
     def tier_types(self) -> List[str]:
@@ -112,12 +122,12 @@ class Dataset(FSObject):
         self.config['tier_types'] = value
 
     @property
-    def tier_name(self) -> str:
-        return self.config['tier_name']
+    def tier_type(self) -> str:
+        return self.config['tier_type']
 
-    @tier_name.setter
-    def tier_name(self, value: str):
-        self.config['tier_name'] = value
+    @tier_type.setter
+    def tier_type(self, value: str):
+        self.config['tier_type'] = value
 
     @property
     def tier_names(self) -> List[str]:
@@ -127,10 +137,19 @@ class Dataset(FSObject):
     def tier_names(self, value: List[str]):
         self.config['tier_names'] = value
 
+    @property
+    def tier_name(self) -> str:
+        return self.config['tier_name']
+
+    @tier_name.setter
+    def tier_name(self, value: str):
+        self.config['tier_name'] = value
+
+
     def get_elan_tier_attributes(self, input_dir: Path = Path('.')):
         """
-        Iterate a dir of elan files and compile two sets:
-        one of unique tier types, another of unique tier names
+        Iterate a dir of elan files and compiles info about all the files' tiers:
+        unique tier types, unique tier names, and the num of tiers
         """
         # Use sets internally for easy uniqueness, conver to lists when done
         _tier_types: Set[str] = set()
@@ -147,6 +166,10 @@ class Dataset(FSObject):
                     tier_type)
                 for tier_id in tier_ids:
                     _tier_names.add(tier_id)
+            # count the number of tiers, use the max from all files
+            tier_count = len(list(input_eaf.get_tier_names()))
+            if tier_count > self.tier_max_count:
+                self.tier_max_count = tier_count
         self.tier_types = list(_tier_types)
         self.tier_names = list(_tier_names)
 
@@ -230,6 +253,7 @@ class Dataset(FSObject):
         for file in self.__files:
             if file.name.endswith('.eaf'):
                 obj = process_eaf(input_elan_file=f'{self.pathto.original.joinpath(file)}',
+                                  tier_order=self.tier_order,
                                   tier_type=self.tier_type,
                                   tier_name=self.tier_name,
                                   corpus_tiers_file=f'{self.pathto.corpus_tiers}'
