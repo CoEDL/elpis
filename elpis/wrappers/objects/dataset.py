@@ -256,8 +256,7 @@ class Dataset(FSObject):
                                   tier_order=self.tier_order,
                                   tier_type=self.tier_type,
                                   tier_name=self.tier_name,
-                                  corpus_tiers_file=f'{self.pathto.corpus_tiers}'
-                                  )
+                                  corpus_tiers_file=f'{self.pathto.corpus_tiers}')
                 dirty.extend(obj)
         # TODO other options for command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
         # Clean punctuation

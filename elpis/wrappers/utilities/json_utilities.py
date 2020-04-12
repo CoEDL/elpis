@@ -22,12 +22,11 @@ def load_json_file(file_name: str) -> List[Dict[str, str]]:
     :return a Python dictionary with the contents of the JSON file.
     """
     data = []
-    with open(file_name, "r", encoding="utf-8") as file_:
-        try:
+    if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        with open(file_name, "r", encoding="utf-8") as file_:
             data = json.load(file_)
-        except JSONDecodeError:
-            pass
     return data
+
 
 def write_data_to_json_file(data: object = {}, output: Union[str, TextIOWrapper] = []) -> None:
     """

@@ -20,7 +20,7 @@ from typing import List, Dict, Tuple, Union
 from ..utilities import load_json_file, write_data_to_json_file
 
 
-def log_tier_info(input_eaf: Eaf = None,
+def save_tier_info(input_eaf: Eaf = None,
                   file_name: str = '',
                   tier_types: List = [],
                   corpus_tiers_file: str = 'corpus_tiers.json'):
@@ -83,7 +83,7 @@ def process_eaf(input_elan_file: str = '',
     tier_names: List[str] = list(input_eaf.get_tier_names())
 
     # Keep this data handy for future corpus analysis
-    log_tier_info(input_eaf=input_eaf,
+    save_tier_info(input_eaf=input_eaf,
                   tier_types=tier_types,
                   file_name=file_name,
                   corpus_tiers_file=corpus_tiers_file)
