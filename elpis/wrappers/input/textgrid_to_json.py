@@ -17,14 +17,14 @@ from ..utilities import *
 
 def process_textgrid(input_directory: str) -> List[Dict[str, Union[str, int]]]:
     """
-    Traverses through the textgrid files in the given directory and extracts 
+    Traverses through the textgrid files in the given directory and extracts
     transcription information in each tier and creates a list of dictionaries,
-    each containing data in the following format: 
+    each containing data in the following format:
                         {'audio_file_name': <file_name>,
                         'transcript': <transcription_label>,
                         'start_ms': <start_time_in_milliseconds>,
                         'stop_ms': <stop_time_in_milliseconds>}
-                        
+
     :param input_directory: directory path containing input files from where the method
     :return: list of interval data in dictionary form
     """
@@ -50,7 +50,7 @@ def process_textgrid(input_directory: str) -> List[Dict[str, Union[str, int]]]:
 def seconds_to_milliseconds(seconds: float) -> int:
     """
     Converts from seconds to milliseconds.
-    
+
     :param seconds: time in seconds
     :return: converted time rounded to nearest millisecond
     """
@@ -59,9 +59,9 @@ def seconds_to_milliseconds(seconds: float) -> int:
 
 def main() -> None:
 
-    """ 
+    """
     Run the entire textgrid_to_json.py as a command line utility.
-    
+
     Usage: python3 textgrid_to_json.py [-h] [-i INPUT_DIR] [-o OUTPUT_DIR]
     """
 
@@ -83,7 +83,8 @@ def main() -> None:
         outfile_name = os.path.join(name + ".json")
 
     output_json = os.path.join(result_base_name, outfile_name)
-    write_data_to_json_file(intervals, output_json)
+    write_data_to_json_file(data=intervals,
+                            output=output_json)
 
 
 if __name__ == "__main__":

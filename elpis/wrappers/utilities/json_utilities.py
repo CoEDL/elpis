@@ -4,26 +4,31 @@ Collection of utilities for working with JSON files.
 Copyright: University of Queensland, 2019
 Contributors:
              Nicholas Lambourne - (University of Queensland, 2018)
+             Ben Foley - (University of Queensland, 2020)
 """
 
 import json
-from typing import Union
+from json.decoder import JSONDecodeError
+import os
+from typing import List, Dict, Union
 from _io import TextIOWrapper
 
 
-def load_json_file(file_name: str) -> object:
+def load_json_file(file_name: str) -> List[Dict[str, str]]:
     """
     Given a filename (parameter) containing JSON, load and
     return the a list of python dictionaries with containing the same information.
     :param file_name: name of file containing JSON to read from.
     :return a Python dictionary with the contents of the JSON file.
     """
-    file = open(file_name, "r", encoding="utf-8")
-    data: object = json.load(file)
+    data = []
+    if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        with open(file_name, "r", encoding="utf-8") as file_:
+            data = json.load(file_)
     return data
 
 
-def write_data_to_json_file(data: object, output: Union[str, TextIOWrapper]) -> None:
+def write_data_to_json_file(data: object = {}, output: Union[str, TextIOWrapper] = []) -> None:
     """
     Writes the given Python dictionary (or list) object to a JSON file at the the given
     output location (which can either be a file - specified as a string, or
