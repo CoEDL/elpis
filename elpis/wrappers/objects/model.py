@@ -226,10 +226,10 @@ class Model(FSObject):  # TODO not thread safe
             ######################################################################
 
             # task _test-train
-            tmp_log_path = '/elpis/state/tmp_log.txt'
-            if os.path.isfile(tmp_log_path):
-                os.remove(tmp_log_path)
-            p = run(f"cd {local_kaldi_path}; ./run.sh > {tmp_log_path}")
+            run_log_path = self.path.joinpath('run_log.txt')
+            if os.path.isfile(run_log_path):
+                os.remove(run_log_path)
+            p = run(f"cd {local_kaldi_path}; ./run.sh > {run_log_path}")
             print(p.stdout)
             print('train double done.')
 
