@@ -1,0 +1,1 @@
+from .json_to_kaldi import create_kaldi_structure
