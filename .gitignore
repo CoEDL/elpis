@@ -28,7 +28,7 @@ abui_toy_corpus/
 # mac files
 .DS_Store
 
-
+_build/
 build/
 dist/
 venv/
