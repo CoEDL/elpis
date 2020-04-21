@@ -2,7 +2,7 @@ import os
 from flask import redirect
 from . import endpoints
 from .app import Flask
-from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.objects.interface import KaldiInterface
 from pathlib import Path
 
 

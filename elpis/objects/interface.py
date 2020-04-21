@@ -113,8 +113,6 @@ class KaldiInterface(FSObject):
         names = [name for name in self.config['datasets'].keys()]
         return names
 
-
-
     def new_pron_dict(self, pdname):
         pd = PronDict(parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
         pron_dicts = self.config['pron_dicts']
