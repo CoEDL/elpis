@@ -1,5 +1,6 @@
 import os
 
+
 # Used by test scripts to tap into a folder of test files
 TEST_FILES_BASE_DIR = os.path.join(".", "test", "testfiles")
 DEFAULT_DATA_DIRECTORY = os.path.join(".", "resources", "corpora", "abui_toy_corpus", "data")

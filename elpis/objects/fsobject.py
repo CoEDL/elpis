@@ -1,8 +1,8 @@
 import json
 import time
 from pathlib import Path
-from elpis.wrappers.utilities import hasher
-from elpis.wrappers.objects.logger import Logger
+from elpis.engines.common.utilities import hasher
+from elpis.objects.logger import Logger
 
 # Design constraint
 # Since there are four classes that must have their states saved to the

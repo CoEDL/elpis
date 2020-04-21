@@ -8,10 +8,10 @@ Contributors:
 """
 
 import json
-from json.decoder import JSONDecodeError
 import os
-from typing import List, Dict, Union
+import sys
 from _io import TextIOWrapper
+from typing import List, Dict, Union
 
 
 def load_json_file(file_name: str) -> List[Dict[str, str]]:
@@ -28,7 +28,7 @@ def load_json_file(file_name: str) -> List[Dict[str, str]]:
     return data
 
 
-def write_data_to_json_file(data: object = {}, output: Union[str, TextIOWrapper] = []) -> None:
+def write_data_to_json_file(data: object = None, output: Union[str, TextIOWrapper] = None) -> None:
     """
     Writes the given Python dictionary (or list) object to a JSON file at the the given
     output location (which can either be a file - specified as a string, or
@@ -36,6 +36,10 @@ def write_data_to_json_file(data: object = {}, output: Union[str, TextIOWrapper]
     :param data: the Python dictionary to be converted to JSON and written.
     :param output: the file to write the dictionary contents to.
     """
+    if not data:
+        data = dict()
+    if not output:
+        output = sys.stdout
     json_data_string = json.dumps(data,
                                   indent=4,
                                   separators=(',', ': '),

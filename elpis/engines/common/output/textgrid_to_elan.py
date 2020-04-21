@@ -19,9 +19,12 @@ def get_first_wav(wav_scp: str) -> str:
 
 
 def main() -> None:
-    parser: ArgumentParser = ArgumentParser(description="Converts Praat TextGrid format to ELAN eaf Format.")
-    parser.add_argument("--tg", "--textgrid", type=str, help="The input TextGrid format file", required=True)
-    parser.add_argument("--wav", type=str, help="The relative path to the .wav file associated with the TextGrid",
+    parser: ArgumentParser = ArgumentParser(description=
+                                            "Converts Praat TextGrid format to ELAN eaf Format.")
+    parser.add_argument("--tg", "--textgrid", type=str, help="The input TextGrid format file",
+                        required=True)
+    parser.add_argument("--wav", type=str,
+                        help="The relative path to the .wav file associated with the TextGrid",
                         required=True)
     parser.add_argument("-o", "--outfile", type=str, help="The file path for the ELAN file output",
                         default="./inferred-aligned.eaf")

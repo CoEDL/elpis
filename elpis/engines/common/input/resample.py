@@ -1,5 +1,5 @@
 import subprocess
-from elpis.wrappers.utilities.globals import SOX_PATH
+from ..utilities.globals import SOX_PATH
 from pathlib import Path
 
 

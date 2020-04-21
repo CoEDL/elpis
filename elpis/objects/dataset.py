@@ -13,12 +13,12 @@ from shutil import move
 from pympi.Elan import Eaf
 
 from .fsobject import FSObject
-from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
+from elpis.objects.path_structure import existing_attributes, ensure_paths_exist
 
-from elpis.wrappers.input.elan_to_json import process_eaf
-from elpis.wrappers.input.clean_json import clean_json_data, extract_additional_corpora
-from elpis.wrappers.input.resample_audio import process_item
-from elpis.wrappers.input.make_wordlist import generate_word_list
+from elpis.engines.common.input.elan_to_json import process_eaf
+from elpis.engines.common.input.clean_json import clean_json_data, extract_additional_corpora
+from elpis.engines.common.input.resample_audio import process_item
+from elpis.engines.common.input.make_wordlist import generate_word_list
 
 
 # TODO: this is very ELAN specific code...

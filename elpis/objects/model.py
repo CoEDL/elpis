@@ -4,12 +4,12 @@ import shutil
 from pathlib import Path
 from typing import Callable
 import threading
-from elpis.wrappers.objects.command import run
-from elpis.wrappers.objects.dataset import Dataset
-from elpis.wrappers.objects.pron_dict import PronDict
-from elpis.wrappers.objects.fsobject import FSObject
-from elpis.wrappers.input.json_to_kaldi import create_kaldi_structure
-from elpis.wrappers.objects.path_structure import KaldiPathStructure
+from elpis.objects.command import run
+from elpis.objects.dataset import Dataset
+from elpis.objects.pron_dict import PronDict
+from elpis.objects.fsobject import FSObject
+from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
+from elpis.objects.path_structure import KaldiPathStructure
 from collections import OrderedDict
 
 
@@ -105,7 +105,7 @@ class Model(FSObject):  # TODO not thread safe
             mfcc_file_path = kaldi_structure.conf.joinpath('mfcc.conf')
             decode_config_file_path = kaldi_structure.conf.joinpath('decode.config')
 
-            template_path = Path('/elpis/elpis/wrappers/templates')
+            template_path = Path('/elpis/elpis/engines/kaldi/templates')
             path_resource = template_path.joinpath('path.sh')
             mfcc_resource = template_path.joinpath('mfcc.conf')
             decode_config_resource = template_path.joinpath('decode.config')

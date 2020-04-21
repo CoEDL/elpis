@@ -1,8 +1,6 @@
 from pathlib import Path
-from elpis.wrappers.input.resample import resample
-from elpis.wrappers.objects.command import run
-from elpis.wrappers.objects.fsobject import FSObject
-import threading
+from elpis.engines.common.input.resample import resample
+from elpis.objects.fsobject import FSObject
 import subprocess
 from typing import Callable
 import os

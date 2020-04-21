@@ -1,15 +1,15 @@
 import os
 import json
-from elpis.wrappers.utilities import hasher
+from elpis.engines.common.utilities import hasher
 from pathlib import Path
 from appdirs import user_data_dir
-from elpis.wrappers.objects.errors import KaldiError
-from elpis.wrappers.objects.dataset import Dataset
-from elpis.wrappers.objects.pron_dict import PronDict
-from elpis.wrappers.objects.logger import Logger
-from elpis.wrappers.objects.model import Model
-from elpis.wrappers.objects.transcription import Transcription
-from elpis.wrappers.objects.fsobject import FSObject
+from elpis.engines.kaldi.errors import KaldiError
+from elpis.objects.dataset import Dataset
+from elpis.objects.pron_dict import PronDict
+from elpis.objects.logger import Logger
+from elpis.objects.model import Model
+from elpis.objects.transcription import Transcription
+from elpis.objects.fsobject import FSObject
 
 
 class KaldiInterface(FSObject):

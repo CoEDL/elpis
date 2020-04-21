@@ -1,18 +1,9 @@
-import json
-import shutil
-import glob
-import os
-import threading
-
 from pathlib import Path
 from io import BufferedIOBase
-from multiprocessing.dummy import Pool
-from shutil import move
 
-from elpis.wrappers.objects.dataset import Dataset
-from elpis.wrappers.objects.fsobject import FSObject
-from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
-from elpis.wrappers.input.make_prn_dict import generate_pronunciation_dictionary
+from elpis.objects.dataset import Dataset
+from elpis.objects.fsobject import FSObject
+from elpis.engines.common.input.make_prn_dict import generate_pronunciation_dictionary
 
 
 class PronDict(FSObject):
@@ -61,11 +52,9 @@ class PronDict(FSObject):
         except FileNotFoundError:
             return False
 
-
     def get_l2s(self):
         with self.l2s_path.open(mode='r') as fin:
             return fin.read()
-
 
     def generate_lexicon(self):
         # task make-prn-dict
@@ -78,14 +67,12 @@ class PronDict(FSObject):
     #     with self.lexicon_txt_path.open(mode='rb') as fin:
     #         return fin.read()
 
-
     def get_lexicon_content(self):
         try:
             with self.lexicon_txt_path.open(mode='r') as fin:
                 return fin.read()
         except FileNotFoundError:
             return 'No lexicon yet'
-
 
     def save_lexicon(self, text):
         # open pron dict file
