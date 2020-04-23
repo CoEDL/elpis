@@ -33,3 +33,7 @@ build/
 dist/
 venv/
 elpis-gui/
+
+# During the inheritance test.
+elpis/engines/persephone/
+

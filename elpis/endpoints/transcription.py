@@ -1,6 +1,6 @@
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
-from elpis.objects.interface import KaldiInterface
+from elpis.engines import Interface
 from elpis.objects.model import Model
 from elpis.objects.transcription import Transcription
 from elpis.engines.common.utilities import hasher
@@ -11,8 +11,8 @@ bp = Blueprint("transcription", __name__, url_prefix="/transcription")
   # TODO transcriptions have no name
 @bp.route("/new", methods=['POST'])
 def new():
-    kaldi: KaldiInterface = app.config['INTERFACE']
-    transcription = kaldi.new_transcription(hasher.new())
+    interface: Interface = app.config['INTERFACE']
+    transcription = interface.new_transcription(hasher.new())
     model: Model = app.config['CURRENT_MODEL']
     transcription.link(model)
     app.config['CURRENT_TRANSCRIPTION'] = transcription

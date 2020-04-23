@@ -2,7 +2,7 @@ from flask import request
 from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from pathlib import Path
-from elpis.objects.interface import KaldiInterface
+from elpis.engines import Interface
 import shutil
 
 bp = Blueprint("config", __name__, url_prefix="/config")
@@ -11,7 +11,7 @@ bp = Blueprint("config", __name__, url_prefix="/config")
 def reset():
     interface_path = Path('/elpis/state')
     shutil.rmtree(interface_path)
-    app.config['INTERFACE'] = KaldiInterface(interface_path)
+    app.config['INTERFACE'] = Interface(interface_path)
     app.config['CURRENT_DATASET'] = None # not okay for multi-user
     app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user
     app.config['CURRENT_MODEL'] = None # not okay for multi-user

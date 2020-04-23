@@ -2,7 +2,7 @@ import os
 from flask import redirect
 from . import endpoints
 from .app import Flask
-from elpis.objects.interface import KaldiInterface
+from elpis.engines import Interface
 from pathlib import Path
 
 
@@ -39,15 +39,15 @@ def create_app(test_config=None):
         SECRET_KEY='dev'
     )
 
-    # For a single user, storing the Kaldi interface object is okay to do in
+    # For a single user, storing the interface object is okay to do in
     # the app.config, however, this would need to change for multi-user.
-    # Each user would require a unique KaldiInterface. One KaldiInterface
+    # Each user would require a unique Interface. One Interface
     # stores all the artifacts that user has generated.
     interface_path = Path('/elpis/state')
     if not interface_path.exists():
-        app.config['INTERFACE'] = KaldiInterface(interface_path)
+        app.config['INTERFACE'] = Interface(interface_path)
     else:
-        app.config['INTERFACE'] = KaldiInterface.load(interface_path)
+        app.config['INTERFACE'] = Interface.load(interface_path)
     app.config['CURRENT_DATASET'] = None # not okay for multi-user
     app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user
     app.config['CURRENT_MODEL'] = None # not okay for multi-user

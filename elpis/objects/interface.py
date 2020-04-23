@@ -12,7 +12,7 @@ from elpis.objects.transcription import Transcription
 from elpis.objects.fsobject import FSObject
 
 
-class KaldiInterface(FSObject):
+class Interface(FSObject):
     _config_file = 'interface.json'
 
     def __init__(self, path: Path = None):
@@ -33,8 +33,6 @@ class KaldiInterface(FSObject):
         # ensure object directories exist
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
-        self.pron_dicts_path = self.path.joinpath('pron_dicts')
-        self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
         self.models_path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
         self.loggers_path = self.path.joinpath('loggers')
@@ -43,21 +41,19 @@ class KaldiInterface(FSObject):
         # config objects
         self.loggers = []
         self.datasets = {}
-        self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
         """
         TODO: fix this.
         Setting the config objects here wipes existing objects from the interface file.
         This means the CLI transcription script can't be run seperately from the CLI training script,
-        because this is run whenever the KaldiInterface is initialised.
+        because this is run whenever the Interface is initialised.
         However, if we don't set them, we get config KeyErrors (see issue #69).
         KI needs a flag to know whether to set these objects or skip initialising them.
         For now, explicitly set them... sorry CLI.
         """
         self.config['loggers'] = []
         self.config['datasets'] = {}
-        self.config['pron_dicts'] = {}
         self.config['models'] = {}
         self.config['transcriptions'] = {}
         # make a default logger
@@ -68,8 +64,6 @@ class KaldiInterface(FSObject):
         self = super().load(base_path)
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
-        self.pron_dicts_path = self.path.joinpath('pron_dicts')
-        self.pron_dicts_path.mkdir(parents=True, exist_ok=True)
         self.models_path = self.path.joinpath('models')
         self.models_path.mkdir(parents=True, exist_ok=True)
         self.loggers_path = self.path.joinpath('loggers')
@@ -78,7 +72,6 @@ class KaldiInterface(FSObject):
         # config objects
         self.loggers = []
         self.datasets = {}
-        self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
         return self
@@ -113,34 +106,6 @@ class KaldiInterface(FSObject):
         names = [name for name in self.config['datasets'].keys()]
         return names
 
-    def new_pron_dict(self, pdname):
-        pd = PronDict(parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
-        pron_dicts = self.config['pron_dicts']
-        pron_dicts[pdname] = pd.hash
-        self.config['pron_dicts'] = pron_dicts
-        return pd
-
-    def get_pron_dict(self, pdname):
-        if pdname not in self.list_pron_dicts():
-            raise KaldiError(f'Tried to load a pron dict called "{pdname}" that does not exist')
-        hash_dir = self.config['pron_dicts'][pdname]
-        pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
-        pd.dataset = self.get_dataset(pd.config['dataset_name'])
-        return pd
-
-    def list_pron_dicts(self):
-        names = [name for name in self.config['pron_dicts'].keys()]
-        return names
-
-    def list_pron_dicts_verbose(self):
-        pron_dicts = []
-        names = [name for name in self.config['pron_dicts'].keys()]
-        for name in names:
-            pd = self.get_pron_dict(name)
-            pron_dicts.append({"name":name, "dataset_name":pd.dataset.name })
-        return pron_dicts
-
-
     def new_model(self, mname):
         m = Model(parent_path=self.models_path, name=mname, logger=self.logger)
         models = self.config['models']
@@ -154,7 +119,6 @@ class KaldiInterface(FSObject):
         hash_dir = self.config['models'][mname]
         m = Model.load(self.models_path.joinpath(hash_dir))
         m.dataset = self.get_dataset(m.config['dataset_name'])
-        m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
         return m
 
     def list_models(self):
@@ -174,8 +138,7 @@ class KaldiInterface(FSObject):
                     data = json.load(fin)
                     model = {
                         'name': data['name'],
-                        'dataset_name': data['dataset_name'],
-                        'pron_dict_name': data['pron_dict_name']
+                        'dataset_name': data['dataset_name']
                         }
                     models.append(model)
         return models

@@ -1,7 +1,7 @@
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
-from elpis.objects.interface import KaldiInterface
+from elpis.engines import Interface
 from elpis.objects.model import Model
 from elpis.objects.dataset import Dataset
 from elpis.objects.pron_dict import PronDict
@@ -27,12 +27,12 @@ def run(cmd: str) -> str:
 
 @bp.route("/new", methods=['POST'])
 def new():
-    kaldi: KaldiInterface = app.config['INTERFACE']
-    model = kaldi.new_model(request.json["name"])
+    interface: Interface = app.config['INTERFACE']
+    model = interface.new_model(request.json["name"])
     # use the selected pron dict
-    pron_dict = kaldi.get_pron_dict(request.json['pron_dict_name'])
+    pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
     # get its dataset
-    dataset = kaldi.get_dataset(pron_dict.dataset.name)
+    dataset = interface.get_dataset(pron_dict.dataset.name)
     app.config['CURRENT_DATASET'] = dataset
     app.config['CURRENT_PRON_DICT'] = pron_dict
     model.link(dataset, pron_dict)
@@ -49,8 +49,8 @@ def new():
 
 @bp.route("/load", methods=['POST'])
 def load():
-    kaldi: KaldiInterface = app.config['INTERFACE']
-    model = kaldi.get_model(request.json["name"])
+    interface: Interface = app.config['INTERFACE']
+    model = interface.get_model(request.json["name"])
     # set the dataset to match the model
     app.config['CURRENT_DATASET'] = model.dataset
     app.config['CURRENT_PRON_DICT'] = model.pron_dict
@@ -66,7 +66,7 @@ def load():
 
 @bp.route("/list", methods=['GET'])
 def list_existing():
-    kaldi: KaldiInterface = app.config['INTERFACE']
+    interface: Interface = app.config['INTERFACE']
     fake_results = {}
     data = {
         "list": [{
@@ -74,7 +74,7 @@ def list_existing():
                 'results': fake_results,
                 'dataset_name': model['dataset_name'],
                 'pron_dict_name': model['pron_dict_name']
-                } for model in kaldi.list_models_verbose()]
+                } for model in interface.list_models_verbose()]
     }
     return jsonify({
         "status": 200,
