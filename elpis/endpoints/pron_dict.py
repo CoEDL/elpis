@@ -1,9 +1,9 @@
 from flask import request
 from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
-from elpis.wrappers.objects.interface import KaldiInterface
-from elpis.wrappers.objects.pron_dict import PronDict
-from elpis.wrappers.objects.dataset import Dataset
+from elpis.objects.interface import KaldiInterface
+from elpis.objects.pron_dict import PronDict
+from elpis.objects.dataset import Dataset
 
 
 bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")

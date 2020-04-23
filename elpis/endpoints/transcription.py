@@ -1,9 +1,9 @@
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
-from elpis.wrappers.objects.interface import KaldiInterface
-from elpis.wrappers.objects.model import Model
-from elpis.wrappers.objects.transcription import Transcription
-from elpis.wrappers.utilities import hasher
+from elpis.objects.interface import KaldiInterface
+from elpis.objects.model import Model
+from elpis.objects.transcription import Transcription
+from elpis.engines.common.utilities import hasher
 
 
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")

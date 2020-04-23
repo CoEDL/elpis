@@ -1,10 +1,10 @@
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
-from elpis.wrappers.objects.interface import KaldiInterface
-from elpis.wrappers.objects.model import Model
-from elpis.wrappers.objects.dataset import Dataset
-from elpis.wrappers.objects.pron_dict import PronDict
+from elpis.objects.interface import KaldiInterface
+from elpis.objects.model import Model
+from elpis.objects.dataset import Dataset
+from elpis.objects.pron_dict import PronDict
 
 from pathlib import Path
 

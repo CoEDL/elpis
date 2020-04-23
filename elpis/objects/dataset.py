@@ -145,7 +145,6 @@ class Dataset(FSObject):
     def tier_name(self, value: str):
         self.config['tier_name'] = value
 
-
     def get_elan_tier_attributes(self, input_dir: Path = Path('.')):
         """
         Iterate a dir of elan files and compiles info about all the files' tiers:
@@ -155,7 +154,7 @@ class Dataset(FSObject):
         _tier_types: Set[str] = set()
         _tier_names: Set[str] = set()
         all_files_in_directory: Set[str] = set(
-            glob.glob(os.path.join(input_dir, "**"), recursive=True))
+            glob.glob(os.path.join(str(input_dir), "**"), recursive=True))
         input_eafs_files: List[str] = [
             file_ for file_ in all_files_in_directory if file_.endswith(".eaf")]
         for file_ in input_eafs_files:
@@ -173,42 +172,32 @@ class Dataset(FSObject):
         self.tier_types = list(_tier_types)
         self.tier_names = list(_tier_names)
 
-
     def add_elan_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
+        raise NotImplementedError
 
     def add_textgrid_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
+        raise NotImplementedError
 
     def add_transcriber_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
+        raise NotImplementedError
 
     def add_wave_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
+        raise NotImplementedError
 
     def add_other_audio_type_file(self, filename, content) -> None:
-        # TODO: unimplemented!
-        return []
+        raise NotImplementedError
 
     def list_audio_files(self) -> List[str]:
-        # TODO: unimplemented!
-        return []
+        raise NotImplementedError
 
     def list_transcription_files(self) -> List[str]:
-        # TODO: unimplemented!
-        return []
+        raise NotImplementedError
 
     def list_all_files(self) -> List[str]:
-        # TODO: unimplemented!
-        return []
+        raise NotImplementedError
 
     def remove_file(self, filename) -> None:
-        # TODO: unimplemented!
-        return
+        raise NotImplementedError
 
     def add_fp(self, fp: Union[BufferedIOBase, BinaryIO],
                fname: str,
@@ -244,9 +233,9 @@ class Dataset(FSObject):
         shutil.rmtree(f'{self.pathto.resampled}')
         self.pathto.resampled.mkdir(parents=True, exist_ok=True)
         # Reset the target corpus file so re-processing doesn't append
-        open(self.pathto.corpus_txt, 'w').close()
+        open(str(self.pathto.corpus_txt), 'w').close()
         # Reset the corpus tier metadata file
-        open(self.pathto.corpus_tiers, 'w').close()
+        open(str(self.pathto.corpus_tiers), 'w').close()
 
         # process files
         dirty = []
@@ -258,11 +247,14 @@ class Dataset(FSObject):
                                   tier_name=self.tier_name,
                                   corpus_tiers_file=f'{self.pathto.corpus_tiers}')
                 dirty.extend(obj)
-        # TODO other options for command below: remove_english=arguments.remove_eng, use_langid=arguments.use_lang_id
+        # TODO other options for command below: remove_english=arguments.remove_eng,
+        # use_langid=arguments.use_lang_id
         # Clean punctuation
         filtered = clean_json_data(json_data=dirty,
-                                   punctuation_to_collapse_by=self.config['punctuation_to_collapse_by'],
-                                   punctuation_to_explode_by=self.config['punctuation_to_explode_by'])
+                                   punctuation_to_collapse_by=
+                                   self.config['punctuation_to_collapse_by'],
+                                   punctuation_to_explode_by=
+                                   self.config['punctuation_to_explode_by'])
         with self.pathto.filtered_json.open(mode='w') as fout:
             json.dump(filtered, fout)
             # Write a file with word counts for just the transcription content
@@ -307,7 +299,7 @@ class Dataset(FSObject):
 
         # Compile text corpora from original/text_corpora dir into one file
         all_files_in_dir = set(glob.glob(os.path.join(
-            self.pathto.text_corpora, "**"), recursive=True))
+            str(self.pathto.text_corpora), "**"), recursive=True))
         corpus_files = []
         for file_ in all_files_in_dir:
             file_name, extension = os.path.splitext(file_)
@@ -318,8 +310,10 @@ class Dataset(FSObject):
         for additional_corpus in corpus_files:
             extract_additional_corpora(additional_corpus=additional_corpus,
                                        corpus_txt=f'{self.pathto.corpus_txt}',
-                                       punctuation_to_collapse_by=self.config['punctuation_to_collapse_by'],
-                                       punctuation_to_explode_by=self.config['punctuation_to_explode_by'])
+                                       punctuation_to_collapse_by=
+                                       self.config['punctuation_to_collapse_by'],
+                                       punctuation_to_explode_by=
+                                       self.config['punctuation_to_explode_by'])
 
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.filtered_json}',

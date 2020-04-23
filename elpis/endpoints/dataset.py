@@ -1,8 +1,8 @@
 from flask import request
 from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
-from elpis.wrappers.objects.interface import KaldiInterface
-from elpis.wrappers.objects.dataset import Dataset
+from elpis.objects.interface import KaldiInterface
+from elpis.objects.dataset import Dataset
 
 
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")

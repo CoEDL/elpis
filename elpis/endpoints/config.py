@@ -2,7 +2,7 @@ from flask import request
 from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from pathlib import Path
-from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.objects.interface import KaldiInterface
 import shutil
 
 bp = Blueprint("config", __name__, url_prefix="/config")
