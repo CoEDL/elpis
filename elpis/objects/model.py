@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 from typing import Callable
 import threading
-from elpis.objects.command import run
+from elpis.engines.common.objects.command import run
 from elpis.objects.dataset import Dataset
 from elpis.objects.pron_dict import PronDict
 from elpis.objects.fsobject import FSObject
