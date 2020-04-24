@@ -21,13 +21,3 @@ bp.register_blueprint(transcription.bp)
 def whole_state():
     # TODO: implement this if needed
     return '{"yet to be named": "the entire model!"}'
-
-
-@bp.route("/log.txt")
-def log():
-    log_file = Path('/elpis/state/tmp_log.txt')
-    if log_file.exists():
-        with log_file.open() as fin:
-            return fin.read()
-    else:
-        return "No log file."

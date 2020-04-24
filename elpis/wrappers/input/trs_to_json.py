@@ -145,7 +145,8 @@ def main() -> None:
     for file_name in transcript_names:
         utterances = utterances + process_trs(file_name, arguments.verbose)
 
-    write_data_to_json_file(utterances, arguments.output_json)
+    write_data_to_json_file(data=utterances,
+                            output=arguments.output_json)
 
 
 if __name__ == '__main__':

@@ -31,7 +31,7 @@ process-infer-files:
     - python3.6 /kaldi-helpers/kaldi_helpers/input/json_to_kaldi.py
                 --input_json /tmp/dirty.json
                 --output_folder /tmp/json_splitted
-                --corpus_file working_dir/input/output/tmp/corpus.txt
+                --corpus_txt working_dir/input/output/tmp/corpus.txt
                 --text_corpus /kaldi-helpers/working_dir/input/config/text_corpora
 
 reset-state:

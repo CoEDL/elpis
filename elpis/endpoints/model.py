@@ -135,8 +135,7 @@ def results():
     if model is None:
         return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
     wer_lines = []
-    # TODO: Store and pull results directly from the model object.
-    log_file = Path('/tmp/tmp_log.txt')
+    log_file = model.path.joinpath('run_log.txt')
     results = {}
     if log_file.exists():
         with log_file.open() as fin:

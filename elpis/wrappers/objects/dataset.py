@@ -3,21 +3,28 @@ import shutil
 import glob
 import os
 import threading
+import string
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Union, BinaryIO, Set
 from io import BufferedIOBase
 from multiprocessing.dummy import Pool
 from shutil import move
+from pympi.Elan import Eaf
 
 from ..utilities import load_json_file
 from .fsobject import FSObject
 from elpis.transformer import make_importer, DataTransformer
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
 from elpis.wrappers.input.elan_to_json import process_eaf
-from elpis.wrappers.input.clean_json import clean_json_data
+from elpis.wrappers.input.clean_json import clean_json_data, extract_additional_corpora
 from elpis.wrappers.input.resample_audio import process_item
 from elpis.wrappers.input.make_wordlist import generate_word_list
+
+
+# TODO: this is very ELAN specific code...
+DEFAULT_TIER_TYPE = 'default-lt'
+DEFAULT_TIER_NAME = 'Phrase'
 
 
 class DSPaths(object):
@@ -29,7 +36,9 @@ class DSPaths(object):
         attrs = existing_attributes(self)
         self.basepath = basepath
         self.original = self.basepath.joinpath('original')
+        self.cleaned = self.basepath.joinpath('cleaned')
         self.resampled = self.basepath.joinpath('resampled')
+        self.text_corpora = self.original.joinpath('text_corpora')
         ensure_paths_exist(self, attrs)
 
         # files
@@ -38,8 +47,8 @@ class DSPaths(object):
         self.word_list_txt: Path = self.basepath.joinpath('word_list.txt')
         # \/ user uploaded addional words
         self.additional_word_list_txt = self.original.joinpath('additional_word_list.txt')
-        # \/ user uploaded additional text (e.g. paragraphs or sentences)
-        self.corpus_txt = self.original.joinpath('corpus.txt')
+        # \/ compile the uploaded corpora into this single file
+        self.corpus_txt = self.cleaned.joinpath('corpus.txt')
 
 
 class Dataset(FSObject):
@@ -187,9 +196,10 @@ class Dataset(FSObject):
             raise RuntimeError('cannot get annotations wihtout runnint .process()')
         with self.pathto.annotation_json.open(mode='r') as fin:
             return json.loads(fin.read())
-        
 
-    def add_fp(self, fp: BufferedIOBase, fname: str):
+    def add_fp(self, fp: Union[BufferedIOBase, BinaryIO],
+               fname: str,
+               destination: str = 'original'):
         """
         Saves a copy of the file pointer contents in the internal datastructure
         at `self.pathto.original`. This method enforces a copy to be made and
@@ -199,7 +209,13 @@ class Dataset(FSObject):
         :param fp: Python file BufferedIOBase object usually from open().
         :param fname: name of the file.
         """
-        path: Path = self.pathto.original.joinpath(fname)
+        # TODO
+        # change this after adding a seperate file upload widget in gui for additional corpora files
+        # then we can determine where to write the files by destination value instead of by name
+        if "corpus" in fname:
+            path: Path = self.pathto.text_corpora.joinpath(fname)
+        else:
+            path: Path = self.pathto.original.joinpath(fname)
         with path.open(mode='wb') as fout:
             fout.write(fp.read())
         self.__files.append(path)
@@ -283,7 +299,7 @@ class Dataset(FSObject):
 
         :returns: the objects state.
         """
-        config = self.config._load()
+        _config = self.config._load()
         return {
             'name': self.config['name'],
             'hash': self.config['hash'],
@@ -300,11 +316,27 @@ class Dataset(FSObject):
             raise RuntimeError('must select importer before processing')
         transformer.process()
 
+        # Compile text corpora from original/text_corpora dir into one file
+        all_files_in_dir = set(glob.glob(os.path.join(
+            self.pathto.text_corpora, "**"), recursive=True))
+        corpus_files = []
+        for file_ in all_files_in_dir:
+            file_name, extension = os.path.splitext(file_)
+            if extension == ".txt":
+                corpus_files.append(file_)
+        print(f"corpus_files {corpus_files}")
+        # Compile and clean the additional corpora content into a single file
+        for additional_corpus in corpus_files:
+            extract_additional_corpora(additional_corpus=additional_corpus,
+                                       corpus_txt=f'{self.pathto.corpus_txt}',
+                                       punctuation_to_collapse_by=self.config['punctuation_to_collapse_by'],
+                                       punctuation_to_explode_by=self.config['punctuation_to_explode_by'])
+
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.annotation_json}',
                            output_file=f'{self.pathto.word_list_txt}',
                            additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
-                           additional_corpus_file=f'{self.pathto.corpus_txt}'
+                           additional_corpus_txt=f'{self.pathto.corpus_txt}'
                            )
 
         # make word count

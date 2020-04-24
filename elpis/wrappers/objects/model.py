@@ -72,15 +72,17 @@ class Model(FSObject):  # TODO not thread safe
         # task json-to-kaldi
         output_path = self.path.joinpath('output')
         output_path.mkdir(parents=True, exist_ok=True)
-        text_corpus_path = self.path.joinpath('text_corpus')
-        text_corpus_path.mkdir(parents=True, exist_ok=True)
-        corpus_file_path = self.path.joinpath('corpus.txt')
+        
+        # Copy cleaned corpus from dataset to the model
+        dataset_corpus_txt = self.dataset.path.joinpath('cleaned', 'corpus.txt')
+        model_corpus_txt = self.path.joinpath('corpus.txt')
+        if os.path.exists(dataset_corpus_txt):
+            shutil.copy(f"{dataset_corpus_txt}", f"{model_corpus_txt}")
         create_kaldi_structure(
             input_json=f'{self.dataset.pathto.annotation_json}',
             output_folder=f'{output_path}',
             silence_markers=None,
-            text_corpus=f'{text_corpus_path}',
-            corpus_file=f'{corpus_file_path}'
+            corpus_txt=f'{model_corpus_txt}'
         )
 
     def train(self, on_complete:Callable=None):
@@ -235,11 +237,10 @@ class Model(FSObject):  # TODO not thread safe
             ######################################################################
 
             # task _test-train
-            # TODO: Standardise logging system & Store results with model object
-            tmp_log_path = '/tmp/tmp_log.txt'
-            if os.path.isfile(tmp_log_path):
-                os.remove(tmp_log_path)
-            p = run(f"cd {local_kaldi_path}; ./run.sh > {tmp_log_path}")
+            run_log_path = self.path.joinpath('run_log.txt')
+            if os.path.isfile(run_log_path):
+                os.remove(run_log_path)
+            p = run(f"cd {local_kaldi_path}; ./run.sh > {run_log_path}")
             print(p.stdout)
             print('train double done.')
 
