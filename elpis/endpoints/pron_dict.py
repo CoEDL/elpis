@@ -3,7 +3,6 @@ from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.objects.pron_dict import PronDict
-from elpis.objects.dataset import Dataset
 
 
 bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
@@ -58,7 +57,8 @@ def list_existing():
 def l2s():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
     if pron_dict is None:
-        return jsonify({"status":404, "data": "No current pron dict exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current pron dict exists (perhaps create one first)"})
     if request.method == 'POST':
         file = request.files['file']
         pron_dict.set_l2s_fp(file)
@@ -75,7 +75,8 @@ def l2s():
 def generate_lexicon():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
     if pron_dict is None:
-        return jsonify({"status":404, "data": "No current pron dict exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current pron dict exists (perhaps create one first)"})
     pron_dict.generate_lexicon()
     data = {
         "lexicon": pron_dict.get_lexicon_content()
@@ -90,7 +91,8 @@ def generate_lexicon():
 def save_lexicon():
     pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
     if pron_dict is None:
-        return jsonify({"status":404, "data": "No current pron dict exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current pron dict exists (perhaps create one first)"})
     if request.method == 'POST':
         lexicon = request.json['lexicon']
     pron_dict.save_lexicon(lexicon)

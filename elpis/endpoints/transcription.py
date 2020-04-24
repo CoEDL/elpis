@@ -8,7 +8,7 @@ from elpis.engines.common.utilities import hasher
 
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 
-  # TODO transcriptions have no name
+# TODO transcriptions have no name
 @bp.route("/new", methods=['POST'])
 def new():
     interface: Interface = app.config['INTERFACE']
@@ -27,6 +27,7 @@ def new():
         "data": data
     })
 
+
 @bp.route("/transcribe", methods=['GET'])
 def transcribe():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
@@ -38,6 +39,7 @@ def transcribe():
         "status": 200,
         "data": data
     })
+
 
 @bp.route("/status", methods=['GET'])
 def status():
@@ -51,11 +53,13 @@ def status():
         "data": data
     })
 
+
 @bp.route("/text", methods=['GET'])
 def text():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     # TODO fix this to return json wrapper
     return transcription.text()
+
 
 @bp.route("/elan", methods=['GET'])
 def elan():
