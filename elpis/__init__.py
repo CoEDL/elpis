@@ -49,7 +49,7 @@ def create_app(test_config=None):
     else:
         app.config['INTERFACE'] = Interface.load(interface_path)
     app.config['CURRENT_DATASET'] = None # not okay for multi-user
-    app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user
+    app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user & need to remove later because it is Kaldi-specific.
     app.config['CURRENT_MODEL'] = None # not okay for multi-user
 
     # add the endpoints routes

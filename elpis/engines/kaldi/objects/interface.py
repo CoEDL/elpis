@@ -1,19 +1,14 @@
-import os
-import json
-from elpis.engines.common.utilities import hasher
 from pathlib import Path
-from appdirs import user_data_dir
 from elpis.engines.kaldi.errors import KaldiError
 from elpis.objects.interface import Interface
-from elpis.objects.dataset import Dataset
-from elpis.objects.pron_dict import PronDict
-from elpis.objects.logger import Logger
-from elpis.objects.model import Model
-from elpis.objects.transcription import Transcription
-from elpis.objects.fsobject import FSObject
+from elpis.objects.pron_dict import PronDict  # Change later for relative import in same folder.
+from .model import model_class  # I could also import KaldiModel, it is a style choice (name genericity even in specific file?) to discuss about!
 
 
 class KaldiInterface(Interface):
+    _data = Interface._data + ['pron_dict_name']
+    _classes = {**Interface._classes, **{"model": model_class}}
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # ensure object directories exist
@@ -71,21 +66,6 @@ class KaldiInterface(Interface):
     def get_model(self, mname):
         m = super().get_model(mname)
         m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
-        println("++++++++++++++++", m)
         return m
-
-    def list_models_verbose(self):
-        models = []
-        for hash_dir in os.listdir(f'{self.models_path}'):
-            if not hash_dir.startswith('.'):
-                with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
-                    data = json.load(fin)
-                    model = {
-                        'name': data['name'],
-                        'dataset_name': data['dataset_name'],
-                        'pron_dict_name': data['pron_dict_name']
-                        }
-                    models.append(model)
-        return models
 
 interface_class = KaldiInterface

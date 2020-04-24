@@ -5,15 +5,15 @@ from pathlib import Path
 from appdirs import user_data_dir
 from elpis.engines.kaldi.errors import KaldiError
 from elpis.objects.dataset import Dataset
-from elpis.objects.pron_dict import PronDict
 from elpis.objects.logger import Logger
-from elpis.objects.model import Model
 from elpis.objects.transcription import Transcription
 from elpis.objects.fsobject import FSObject
 
 
 class Interface(FSObject):
     _config_file = 'interface.json'
+    _data = ['name', 'dataset_name']
+    _classes = {}  # Dict of inherited classes to avoid potential mess in imports. NOTE Need to discuss if it is an adequate pattern.
 
     def __init__(self, path: Path = None):
         if path is None:
@@ -107,7 +107,7 @@ class Interface(FSObject):
         return names
 
     def new_model(self, mname):
-        m = Model(parent_path=self.models_path, name=mname, logger=self.logger)
+        m = self._classes["model"](parent_path=self.models_path, name=mname, logger=self.logger)
         models = self.config['models']
         models[mname] = m.hash
         self.config['models'] = models
@@ -117,7 +117,7 @@ class Interface(FSObject):
         if mname not in self.list_models():
             raise KaldiError(f'Tried to load a model called "{mname}" that does not exist')
         hash_dir = self.config['models'][mname]
-        m = Model.load(self.models_path.joinpath(hash_dir))
+        m = self._classes["model"].load(self.models_path.joinpath(hash_dir))
         m.dataset = self.get_dataset(m.config['dataset_name'])
         return m
 
@@ -125,7 +125,7 @@ class Interface(FSObject):
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             if not hash_dir.startswith('.'):
-                with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
+                with self.models_path.joinpath(hash_dir, self._classes["model"]._config_file).open() as fin:
                     name = json.load(fin)['name']
                     models.append(name)
         return models
@@ -134,12 +134,9 @@ class Interface(FSObject):
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             if not hash_dir.startswith('.'):
-                with self.models_path.joinpath(hash_dir, Model._config_file).open() as fin:
+                with self.models_path.joinpath(hash_dir, self._classes["model"]._config_file).open() as fin:
                     data = json.load(fin)
-                    model = {
-                        'name': data['name'],
-                        'dataset_name': data['dataset_name']
-                        }
+                    model = {name: data[name] for name in self._data}
                     models.append(model)
         return models
 
