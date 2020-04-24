@@ -6,7 +6,7 @@ from typing import Callable
 import threading
 from elpis.engines.common.objects.command import run
 from elpis.objects.dataset import Dataset
-from elpis.objects.pron_dict import PronDict
+from elpis.engines.kaldi.objects.pron_dict import PronDict
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
 from elpis.objects.path_structure import KaldiPathStructure

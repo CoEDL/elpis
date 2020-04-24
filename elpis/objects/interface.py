@@ -5,7 +5,7 @@ from pathlib import Path
 from appdirs import user_data_dir
 from elpis.engines.kaldi.errors import KaldiError
 from elpis.objects.dataset import Dataset
-from elpis.objects.pron_dict import PronDict
+from elpis.engines.kaldi.objects.pron_dict import PronDict
 from elpis.engines.common.objects.logger import Logger
 from elpis.objects.model import Model
 from elpis.objects.transcription import Transcription
