@@ -1,6 +1,6 @@
 from pathlib import Path
 from elpis.engines.common.input.resample import resample
-from elpis.objects.fsobject import FSObject
+from elpis.engines.common.objects.fsobject import FSObject
 import subprocess
 from typing import Callable
 import os

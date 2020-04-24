@@ -6,10 +6,10 @@ from appdirs import user_data_dir
 from elpis.engines.kaldi.errors import KaldiError
 from elpis.objects.dataset import Dataset
 from elpis.objects.pron_dict import PronDict
-from elpis.objects.logger import Logger
+from elpis.engines.common.objects.logger import Logger
 from elpis.objects.model import Model
 from elpis.objects.transcription import Transcription
-from elpis.objects.fsobject import FSObject
+from elpis.engines.common.objects.fsobject import FSObject
 
 
 class KaldiInterface(FSObject):

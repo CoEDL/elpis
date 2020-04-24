@@ -2,7 +2,7 @@ from pathlib import Path
 from io import BufferedIOBase
 
 from elpis.objects.dataset import Dataset
-from elpis.objects.fsobject import FSObject
+from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.input.make_prn_dict import generate_pronunciation_dictionary
 
 
