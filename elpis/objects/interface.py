@@ -5,9 +5,9 @@ from pathlib import Path
 from appdirs import user_data_dir
 from elpis.engines.kaldi.errors import KaldiError
 from elpis.objects.dataset import Dataset
-from elpis.objects.logger import Logger
+from elpis.engines.common.objects.logger import Logger
 from elpis.objects.transcription import Transcription
-from elpis.objects.fsobject import FSObject
+from elpis.engines.common.objects.fsobject import FSObject
 
 
 class Interface(FSObject):

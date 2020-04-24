@@ -1,6 +1,6 @@
 from pathlib import Path
 from elpis.objects.dataset import Dataset
-from elpis.objects.fsobject import FSObject
+from elpis.engines.common.objects.fsobject import FSObject
 from elpis.objects.path_structure import KaldiPathStructure
 
 

@@ -2,7 +2,7 @@ import json
 import time
 from pathlib import Path
 from elpis.engines.common.utilities import hasher
-from elpis.objects.logger import Logger
+from elpis.engines.common.objects.logger import Logger
 
 # Design constraint
 # Since there are four classes that must have their states saved to the
@@ -94,7 +94,7 @@ class FSObject(object):
 
     class ConfigurationInterface(object):
         """
-        Continuesly save changes to disk and only read properties from disk
+        Continuously save changes to disk and only read properties from disk
         (in the JSON file storing the objects configuration).
 
         This class is more syntax sugar. Particularly so we can treat the

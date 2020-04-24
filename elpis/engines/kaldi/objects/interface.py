@@ -1,7 +1,7 @@
 from pathlib import Path
 from elpis.engines.kaldi.errors import KaldiError
 from elpis.objects.interface import Interface
-from elpis.objects.pron_dict import PronDict  # Change later for relative import in same folder.
+from .pron_dict import PronDict  # Change later for relative import in same folder.
 from .model import model_class  # I could also import KaldiModel, it is a style choice (name genericity even in specific file?) to discuss about!
 
 
