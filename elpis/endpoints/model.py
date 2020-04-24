@@ -3,8 +3,6 @@ from ..blueprint import Blueprint
 import subprocess
 from elpis.objects.interface import KaldiInterface
 from elpis.objects.model import Model
-from elpis.objects.dataset import Dataset
-from elpis.objects.pron_dict import PronDict
 
 from pathlib import Path
 
@@ -86,11 +84,12 @@ def list_existing():
 def settings():
     model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current model exists (perhaps create one first)"})
     if request.method == 'POST':
         model.ngram = request.json['ngram']
     data = {
-        "settings":{
+        "settings": {
             "ngram": model.ngram
         }
     }
@@ -104,7 +103,8 @@ def settings():
 def train():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current model exists (perhaps create one first)"})
     model.train(on_complete=lambda: print("Training complete!"))
     data = {
         "status": model.status
@@ -119,7 +119,8 @@ def train():
 def status():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current model exists (perhaps create one first)"})
     data = {
         "status": model.status
     }
@@ -150,17 +151,19 @@ def results():
             line_split = line.split(None, 1)
             wer = line_split[0]
             line_results = line_split[1]
-            line_results = line_results.replace('[','')
-            line_results = line_results.replace(']','')
+            line_results = line_results.replace('[', '')
+            line_results = line_results.replace(']', '')
             results_split = line_results.split(',')
             count_val = results_split[0].strip()
-            ins_val = results_split[1].replace(' ins','').strip()
-            del_val = results_split[2].replace(' del','').strip()
-            sub_val = results_split[3].replace(' sub','').strip()
-            results = {'wer':wer, 'count_val':count_val, 'ins_val':ins_val, 'del_val':del_val, 'sub_val':sub_val}
+            ins_val = results_split[1].replace(' ins', '').strip()
+            del_val = results_split[2].replace(' del', '').strip()
+            sub_val = results_split[3].replace(' sub', '').strip()
+            results = {'wer': wer, 'count_val': count_val, 'ins_val': ins_val, 'del_val': del_val,
+                       'sub_val': sub_val}
             print(results)
     else:
-        return jsonify({"status":404, "data": "No log file was found, couldn't parse the results"})
+        return jsonify({"status": 404,
+                        "data": "No log file was found, couldn't parse the results"})
     data = {
         "results": results
     }

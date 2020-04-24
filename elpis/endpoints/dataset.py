@@ -78,7 +78,8 @@ def files():
 def settings():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
-        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current dataset exists (perhaps create one first)"})
     if request.method == 'POST':
         dataset.tier_order = int(request.json['tier_order'] or 0)
         dataset.tier_type = request.json['tier_type']
@@ -98,11 +99,13 @@ def settings():
 # TODO prepare endpoint returns file contents as text.
 # Probably nicer to send back JSON data instead
 
+
 @bp.route("/prepare", methods=['POST'])
 def prepare():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
-        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+        return jsonify({"status": 404,
+                        "data": "No current dataset exists (perhaps create one first)"})
     dataset.process()
     with dataset.pathto.word_count_json.open() as fin:
         wordlist = fin.read()
