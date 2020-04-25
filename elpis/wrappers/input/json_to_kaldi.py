@@ -48,7 +48,6 @@ class KaldiInput:
 
         self.segments_file: TextIO = open(f"{output_folder}/segments", "w", encoding="utf-8")
         self.transcripts_file: TextIO = open(f"{output_folder}/text", "w", encoding="utf-8")
-        self.speakers_file: TextIO = open(f"{output_folder}/spk2gender", "w", encoding="utf-8")
         self.recordings_file: TextIO = open(f"{output_folder}/wav.scp", "w", encoding="utf-8")
         self.utt2spk_file: TextIO = open(f"{output_folder}/utt2spk", "w", encoding="utf-8")
         self.corpus_txt: TextIO = open(f"{output_folder}/corpus.txt", "w", encoding="utf-8")
@@ -62,7 +61,7 @@ class KaldiInput:
         """
         if speaker_id not in self.speakers:
             self.speakers[speaker_id] = str(uuid.uuid4())  # create speaker id
-            self.speakers_list.append(f"{self.speakers[speaker_id]} \n")  # writing gender
+            self.speakers_list.append(f"{self.speakers[speaker_id]} \n")  # writing gender # TODO Handle gender here
         return self.speakers[speaker_id]
 
     def add_recording(self, audio_file: str) -> str:
@@ -116,10 +115,6 @@ class KaldiInput:
         self.transcripts_list.sort()
         self.transcripts_file.write("".join(self.transcripts_list))
         self.transcripts_file.close()
-
-        self.speakers_list.sort()
-        self.speakers_file.write("".join(self.speakers_list))
-        self.speakers_file.close()
 
         self.recordings_list.sort()
         self.recordings_file.write("".join(self.recordings_list))
