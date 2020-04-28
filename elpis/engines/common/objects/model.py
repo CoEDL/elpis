@@ -1,5 +1,5 @@
 from pathlib import Path
-from elpis.objects.dataset import Dataset
+from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.objects.path_structure import KaldiPathStructure
 
@@ -37,6 +37,6 @@ class Model(FSObject):  # TODO not thread safe
     def link(self, *link_objects):
         # NOTE It should be easier to use **links (keyword arguments), but it forces the edition of related endpoint file, so wait for now.
         for link_name, link_class in self._links.items():
-            link_object = [link_object for link_object in link_objects if link_object.__class__ == link_class][0]  # Do we need assert length = 1 here?
+            link_object = [link_object for link_object in link_objects if issubclass(link_object.__class__, link_class)][0]  # Do we need assert length = 1 here?
             setattr(self, link_name, link_object)
             self.config[f"{link_name}_name"] = link_object.name

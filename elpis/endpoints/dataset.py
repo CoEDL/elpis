@@ -2,8 +2,7 @@ from flask import request
 from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
-from elpis.objects.dataset import Dataset
-
+from elpis.engines.common.objects.dataset import Dataset
 
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 

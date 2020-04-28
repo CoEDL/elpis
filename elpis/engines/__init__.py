@@ -11,8 +11,7 @@ print(f"Engine used: {engine}")
 engine_path = Path(os.path.dirname(__file__)) / engine
 
 module = import_module(f"elpis.engines.{engine}")
-interface = import_module(f".objects.interface", module.__name__)
-Interface = interface.interface_class
+Interface = import_module(f".objects.interface", module.__name__).interface_class
 
 print(f"Interface used: {Interface}")
 

@@ -2,7 +2,7 @@ from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
 from elpis.engines import Interface
-from elpis.objects.model import Model
+from elpis.engines.common.objects.model import Model
 
 from pathlib import Path
 

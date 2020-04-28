@@ -1,13 +1,14 @@
 from pathlib import Path
 from elpis.engines.kaldi.errors import KaldiError
-from elpis.objects.interface import Interface
-from .pron_dict import PronDict  # Change later for relative import in same folder.
+from elpis.engines.common.objects.interface import Interface
+from .pron_dict import pron_dict_class
 from .model import model_class  # I could also import KaldiModel, it is a style choice (name genericity even in specific file?) to discuss about!
-
+from .dataset import dataset_class  # Same as above.
+from .transcription import transcription_class  # Same as above.
 
 class KaldiInterface(Interface):
     _data = Interface._data + ['pron_dict_name']
-    _classes = {**Interface._classes, **{"model": model_class}}
+    _classes = {**Interface._classes, **{"dataset": dataset_class, "model": model_class, "transcription": transcription_class, "pron_dict": pron_dict_class}}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,7 +38,7 @@ class KaldiInterface(Interface):
         return self
 
     def new_pron_dict(self, pdname):
-        pd = PronDict(parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
+        pd = self._classes["pron_dict"](parent_path=self.pron_dicts_path, name=pdname, logger=self.logger)
         pron_dicts = self.config['pron_dicts']
         pron_dicts[pdname] = pd.hash
         self.config['pron_dicts'] = pron_dicts
@@ -47,7 +48,7 @@ class KaldiInterface(Interface):
         if pdname not in self.list_pron_dicts():
             raise KaldiError(f'Tried to load a pron dict called "{pdname}" that does not exist')
         hash_dir = self.config['pron_dicts'][pdname]
-        pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
+        pd = self._classes["pron_dict"].load(self.pron_dicts_path.joinpath(hash_dir))
         pd.dataset = self.get_dataset(pd.config['dataset_name'])
         return pd
 

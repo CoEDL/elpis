@@ -1,19 +1,19 @@
 from pathlib import Path
 from io import BufferedIOBase
 
-from .dataset import KaldiDataset
-from elpis.engines.common.objects.pron_dict import PronDict
+from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.input.make_prn_dict import generate_pronunciation_dictionary
 
 
-class KaldiPronDict(PronDict):  # NOTE See note at import: later make a generic PronDict class.
+class PronDict(FSObject):
     # The configuration settings stored in the file below.
     _config_file = 'pron_dict.json'
+    _links = {"dataset": Dataset}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dataset: KaldiDataset = None
+        self.dataset: Dataset = None
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.l2s_path = self.path.joinpath('l2s.txt')
         self.lexicon_txt_path = self.path.joinpath('lexicon.txt') #TODO change to lexicon_txt_path
@@ -27,9 +27,12 @@ class KaldiPronDict(PronDict):  # NOTE See note at import: later make a generic 
         self.dataset = None
         return self
 
-    def link(self, dataset: KaldiDataset):
-        self.dataset = dataset
-        self.config['dataset_name'] = dataset.name
+    def link(self, *link_objects):
+        # NOTE It should be easier to use **links (keyword arguments), but it forces the edition of related endpoint file, so wait for now.
+        for link_name, link_class in self._links.items():
+            link_object = [link_object for link_object in link_objects if issubclass(link_object.__class__, link_class)][0]  # Do we need assert length = 1 here?
+            setattr(self, link_name, link_object)
+            self.config[f"{link_name}_name"] = link_object.name
 
     def set_l2s_path(self, path: Path):
         path = Path(path)
@@ -83,5 +86,3 @@ class KaldiPronDict(PronDict):  # NOTE See note at import: later make a generic 
                 fout.write(text)
         except FileNotFoundError:
             return 'No lexicon yet'
-
-pron_dict_class = KaldiPronDict

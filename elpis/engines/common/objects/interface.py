@@ -4,15 +4,13 @@ from elpis.engines.common.utilities import hasher
 from pathlib import Path
 from appdirs import user_data_dir
 from elpis.engines.kaldi.errors import KaldiError
-from elpis.objects.dataset import Dataset
 from elpis.engines.common.objects.logger import Logger
-from elpis.objects.transcription import Transcription
 from elpis.engines.common.objects.fsobject import FSObject
 
 
 class Interface(FSObject):
     _config_file = 'interface.json'
-    _data = ['name', 'dataset_name']
+    _data = ['name', 'dataset_name']  # For verbose model listing.
     _classes = {}  # Dict of inherited classes to avoid potential mess in imports. NOTE Need to discuss if it is an adequate pattern.
 
     def __init__(self, path: Path = None):
@@ -90,7 +88,7 @@ class Interface(FSObject):
                 f'Tried adding \'{dsname}\' which is already in {existing_names} with hash {self.config["datasets"][dsname]}.',
                 human_message=f'data set with name "{dsname}" already exists'
             )
-        ds = Dataset(parent_path=self.datasets_path, name=dsname, logger=self.logger)
+        ds = self._classes["dataset"](parent_path=self.datasets_path, name=dsname, logger=self.logger)
         datasets = self.config['datasets']
         datasets[dsname] = ds.hash
         self.config['datasets'] = datasets
@@ -100,7 +98,7 @@ class Interface(FSObject):
         if dsname not in self.list_datasets():
             raise KaldiError(f'Tried to load a dataset called "{dsname}" that does not exist')
         hash_dir = self.config['datasets'][dsname]
-        return Dataset.load(self.datasets_path.joinpath(hash_dir))
+        return self._classes["dataset"].load(self.datasets_path.joinpath(hash_dir))
 
     def list_datasets(self):
         names = [name for name in self.config['datasets'].keys()]
@@ -141,7 +139,7 @@ class Interface(FSObject):
         return models
 
     def new_transcription(self, tname):
-        t = Transcription(parent_path=self.transcriptions_path, name=tname, logger=self.logger)
+        t = self._classes["transcription"](parent_path=self.transcriptions_path, name=tname, logger=self.logger)
         transcriptions = self.config['transcriptions']
         transcriptions[tname] = t.hash
         self.config['transcriptions'] = transcriptions
@@ -151,7 +149,7 @@ class Interface(FSObject):
         if tname not in self.list_transcriptions():
             raise KaldiError(f'Tried to load a transcription called "{tname}" that does not exist')
         hash_dir = self.config['transcriptions'][tname]
-        t = Transcription.load(self.transcriptions_path.joinpath(hash_dir))
+        t = self._classes["transcription"].load(self.transcriptions_path.joinpath(hash_dir))
         t.model = self.get_model(t.config['model_name'])
         return t
 
@@ -159,7 +157,7 @@ class Interface(FSObject):
         names = []
         for hash_dir in os.listdir(f'{self.transcriptions_path}'):
             if not hash_dir.startswith('.'):
-                with self.transcriptions_path.joinpath(hash_dir, Transcription._config_file).open() as fin:
+                with self.transcriptions_path.joinpath(hash_dir, self._classes["transcription"]._config_file).open() as fin:
                     name = json.load(fin)['name']
                     names.append(name)
         return names
