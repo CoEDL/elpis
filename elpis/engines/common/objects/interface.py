@@ -10,7 +10,7 @@ from elpis.engines.common.objects.fsobject import FSObject
 
 class Interface(FSObject):
     _config_file = 'interface.json'
-    _data = ['name', 'dataset_name']  # For verbose model listing.
+    _data = ['name', 'dataset_name']  # For verbose model listing. NOTE Maybe make a general verbose function for several classes, without need of this variable?
     _classes = {}  # Dict of inherited classes to avoid potential mess in imports. NOTE Need to discuss if it is an adequate pattern.
 
     def __init__(self, path: Path = None):

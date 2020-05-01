@@ -27,10 +27,6 @@ class KaldiPronDict(PronDict):  # NOTE See note at import: later make a generic 
         self.dataset = None
         return self
 
-    def link(self, dataset: KaldiDataset):
-        self.dataset = dataset
-        self.config['dataset_name'] = dataset.name
-
     def set_l2s_path(self, path: Path):
         path = Path(path)
         with path.open(mode='rb') as fin:

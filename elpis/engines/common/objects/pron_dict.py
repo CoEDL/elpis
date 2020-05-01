@@ -9,7 +9,7 @@ from elpis.engines.common.input.make_prn_dict import generate_pronunciation_dict
 class PronDict(FSObject):
     # The configuration settings stored in the file below.
     _config_file = 'pron_dict.json'
-    _links = {"dataset": Dataset}
+    _links = {**FSObject._links, **{"dataset": Dataset}}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -26,13 +26,6 @@ class PronDict(FSObject):
         self.lexicon_txt_path = self.path.joinpath('lexicon.txt')
         self.dataset = None
         return self
-
-    def link(self, *link_objects):
-        # NOTE It should be easier to use **links (keyword arguments), but it forces the edition of related endpoint file, so wait for now.
-        for link_name, link_class in self._links.items():
-            link_object = [link_object for link_object in link_objects if issubclass(link_object.__class__, link_class)][0]  # Do we need assert length = 1 here?
-            setattr(self, link_name, link_object)
-            self.config[f"{link_name}_name"] = link_object.name
 
     def set_l2s_path(self, path: Path):
         path = Path(path)
