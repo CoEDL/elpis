@@ -1,13 +1,6 @@
 from pathlib import Path
 from elpis.engines.common.objects.model import Model
-from elpis.engines.common.input.resample import resample
 from elpis.engines.common.objects.fsobject import FSObject
-import subprocess
-from typing import Callable
-import os
-from distutils import dir_util, file_util
-import wave
-import contextlib
 
 
 class Transcription(FSObject):

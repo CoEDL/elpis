@@ -1,9 +1,8 @@
 from pathlib import Path
 from io import BufferedIOBase
 
-from .dataset import KaldiDataset
+from elpis.engines.kaldi.objects.dataset import KaldiDataset
 from elpis.engines.common.objects.pron_dict import PronDict
-from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.input.make_prn_dict import generate_pronunciation_dictionary
 
 
@@ -79,5 +78,3 @@ class KaldiPronDict(PronDict):  # NOTE See note at import: later make a generic 
                 fout.write(text)
         except FileNotFoundError:
             return 'No lexicon yet'
-
-pron_dict_class = KaldiPronDict

@@ -1,12 +1,12 @@
 from pathlib import Path
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
-from elpis.objects.path_structure import KaldiPathStructure
+from elpis.engines.common.objects.path_structure import PathStructure
 
 
 class ModelFiles(object):
     def __init__(self, basepath: Path):
-        self.kaldi = KaldiPathStructure(basepath)
+        self.kaldi = PathStructure(basepath)
 
 
 class Model(FSObject):  # TODO not thread safe

@@ -6,14 +6,14 @@ from typing import Callable
 import threading
 from elpis.engines.common.objects.command import run
 from elpis.engines.common.objects.model import Model
-from .pron_dict import pron_dict_class
+from elpis.engines.kaldi.objects.pron_dict import PronDict
 from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
-from elpis.objects.path_structure import KaldiPathStructure
+from elpis.engines.common.objects.path_structure import PathStructure
 from collections import OrderedDict
 
 
 class KaldiModel(Model):  # TODO not thread safe
-    _links = {**Model._links, **{"pron_dict": pron_dict_class}}
+    _links = {**Model._links, **{"pron_dict": PronDict}}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -46,7 +46,7 @@ class KaldiModel(Model):  # TODO not thread safe
             shutil.copy(f"{dataset_corpus_txt}", f"{model_corpus_txt}")
         create_kaldi_structure(input_json=f'{self.dataset.pathto.filtered_json}',
             output_folder=f'{output_path}',
-            silence_markers=None,
+            silence_markers=False,
             corpus_txt=f'{model_corpus_txt}'
         )
 
@@ -55,7 +55,7 @@ class KaldiModel(Model):  # TODO not thread safe
         def prepare_for_training():
             print("prepare_for_training")
             # task make-kaldi-subfolders
-            kaldi_structure = KaldiPathStructure(self.path)
+            kaldi_structure = PathStructure(self.path)
 
             local_kaldi_path = self.path.joinpath('kaldi')
             local_kaldi_path.mkdir(parents=True, exist_ok=True)

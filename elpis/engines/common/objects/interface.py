@@ -1,11 +1,12 @@
-import os
 import json
-from elpis.engines.common.utilities import hasher
+import os
 from pathlib import Path
+
 from appdirs import user_data_dir
-from elpis.engines.kaldi.errors import KaldiError
-from elpis.engines.common.objects.logger import Logger
 from elpis.engines.common.objects.fsobject import FSObject
+from elpis.engines.common.objects.logger import Logger
+from elpis.engines.common.utilities import hasher
+from elpis.engines.kaldi.errors import KaldiError
 
 
 class Interface(FSObject):

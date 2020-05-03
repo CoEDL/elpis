@@ -1,14 +1,18 @@
 from pathlib import Path
 from elpis.engines.kaldi.errors import KaldiError
 from elpis.engines.common.objects.interface import Interface
-from .pron_dict import pron_dict_class
-from .model import model_class  # I could also import KaldiModel, it is a style choice (name genericity even in specific file?) to discuss about!
-from .dataset import dataset_class  # Same as above.
-from .transcription import transcription_class  # Same as above.
+from elpis.engines.kaldi.objects.pron_dict import KaldiPronDict
+from elpis.engines.kaldi.objects.model import KaldiModel
+from elpis.engines.kaldi.objects.dataset import KaldiDataset
+from elpis.engines.kaldi.objects.transcription import KaldiTranscription
+
 
 class KaldiInterface(Interface):
     _data = Interface._data + ['pron_dict_name']
-    _classes = {**Interface._classes, **{"dataset": dataset_class, "model": model_class, "transcription": transcription_class, "pron_dict": pron_dict_class}}
+    _classes = {**Interface._classes, **{"dataset": KaldiDataset,
+                                         "model": KaldiModel,
+                                         "transcription": KaldiTranscription,
+                                         "pron_dict": KaldiPronDict}}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,8 +24,8 @@ class KaldiInterface(Interface):
         """
         TODO: fix this.
         Setting the config objects here wipes existing objects from the interface file.
-        This means the CLI transcription script can't be run seperately from the CLI training script,
-        because this is run whenever the KaldiInterface is initialised.
+        This means the CLI transcription script can't be run seperately from the CLI training 
+        script, because this is run whenever the KaldiInterface is initialised.
         However, if we don't set them, we get config KeyErrors (see issue #69).
         KI needs a flag to know whether to set these objects or skip initialising them.
         For now, explicitly set them... sorry CLI.
@@ -68,5 +72,3 @@ class KaldiInterface(Interface):
         m = super().get_model(mname)
         m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
         return m
-
-interface_class = KaldiInterface

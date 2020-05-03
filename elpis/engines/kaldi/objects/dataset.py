@@ -13,7 +13,7 @@ from shutil import move
 from pympi.Elan import Eaf
 
 from elpis.engines.common.objects.fsobject import FSObject
-from elpis.objects.path_structure import existing_attributes, ensure_paths_exist
+from elpis.engines.common.objects.path_structure import existing_attributes, ensure_paths_exist
 from elpis.engines.common.objects.dataset import Dataset, DSPaths
 
 from elpis.engines.common.input.elan_to_json import process_eaf

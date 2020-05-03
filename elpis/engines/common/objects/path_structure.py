@@ -13,7 +13,7 @@ def ensure_paths_exist(obj, existing_attrs):
         path.mkdir(parents=True, exist_ok=True)
 
 
-class KaldiPathStructure(object):
+class PathStructure(object):
     def __init__(self, parent: Path):
         self.parent = Path(parent)
         self.path: Path = self.parent.joinpath('kaldi')
