@@ -1,17 +1,15 @@
-import os
-from pathlib import Path
-from importlib import import_module
+from elpis.engines.kaldi.objects.interface import KaldiInterface
 
-default_engine = "kaldi"  # We need later here an interaction with GUI to provide us the selected engine.
-engine_list = {name: name for name in os.listdir("elpis/engines")}
-engine = engine_list.get(default_engine, "kaldi")
 
-print(f"Engine used: {engine}")
+ENGINES = {
+    "kaldi": KaldiInterface
+}
 
-engine_path = Path(os.path.dirname(__file__)) / engine
+default_engine = "kaldi"  # Get runtime engine from GUI later
 
-module = import_module(f"elpis.engines.{engine}")
-Interface = import_module(f".objects.interface", module.__name__).interface_class
+print(f"Engine used: {default_engine}")
+
+Interface = ENGINES[default_engine]
 
 print(f"Interface used: {Interface}")
 

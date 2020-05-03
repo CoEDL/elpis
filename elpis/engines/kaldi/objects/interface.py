@@ -68,6 +68,13 @@ class KaldiInterface(Interface):
             pron_dicts.append({"name":name, "dataset_name":pd.dataset.name })
         return pron_dicts
 
+    def new_transcription(self, tname):
+        t = KaldiTranscription(parent_path=self.transcriptions_path, name=tname, logger=self.logger)
+        transcriptions = self.config['transcriptions']
+        transcriptions[tname] = t.hash
+        self.config['transcriptions'] = transcriptions
+        return t
+
     def get_model(self, mname):
         m = super().get_model(mname)
         m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])

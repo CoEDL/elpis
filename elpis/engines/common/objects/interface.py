@@ -1,5 +1,6 @@
 import json
 import os
+from abc import abstractmethod
 from pathlib import Path
 
 from appdirs import user_data_dir
@@ -139,12 +140,9 @@ class Interface(FSObject):
                     models.append(model)
         return models
 
+    @abstractmethod
     def new_transcription(self, tname):
-        t = self._classes["transcription"](parent_path=self.transcriptions_path, name=tname, logger=self.logger)
-        transcriptions = self.config['transcriptions']
-        transcriptions[tname] = t.hash
-        self.config['transcriptions'] = transcriptions
-        return t
+        pass
 
     def get_transcription(self, tname):
         if tname not in self.list_transcriptions():
