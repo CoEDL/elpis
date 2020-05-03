@@ -21,14 +21,9 @@ from elpis.engines.common.input.resample_audio import process_item
 from elpis.engines.common.input.make_wordlist import generate_word_list
 
 
-# TODO: this is very ELAN specific code...
-DEFAULT_TIER_TYPE = 'default-lt'
-DEFAULT_TIER_NAME = 'Phrase'
-
-
 class DSPaths(object):
     """
-    Path locations for the DataSet object. Attribures represent paths to DataSet artifacts.
+    Path locations for the DataSet object. Attributes represent paths to DataSet artifacts.
     """
     def __init__(self, basepath: Path):
         # directories

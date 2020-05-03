@@ -1,25 +1,8 @@
-import json
-import shutil
-import glob
-import os
-import threading
 import string
 
 from pathlib import Path
-from typing import List, Union, BinaryIO, Set
-from io import BufferedIOBase
-from multiprocessing.dummy import Pool
-from shutil import move
-from pympi.Elan import Eaf
-
-from elpis.engines.common.objects.fsobject import FSObject
-from elpis.engines.common.objects.path_structure import existing_attributes, ensure_paths_exist
+from typing import List
 from elpis.engines.common.objects.dataset import Dataset, DSPaths
-
-from elpis.engines.common.input.elan_to_json import process_eaf
-from elpis.engines.common.input.clean_json import clean_json_data, extract_additional_corpora
-from elpis.engines.common.input.resample_audio import process_item
-from elpis.engines.common.input.make_wordlist import generate_word_list
 
 
 # TODO: this is very ELAN specific code...
@@ -28,7 +11,8 @@ DEFAULT_TIER_NAME = 'Phrase'
 
 
 class KaldiDataset(Dataset):
-    # TODO Code deletion: this class is mainly empty compared to its parent because I don’t know what is really Kaldi-specific.
+    # TODO Code deletion: this class is mainly empty compared to its parent because I don’t know
+    #  what is really Kaldi-specific.
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.__files: List[Path] = []
@@ -60,5 +44,3 @@ class KaldiDataset(Dataset):
         self.pathto = DSPaths(self.path)
         self.has_been_processed = self.config['has_been_processed']
         return self
-
-dataset_class = KaldiDataset

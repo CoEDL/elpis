@@ -226,5 +226,3 @@ class KaldiModel(Model):  # TODO not thread safe
         else:
             run_training_in_background()
         return
-
-model_class = KaldiModel

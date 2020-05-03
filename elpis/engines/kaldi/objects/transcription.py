@@ -111,5 +111,3 @@ class KaldiTranscription(Transcription):
     def elan(self):
         with open(f'{self.path}/{self.hash}.eaf', 'rb') as fin:
             return fin.read()
-
-transcription_class = KaldiTranscription
