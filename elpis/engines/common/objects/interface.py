@@ -20,7 +20,7 @@ class Interface(FSObject):
             name = hasher.new()
             super().__init__(
                 parent_path=Path(user_data_dir('elpis')),
-                dir_name = name,
+                dir_name=name,
                 pre_allocated_hash=name,
                 name=name
             )

@@ -2,6 +2,7 @@ from pathlib import Path
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.objects.path_structure import PathStructure
+from elpis.engines.common.objects.pron_dict import PronDict
 
 
 class ModelFiles(object):
@@ -34,3 +35,8 @@ class Model(FSObject):  # TODO not thread safe
     def status(self, value: str):
         self.config['status'] = value
 
+    def link(self, dataset: Dataset, pron_dict: PronDict):
+        self.dataset = dataset
+        self.config['dataset_name'] = dataset.name
+        self.pron_dict = pron_dict
+        self.config['pron_dict_name'] = pron_dict.name

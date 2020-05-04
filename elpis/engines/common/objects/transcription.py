@@ -5,7 +5,6 @@ from elpis.engines.common.objects.fsobject import FSObject
 
 class Transcription(FSObject):
     _config_file = "transcription.json"
-    _links = {**FSObject._links, **{"model": Model}}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -20,6 +19,10 @@ class Transcription(FSObject):
         self = super().load(base_path)
         self.model = None
         return self
+
+    def link(self, model: Model):
+        self.model = model
+        self.config['model_name'] = model.name
 
     @property
     def status(self):
