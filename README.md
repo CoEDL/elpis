@@ -1,4 +1,4 @@
-# Elpis <img src="docs/img/elpis.png" align="right" width="250px"/>
+# Elpis 
 
 This project is under construction and not yet ready for everyday use. Please contact us by email at `elpis.asr@gmail.com` to be informed when a stable version is ready.
 
@@ -9,7 +9,7 @@ The goal of Elpis is to expose the power of Kaldi to linguists and language work
 needless technical complexity.
 
 <p align="center">
-    <img src="docs/img/elpis-pipeline.svg" width="500px" style="margin: 40px" />
+    <img src="docs/img/elpis-pipeline.svg" width="100%" style="margin: 40px 40px 60px 40px;" />
 </p>
 
 
