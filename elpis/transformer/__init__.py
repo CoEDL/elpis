@@ -170,8 +170,8 @@ class DataTransformerAbstractFactory:
         self._export_context = {}
 
         # GUI configurations
-        self._import_ui_config = {}
-        self._export_ui_config = {}
+        self._import_ui_config = []
+        self._export_ui_config = []
 
         # Concrete import/export function collection
         self._import_extension_callbacks: Dict[str, FileImporterType] = {}
@@ -181,11 +181,6 @@ class DataTransformerAbstractFactory:
 
         self._attributes = {}
         self._obj_to_attr_name = {}
-
-        self._type_to_label = {
-            str: 'str',
-            int: 'int'
-        }
     
     def set_audio_extention(self, ext: str):
         """
@@ -365,53 +360,95 @@ class DataTransformerAbstractFactory:
         self._export_callback = f
         self._obj_to_attr_name[f] = f.__name__
         return f
+    
+    def _search_by_name_in_ui_configs(self, name, ui_configs):
+        for config in ui_configs:
+            if config['ui'] != 'setting': continue
+            if name == config['name']:
+                return config # Found!
+        return None # Did not find the name in any ui configs
+    
+    def _type_to_str(self, t):
+        if t == str:
+            return 'str'
+        if t == int:
+            return 'int'
+        if isinstance(t, list):
+            # TODO: check the types in t
+            return str(t)
+        print("t:", t, ":", type(t), ': t is list =', t is list, ": type(t) == list = ", type(t) == list)
+        raise ValueError(f'type \'{t}\' is not a valid type')
 
-    def import_setting(self, key, type, default=None, ui=None):
+    def import_setting(self, key, type, default=None, description=None):
         """
         Add a field to the import context.
 
         :param key: the name of the field.
         :param type: the type of the field (must be JSONable)
         :param default: (Optional) default value of the field.
-        :param ui: (Optional) ui configuration
+        :param ui: (Optional) ui configuration TODO: replace with description
         :raises:
             RuntimeError: if the key has already been specified as an import setting or in the default context.
         """
-        if key in self._import_context:
+        if self._search_by_name_in_ui_configs(key, self._import_ui_config)  is not None:
             raise ValueError(f'key "{key}" already in the import context')
         self._import_context[key] = default
-        self._import_ui_config[key] = {
-            'type': self._type_to_label[type],
-            'ui': ui
-        }
+        self._import_ui_config.append({
+            'ui': 'setting',
+            'name': key,
+            'type': self._type_to_str(type),
+            'description': description
+        })
     
-    def export_setting(self, key, type, default=None, ui=None):
+    def export_setting(self, key, type, default=None, description=None):
         """
         Add a field to the export context.
 
         :param key: the name of the field.
         :param type: the type of the field (must be JSONable)
         :param default: (Optional) default value of the field.
-        :param ui: (Optional) ui configuration
+        :param ui: (Optional) ui configuration TODO: replace with description
         :raises:
             RuntimeError: if the key has already been specified as an export setting or in the default context.
         """
-        if key in self._export_context:
+        if self._search_by_name_in_ui_configs(key, self._export_ui_config) is not None:
             raise ValueError(f'key "{key}" already in the export context')
         self._export_context[key] = default
-        self._export_ui_config[key] = {
-            'type': self._type_to_label[type],
-            'ui': ui
-        }
+        self._export_ui_config.append({
+            'ui': 'setting',
+            'name': key,
+            'type': self._type_to_str(type),
+            'description': description
+        })
+    
+    def import_setting_title(self, title):
+        self._import_ui_config.append({
+            'ui': 'title',
+            'title': title
+        })
+        return
+        
+    
+    def export_setting_title(self, title):
+        self._export_ui_config.append({
+            'ui': 'title',
+            'title': title
+        })
+        return
+        
+    def general_setting_title(self, title):
+        self.import_setting_title(title)
+        self.export_setting_title(title)
+        return
 
-    def general_setting(self, key, type, default=None, ui=None):
+    def general_setting(self, key, type, default=None, description=None):
         """
         Add a field to the both import and export context.
 
         :param key: the name of the field.
         :param type: the type of the field (must be JSONable)
         :param default: (Optional) default value of the field.
-        :param ui: (Optional) ui configuration
+        :param ui: (Optional) ui configuration TODO: replace with description
         :raises:
             RuntimeError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -419,8 +456,8 @@ class DataTransformerAbstractFactory:
             raise ValueError(f'key "{key}" already in the import context')
         if key in self._export_context:
             raise ValueError(f'key "{key}" already in the export context')
-        self.import_setting(key, type, default=default, ui=ui)
-        self.export_setting(key, type, default=default, ui=ui)
+        self.import_setting(key, type, default=default, description=None)
+        self.export_setting(key, type, default=default, description=None)
     
     def is_import_capable(self):
         if self._import_directory_callback != None:

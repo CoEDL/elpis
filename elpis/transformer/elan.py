@@ -38,7 +38,13 @@ elan.set_default_context({
     'graphic': GRAPHIC_RESOURCE_NAME
 })
 
-elan.general_setting('tier', str, default=DEFAULT_TIER)
+
+# TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
+elan.general_setting_title('Tiers')
+elan.general_setting('tier_type', ['A', 'B'], default=None, description='Choose the tier that your transcriptions are on')
+elan.general_setting('tier_name', str, default=None)
+elan.general_setting('tier_order', int, default=None)
+
 
 @elan.import_files('eaf')
 def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
