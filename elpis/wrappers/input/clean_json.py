@@ -67,10 +67,6 @@ def clean_utterance(utterance: Dict[str, str],
             continue
         if word in translation_tags:  # Translations / ignore
             return [], 0
-        # If a word contains a digit, throw out whole utterance
-        if bool(re.search(r"\d", word)) and not word.isdigit():
-            return [], 0
-        # clean punctuation
         word = deal_with_punctuation(text=word,
                                      punctuation_to_collapse_by=punctuation_to_collapse_by,
                                      punctuation_to_explode_by=punctuation_to_explode_by)
