@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
-import { Button, Checkbox, Divider, Form, Grid, Header, Icon, Input, List, Message, Segment } from 'semantic-ui-react';
+import { Button, Select, Divider, Form, Grid, Header, Icon, Input, List, Message, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { Formik, Field, ErrorMessage } from 'formik';
 import { datasetSettings, datasetPrepare } from 'redux/actions/datasetActions';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
@@ -21,7 +20,7 @@ class DatasetFiles extends Component {
 
     render() {
 
-        const { t, name, status, audioFiles, transcriptionFiles, additionalTextFiles, settings, datasetSettings } = this.props;
+        const { t, name, status, audioFiles, transcriptionFiles, additionalTextFiles, settings, ui, datasetSettings } = this.props;
 
         const interactionDisabled = name ? false : true
 
@@ -54,12 +53,12 @@ class DatasetFiles extends Component {
                  t('dataset.files.filesHeader')
             ) : null
 
-        const writeCountOptions = []
-        for (var i = 1; i <= settings.tier_max_count; i++) {
-            writeCountOptions.push(
-                <option key={i} value={i}>{i}</option>
-            )
-        }
+        // const writeCountOptions = []
+        // for (var i = 1; i <= settings.tier_max_count; i++) {
+        //     writeCountOptions.push(
+        //         <option key={i} value={i}>{i}</option>
+        //     )
+        // }
 
         return (
             <div>
@@ -112,118 +111,7 @@ class DatasetFiles extends Component {
                                     { t('dataset.files.settingsHeader') }
                                 </Header>
 
-                                <Formik
-                                    className="attached"
-                                    enableReinitialize
-                                    initialValues={ {
-                                        tier_types: settings.tier_types,
-                                        tier_type: settings.tier_type,
-                                        tier_names: settings.tier_names,
-                                        tier_name: settings.tier_name,
-                                        tier_orders: settings.tier_orders,
-                                        tier_order: settings.tier_order,
-                                        punctuation_to_explode_by: settings.punctuation_to_explode_by
-                                    } }
-                                    validate={ values => {
-                                        let errors = {};
-                                        // if (!values.tier) {
-                                        //     errors.tier = 'Required';
-                                        // } else if (
-                                        //     !/^[ 0-9a-zA-Z\-_@]+$/i.test(values.tier)
-                                        // ) {
-                                        //     errors.tier = t('dataset.common.invalidCharacterErrorMessage');
-                                        // }
-                                        return errors;
-                                    } }
-                                    onSubmit={ (values, { setSubmitting }) => {
-                                        const postData = {
-                                            tier_type: values.tier_type,
-                                            tier_name: values.tier_name,
-                                            tier_order: values.tier_order,
-                                            punctuation_to_explode_by: values.punctuation_to_explode_by
-                                        }
-                                        datasetSettings(postData)
-                                    } }
-                                >
-                                    { ({
-                                        values,
-                                        errors,
-                                        dirty,
-                                        touched,
-                                        handleSubmit,
-                                        handleChange,
-                                        isSubmitting,
-                                        setFieldValue
-                                        /* and other goodies */
-                                    }) => (
-                                            <Form onSubmit={handleSubmit}>
-
-                                                <Header as='h4'>
-                                                    {t('dataset.files.settingsTierHeader')}
-                                                </Header>
-
-                                                <Message attached content={t('dataset.files.tierOrderDescription')} />
-                                                <Form.Field>
-                                                    <Field component="select" name="tier_order" onChange={e => {
-                                                        setFieldValue('tier_type', '');
-                                                        setFieldValue('tier_name', '');
-                                                        setFieldValue('tier_order', e.target.value);
-                                                        console.log("setting tier order", e.target.value)
-                                                    }}>
-                                                        <option></option>
-                                                        {writeCountOptions}
-                                                    </Field>
-                                                </Form.Field>
-
-                                                <Message attached content={t('dataset.files.tierTypeDescription')} />
-                                                <Form.Field>
-                                                    <Field component="select" name="tier_type" onChange={e => {
-                                                        setFieldValue('tier_type', e.target.value);
-                                                        setFieldValue('tier_name', '');
-                                                        setFieldValue('tier_order', '');
-                                                    }}>
-                                                        <option></option>
-                                                        {values.tier_types.map(name =>
-                                                            (<option key={name} value={name}>{name}</option>))
-                                                        }
-                                                    </Field>
-                                                </Form.Field>
-
-                                                <Message attached content={t('dataset.files.tierNameDescription')} />
-                                                <Form.Field>
-                                                    <Field component="select" name="tier_name" onChange={e => {
-                                                        setFieldValue('tier_type', '');
-                                                        setFieldValue('tier_order', '');
-                                                        setFieldValue('tier_name', e.target.value);
-                                                    }}>
-                                                        <option></option>
-                                                        {values.tier_names.map(name =>
-                                                            (<option key={name} value={name}>{name}</option>))
-                                                        }
-                                                    </Field>
-                                                </Form.Field>
-
-                                                <Header as='h4'>
-                                                    {t('dataset.files.settingsPunctuationHeader')}
-                                                </Header>
-
-                                                <Message attached content={t('dataset.files.puncDescription')} />
-                                                <Form.Field>
-                                                    <Input
-                                                        label={t('dataset.files.puncLabel')}
-                                                        value={values.punctuation_to_explode_by}
-                                                        name="punctuation_to_explode_by"
-                                                        type="text"
-                                                        onChange={handleChange} />
-                                                </Form.Field>
-
-
-                                                <Button type="button" onClick={handleSubmit} disabled={interactionDisabled}>
-                                                    { t('dataset.files.saveButton') }
-                                                </Button>
-                                            </Form>
-                                        ) }
-                                </Formik>
+                                <SettingsForm settings={settings} ui={ui} />
                             </Segment>
 
                             <Divider />
@@ -241,6 +129,106 @@ class DatasetFiles extends Component {
 }
 
 
+const SettingsForm = ({settings, ui}) => {
+    console.group();
+    console.log({settings});
+    console.log({ui});
+    const handleSubmit = props => {}
+
+    // Sort names into groups by title followed by settings.
+    let settingGroups = [];
+    {
+        // scope protect.
+        let group = [];
+        ui['order'].forEach(ui_name => {
+            if (ui['type'][ui_name] === "title" && group.length !== 0) {
+                settingGroups.push(group);
+                group = []; // clear for the next group
+            }
+            group.push(ui_name);
+        });
+        if (group.length !== 0) { // add the last group
+            settingGroups.push(group);
+        }
+    }
+
+    // Construct individual tables
+    let tables = [];
+    {
+        let groupIndex = 0;
+        settingGroups.forEach(group => {
+            let header = null;
+            let settingRows = [];
+
+            // Construct table rows for group
+            group.forEach(ui_name => {
+                if (ui['type'][ui_name] === "title") {
+                    header = (
+                        <Table.Row>
+                            <Table.HeaderCell colSpan='2'>{ui['data'][ui_name]['title']}</Table.HeaderCell>
+                        </Table.Row>
+                    );
+                } else { // ui['type'][ui_name] == "settings"
+                    let data = ui['data'][ui_name];
+                    let label = data.display_name !== null ? data.display_name : ui_name;
+                    let row = (
+                        <Table.Row key={ui_name}>
+                            <Table.Cell collapsing>{label}</Table.Cell>
+                            <Table.Cell>option</Table.Cell>
+                        </Table.Row>
+                    );
+                    settingRows.push(row);
+                }
+            });
+
+            // Construct table
+            let table = (
+                <Table celled striped key={groupIndex++}>
+                    {header===null?null:(
+                        <Table.Header>
+                            {header}
+                        </Table.Header>
+                    )}
+                    <Table.Body>
+                        {settingRows}
+                    </Table.Body>
+                </Table>
+            );
+            tables.push(table);
+        });
+    }
+
+    /* Generate the settings */
+    // let elements = []
+    // ui['order'].forEach(ui_name => {
+    //     let element = null;
+    //     if (ui['type'][ui_name] === "title") {
+    //         element = <Header key={ui_name} as="h4">{ui['data'][ui_name]['title']}</Header>;
+    //     } else {
+    //         let data = ui['data'][ui_name];
+    //         let label = data.display_name !== null ? data.display_name : ui_name;
+    //         let ooo = [
+    //             { key: 'au', value: 'au', text: 'AU' },
+    //             { key: 'az', value: 'az', text: 'AZ' }
+    //         ];
+    //         element = (<div key={ui_name} >
+    //             <p>Type: {data.type}</p>
+    //             <p>Display name: {label}</p>
+    //             <Message attached content={data.description} />
+    //             <Select placeholder="whats uuuup:" options={ooo} />
+    //         </div>)
+    //     }
+    //     elements.push(element);
+    // });
+    console.log("here");
+    console.groupEnd();
+    return (<>
+        <Form onSubmit={handleSubmit}>
+            {tables}
+        </Form>
+    </>);
+}
+
 const mapStateToProps = state => {
     return {
         name: state.dataset.name,
@@ -248,6 +236,7 @@ const mapStateToProps = state => {
         transcriptionFiles: state.dataset.transcriptionFiles,
         additionalTextFiles: state.dataset.additionalTextFiles,
         settings: state.dataset.settings,
+        ui: state.dataset.ui,
         status: state.dataset.status
     }
 }

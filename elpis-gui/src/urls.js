@@ -5,7 +5,10 @@ export default {
             "new": "/dataset/new",
             "files": "/dataset/files",
             "prepare": "/dataset/prepare",
-            "prepareError": "/dataset/prepare/error"
+            "prepareError": "/dataset/prepare/error",
+            "ui": "/dataset/import/ui",
+            "settings": "/dataset/import/settings",
+            "punctuation_to_explode_by": "/dataset/punctuation_to_explode_by"
         },
         "pronDict": {
             "index": "/pron-dict",

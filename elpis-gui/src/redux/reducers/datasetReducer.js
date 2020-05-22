@@ -8,15 +8,9 @@ const initState = {
     audioFiles: [],
     transcriptionFiles: [],
     additionalTextFiles: [],
-    settings: {
-        tier_max_count: 4,
-        tier_types: ["a","b"],
-        tier_names: ["c","d"],
-        tier_order: 1,
-        tier_type: "",
-        tier_name: "",
-        punctuation_to_explode_by: ""
-    },
+    settings: null,
+    ui: null,
+    punctuation_to_explode_by: "",
     wordlist: {}
 }
 
@@ -26,48 +20,41 @@ const dataset = (state = initState, action) => {
 
         // Boilerplate for all...
         case actionTypes.DATASET_NEW_STARTED:
-            return {...state}
-
         case actionTypes.DATASET_NEW_FAILURE:
             return {...state}
 
-        case actionTypes.DATASET_NEW_SUCCESS:
-            var {name,
-                tier_max_count,
-                tier_types,
-                tier_names,
-                tier_order,
-                tier_type,
-                tier_name,
-                punctuation_to_explode_by } = action.response.data.data.config
+        case actionTypes.DATASET_NEW_SUCCESS: {
+            let dataset_state = action.response.data.data.state
+            let {
+                name,
+                settings,
+                ui,
+                punctuation_to_explode_by
+            } = dataset_state.importer;
             console.log("DATASET_NEW_SUCCESS name", name)
             return { ...initState,
                 name,
-                settings: {
-                    ...state.settings,
-                    tier_max_count,
-                    tier_types,
-                    tier_names,
-                    tier_order,
-                    tier_type,
-                    tier_name,
-                    punctuation_to_explode_by }}
+                settings,
+                ui,
+                punctuation_to_explode_by}
+        }
 
-        case actionTypes.DATASET_LOAD_SUCCESS:
+        case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
-            var { name,
-                tier_max_count,
-                tier_types,
-                tier_names,
-                tier_order,
-                tier_type,
-                tier_name,
-                punctuation_to_explode_by,
-                files } = action.response.data.data.config
+            let dataset_state = action.response.data.data.state
+            let {
+                name,
+                files,
+                settings,
+                ui,
+                punctuation_to_explode_by
+            } = dataset_state
             // action.data is an array of filenames. parse this, split into separate lists
             var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort()
-            var transcriptionFiles = files.filter(file => getFileExtension(file) === 'eaf').sort()
             var additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort()
+            var transcriptionFiles = files.filter(file => {
+                return (getFileExtension(file) !== 'wav' && getFileExtension(file) !== 'txt')
+            }).sort()
             // remove duplicates (should do this on the server though!)
             audioFiles = [...(new Set(audioFiles))];
             transcriptionFiles = [...(new Set(transcriptionFiles))];
@@ -78,16 +65,12 @@ const dataset = (state = initState, action) => {
                 audioFiles,
                 transcriptionFiles,
                 additionalTextFiles,
-                settings: { ...state.settings,
-                    tier_max_count,
-                    tier_types,
-                    tier_names,
-                    tier_order,
-                    tier_type,
-                    tier_name,
-                    punctuation_to_explode_by },
+                settings,
+                ui,
+                punctuation_to_explode_by,
                 wordlist: "",
             }
+        }
 
         case actionTypes.DATASET_LIST_SUCCESS:
             return {
