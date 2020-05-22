@@ -15,7 +15,7 @@ def new():
     dataset.select_importer('Elan')
     app.config['CURRENT_DATASET'] = dataset
     data = {
-        "config": dataset.config._load()
+        "state": dataset.state # TODO: ensure we use get_state() in the future
     }
     return jsonify({
         "status": 200,
@@ -75,22 +75,55 @@ def files():
     })
 
 
-@bp.route("/settings", methods=['POST'])
+@bp.route("/import/settings", methods=['GET', 'POST'])
 def settings():
     dataset: Dataset = app.config['CURRENT_DATASET']
     if dataset is None:
         # TODO: 404 does not accurately describe the status
         return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+    
+    # Only edit if POST
     if request.method == 'POST':
-        dataset.tier_order = int(request.json['tier_order'] or 0)
-        dataset.tier_type = request.json['tier_type']
-        dataset.tier_name = request.json['tier_name']
-        dataset.config['punctuation_to_explode_by'] = request.json['punctuation_to_explode_by']
+        settings = dataset.importer.get_settings()
+        for key in request.json.keys():
+            if key in settings.keys():
+                dataset.importer.set_setting(key, request.json[key])
+            else:
+                pass # TODO throw an invalid key error here?
+        
+    # Return imports current/updated settings.
     data = {
-        "tier_order": dataset.tier_order,
-        "tier_type": dataset.tier_type,
-        "tier_name": dataset.tier_name,
-        "punctuation_to_explode_by": dataset.config['punctuation_to_explode_by']
+        'settings': dataset.importer.get_settings()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
+@bp.route("/import/ui", methods=['GET', 'POST'])
+def settings_ui():
+    dataset: Dataset = app.config['CURRENT_DATASET']
+    if dataset is None:
+        # TODO: 404 does not accurately describe the status
+        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+    data = {
+        'ui': dataset.importer.get_ui()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
+@bp.route("/punctuation_to_explode_by", methods=['POST'])
+def punctuation_to_explode_by():
+    dataset: Dataset = app.config['CURRENT_DATASET']
+    if dataset is None:
+        # TODO: 404 does not accurately describe the status
+        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+    if 'punctuation_to_explode_by' in request.json.keys():
+        dataset.punctuation_to_explode_by = request.json['punctuation_to_explode_by']
+    data = {
+        'punctuation_to_explode_by': dataset.punctuation_to_explode_by
     }
     return jsonify({
         "status": 200,

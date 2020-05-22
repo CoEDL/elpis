@@ -72,6 +72,7 @@ class Dataset(FSObject):
         self.config['files'] = []
         self.config['processed_labels'] = []
         self.config['importer'] = None
+        self.config['punctuation_to_explode_by'] = '' # TODO: check if '' is the correct default
 
     @classmethod
     def load(cls, base_path: Path):
@@ -98,16 +99,19 @@ class Dataset(FSObject):
             ValueError: if name does not corrospond to any existing data transformers.
         """
 
-        def context_change_callback(ctx):
+        def settings_change_callback(ctx):
             """
             Generate the JSON importer (data transformer) state variable.
             """
             nonlocal name
-            self.config['importer'] = {
-                'name': name,
-                'context': ctx
-            }
-            return 
+            # TODO: is this function required?
+            return
+        
+        # getters and setters for the subconfig for importers.
+        def get_config_callback():
+            return self.config['importer']
+        def set_config_callback(importer_config):
+            self.config['importer'] = importer_config
 
         temporary_directory_path = f'/tmp/{self.hash}/working'
         Path(temporary_directory_path).mkdir(parents=True, exist_ok=True) # TODO: what if two importers are used on this directory?
@@ -118,13 +122,10 @@ class Dataset(FSObject):
             self.pathto.resampled,
             temporary_directory_path,
             transcription_json_file_path,
-            context_change_callback=context_change_callback
+            get_config_callback,
+            set_config_callback,
+            settings_change_callback=settings_change_callback
         )
-
-        self.config['importer'] = {
-            'name': name,
-            'context': self._importer._context
-        }
         return
 
     @property
@@ -196,6 +197,14 @@ class Dataset(FSObject):
             raise RuntimeError('cannot get annotations wihtout runnint .process()')
         with self.pathto.annotation_json.open(mode='r') as fin:
             return json.loads(fin.read())
+    
+    @property
+    def punctuation_to_explode_by(self) -> str:
+        return self.config['punctuation_to_explode_by']
+    
+    @punctuation_to_explode_by.setter
+    def punctuation_to_explode_by(self, value):
+        self.config['punctuation_to_explode_by'] = value
 
     def add_fp(self, fp: Union[BufferedIOBase, BinaryIO],
                fname: str,
@@ -307,7 +316,8 @@ class Dataset(FSObject):
             'has_been_processed': self.config['has_been_processed'],
             'files': self.config['files'],
             'processed_labels': self.config['processed_labels'],
-            'importer': self.config['importer']
+            'importer': self.config['importer'],
+            'punctuation_to_explode_by': self.config['punctuation_to_explode_by']
         }
 
     def process(self):
