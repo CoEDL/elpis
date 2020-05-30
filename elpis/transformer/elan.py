@@ -87,7 +87,7 @@ def update_ui(file_paths: List[Path], ui):
             
     ui['data']['tier_type']['type'] = list(_tier_types)
     ui['data']['tier_name']['type'] = list(_tier_names)
-    ui['data']['tier_order']['type'] = [i for i in range(tier_max_count)]
+    ui['data']['tier_order']['type'] = [None] + [i for i in range(tier_max_count)]
     return ui
 
 @elan.import_files('eaf')
