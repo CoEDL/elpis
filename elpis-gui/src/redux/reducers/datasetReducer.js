@@ -110,12 +110,7 @@ const dataset = (state = initState, action) => {
             if (status === 200) {
                 return {
                     ...state,
-                    settings: { ...state.settings,
-                        // TODO: this is old code below, will break!!
-                        tier_type: data.tier_type,
-                        tier_name: data.tier_name,
-                        tier_order: data.tier_order,
-                        punctuation_to_explode_by: data.punctuation_to_explode_by}
+                    settings: { ...state.settings, ...data.settings }
                 }
             } else {
                 console.log(data)

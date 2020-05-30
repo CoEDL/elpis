@@ -189,6 +189,8 @@ const SettingsForm = ({settings, ui, datasetSettings}) => {
                         default: /*ENUM*/ {
                             let options = [];
                             data.type.forEach(v => {
+                                // <Select> does not like to display text if the key or value (?) is null.
+                                // So convert null to string "- not selected -".
                                 if (v === null) {
                                     console.log("pushing: ", {key: "- not selected -", value: "- not selected -", text: "- not selected -"});
                                     options.push({key: "- not selected -", value: "- not selected -", text: "- not selected -"})
@@ -200,9 +202,9 @@ const SettingsForm = ({settings, ui, datasetSettings}) => {
                             });
                             dataEntryElement = (<Select
                                 options={options}
-                                // value={settings[ui_name]}
                                 onChange={(event, data)=>{
                                     let newSettings = { ...settings };
+                                    // Convert from "not selected" string back to null.
                                     if (data.value === "- not selected -") {
                                         newSettings[ui_name] = null;
                                     } else {
