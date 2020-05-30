@@ -58,29 +58,6 @@ def copyJSONable(obj):
     """
     return json.loads(json.dumps(obj))
 
-class Functional:
-    """
-    Support class to keep a reference to an object containing a function. Use
-    this object when a function could be changed after it's assignment.
-    """
-    def __init__(self, f):
-        """Alwyas have a default function."""
-        self._callback = f
-
-    def __call__(self, *args, **kwargs):
-        """Calling this class called the contained function."""
-        self._callback(*args, **kwargs)
-
-    @property
-    def callback(self):
-        """Access the function directly."""
-        return self._callback
-
-    @callback.setter
-    def callback(self, f):
-        """Assign a new function to this object."""
-        self._callback = f
-
 
 class DataTransformer:
     """
@@ -95,8 +72,8 @@ class DataTransformer:
                     name: str,
                     settings: Dict,
                     ui: List,
-                    get_config_callback,
-                    set_config_callback,
+                    callback_get_config,
+                    callback_set_config,
                     settings_change_callback: SettingsChangeCallback
                     ):
 
@@ -104,8 +81,8 @@ class DataTransformer:
         config = {}
 
         # save the callbacks for getting/setting importer/exporter configurations
-        self._get_config_callback = get_config_callback
-        self._set_config_callback = set_config_callback
+        self._callback_get_config = callback_get_config
+        self._callback_set_config = callback_set_config
 
         # Name and UI config are immutable. Will not change after DT is created
         config['name'] = name
@@ -120,7 +97,10 @@ class DataTransformer:
         # audio_store: collection of (ID -> audio_file_path) pairs
         self._audio_store = {}
 
-        self._set_config_callback(config)
+        self._callback_set_config(config)
+
+        self._validaters = {}
+        self._ui_updater = None # Gets replaced by callback (used on file addition)
 
     def process(self):
         """
@@ -129,17 +109,17 @@ class DataTransformer:
         pass
     
     def get_name(self) -> str:
-        return self._get_config_callback()['name']
+        return self._callback_get_config()['name']
 
     def get_ui(self) -> Dict:
-        return self._get_config_callback()['ui']
+        return self._callback_get_config()['ui']
     
     # TODO: add import/export settings to the state
     def get_state(self) -> str:
-        return self._get_config_callback()
+        return self._callback_get_config()
 
     def get_settings(self):
-        return self._get_config_callback()['settings']
+        return self._callback_get_config()['settings']
     
     def set_setting(self, key, value):
         """
@@ -147,13 +127,26 @@ class DataTransformer:
         TODO: improve this doc
         Ensure only settings is writable.
         """
-        config = self._get_config_callback()
+        config = self._callback_get_config()
         settings = config['settings']
-        settings['key'] = value # TODO handle error if key is not already in settings.
+        settings[key] = value # TODO handle error if key is not already in settings.
         settings_for_callback = copyJSONable(settings) # TODO handle error if not JSONable
         self._settings_change_callback(settings_for_callback)
         config['settings'] = settings
-        self._set_config_callback(config)
+        self._callback_set_config(config)
+    
+    def validate_files(self, extention: str, file_paths: Path):
+        """ TODO fix up this doc"""
+        """ Returns None if everything is okay, otherwise string with error message."""
+        if extention not in self._validaters.keys():
+            return None
+        return self._validaters[extention](file_paths)
+
+    def refresh_ui(self, file_paths):
+        config = self._callback_get_config()
+        ui = self._ui_updater(file_paths, config['ui'])
+        config['ui'] = ui
+        self._callback_set_config(config)
 
 class DataTransformerAbstractFactory:
     """
@@ -203,9 +196,12 @@ class DataTransformerAbstractFactory:
 
         # Concrete import/export function collection
         self._import_extension_callbacks: Dict[str, FileImporterType] = {}
+        self._import_file_validator_callback: Dict[str, Callable] = {}
         self._import_directory_callback: Callable = None
         self._export_callback: Callable = None
         self._audio_processing_callback: Callable = None
+
+        self._update_ui_callback = lambda x: None
 
         self._attributes = {}
         self._obj_to_attr_name = {}
@@ -300,7 +296,36 @@ class DataTransformerAbstractFactory:
             self._obj_to_attr_name[f] = f.__name__
             return f
         return decorator
-    
+
+    def validate_files(self, extention: str):
+        # TODO: Docs
+        if self._import_directory_callback is not None:
+            raise RuntimeError('import_directory used, therefore cannot use validate_files')
+        elif extention in self._import_file_validator_callback:
+            raise RuntimeError(f'"{extention}" has already been registered with validate_files decorator')
+
+        def decorator(f: Callable):
+            if f.__name__ in self._attributes:
+                raise NameError('bad function name. Already used')
+            if f.__name__ in dir(DataTransformer):
+                raise NameError('bad function name. Name is attribute of DataTransformer')
+
+            sig = signature(f)
+            if len(sig.parameters) != 1:
+                raise RuntimeError(f'validation function "{f.__name__}" must have one parameter (file_paths), currently has {len(sig.parameters)}')
+
+            # Store the closure by file extention
+            self._import_file_validator_callback[extention] = f
+            # Store attribute
+            self._attributes[f.__name__] = f
+            self._obj_to_attr_name[f] = f.__name__
+            return f
+        return decorator
+
+    def update_ui(self, f):
+        self._update_ui_callback = f
+        return f
+
     def import_directory(self, f: Callable):
         """
         Python Decorator (no arguments)
@@ -396,7 +421,7 @@ class DataTransformerAbstractFactory:
             return 'int'
         if isinstance(t, list):
             # TODO: check the types in t
-            return str(t)
+            return t
         print("t:", t, ":", type(t), ': t is list =', t is list, ": type(t) == list = ", type(t) == list)
         raise ValueError(f'type \'{t}\' is not a valid type')
 
@@ -454,7 +479,6 @@ class DataTransformerAbstractFactory:
         self._import_ui_order_config.append(key)
         return
         
-    
     def export_setting_title(self, title):
         key = '_title_' + str(self._export_title_count)
         self._export_title_count += 1
@@ -668,6 +692,13 @@ class DataTransformerAbstractFactory:
                 return # import_files_process
             setattr(dt, 'process', import_files_process) # Override this function
 
+        # add validators
+        for ext, f in self._import_file_validator_callback.items():
+            dt._validaters[ext] = f
+        
+        # Add ui refresher
+        dt._ui_updater = self._update_ui_callback
+
         return dt
     
     def build_exporter(self,
@@ -752,7 +783,6 @@ def make_exporter(name: str,
         settings_change_callback
     )
     return dt
-
 
 def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
     """

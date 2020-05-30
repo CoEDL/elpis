@@ -41,9 +41,9 @@ elan.set_default_context({
 
 # TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
 elan.general_setting_title('Tiers')
-elan.general_setting('tier_type', [], default=None, description='Choose the tier that your transcriptions are on')
-elan.general_setting('tier_name', [], default=None)
-elan.general_setting('tier_order', [], default=None)
+elan.general_setting('tier_type', [None], default=None, description='Choose the tier that your transcriptions are on')
+elan.general_setting('tier_name', [None], default=None)
+elan.general_setting('tier_order', [None], default=None)
 
 # TODO: limitation, settings must be defined before used in functions so that they are registered and visible.
 
@@ -53,6 +53,42 @@ elan.general_setting('tier_order', [], default=None)
 #     tier_types, tier_names, tier_max_count = get_elan_tier_attributes(file_paths)
 
 #     return ui
+
+@elan.validate_files('eaf')
+def elan_validator(file_paths: List[Path]):
+    print("validating:", file_paths)
+    return None
+
+@elan.update_ui
+def update_ui(file_paths: List[Path], ui):
+    
+    """
+    Iterate a dir of elan files and compiles info about all the files' tiers:
+    unique tier types, unique tier names, and the num of tiers
+    """
+    # Use sets internally for easy uniqueness, conver to lists when done
+    _tier_types: Set[str] = set(ui['data']['tier_type']['type'])
+    _tier_names: Set[str] = set(ui['data']['tier_name']['type'])
+    tier_max_count = 0
+
+    eaf_paths = [p for p in file_paths if f'{p}'.endswith('.eaf')]
+    for eaf_path in eaf_paths:
+        input_eaf = Eaf(eaf_path)
+        for tier_type in list(input_eaf.get_linguistic_type_names()):
+            _tier_types.add(tier_type)
+            tier_ids: List[str] = input_eaf.get_tier_ids_for_linguistic_type(
+                tier_type)
+            for tier_id in tier_ids:
+                _tier_names.add(tier_id)
+        # count the number of tiers, use the max from all files
+        tier_count = len(list(input_eaf.get_tier_names()))
+        if tier_count > tier_max_count:
+            tier_max_count = tier_count
+            
+    ui['data']['tier_type']['type'] = list(_tier_types)
+    ui['data']['tier_name']['type'] = list(_tier_names)
+    ui['data']['tier_order']['type'] = [i for i in range(tier_max_count)]
+    return ui
 
 @elan.import_files('eaf')
 def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):

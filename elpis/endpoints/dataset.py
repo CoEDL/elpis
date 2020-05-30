@@ -48,26 +48,33 @@ def list_existing():
         "data": data
     })
 
+def require_dataset(f):
+    def wrapper(*args, **kwargs):
+        dataset: Dataset = app.config['CURRENT_DATASET']
+        if dataset is None:
+            return jsonify({"status": 404,
+                            "data": "No current dataset exists (perhaps create one first)"})
+        return f(dataset, *args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
+
 # Handle file uploads. For now, default to the "original" dir.
 # Dataset.add_fp() will check file names, moving corpora files to own dir
 # later we might have a separate GUI widget for corpora files
 # which could have a different route with a different destination.
 # add_fp scans the uploaded files and returns lists of all tier types and tier names for eafs
 @bp.route("/files", methods=['POST'])
-def files():
-    dataset: Dataset = app.config['CURRENT_DATASET']
-    if dataset is None:
-        return jsonify({"status": 404,
-                        "data": "No current dataset exists (perhaps create one first)"})
+@require_dataset
+def files(dataset: Dataset):
     if request.method == 'POST':
         for file in request.files.getlist("file"):
             dataset.add_fp(fp=file, fname=file.filename, destination='original')
-        dataset.get_elan_tier_attributes(dataset.pathto.original)
+        dataset.validate()
+        dataset.refresh_ui()
     data = {
         "files": dataset.files,
-        "tier_max_count": dataset.tier_max_count,
-        "tier_types": dataset.tier_types,
-        "tier_names": dataset.tier_names
+        'settings': dataset.importer.get_settings(),
+        "ui": dataset.importer.get_ui()
     }
     return jsonify({
         "status": 200,
@@ -76,12 +83,8 @@ def files():
 
 
 @bp.route("/import/settings", methods=['GET', 'POST'])
-def settings():
-    dataset: Dataset = app.config['CURRENT_DATASET']
-    if dataset is None:
-        # TODO: 404 does not accurately describe the status
-        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
-    
+@require_dataset
+def settings(dataset: Dataset):
     # Only edit if POST
     if request.method == 'POST':
         settings = dataset.importer.get_settings()
@@ -101,11 +104,8 @@ def settings():
     })
 
 @bp.route("/import/ui", methods=['GET', 'POST'])
-def settings_ui():
-    dataset: Dataset = app.config['CURRENT_DATASET']
-    if dataset is None:
-        # TODO: 404 does not accurately describe the status
-        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+@require_dataset
+def settings_ui(dataset: Dataset):
     data = {
         'ui': dataset.importer.get_ui()
     }
@@ -115,11 +115,8 @@ def settings_ui():
     })
 
 @bp.route("/punctuation_to_explode_by", methods=['POST'])
-def punctuation_to_explode_by():
-    dataset: Dataset = app.config['CURRENT_DATASET']
-    if dataset is None:
-        # TODO: 404 does not accurately describe the status
-        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+@require_dataset
+def punctuation_to_explode_by(dataset: Dataset):
     if 'punctuation_to_explode_by' in request.json.keys():
         dataset.punctuation_to_explode_by = request.json['punctuation_to_explode_by']
     data = {
@@ -134,10 +131,8 @@ def punctuation_to_explode_by():
 # Probably nicer to send back JSON data instead
 
 @bp.route("/prepare", methods=['POST'])
-def prepare():
-    dataset: Dataset = app.config['CURRENT_DATASET']
-    if dataset is None:
-        return jsonify({"status":404, "data": "No current dataset exists (perhaps create one first)"})
+@require_dataset
+def prepare(dataset: Dataset):
     dataset.process()
     with dataset.pathto.word_count_json.open() as fin:
         wordlist = fin.read()

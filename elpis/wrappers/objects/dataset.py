@@ -320,6 +320,20 @@ class Dataset(FSObject):
             'punctuation_to_explode_by': self.config['punctuation_to_explode_by']
         }
 
+    def validate(self):
+        extention_to_path = {}
+        for path in self.__files:
+            extention = f'{path}'.split('.')[-1]
+            if extention not in extention_to_path.keys():
+                extention_to_path[extention] = [path]
+            else:
+                extention_to_path[extention].append(path)
+        for extention, paths in extention_to_path.items():
+            self.importer.validate_files(extention, paths)
+    
+    def refresh_ui(self):
+        self.importer.refresh_ui(self.__files)
+
     def process(self):
         transformer = self._importer
         if transformer == None:
