@@ -6,8 +6,6 @@ export default {
             "files": "/dataset/files",
             "prepare": "/dataset/prepare",
             "prepareError": "/dataset/prepare/error",
-            "ui": "/dataset/import/ui",
-            "settings": "/dataset/import/settings",
             "punctuation_to_explode_by": "/dataset/punctuation_to_explode_by"
         },
         "pronDict": {
@@ -38,7 +36,8 @@ export default {
             "load": "/api/dataset/load",
             "list": "/api/dataset/list",
             "files": "/api/dataset/files",
-            "settings": "/api/dataset/settings",
+            "settings": "/api/dataset/import/settings",
+            "ui": "/api/dataset/import/ui",
             "prepare": "/api/dataset/prepare"
         },
         "pronDict": {

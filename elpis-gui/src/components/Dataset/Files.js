@@ -111,7 +111,7 @@ class DatasetFiles extends Component {
                                     { t('dataset.files.settingsHeader') }
                                 </Header>
 
-                                <SettingsForm settings={settings} ui={ui} />
+                                <SettingsForm settings={settings} ui={ui} datasetSettings={datasetSettings} />
                             </Segment>
 
                             <Divider />
@@ -129,8 +129,8 @@ class DatasetFiles extends Component {
 }
 
 
-const SettingsForm = ({settings, ui}) => {
-    console.group();
+const SettingsForm = ({settings, ui, datasetSettings}) => {
+    console.group("SettingsForm");
     console.log({settings});
     console.log({ui});
     const handleSubmit = props => {}
@@ -162,23 +162,71 @@ const SettingsForm = ({settings, ui}) => {
 
             // Construct table rows for group
             group.forEach(ui_name => {
+                console.group("Row for " + ui_name);
                 if (ui['type'][ui_name] === "title") {
+                    console.log("Building title");
                     header = (
                         <Table.Row>
                             <Table.HeaderCell colSpan='2'>{ui['data'][ui_name]['title']}</Table.HeaderCell>
                         </Table.Row>
                     );
                 } else { // ui['type'][ui_name] == "settings"
+                    console.log("Building input");
                     let data = ui['data'][ui_name];
                     let label = data.display_name !== null ? data.display_name : ui_name;
+
+                    // Switch input type based on importer ui specification
+                    let dataEntryElement;
+                    switch (data.type) {
+                        case 'str': {
+                            dataEntryElement = (<Input type='text' />);
+                        }
+                        break;
+                        case 'int': {
+                            dataEntryElement = (<Input type='number' />);
+                        }
+                        break;
+                        default: /*ENUM*/ {
+                            let options = [];
+                            data.type.forEach(v => {
+                                if (v === null) {
+                                    console.log("pushing: ", {key: "- not selected -", value: "- not selected -", text: "- not selected -"});
+                                    options.push({key: "- not selected -", value: "- not selected -", text: "- not selected -"})
+                                }
+                                else {
+                                    console.log("pushing: ", {key: v, value: v, text: v});
+                                    options.push({key: v, value: v, text: v})
+                                }
+                            });
+                            dataEntryElement = (<Select
+                                options={options}
+                                // value={settings[ui_name]}
+                                onChange={(event, data)=>{
+                                    let newSettings = { ...settings };
+                                    if (data.value === "- not selected -") {
+                                        newSettings[ui_name] = null;
+                                    } else {
+                                        newSettings[ui_name] = data.value;
+                                    }
+                                    console.log("Sending new settings: ", {newSettings});
+                                    datasetSettings(newSettings)
+                                }}
+                                selection
+                            />);
+                            // TODO: add a onChange that dispatches the setting (do this for int and string as well)
+                        }
+                    }
+
+                    // Construct row for individual setting
                     let row = (
                         <Table.Row key={ui_name}>
                             <Table.Cell collapsing>{label}</Table.Cell>
-                            <Table.Cell>option</Table.Cell>
+                            <Table.Cell>{dataEntryElement}</Table.Cell>
                         </Table.Row>
                     );
                     settingRows.push(row);
                 }
+                console.groupEnd();
             });
 
             // Construct table

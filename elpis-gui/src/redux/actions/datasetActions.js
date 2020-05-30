@@ -118,6 +118,9 @@ export function datasetFiles(postData) {
                 responseData = response.data
                 dispatch(datasetFilesSuccess(response))
             })
+            // .then((res) => {
+            //     dispatch(datasetUIUpdate())
+            // })
             .catch(error => {
                 dispatch(datasetFilesFailure(error))
                 throw error
@@ -201,5 +204,37 @@ const datasetPrepareSuccess = response => ({
 })
 const datasetPrepareFailure = error => ({
     type: actionTypes.DATASET_PREPARE_FAILURE,
+    response: { error }
+})
+
+
+/* * * * * * * * * * * * UI UPDATE  * * * * * * * * * *  */
+export function datasetUIUpdate() {
+    const url = baseUrl + urls.api.dataset.ui
+    var responseData
+    return async dispatch => {
+        dispatch(datasetUIUpdateStarted())
+        await axios.post(url)
+            .then(response => {
+                responseData = response.data
+                dispatch(datasetUIUpdateSuccess(response))
+            })
+            .catch(error => {
+                dispatch(datasetUIUpdateFailure(error))
+                throw error
+            })
+        return responseData
+    }
+}
+
+const datasetUIUpdateStarted = () => ({
+    type: actionTypes.DATASET_UI_UPDATE_STARTED
+})
+const datasetUIUpdateSuccess = response => ({
+    type: actionTypes.DATASET_UI_UPDATE_SUCCESS,
+    response: { ...response }
+})
+const datasetUIUpdateFailure = error => ({
+    type: actionTypes.DATASET_UI_UPDATE_FAILURE,
     response: { error }
 })

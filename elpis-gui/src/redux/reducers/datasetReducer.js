@@ -97,11 +97,8 @@ const dataset = (state = initState, action) => {
                     audioFiles,
                     transcriptionFiles,
                     additionalTextFiles,
-                    settings: { ...state.settings,
-                        tier_max_count: data.tier_max_count,
-                        tier_types: data.tier_types,
-                        tier_names: data.tier_names
-                    }
+                    settings: data.settings,
+                    ui: data.ui
                 }
             } else {
                 console.log(data)
@@ -114,6 +111,7 @@ const dataset = (state = initState, action) => {
                 return {
                     ...state,
                     settings: { ...state.settings,
+                        // TODO: this is old code below, will break!!
                         tier_type: data.tier_type,
                         tier_name: data.tier_name,
                         tier_order: data.tier_order,
@@ -122,6 +120,15 @@ const dataset = (state = initState, action) => {
             } else {
                 console.log(data)
                 return { ...state }
+            }
+        
+        case actionTypes.DATASET_UI_UPDATE_SUCCESS:
+            var { data, status } = action.response.data
+            if (status == 200) {
+                return {
+                    ...state,
+                    ui: data.ui
+                }
             }
 
         case actionTypes.DATASET_PREPARE_SUCCESS:
