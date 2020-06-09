@@ -101,6 +101,7 @@ class DataTransformer:
 
         self._validaters = {}
         self._ui_updater = None # Gets replaced by callback (used on file addition)
+        self._extentions = []
 
     def process(self):
         """
@@ -160,6 +161,9 @@ class DataTransformerAbstractFactory:
     # transformer name to the unique object factory for that transformer. As
     # per dictionary rules, tranformers must be uniquely named.
     _transformer_factories = {}
+
+    # mapping extention to factories
+    _ext_to_factory = {}
 
     def __init__(self, name: str):
         """
@@ -278,6 +282,8 @@ class DataTransformerAbstractFactory:
             raise RuntimeError('import_directory used, therefore cannot use import_files')
         elif extention in self._import_extension_callbacks:
             raise RuntimeError(f'"{extention}" has already been registered with import_files decorator')
+
+        self._ext_to_factory[extention] = self._name
 
         def decorator(f: Callable):
             if f.__name__ in self._attributes:
@@ -698,6 +704,9 @@ class DataTransformerAbstractFactory:
         
         # Add ui refresher
         dt._ui_updater = self._update_ui_callback
+
+        # Add handable extentions
+        dt._extentions = self._import_file_validator_callback.keys()
 
         return dt
     

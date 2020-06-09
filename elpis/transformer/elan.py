@@ -23,6 +23,8 @@ from praatio import tgio
 from typing import Dict, List, Set, Tuple
 from pathlib import Path
 
+from ..wrappers.input.elan_to_json import process_eaf
+
 from elpis.transformer import DataTransformerAbstractFactory
 
 elan = DataTransformerAbstractFactory('Elan')
@@ -113,12 +115,18 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
     :param eaf_paths: List of string paths to Elan files.
     :return: a list of dictionaries, where each dictionary is an annotation
     """
+    tier_order = context['tier_order']
+    tier_name = context['tier_name']
+    tier_type = context['tier_type']
+
     for input_elan_file in eaf_paths:
         # Get paths to files
         input_directory, full_file_name = os.path.split(input_elan_file)
         file_name, extension = os.path.splitext(full_file_name)
 
         input_eaf = Eaf(input_elan_file)
+        tier_types: List[str] = list(input_eaf.get_linguistic_type_names())
+        tier_names: List[str] = list(input_eaf.get_tier_names())
 
         # TODO: Check if this is necessary? It is possible to process transcription and audio file separately.
         # # Look for wav file matching the eaf file in same directory
@@ -129,12 +137,41 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
         #                     f"Please put it next to the eaf file in {input_directory}.")
 
         # Get annotations and parameters (things like speaker id) on the target tier
-        tier_name = context['tier']
-        annotations = sorted(input_eaf.get_annotation_data_for_tier(tier_name))
-        parameters = input_eaf.get_parameters_for_tier(tier_name)
-        speaker_id = parameters.get("PARTICIPANT", "")
+        annotations: List[Tuple[str, str, str]] = []
+        annotation_data: List[dict] = []
 
-        annotations_data = []
+        # Determine tier_name
+        # First try using tier order to get tier name
+        if tier_order:
+            # Watch out for files that may not have this many tiers
+            # tier_order is 1-index but List indexing is 0-index
+            try:
+                tier_name = tier_names[tier_order-1]
+                print(f"using tier order {tier_order} to get tier name {tier_name}")
+            except IndexError:
+                print("couldn't find a tier")
+                pass
+        else:
+            # else use tier type to get a tier name
+            if tier_type in tier_types:
+                print(f"found tier type {tier_type}")
+                tier_names = input_eaf.get_tier_ids_for_linguistic_type(tier_type)
+                tier_name = tier_names[0]
+                if tier_name:
+                    print(f"found tier name {tier_name}")
+            else:
+                print("tier type not found in this file")
+
+        if tier_name in tier_names:
+            print(f"using tier name {tier_name}")
+            annotations = input_eaf.get_annotation_data_for_tier(tier_name)
+        else:
+            pass # TODO: Alert user of a skip due to missing tier_name in file
+
+        if annotations:
+            annotations = sorted(annotations)
+            parameters: Dict[str,str] = input_eaf.get_parameters_for_tier(tier_name)
+            speaker_id: str = parameters.get("PARTICIPANT", "")
 
         for annotation in annotations:
             start = annotation[0]

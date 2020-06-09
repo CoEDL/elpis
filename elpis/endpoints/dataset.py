@@ -12,7 +12,6 @@ bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 def new():
     kaldi: KaldiInterface = app.config['INTERFACE']
     dataset = kaldi.new_dataset(request.json['name'])
-    dataset.select_importer('Elan')
     app.config['CURRENT_DATASET'] = dataset
     data = {
         "state": dataset.state # TODO: ensure we use get_state() in the future
@@ -69,12 +68,14 @@ def files(dataset: Dataset):
     if request.method == 'POST':
         for file in request.files.getlist("file"):
             dataset.add_fp(fp=file, fname=file.filename, destination='original')
+        dataset.auto_select_importer()
         dataset.validate()
         dataset.refresh_ui()
     data = {
         "files": dataset.files,
         'settings': dataset.importer.get_settings(),
-        "ui": dataset.importer.get_ui()
+        "ui": dataset.importer.get_ui(),
+        "importer_name": dataset.importer.get_name()
     }
     return jsonify({
         "status": 200,

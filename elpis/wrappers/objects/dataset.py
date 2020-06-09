@@ -14,7 +14,7 @@ from pympi.Elan import Eaf
 
 from ..utilities import load_json_file
 from .fsobject import FSObject
-from elpis.transformer import make_importer, DataTransformer
+from elpis.transformer import make_importer, DataTransformer, DataTransformerAbstractFactory
 from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
 from elpis.wrappers.input.elan_to_json import process_eaf
 from elpis.wrappers.input.clean_json import clean_json_data, extract_additional_corpora
@@ -127,6 +127,22 @@ class Dataset(FSObject):
             settings_change_callback=settings_change_callback
         )
         return
+    
+    def auto_select_importer(self):
+        if self.importer is not None:
+            return # Already have importer selected
+        if len(self.files) == 0:
+            return # cannot determine importer with no files.
+        extentions = set([ f'{p}'.split('.')[-1] for p in self.files ])
+        dtaf_exts = set(DataTransformerAbstractFactory._ext_to_factory.keys())
+        intersect = extentions.intersection(dtaf_exts)
+        if len(intersect) == 0:
+            return # No common file extentions
+        # Just use the first one
+        ext = list(intersect)[0]
+        name = DataTransformerAbstractFactory._ext_to_factory[ext]
+        self.select_importer(name)
+
 
     @property
     def files(self) -> List[str]:
@@ -349,6 +365,7 @@ class Dataset(FSObject):
             if extension == ".txt":
                 corpus_files.append(file_)
         print(f"corpus_files {corpus_files}")
+
         # Compile and clean the additional corpora content into a single file
         for additional_corpus in corpus_files:
             extract_additional_corpora(additional_corpus=additional_corpus,
