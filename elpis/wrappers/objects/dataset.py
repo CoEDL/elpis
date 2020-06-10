@@ -73,6 +73,7 @@ class Dataset(FSObject):
         self.config['processed_labels'] = []
         self.config['importer'] = None
         self.config['punctuation_to_explode_by'] = '' # TODO: check if '' is the correct default
+        self.config['punctuation_to_collapse_by'] = '' # TODO verify if we need this line?
 
     @classmethod
     def load(cls, base_path: Path):
@@ -221,6 +222,14 @@ class Dataset(FSObject):
     @punctuation_to_explode_by.setter
     def punctuation_to_explode_by(self, value):
         self.config['punctuation_to_explode_by'] = value
+    
+    @property
+    def punctuation_to_collapse_by(self) -> str:
+        return self.config['punctuation_to_collapse_by']
+    
+    @punctuation_to_collapse_by.setter
+    def punctuation_to_collapse_by(self, value):
+        self.config['punctuation_to_collapse_by'] = value
 
     def add_fp(self, fp: Union[BufferedIOBase, BinaryIO],
                fname: str,
