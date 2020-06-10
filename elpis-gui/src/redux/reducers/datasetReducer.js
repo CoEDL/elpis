@@ -3,6 +3,7 @@ import * as actionTypes from '../actionTypes/datasetActionTypes';
 
 const initState = {
     name: "",
+    importer_name: "",
     status: "",
     datasetList: [],
     audioFiles: [],
@@ -11,6 +12,7 @@ const initState = {
     settings: null,
     ui: null,
     punctuation_to_explode_by: "",
+    punctuation_to_collapsed_by: "",
     wordlist: {}
 }
 
@@ -24,16 +26,25 @@ const dataset = (state = initState, action) => {
             return {...state}
 
         case actionTypes.DATASET_NEW_SUCCESS: {
-            let dataset_state = action.response.data.data.state
-            let {
-                name,
-                settings,
-                ui,
-                punctuation_to_explode_by
-            } = dataset_state.importer;
+            let dataset_state = action.response.data.data.state;
+
+            let name = dataset_state.name;
+            let punctuation_to_explode_by = dataset_state.punctuation_to_explode_by;
+
+            let importer_name = null;
+            let settings = null;
+            let ui = null;
+            
+            if (dataset_state.importer !== null) {
+                name =     dataset_state.importer.name;
+                settings = dataset_state.importer.settings;
+                ui =       dataset_state.importer.ui;
+            }
+
             console.log("DATASET_NEW_SUCCESS name", name)
             return { ...initState,
                 name,
+                importer_name,
                 settings,
                 ui,
                 punctuation_to_explode_by}
@@ -98,7 +109,8 @@ const dataset = (state = initState, action) => {
                     transcriptionFiles,
                     additionalTextFiles,
                     settings: data.settings,
-                    ui: data.ui
+                    ui: data.ui,
+                    importer_name: data.importer_name
                 }
             } else {
                 console.log(data)
