@@ -2,9 +2,9 @@ import pytest
 import json
 from pathlib import Path
 
-from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.engines.kaldi.objects.interface import KaldiInterface
 
-from .dataset import Dataset
+from .dataset import KaldiDataset
 
 def test_new_dataset(tmpdir):
     """

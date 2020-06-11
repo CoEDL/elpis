@@ -2,7 +2,7 @@ import pytest
 import json
 from pathlib import Path
 
-from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.engines.kaldi.objects.interface import KaldiInterface
 
 # from .test_pipeline import pipeline_upto_step_3
 

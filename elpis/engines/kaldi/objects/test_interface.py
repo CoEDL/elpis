@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 
-from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.engines.kaldi.objects.interface import KaldiInterface
 
 def test_construction(tmpdir):
     KaldiInterface(f'{tmpdir}/state')

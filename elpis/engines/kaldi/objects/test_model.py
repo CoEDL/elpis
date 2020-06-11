@@ -1,6 +1,6 @@
 import pytest
 
-from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.engines.kaldi.objects.interface import KaldiInterface
 
 @pytest.fixture
 def pipeline_upto_step_1(tmpdir):

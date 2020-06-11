@@ -2,9 +2,9 @@ import pytest
 import json
 from pathlib import Path
 
-from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.engines.kaldi.objects.interface import KaldiInterface
 
-from .pron_dict import PronDict
+from .pron_dict import KaldiPronDict
 
 @pytest.fixture
 def pipeline_upto_step_1(tmpdir):

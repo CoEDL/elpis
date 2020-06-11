@@ -1,6 +1,6 @@
 import pytest
 
-from elpis.wrappers.objects.interface import KaldiInterface
+from elpis.engines.kaldi.objects.interface import KaldiInterface
 
 # TODO: this file is broken, solution is to fix it or create mock objects
 
