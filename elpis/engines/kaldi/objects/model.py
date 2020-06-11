@@ -4,37 +4,27 @@ import shutil
 from pathlib import Path
 from typing import Callable
 import threading
-from elpis.wrappers.objects.command import run
-from elpis.wrappers.objects.dataset import Dataset
-from elpis.wrappers.objects.pron_dict import PronDict
-from elpis.wrappers.objects.fsobject import FSObject
-from elpis.wrappers.input.json_to_kaldi import create_kaldi_structure
-from elpis.wrappers.objects.path_structure import KaldiPathStructure
+from elpis.engines.common.objects.command import run
+from elpis.engines.common.objects.model import Model
+from elpis.engines.common.objects.dataset import Dataset
+from elpis.engines.kaldi.objects.pron_dict import PronDict
+from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
+from elpis.engines.common.objects.path_structure import PathStructure
 from collections import OrderedDict
 
 
-class ModelFiles(object):
-    def __init__(self, basepath: Path):
-        self.kaldi = KaldiPathStructure(basepath)
-
-
-class Model(FSObject):  # TODO not thread safe
-    _config_file = 'model.json'
+class KaldiModel(Model):  # TODO not thread safe
+    _links = {**Model._links, **{"pron_dict": PronDict}}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dataset: Dataset = None
-        self.config['dataset_name'] = None  # dataset hash has not been linked
         self.pron_dict: PronDict = None
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
         self.config['ngram'] = 1  # default to 1 to make playing quicker
-        self.config['status'] = 'untrained'
-        self.status = 'untrained'
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
-        self.dataset = None
         self.pron_dict = None
         return self
 
@@ -81,7 +71,7 @@ class Model(FSObject):  # TODO not thread safe
         create_kaldi_structure(
             input_json=f'{self.dataset.pathto.annotation_json}',
             output_folder=f'{output_path}',
-            silence_markers=None,
+            silence_markers=False,
             corpus_txt=f'{model_corpus_txt}'
         )
 
@@ -90,7 +80,7 @@ class Model(FSObject):  # TODO not thread safe
         def prepare_for_training():
             print("prepare_for_training")
             # task make-kaldi-subfolders
-            kaldi_structure = KaldiPathStructure(self.path)
+            kaldi_structure = PathStructure(self.path)
 
             local_kaldi_path = self.path.joinpath('kaldi')
             local_kaldi_path.mkdir(parents=True, exist_ok=True)
@@ -115,8 +105,7 @@ class Model(FSObject):  # TODO not thread safe
             mfcc_file_path = kaldi_structure.conf.joinpath('mfcc.conf')
             decode_config_file_path = kaldi_structure.conf.joinpath('decode.config')
 
-            # TODO: remove reference to fixed path below
-            template_path = Path('/elpis/elpis/wrappers/templates')
+            template_path = Path('/elpis/elpis/engines/kaldi/templates')
             path_resource = template_path.joinpath('path.sh')
             mfcc_resource = template_path.joinpath('mfcc.conf')
             decode_config_resource = template_path.joinpath('decode.config')

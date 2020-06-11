@@ -6,14 +6,14 @@ def existing_attributes(obj):
 
 
 def ensure_paths_exist(obj, existing_attrs):
-    post_structure_defintions = set(dir(obj))
-    structure_path_attrs = post_structure_defintions - existing_attrs
+    post_structure_definitions = set(dir(obj))
+    structure_path_attrs = post_structure_definitions - existing_attrs
     for attr in structure_path_attrs:
         path: Path = getattr(obj, attr)
         path.mkdir(parents=True, exist_ok=True)
 
 
-class KaldiPathStructure(object):
+class PathStructure(object):
     def __init__(self, parent: Path):
         self.parent = Path(parent)
         self.path: Path = self.parent.joinpath('kaldi')

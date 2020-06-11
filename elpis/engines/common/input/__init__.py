@@ -1,6 +1,5 @@
 from .clean_json import clean_json_data
 from .elan_to_json import process_eaf
-from .json_to_kaldi import create_kaldi_structure
 from .make_prn_dict import generate_pronunciation_dictionary
 from .make_wordlist import generate_word_list
 from .resample_audio import process_item

@@ -31,8 +31,6 @@ recordings/
 # mac files
 .DS_Store
 
+# During the inheritance test.
+elpis/engines/persephone/
 
-build/
-dist/
-venv/
-elpis-gui/

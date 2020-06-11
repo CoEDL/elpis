@@ -23,7 +23,7 @@ from praatio import tgio
 from typing import Dict, List, Set, Tuple
 from pathlib import Path
 
-from ..wrappers.input.elan_to_json import process_eaf
+from elpis.engines.common.input.elan_to_json import process_eaf
 
 from elpis.transformer import DataTransformerAbstractFactory
 

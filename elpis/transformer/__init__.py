@@ -17,7 +17,7 @@ from multiprocessing.dummy import Pool
 from typing import List, Dict, Callable
 from pathlib import Path
 
-from elpis.wrappers.input.resample_audio import process_item
+from elpis.engines.common.input.resample_audio import process_item
 
 # A json_str is the same as a normal string except must always be deserializable into JSON as an invariant.
 json_str = str

@@ -13,23 +13,20 @@ from shutil import move
 from pympi.Elan import Eaf
 
 from ..utilities import load_json_file
-from .fsobject import FSObject
+
 from elpis.transformer import make_importer, DataTransformer, DataTransformerAbstractFactory
-from elpis.wrappers.objects.path_structure import existing_attributes, ensure_paths_exist
-from elpis.wrappers.input.elan_to_json import process_eaf
-from elpis.wrappers.input.clean_json import clean_json_data, extract_additional_corpora
-from elpis.wrappers.input.resample_audio import process_item
-from elpis.wrappers.input.make_wordlist import generate_word_list
 
+from elpis.engines.common.objects.fsobject import FSObject
+from elpis.engines.common.objects.path_structure import existing_attributes, ensure_paths_exist
 
-# TODO: this is very ELAN specific code...
-DEFAULT_TIER_TYPE = 'default-lt'
-DEFAULT_TIER_NAME = 'Phrase'
-
+from elpis.engines.common.input.elan_to_json import process_eaf
+from elpis.engines.common.input.clean_json import clean_json_data, extract_additional_corpora
+from elpis.engines.common.input.resample_audio import process_item
+from elpis.engines.common.input.make_wordlist import generate_word_list
 
 class DSPaths(object):
     """
-    Path locations for the DataSet object. Attribures represent paths to DataSet artifacts.
+    Path locations for the DataSet object. Attributes represent paths to DataSet artifacts.
     """
     def __init__(self, basepath: Path):
         # directories
@@ -195,7 +192,6 @@ class Dataset(FSObject):
 
         :return: A DataTransformer if one has been assigned using the select_importer(...) method, otherwise None.
         """
-
         return self._importer
     
     @property
@@ -367,7 +363,7 @@ class Dataset(FSObject):
 
         # Compile text corpora from original/text_corpora dir into one file
         all_files_in_dir = set(glob.glob(os.path.join(
-            self.pathto.text_corpora, "**"), recursive=True))
+            str(self.pathto.text_corpora), "**"), recursive=True))
         corpus_files = []
         for file_ in all_files_in_dir:
             file_name, extension = os.path.splitext(file_)
@@ -379,8 +375,10 @@ class Dataset(FSObject):
         for additional_corpus in corpus_files:
             extract_additional_corpora(additional_corpus=additional_corpus,
                                        corpus_txt=f'{self.pathto.corpus_txt}',
-                                       punctuation_to_collapse_by=self.config['punctuation_to_collapse_by'],
-                                       punctuation_to_explode_by=self.config['punctuation_to_explode_by'])
+                                       punctuation_to_collapse_by=
+                                       self.config['punctuation_to_collapse_by'],
+                                       punctuation_to_explode_by=
+                                       self.config['punctuation_to_explode_by'])
 
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.annotation_json}',

@@ -16,7 +16,7 @@ import sys
 import os
 import argparse
 from pympi.Elan import Eaf
-from typing import List, Dict, Tuple, Union
+from typing import List, Dict, Tuple
 from ..utilities import load_json_file, write_data_to_json_file
 
 

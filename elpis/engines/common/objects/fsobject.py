@@ -2,7 +2,7 @@ import json
 import time
 from abc import ABC, abstractclassmethod, abstractmethod
 from pathlib import Path
-from elpis.wrappers.utilities import hasher
+from elpis.engines.common.utilities import hasher
 
 # Design constraint
 # Since there are four classes that must have their states saved to the
@@ -19,6 +19,8 @@ from elpis.wrappers.utilities import hasher
 
 
 class FSObject(ABC):
+    _links = {}  # Used for child classes to dynamically link to other objects if applicable.
+
     def __init__(self,
                  parent_path: Path = None,
                  dir_name: str = None,
@@ -110,9 +112,17 @@ class FSObject(ABC):
     def config(self):
         return self.ConfigurationInterface(self)
 
+    # def link(self, *link_objects):
+    #     # NOTE It should be easier to use **links (keyword arguments), but it forces the edition of related endpoint file, so wait for now.
+    #     print(f"*** linking of {self} to these objects: {self._links}.")
+    #     for link_name, link_class in self._links.items():
+    #         link_object = [link_object for link_object in link_objects if issubclass(link_object.__class__, link_class)][0]  # Do we need assert length = 1 here?
+    #         setattr(self, link_name, link_object)
+    #         self.config[f"{link_name}_name"] = link_object.name
+
     class ConfigurationInterface(object):
         """
-        Continuesly save changes to disk and only read properties from disk
+        Continuously save changes to disk and only read properties from disk
         (in the JSON file storing the objects configuration).
 
         This class is more syntax sugar. Particularly so we can treat the

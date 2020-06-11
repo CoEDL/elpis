@@ -16,7 +16,7 @@ import argparse
 import platform
 import uuid
 import glob
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 from typing import Dict, List, Set, Tuple, Union
 from ..utilities import find_files_by_extensions, write_data_to_json_file
 
@@ -56,19 +56,19 @@ def process_trs(file_name: str, verbose_output: bool) -> List[Dict[str, Union[st
 
     utterances: List[Dict[str, Union[str, float]]] = []
     try:
-        tree: ET.ElementTree = ET.parse(file_name)
-        root: ET.Element = tree.getroot()
+        tree: ElementTree.ElementTree = ElementTree.parse(file_name)
+        root: ElementTree.Element = tree.getroot()
         wave_name: str = root.attrib["audio_filename"] + ".wav"
-        turn_nodes: List[ET.Element] = tree.findall(".//Turn")
+        turn_nodes: List[ElementTree.Element] = tree.findall(".//Turn")
         for turn_node in turn_nodes:
             utterances = utterances + process_turn(wave_name, turn_node, tree)
-    except ET.ParseError as error:
+    except ElementTree.ParseError as error:
         conditional_log(True, "XML parser failed to parse '%s'!\n" % file_name)
         conditional_log(True, str(error))
     return utterances
 
 
-def process_turn(wave_name: str, turn_node: ET.Element, tree: ET.ElementTree) -> List[Dict[str, Union[str, float]]]:
+def process_turn(wave_name: str, turn_node: ElementTree.Element, tree: ElementTree.ElementTree) -> List[Dict[str, Union[str, float]]]:
     """
     Helper method to process each turn_node in the .trs file.
 
@@ -82,7 +82,7 @@ def process_turn(wave_name: str, turn_node: ET.Element, tree: ET.ElementTree) ->
     turn_end: float = float(turn_node.attrib["endTime"])
     speaker_id: str = turn_node.get("speaker", "")
 
-    speaker_name_node: ET.Element = tree.find(".//Speaker[@id='%s']" % speaker_id)
+    speaker_name_node: ElementTree.Element = tree.find(".//Speaker[@id='%s']" % speaker_id)
     if speaker_name_node is not None:
         speaker_name: str = speaker_name_node.attrib["name"]
     else:

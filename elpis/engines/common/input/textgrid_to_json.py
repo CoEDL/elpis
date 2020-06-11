@@ -11,7 +11,6 @@ Contributors:
 
 import argparse
 from praatio import tgio
-from typing import Dict
 from ..utilities import *
 
 

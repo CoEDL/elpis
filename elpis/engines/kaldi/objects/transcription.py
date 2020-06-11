@@ -1,9 +1,6 @@
 from pathlib import Path
-from elpis.wrappers.input.resample import resample
-from elpis.wrappers.inference.generate_infer_files import generate_files
-from elpis.wrappers.objects.command import run
-from elpis.wrappers.objects.fsobject import FSObject
-import threading
+from elpis.engines.common.input.resample import resample
+from elpis.engines.common.objects.transcription import Transcription
 import subprocess
 from typing import Callable
 import os
@@ -12,63 +9,16 @@ import wave
 import contextlib
 
 
-class Transcription(FSObject):
-    _config_file = "transcription.json"
-
+class KaldiTranscription(Transcription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.audio_file_path = self.path.joinpath('audio.wav')
-        self.model = None
-        self.config["model_name"] = None
-        self.config["status"] = "ready"
-        self.status = "ready"
-        self.type = None
-        self._exporter = None
-        self.config['exporter'] = None
-        self.config['has_been_transcribed'] = False
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
         self.audio_file_path = self.path.joinpath('audio.wav')
-        self.model = None
-
-        self._exporter = self.config['exporter']
-        if self._exporter != None:
-            exporter_name = self._exporter['name']
-            self.select_exporter(exporter_name)
         return self
-
-    def link(self, model):
-        self.model = model
-        self.config['model_name'] = model.name
-
-    @property
-    def status(self):
-        return self.config['status']
-    
-    @property
-    def state(self):
-        return {
-            'name': self.config['name'],
-            'hash': self.config['hash'],
-            'date': self.config['date'],
-            'model': self.config['model_name'],
-            'has_been_transcribed': self.config['has_been_transcribed'],
-            'exporter': self.config['exporter']
-        }
-    
-    @property
-    def has_been_transcribed(self):
-        return self.config['has_been_transcribed']
-    
-    @property
-    def exporter(self):
-        return self._exporter
-
-    @status.setter
-    def status(self, value: str):
-        self.config['status'] = value
 
     def _build_spk2utt_file(self, spk_id: str, utt_id: str):
         spk2utt_path = Path(self.path).joinpath('spk2utt')
@@ -139,7 +89,7 @@ class Transcription(FSObject):
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-        subprocess.run('sh /elpis/elpis/wrappers/inference/gmm-decode-long.sh'.split(),
+        subprocess.run('sh /elpis/elpis/engines/kaldi/inference/gmm-decode-long.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
         file_util.copy_file(f"{kaldi_infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
         file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')

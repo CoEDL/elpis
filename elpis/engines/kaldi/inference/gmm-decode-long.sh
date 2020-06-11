@@ -104,7 +104,7 @@ echo "${recid} ${audio}" > ./data/infer/split1/1/wav.scp
 
 echo "==== Converting CTM to Textgrid ===="
 # python /kaldi-helpers/kaldi_helpers/output_scripts/ctm_to_textgrid.py \
-python /elpis/elpis/wrappers/output/ctm_to_textgrid.py \
+python /elpis/elpis/engines/common/output/ctm_to_textgrid.py \
     --ctm data/infer/align-words-best-wordkeys.ctm \
     --wav data/infer/split1/1/wav.scp \
     --seg data/infer/split1/1/segments \
@@ -112,7 +112,7 @@ python /elpis/elpis/wrappers/output/ctm_to_textgrid.py \
 
 echo "==== Converting Textgrid to ELAN ===="
 # python /kaldi-helpers/kaldi_helpers/output_scripts/textgrid_to_elan.py \
-python /elpis/elpis/wrappers/output/textgrid_to_elan.py \
+python /elpis/elpis/engines/common/output/textgrid_to_elan.py \
     --tg data/infer/utterance-0.TextGrid \
     --wav data/infer/wav.scp \
     --outfile data/infer/utterance-0.eaf

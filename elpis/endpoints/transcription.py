@@ -1,18 +1,18 @@
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
-from elpis.wrappers.objects.interface import KaldiInterface
-from elpis.wrappers.objects.model import Model
-from elpis.wrappers.objects.transcription import Transcription
-from elpis.wrappers.utilities import hasher
+from elpis.engines import Interface
+from elpis.engines.common.objects.model import Model
+from elpis.engines.common.objects.transcription import Transcription
+from elpis.engines.common.utilities import hasher
 
 
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 
-  # TODO transcriptions have no name
+# TODO transcriptions have no name
 @bp.route("/new", methods=['POST'])
 def new():
-    kaldi: KaldiInterface = app.config['INTERFACE']
-    transcription = kaldi.new_transcription(hasher.new())
+    interface: Interface = app.config['INTERFACE']
+    transcription = interface.new_transcription(hasher.new())
     model: Model = app.config['CURRENT_MODEL']
     transcription.link(model)
     app.config['CURRENT_TRANSCRIPTION'] = transcription
@@ -27,6 +27,7 @@ def new():
         "data": data
     })
 
+
 @bp.route("/transcribe", methods=['GET'])
 def transcribe():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
@@ -38,6 +39,7 @@ def transcribe():
         "status": 200,
         "data": data
     })
+
 
 @bp.route("/status", methods=['GET'])
 def status():
@@ -51,11 +53,13 @@ def status():
         "data": data
     })
 
+
 @bp.route("/text", methods=['GET'])
 def text():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     # TODO fix this to return json wrapper
     return transcription.text()
+
 
 @bp.route("/elan", methods=['GET'])
 def elan():
