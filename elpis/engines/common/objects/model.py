@@ -1,4 +1,6 @@
 from pathlib import Path
+from typing import Optional
+
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.objects.path_structure import PathStructure
@@ -16,7 +18,7 @@ class Model(FSObject):  # TODO not thread safe
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dataset: Dataset = None
+        self.dataset: Optional[Dataset] = None
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.config['status'] = 'untrained'
         self.status = 'untrained'

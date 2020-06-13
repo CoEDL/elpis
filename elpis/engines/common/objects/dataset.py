@@ -24,6 +24,7 @@ from elpis.engines.common.input.clean_json import clean_json_data, extract_addit
 from elpis.engines.common.input.resample_audio import process_item
 from elpis.engines.common.input.make_wordlist import generate_word_list
 
+
 class DSPaths(object):
     """
     Path locations for the DataSet object. Attributes represent paths to DataSet artifacts.
@@ -46,6 +47,10 @@ class DSPaths(object):
         self.additional_word_list_txt = self.original.joinpath('additional_word_list.txt')
         # \/ compile the uploaded corpora into this single file
         self.corpus_txt = self.cleaned.joinpath('corpus.txt')
+
+
+DEFAULT_TIER_TYPE = 'default-lt'
+DEFAULT_TIER_NAME = 'Phrase'
 
 
 class Dataset(FSObject):

@@ -1,6 +1,6 @@
 from pathlib import Path
 from elpis.engines.common.input.resample import resample
-from elpis.engines.common.objects.transcription import Transcription
+from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 import subprocess
 from typing import Callable
 import os
@@ -9,7 +9,7 @@ import wave
 import contextlib
 
 
-class KaldiTranscription(Transcription):
+class KaldiTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.audio_file_path = self.path.joinpath('audio.wav')
@@ -97,7 +97,7 @@ class KaldiTranscription(Transcription):
         if on_complete is not None:
             on_complete()
 
-    def prepare_audio(self, audio, on_complete: Callable=None):
+    def prepare_audio(self, audio, on_complete: Callable = None):
         self._process_audio_file(audio)
         self._generate_inference_files()
         if on_complete is not None:

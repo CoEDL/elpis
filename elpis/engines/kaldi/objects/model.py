@@ -5,16 +5,16 @@ from pathlib import Path
 from typing import Callable
 import threading
 from elpis.engines.common.objects.command import run
-from elpis.engines.common.objects.model import Model
+from elpis.engines.common.objects.model import Model as BaseModel
 from elpis.engines.common.objects.dataset import Dataset
-from elpis.engines.kaldi.objects.pron_dict import PronDict
+from elpis.engines.common.objects.pron_dict import PronDict
 from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
 from elpis.engines.common.objects.path_structure import PathStructure
 from collections import OrderedDict
 
 
-class KaldiModel(Model):  # TODO not thread safe
-    _links = {**Model._links, **{"pron_dict": PronDict}}
+class KaldiModel(BaseModel):  # TODO not thread safe
+    # _links = {**Model._links, **{"pron_dict": PronDict}}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

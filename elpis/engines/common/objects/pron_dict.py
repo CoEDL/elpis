@@ -33,7 +33,7 @@ class PronDict(FSObject):
         """
         An API fiendly state representation of the object.
 
-        Invarient: The returned object can be converted to JSON using json.load(...).
+        Invariant: The returned object can be converted to JSON using json.load(...).
 
         :returns: the objects state.
         """
@@ -49,6 +49,7 @@ class PronDict(FSObject):
     def link(self, dataset: Dataset):
         self.dataset = dataset
         self.config['dataset'] = dataset.name
+        self.config['dataset_name'] = dataset.name
 
     def set_l2s_path(self, path: Path):
         path = Path(path)
@@ -89,21 +90,24 @@ class PronDict(FSObject):
                                           pronunciation_dictionary=f'{self.lexicon_txt_path}',
                                           config_file=f'{self.l2s_path}')
         self.config['lexicon'] = True
-    # @property
-    # def lexicon(self):
-    #     with self.lexicon_txt_path.open(mode='rb') as fin:
-    #         return fin.read()
+    @property
+    def lexicon(self):
+        with self.lexicon_txt_path.open(mode='rb') as fin:
+            return fin.read()
 
-    def get_lexicon_content(self) -> bytes:
+    def get_lexicon_content(self):
         try:
             with self.lexicon_txt_path.open(mode='r') as fin:
                 return fin.read()
         except FileNotFoundError:
-            return None
+            return 'No lexicon yet'
 
     def save_lexicon(self, bytestring):
         # open pron dict file
         # write lexicon text to file
-        with self.lexicon_txt_path.open(mode='w') as fout:
-            fout.write(bytestring)
-        self.config['lexicon'] = True
+        try:
+            with self.lexicon_txt_path.open(mode='w') as fout:
+                fout.write(bytestring)
+            self.config['lexicon'] = True
+        except FileNotFoundError:
+            return 'No lexicon yet'

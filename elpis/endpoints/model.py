@@ -1,10 +1,9 @@
+
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
-from elpis.engines import Interface
 from elpis.engines.common.objects.model import Model
-
-from pathlib import Path
+from elpis.engines import ENGINES
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -25,7 +24,14 @@ def run(cmd: str) -> str:
 
 @bp.route("/new", methods=['POST'])
 def new():
-    interface: Interface = app.config['INTERFACE']
+    try:
+        engine_name = request.json["engine"]
+    except KeyError:
+        engine_name = "kaldi"
+    engine = ENGINES[engine_name]
+    interface = app.config['INTERFACE']
+    interface.set_engine(engine)
+
     model = interface.new_model(request.json["name"])
     # use the selected pron dict
     pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
@@ -47,7 +53,7 @@ def new():
 
 @bp.route("/load", methods=['POST'])
 def load():
-    interface: Interface = app.config['INTERFACE']
+    interface = app.config['INTERFACE']
     model = interface.get_model(request.json["name"])
     # set the dataset to match the model
     app.config['CURRENT_DATASET'] = model.dataset

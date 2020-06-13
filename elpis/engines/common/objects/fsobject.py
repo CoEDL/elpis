@@ -25,8 +25,7 @@ class FSObject(ABC):
                  parent_path: Path = None,
                  dir_name: str = None,
                  name: str = None,
-                 pre_allocated_hash: str = None
-                 ):
+                 pre_allocated_hash: str = None):
         # Not allowed to instantiate this base class
         if type(self) == FSObject:
             raise NotImplementedError('Must inherit FSObject, not instantiate it.')
@@ -81,10 +80,10 @@ class FSObject(ABC):
     def _config_file(self) -> str:
         raise NotImplementedError('no _config_file has been defined for this class')
 
-    @property
-    @abstractmethod
-    def state(self) -> dict:
-        raise NotImplementedError('no state has been defined for this class')
+    # @property
+    # @abstractmethod
+    # def state(self) -> dict:
+    #     raise NotImplementedError('no state has been defined for this class')
     
 
     @property

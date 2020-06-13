@@ -11,10 +11,12 @@ bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 def new():
     interface: Interface = app.config['INTERFACE']
     dataset = interface.new_dataset(request.json['name'])
+    print(f"****{request.json['name']}****")
     app.config['CURRENT_DATASET'] = dataset
     data = {
-        "state": dataset.state # TODO: ensure we use get_state() in the future
+        "config": dataset.config._load()
     }
+    print(data)
     return jsonify({
         "status": 200,
         "data": data
