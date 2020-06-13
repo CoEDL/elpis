@@ -34,3 +34,11 @@ recordings/
 # During the inheritance test.
 elpis/engines/persephone/
 
+# Build & Docs
+build/
+dist/
+docs/_build/
+elpis-gui/
+venv/
+
+
