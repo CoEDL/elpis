@@ -14,7 +14,7 @@ def new():
     print(f"****{request.json['name']}****")
     app.config['CURRENT_DATASET'] = dataset
     data = {
-        "config": dataset.config._load()
+        "state": dataset.config._load()
     }
     print(data)
     return jsonify({
@@ -29,7 +29,7 @@ def load():
     dataset = interface.get_dataset(request.json['name'])
     app.config['CURRENT_DATASET'] = dataset
     data = {
-        "config": dataset.config._load()
+        "state": dataset.config._load()
     }
     return jsonify({
         "status": 200,
