@@ -26,7 +26,7 @@ def reset():
 @bp.route("/engine/list", methods=['GET', 'POST'])
 def engine_list():
     data = {
-        'engine_list': ['kaldi'] # TODO: generate this from the available engines (maybe ENGINES?)
+        'engine_list': ENGINES.keys()
     }
     return jsonify({
         "status": 200,
