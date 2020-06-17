@@ -18,6 +18,32 @@ export function stepToOrder(stepName) {
 	return stepOrderDefinition.findIndex(v => v===stepName);
 }
 
+// Get the name of the next step according to the stepOrderDefinition variable.
+function getNextStepName(stepName, engine) {
+	if (stepName === null) return null;
+
+	let stepIndex = stepToOrder(stepName);
+
+	// if current step is not in the list
+	if (stepIndex === -1) {
+		throw "stepName: " + stepName + " is not in the stepOrderDefinition list.";
+	}
+
+	// if there is no next step
+	if (stepIndex === stepOrderDefinition.length - 1) {
+		return null;
+	}
+
+	let nextStepName = stepOrderDefinition[stepIndex + 1];
+
+	// if non-kaldi engine, then skip 'pronunciation'
+	if (engine !== "kaldi" && nextStepName === 'pronunciation') {
+		nextStepName = getNextStepName(nextStepName);
+	}
+
+	return nextStepName;
+}
+
 const initialStepModelState = {
 	engine: null,
 	engine_list: [],
@@ -66,10 +92,6 @@ const initialStepModelState = {
 }
 
 const sideNav = (state = initialStepModelState, action) => {
-	let newSteps = []
-	let currentSubStepIndex = 0;
-	let currentStepName = null;
-
 	switch (action.type) {
 		case actionTypes.ENGINE_LOAD_STARTED:
 		case actionTypes.ENGINE_LOAD_FAILURE:
@@ -87,10 +109,13 @@ const sideNav = (state = initialStepModelState, action) => {
 			action['url'] = state.lastURL;
 			// No return here!
 
-		case actionTypes.APP_SET_CURRENT_STEP:
+		case actionTypes.APP_SET_CURRENT_STEP: {
+			let currentSubStepIndex = 0;
+			let currentStepName = null;
 			// Make a copy of the original steps as to not override the initial steps.
 			let originalStepsState = Object.assign({}, initialStepModelState);
 
+			// Used to enable next groups of steps if user is on last substep
 			let rememberToEnableTheNextStep = false;
 
 			// Track down which is the current substep by matching path to URL
@@ -110,7 +135,7 @@ const sideNav = (state = initialStepModelState, action) => {
 			let rebuiltSteps = {};
 			Object.entries(originalStepsState.steps).forEach(([stepName, step], i) => {
 				// Determine this steps situation.
-				let isPastStep    = stepToOrder(stepName)  <  stepToOrder(currentStepName);
+				let isPastStep =    stepToOrder(stepName)  <  stepToOrder(currentStepName);
 				let isCurrentStep = stepToOrder(stepName) === stepToOrder(currentStepName);
 				let isFutureStep =  stepToOrder(stepName)  >  stepToOrder(currentStepName);
 
@@ -170,13 +195,15 @@ const sideNav = (state = initialStepModelState, action) => {
 				rebuiltSteps[stepName] = step;
 			});
 
-			// if (rememberToEnableTheNextStep && newSteps[currentIndex[0] + 1]) {
-			// 	newSteps[currentIndex[0] + 1].enabled = true
-			// 	newSteps[currentIndex[0] + 1].substeps[0].enabled = true
-			// }
+
+			let nextStepName = getNextStepName(currentStepName, state.engine)
+			// ->                           && if there is a next step
+			if (rememberToEnableTheNextStep && nextStepName ) {
+				rebuiltSteps[nextStepName].substeps[0].enabled = true
+			}
 
 			return { ...state, steps: rebuiltSteps, lastURL: action.url }
-
+		}
 		default:
 			return { ...state }
 	}
