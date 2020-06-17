@@ -1,7 +1,7 @@
 from ..blueprint import Blueprint
-from flask import current_app as app, jsonify
+from flask import current_app as app, jsonify, request
 from pathlib import Path
-from elpis.engines import Interface
+from elpis.engines import Interface, ENGINES
 import shutil
 
 bp = Blueprint("config", __name__, url_prefix="/config")
@@ -17,6 +17,34 @@ def reset():
     app.config['CURRENT_MODEL'] = None # not okay for multi-user
     data = {
         "message": "reset ok"
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
+@bp.route("/engine/list", methods=['GET', 'POST'])
+def engine_list():
+    data = {
+        'engine_list': ['kaldi'] # TODO: generate this from the available engines (maybe ENGINES?)
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
+
+@bp.route("/engine/load", methods=['GET', 'POST'])
+def engine_load():
+    engine_name = request.json["engine_name"]
+    if engine_name not in ENGINES:
+        return jsonify({"status": 404,
+            "data": "No current dataset exists (perhaps create one first)"})
+    engine = ENGINES[engine_name]
+    interface = app.config['INTERFACE']
+    interface.set_engine(engine)
+    data = {
+        "engine": engine_name
     }
     return jsonify({
         "status": 200,

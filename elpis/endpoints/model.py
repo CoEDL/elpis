@@ -24,13 +24,7 @@ def run(cmd: str) -> str:
 
 @bp.route("/new", methods=['POST'])
 def new():
-    try:
-        engine_name = request.json["engine"]
-    except KeyError:
-        engine_name = "kaldi"
-    engine = ENGINES[engine_name]
     interface = app.config['INTERFACE']
-    interface.set_engine(engine)
 
     model = interface.new_model(request.json["name"])
     # use the selected pron dict
