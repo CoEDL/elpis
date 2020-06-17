@@ -104,7 +104,7 @@ class DatasetPrepare extends Component {
 
                             { listEl }
 
-                            <Button as={Link} to={urls.gui.pronDict.index} disabled={interactionDisabled}>
+                            <Button as={Link} to={urls.gui.engine.index} disabled={interactionDisabled}>
                                 { t('common.nextButton') }
                             </Button>
 

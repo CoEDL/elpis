@@ -5,77 +5,132 @@ import urls from 'urls'
 // false will make the menus collapse
 const enableAll = true
 
+// Define a total ordering on the steps.
+const stepOrderDefinition = [
+	'recordings',
+	'engine',
+	'pronunciation',
+	'train',
+	'transcribe'
+];
+
+export function stepToOrder(stepName) {
+	return stepOrderDefinition.findIndex(v => v===stepName);
+}
+
 const initialStepModelState = {
-	currentStep: [0, 0],
-	steps: [
-			{
-				substeps: [
-					{ done: false, doing: false, enabled: false, title: "Recordings", path: urls.gui.dataset.index },
-					{ done: false, doing: false, enabled: false, title: "Files", path: urls.gui.dataset.files },
-					{ done: false, doing: false, enabled: false, title: "Wordlist", path: urls.gui.dataset.prepare }
-				]
-			},
-			{
-				substeps: [
-					{ done: false, doing: false, enabled: false, title: "Pronunciation", path: urls.gui.pronDict.index },
-					{ done: false, doing: false, enabled: false, title: "Letter to sound", path: urls.gui.pronDict.l2s },
-					{ done: false, doing: false, enabled: false, title: "Dictionary", path: urls.gui.pronDict.lexicon }
-				]
-			},
-			{
-				substeps: [
-					{ done: false, doing: false, enabled: false, title: "Training", path: urls.gui.model.index },
-					{ done: false, doing: false, enabled: false, title: "Settings", path: urls.gui.model.settings },
-					{ done: false, doing: false, enabled: false, title: "Train", path: urls.gui.model.train },
-					{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.model.results },
-				]
-			},
-			{
-				substeps: [
-					{ done: false, doing: false, enabled: false, title: "New transcriptions", path: urls.gui.transcription.new }
-				]
-			}
-		]
+	engine: null,
+	engine_list: [],
+	lastURL: null,
+	steps: {
+		recordings: {
+			substeps: [
+				{ done: false, doing: false, enabled: false, title: "Recordings", path: urls.gui.dataset.index },
+				{ done: false, doing: false, enabled: false, title: "Files", path: urls.gui.dataset.files },
+				{ done: false, doing: false, enabled: false, title: "Wordlist", path: urls.gui.dataset.prepare }
+			],
+			engine_specific: null
+		},
+		engine: {
+			substeps: [
+				{ done: false, doing: false, enabled: false, title: "Engine", path: urls.gui.engine.index }
+			],
+			engine_specific: null
+		},
+		// Note: Pronunciation step will only be visible when state.engine == "kaldi".
+		// TODO: Prehaps store engine specific details in the engine step
+		pronunciation: {
+			substeps: [
+				{ done: false, doing: false, enabled: false, title: "Pronunciation", path: urls.gui.pronDict.index },
+				{ done: false, doing: false, enabled: false, title: "Letter to sound", path: urls.gui.pronDict.l2s },
+				{ done: false, doing: false, enabled: false, title: "Dictionary", path: urls.gui.pronDict.lexicon }
+			],
+			engine_specific: 'kaldi'
+		},
+		train: {
+			substeps: [
+				{ done: false, doing: false, enabled: false, title: "Training", path: urls.gui.model.index },
+				{ done: false, doing: false, enabled: false, title: "Settings", path: urls.gui.model.settings },
+				{ done: false, doing: false, enabled: false, title: "Train", path: urls.gui.model.train },
+				{ done: false, doing: false, enabled: false, title: "Results", path: urls.gui.model.results },
+			],
+			engine_specific: null
+		},
+		transcribe: {
+			substeps: [
+				{ done: false, doing: false, enabled: false, title: "New transcriptions", path: urls.gui.transcription.new }
+			],
+			engine_specific: null
+		}
+	}
 }
 
 const sideNav = (state = initialStepModelState, action) => {
 	let newSteps = []
-	let currentIndex = []
+	let currentSubStepIndex = 0;
+	let currentStepName = null;
 
 	switch (action.type) {
+		case actionTypes.ENGINE_LOAD_STARTED:
+		case actionTypes.ENGINE_LOAD_FAILURE:
+		case actionTypes.ENGINE_LIST_STARTED:
+		case actionTypes.ENGINE_LIST_FAILURE:
+			return {...state}
+
+		case actionTypes.ENGINE_LIST_SUCCESS:
+			let engine_list = action.response.data.data.engine_list;
+			return { ...state, engine_list };
+
+		case actionTypes.ENGINE_LOAD_SUCCESS:
+			state = { ...state, engine: action.response.data.data.engine };
+			// Fall through to setting the current step
+			action['url'] = state.lastURL;
+			// No return here!
 
 		case actionTypes.APP_SET_CURRENT_STEP:
-			let rememberToEnableTheNextStep = false
+			// Make a copy of the original steps as to not override the initial steps.
+			let originalStepsState = Object.assign({}, initialStepModelState);
+
+			let rememberToEnableTheNextStep = false;
+
 			// Track down which is the current substep by matching path to URL
 			// Split the url into parts, remove the first / to avoid empty first item in array
-			let urls_params = action.url.slice(1, action.url.length).split("/")
 
-			state.steps.forEach((step, i) => {
-				step.substeps.forEach((substep, j) => {
+			// Iterate through main steps
+			for (let [stepName, step] of Object.entries(originalStepsState.steps)) {
+				step.substeps.forEach((substep, i) => {
 					if (action.url === substep.path) {
-						currentIndex = [i, j]
+						// Found the current step!
+						currentStepName = stepName;
+						currentSubStepIndex = i;
 					}
-				})
-			})
+				});
+			}
 
-			newSteps = state.steps.map((step, i) => {
+			let rebuiltSteps = {};
+			Object.entries(originalStepsState.steps).forEach(([stepName, step], i) => {
+				// Determine this steps situation.
+				let isPastStep    = stepToOrder(stepName)  <  stepToOrder(currentStepName);
+				let isCurrentStep = stepToOrder(stepName) === stepToOrder(currentStepName);
+				let isFutureStep =  stepToOrder(stepName)  >  stepToOrder(currentStepName);
 
-				let isPastStep = (i < currentIndex[0]) ? true : false
-				let isCurrentStep = (i === currentIndex[0]) ? true : false
-				let isFutureStep = (i > currentIndex[0]) ? true : false
+				// Determine whether step is to be kept based on selected engine.
+				if (step.engine_specific !== null && step.engine_specific !== state.engine) {
+					// The engine has been specified and this step does not belong to this engine.
+					return; // Skip construction step.
+				}
 
-				step.substeps.map((substep, j) => {
-
+				step.substeps.forEach((substep, i) => {
 					// reset all
 					substep.done = false
 					substep.doing = false
 					substep.enabled = false
 
-					let isPastSubStep = (j < currentIndex[1]) ? true : false
-					let isCurrentSubStep = (j === currentIndex[1]) ? true : false
-					let isNextSubStep = (j === currentIndex[1] + 1) ? true : false
-					let isLastSubStep = (j === step.substeps.length - 1) ? true : false
-					// let isFutureSubStep  = (j > currentIndex[1]) ? true : false
+					// Determine the substep situation
+					let isPastSubStep =    i  <  currentSubStepIndex;
+					let isCurrentSubStep = i === currentSubStepIndex;
+					let isNextSubStep =    i === currentSubStepIndex + 1;
+					let isLastSubStep =    i === currentSubStepIndex - 1;
 
 					// previous
 					if (isPastStep || (isCurrentStep && isPastSubStep)) {
@@ -109,22 +164,18 @@ const sideNav = (state = initialStepModelState, action) => {
 
 					// For developer convenience...
 					if (enableAll) substep.enabled = true
+				});
 
-					return substep
-				})
+				// add step to the rebuilt steps
+				rebuiltSteps[stepName] = step;
+			});
 
-				// For further developer convenience...
-				if (enableAll) step.enabled = true
+			// if (rememberToEnableTheNextStep && newSteps[currentIndex[0] + 1]) {
+			// 	newSteps[currentIndex[0] + 1].enabled = true
+			// 	newSteps[currentIndex[0] + 1].substeps[0].enabled = true
+			// }
 
-				return step
-			})
-
-			if (rememberToEnableTheNextStep && newSteps[currentIndex[0] + 1]) {
-				newSteps[currentIndex[0] + 1].enabled = true
-				newSteps[currentIndex[0] + 1].substeps[0].enabled = true
-			}
-
-			return { steps: newSteps }
+			return { ...state, steps: rebuiltSteps, lastURL: action.url }
 
 		default:
 			return { ...state }

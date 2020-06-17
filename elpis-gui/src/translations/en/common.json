@@ -50,6 +50,15 @@
             "noWords": "No words found, please upload some files."
         }
     },
+    "engine": {
+        "select": {
+            "title": "Select Engine"
+        },
+        "common": {
+            "currentEngineLabel": "Current engine: ",
+            "noCurrentEngineLabel": "No engine selected yet."
+        }
+    },
     "pronDict": {
         "common": {
             "currentPronDictLabel": "Current pronunciation dictionary: ",

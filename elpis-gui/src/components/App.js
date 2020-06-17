@@ -18,6 +18,8 @@ import ModelTrain from './Model/Train'
 import ModelResults from './Model/Results'
 import NewTranscription from './Transcription/New'
 
+import SelectEngine from './Engine/SelectEngine'
+
 import PageContainer from './PageContainer';
 import urls from 'urls'
 
@@ -34,6 +36,8 @@ class App extends Component {
                         <Route path={urls.gui.dataset.new} component={ DatasetNew } />
                         <Route path={urls.gui.dataset.files} component={ DatasetFiles } />
                         <Route path={urls.gui.dataset.prepare} exact component={ DatasetPrepare } />
+
+                        <Route path={urls.gui.engine.index} exact component={SelectEngine} />
 
                         <Route path={urls.gui.pronDict.index} exact component={PronDictDashboard} />
                         <Route path={urls.gui.pronDict.new} component={PronDictNew} />

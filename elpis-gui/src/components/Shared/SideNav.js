@@ -4,6 +4,7 @@ import { List, Accordion } from 'semantic-ui-react';
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import { setCurrentStep } from 'redux/actions/appActions'
+import { stepToOrder } from '../../redux/reducers/sideNavReducer'
 import './SideNav.css'
 
 
@@ -20,14 +21,16 @@ class SideNav extends Component {
 	}
 
 	render() {
-		const { steps } = this.props
+		const { engine, steps } = this.props
 
 		return (
 			<Accordion styled>
 				{
 					// for each step (pass down the index too,
 					// we'll use that when we call the action to update redux state)
-					steps.map((step, i) => {
+					Object.entries(steps)
+						.sort((left, right) => (stepToOrder(left[0]) - stepToOrder(right[0])))
+						.map(([_stepName, step], i) => {
 
 						// step classes - use 'disabled' rather than 'enabled' cause it might have magic power
 						const stepClassNames = classNames({
@@ -81,6 +84,7 @@ class SideNav extends Component {
 const mapStateToProps = (state, ownProps) => {
 	return {
 		steps: state.sideNav.steps,
+		engine: state.sideNav.engine,
 		ownProps: ownProps
 	}
 }

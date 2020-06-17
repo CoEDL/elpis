@@ -8,6 +8,9 @@ export default {
             "prepareError": "/dataset/prepare/error",
             "punctuation_to_explode_by": "/dataset/punctuation_to_explode_by"
         },
+        "engine": {
+            "index": "/engine"
+        },
         "pronDict": {
             "index": "/pron-dict",
             "new": "/pron-dict/new",
@@ -39,6 +42,10 @@ export default {
             "settings": "/api/dataset/import/settings",
             "ui": "/api/dataset/import/ui",
             "prepare": "/api/dataset/prepare"
+        },
+        "engine": {
+            "list": "/api/config/engine/list",
+            "load": "/api/config/engine/load"
         },
         "pronDict": {
             "new": "/api/pron-dict/new",
