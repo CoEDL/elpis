@@ -142,7 +142,6 @@ class Interface(FSObject):
         for name in names:
             pd = self.get_pron_dict(name)
             pron_dicts.append({"name": name, "dataset_name": pd.dataset.name})
-            pron_dicts.append({"name": name})
         return pron_dicts
 
     def new_model(self, mname):
