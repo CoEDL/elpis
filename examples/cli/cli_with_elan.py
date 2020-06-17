@@ -17,7 +17,7 @@ kaldi = KaldiInterface('/workspaces/elpis/state', use_existing=True)
 # ======
 # Setup a dataset to to train data on.
 ds = kaldi.new_dataset('dsy', override=True)
-ds.add_directory('/recordings/transcribed', filter=['eaf', 'wav'])
+ds.add_directory('/recordings/transcribed', extensions=['eaf', 'wav'])
 ds.import_with('Elan')
 # ds.import_with('Elan').import_directory('/recordings/transcribed')
 

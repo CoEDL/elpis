@@ -1,27 +1,16 @@
 import json
-import shutil
 import glob
 import os
-import threading
-import string
 
 from pathlib import Path
-from typing import Dict, List, Union, BinaryIO, Set
+from typing import Dict, List, Union, BinaryIO, Optional
 from io import BufferedIOBase
-from multiprocessing.dummy import Pool
-from shutil import move
-from pympi.Elan import Eaf
 
 from ..utilities import load_json_file
-
 from elpis.transformer import make_importer, DataTransformer, DataTransformerAbstractFactory
-
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.objects.path_structure import existing_attributes, ensure_paths_exist
-
-from elpis.engines.common.input.elan_to_json import process_eaf
-from elpis.engines.common.input.clean_json import clean_json_data, extract_additional_corpora
-from elpis.engines.common.input.resample_audio import process_item
+from elpis.engines.common.input.clean_json import extract_additional_corpora
 from elpis.engines.common.input.make_wordlist import generate_word_list
 
 
@@ -74,8 +63,8 @@ class Dataset(FSObject):
         self.config['files'] = []
         self.config['processed_labels'] = []
         self.config['importer'] = None
-        self.config['punctuation_to_explode_by'] = '' # TODO: check if '' is the correct default
-        self.config['punctuation_to_collapse_by'] = '' # TODO verify if we need this line?
+        self.config['punctuation_to_explode_by'] = ''  # TODO: check if '' is the correct default
+        self.config['punctuation_to_collapse_by'] = ''  # TODO verify if we need this line?
 
     @classmethod
     def load(cls, base_path: Path):
@@ -83,7 +72,7 @@ class Dataset(FSObject):
         self.__files = [Path(path) for path in self.config['files']]
         self.pathto = DSPaths(self.path)
         self._importer = self.config['importer']
-        if self._importer != None:
+        if self._importer is not None:
             importer_name = self._importer['name']
             self.select_importer(importer_name)
         return self
@@ -113,6 +102,7 @@ class Dataset(FSObject):
         # getters and setters for the subconfig for importers.
         def get_config_callback():
             return self.config['importer']
+
         def set_config_callback(importer_config):
             self.config['importer'] = importer_config
 
@@ -121,8 +111,8 @@ class Dataset(FSObject):
         transcription_json_file_path = f'{self.pathto.annotation_json}'
         self._importer = make_importer(
             name,
-            self.pathto.original,
-            self.pathto.resampled,
+            str(self.pathto.original),
+            str(self.pathto.resampled),
             temporary_directory_path,
             transcription_json_file_path,
             get_config_callback,
@@ -136,9 +126,9 @@ class Dataset(FSObject):
             return # Already have importer selected
         if len(self.files) == 0:
             return # cannot determine importer with no files.
-        extentions = set([ f'{p}'.split('.')[-1] for p in self.files ])
+        extensions = set([f'{p}'.split('.')[-1] for p in self.files])
         dtaf_exts = set(DataTransformerAbstractFactory._ext_to_factory.keys())
-        intersect = extentions.intersection(dtaf_exts)
+        intersect = extensions.intersection(dtaf_exts)
         if len(intersect) == 0:
             return # No common file extentions
         # Just use the first one
@@ -232,8 +222,7 @@ class Dataset(FSObject):
     def punctuation_to_collapse_by(self, value):
         self.config['punctuation_to_collapse_by'] = value
 
-    def add_fp(self, fp: Union[BufferedIOBase, BinaryIO],
-               fname: str,
+    def add_fp(self, fp: Union[BufferedIOBase, BinaryIO], fname: str,
                destination: str = 'original'):
         """
         Saves a copy of the file pointer contents in the internal datastructure
@@ -275,7 +264,7 @@ class Dataset(FSObject):
         self.config['has_been_processed'] = False
         self.config['processed_labels'] = []
 
-    def add_directory(self, path, filter=[]):
+    def add_directory(self, path, extensions: Optional[List[str]] = None):
         """
         Add all the contents of the given directory to the dataset.
 
@@ -283,20 +272,21 @@ class Dataset(FSObject):
         dataset is marked as unprocessed (has_been_processed == False).
         
         :param path: is the string path to the directory containing the files to be added.
-        :param filter: Optional keyword parameter, if set must be a list of file extentions to filter files in the directory.
+        :param extensions: Optional keyword parameter, if set must be a list of file extentions to
+        filter files in the directory.
         :raises:
             - ValueError: if the file cannot be openned.
         """
+        extensions = extensions or list()
         path: Path = Path(path)
         for filepath in path.iterdir():
-            if len(filter) != 0:
-                if filepath.name.split('.')[-1] not in filter:
+            if len(extensions) != 0:
+                if filepath.name.split('.')[-1] not in extensions:
                     continue
             file_pointer = filepath.open(mode='rb')
             self.add_fp(file_pointer, filepath.name)
         self.config['has_been_processed'] = False
         self.config['processed_labels'] = []
-    
 
     def remove_file(self, file_name: str):
         """
@@ -311,7 +301,7 @@ class Dataset(FSObject):
             - ValueError: if the file name is not in the internal set.
         """
         # Search for file then delete it.
-        file_path: Path = None
+        file_path: Optional[Path] = None
         for path in self.__files:
             if path.name == file_name:
                 file_path = path
@@ -323,7 +313,6 @@ class Dataset(FSObject):
         self.config['files'] = [f'{f.name}' for f in self.__files]
         self.config['has_been_processed'] = False
         self.config['processed_labels'] = []
-
 
     @property
     def state(self):

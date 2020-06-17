@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from pathlib import Path
 from elpis.engines.common.objects.model import Model
 from elpis.engines.common.objects.fsobject import FSObject
@@ -58,8 +59,14 @@ class Transcription(FSObject):
     def exporter(self):
         return self._exporter
 
+    @abstractmethod
+    def transcribe(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
     def text(self):
         pass
 
+    @abstractmethod
     def elan(self):
         pass

@@ -39,7 +39,8 @@ def split_audio_file_on_silence(file_path: str,
     :param min_silence_length: the minimum length (in ms) of silence that indicates a break
     :param threshold: the level below the norm (in dBFS) to consider silence
     :param added_silence: silence to be added to the beginning and end of each split utterance
-    :param file_index: the number of the file in the directory (recursive) to mark each sub-utterance with.
+    :param file_index: the number of the file in the directory (recursive) to mark each
+    sub-utterance with.
     """
     audio = AudioSegment(file_path)
     segments = split_on_silence(audio_segment=audio,
@@ -55,7 +56,8 @@ def split_audio_file_on_silence(file_path: str,
 
 
 def main() -> None:
-    parser = ArgumentParser(description="Splits a directory of audio (.wav) files into short segments")
+    parser = ArgumentParser(description="Splits a directory of audio (.wav) files into short "
+                                        "segments")
     parser.add_argument("-i", "--input_dir",
                         help="Directory containing audio to be split",
                         type=str,

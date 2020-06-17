@@ -123,7 +123,8 @@ def main():
     parser.add_argument("-c", "--config",
                         type=str,
                         required=True,
-                        help="configuration file with one letter/symbol -> sound mapping in each line")
+                        help="configuration file with one letter/symbol "
+                             "-> sound mapping in each line")
     arguments = parser.parse_args()
 
     generate_pronunciation_dictionary(word_list=arguments.infile,

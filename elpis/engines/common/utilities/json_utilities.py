@@ -28,24 +28,25 @@ def load_json_file(file_name: str) -> List[Dict[str, str]]:
     return data
 
 
-def write_data_to_json_file(data: object = None, output: Union[str, TextIOWrapper] = None) -> None:
+def write_data_to_json_file(data: object = None,
+                            file_name: Union[str, TextIOWrapper] = None) -> None:
     """
     Writes the given Python dictionary (or list) object to a JSON file at the the given
     output location (which can either be a file - specified as a string, or
     directed to an output like sys.stdout or sys.stderr).
     :param data: the Python dictionary to be converted to JSON and written.
-    :param output: the file to write the dictionary contents to.
+    :param file_name: the file to write the dictionary contents to.
     """
     if not data:
         data = dict()
-    if not output:
-        output = sys.stdout
+    if not file_name:
+        file_name = sys.stdout
     json_data_string = json.dumps(data,
                                   indent=4,
                                   separators=(',', ': '),
                                   sort_keys=False)
-    if isinstance(output, str):
-        with open(output, "w") as file:
+    if isinstance(file_name, str):
+        with open(file_name, "w") as file:
             file.write(json_data_string)
     else:
-        print(json_data_string, file=output, flush=True)
+        print(json_data_string, file=file_name, flush=True)

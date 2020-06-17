@@ -31,7 +31,8 @@ def conditional_log(condition: bool, text: str) -> None:
 
     if condition:
         if platform.system() == "Windows":
-            sys.stderr.write(text.encode("cp850", errors="backslashreplace").decode(sys.stdout.encoding))
+            sys.stderr.write(text.encode("cp850",
+                                         errors="backslashreplace").decode(sys.stdout.encoding))
         else:
             sys.stderr.write(text)
         sys.stderr.flush()
@@ -44,7 +45,8 @@ def process_trs(file_name: str, verbose_output: bool) -> List[Dict[str, Union[st
 
     :param file_name: file_name of the .trs file
     :param verbose_output: whether or not output to stderr
-    :return: a list of dictionaries. Each dictionary contains key information on utterances in the following format:
+    :return: a list of dictionaries. Each dictionary contains key information on utterances in the
+    following format:
                                    {'speaker_id': <speaker_id>,
                                     'audio_file_name': <file_name>,
                                     'transcript': <transcription_label>,
@@ -68,7 +70,8 @@ def process_trs(file_name: str, verbose_output: bool) -> List[Dict[str, Union[st
     return utterances
 
 
-def process_turn(wave_name: str, turn_node: ElementTree.Element, tree: ElementTree.ElementTree) -> List[Dict[str, Union[str, float]]]:
+def process_turn(wave_name: str, turn_node: ElementTree.Element,
+                 tree: ElementTree.ElementTree) -> List[Dict[str, Union[str, float]]]:
     """
     Helper method to process each turn_node in the .trs file.
 
@@ -88,7 +91,8 @@ def process_turn(wave_name: str, turn_node: ElementTree.Element, tree: ElementTr
     else:
         speaker_name: str = str(uuid.uuid4())
 
-    items: List[Tuple[str, str]] = [(element.attrib["time"], element.tail.strip()) for element in turn_node.findall("./Sync")]
+    items: List[Tuple[str, str]] = [(element.attrib["time"], element.tail.strip())
+                                    for element in turn_node.findall("./Sync")]
     wave_file_name = os.path.join(".", wave_name)
 
     result: List[Dict[str, Union[str, float]]] = []
@@ -118,7 +122,8 @@ def main() -> None:
     Usage: python3 trs_to_json.py [-h] [-d INPUT_DIRECTORY] [-v] > {OUTPUT_FILE]
     """
 
-    parser = argparse.ArgumentParser(description="A command line utility to convert .trs files to .json",
+    parser = argparse.ArgumentParser(description="A command line utility to convert .trs "
+                                                 "files to .json",
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("-i", "--input_dir",
                         type=str,
@@ -138,7 +143,8 @@ def main() -> None:
     if arguments.verbose:
         sys.stderr.write(arguments.input_directory + "\n")
 
-    all_files_in_dir: Set[str] = set(glob.glob(os.path.join(arguments.input_dir, "**"), recursive=True))
+    all_files_in_dir: Set[str] = set(glob.glob(os.path.join(arguments.input_dir, "**"),
+                                               recursive=True))
     transcript_names: Set[str] = find_files_by_extensions(all_files_in_dir, {"*.trs"})
 
     utterances = []
@@ -146,7 +152,7 @@ def main() -> None:
         utterances = utterances + process_trs(file_name, arguments.verbose)
 
     write_data_to_json_file(data=utterances,
-                            output=arguments.output_json)
+                            file_name=arguments.output_json)
 
 
 if __name__ == '__main__':

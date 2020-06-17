@@ -48,6 +48,7 @@ def list_existing():
         "data": data
     })
 
+
 def require_dataset(f):
     def wrapper(*args, **kwargs):
         dataset: Dataset = app.config['CURRENT_DATASET']
@@ -105,6 +106,7 @@ def settings(dataset: Dataset):
         "data": data
     })
 
+
 @bp.route("/import/ui", methods=['GET', 'POST'])
 @require_dataset
 def settings_ui(dataset: Dataset):
@@ -115,6 +117,7 @@ def settings_ui(dataset: Dataset):
         "status": 200,
         "data": data
     })
+
 
 @bp.route("/punctuation_to_explode_by", methods=['POST'])
 @require_dataset
@@ -128,6 +131,7 @@ def punctuation_to_explode_by(dataset: Dataset):
         "status": 200,
         "data": data
     })
+
 
 @bp.route("/punctuation_to_collapse_by", methods=['POST'])
 @require_dataset

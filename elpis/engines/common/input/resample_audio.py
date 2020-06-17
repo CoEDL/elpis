@@ -42,14 +42,15 @@ def process_item(sox_arguments: Tuple[int, str, threading.Lock, Set[str], str]) 
     temporary_file_name = join_norm(output_directory, "%s.%s" % (base_directory, "wav"))
 
     if not os.path.exists(temporary_file_name):
-        sox_arguments = [SOX_PATH, input_name, "-b", "16", "-c", "1", "-r", "44.1k", "-t", "wav", temporary_file_name]
+        sox_arguments = [SOX_PATH, input_name, "-b", "16", "-c", "1", "-r", "44.1k", "-t", "wav",
+                         temporary_file_name]
         subprocess.call(sox_arguments)
     return temporary_file_name
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="This script will silence a wave file based on annotations in "
-                                                 "an Elan tier ")
+    parser = argparse.ArgumentParser(description="This script will silence a wave file based on "
+                                                 "annotations in an Elan tier ")
     parser.add_argument('-c', '--corpus',
                         help='Directory of audio and eaf files',
                         type=str,
@@ -69,7 +70,8 @@ def main() -> None:
     process_lock = threading.Lock()
     temporary_directories = set()
 
-    map_arguments = [(index, audio_path, process_lock, temporary_directories, parent_temporary_directory)
+    map_arguments = [(index, audio_path, process_lock, temporary_directories,
+                      parent_temporary_directory)
                      for index, audio_path in enumerate(input_audio)]
 
     # Multi-Threaded Audio Re-sampling

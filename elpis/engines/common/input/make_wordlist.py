@@ -107,7 +107,8 @@ def main():
     """
     Run the entire make_wordlist.py as a command line utility.
 
-    Usage: python3 make_wordlist.py [-h] -i INFILE [-o OUTFILE] [-w WORDLIST] [-t TEXTCORPUS] [-c KALDICORPUS]
+    Usage: python3 make_wordlist.py [-h] -i INFILE [-o OUTFILE] [-w WORDLIST] [-t TEXTCORPUS]
+    [-c KALDICORPUS]
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infile",

@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 """
-Extracts transcription information from Praat (*.TextGrid) transcription files and outputs them in json format
+Extracts transcription information from Praat (*.TextGrid) transcription files and outputs them
+in json format
 
 Copyright: University of Queensland, 2019
 Contributors:
@@ -83,7 +84,7 @@ def main() -> None:
 
     output_json = os.path.join(result_base_name, outfile_name)
     write_data_to_json_file(data=intervals,
-                            output=output_json)
+                            file_name=output_json)
 
 
 if __name__ == "__main__":

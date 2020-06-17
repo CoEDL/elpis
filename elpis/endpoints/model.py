@@ -1,9 +1,7 @@
-
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
 from elpis.engines.common.objects.model import Model
-from elpis.engines import ENGINES
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -25,7 +23,6 @@ def run(cmd: str) -> str:
 @bp.route("/new", methods=['POST'])
 def new():
     interface = app.config['INTERFACE']
-
     model = interface.new_model(request.json["name"])
     # use the selected pron dict
     pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
@@ -64,7 +61,7 @@ def load():
 
 @bp.route("/list", methods=['GET'])
 def list_existing():
-    interface: Interface = app.config['INTERFACE']
+    interface = app.config['INTERFACE']
     fake_results = {}
     data = {
         "list": [{
@@ -134,7 +131,7 @@ def status():
 def results():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status":404, "data": "No current model exists (perhaps create one first)"})
+        return jsonify({"status": 404, "data": "No current model exists (perhaps create one first)"})
     wer_lines = []
     log_file = model.path.joinpath('run_log.txt')
     results = {}

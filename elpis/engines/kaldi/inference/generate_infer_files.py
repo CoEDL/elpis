@@ -1,9 +1,3 @@
-from pathlib import Path
-import os
-import wave
-import contextlib
-
-
 """
 Generates files requires to do infer with untranscribed audio.
 Files need trailing newline, otherwise Kaldi fails silently.
@@ -31,34 +25,42 @@ NB: Single-file only for now, it doesn't handle multiple files.
     This assocaites the recording ID used above to the audio filename
 """
 
+from pathlib import Path
+import os
+import wave
+import contextlib
+
+
 # echo -e "$spk_id $utt_id" > working_dir/input/infer/spk2utt
 def build_spk2utt_file(path, spk_id, utt_id):
     spk2utt_path = Path(path).joinpath('spk2utt')
     with spk2utt_path.open(mode='w') as fout:
-            fout.write(f'{spk_id} {utt_id}\n')
+        fout.write(f'{spk_id} {utt_id}\n')
+
 
 # echo -e "$utt_id $spk_id" > working_dir/input/infer/utt2spk
 def build_utt2spk_file(path, utt_id, spk_id):
     utt2spk_path = Path(path).joinpath('utt2spk')
     with utt2spk_path.open(mode='w') as fout:
-            fout.write(f'{utt_id} {spk_id}\n')
+        fout.write(f'{utt_id} {spk_id}\n')
+
 
 # echo -e "$utt_id $rec_id $start_ms $stop_ms" > working_dir/input/infer/segments
 def build_segments_file(path, utt_id, rec_id, start_ms, stop_ms):
     segments_path = Path(path).joinpath('segments')
     with segments_path.open(mode='w') as fout:
-            fout.write(f'{utt_id} {rec_id} {start_ms} {stop_ms}\n')
+        fout.write(f'{utt_id} {rec_id} {start_ms} {stop_ms}\n')
+
 
 # echo -e "decode data/infer/audio.wav" > working_dir/input/infer/wav.scp
 def build_wav_scp_file(path, rec_id, rel_audio_file_path):
     wav_scp_path = Path(path).joinpath('wav.scp')
     with wav_scp_path.open(mode='w') as fout:
-            fout.write(f'{rec_id} {rel_audio_file_path}\n')
+        fout.write(f'{rec_id} {rel_audio_file_path}\n')
 
 
 # Prepare the values we need
 def generate_files(transcription):
-
     # This is our transcription directory (state object directory)
     path = transcription.path
 
@@ -75,12 +77,13 @@ def generate_files(transcription):
     utt_id = spk_id + '-utterance0'
 
     # Expecting to start at 0 time. Could benefit from VAD here?
-    start_ms=0
+    start_ms = 0
 
     # Duration of the audio
-    # stop_ms=$(sox working_dir/input/infer/audio.wav -n stat 2>&1 | sed -n 's#^Length (seconds):[^0-9]*\([0-9.]*\)$#\1#p')
+    # stop_ms=$(sox working_dir/input/infer/audio.wav -n stat 2>&1 |
+    # sed -n 's#^Length (seconds):[^0-9]*\([0-9.]*\)$#\1#p')
     abs_audio_file_path = Path(path).joinpath(audio_file_name)
-    with contextlib.closing(wave.open(str(abs_audio_file_path),'r')) as fin:
+    with contextlib.closing(wave.open(str(abs_audio_file_path), 'r')) as fin:
         frames = fin.getnframes()
         rate = fin.getframerate()
         stop_ms = frames / float(rate)

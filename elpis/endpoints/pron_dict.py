@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, make_response
 from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
@@ -95,6 +95,8 @@ def save_lexicon():
                         "data": "No current pron dict exists (perhaps create one first)"})
     if request.method == 'POST':
         lexicon = request.json['lexicon']
+    else:
+        return make_response(405, "GET not allowed")
     pron_dict.save_lexicon(lexicon)
     data = {
         "lexicon": pron_dict.get_lexicon_content()

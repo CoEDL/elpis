@@ -61,8 +61,6 @@ class FSObject(ABC):
     def _initial_config(self, config):
         self.ConfigurationInterface(self)._save(config)
 
-    
-
     @classmethod
     def load(cls, base_path: Path):
         """

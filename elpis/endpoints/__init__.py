@@ -5,7 +5,6 @@ from . import model
 from . import pron_dict
 from . import transcription
 
-from pathlib import Path
 
 bp = Blueprint("endpoints", __name__, url_prefix="/api")
 

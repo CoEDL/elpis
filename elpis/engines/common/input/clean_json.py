@@ -252,7 +252,7 @@ def main() -> None:
                                     punctuation_to_explode_by=arguments.punctuation_to_explode_by)
 
     write_data_to_json_file(data=list(filtered_data),
-                            output=outfile)
+                            file_name=outfile)
 
     print(f"Finished! Wrote {str(len(filtered_data))} transcriptions.")
 

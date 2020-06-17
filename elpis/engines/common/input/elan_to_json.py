@@ -11,28 +11,30 @@ Contributors:
               Nicholas Lambourne - (The University of Queensland, 2018)
 """
 
-import glob
-import sys
-import os
 import argparse
+import glob
+import os
+import sys
+from typing import List, Dict, Tuple, Optional
+
 from pympi.Elan import Eaf
-from typing import List, Dict, Tuple
 from ..utilities import load_json_file, write_data_to_json_file
 
 
 def save_tier_info(input_eaf: Eaf = None,
-                  file_name: str = '',
-                  tier_types: List = [],
-                  corpus_tiers_file: str = 'corpus_tiers.json'):
+                   file_name: str = '',
+                   tier_types: Optional[List] = None,
+                   corpus_tiers_file: str = 'corpus_tiers.json'):
     tiers = []
+    tier_types = tier_types or list()
     for tier_type in tier_types:
         tier_names = input_eaf.get_tier_ids_for_linguistic_type(tier_type)
-        tiers.append( { tier_type: tier_names } )
+        tiers.append({tier_type: tier_names})
     file_data = {"file": file_name, "tiers": tiers}
     corpus_tiers = load_json_file(corpus_tiers_file)
     corpus_tiers.append(file_data)
     write_data_to_json_file(data=corpus_tiers,
-                            output=corpus_tiers_file)
+                            file_name=corpus_tiers_file)
 
 
 def process_eaf(input_elan_file: str = '',
@@ -61,6 +63,7 @@ def process_eaf(input_elan_file: str = '',
     :param tier_order: index of the elan tier to process
     :param tier_type:  type of the elan tier to process
     :param tier_name:  name of the elan tier to process
+    :param corpus_tiers_file list of all
     :return: a list of dictionaries, where each dictionary is an annotation
     """
 
@@ -84,9 +87,9 @@ def process_eaf(input_elan_file: str = '',
 
     # Keep this data handy for future corpus analysis
     save_tier_info(input_eaf=input_eaf,
-                  tier_types=tier_types,
-                  file_name=file_name,
-                  corpus_tiers_file=corpus_tiers_file)
+                   tier_types=tier_types,
+                   file_name=file_name,
+                   corpus_tiers_file=corpus_tiers_file)
 
     # Get annotations and parameters (things like speaker id) on the target tier
     annotations: List[Tuple[str, str, str]] = []
@@ -97,7 +100,7 @@ def process_eaf(input_elan_file: str = '',
         # Watch out for files that may not have this many tiers
         # tier_order is 1-index but List indexing is 0-index
         try:
-            tier_name = tier_names[tier_order-1]
+            tier_name = tier_names[tier_order - 1]
             print(f"using tier order {tier_order} to get tier name {tier_name}")
         except IndexError:
             print("couldn't find a tier")
@@ -120,7 +123,7 @@ def process_eaf(input_elan_file: str = '',
     if annotations:
         print(f"annotations {annotations}")
         annotations = sorted(annotations)
-        parameters: Dict[str,str] = input_eaf.get_parameters_for_tier(tier_name)
+        parameters: Dict[str, str] = input_eaf.get_parameters_for_tier(tier_name)
         print(f"parameters {parameters}")
         speaker_id: str = parameters.get("PARTICIPANT", "")
 
@@ -144,7 +147,6 @@ def process_eaf(input_elan_file: str = '',
 
 
 def main():
-
     """
     Run the entire elan_to_json.py as a command line utility. It extracts information on speaker, audio file,
     transcription etc. from the given tier of the specified .eaf file.
@@ -153,9 +155,9 @@ def main():
     """
 
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
-                            description="This script takes an directory with ELAN files and "
-                                        "slices the audio and output text in a format ready "
-                                        "for our Kaldi pipeline.")
+        description="This script takes an directory with ELAN files and "
+                    "slices the audio and output text in a format ready "
+                    "for our Kaldi pipeline.")
     parser.add_argument("-i", "--input_dir",
                         help="Directory of dirty audio and eaf files",
                         default="working_dir/input/data/")
@@ -174,7 +176,7 @@ def main():
         os.makedirs(arguments.output_dir)
 
     all_files_in_directory = set(glob.glob(os.path.join(arguments.input_dir, "**"), recursive=True))
-    input_elan_files = [ file_ for file_ in all_files_in_directory if file_.endswith(".eaf") ]
+    input_elan_files = [file_ for file_ in all_files_in_directory if file_.endswith(".eaf")]
 
     annotations_data = []
 
@@ -183,9 +185,8 @@ def main():
                                             tier_name=arguments.tier))
 
     write_data_to_json_file(data=annotations_data,
-                            output=arguments.output_json)
+                            file_name=arguments.output_json)
 
 
 if __name__ == "__main__":
     main()
-
