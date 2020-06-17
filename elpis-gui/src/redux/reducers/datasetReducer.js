@@ -16,14 +16,13 @@ const initState = {
     wordlist: {}
 }
 
-
 const dataset = (state = initState, action) => {
     switch (action.type) {
 
         // Boilerplate for all...
         case actionTypes.DATASET_NEW_STARTED:
         case actionTypes.DATASET_NEW_FAILURE:
-            return {...state}
+            return {...state};
 
         case actionTypes.DATASET_NEW_SUCCESS: {
             let dataset_state = action.response.data.data.state;
@@ -41,7 +40,7 @@ const dataset = (state = initState, action) => {
                 ui =       dataset_state.importer.ui;
             }
 
-            console.log("DATASET_NEW_SUCCESS name", name)
+            console.log("DATASET_NEW_SUCCESS name", name);
             return { ...initState,
                 name,
                 importer_name,
@@ -52,20 +51,20 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
-            let dataset_state = action.response.data.data.state
+            let dataset_state = action.response.data.data.state;
             let {
                 name,
                 files,
                 settings,
                 ui,
                 punctuation_to_explode_by
-            } = dataset_state
+            } = dataset_state;
             // action.data is an array of filenames. parse this, split into separate lists
-            var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort()
-            var additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort()
+            var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort();
+            var additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort();
             var transcriptionFiles = files.filter(file => {
                 return (getFileExtension(file) !== 'wav' && getFileExtension(file) !== 'txt')
-            }).sort()
+            }).sort();
             // remove duplicates (should do this on the server though!)
             audioFiles = [...(new Set(audioFiles))];
             transcriptionFiles = [...(new Set(transcriptionFiles))];
@@ -80,14 +79,14 @@ const dataset = (state = initState, action) => {
                 ui,
                 punctuation_to_explode_by,
                 wordlist: "",
-            }
+            };
         }
 
         case actionTypes.DATASET_LIST_SUCCESS:
             return {
                 ...state,
                 datasetList: action.response.data.data.list
-            }
+            };
 
         case actionTypes.DATASET_FILES_STARTED:
             return { ...state, status: "loading" }
