@@ -58,7 +58,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     def ngram(self, value: int) -> None:
         self.config['ngram'] = value
 
-    def build_kaldi_structure(self):
+    def build_structure(self):
         # task json-to-kaldi
         output_path = self.path.joinpath('output')
         output_path.mkdir(parents=True, exist_ok=True)

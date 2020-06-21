@@ -31,7 +31,7 @@ def new():
     app.config['CURRENT_DATASET'] = dataset
     app.config['CURRENT_PRON_DICT'] = pron_dict
     model.link(dataset, pron_dict)
-    model.build_kaldi_structure()
+    model.build_structure()
     app.config['CURRENT_MODEL'] = model
     data = {
         "config": model.config._load()
