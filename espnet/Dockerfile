@@ -9,9 +9,9 @@ RUN apt-get install -y flac
 RUN apt-get install -y bc
 
 WORKDIR /
-RUN git clone https://github.com/espnet/espnet.git
+RUN git clone https://github.com/persephone-tools/espnet.git
 WORKDIR /espnet
-RUN git checkout v.0.6.3
+RUN git checkout elpis
 # Explicitly installing only the CPU version. We should update this to be an
 # nvidia-docker image and install GPU-supported version of ESPnet.
 WORKDIR /espnet/tools
