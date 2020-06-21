@@ -31,7 +31,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     @property
     def status(self):
         return self.config['status']
-    
+
     @property
     def state(self):
         # TODO: fix this
@@ -62,7 +62,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         # task json-to-kaldi
         output_path = self.path.joinpath('output')
         output_path.mkdir(parents=True, exist_ok=True)
-        
+
         # Copy cleaned corpus from dataset to the model
         dataset_corpus_txt = self.dataset.path.joinpath('cleaned', 'corpus.txt')
         model_corpus_txt = self.path.joinpath('corpus.txt')
@@ -76,6 +76,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         )
 
     def train(self, on_complete:Callable=None):
+
 
         def prepare_for_training():
             print("prepare_for_training")

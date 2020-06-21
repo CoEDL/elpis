@@ -2,6 +2,7 @@ from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
 from elpis.engines.common.objects.model import Model
+from elpis.engines.kaldi.errors import KaldiError
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -25,9 +26,19 @@ def new():
     interface = app.config['INTERFACE']
     model = interface.new_model(request.json["name"])
     # use the selected pron dict
-    pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
-    # get its dataset
-    dataset = interface.get_dataset(pron_dict.dataset.name)
+    try:
+        pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
+        # get its dataset
+        dataset = interface.get_dataset(pron_dict.dataset.name)
+    except KaldiError:
+        # Then it's fine, not all models need pronunciation dictionaries.
+        # But it means we need to get a dataset directly.
+
+        # TODO This dataset will have to actually come from the interface, but
+        # for testing I'm just grabbing the first one.
+        datasets = interface.list_datasets()
+        dataset = interface.get_dataset(datasets[0])
+        pron_dict = None
     app.config['CURRENT_DATASET'] = dataset
     app.config['CURRENT_PRON_DICT'] = pron_dict
     model.link(dataset, pron_dict)
