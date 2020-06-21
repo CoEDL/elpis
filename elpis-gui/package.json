@@ -1,6 +1,6 @@
 {
   "name": "elpis-gui",
-  "version": "0.1.0",
+  "version": "0.94.0",
   "private": true,
   "dependencies": {
     "array-sort": "^1.0.0",
