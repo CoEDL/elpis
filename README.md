@@ -7,13 +7,17 @@
 
 This project is under construction and not yet ready for everyday use. Please contact us by email at `elpis.asr@gmail.com` to be informed when a stable version is ready.
 
----
-
 Elpis is a tool which allows language workers with minimal computational experience to build their own speech recognition models 
 to automatically transcribe audio. It relies on the [Kaldi](http://kaldi-asr.org) automatic speech recognition 
 (ASR) toolkit. Kaldi is notorious for being difficult to build, use and navigate - even for trained computer scientists. 
 The goal of Elpis is to expose the power of Kaldi to linguists and language workers by abstracting away much of the 
 needless technical complexity.
+
+<p align="center">
+    <img src="docs/img/elpis-pipeline.svg" width="100%" style="margin: 40px 40px 60px 40px;" />
+</p>
+
+
 
 ## I'm An Academic, How Do I Cite This In My Research?
 
