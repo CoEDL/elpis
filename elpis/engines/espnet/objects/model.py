@@ -106,7 +106,7 @@ class EspnetModel(BaseModel):
             print("SELF PATH {}".format(self.path))
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
-            p = run(f"cd {local_espnet_path}; ./run.sh > {run_log_path}")
+            p = run(f"cd {local_espnet_path}; ./run.sh --nj 1 &> {run_log_path}")
             print(p.stdout)
             print('train double done.')
 
@@ -126,3 +126,21 @@ class EspnetModel(BaseModel):
             print("oncomplete is not none")
             run_training_in_background()
         return
+
+    def get_train_results(self):
+        from pathlib import Path
+        path_gen = Path(self.path).glob("espnet-asr1/exp/train*/decode*/result.txt")
+        log_file = next(path_gen) # TODO Assumes just one decode directory, but if we apply the same model to data several times, this won't be true.
+
+        with open(log_file) as f:
+            sum_avg_line = f.readlines()[34]
+            per = sum_avg_line.split()[-3]
+            ins = sum_avg_line.split()[-4]
+            del_ = sum_avg_line.split()[-5]
+            sub = sum_avg_line.split()[-6]
+        results = {"per": per,
+                   "sub_val": sub,
+                   "ins_val": ins,
+                   "del_val": del_}
+        print(results)
+        return results

@@ -252,3 +252,31 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         else:
             run_training_in_background()
         return
+
+    def get_train_results(self):
+        log_file = self.path.joinpath('run_log.txt')
+        results = {}
+        with log_file.open() as fin:
+            wer_lines = []
+            for line in reversed(list(fin)):
+                line = line.rstrip()
+                if "%WER" in line:
+                    # use line to sort by best val
+                    line_r = line.replace('%WER ', '')
+                    wer_lines.append(line_r)
+            wer_lines.sort(reverse = True)
+            line = wer_lines[0]
+            line_split = line.split(None, 1)
+            wer = line_split[0]
+            line_results = line_split[1]
+            line_results = line_results.replace('[', '')
+            line_results = line_results.replace(']', '')
+            results_split = line_results.split(',')
+            count_val = results_split[0].strip()
+            ins_val = results_split[1].replace(' ins', '').strip()
+            del_val = results_split[2].replace(' del', '').strip()
+            sub_val = results_split[3].replace(' sub', '').strip()
+            results = {'wer': wer, 'count_val': count_val, 'ins_val': ins_val, 'del_val': del_val,
+                    'sub_val': sub_val}
+            print(results)
+        return results
