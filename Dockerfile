@@ -100,6 +100,8 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
 # Add node, npm and xml-js
 RUN apt-get install -y nodejs build-essential npm && \
     #ln -s /usr/bin/nodejs /usr/bin/node && \
+    npm install -g npm \
+    hash -d npm \
     npm install -g xml-js
 
 # Add moustache templates as mo
