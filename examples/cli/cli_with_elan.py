@@ -19,6 +19,7 @@ ds = kaldi.new_dataset('dsy')
 ds.add_directory('/recordings/transcribed', extensions=['eaf', 'wav'])
 ds.auto_select_importer()
 # ds.import_with('Elan').import_directory('/recordings/transcribed')
+ds.importer.set_setting('tier_name', 'Phrase')
 
 # # Change an importing setting
 # ds.importer().change_tier('Phrase')
@@ -57,8 +58,5 @@ t = kaldi.new_transcription('tx')
 t.link(m)
 with open('/recordings/untranscribed/audio.wav', 'rb') as faudio:
     t.prepare_audio(faudio)
-t.transcribe_align()
 t.transcribe()
-t.export_as('Elan')
-# print(t.elan().decode('utf-8'))
-print(t.text().decode('utf-8'))
+print(t.text())
