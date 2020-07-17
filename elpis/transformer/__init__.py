@@ -852,17 +852,19 @@ def _default_audio_resampler(audio_paths: List[str], resampled_dir_path: str, ad
             resampled_file_path = f'{resampled_dir_path.joinpath(file_name)}'
             add_audio(id, resampled_file_path)
 
-# import other python files in this directory as data transformers.
-def _import_instanciated_data_transformers():
-    names = os.listdir('elpis/transformer')
-    try:
-        names.remove('__init__.py')
-    except ValueError:
-        pass # '__init__.py' not in the list and that's okay.
-    # Only keep python files
-    names = [name[:-len('.py')] for name in names if name.endswith('.py')]
-    for importer_file_name in names:
-        i = importlib.import_module('elpis.transformer.' + importer_file_name)
-        print(dir(i))
-        print(DataTransformerAbstractFactory._transformer_factories)
-_import_instanciated_data_transformers()
+# # import other python files in this directory as data transformers.
+# def _import_instanciated_data_transformers():
+#     names = os.listdir('elpis/transformer')
+#     try:
+#         names.remove('__init__.py')
+#     except ValueError:
+#         pass # '__init__.py' not in the list and that's okay.
+#     # Only keep python files
+#     names = [name[:-len('.py')] for name in names if name.endswith('.py')]
+#     for importer_file_name in names:
+#         i = importlib.import_module('elpis.transformer.' + importer_file_name)
+#         print(dir(i))
+#         print(DataTransformerAbstractFactory._transformer_factories)
+# _import_instanciated_data_transformers()
+
+from . import import_list

@@ -19,7 +19,23 @@ from elpis.engines.common.utilities import hasher
 
 
 class FSObject(ABC):
+
+    """
+    ..
+        "... TODO More docs here ..."
+    
+    ``_config_file``
+    ================
+    All classes that inherit from FSObjects should implement a ``_config_file``
+    static variable with the name of the JSON file that store the objects
+    non-volatile properties. The ``_config_file`` file must be located in the
+    ``dir_name`` directory.
+    """
     _links = {}  # Used for child classes to dynamically link to other objects if applicable.
+
+    # _config_file = '___________.json'
+    # Do not uncomment line above, this is an example of how to implement the
+    # _config_file variable in subclasses (classes that inherit this class).
 
     def __init__(self,
                  parent_path: Path = None,
@@ -54,9 +70,12 @@ class FSObject(ABC):
         config_file_path = Path(f'{self.__path}/{self._config_file}')
         if not config_file_path.exists():
             self.ConfigurationInterface(self)._save({})
-        self.config['name'] = name
-        self.config['hash'] = h
-        self.config['date'] = str(time.time())
+        if 'name' not in self.config._load() or name is not None:
+            self.config['name'] = name
+        if 'hash' not in self.config._load():
+            self.config['hash'] = h
+        if 'date' not in self.config._load():
+            self.config['date'] = str(time.time())
 
     def _initial_config(self, config):
         self.ConfigurationInterface(self)._save(config)

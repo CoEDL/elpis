@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from shutil import rmtree
 
 from appdirs import user_data_dir
 from elpis.engines.common.objects.fsobject import FSObject
@@ -14,21 +15,77 @@ from elpis.engines.common.objects.pron_dict import PronDict
 class Interface(FSObject):
     _config_file = 'interface.json'
 
-    def __init__(self, path: Path = None):
+    def __init__(self, path: Path = None, use_existing=False):
+        """
+        :param Boolean use_existing: If this flag is enabled and an interface
+            already exists at the specified ``path``, then load the interface
+            at the ``path``. When ``path`` is not specified or if the
+            interface is not at the ``path``, then a new interface is created.
+        """
+        path_was_none = False
         if path is None:
+            path_was_none = True
             name = hasher.new()
+            parent_path = Path(user_data_dir('elpis')).joinpath('interfaces')
+            path = parent_path.joinpath(name)
+
+            # super().__init__(
+            #     parent_path=Path(user_data_dir('elpis')),
+            #     dir_name=name,
+            #     pre_allocated_hash=name,
+            #     name=name
+            # )
+        
+
+        path = Path(path).absolute()
+
+        # === Check if the existing interface is valid ===================
+        # If any of the below nested if-statements fail, the existing (if
+        #   it exists) interface is not valid. In that case, wipe the
+        #   path directory and start a new interface directory.
+        class InvalidInterfaceError(Exception):
+            pass
+        config_file_path = path.joinpath(Interface._config_file)
+        try:
+            if (use_existing == True
+                and path.exists()
+                and path.is_dir()
+                and config_file_path.exists()
+                and config_file_path.is_file()):
+                # a valid interface exists. (this is a shallow check)
+                    pass
+            else:
+                raise InvalidInterfaceError
+        
+        # === Create a new interface object ==============================
+        except InvalidInterfaceError:
+            # Must wipe the interface and make a new one
+            if path.exists():
+                rmtree(path)
             super().__init__(
-                parent_path=Path(user_data_dir('elpis')),
-                dir_name=name,
-                pre_allocated_hash=name,
-                name=name
+                parent_path=path.parent,
+                dir_name=path.name,
+                pre_allocated_hash=(path.name if path_was_none else None),
+                name=(path.name if path_was_none else None)
             )
+            self.config['loggers'] = []
+            self.config['datasets'] = {}
+            self.config['pron_dicts'] = {}
+            self.config['models'] = {}
+            self.config['transcriptions'] = {}
+
+        # === Use existing interface object ==============================
         else:
-            path = Path(path).absolute()
+            # Create a new interface without wiping the directory.
+            # Uses existing _config_file.
             super().__init__(
                 parent_path=path.parent,
                 dir_name=path.name
             )
+
+
+            
+        
         # ensure object directories exist
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
@@ -54,11 +111,8 @@ class Interface(FSObject):
         KI needs a flag to know whether to set these objects or skip initialising them.
         For now, explicitly set them... sorry CLI.
         """
-        self.config['loggers'] = []
-        self.config['datasets'] = {}
-        self.config['pron_dicts'] = {}
-        self.config['models'] = {}
-        self.config['transcriptions'] = {}
+
+        
 
         # make a default logger
         self.new_logger(default=True)
@@ -208,6 +262,8 @@ class Interface(FSObject):
 
     def list_transcriptions(self):
         names = []
+        if not Path(f'{self.transcriptions_path}').exists():
+            return names # no directory -> no items in list
         for hash_dir in os.listdir(f'{self.transcriptions_path}'):
             if not hash_dir.startswith('.'):
                 with self.transcriptions_path.joinpath(
