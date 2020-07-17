@@ -262,6 +262,8 @@ class Interface(FSObject):
 
     def list_transcriptions(self):
         names = []
+        if not Path(f'{self.transcriptions_path}').exists():
+            return names # no directory -> no items in list
         for hash_dir in os.listdir(f'{self.transcriptions_path}'):
             if not hash_dir.startswith('.'):
                 with self.transcriptions_path.joinpath(
