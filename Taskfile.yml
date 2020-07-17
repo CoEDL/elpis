@@ -39,6 +39,5 @@ reset-state:
   desc: "clear state dir"
   cmds:
     - rm -rf /state/*
-    - mkdir /state
     - touch  /state/interface.json
 
