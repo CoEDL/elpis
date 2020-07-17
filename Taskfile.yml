@@ -34,9 +34,11 @@ process-infer-files:
                 --corpus_txt working_dir/input/output/tmp/corpus.txt
                 --text_corpus /kaldi-helpers/working_dir/input/config/text_corpora
 
+#  This is useful for resetting when using the CLI (July 2020)
 reset-state:
   desc: "clear state dir"
   cmds:
-    - rm -rf /elpis/state/*
-    - touch  /elpis/state/interface.json
+    - rm -rf /state/*
+    - mkdir /state
+    - touch  /state/interface.json
 
