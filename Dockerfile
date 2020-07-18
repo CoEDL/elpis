@@ -143,6 +143,10 @@ ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
 WORKDIR /elpis/elpis-gui
+# https://askubuntu.com/questions/1036278/npm-is-incorrect-version-on-latest-ubuntu-18-04-installation (`hash -d npm` did not work for me)
+RUN npm install -g npm
+# RUN npm update
+RUN npm --version
 RUN npm install && \
     npm run build
 
