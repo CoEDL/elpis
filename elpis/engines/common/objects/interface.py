@@ -47,7 +47,7 @@ class Interface(FSObject):
             pass
         config_file_path = path.joinpath(Interface._config_file)
         try:
-            if (use_existing == True
+            if (use_existing is True
                 and path.exists()
                 and path.is_dir()
                 and config_file_path.exists()
@@ -65,11 +65,11 @@ class Interface(FSObject):
                 # local filesystem into the docker container.
                 # Error is "Device or resource busy: '/state'"
                 # We need to keep the dir and delete the contents...
-                for root, dirs, files in os.walk(path):
-                    for f in files:
-                        os.unlink(os.path.join(root, f))
-                    for d in dirs:
-                        shutil.rmtree(os.path.join(root, d))
+                for root, subdirectories, files in os.walk(path):
+                    for file_ in files:
+                        os.unlink(os.path.join(root, file_))
+                    for directory in subdirectories:
+                        shutil.rmtree(os.path.join(root, directory))
 
             super().__init__(
                 parent_path=path.parent,
@@ -267,4 +267,3 @@ class Interface(FSObject):
 
     def set_engine(self, engine):
         self.engine = engine
-
