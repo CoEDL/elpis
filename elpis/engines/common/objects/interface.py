@@ -37,8 +37,6 @@ class Interface(FSObject):
             #     name=name
             # )
         
-        print(f"ben interface __init__")
-
         path = Path(path).absolute()
 
         # === Check if the existing interface is valid ===================
