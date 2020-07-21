@@ -4,7 +4,7 @@ from elpis.engines.common.objects.interface import Interface
 # ======
 # Create a Kaldi interface directory (where all the associated files/objects
 # will be stored).
-elpis = Interface(path='state', use_existing=True)
+elpis = Interface(path='/state', use_existing=True)
 
 # Step 1
 # ======
