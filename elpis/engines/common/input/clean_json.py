@@ -198,13 +198,15 @@ def deal_with_punctuation(text: str = '',
     :param punctuation_to_explode_by: punctuation marks to replace with spaces
     :return: cleaned text
     """
-    pattern_to_collapse_by = re.escape(punctuation_to_collapse_by)
-    pattern_to_explode_by = re.escape(punctuation_to_explode_by)
-    # Prioritise exploding first, this is set of punctuation marks that the user adds
-    new_text: str = re.sub(rf"[{pattern_to_explode_by}]", " ", text)
+    new_text: str = text
+    # Prioritise exploding first, these are punctuation marks that the user sets
+    if punctuation_to_explode_by is not '':
+        pattern_to_explode_by = re.escape(punctuation_to_explode_by)
+        new_text = re.sub(rf"[{pattern_to_explode_by}]", " ", new_text)
     # Then strip the rest
-    new_text = re.sub(rf"[{pattern_to_collapse_by}]", "", new_text)
-    print(f"{text} {new_text}")
+    if punctuation_to_collapse_by is not '':
+        pattern_to_collapse_by = re.escape(punctuation_to_collapse_by)
+        new_text = re.sub(rf"[{pattern_to_collapse_by}]", "", new_text)
     return new_text
 
 
