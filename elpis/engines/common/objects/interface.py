@@ -36,7 +36,7 @@ class Interface(FSObject):
             #     pre_allocated_hash=name,
             #     name=name
             # )
-        
+
         path = Path(path).absolute()
 
         # === Check if the existing interface is valid ===================
@@ -92,9 +92,6 @@ class Interface(FSObject):
                 dir_name=path.name
             )
 
-
-            
-        
         # ensure object directories exist
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
@@ -111,21 +108,8 @@ class Interface(FSObject):
         self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
-        """
-        TODO: fix this.
-        Setting the config objects here wipes existing objects from the interface file.
-        This means the CLI transcription script can't be run seperately from the CLI training script,
-        because this is run whenever the KaldiInterface is initialised.
-        However, if we don't set them, we get config KeyErrors (see issue #69).
-        KI needs a flag to know whether to set these objects or skip initialising them.
-        For now, explicitly set them... sorry CLI.
-        """
-
-        
-
         # make a default logger
         self.new_logger(default=True)
-
         # set during runtime
         self.engine = None
 
