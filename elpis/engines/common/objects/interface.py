@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+import shutil
 from shutil import rmtree
 
 from appdirs import user_data_dir
@@ -35,7 +36,6 @@ class Interface(FSObject):
             #     pre_allocated_hash=name,
             #     name=name
             # )
-        
 
         path = Path(path).absolute()
 
@@ -47,7 +47,7 @@ class Interface(FSObject):
             pass
         config_file_path = path.joinpath(Interface._config_file)
         try:
-            if (use_existing == True
+            if (use_existing is True
                 and path.exists()
                 and path.is_dir()
                 and config_file_path.exists()
@@ -61,7 +61,16 @@ class Interface(FSObject):
         except InvalidInterfaceError:
             # Must wipe the interface and make a new one
             if path.exists():
-                rmtree(path)
+                # Tempted to use shutil.rmtree? It breaks if we have mounted /state from
+                # local filesystem into the docker container.
+                # Error is "Device or resource busy: '/state'"
+                # We need to keep the dir and delete the contents...
+                for root, subdirectories, files in os.walk(path):
+                    for file_ in files:
+                        os.unlink(os.path.join(root, file_))
+                    for directory in subdirectories:
+                        shutil.rmtree(os.path.join(root, directory))
+
             super().__init__(
                 parent_path=path.parent,
                 dir_name=path.name,
@@ -83,9 +92,6 @@ class Interface(FSObject):
                 dir_name=path.name
             )
 
-
-            
-        
         # ensure object directories exist
         self.datasets_path = self.path.joinpath('datasets')
         self.datasets_path.mkdir(parents=True, exist_ok=True)
@@ -102,21 +108,8 @@ class Interface(FSObject):
         self.pron_dicts = {}
         self.models = {}
         self.transcriptions = {}
-        """
-        TODO: fix this.
-        Setting the config objects here wipes existing objects from the interface file.
-        This means the CLI transcription script can't be run seperately from the CLI training script,
-        because this is run whenever the KaldiInterface is initialised.
-        However, if we don't set them, we get config KeyErrors (see issue #69).
-        KI needs a flag to know whether to set these objects or skip initialising them.
-        For now, explicitly set them... sorry CLI.
-        """
-
-        
-
         # make a default logger
         self.new_logger(default=True)
-
         # set during runtime
         self.engine = None
 
@@ -274,4 +267,3 @@ class Interface(FSObject):
 
     def set_engine(self, engine):
         self.engine = engine
-

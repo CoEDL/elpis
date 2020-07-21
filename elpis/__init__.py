@@ -8,7 +8,6 @@ from pathlib import Path
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
-
     GUI_PUBLIC_DIR = "/elpis-gui/build"
 
     # Setup static resources
@@ -49,16 +48,19 @@ def create_app(test_config=None):
     # stores all the artifacts that user has generated.
     interface_path = Path(os.path.join(elpis_path, '/state'))
     if not interface_path.exists():
+        print("no interface exists")
         app.config['INTERFACE'] = Interface(interface_path)
     else:
-        app.config['INTERFACE'] = Interface.load(interface_path)
-    app.config['CURRENT_DATASET'] = None # not okay for multi-user
-    app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user & need to remove later because it is Kaldi-specific.
-    app.config['CURRENT_MODEL'] = None # not okay for multi-user
+        print("interface exists, load it")
+        app.config['INTERFACE'] = Interface(interface_path, use_existing=True)
+    # app.config['CURRENT_DATASET'] = None # not okay for multi-user
+    # app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user & need to remove later because it is Kaldi-specific.
+    # app.config['CURRENT_MODEL'] = None # not okay for multi-user
+    # app.config['CURRENT_TRANSCRIPTION'] = None  # not okay for multi-user
 
     # add the endpoints routes
     app.register_blueprint(endpoints.bp)
-    print(app.url_map)
+    # print(app.url_map)
 
     # the rest of the routes below are for the single file react app.
     @app.route('/index.html')
