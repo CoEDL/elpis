@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+import shutil
 from shutil import rmtree
 
 from appdirs import user_data_dir
@@ -36,6 +37,7 @@ class Interface(FSObject):
             #     name=name
             # )
         
+        print(f"ben interface __init__")
 
         path = Path(path).absolute()
 
@@ -61,7 +63,16 @@ class Interface(FSObject):
         except InvalidInterfaceError:
             # Must wipe the interface and make a new one
             if path.exists():
-                rmtree(path)
+                # Tempted to use shutil.rmtree? It breaks if we have mounted /state from
+                # local filesystem into the docker container.
+                # Error is "Device or resource busy: '/state'"
+                # We need to keep the dir and delete the contents...
+                for root, dirs, files in os.walk(path):
+                    for f in files:
+                        os.unlink(os.path.join(root, f))
+                    for d in dirs:
+                        shutil.rmtree(os.path.join(root, d))
+
             super().__init__(
                 parent_path=path.parent,
                 dir_name=path.name,
