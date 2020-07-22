@@ -70,15 +70,16 @@ def files(dataset: Dataset):
     if request.method == 'POST':
         for file in request.files.getlist("file"):
             dataset.add_fp(fp=file, fname=file.filename, destination='original')
+        data = {"files": dataset.files}
         dataset.auto_select_importer()
+        if dataset.importer is not None:
         dataset.validate()
         dataset.refresh_ui()
-    data = {
-        "files": dataset.files,
+            data.update({
         'settings': dataset.importer.get_settings(),
         "ui": dataset.importer.get_ui(),
         "importer_name": dataset.importer.get_name()
-    }
+            })
     return jsonify({
         "status": 200,
         "data": data
