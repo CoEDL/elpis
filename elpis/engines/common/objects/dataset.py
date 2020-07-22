@@ -39,9 +39,6 @@ class DSPaths(object):
         self.corpus_txt = self.cleaned.joinpath('corpus.txt')
 
 
-DEFAULT_TIER_TYPE = 'default-lt'
-DEFAULT_TIER_NAME = 'Phrase'
-
 
 class Dataset(FSObject):
     """
@@ -64,8 +61,6 @@ class Dataset(FSObject):
         self.config['files'] = []
         self.config['processed_labels'] = []
         self.config['importer'] = None
-        self.config['punctuation_to_explode_by'] = string.punctuation + ',…‘’“”°'
-        self.config['punctuation_to_collapse_by'] = ''
 
     @classmethod
     def load(cls, base_path: Path):
@@ -207,21 +202,6 @@ class Dataset(FSObject):
         with self.pathto.annotation_json.open(mode='r') as fin:
             return json.loads(fin.read())
     
-    @property
-    def punctuation_to_explode_by(self) -> str:
-        return self.config['punctuation_to_explode_by']
-    
-    @punctuation_to_explode_by.setter
-    def punctuation_to_explode_by(self, value):
-        self.config['punctuation_to_explode_by'] = value
-    
-    @property
-    def punctuation_to_collapse_by(self) -> str:
-        return self.config['punctuation_to_collapse_by']
-    
-    @punctuation_to_collapse_by.setter
-    def punctuation_to_collapse_by(self, value):
-        self.config['punctuation_to_collapse_by'] = value
 
     def add_fp(self, fp: Union[BufferedIOBase, BinaryIO], fname: str,
                destination: str = 'original'):
@@ -334,8 +314,8 @@ class Dataset(FSObject):
             'files': self.config['files'],
             'processed_labels': self.config['processed_labels'],
             'importer': self.config['importer'],
-            'punctuation_to_explode_by': self.config['punctuation_to_explode_by'],
-            'punctuation_to_collapse_by': self.config['punctuation_to_collapse_by']
+            # 'punctuation_to_explode_by': self.config['punctuation_to_explode_by'],
+            # 'punctuation_to_collapse_by': self.config['punctuation_to_collapse_by']
         }
 
     def validate(self):
@@ -354,11 +334,12 @@ class Dataset(FSObject):
         self.importer.refresh_ui(self.__files)
 
     def process(self):
+        print("**** dataset process ****")
         transformer = self._importer
         if transformer == None:
             raise RuntimeError('must select importer before processing')
         transformer.process()
-        print("**** dataset process")
+        settings = transformer.get_settings()
         # Compile text corpora from original/text_corpora dir into one file
         all_files_in_dir = set(glob.glob(os.path.join(
             str(self.pathto.text_corpora), "**"), recursive=True))
@@ -368,23 +349,20 @@ class Dataset(FSObject):
             if extension == ".txt":
                 corpus_files.append(file_)
         print(f"corpus_files {corpus_files}")
-
         # Compile and clean the additional corpora content into a single file
         for additional_corpus in corpus_files:
             extract_additional_corpora(additional_corpus=additional_corpus,
                                        corpus_txt=f'{self.pathto.corpus_txt}',
                                        punctuation_to_collapse_by=
-                                       self.config['punctuation_to_collapse_by'],
+                                       settings['punctuation_to_collapse_by'],
                                        punctuation_to_explode_by=
-                                       self.config['punctuation_to_explode_by'])
-
+                                       settings['punctuation_to_explode_by'])
         # task make-wordlist
         generate_word_list(transcription_file=f'{self.pathto.annotation_json}',
                            output_file=f'{self.pathto.word_list_txt}',
                            additional_word_list_file=f'{self.pathto.additional_word_list_txt}',
                            additional_corpus_txt=f'{self.pathto.corpus_txt}'
                            )
-
         # make word count
         annotations: List[Dict[str, str]] = load_json_file(f'{self.pathto.annotation_json}')
         with self.pathto.word_count_json.open(mode='w') as f_word_count:

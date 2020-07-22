@@ -47,6 +47,10 @@ elan.general_setting('tier_type', [None], default=None, description='Choose the 
 elan.general_setting('tier_name', [None], default=None)
 elan.general_setting('tier_order', [None], default=None)
 
+elan.general_setting_title('Punctuation')
+elan.general_setting('punctuation_to_explode_by', str, default=string.punctuation + ',…‘’“”°')
+elan.general_setting('punctuation_to_collapse_by', str, default='')
+
 # TODO: limitation, settings must be defined before used in functions so that they are registered and visible.
 
 
@@ -63,7 +67,6 @@ def elan_validator(file_paths: List[Path]):
 
 @elan.update_ui
 def update_ui(file_paths: List[Path], ui):
-    
     """
     Iterate a dir of elan files and compiles info about all the files' tiers:
     unique tier types, unique tier names, and the num of tiers
@@ -118,6 +121,8 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
     tier_order = context['tier_order']
     tier_name = context['tier_name']
     tier_type = context['tier_type']
+    punctuation_to_collapse_by = context['punctuation_to_collapse_by']
+    punctuation_to_explode_by = context['punctuation_to_explode_by']
 
     for input_elan_file in eaf_paths:
         # Get paths to files
@@ -188,7 +193,11 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
             # if "PARTICIPANT" in parameters:
             #     obj["speaker_id"] = speaker_id
 
-            utterance_cleaned = clean_json_utterance(utterance)
+            utterance_cleaned = clean_json_utterance(utterance=utterance,
+                                                     remove_english=False,
+                                                     use_langid=False,
+                                                     punctuation_to_collapse_by=punctuation_to_collapse_by,
+                                                     punctuation_to_explode_by=punctuation_to_explode_by)
             add_annotation(file_name, utterance_cleaned)
 
 

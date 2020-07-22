@@ -38,6 +38,7 @@ def get_english_words() -> Set[str]:
 
 def clean_utterance(utterance: Dict[str, str],
                     remove_english: bool = False,
+                    english_words: set = None,
                     punctuation_to_collapse_by: str = '',
                     punctuation_to_explode_by: str = '',
                     special_cases: List[str] = None) -> (List[str], int):
@@ -45,6 +46,8 @@ def clean_utterance(utterance: Dict[str, str],
     Takes an utterance and cleans it based on the rules established by the provided parameters.
     :param utterance: a dictionary with a "transcript" key-value pair.
     :param remove_english: whether or not to remove English dirty_words.
+    :param english_words: a list of english dirty_words to remove from the transcript
+                          (we suggest the nltk dirty_words corpora).
     :param punctuation_to_collapse_by: punctuation marks to strip
     :param punctuation_to_explode_by: punctuation marks to replace with spaces
     :param special_cases: a list of dirty_words to always remove from the output.
@@ -59,10 +62,6 @@ def clean_utterance(utterance: Dict[str, str],
     dirty_words = utterance_string.split()
     clean_words = []
     english_word_count = 0
-    if remove_english:
-        english_words = get_english_words()  # pre-load English corpus
-    else:
-        english_words = set()
     for word in dirty_words:
         if special_cases and word in special_cases:
             continue
@@ -127,10 +126,16 @@ def clean_json_utterance(utterance: Dict[str, str],
     # TODO make this an interface setting
     special_cases = ["<silence>"]  # Any words you want to ignore
 
+    if remove_english:
+        english_words = get_english_words()  # pre-load English corpus
+    else:
+        english_words = set()
+
     # Clean the text in the dict, returns a list of cleaned words
     clean_words, english_word_count = \
         clean_utterance(utterance=utterance,
                         remove_english=remove_english,
+                        english_words=english_words,
                         punctuation_to_collapse_by=punctuation_to_collapse_by,
                         punctuation_to_explode_by=punctuation_to_explode_by,
                         special_cases=special_cases)

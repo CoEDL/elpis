@@ -119,32 +119,6 @@ def settings_ui(dataset: Dataset):
     })
 
 
-@bp.route("/punctuation_to_explode_by", methods=['POST'])
-@require_dataset
-def punctuation_to_explode_by(dataset: Dataset):
-    if 'punctuation_to_explode_by' in request.json.keys():
-        dataset.punctuation_to_explode_by = request.json['punctuation_to_explode_by']
-    data = {
-        'punctuation_to_explode_by': dataset.punctuation_to_explode_by
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
-
-
-@bp.route("/punctuation_to_collapse_by", methods=['POST'])
-@require_dataset
-def punctuation_to_collapse_by(dataset: Dataset):
-    if 'punctuation_to_collapse_by' in request.json.keys():
-        dataset.punctuation_to_collapse_by = request.json['punctuation_to_collapse_by']
-    data = {
-        'punctuation_to_collapse_by': dataset.punctuation_to_collapse_by
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
 
 # TODO prepare endpoint returns file contents as text.
 # Probably nicer to send back JSON data instead
