@@ -194,7 +194,6 @@ class Interface(FSObject):
     def new_model(self, mname):
         if self.engine is None:
             raise RuntimeError("Engine must be set before model creation")
-        print("***********************************))!)@)!@()!@)!(!)@@")
         print(self.engine)
         m = self.engine.model(parent_path=self.models_path, name=mname)
         models = self.config['models']
