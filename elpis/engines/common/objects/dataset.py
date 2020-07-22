@@ -1,6 +1,7 @@
 import json
 import glob
 import os
+import string
 
 from pathlib import Path
 from typing import Dict, List, Union, BinaryIO, Optional
@@ -63,8 +64,8 @@ class Dataset(FSObject):
         self.config['files'] = []
         self.config['processed_labels'] = []
         self.config['importer'] = None
-        self.config['punctuation_to_explode_by'] = ''  # TODO: check if '' is the correct default
-        self.config['punctuation_to_collapse_by'] = ''  # TODO verify if we need this line?
+        self.config['punctuation_to_explode_by'] = string.punctuation + ',…‘’“”°'
+        self.config['punctuation_to_collapse_by'] = ''
 
     @classmethod
     def load(cls, base_path: Path):
@@ -233,6 +234,7 @@ class Dataset(FSObject):
         :param fp: Python file BufferedIOBase object usually from open().
         :param fname: name of the file.
         """
+        print("**** engines common objects dataset add_fp")
         # TODO
         # change this after adding a seperate file upload widget in gui for additional corpora files
         # then we can determine where to write the files by destination value instead of by name
@@ -332,10 +334,12 @@ class Dataset(FSObject):
             'files': self.config['files'],
             'processed_labels': self.config['processed_labels'],
             'importer': self.config['importer'],
-            'punctuation_to_explode_by': self.config['punctuation_to_explode_by']
+            'punctuation_to_explode_by': self.config['punctuation_to_explode_by'],
+            'punctuation_to_collapse_by': self.config['punctuation_to_collapse_by']
         }
 
     def validate(self):
+        print("**** engines common objects dataset validate")
         extention_to_path = {}
         for path in self.__files:
             extention = f'{path}'.split('.')[-1]
@@ -354,7 +358,7 @@ class Dataset(FSObject):
         if transformer == None:
             raise RuntimeError('must select importer before processing')
         transformer.process()
-
+        print("**** dataset process")
         # Compile text corpora from original/text_corpora dir into one file
         all_files_in_dir = set(glob.glob(os.path.join(
             str(self.pathto.text_corpora), "**"), recursive=True))
