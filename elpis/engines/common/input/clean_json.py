@@ -54,7 +54,6 @@ def clean_utterance(utterance: Dict[str, str],
     :return: a tuple with a list of 'cleaned' words and a number representing the number of
              English dirty_words to remove.
     """
-    print("*** clean_utterance")
     # TODO add interface setting to include user specific tags
     translation_tags = {"@eng@", "<ind:", "<eng:"}
     # TODO add interface setting to skip this as caps are significant in some languages

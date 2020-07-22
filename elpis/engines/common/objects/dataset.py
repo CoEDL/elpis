@@ -214,7 +214,6 @@ class Dataset(FSObject):
         :param fp: Python file BufferedIOBase object usually from open().
         :param fname: name of the file.
         """
-        print("**** engines common objects dataset add_fp")
         # TODO
         # change this after adding a seperate file upload widget in gui for additional corpora files
         # then we can determine where to write the files by destination value instead of by name
@@ -319,7 +318,6 @@ class Dataset(FSObject):
         }
 
     def validate(self):
-        print("**** engines common objects dataset validate")
         extention_to_path = {}
         for path in self.__files:
             extention = f'{path}'.split('.')[-1]
@@ -334,7 +332,6 @@ class Dataset(FSObject):
         self.importer.refresh_ui(self.__files)
 
     def process(self):
-        print("**** dataset process ****")
         transformer = self._importer
         if transformer == None:
             raise RuntimeError('must select importer before processing')
