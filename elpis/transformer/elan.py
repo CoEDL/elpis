@@ -115,7 +115,6 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
     :param eaf_paths: List of string paths to Elan files.
     :return: a list of dictionaries, where each dictionary is an annotation
     """
-    print('**** transformer import_eaf_file')
     tier_order = context['tier_order']
     tier_name = context['tier_name']
     tier_type = context['tier_type']
@@ -179,7 +178,6 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
             end = annotation[1]
             annotation = annotation[2]
 
-            # print("processing annotation: " + annotation, start, end)
             utterance = {
                 "audio_file_name": f"{file_name}.wav",
                 "transcript": annotation,
