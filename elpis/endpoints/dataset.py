@@ -73,12 +73,13 @@ def files(dataset: Dataset):
         data = {"files": dataset.files}
         dataset.auto_select_importer()
         if dataset.importer is not None:
-        dataset.validate()
-        dataset.refresh_ui()
+            # maybe a comment here will force this file update?
+            dataset.validate()
+            dataset.refresh_ui()
             data.update({
-        'settings': dataset.importer.get_settings(),
-        "ui": dataset.importer.get_ui(),
-        "importer_name": dataset.importer.get_name()
+                'settings': dataset.importer.get_settings(),
+                "ui": dataset.importer.get_ui(),
+                "importer_name": dataset.importer.get_name()
             })
     return jsonify({
         "status": 200,
