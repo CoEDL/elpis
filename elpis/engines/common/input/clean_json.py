@@ -222,11 +222,11 @@ def deal_with_punctuation(text: str = '',
     """
     new_text: str = text
     # Prioritise exploding first, these are punctuation marks that the user sets
-    if punctuation_to_explode_by is not '':
+    if punctuation_to_explode_by:
         pattern_to_explode_by = re.escape(punctuation_to_explode_by)
         new_text = re.sub(rf"[{pattern_to_explode_by}]", " ", new_text)
     # Then strip the rest
-    if punctuation_to_collapse_by is not '':
+    if punctuation_to_collapse_by:
         pattern_to_collapse_by = re.escape(punctuation_to_collapse_by)
         new_text = re.sub(rf"[{pattern_to_collapse_by}]", "", new_text)
     return new_text

@@ -312,9 +312,7 @@ class Dataset(FSObject):
             'has_been_processed': self.config['has_been_processed'],
             'files': self.config['files'],
             'processed_labels': self.config['processed_labels'],
-            'importer': self.config['importer'],
-            # 'punctuation_to_explode_by': self.config['punctuation_to_explode_by'],
-            # 'punctuation_to_collapse_by': self.config['punctuation_to_collapse_by']
+            'importer': self.config['importer']
         }
 
     def validate(self):
