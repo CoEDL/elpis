@@ -119,7 +119,7 @@ def clean_json_utterance(utterance: Dict[str, str],
     :param use_langid: whether or not to use the langid library to identify English to remove.
     :param punctuation_to_collapse_by: punctuation marks to strip
     :param punctuation_to_explode_by: punctuation marks to replace with spaces
-    :return: cleaned utterances (dictionary).
+    :return: cleaned utterance (dictionary).
     """
 
     # TODO make this an interface setting
