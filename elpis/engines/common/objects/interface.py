@@ -161,7 +161,11 @@ class Interface(FSObject):
         hash_dir = self.config['models'][mname]
         m = self.engine.model.load(self.models_path.joinpath(hash_dir))
         m.dataset = self.get_dataset(m.config['dataset_name'])
-        m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
+        try:
+            m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
+        except KaldiError:
+            # If there's no pron_dict, that's not an issue.
+            pass
         return m
 
     def list_models(self):
@@ -192,6 +196,7 @@ class Interface(FSObject):
     def new_transcription(self, tname):
         if self.engine is None:
             raise RuntimeError("Engine need to be set prior to transcription")
+        print("{}".format(self.engine))
         t = self.engine.transcription(parent_path=self.transcriptions_path, name=tname)
         transcriptions = self.config['transcriptions']
         transcriptions[tname] = t.hash

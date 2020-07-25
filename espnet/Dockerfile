@@ -16,3 +16,5 @@ RUN git checkout elpis
 # nvidia-docker image and install GPU-supported version of ESPnet.
 WORKDIR /espnet/tools
 RUN make KALDI=/kaldi CUPY_VERSION='' -j 4
+
+WORKDIR /elpis
