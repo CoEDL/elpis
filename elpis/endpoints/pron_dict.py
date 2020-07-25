@@ -63,7 +63,7 @@ def l2s():
         file = request.files['file']
         pron_dict.set_l2s_fp(file)
     data = {
-        "l2s": pron_dict.get_l2s()
+        "l2s": pron_dict.get_l2s_content()
     }
     return jsonify({
         "status": 200,
