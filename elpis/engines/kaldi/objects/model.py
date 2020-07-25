@@ -226,7 +226,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             ######################################################################
 
             # task _test-train
-            run_log_path = self.path.joinpath('run_log.txt')
+            run_log_path = self.path.joinpath('train.log')
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
             p = run(f"cd {local_kaldi_path}; ./run.sh > {run_log_path}")

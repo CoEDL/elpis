@@ -133,7 +133,7 @@ def results():
     if model is None:
         return jsonify({"status": 404, "data": "No current model exists (perhaps create one first)"})
     wer_lines = []
-    log_file = model.path.joinpath('run_log.txt')
+    log_file = model.path.joinpath('train.log')
     results = {}
     if log_file.exists():
         with log_file.open() as fin:
