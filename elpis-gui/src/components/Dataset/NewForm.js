@@ -11,7 +11,7 @@ import urls from 'urls'
 class NewForm extends Component {
 
      render() {
-        const { t, name, datasetNew } = this.props;
+        const { t, error, datasetNew } = this.props;
         return (
 
             <Formik
@@ -56,6 +56,9 @@ class NewForm extends Component {
                                     onChange={handleChange} />
                                 <ErrorMessage component="div" className="error" name="name" />
                             </Form.Field>
+                            {error &&
+                                <p className={"error-message"}>{error}</p>
+                            }
                             <Button type="button" onClick={handleSubmit}>
                                 {t('common.addNewButton')}
                             </Button>
@@ -68,12 +71,20 @@ class NewForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.dataset.name
+        name: state.dataset.name,
+        error: state.dataset.error
     }
 }
 const mapDispatchToProps = dispatch => ({
     datasetNew: (name, history) => {
         dispatch(datasetNew(name, history))
+            .then(response => {
+                if (response.status===500) {
+                    console.log('response.status', response.status)
+                    throw Error(response.error)
+                }
+                return response
+            })
             .then(response => {
                 history.push(urls.gui.dataset.files)
             })

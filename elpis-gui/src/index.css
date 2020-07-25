@@ -100,3 +100,7 @@ label.pad-right,
 .form-wrapper {
     margin-bottom: 2em
 }
+
+.error-message {
+    color: indianred;
+}

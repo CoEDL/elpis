@@ -11,7 +11,8 @@ const initState = {
     additionalTextFiles: [],
     settings: null,
     ui: null,
-    wordlist: {}
+    wordlist: {},
+    error: ''
 }
 
 let audioFiles = []
@@ -27,10 +28,17 @@ const dataset = (state = initState, action) => {
             return {...state};
 
         case actionTypes.DATASET_NEW_SUCCESS: {
-            let dataset_state = action.response.data.data.state;
-            let name = dataset_state.name;
-            return { ...initState,
-                name
+            if (action.response.data.status==500){
+                return { ...initState,
+                    status: action.response.data.status,
+                    error: action.response.data.error
+                }
+            } else {
+                let dataset_state = action.response.data.data.state;
+                let name = dataset_state.name;
+                return { ...initState,
+                    name
+                }
             }
         }
 
