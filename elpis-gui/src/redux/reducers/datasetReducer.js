@@ -28,33 +28,21 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_NEW_SUCCESS: {
             let dataset_state = action.response.data.data.state;
-
             let name = dataset_state.name;
-            let importer_name = null;
-            let settings = null;
-            let ui = null;
-            if (dataset_state.importer !== null) {
-                importer_name = dataset_state.importer.name;
-                settings = dataset_state.importer.settings;
-                ui =       dataset_state.importer.ui;
-            }
             return { ...initState,
-                name,
-                importer_name,
-                settings,
-                ui
+                name
             }
         }
 
         case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
             let dataset_state = action.response.data.data.state;
-            console.log("dataset load state", dataset_state)
+            console.log("dataset load success, dataset_state", dataset_state)
             let {
                 name,
                 files,
                 importer
-            } = dataset_state;
+            } = dataset_state
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort();
             additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort();

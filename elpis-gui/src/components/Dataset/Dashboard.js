@@ -145,7 +145,7 @@ const mapDispatchToProps = dispatch => ({
     datasetLoad: postData => {
         dispatch(datasetLoad(postData))
             .then(response => {
-                console.log("datasetLoad", response)
+                // console.log("Dashboard got datasetLoad", response)
             })
             .catch(error => console.log("error", error))
     }
