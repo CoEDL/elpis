@@ -3,6 +3,7 @@ from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.dataset import Dataset
+from elpis.engines.kaldi.errors import KaldiError
 
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
@@ -10,17 +11,22 @@ bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 @bp.route("/new", methods=['POST'])
 def new():
     interface: Interface = app.config['INTERFACE']
-    dataset = interface.new_dataset(request.json['name'])
-    print(f"****{request.json['name']}****")
-    app.config['CURRENT_DATASET'] = dataset
-    data = {
-        "state": dataset.config._load()
-    }
-    print(data)
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    try:
+        dataset = interface.new_dataset(request.json['name'])
+        print(f"****{request.json['name']}****")
+        app.config['CURRENT_DATASET'] = dataset
+        data = {
+            "state": dataset.config._load()
+        }
+        return jsonify({
+            "status": 200,
+            "data": data
+        })
+    except KaldiError as e:
+        return jsonify({
+            "status": 500,
+            "error": e.human_message
+        })
 
 
 @bp.route("/load", methods=['POST'])
