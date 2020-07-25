@@ -31,10 +31,6 @@ class ModelResults extends Component {
                         </Table.Row>
                     </Table.Body>
                 </Table>
-                <p className="bug">
-                    {t('model.results.oops')}
-                </p>
-
             </Segment>
         ) : (
             <p>{t('model.results.noResults')}</p>
