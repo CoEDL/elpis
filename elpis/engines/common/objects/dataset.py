@@ -65,8 +65,8 @@ class Dataset(FSObject):
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
-        self.__files = [Path(path) for path in self.config['files']]
         self.pathto = DSPaths(self.path)
+        self.__files = [ self.pathto.original.joinpath(path) for path in self.config['files']]
         self._importer = self.config['importer']
         if self._importer is not None:
             importer_name = self._importer['name']
@@ -214,17 +214,24 @@ class Dataset(FSObject):
         :param fp: Python file BufferedIOBase object usually from open().
         :param fname: name of the file.
         """
+
         # TODO
         # change this after adding a seperate file upload widget in gui for additional corpora files
         # then we can determine where to write the files by destination value instead of by name
+        # TODO is corpus needed?
         if "corpus" in fname:
             path: Path = self.pathto.text_corpora.joinpath(fname)
         else:
             path: Path = self.pathto.original.joinpath(fname)
         with path.open(mode='wb') as fout:
             fout.write(fp.read())
-        self.__files.append(path)
-        self.config['files'] = [f'{f.name}' for f in self.__files]
+        
+        if fname not in self.config['files']:
+            self.__files.append(path)
+            self.config['files'] = [f'{f.name}' for f in self.__files]
+        else:
+            # already existed but has been overriden, name is already in the config
+            pass
     
     def add_file(self, file_path: str):
         """
