@@ -11,8 +11,6 @@ const initState = {
     additionalTextFiles: [],
     settings: null,
     ui: null,
-    punctuation_to_explode_by: "",
-    punctuation_to_collapsed_by: "",
     wordlist: {}
 }
 
@@ -28,7 +26,6 @@ const dataset = (state = initState, action) => {
             let dataset_state = action.response.data.data.state;
 
             let name = dataset_state.name;
-            let punctuation_to_explode_by = dataset_state.punctuation_to_explode_by;
 
             let importer_name = null;
             let settings = null;
@@ -45,8 +42,7 @@ const dataset = (state = initState, action) => {
                 name,
                 importer_name,
                 settings,
-                ui,
-                punctuation_to_explode_by}
+                ui}
         }
 
         case actionTypes.DATASET_LOAD_SUCCESS: {
@@ -56,8 +52,7 @@ const dataset = (state = initState, action) => {
                 name,
                 files,
                 settings,
-                ui,
-                punctuation_to_explode_by
+                ui
             } = dataset_state;
             // action.data is an array of filenames. parse this, split into separate lists
             var audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort();
@@ -77,7 +72,6 @@ const dataset = (state = initState, action) => {
                 additionalTextFiles,
                 settings,
                 ui,
-                punctuation_to_explode_by,
                 wordlist: "",
             };
         }

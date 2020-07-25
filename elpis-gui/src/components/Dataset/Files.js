@@ -114,21 +114,6 @@ class DatasetFiles extends Component {
 
                                 <GeneratedUI settings={settings} ui={ui} changeSettingsCallback={datasetSettings} />
                             </Segment>
-                            <Segment>
-                                <Header as='h4'>
-                                    { t('dataset.files.generalSettingsHeader') }
-                                </Header>
-                                <Form>
-                                    <Form.Field>
-                                        <label>Punctuation to explode by</label>
-                                        <Input type='text' />
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <label>Punctuation to collapse by</label>
-                                        <Input type='text' />
-                                    </Form.Field>
-                                </Form>
-                            </Segment>
 
                             <Divider />
 

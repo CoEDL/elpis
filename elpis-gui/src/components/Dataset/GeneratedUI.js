@@ -26,6 +26,13 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
         return (<>No Settings.</>);
     }
 
+    const handleStrChange = (ui_name, data) => {
+        console.log(ui_name, data)
+        let newSettings = { ...settings };
+        newSettings[ui_name] = data.value
+        changeSettingsCallback(newSettings)
+    }
+
     // Sort names into groups by title followed by settings.
     let settingGroups = groupSettingsFromUI(ui);
 
@@ -55,7 +62,11 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                 let dataEntryElement;
                 switch (data.type) {
                     case 'str': {
-                        dataEntryElement = (<Input type='text' />); /* TODO */
+                        dataEntryElement = (<Input 
+                            type='text'
+                            value={settings[ui_name]}
+                            onChange={(event, data) => { handleStrChange(ui_name, data)}}/>
+                            ); /* TODO */
                     }
                     break;
                     case 'int': {
