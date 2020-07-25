@@ -16,8 +16,18 @@ const model = (state = initState, action) => {
     switch (action.type) {
 
         case actionTypes.MODEL_NEW_SUCCESS:
-            var { config, results } = action.response.data.data
-            return { ...initState, name: config.name }
+            if (action.response.data.status==500){
+                return { ...initState,
+                    status: action.response.data.status,
+                    error: action.response.data.error
+                }
+            } else {
+                var {name} = action.response.data.data.config
+                return {
+                    ...initState,
+                    name
+                }
+            }
 
         case actionTypes.MODEL_LOAD_SUCCESS:
             var { config } = action.response.data.data
@@ -26,7 +36,6 @@ const model = (state = initState, action) => {
                 name: config.name,
                 datasetName: config.dataset_name,
                 pronDictName: config.pron_dict_name,
-                results,
                 settings: {...state.settings, ngram: config.ngram},
                 status: 'ready'
             }
@@ -58,7 +67,7 @@ const model = (state = initState, action) => {
         case actionTypes.MODEL_RESULTS_SUCCESS:
             var { data, status } = action.response.data
             if (status == 200) {
-                return { ...state, results:data.results }
+                return { ...state, results: data.results }
             } else {
                 console.log(data)
                 return { ...state }
