@@ -69,18 +69,18 @@ class ModelTrain extends Component {
                                 <Card.Content description={ t('model.settings.ngramLabel') + ' ' + settings.ngram } />
                             </Card>
 
-                            {status !== "trained" &&
-                                <Segment>
-                                    {trainingButton}
-                                </Segment>
-                            }
-
                             <Message icon>
                                 { loadingIcon }
                                 <Message.Content>
                                     <Message.Header>{ status }</Message.Header>
                                 </Message.Content>
                             </Message>
+
+                            {status === "ready" &&
+                                <Segment>
+                                    {trainingButton}
+                                </Segment>
+                            }
 
                             <Button as={Link} to={urls.gui.model.results} disabled={status === 'ready' || status === "training" }>
                                 { t('common.nextButton') }
