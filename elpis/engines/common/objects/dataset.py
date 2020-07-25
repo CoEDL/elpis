@@ -218,7 +218,6 @@ class Dataset(FSObject):
         # TODO
         # change this after adding a seperate file upload widget in gui for additional corpora files
         # then we can determine where to write the files by destination value instead of by name
-        # TODO is corpus needed?
         if "corpus" in fname:
             path: Path = self.pathto.text_corpora.joinpath(fname)
         else:
