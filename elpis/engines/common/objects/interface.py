@@ -145,7 +145,7 @@ class Interface(FSObject):
         if dsname in self.config['datasets'].keys():
             raise KaldiError(
                 f'Tried adding \'{dsname}\' which is already in {existing_names} with hash {self.config["datasets"][dsname]}.',
-                human_message=f'data set with name "{dsname}" already exists'
+                human_message=f'dataset with name "{dsname}" already exists'
             )
         ds = Dataset(parent_path=self.datasets_path, name=dsname)
         datasets = self.config['datasets']
@@ -164,6 +164,12 @@ class Interface(FSObject):
         return names
 
     def new_pron_dict(self, pdname):
+        existing_names = self.list_pron_dicts()
+        if pdname in self.config['pron_dicts'].keys():
+            raise KaldiError(
+                f'Tried adding \'{pdname}\' which is already in {existing_names} with hash {self.config["pron_dicts"][pdname]}.',
+                human_message=f'pron dict with name "{pdname}" already exists'
+            )
         pd = PronDict(parent_path=self.pron_dicts_path, name=pdname)
         pron_dicts = self.config['pron_dicts']
         pron_dicts[pdname] = pd.hash
@@ -195,6 +201,12 @@ class Interface(FSObject):
         if self.engine is None:
             raise RuntimeError("Engine must be set before model creation")
         print(self.engine)
+        existing_names = self.list_models()
+        if mname in self.config['models'].keys():
+            raise KaldiError(
+                f'Tried adding \'{mname}\' which is already in {existing_names} with hash {self.config["models"][mname]}.',
+                human_message=f'model with name "{mname}" already exists'
+            )
         m = self.engine.model(parent_path=self.models_path, name=mname)
         models = self.config['models']
         models[mname] = m.hash
@@ -238,6 +250,7 @@ class Interface(FSObject):
     def new_transcription(self, tname):
         if self.engine is None:
             raise RuntimeError("Engine need to be set prior to transcription")
+        # no name conflict because transcriptions have auto-generated names
         t = self.engine.transcription(parent_path=self.transcriptions_path, name=tname)
         transcriptions = self.config['transcriptions']
         transcriptions[tname] = t.hash

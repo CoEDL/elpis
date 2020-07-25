@@ -2,6 +2,7 @@ from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
 from elpis.engines.common.objects.model import Model
+from elpis.engines.kaldi.errors import KaldiError
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -23,15 +24,19 @@ def run(cmd: str) -> str:
 @bp.route("/new", methods=['POST'])
 def new():
     interface = app.config['INTERFACE']
-    model = interface.new_model(request.json["name"])
-    # use the selected pron dict
+    try:
+        model = interface.new_model(request.json["name"])
+    except KaldiError as e:
+        return jsonify({
+            "status": 500,
+            "error": e.human_message
+        })
     pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
-    # get its dataset
     dataset = interface.get_dataset(pron_dict.dataset.name)
-    app.config['CURRENT_DATASET'] = dataset
-    app.config['CURRENT_PRON_DICT'] = pron_dict
     model.link(dataset, pron_dict)
     model.build_kaldi_structure()
+    app.config['CURRENT_DATASET'] = dataset
+    app.config['CURRENT_PRON_DICT'] = pron_dict
     app.config['CURRENT_MODEL'] = model
     data = {
         "config": model.config._load()

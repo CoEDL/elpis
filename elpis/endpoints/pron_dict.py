@@ -3,6 +3,7 @@ from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.pron_dict import PronDict
+from elpis.engines.kaldi.errors import KaldiError
 
 
 bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
@@ -11,7 +12,14 @@ bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
 @bp.route("/new", methods=['POST'])
 def new():
     interface: Interface = app.config['INTERFACE']
-    pron_dict = interface.new_pron_dict(request.json['name'])
+    try:
+        pron_dict = interface.new_pron_dict(request.json['name'])
+    except KaldiError as e:
+        return jsonify({
+            "status": 500,
+            "error": e.human_message
+        })
+    print(f"****{request.json['name']}****")
     dataset = interface.get_dataset(request.json['dataset_name'])
     pron_dict.link(dataset)
     app.config['CURRENT_PRON_DICT'] = pron_dict

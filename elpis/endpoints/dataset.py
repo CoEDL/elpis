@@ -13,20 +13,20 @@ def new():
     interface: Interface = app.config['INTERFACE']
     try:
         dataset = interface.new_dataset(request.json['name'])
-        print(f"****{request.json['name']}****")
-        app.config['CURRENT_DATASET'] = dataset
-        data = {
-            "state": dataset.config._load()
-        }
-        return jsonify({
-            "status": 200,
-            "data": data
-        })
     except KaldiError as e:
         return jsonify({
             "status": 500,
             "error": e.human_message
         })
+    print(f"****{request.json['name']}****")
+    app.config['CURRENT_DATASET'] = dataset
+    data = {
+        "state": dataset.config._load()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 
 @bp.route("/load", methods=['POST'])
