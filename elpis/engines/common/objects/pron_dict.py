@@ -62,14 +62,15 @@ class PronDict(FSObject):
         self.config['l2s'] = True
 
     def set_l2s_content(self, content: bytes):
-        tmp = self.path.joinpath('l2s-tmp.txt')
-        with tmp.open(mode='wb') as fout:
+        tmp_l2s_path = self.path.joinpath('tmp_l2s.txt')
+        with tmp_l2s_path.open(mode='wb') as fout:
             fout.write(content)
-        with tmp.open(mode='r') as file_raw, self.l2s_path.open(mode='w', encoding='utf-8') as file_translated:
+        # translate line endings from Win to Unix for Kaldi
+        with tmp_l2s_path.open(mode='r') as file_raw, self.l2s_path.open(mode='w', encoding='utf-8') as file_translated:
             file_translated.write(file_raw.read().replace('\r\n', '\n'))
+        if os.path.exists(tmp_l2s_path):
+            os.remove(tmp_l2s_path)
         self.config['l2s'] = True
-        if os.path.exists(tmp):
-            os.remove(tmp)
 
     def get_l2s_content(self):
         try:
