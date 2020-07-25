@@ -96,3 +96,7 @@ label.pad-right,
 .label {
     float: left;
 }
+
+.form-wrapper {
+    margin-bottom: 2em
+}

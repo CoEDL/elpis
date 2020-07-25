@@ -13,6 +13,9 @@ class PronDictLexicon extends Component {
 
 
     componentDidMount = () => {
+        const { lexicon } = this.props
+        if (!lexicon) this.generateLexicon()
+
     }
 
     generateLexicon = () => {
@@ -54,7 +57,7 @@ class PronDictLexicon extends Component {
 
                             <Message content={ t('pronDict.lexicon.description') } />
 
-                            <Segment>
+                            <div className="form-wrapper">
                                 <Form>
                                     <TextArea
                                         className="lexicon"
@@ -66,7 +69,7 @@ class PronDictLexicon extends Component {
                                     <Button onClick={this.generateLexicon} disabled={interactionDisabled}>reset</Button>
                                     <Button onClick={this.saveLexicon} positive disabled={interactionDisabled}>save</Button>
                                 </Button.Group>
-                            </Segment>
+                            </div>
 
                             <Button as={Link} to={urls.gui.model.index} disabled={interactionDisabled}>
                                 {t('common.nextButton')}

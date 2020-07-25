@@ -28,12 +28,9 @@ class PronDictL2S extends Component {
         const interactionDisabled = name ? false : true
 
         const pron = l2s ? (
-            <Segment>
-                <pre>
-                    { l2s }
-                </pre>
-            </Segment>
-
+            <pre>
+                { l2s }
+            </pre>
         ) : null
 
         return (
@@ -85,15 +82,15 @@ class PronDictL2S extends Component {
                                 </Segment>
                             }
 
+                            <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
+                                {t('common.nextButton')}
+                            </Button>
+
                             {pron &&
                                 <Segment>
                                     { pron }
                                 </Segment>
                             }
-
-                            <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
-                                {t('common.nextButton')}
-                            </Button>
 
                         </Grid.Column>
                     </Grid>
