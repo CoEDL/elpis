@@ -47,7 +47,7 @@
             "bannerMessageDetailed": "Punctuation has been removed.",
             "wordlistHeader": "Wordlist",
             "frequencyHeader": "Frequency",
-            "noWords": "No words found, please upload some files."
+            "noWords": "No words found, please upload some files or check your import settings."
         }
     },
     "engine": {
