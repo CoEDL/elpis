@@ -67,10 +67,15 @@ class Dataset(FSObject):
         self = super().load(base_path)
         self.pathto = DSPaths(self.path)
         self.__files = [ self.pathto.original.joinpath(path) for path in self.config['files']]
+        # at this point config has the previous state
         self._importer = self.config['importer']
+        temp_state = self._importer
+        # rebuild the importer, this resets importer ui
         if self._importer is not None:
             importer_name = self._importer['name']
             self.select_importer(importer_name)
+        # importer has been reset, copy the old state back
+        self.config['importer'] = temp_state
         return self
 
     def select_importer(self, name: str):
