@@ -351,6 +351,9 @@ class Dataset(FSObject):
                 corpus_files.append(file_)
         print(f"corpus_files {corpus_files}")
         # Compile and clean the additional corpora content into a single file
+        # Reset first to prevent files being added multiple times
+        if os.path.exists(self.pathto.corpus_txt):
+            self.pathto.corpus_txt.unlink()
         for additional_corpus in corpus_files:
             extract_additional_corpora(additional_corpus=additional_corpus,
                                        corpus_txt=f'{self.pathto.corpus_txt}',
