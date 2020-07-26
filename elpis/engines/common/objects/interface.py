@@ -2,13 +2,12 @@ import json
 import os
 from pathlib import Path
 import shutil
-from shutil import rmtree
 
 from appdirs import user_data_dir
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.utilities import hasher
 from elpis.engines.common.utilities.logger import Logger
-from elpis.engines.kaldi.errors import KaldiError
+from elpis.engines.common.errors import InterfaceError
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.pron_dict import PronDict
 
@@ -143,9 +142,9 @@ class Interface(FSObject):
     def new_dataset(self, dsname):
         existing_names = self.list_datasets()
         if dsname in self.config['datasets'].keys():
-            raise KaldiError(
+            raise InterfaceError(
                 f'Tried adding \'{dsname}\' which is already in {existing_names} with hash {self.config["datasets"][dsname]}.',
-                human_message=f'dataset with name "{dsname}" already exists'
+                human_message=f'Dataset with name "{dsname}" already exists'
             )
         ds = Dataset(parent_path=self.datasets_path, name=dsname)
         datasets = self.config['datasets']
@@ -155,7 +154,7 @@ class Interface(FSObject):
 
     def get_dataset(self, dsname):
         if dsname not in self.list_datasets():
-            raise KaldiError(f'Tried to load a dataset called "{dsname}" that does not exist')
+            raise InterfaceError(f'Tried to load a dataset called "{dsname}" that does not exist')
         hash_dir = self.config['datasets'][dsname]
         return Dataset.load(self.datasets_path.joinpath(hash_dir))
 
@@ -166,9 +165,9 @@ class Interface(FSObject):
     def new_pron_dict(self, pdname):
         existing_names = self.list_pron_dicts()
         if pdname in self.config['pron_dicts'].keys():
-            raise KaldiError(
+            raise InterfaceError(
                 f'Tried adding \'{pdname}\' which is already in {existing_names} with hash {self.config["pron_dicts"][pdname]}.',
-                human_message=f'pron dict with name "{pdname}" already exists'
+                human_message=f'Pronunciation dictionary with name "{pdname}" already exists'
             )
         pd = PronDict(parent_path=self.pron_dicts_path, name=pdname)
         pron_dicts = self.config['pron_dicts']
@@ -178,7 +177,7 @@ class Interface(FSObject):
 
     def get_pron_dict(self, pdname):
         if pdname not in self.list_pron_dicts():
-            raise KaldiError(f'Tried to load a pron dict called "{pdname}" that does not exist')
+            raise InterfaceError(f'Tried to load a pron dict called "{pdname}" that does not exist')
         hash_dir = self.config['pron_dicts'][pdname]
         pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
         print(dir(pd.config))
@@ -203,9 +202,9 @@ class Interface(FSObject):
         print(self.engine)
         existing_names = self.list_models()
         if mname in self.config['models'].keys():
-            raise KaldiError(
+            raise InterfaceError(
                 f'Tried adding \'{mname}\' which is already in {existing_names} with hash {self.config["models"][mname]}.',
-                human_message=f'model with name "{mname}" already exists'
+                human_message=f'Model with name "{mname}" already exists'
             )
         m = self.engine.model(parent_path=self.models_path, name=mname)
         models = self.config['models']
@@ -215,7 +214,7 @@ class Interface(FSObject):
 
     def get_model(self, mname):
         if mname not in self.list_models():
-            raise KaldiError(f'Tried to load a model called "{mname}" that does not exist')
+            raise InterfaceError(f'Tried to load a model called "{mname}" that does not exist')
         hash_dir = self.config['models'][mname]
         m = self.engine.model.load(self.models_path.joinpath(hash_dir))
         m.dataset = self.get_dataset(m.config['dataset_name'])
@@ -259,7 +258,7 @@ class Interface(FSObject):
 
     def get_transcription(self, tname):
         if tname not in self.list_transcriptions():
-            raise KaldiError(f'Tried to load a transcription called "{tname}" that does not exist')
+            raise InterfaceError(f'Tried to load a transcription called "{tname}" that does not exist')
         hash_dir = self.config['transcriptions'][tname]
         t = self.engine.transcription.load(self.transcriptions_path.joinpath(hash_dir))
         t.model = self.get_model(t.config['model_name'])

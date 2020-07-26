@@ -2,7 +2,7 @@ from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
 from elpis.engines.common.objects.model import Model
-from elpis.engines.kaldi.errors import KaldiError
+from elpis.engines.common.errors import InterfaceError
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -26,7 +26,7 @@ def new():
     interface = app.config['INTERFACE']
     try:
         model = interface.new_model(request.json["name"])
-    except KaldiError as e:
+    except InterfaceError as e:
         return jsonify({
             "status": 500,
             "error": e.human_message

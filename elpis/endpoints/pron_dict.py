@@ -3,7 +3,7 @@ from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.pron_dict import PronDict
-from elpis.engines.kaldi.errors import KaldiError
+from elpis.engines.common.errors import InterfaceError
 
 
 bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
@@ -14,7 +14,7 @@ def new():
     interface: Interface = app.config['INTERFACE']
     try:
         pron_dict = interface.new_pron_dict(request.json['name'])
-    except KaldiError as e:
+    except InterfaceError as e:
         return jsonify({
             "status": 500,
             "error": e.human_message

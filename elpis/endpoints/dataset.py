@@ -3,7 +3,7 @@ from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.dataset import Dataset
-from elpis.engines.kaldi.errors import KaldiError
+from elpis.engines.common.errors import InterfaceError
 
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
@@ -13,7 +13,7 @@ def new():
     interface: Interface = app.config['INTERFACE']
     try:
         dataset = interface.new_dataset(request.json['name'])
-    except KaldiError as e:
+    except InterfaceError as e:
         return jsonify({
             "status": 500,
             "error": e.human_message
