@@ -43,13 +43,14 @@ elan.set_default_context({
 
 # TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
 elan.general_setting_title('Tiers')
-elan.general_setting('tier_type', [None], default=None, description='Choose the tier that your transcriptions are on')
-elan.general_setting('tier_name', [None], default=None)
-elan.general_setting('tier_order', [None], default=None)
+# elan.general_setting_description('Choose the tier that your transcriptions are on')
+elan.general_setting('tier_type', [None], display_name='Tier Type', default=None)
+elan.general_setting('tier_name', [None], display_name='Tier Name', default=None)
+elan.general_setting('tier_order', [None], display_name='Tier Order', default=None)
 
 elan.general_setting_title('Punctuation')
-elan.general_setting('punctuation_to_explode_by', str, default=string.punctuation + ',…‘’“”°')
-elan.general_setting('punctuation_to_collapse_by', str, default='')
+elan.general_setting('punctuation_to_explode_by', str, display_name='Punctuation to replace with spaces', default=string.punctuation + ',…‘’“”°')
+elan.general_setting('punctuation_to_collapse_by', str, display_name='Punctuation to remove', default='')
 
 # TODO: limitation, settings must be defined before used in functions so that they are registered and visible.
 
