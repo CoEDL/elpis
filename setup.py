@@ -24,7 +24,7 @@ setup(
     url='https://github.com/CoEDL/elpis',
     install_requires=requirements,
     include_package_data=True,
-    license='',
+    license='Apache-2.0',
     author='CoEDL',
     author_email='b.foley@uq.edu.au',
     description='',
