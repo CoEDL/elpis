@@ -204,7 +204,7 @@ def extract_additional_corpora(additional_corpus: str = '',
                         deal_with_punctuation(text=line,
                                               punctuation_to_collapse_by=punctuation_to_collapse_by,
                                               punctuation_to_explode_by=punctuation_to_explode_by)
-                    if '\n' not in line:
+                    if not line.endswith('\n'):
                         line = line + '\n'
                     corpus_txt_file.writelines(line)
         else:
