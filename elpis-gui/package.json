@@ -2,6 +2,7 @@
   "name": "elpis-gui",
   "version": "0.94.1",
   "private": true,
+  "license": "Apache-2.0",
   "dependencies": {
     "array-sort": "^1.0.0",
     "axios": "^0.19.2",
