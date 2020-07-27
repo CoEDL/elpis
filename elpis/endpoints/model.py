@@ -71,9 +71,10 @@ def list_existing():
     data = {
         "list": [{
                 'name': model['name'],
-                'results': fake_results,
                 'dataset_name': model['dataset_name'],
-                'pron_dict_name': model['pron_dict_name']
+                'pron_dict_name': model['pron_dict_name'],
+                'status': model['status'],
+                'results': fake_results
                 } for model in interface.list_models_verbose()]
     }
     return jsonify({

@@ -222,6 +222,8 @@ class Interface(FSObject):
         return m
 
     def list_models(self):
+        if self.engine is None:
+            raise RuntimeError("Engine needs to be set to list models")
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             if not hash_dir.startswith('.'):
@@ -232,23 +234,28 @@ class Interface(FSObject):
         return models
 
     def list_models_verbose(self):
+        if self.engine is None:
+            raise RuntimeError("Engine needs to be set to list models")
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             if not hash_dir.startswith('.'):
                 with self.models_path.joinpath(hash_dir,
                                                self.engine.model._config_file).open() as fin:
-                    data = json.load(fin)
-                    model = {
-                        'name': data['name'],
-                        'dataset_name': data['dataset_name'],
-                        'pron_dict_name': data['pron_dict_name']
+                    model = json.load(fin)
+                    print('data', model)
+                    #  need to get results here
+                    model_info = {
+                        'name': model['name'],
+                        'dataset_name': model['dataset_name'],
+                        'pron_dict_name': model['pron_dict_name'],
+                        'status': model['status']
                     }
-                    models.append(model)
+                    models.append(model_info)
         return models
 
     def new_transcription(self, tname):
         if self.engine is None:
-            raise RuntimeError("Engine need to be set prior to transcription")
+            raise RuntimeError("Engine needs to be set prior to transcription")
         # no name conflict because transcriptions have auto-generated names
         t = self.engine.transcription(parent_path=self.transcriptions_path, name=tname)
         transcriptions = self.config['transcriptions']
@@ -257,6 +264,8 @@ class Interface(FSObject):
         return t
 
     def get_transcription(self, tname):
+        if self.engine is None:
+            raise RuntimeError("Engine needs to be set to get transcription")
         if tname not in self.list_transcriptions():
             raise InterfaceError(f'Tried to load a transcription called "{tname}" that does not exist')
         hash_dir = self.config['transcriptions'][tname]
@@ -265,6 +274,8 @@ class Interface(FSObject):
         return t
 
     def list_transcriptions(self):
+        if self.engine is None:
+            raise RuntimeError("Engine needs to be set to list transcriptions")
         names = []
         if not Path(f'{self.transcriptions_path}').exists():
             return names # no directory -> no items in list
