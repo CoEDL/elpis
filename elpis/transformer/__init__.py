@@ -431,7 +431,7 @@ class DataTransformerAbstractFactory:
         print("t:", t, ":", type(t), ': t is list =', t is list, ": type(t) == list = ", type(t) == list)
         raise ValueError(f'type \'{t}\' is not a valid type')
 
-    def import_setting(self, key, type, default=None, display_name=None, description=None):
+    def import_setting(self, key, type, ui_format=None, default=None, display_name=None, description=None):
         """
         Add a field to the import context.
 
@@ -448,13 +448,14 @@ class DataTransformerAbstractFactory:
         self._import_settings[key] = default
         self._import_ui_data_config[key] = {
             'type': self._type_to_str(type),
+            'ui_format': ui_format,
             'display_name': display_name,
             'description': description
         }
         self._import_ui_type_config[key] = 'setting'
         self._import_ui_order_config.append(key)
     
-    def export_setting(self, key, type, default=None, display_name=None, description=None):
+    def export_setting(self, key, type, ui_format=None, default=None, display_name=None, description=None):
         """
         Add a field to the export context.
 
@@ -471,6 +472,7 @@ class DataTransformerAbstractFactory:
         self._export_settings[key] = default
         self._export_ui_data_config[key] = {
             'type': self._type_to_str(type),
+            'ui_format': ui_format,
             'display_name': display_name,
             'description': description
         }
@@ -498,7 +500,7 @@ class DataTransformerAbstractFactory:
         self.export_setting_title(title)
         return
 
-    def general_setting(self, key, type, default=None, display_name=None, description=None):
+    def general_setting(self, key, type, ui_format=None, default=None, display_name=None, description=None):
         """
         Add a field to the both import and export context.
 
@@ -514,8 +516,8 @@ class DataTransformerAbstractFactory:
             raise ValueError(f'key "{key}" already in the import context')
         if key in self._export_settings:
             raise ValueError(f'key "{key}" already in the export context')
-        self.import_setting(key, type, default=default, display_name=display_name, description=description)
-        self.export_setting(key, type, default=default, display_name=display_name, description=description)
+        self.import_setting(key, type, ui_format=ui_format, default=default, display_name=display_name, description=description)
+        self.export_setting(key, type, ui_format=ui_format, default=default, display_name=display_name, description=description)
     
     def is_import_capable(self):
         if self._import_directory_callback != None:

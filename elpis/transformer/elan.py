@@ -44,13 +44,47 @@ elan.set_default_context({
 # TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
 elan.general_setting_title('Tiers')
 # elan.general_setting_description('Choose the tier that your transcriptions are on')
-elan.general_setting('tier_type', [None], display_name='Tier Type', default=None)
-elan.general_setting('tier_name', [None], display_name='Tier Name', default=None)
-elan.general_setting('tier_order', [None], display_name='Tier Order', default=None)
+elan.general_setting('tier_type',
+                     [None],
+                     ui_format='select',
+                     display_name='Tier Type',
+                     default=None)
+elan.general_setting('tier_name',
+                     [None],
+                     ui_format='select',
+                     display_name='Tier Name',
+                     default=None)
+elan.general_setting('tier_order',
+                     [None],
+                     ui_format='select',
+                     display_name='Tier Order',
+                     default=None)
 
 elan.general_setting_title('Punctuation')
-elan.general_setting('punctuation_to_explode_by', str, display_name='Punctuation to replace with spaces', default=string.punctuation + ',…‘’“”°')
-elan.general_setting('punctuation_to_collapse_by', str, display_name='Punctuation to remove', default='')
+elan.general_setting('punctuation_to_explode_by',
+                     str,
+                     ui_format='text',
+                     display_name='Punctuation to replace with spaces',
+                     default=string.punctuation + ',…‘’“”°')
+elan.general_setting('punctuation_to_collapse_by',
+                     str,
+                     ui_format='text',
+                     display_name='Punctuation to remove',
+                     default='')
+
+# These settings are string that end up being converted to sets
+elan.general_setting_title('Cleaning')
+# elan.general_setting_description('Add words to remove, one per line.')
+elan.general_setting('special_cases',
+                     str,
+                     ui_format='textarea',
+                     display_name='Words to remove',
+                     default="<silence>")
+elan.general_setting('translation_tags',
+                     str,
+                     ui_format='textarea',
+                     display_name='Tags to remove',
+                     default="@eng@")
 
 # TODO: limitation, settings must be defined before used in functions so that they are registered and visible.
 
@@ -124,6 +158,9 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
     tier_type = context['tier_type']
     punctuation_to_collapse_by = context['punctuation_to_collapse_by']
     punctuation_to_explode_by = context['punctuation_to_explode_by']
+    # Convert dirty words and tokens from str to set, split by '\n'
+    special_cases = set(context['special_cases'].splitlines())
+    translation_tags = set(context['translation_tags'].splitlines())
 
     for input_elan_file in eaf_paths:
         # Get paths to files
@@ -195,10 +232,12 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
             #     obj["speaker_id"] = speaker_id
 
             utterance_cleaned = clean_json_utterance(utterance=utterance,
-                                                     remove_english=False,
-                                                     use_langid=False,
                                                      punctuation_to_collapse_by=punctuation_to_collapse_by,
-                                                     punctuation_to_explode_by=punctuation_to_explode_by)
+                                                     punctuation_to_explode_by=punctuation_to_explode_by,
+                                                     special_cases=special_cases,
+                                                     translation_tags=translation_tags,
+                                                     remove_english=False,
+                                                     use_langid=False)
             add_annotation(file_name, utterance_cleaned)
 
 
