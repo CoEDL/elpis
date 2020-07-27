@@ -23,6 +23,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
     console.log({ui});
 
     if (ui === null || ui === undefined) {
+        console.groupEnd();
         return (<>No Settings.</>);
     }
 
@@ -62,7 +63,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                 let dataEntryElement;
                 switch (data.type) {
                     case 'str': {
-                        dataEntryElement = (<Input 
+                        dataEntryElement = (<Input
                             type='text'
                             value={settings[ui_name]}
                             onChange={(event, data) => { handleStrChange(ui_name, data)}}/>
