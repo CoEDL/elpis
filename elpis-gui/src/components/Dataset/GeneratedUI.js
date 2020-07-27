@@ -88,6 +88,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                             }
                         });
                         dataEntryElement = (<Select
+                            value={settings[ui_name]}
                             options={options}
                             onChange={(event, data)=>{
                                 let newSettings = { ...settings };
