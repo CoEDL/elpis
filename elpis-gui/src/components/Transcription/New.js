@@ -76,11 +76,16 @@ class NewTranscription extends Component {
     render = () => {
         const { t, filename, list, status, text, modelName } = this.props;
 
-        const listOptions = list.map(model => ({"key": model.name, "value": model.name, "text": model.name}))
+        //Only show trained models
+        const listTrained = list.filter(model => model.status === 'trained')
+        const listOptions = listTrained.map(model => ({
+            "key": model.name,
+            "value": model.name,
+            "text": model.name
+        }))
 
-        // preven the buttnos from being clicked if we haven't got
-        // an active model, or file to transcribe
-        let enableButtons = (modelName && filename &&
+        // prevent the buttons from being clicked if we haven't got an active model, or file to transcribe
+        let enableTranscription = (modelName && filename &&
             (status == 'ready' || status == 'transcribed' )) ? true : false
 
         const loadingIcon = (status == 'transcribing') ? (
@@ -145,7 +150,7 @@ class NewTranscription extends Component {
                             }
 
                             <Segment>
-                                <Button onClick={this.handleTranscribe} disabled={!enableButtons} >
+                                <Button onClick={this.handleTranscribe} disabled={!enableTranscription} >
                                     {t('transcription.new.transcribe')}
                                 </Button>
                             </Segment>
