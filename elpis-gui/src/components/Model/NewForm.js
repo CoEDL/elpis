@@ -19,7 +19,7 @@ class NewForm extends Component {
 
 
     render() {
-        const { t, name, currentPronDict, pronDicts, modelNew } = this.props;
+        const { t, error, currentPronDict, pronDicts, modelNew } = this.props;
 
         /**
          *  If we have a current pron dict, pre-select that in the form,
@@ -53,8 +53,7 @@ class NewForm extends Component {
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                     const modelData = { name: values.name, pron_dict_name: values.pron_dict_name }
-                    modelNew(modelData)
-                    this.props.history.push(urls.gui.model.settings)
+                    modelNew(modelData, this.props.history)
                 }}
             >
                 {({
@@ -84,9 +83,9 @@ class NewForm extends Component {
                                 }
                                 </Field>
                             </Form.Field>
-
-                            <Divider />
-
+                            {error &&
+                                <p className={"error-message"}>{error}</p>
+                            }
                             <Button type="button" onClick={handleSubmit}>
                                 {t('common.addNewButton')}
                             </Button>
@@ -102,15 +101,28 @@ const mapStateToProps = state => {
         name: state.model.name,
         pronDicts: state.pronDict.pronDictList,
         currentPronDict: state.pronDict.name,
+        error: state.model.error
     }
 }
 const mapDispatchToProps = dispatch => ({
     pronDictList: () => {
         dispatch(pronDictList())
     },
-    modelNew: (postData) => {
+    modelNew: (postData, history) => {
         // need to pass the new name, the selected pron_dict_name. we get its dataset_name in flask
         dispatch(modelNew(postData))
+            .then(response => {
+                console.log('model response', response)
+                if (response.status===500) {
+                    console.log('response.status', response.status)
+                    throw Error(response.error)
+                }
+                return response
+            })
+            .then(response => {
+                history.push(urls.gui.model.settings)
+            })
+            .catch(error => console.log("error", error))
     }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewForm)));

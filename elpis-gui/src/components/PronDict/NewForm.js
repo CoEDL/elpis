@@ -16,7 +16,7 @@ class NewForm extends Component {
     }
 
     render() {
-        const { t, currentDataset, datasets, pronDictNew } = this.props;
+        const { t, error, currentDataset, datasets, pronDictNew } = this.props;
 
         let defaultDatasetName = ''
         if (currentDataset) {
@@ -46,8 +46,7 @@ class NewForm extends Component {
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                     const postData = { name: values.name, dataset_name: values.dataset_name }
-                    pronDictNew(postData)
-                    this.props.history.push(urls.gui.pronDict.l2s)
+                    pronDictNew(postData, this.props.history)
                 }}
             >
                 {({
@@ -77,9 +76,9 @@ class NewForm extends Component {
                                     }
                                 </Field>
                             </Form.Field>
-
-                            <Divider />
-
+                            {error &&
+                                <p className={"error-message"}>{error}</p>
+                            }
                             <Button type="button" onClick={handleSubmit}>
                                 {t('common.addNewButton')}
                             </Button>
@@ -94,15 +93,29 @@ const mapStateToProps = state => {
     return {
         name: state.pronDict.name,
         currentDataset: state.dataset.name,
-        datasets: state.dataset.datasetList
+        datasets: state.dataset.datasetList,
+        error: state.pronDict.error
     }
 }
 const mapDispatchToProps = dispatch => ({
     datasetList: () => {
         dispatch(datasetList())
     },
-    pronDictNew: postData => {
+    pronDictNew: (postData, history) => {
         dispatch(pronDictNew(postData))
+            .then(response => {
+                console.log('pron dict response', response)
+                if (response.status===500) {
+                    console.log('response.status', response.status)
+                    throw Error(response.error)
+                }
+                return response
+            })
+            .then(response => {
+                history.push(urls.gui.pronDict.l2s)
+            })
+            .catch(error => console.log("error", error))
     }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewForm)));
+

@@ -17,10 +17,17 @@ const pronDict = (state = initState, action) => {
     switch (action.type) {
 
         case actionTypes.PRON_DICT_NEW_SUCCESS:
-            var { name } = action.response.data.data.config
-            return {
-                ...initState,
-                name
+            if (action.response.data.status==500){
+                return { ...initState,
+                    status: action.response.data.status,
+                    error: action.response.data.error
+                }
+            } else {
+                var {name} = action.response.data.data.config
+                return {
+                    ...initState,
+                    name
+                }
             }
 
         case actionTypes.PRON_DICT_LOAD_SUCCESS:
