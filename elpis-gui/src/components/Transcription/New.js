@@ -101,7 +101,9 @@ class NewTranscription extends Component {
                                 { t('transcription.new.title') }
                             </Header>
 
-                            <CurrentModelName />
+                            {modelName &&
+                            <CurrentModelName/>
+                            }
 
                             <Segment>
                                 {listOptions &&
