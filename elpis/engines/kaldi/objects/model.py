@@ -2,7 +2,7 @@ import pystache
 import os
 import shutil
 from pathlib import Path
-from typing import Callable, Tuple
+from typing import Callable, Dict, Tuple
 import threading
 from elpis.engines.common.objects.command import run
 from elpis.engines.common.objects.model import Model as BaseModel
@@ -22,6 +22,16 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
         self.config['ngram'] = 1  # default to 1 to make playing quicker
         self.config['stage_status'] = {}
+        stage_names = {
+            "0_setup.sh": "Set up",
+            "1_prep_acoustic.sh": "Prepare acoustic data",
+            "2_feature_ext.sh": "Extract features",
+            "3_prep_lang_data.sh": "Prepare language data",
+            "4_lang_model_cr.sh": "Create language model",
+            "5_mono.sh": "Monophone training",
+            "6_tri1.sh": "Triphone training"
+        }
+        self.build_stage_status(stage_names)
 
     @classmethod
     def load(cls, base_path: Path):
@@ -49,9 +59,16 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     @stage_status.setter
     def stage_status(self, vals: Tuple[str, str, str]):
         stage, status, message = vals
-        temp_status = self.config['stage_status']
-        temp_status.update({stage: {'status': status, 'message': message}})
-        self.config['stage_status'] = temp_status
+        stage_status = self.config['stage_status']
+        stage_status[stage]['status'] = status
+        stage_status[stage]['message'] = message
+        self.config['stage_status'] = stage_status
+
+    def build_stage_status(self, stage_names: Dict[str, str]):
+        for stage_file, stage_name in stage_names.items():
+            stage_status = self.config['stage_status']
+            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': 'message'}})
+            self.config['stage_status'] = stage_status
 
     def has_been_trained(self):
         return self.status == 'trained'
@@ -226,10 +243,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 shutil.copytree(f"{template_path.joinpath('stages')}", local_kaldi_path.joinpath('stages'))
                 for file in os.listdir(local_kaldi_path.joinpath('stages')):
                     os.chmod(local_kaldi_path.joinpath('stages').joinpath(file), 0o774)
-
-                # Set up status info for the stages
-                for stage in sorted(os.listdir(local_kaldi_path.joinpath('stages'))):
-                    self.stage_status = (stage, 'ready', '')
 
                 # - cp {{ .KALDI_TEMPLATES }}/score.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/local/
                 shutil.copy(f"{template_path.joinpath('score.sh')}", f"{kaldi_local}")
