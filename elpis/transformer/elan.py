@@ -42,46 +42,43 @@ elan.set_default_context({
 
 
 # TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
-elan.general_setting_title('Tiers')
-# elan.general_setting_description('Choose the tier that your transcriptions are on')
-elan.general_setting('tier_type',
-                     [None],
+elan.general_setting_title(title='Tiers',
+                           description='Choose the tier that your transcriptions are on')
+elan.general_setting(key='tier_type',
                      ui_format='select',
                      display_name='Tier Type',
-                     default=None)
-elan.general_setting('tier_name',
-                     [None],
+                     default=None,
+                     options=[])
+elan.general_setting(key='tier_name',
                      ui_format='select',
                      display_name='Tier Name',
-                     default=None)
-elan.general_setting('tier_order',
-                     [None],
+                     default=None,
+                     options=[])
+elan.general_setting(key='tier_order',
                      ui_format='select',
                      display_name='Tier Order',
-                     default=None)
+                     default=None,
+                     options=[])
 
-elan.general_setting_title('Punctuation')
-elan.general_setting('punctuation_to_explode_by',
-                     str,
+elan.general_setting_title(title='Punctuation',
+                           description='What to do with punctuation.')
+elan.general_setting(key='punctuation_to_explode_by',
                      ui_format='text',
                      display_name='Punctuation to replace with spaces',
                      default=string.punctuation + ',…‘’“”°')
-elan.general_setting('punctuation_to_collapse_by',
-                     str,
+elan.general_setting(key='punctuation_to_collapse_by',
                      ui_format='text',
                      display_name='Punctuation to remove',
                      default='')
 
 # These settings are string that end up being converted to sets
-elan.general_setting_title('Cleaning')
-# elan.general_setting_description('Add words to remove, one per line.')
-elan.general_setting('special_cases',
-                     str,
+elan.general_setting_title(title='Cleaning',
+                           description='Add words to remove, one per line.')
+elan.general_setting(key='special_cases',
                      ui_format='textarea',
                      display_name='Words to remove',
                      default="<silence>")
-elan.general_setting('translation_tags',
-                     str,
+elan.general_setting(key='translation_tags',
                      ui_format='textarea',
                      display_name='Tags to remove',
                      default="@eng@")
@@ -107,9 +104,15 @@ def update_ui(file_paths: List[Path], ui):
     unique tier types, unique tier names, and the num of tiers
     """
     # Use sets internally for easy uniqueness, conver to lists when done
-    _tier_types: Set[str] = set(ui['data']['tier_type']['type'])
-    _tier_names: Set[str] = set(ui['data']['tier_name']['type'])
+    _tier_types: Set[str] = set(ui['data']['tier_type']['options'])
+    _tier_names: Set[str] = set(ui['data']['tier_name']['options'])
     tier_max_count = 0
+
+    print('**** ui data')
+    print(ui['data'])
+
+    print('**** _tier_types')
+    print(_tier_types)
 
     eaf_paths = [p for p in file_paths if f'{p}'.endswith('.eaf')]
     for eaf_path in eaf_paths:
@@ -125,9 +128,9 @@ def update_ui(file_paths: List[Path], ui):
         if tier_count > tier_max_count:
             tier_max_count = tier_count
             
-    ui['data']['tier_type']['type'] = list(_tier_types)
-    ui['data']['tier_name']['type'] = list(_tier_names)
-    ui['data']['tier_order']['type'] = [None] + [i for i in range(tier_max_count)]
+    ui['data']['tier_type']['options'] = list(_tier_types)
+    ui['data']['tier_name']['options'] = list(_tier_names)
+    ui['data']['tier_order']['options'] = [None] + [i for i in range(tier_max_count)]
     return ui
 
 @elan.import_files('eaf')
