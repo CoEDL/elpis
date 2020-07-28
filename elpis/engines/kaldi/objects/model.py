@@ -234,9 +234,13 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
             stages = os.listdir(local_kaldi_path.joinpath('stages'))
-            for stage in stages:
+            for stage in sorted(stages):
+                print(f"======== STAGE {stage} STARTING ========")
+                self.status = f'stage {stage} in-progress'
                 p = run(f"cd {local_kaldi_path}; stages/{stage} > {run_log_path}")
                 print(p.stdout)
+                print(f"======== STAGE {stage} COMPLETE ========")
+                self.status = f'stage {stage} complete'
             print('train double done.')
 
         def run_training_in_background():
