@@ -105,6 +105,6 @@ label.pad-right,
     color: indianred;
 }
 
-.settings .description {
+.ui.table.settings .description {
     font-weight: normal
 }

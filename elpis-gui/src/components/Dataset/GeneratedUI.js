@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Form, Input, Table } from 'semantic-ui-react';
+import { Select, Form, Input, Table, TextArea } from 'semantic-ui-react';
 
 function groupSettingsFromUI(ui) {
     let settingGroups = [];
@@ -50,14 +50,14 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
             if (ui['type'][ui_name] === "title") {
                 console.log("Building title");
                 header = (
-                    <Table.Row>
-                        <Table.HeaderCell colSpan='2'>
-                            {ui['data'][ui_name]['title']}
-                            <p className="description">
-                                {ui['data'][ui_name]['description']}
-                            </p>
-                        </Table.HeaderCell>
-                    </Table.Row>
+                    <>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan='2'>{ui['data'][ui_name]['title']}</Table.HeaderCell>
+                        </Table.Row>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan='2' className='description'>{ui['data'][ui_name]['description']}</Table.HeaderCell>
+                        </Table.Row>
+                    </>
                 );
             } else { // ui['type'][ui_name] == "settings"
                 console.log("Building input");
@@ -66,29 +66,46 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
 
                 // Switch input type based on ui specification
                 let dataEntryElement;
-                switch (data.type) {
-                    case 'str': {
+                switch (data.ui_format) {
+                    case 'text': {
                         dataEntryElement = (<Input
-                            type='text'
-                            value={settings[ui_name]}
-                            onChange={(event, data) => { handleStrChange(ui_name, data)}}/>
-                            ); /* TODO */
-                    }
-                    break;
+                                type='text'
+                                value={settings[ui_name]}
+                                onChange={(event, data) => {
+                                    handleStrChange(ui_name, data)
+                                }} />);
+                        }
+                        break;
+                    case 'textarea': {
+                        dataEntryElement = (<TextArea
+                                value={settings[ui_name]}
+                                onChange={(event, data) => {
+                                    handleStrChange(ui_name, data)
+                                }} />);
+                        }
+                        break;
                     case 'int': {
-                        dataEntryElement = (<Input type='number' />); /* TODO */
-                    }
-                    break;
-                    default: /*ENUM*/ {
+                        dataEntryElement = (<Input type='number'/>); /* TODO */
+                        }
+                        break;
+                    case 'select': {
                         let options = [];
-                        data.type.forEach(v => {
+                        // Build options
+                        data.options.forEach(v => {
                             // <Select> does not like to display text if the key or value (?) is null.
                             // So convert null to string "- not selected -".
-                            if (v === null) {
-                                console.log("pushing: ", {key: "- not selected -", value: "- not selected -", text: "- not selected -"});
-                                options.push({key: "- not selected -", value: "- not selected -", text: "- not selected -"})
-                            }
-                            else {
+                            if (v === null || v === '') {
+                                console.log("pushing: ", {
+                                    key: "- not selected -",
+                                    value: "- not selected -",
+                                    text: "- not selected -"
+                                });
+                                options.push({
+                                    key: "- not selected -",
+                                    value: "- not selected -",
+                                    text: "- not selected -"
+                                })
+                            } else {
                                 console.log("pushing: ", {key: v, value: v, text: v});
                                 options.push({key: v, value: v, text: v})
                             }
@@ -96,8 +113,8 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                         dataEntryElement = (<Select
                             value={settings[ui_name]}
                             options={options}
-                            onChange={(event, data)=>{
-                                let newSettings = { ...settings };
+                            onChange={(event, data) => {
+                                let newSettings = {...settings};
                                 // Convert from "not selected" string back to null.
                                 if (data.value === "- not selected -") {
                                     newSettings[ui_name] = null;
@@ -109,6 +126,9 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                             selection
                         />);
                         // TODO: add a onChange that dispatches the setting (do this for int and string as well)
+                        }
+                        break;
+                    default: {
                     }
                 }
 
