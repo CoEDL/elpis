@@ -42,6 +42,7 @@ elan.set_default_context({
 
 
 # TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
+
 elan.general_setting_title(title='Tiers',
                            description='Choose the tier that your transcriptions are on')
 elan.general_setting(key='tier_type',
