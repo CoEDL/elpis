@@ -476,6 +476,24 @@ class DataTransformerAbstractFactory:
         self._export_ui_type_config[key] = 'setting'
         self._export_ui_order_config.append(key)
 
+    def import_setting_title(self, title: str, description: str):
+        key = '_title_' + str(self._import_title_count)
+        self._import_title_count += 1
+        self._import_ui_data_config[key] = {'title': title,
+                                            'description': description}
+        self._import_ui_type_config[key] = 'title'
+        self._import_ui_order_config.append(key)
+        return
+
+    def export_setting_title(self, title: str, description: str):
+        key = '_title_' + str(self._export_title_count)
+        self._export_title_count += 1
+        self._export_ui_data_config[key] = {'title': title,
+                                            'description': description}
+        self._export_ui_type_config[key] = 'title'
+        self._export_ui_order_config.append(key)
+        return
+
     def general_setting(self,
                         key: str = '',
                         ui_format: Optional[str] = None,
@@ -511,24 +529,6 @@ class DataTransformerAbstractFactory:
                             description=description,
                             options=options)
 
-    def import_setting_title(self, title: str, description: str):
-        key = '_title_' + str(self._import_title_count)
-        self._import_title_count += 1
-        self._import_ui_data_config[key] = {'title': title,
-                                            'description': description}
-        self._import_ui_type_config[key] = 'title'
-        self._import_ui_order_config.append(key)
-        return
-
-    def export_setting_title(self, title: str, description: str):
-        key = '_title_' + str(self._export_title_count)
-        self._export_title_count += 1
-        self._export_ui_data_config[key] = {'title': title,
-                                            'description': description}
-        self._export_ui_type_config[key] = 'title'
-        self._export_ui_order_config.append(key)
-        return
-        
     def general_setting_title(self, title: str, description: str):
         self.import_setting_title(title=title, description=description)
         self.export_setting_title(title=title, description=description)
