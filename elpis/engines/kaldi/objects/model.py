@@ -199,10 +199,14 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 # - cp {{ .KALDI_TEMPLATES }}/cmd.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
                 shutil.copy(f"{template_path.joinpath('cmd.sh')}", f"{local_kaldi_path}")
                 # - cp {{ .KALDI_TEMPLATES }}/run.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
-                with open(f"{template_path.joinpath('run.sh')}", 'r') as fin, \
-                        open(f"{local_kaldi_path.joinpath('run.sh')}", 'w') as fout:
-                    fout.write(fin.read().replace('lm_order=1', f"lm_order={self.ngram}"))
-                os.chmod(f"{local_kaldi_path.joinpath('run.sh')}", 0o774)
+                # with open(f"{template_path.joinpath('run.sh')}", 'r') as fin, \
+                #         open(f"{local_kaldi_path.joinpath('run.sh')}", 'w') as fout:
+                #     fout.write(fin.read().replace('lm_order=1', f"lm_order={self.ngram}"))
+                # os.chmod(f"{local_kaldi_path.joinpath('run.sh')}", 0o774)
+                shutil.copytree(f"{template_path.joinpath('stages')}", local_kaldi_path.joinpath('stages'))
+                for file in os.listdir(local_kaldi_path.joinpath('stages')):
+                    os.chmod(local_kaldi_path.joinpath('stages').joinpath(file), 0o774)
+
                 # - cp {{ .KALDI_TEMPLATES }}/score.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/local/
                 shutil.copy(f"{template_path.joinpath('score.sh')}", f"{kaldi_local}")
                 # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/steps {{ .KALDI_OUTPUT_PATH }}/kaldi/steps
@@ -229,8 +233,10 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             run_log_path = self.path.joinpath('train.log')
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
-            p = run(f"cd {local_kaldi_path}; ./run.sh > {run_log_path}")
-            print(p.stdout)
+            stages = os.listdir(local_kaldi_path.joinpath('stages'))
+            for stage in stages:
+                p = run(f"cd {local_kaldi_path}; stages/{stage} > {run_log_path}")
+                print(p.stdout)
             print('train double done.')
 
         def run_training_in_background():
