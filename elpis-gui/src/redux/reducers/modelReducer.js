@@ -9,7 +9,8 @@ const initState = {
     settings: {
         ngram: 1
     },
-    status: 'ready'
+    status: 'ready',
+    stage_status: null
 }
 
 const model = (state = initState, action) => {
@@ -55,10 +56,18 @@ const model = (state = initState, action) => {
 
         // crazy, there will be three layers of objects with status properties here!
         case actionTypes.MODEL_TRAIN_SUCCESS:
-        case actionTypes.MODEL_STATUS_SUCCESS:
             var { data, status } = action.response.data
             if (status == 200) {
                 return { ...state, status: data.status }
+            } else {
+                console.log(data)
+                return { ...state }
+            }
+
+        case actionTypes.MODEL_STATUS_SUCCESS:
+            var { data, status } = action.response.data
+            if (status == 200) {
+                return { ...state, status: data.status, stage_status: data.stage_status }
             } else {
                 console.log(data)
                 return { ...state }

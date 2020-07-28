@@ -19,7 +19,7 @@ class ModelTrain extends Component {
 
     handleModelTrain = () => {
         this.props.modelTrain()
-        this.statusInterval = this.props.setInterval(this.handleModelStatus, 5000)
+        this.statusInterval = this.props.setInterval(this.handleModelStatus, 1000)
     }
 
     handleModelStatus = () => {
@@ -35,7 +35,7 @@ class ModelTrain extends Component {
     }
 
     render() {
-        const { t, name, settings, status } = this.props;
+        const { t, name, settings, status, stage_status } = this.props;
 
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />
@@ -73,18 +73,21 @@ class ModelTrain extends Component {
                                 { loadingIcon }
                                 <Message.Content>
                                     <Message.Header>{ status }</Message.Header>
+                                    {stage_status &&
+                                        Object.keys(stage_status).map((stage_name, i) => (
+                                            <p key={stage_name} className="stage">
+                                                <span className="name">{stage_name}</span>
+                                                <span className="divider">|</span>
+                                                <span className="status">{stage_status[stage_name]["status"]}</span>
+                                            </p>
+                                        ))
+                                    }
                                 </Message.Content>
                             </Message>
-
-                            {status === "ready" &&
                                 <Segment>
                                     {trainingButton}
                                 </Segment>
-                            }
 
-                            <Button as={Link} to={urls.gui.model.results} disabled={status === 'ready' || status === "training" }>
-                                { t('common.nextButton') }
-                            </Button>
 
                         </Grid.Column>
                     </Grid>
@@ -99,7 +102,8 @@ const mapStateToProps = state => {
     return {
         name: state.model.name,
         settings: state.model.settings,
-        status: state.model.status
+        status: state.model.status,
+        stage_status: state.model.stage_status
     }
 }
 const mapDispatchToProps = dispatch => ({
