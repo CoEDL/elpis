@@ -68,7 +68,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                                 value={settings[ui_name]}
                                 onChange={(event, data) => {
                                     handleStrChange(ui_name, data)
-                                }}/>);
+                                }} />);
                         }
                         break;
                     case 'textarea': {
@@ -76,7 +76,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                                 value={settings[ui_name]}
                                 onChange={(event, data) => {
                                     handleStrChange(ui_name, data)
-                                }}/>);
+                                }} />);
                         }
                         break;
                     case 'int': {
@@ -85,7 +85,8 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                         break;
                     case 'select': {
                         let options = [];
-                        data.type.forEach(v => {
+                        // Build options
+                        data.options.forEach(v => {
                             // <Select> does not like to display text if the key or value (?) is null.
                             // So convert null to string "- not selected -".
                             if (v === null) {
