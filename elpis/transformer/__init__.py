@@ -417,12 +417,12 @@ class DataTransformerAbstractFactory:
         return f
 
     def import_setting(self,
-                       key: str,
-                       ui_format: Optional[str],
-                       default: Union[List[str], Set[str], int, str],
-                       display_name: str,
-                       description: str,
-                       options: Optional[List[str]]):
+                       key: str = '',
+                       ui_format: Optional[str] = None,
+                       default: Union[List[str], Set[str], int, str] = '',
+                       display_name: str = '',
+                       description: str = '',
+                       options: Optional[List[str]] = None):
         """
         Add a field to the import context.
         :param key: the name of the field.
@@ -447,12 +447,12 @@ class DataTransformerAbstractFactory:
         self._import_ui_order_config.append(key)
     
     def export_setting(self,
-                       key: str,
-                       ui_format: Optional[str],
-                       default: Union[List[str], Set[str], int, str],
-                       display_name: str,
-                       description: str,
-                       options: Optional[List[str]]):
+                       key: str = '',
+                       ui_format: Optional[str] = None,
+                       default: Union[List[str], Set[str], int, str] = '',
+                       display_name: str = '',
+                       description: str = '',
+                       options: Optional[List[str]] = None):
         """
         Add a field to the export context.
         :param key: the name of the field.
