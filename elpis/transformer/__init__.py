@@ -425,7 +425,14 @@ class DataTransformerAbstractFactory:
                        options):
         """
         Add a field to the import context.
-        TODO: add params
+        :param key: the name of the field.
+        :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
+        :param default: (Optional) default value of the field.
+        :param display_name: (Optional) human-readable name for the setting.
+        :param description: (Optional) human-readable description of what the setting is for.
+        :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :raises:
+            ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
         if key in self._import_settings:
             raise ValueError(f'key "{key}" already in the import context')
@@ -448,7 +455,14 @@ class DataTransformerAbstractFactory:
                        options):
         """
         Add a field to the export context.
-        TODO: add params
+        :param key: the name of the field.
+        :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
+        :param default: (Optional) default value of the field.
+        :param display_name: (Optional) human-readable name for the setting.
+        :param description: (Optional) human-readable description of what the setting is for.
+        :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :raises:
+            ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
         if key in self._export_settings:
             raise ValueError(f'key "{key}" already in the export context')
@@ -463,20 +477,20 @@ class DataTransformerAbstractFactory:
         self._export_ui_order_config.append(key)
 
     def general_setting(self,
-                        key: str,
+                        key: str = '',
                         ui_format: Optional[str] = None,
-                        default: Union[List[str], Set[str], int, str] = None,
+                        default: Union[List[str], Set[str], int, str] = '',
                         display_name: str = '',
                         description: str = '',
                         options: Optional[List[str]] = None):
         """
         Add a field to the both import and export context.
         :param key: the name of the field.
-        :param ui_format: (Optional) TODO
+        :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
         :param default: (Optional) default value of the field.
-        :param display_name: (Optional) TODO
-        :param description: (Optional) TODO
-        :param options: (Optional) TODO
+        :param display_name: (Optional) human-readable name for the setting.
+        :param description: (Optional) human-readable description of what the setting is for.
+        :param options: (Optional) if set, this will be dynamically populated when files are parsed.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
