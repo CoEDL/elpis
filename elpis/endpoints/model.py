@@ -110,7 +110,8 @@ def train():
                         "data": "No current model exists (perhaps create one first)"})
     model.train(on_complete=lambda: print("Training complete!"))
     data = {
-        "status": model.status
+        "status": model.status,
+        "stage_status": model.stage_status
     }
     return jsonify({
         "status": 200,
@@ -125,7 +126,8 @@ def status():
         return jsonify({"status": 404,
                         "data": "No current model exists (perhaps create one first)"})
     data = {
-        "status": model.status
+        "status": model.status,
+        "stage_status": model.stage_status
     }
     return jsonify({
         "status": 200,
