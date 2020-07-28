@@ -13,6 +13,7 @@ def run(cmdline: str) -> subprocess.CompletedProcess:
         args,
         check=True,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT
+        stderr=subprocess.STDOUT,
+        universal_newlines=True
     )
     return process
