@@ -31,6 +31,10 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     @property
     def status(self):
         return self.config['status']
+
+    @property
+    def log(self):
+        return self.config['log']
     
     @property
     def state(self):
@@ -43,6 +47,10 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     @status.setter
     def status(self, value: str):
         self.config['status'] = value
+
+    @log.setter
+    def log(self, value: str):
+        self.config['log'] = value
 
     def link(self, dataset: Dataset, pron_dict: PronDict):
         self.dataset = dataset
@@ -250,6 +258,8 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 print(p.stdout)
                 print(f"======== STAGE {stage} COMPLETE ========")
                 self.status = f'stage {stage} complete'
+
+            self.log = run(f"cd {local_kaldi_path}; cat {run_log_path}").stdout
             print('train double done.')
 
         def run_training_in_background():

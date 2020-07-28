@@ -132,6 +132,19 @@ def status():
         "data": data
     })
 
+@bp.route("/log", methods=['GET'])
+def log():
+    model: Model = app.config['CURRENT_MODEL']
+    if model is None:
+        return jsonify({"status": 404,
+                        "data": "No current model exists (perhaps create one first)"})
+    data = {
+        "log": model.log
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 @bp.route("/results", methods=['GET'])
 def results():
