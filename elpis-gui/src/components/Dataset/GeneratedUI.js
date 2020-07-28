@@ -89,7 +89,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                         data.options.forEach(v => {
                             // <Select> does not like to display text if the key or value (?) is null.
                             // So convert null to string "- not selected -".
-                            if (v === null) {
+                            if (v === null || v === '') {
                                 console.log("pushing: ", {
                                     key: "- not selected -",
                                     value: "- not selected -",
