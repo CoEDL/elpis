@@ -248,7 +248,7 @@ class Interface(FSObject):
 
     def new_transcription(self, tname):
         if self.engine is None:
-            raise RuntimeError("Engine need to be set prior to transcription")
+            raise RuntimeError("Engine must be set prior to transcription")
         # no name conflict because transcriptions have auto-generated names
         t = self.engine.transcription(parent_path=self.transcriptions_path, name=tname)
         transcriptions = self.config['transcriptions']
