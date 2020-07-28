@@ -44,7 +44,7 @@ elan.set_default_context({
 # TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
 
 elan.general_setting_title(title='Tiers',
-                           description='Choose the tier that your transcriptions are on')
+                           description='Choose the tier that your transcriptions are on, just choose one of these.')
 elan.general_setting(key='tier_type',
                      ui_format='select',
                      display_name='Tier Type',
@@ -62,16 +62,16 @@ elan.general_setting_title(title='Punctuation',
                            description='What to do with punctuation.')
 elan.general_setting(key='punctuation_to_explode_by',
                      ui_format='text',
-                     display_name='Punctuation to replace with spaces',
+                     display_name='Replace these with spaces',
                      default=string.punctuation + ',…‘’“”°')
 elan.general_setting(key='punctuation_to_collapse_by',
                      ui_format='text',
-                     display_name='Punctuation to remove',
+                     display_name='Remove these',
                      default='')
 
 # These settings are string that end up being converted to sets
 elan.general_setting_title(title='Cleaning',
-                           description='Add words to remove, one per line.')
+                           description='Remove text from annotations, add one per line.')
 elan.general_setting(key='special_cases',
                      ui_format='textarea',
                      display_name='Words to remove',
