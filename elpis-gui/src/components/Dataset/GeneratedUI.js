@@ -50,9 +50,14 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
             if (ui['type'][ui_name] === "title") {
                 console.log("Building title");
                 header = (
-                    <Table.Row>
-                        <Table.HeaderCell colSpan='2'>{ui['data'][ui_name]['title']}</Table.HeaderCell>
-                    </Table.Row>
+                    <>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan='2'>{ui['data'][ui_name]['title']}</Table.HeaderCell>
+                        </Table.Row>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan='2' className='description'>{ui['data'][ui_name]['description']}</Table.HeaderCell>
+                        </Table.Row>
+                    </>
                 );
             } else { // ui['type'][ui_name] == "settings"
                 console.log("Building input");
@@ -141,7 +146,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
 
         // Construct table
         let table = (
-            <Table celled striped key={groupIndex++}>
+            <Table celled striped key={groupIndex++} className='settings'>
                 {header===null?null:(
                     <Table.Header>
                         {header}
