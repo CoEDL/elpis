@@ -2,7 +2,7 @@ from pathlib import Path
 from elpis.engines.common.input.resample import resample
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 import subprocess
-from typing import Callable
+from typing import Callable, Dict
 import os
 from distutils import dir_util, file_util
 import wave
