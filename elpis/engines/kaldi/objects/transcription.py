@@ -12,6 +12,20 @@ import contextlib
 class KaldiTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.config['stage_status'] = {}
+        stage_names = {
+            "0_feature_vec.sh": "Extracting feature vectors",
+            "1_cmvn.sh": "Applying CMVN",
+            "2_transcription_decode.sh": "Decoding (transcription)",
+            "3_transcription_best_path.sh": "Finding best path (transcription)",
+            "4_word_boundaries.sh": "Adding word boundaries to FST",
+            "5_lattice_to_ctm.sh": "Converting lattice to CTM",
+            "6_word_idx_to_words.sh": "Translating word indexes to words",
+            "7_ctm_textgrid.sh": "Converting CTM to Textgrid",
+            "8_textgrid_elan.sh": "Converting Textgrid to ELAN",
+            "9_ctm_output.sh": "CTM output"
+        }
+        self.build_stage_status(stage_names)
         self.audio_file_path = self.path.joinpath('audio.wav')
 
     @classmethod
@@ -86,9 +100,11 @@ class KaldiTranscription(BaseTranscription):
     def transcribe(self, on_complete: Callable = None):
         self.status = "transcribing"
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
+        gmm_decode_path = Path('/elpis/elpis/engines/kaldi/inference/gmm-decode')
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
+        dir_util.copy_tree(gmm_decode_path, kaldi_infer_path.joinpath('gmm-decode'))
         subprocess.run('sh /elpis/elpis/engines/kaldi/inference/gmm-decode-long.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
         file_util.copy_file(f"{kaldi_infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
@@ -110,3 +126,9 @@ class KaldiTranscription(BaseTranscription):
     def elan(self):
         with open(f'{self.path}/{self.hash}.eaf', 'rb') as fin:
             return fin.read()
+
+    def build_stage_status(self, stage_names: Dict[str, str]):
+        for stage_file, stage_name in stage_names.items():
+            stage_status = self.config['stage_status']
+            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': 'message'}})
+            self.config['stage_status'] = stage_status

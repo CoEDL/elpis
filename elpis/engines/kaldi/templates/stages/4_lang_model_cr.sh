@@ -14,17 +14,17 @@ echo
 loc=`which ngram-count`;
 if [ -z $loc ]; then
    if uname -a | grep 64 >/dev/null; then
-           sdir=$KALDI_ROOT/tools/srilm/bin/i686-m64
+        sdir=$KALDI_ROOT/tools/srilm/bin/i686-m64
    else
-                   sdir=$KALDI_ROOT/tools/srilm/bin/i686
+        sdir=$KALDI_ROOT/tools/srilm/bin/i686
    fi
    if [ -f $sdir/ngram-count ]; then
-                   echo "Using SRILM language modelling tool from $sdir"
-                   export PATH=$PATH:$sdir
+        echo "Using SRILM language modelling tool from $sdir"
+        export PATH=$PATH:$sdir
    else
-                   echo "SRILM toolkit is probably not installed.
-                           Instructions: tools/install_srilm.sh"
-                   exit 1
+        echo "SRILM toolkit is probably not installed.
+                Instructions: tools/install_srilm.sh"
+        exit 1
    fi
 fi
 
