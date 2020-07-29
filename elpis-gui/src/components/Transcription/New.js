@@ -162,20 +162,24 @@ class NewTranscription extends Component {
                                 <Message.Content>
                                     <Message.Header>{ status }</Message.Header>
                                     {stage_status &&
-                                        Object.keys(stage_status).map((stage, i) => {
-                                            let name = stage_status[stage]["name"]
-                                            let status = stage_status[stage]["status"]
-                                            let message = stage_status[stage]["message"]
-                                        return (
-                                            <p key={stage} className="stage">
-                                                <span className="name">{name}</span>
-                                                <span className="divider">{status && <>|</>}</span>
-                                                <span className="status">{status}</span>
-                                                <span className="divider">{message && <>|</>}</span>
-                                                <span className="message">{message}</span>
-                                            </p>
+                                    <div className="stages">
+                                        {Object.keys(stage_status).map((stage, i) => {
+                                                let name = stage_status[stage]["name"]
+                                                let status = stage_status[stage]["status"]
+                                                let message = stage_status[stage]["message"]
+                                                return (
+                                                    <p key={stage} className="stage">
+                                                        <span className="name">{name}</span>
+                                                        <span className="divider">{status && <>|</>}</span>
+                                                        <span className="status">{status}</span>
+                                                        <span className="divider">{message && <>|</>}</span>
+                                                        <span className="message">{message}</span>
+                                                    </p>
+                                                )
+                                            }
                                         )}
-                                    )}
+                                    </div>
+                                    }
                                 </Message.Content>
                             </Message>
 
