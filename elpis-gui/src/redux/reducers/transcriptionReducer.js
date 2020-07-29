@@ -3,6 +3,7 @@ import * as actionTypes from '../actionTypes/transcriptionActionTypes';
 const initState = {
     filename: null,
     status: 'ready',
+    stage_status: null,
     type: null,
     text: null,
     elan: null
@@ -24,8 +25,8 @@ const transcription = (state = initState, action) => {
             }
 
         case actionTypes.TRANSCRIPTION_STATUS_SUCCESS:
-            var { status, type } = action.response.data.data
-            return { ...state, status, type }
+            var { status, stage_status, type } = action.response.data.data
+            return { ...state, status, stage_status, type }
 
         case actionTypes.TRANSCRIPTION_GET_TEXT_SUCCESS:
             var { data } = action.response

@@ -74,7 +74,7 @@ class NewTranscription extends Component {
     }
 
     render = () => {
-        const { t, filename, list, status, text, modelName } = this.props;
+        const { t, filename, list, status, stage_status, text, modelName } = this.props;
 
         //Only show trained models
         const listTrained = list.filter(model => model.status === 'trained')
@@ -157,9 +157,27 @@ class NewTranscription extends Component {
                                 </Button>
                             </Segment>
 
-                            <Segment>
-                                {loadingIcon} {status}
-                            </Segment>
+                            <Message icon>
+                                { loadingIcon }
+                                <Message.Content>
+                                    <Message.Header>{ status }</Message.Header>
+                                    {stage_status &&
+                                        Object.keys(stage_status).map((stage, i) => {
+                                            let name = stage_status[stage]["name"]
+                                            let status = stage_status[stage]["status"]
+                                            let message = stage_status[stage]["message"]
+                                        return (
+                                            <p key={stage} className="stage">
+                                                <span className="name">{name}</span>
+                                                <span className="divider">{status && <>|</>}</span>
+                                                <span className="status">{status}</span>
+                                                <span className="divider">{message && <>|</>}</span>
+                                                <span className="message">{message}</span>
+                                            </p>
+                                        )}
+                                    )}
+                                </Message.Content>
+                            </Message>
 
                             {status=='transcribed' &&
                                 <Segment>
@@ -189,6 +207,7 @@ const mapStateToProps = state => {
         modelName: state.model.name,
         filename: state.transcription.filename,
         status: state.transcription.status,
+        stage_status: state.transcription.stage_status,
         text: state.transcription.text,
         elan: state.transcription.elan
     }
