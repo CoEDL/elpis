@@ -21,7 +21,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.pron_dict: PronDict = None
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
         self.config['ngram'] = 1  # default to 1 to make playing quicker
-        self.config['stage_status'] = {}
         stage_names = {
             "0_setup.sh": "Set up",
             "1_prep_acoustic.sh": "Prepare acoustic data",
@@ -31,55 +30,21 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             "5_mono.sh": "Monophone training",
             "6_tri1.sh": "Triphone training"
         }
-        self.build_stage_status(stage_names)
+        super().build_stage_status(stage_names)
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
         self.pron_dict = None
         return self
-
-    @property
-    def status(self):
-        return self.config['status']
-
-    @property
-    def log(self):
-        return self.config['log']
     
     @property
     def state(self):
         # TODO: fix this
         return {}
 
-    @property
-    def stage_status(self):
-        return self.config['stage_status']
-
-    @stage_status.setter
-    def stage_status(self, vals: Tuple[str, str, str]):
-        stage, status, message = vals
-        stage_status = self.config['stage_status']
-        stage_status[stage]['status'] = status
-        stage_status[stage]['message'] = message
-        self.config['stage_status'] = stage_status
-
-    def build_stage_status(self, stage_names: Dict[str, str]):
-        for stage_file, stage_name in stage_names.items():
-            stage_status = self.config['stage_status']
-            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': 'message'}})
-            self.config['stage_status'] = stage_status
-
     def has_been_trained(self):
         return self.status == 'trained'
-
-    @status.setter
-    def status(self, value: str):
-        self.config['status'] = value
-
-    @log.setter
-    def log(self, value: str):
-        self.config['log'] = value
 
     def link(self, dataset: Dataset, pron_dict: PronDict):
         self.dataset = dataset
@@ -162,7 +127,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                         line = line[0]
                         seen[line] = seen.get(line, 0) + 1
             with nonsilence_phones_path.open(mode='w') as fout:
-                for (item,i) in seen.items():
+                for (item, i) in seen.items():
                     fout.write("%s\n" % item)
 
             with path_file_path.open(mode='w') as fout:

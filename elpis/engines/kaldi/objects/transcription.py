@@ -104,7 +104,7 @@ class KaldiTranscription(BaseTranscription):
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-        dir_util.copy_tree(gmm_decode_path, kaldi_infer_path.joinpath('gmm-decode'))
+        dir_util.copy_tree(gmm_decode_path, f"{kaldi_infer_path.joinpath('gmm-decode')}")
         subprocess.run('sh /elpis/elpis/engines/kaldi/inference/gmm-decode-long.sh'.split(),
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
         file_util.copy_file(f"{kaldi_infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
@@ -130,5 +130,5 @@ class KaldiTranscription(BaseTranscription):
     def build_stage_status(self, stage_names: Dict[str, str]):
         for stage_file, stage_name in stage_names.items():
             stage_status = self.config['stage_status']
-            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': 'message'}})
+            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': ''}})
             self.config['stage_status'] = stage_status
