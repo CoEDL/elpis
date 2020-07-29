@@ -4,6 +4,7 @@ from elpis.engines.common.objects.transcription import Transcription as BaseTran
 import subprocess
 from typing import Callable, Dict
 import os
+import shutil
 from distutils import dir_util, file_util
 import wave
 import contextlib
@@ -69,6 +70,12 @@ class KaldiTranscription(BaseTranscription):
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
+        # wipe previous dir to avoid file_exists errors
+        infer_path = Path(self.model.path).joinpath(
+            'kaldi/exp/tri1_online')
+        if infer_path.exists():
+            shutil.rmtree(f'{infer_path}')
+            infer_path.mkdir(parents=True, exist_ok=True)
         # _process_audio_file above a file named audio.wav
         audio_file_name = 'audio.wav'
         # Get the speaker id from the model > kaldi/data/test/spk2utt file. it's the first "word".
