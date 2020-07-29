@@ -60,7 +60,7 @@ class Model(FSObject):  # TODO not thread safe
     def build_stage_status(self, stage_names: Dict[str, str]):
         for stage_file, stage_name in stage_names.items():
             stage_status = self.config['stage_status']
-            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': 'message'}})
+            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': ''}})
             self.config['stage_status'] = stage_status
 
     def link(self, dataset: Dataset, pron_dict: PronDict):
