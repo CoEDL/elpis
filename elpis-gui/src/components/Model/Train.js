@@ -25,7 +25,7 @@ class ModelTrain extends Component {
     handleModelStatus = () => {
         const { status, modelStatus } = this.props;
         modelStatus()
-        if (status=='trained') this.props.clearInterval(this.statusInterval)
+        if (status === 'trained') this.props.clearInterval(this.statusInterval)
     }
 
 
@@ -41,11 +41,6 @@ class ModelTrain extends Component {
             <Icon name='circle notched' loading  />
         ) : null
 
-        const trainingButton = (status === 'ready') ? (
-            <Button onClick={this.handleModelTrain} disabled={!name}>
-                { t('model.train.trainButton') }
-            </Button>
-        ) : null
 
         return (
             <div>
@@ -74,25 +69,39 @@ class ModelTrain extends Component {
                                 <Message.Content>
                                     <Message.Header>{ status }</Message.Header>
                                     {stage_status &&
-                                        Object.keys(stage_status).map((stage, i) => {
-                                            let name = stage_status[stage]["name"]
-                                            let status = stage_status[stage]["status"]
-                                            let message = stage_status[stage]["message"]
-                                        return (
-                                            <p key={stage} className="stage">
-                                                <span className="name">{name}</span>
-                                                <span className="divider">{status && <>|</>}</span>
-                                                <span className="status">{status}</span>
-                                                <span className="divider">{message && <>|</>}</span>
-                                                <span className="message">{message}</span>
-                                            </p>
+                                    <div className="stages">
+                                        {Object.keys(stage_status).map((stage, i) => {
+                                                let name = stage_status[stage]["name"]
+                                                let status = stage_status[stage]["status"]
+                                                let message = stage_status[stage]["message"]
+                                                return (
+                                                    <p key={stage} className="stage">
+                                                        <span className="name">{name}</span>
+                                                        <span className="divider">{status && <>|</>}</span>
+                                                        <span className="status">{status}</span>
+                                                        <span className="divider">{message && <>|</>}</span>
+                                                        <span className="message">{message}</span>
+                                                    </p>
+                                                )
+                                            }
                                         )}
-                                    )}
+                                    </div>
+                                    }
                                 </Message.Content>
                             </Message>
-                                <Segment>
-                                    {trainingButton}
-                                </Segment>
+
+                            <Segment>
+
+                                <Button onClick={this.handleModelTrain} disabled={!name || status !== 'ready'}>
+                                    { t('model.train.trainButton') }
+                                </Button>
+
+                                <Button as={Link} to={urls.gui.model.results}
+                                        disabled={status === 'ready' || status === "training"}>
+                                    {t('common.nextButton')}
+                                </Button>
+
+                            </Segment>
 
 
                         </Grid.Column>
