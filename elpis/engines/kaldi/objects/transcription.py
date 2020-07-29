@@ -100,6 +100,9 @@ class KaldiTranscription(BaseTranscription):
         self.status = "transcribing"
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
         gmm_decode_path = Path('/elpis/elpis/engines/kaldi/inference/gmm-decode')
+
+        # Setup logging path
+        run_log_path = self.path.joinpath('transcription.log')
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
@@ -111,8 +114,9 @@ class KaldiTranscription(BaseTranscription):
         for stage in sorted(stages):
             print(f"======== STAGE {stage} STARTING ========")
             self.stage_status = (stage, 'in-progress', '')
-            p = subprocess.run(f'{kaldi_infer_path.joinpath("gmm-decode", stage)}', \
-                       cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
+            # Setup logging
+            args = ['bash', '-c', f'touch {run_log_path}; sh {kaldi_infer_path.joinpath("gmm-decode", stage)} >> {run_log_path}']
+            p = subprocess.run(args, cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
             print(f"======== STAGE {stage} COMPLETE ========")
             self.stage_status = (stage, 'complete', '')
         

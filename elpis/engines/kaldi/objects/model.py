@@ -236,6 +236,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
             stages = os.listdir(local_kaldi_path.joinpath('stages'))
+            run(f"touch {run_log_path};")
             for stage in sorted(stages):
                 print(f"======== STAGE {stage} STARTING ========")
                 self.stage_status = (stage, 'in-progress', '')
@@ -247,8 +248,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'w') as file:
                     file.write(filedata)
-
-                p = run(f"touch {run_log_path}; cd {local_kaldi_path}; stages/{stage} >> {run_log_path}")
+                p = run(f"cd {local_kaldi_path}; stages/{stage} >> {run_log_path}")
                 print(p.stdout)
                 print(f"======== STAGE {stage} COMPLETE ========")
                 self.stage_status = (stage, 'complete', '')
