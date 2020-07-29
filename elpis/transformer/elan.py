@@ -42,15 +42,44 @@ elan.set_default_context({
 
 
 # TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
-elan.general_setting_title('Tiers', 'Choose a tier')
-# elan.general_setting_description('Choose the tier that your transcriptions are on')
-elan.general_setting('tier_type', [None], display_name='Tier Type', default=None)
-elan.general_setting('tier_name', [None], display_name='Tier Name', default=None)
-elan.general_setting('tier_order', [None], display_name='Tier Order', default=None)
 
-elan.general_setting_title('Punctuation', 'What to do about punctuation')
-elan.general_setting('punctuation_to_explode_by', str, display_name='Punctuation to replace with spaces', default=string.punctuation + ',…‘’“”°')
-elan.general_setting('punctuation_to_collapse_by', str, display_name='Punctuation to remove', default='')
+elan.general_setting_title(title='Tiers',
+                           description='Choose the tier that your transcriptions are on, just choose one of these.')
+elan.general_setting(key='tier_type',
+                     ui_format='select',
+                     display_name='Tier Type',
+                     options=[''])
+elan.general_setting(key='tier_name',
+                     ui_format='select',
+                     display_name='Tier Name',
+                     options=[''])
+elan.general_setting(key='tier_order',
+                     ui_format='select',
+                     display_name='Tier Order',
+                     options=[''])
+
+elan.general_setting_title(title='Punctuation',
+                           description='What to do with punctuation.')
+elan.general_setting(key='punctuation_to_explode_by',
+                     ui_format='text',
+                     display_name='Replace these with spaces',
+                     default=string.punctuation + ',…‘’“”°')
+elan.general_setting(key='punctuation_to_collapse_by',
+                     ui_format='text',
+                     display_name='Remove these',
+                     default='')
+
+# These settings are string that end up being converted to sets
+elan.general_setting_title(title='Cleaning',
+                           description='Remove text from annotations, add one per line.')
+elan.general_setting(key='special_cases',
+                     ui_format='textarea',
+                     display_name='Words to remove',
+                     default="<silence>")
+elan.general_setting(key='translation_tags',
+                     ui_format='textarea',
+                     display_name='Tags to remove',
+                     default="@eng@")
 
 # TODO: limitation, settings must be defined before used in functions so that they are registered and visible.
 
@@ -73,9 +102,15 @@ def update_ui(file_paths: List[Path], ui):
     unique tier types, unique tier names, and the num of tiers
     """
     # Use sets internally for easy uniqueness, conver to lists when done
-    _tier_types: Set[str] = set(ui['data']['tier_type']['type'])
-    _tier_names: Set[str] = set(ui['data']['tier_name']['type'])
+    _tier_types: Set[str] = set(ui['data']['tier_type']['options'])
+    _tier_names: Set[str] = set(ui['data']['tier_name']['options'])
     tier_max_count = 0
+
+    print('**** ui data')
+    print(ui['data'])
+
+    print('**** _tier_types')
+    print(_tier_types)
 
     eaf_paths = [p for p in file_paths if f'{p}'.endswith('.eaf')]
     for eaf_path in eaf_paths:
@@ -91,9 +126,9 @@ def update_ui(file_paths: List[Path], ui):
         if tier_count > tier_max_count:
             tier_max_count = tier_count
             
-    ui['data']['tier_type']['type'] = list(_tier_types)
-    ui['data']['tier_name']['type'] = list(_tier_names)
-    ui['data']['tier_order']['type'] = [None] + [i for i in range(tier_max_count)]
+    ui['data']['tier_type']['options'] = list(_tier_types)
+    ui['data']['tier_name']['options'] = list(_tier_names)
+    ui['data']['tier_order']['options'] = [None] + [i for i in range(tier_max_count)]
     return ui
 
 @elan.import_files('eaf')
@@ -124,6 +159,9 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
     tier_type = context['tier_type']
     punctuation_to_collapse_by = context['punctuation_to_collapse_by']
     punctuation_to_explode_by = context['punctuation_to_explode_by']
+    # Convert dirty words and tokens from str to set, split by '\n'
+    special_cases = set(context['special_cases'].splitlines())
+    translation_tags = set(context['translation_tags'].splitlines())
 
     for input_elan_file in eaf_paths:
         # Get paths to files
@@ -195,10 +233,12 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
             #     obj["speaker_id"] = speaker_id
 
             utterance_cleaned = clean_json_utterance(utterance=utterance,
-                                                     remove_english=False,
-                                                     use_langid=False,
                                                      punctuation_to_collapse_by=punctuation_to_collapse_by,
-                                                     punctuation_to_explode_by=punctuation_to_explode_by)
+                                                     punctuation_to_explode_by=punctuation_to_explode_by,
+                                                     special_cases=special_cases,
+                                                     translation_tags=translation_tags,
+                                                     remove_english=False,
+                                                     use_langid=False)
             add_annotation(file_name, utterance_cleaned)
 
 

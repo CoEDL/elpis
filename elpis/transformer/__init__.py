@@ -14,7 +14,7 @@ import threading
 
 from inspect import signature
 from multiprocessing.dummy import Pool
-from typing import List, Dict, Callable
+from typing import Callable, Dict, List, Optional, Set, Union
 from pathlib import Path
 
 from elpis.engines.common.input.resample_audio import process_item
@@ -27,11 +27,8 @@ AddAudioFunction = Callable[[str, str], None]
 FileImporterType = Callable[[List[str], Dict, AnnotationFunction], None]
 DirImporterType = Callable[[str, Dict, AnnotationFunction, AddAudioFunction], None]
 AudioProcessingFunction = Callable[[List[str], Dict, AddAudioFunction], None]
-
 SettingsChangeCallback = Callable[[dict, dict], None]
-
-
-PathList = List[str] # a list of paths to file
+PathList = List[str]  # a list of paths to file
 FilteredPathList = Dict[str, PathList]
 
 # WARNING: All other python files in this directory with the exception of this one should be a data transformer.
@@ -45,7 +42,7 @@ FilteredPathList = Dict[str, PathList]
 # that identifies the audio resource. IDs are unique and are derived from the
 # names of the audio files without the extention. Every ID will then start with
 # en empty list of annotations. Import functions can then make calls to a
-# callback (add_annotation) that appends an anotaion dictiornary to the IDs
+# callback (add_annotation) that appends an annotation dictionary to the IDs
 # list.
 
 def copyJSONable(obj):
@@ -69,15 +66,15 @@ class DataTransformer:
     """
 
     def __init__(self,
-                    name: str,
-                    settings: Dict,
-                    ui: List,
-                    callback_get_config,
-                    callback_set_config,
-                    settings_change_callback: SettingsChangeCallback
-                    ):
+                 name: str,
+                 settings: Dict,
+                 ui: List,
+                 callback_get_config,
+                 callback_set_config,
+                 settings_change_callback: SettingsChangeCallback
+                 ):
 
-        # Varialbles to be saved between in non-volitile memory exist in the config
+        # Variables to be saved between in non-volatile memory exist in the config
         config = {}
 
         # save the callbacks for getting/setting importer/exporter configurations
@@ -90,9 +87,9 @@ class DataTransformer:
 
         # settings is mutable and is stored in the dataset.config (on disk)
         config['settings'] = settings
-        self._settings_change_callback = settings_change_callback # TODO: name change 'context' -> 'settings'
+        self._settings_change_callback = settings_change_callback  # TODO: name change 'context' -> 'settings'
 
-        # annotation_store: collection of (ID -> List[annotaion obj]) pairs
+        # annotation_store: collection of (ID -> List[annotation obj]) pairs
         self._annotation_store = {}
         # audio_store: collection of (ID -> audio_file_path) pairs
         self._audio_store = {}
@@ -100,7 +97,7 @@ class DataTransformer:
         self._callback_set_config(config)
 
         self._validaters = {}
-        self._ui_updater = None # Gets replaced by callback (used on file addition)
+        self._ui_updater = None  # Gets replaced by callback (used on file addition)
         self._extentions = []
 
     def process(self):
@@ -130,8 +127,8 @@ class DataTransformer:
         """
         config = self._callback_get_config()
         settings = config['settings']
-        settings[key] = value # TODO handle error if key is not already in settings.
-        settings_for_callback = copyJSONable(settings) # TODO handle error if not JSONable
+        settings[key] = value  # TODO handle error if key is not already in settings.
+        settings_for_callback = copyJSONable(settings)  # TODO handle error if not JSONable
         self._settings_change_callback(settings_for_callback)
         config['settings'] = settings
         self._callback_set_config(config)
@@ -155,7 +152,6 @@ class DataTransformerAbstractFactory:
     to build(). All other functions are decotators for creating methods for
     the DataTransformer being built.
     """
-
 
     # Class variable _transformer_factories contains a mapping from a
     # transformer name to the unique object factory for that transformer. As
@@ -184,14 +180,14 @@ class DataTransformerAbstractFactory:
             raise ValueError(f'DataTransformerAbstractFactory with name "{name}" already exists')
         self._transformer_factories[name] = self
 
-        # Context proxy variables to copy to the instanciated class
+        # Context proxy variables to copy to the instantiated class
         self._import_settings = {}
         self._export_settings = {}
 
         # GUI configurations
-        self._import_ui_data_config = {} # name -> {}
+        self._import_ui_data_config = {}  # name -> {}
         self._export_ui_data_config = {}
-        self._import_ui_type_config = {} # name -> type
+        self._import_ui_type_config = {}  # name -> type
         self._export_ui_type_config = {}
         self._import_ui_order_config = []
         self._export_ui_order_config = []
@@ -405,7 +401,7 @@ class DataTransformerAbstractFactory:
             RuntimeError: if the decorated function name is repeated or invalid.
             RuntimeError: if the decorated function does not have three parameters.
         """
-        if self._export_callback != None:
+        if self._export_callback is not None:
             raise RuntimeError('export used, therefore cannot use export')
         if f.__name__ in self._attributes:
             raise NameError('bad function name. Already used')
@@ -419,131 +415,150 @@ class DataTransformerAbstractFactory:
         self._export_callback = f
         self._obj_to_attr_name[f] = f.__name__
         return f
-    
-    def _type_to_str(self, t):
-        if t == str:
-            return 'str'
-        if t == int:
-            return 'int'
-        if isinstance(t, list):
-            # TODO: check the types in t
-            return t
-        print("t:", t, ":", type(t), ': t is list =', t is list, ": type(t) == list = ", type(t) == list)
-        raise ValueError(f'type \'{t}\' is not a valid type')
 
-    def import_setting(self, key, type, default=None, display_name=None, description=None):
+    def import_setting(self,
+                       key: str = '',
+                       ui_format: Optional[str] = None,
+                       default: Union[List[str], Set[str], int, str] = '',
+                       display_name: str = '',
+                       description: str = '',
+                       options: Optional[List[str]] = None):
         """
         Add a field to the import context.
-
-        :param key: the name of the field. TODO: change 'key' -> 'name'
-        :param type: the type of the field (must be JSONable)
+        :param key: the name of the field.
+        :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
         :param default: (Optional) default value of the field.
-        TODO: add display name
-        :param ui: (Optional) ui configuration TODO: replace with description
+        :param display_name: (Optional) human-readable name for the setting.
+        :param description: (Optional) human-readable description of what the setting is for.
+        :param options: (Optional) if set, this will be dynamically populated when files are parsed.
         :raises:
-            RuntimeError: if the key has already been specified as an import setting or in the default context.
+            ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
         if key in self._import_settings:
             raise ValueError(f'key "{key}" already in the import context')
         self._import_settings[key] = default
         self._import_ui_data_config[key] = {
-            'type': self._type_to_str(type),
+            'ui_format': ui_format,
             'display_name': display_name,
-            'description': description
+            'description': description,
+            'options': options
         }
         self._import_ui_type_config[key] = 'setting'
         self._import_ui_order_config.append(key)
     
-    def export_setting(self, key, type, default=None, display_name=None, description=None):
+    def export_setting(self,
+                       key: str = '',
+                       ui_format: Optional[str] = None,
+                       default: Union[List[str], Set[str], int, str] = '',
+                       display_name: str = '',
+                       description: str = '',
+                       options: Optional[List[str]] = None):
         """
         Add a field to the export context.
-
         :param key: the name of the field.
-        :param type: the type of the field (must be JSONable)
+        :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
         :param default: (Optional) default value of the field.
-        TODO: add display name
-        :param ui: (Optional) ui configuration TODO: replace with description
+        :param display_name: (Optional) human-readable name for the setting.
+        :param description: (Optional) human-readable description of what the setting is for.
+        :param options: (Optional) if set, this will be dynamically populated when files are parsed.
         :raises:
-            RuntimeError: if the key has already been specified as an export setting or in the default context.
+            ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
         if key in self._export_settings:
             raise ValueError(f'key "{key}" already in the export context')
         self._export_settings[key] = default
         self._export_ui_data_config[key] = {
-            'type': self._type_to_str(type),
+            'ui_format': ui_format,
             'display_name': display_name,
-            'description': description
+            'description': description,
+            'options': options
         }
         self._export_ui_type_config[key] = 'setting'
         self._export_ui_order_config.append(key)
-    
-    def import_setting_title(self, title, description):
-        key = '_title_' + str(self._import_title_count)
-        self._import_title_count += 1
-        self._import_ui_data_config[key] = { 'title': title, 'description': description }
-        self._import_ui_type_config[key] = 'title'
-        self._import_ui_order_config.append(key)
-        return
-        
-    def export_setting_title(self, title, description):
-        key = '_title_' + str(self._export_title_count)
-        self._export_title_count += 1
-        self._export_ui_data_config[key] = { 'title': title, 'description': description }
-        self._export_ui_type_config[key] = 'title'
-        self._export_ui_order_config.append(key)
-        return
-        
-    def general_setting_title(self, title, description):
-        self.import_setting_title(title, description)
-        self.export_setting_title(title, description)
-        return
 
-    def general_setting(self, key, type, default=None, display_name=None, description=None):
+    def general_setting(self,
+                        key: str = '',
+                        ui_format: Optional[str] = None,
+                        default: Union[List[str], Set[str], int, str] = '',
+                        display_name: str = '',
+                        description: str = '',
+                        options: Optional[List[str]] = None):
         """
         Add a field to the both import and export context.
-
         :param key: the name of the field.
-        :param type: the type of the field (must be JSONable)
+        :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
         :param default: (Optional) default value of the field.
-        TODO: add display name
-        :param ui: (Optional) ui configuration TODO: replace with description
+        :param display_name: (Optional) human-readable name for the setting.
+        :param description: (Optional) human-readable description of what the setting is for.
+        :param options: (Optional) if set, this will be dynamically populated when files are parsed.
         :raises:
-            RuntimeError: if the key has already been specified as an import or export setting, or in the default context.
+            ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
         if key in self._import_settings:
             raise ValueError(f'key "{key}" already in the import context')
         if key in self._export_settings:
             raise ValueError(f'key "{key}" already in the export context')
-        self.import_setting(key, type, default=default, display_name=display_name, description=description)
-        self.export_setting(key, type, default=default, display_name=display_name, description=description)
-    
+        self.import_setting(key=key,
+                            ui_format=ui_format,
+                            default=default,
+                            display_name=display_name,
+                            description=description,
+                            options=options)
+        self.export_setting(key=key,
+                            ui_format=ui_format,
+                            default=default,
+                            display_name=display_name,
+                            description=description,
+                            options=options)
+
+    def import_setting_title(self, title: str, description: str):
+        key = '_title_' + str(self._import_title_count)
+        self._import_title_count += 1
+        self._import_ui_data_config[key] = {'title': title,
+                                            'description': description}
+        self._import_ui_type_config[key] = 'title'
+        self._import_ui_order_config.append(key)
+        return
+
+    def export_setting_title(self, title: str, description: str):
+        key = '_title_' + str(self._export_title_count)
+        self._export_title_count += 1
+        self._export_ui_data_config[key] = {'title': title,
+                                            'description': description}
+        self._export_ui_type_config[key] = 'title'
+        self._export_ui_order_config.append(key)
+        return
+
+    def general_setting_title(self, title: str, description: str):
+        self.import_setting_title(title=title, description=description)
+        self.export_setting_title(title=title, description=description)
+        return
+
     def is_import_capable(self):
-        if self._import_directory_callback != None:
+        if self._import_directory_callback is not None:
             return True
         if len(self._import_extension_callbacks) != 0:
             return True
         return False
     
     def is_export_capable(self):
-        return self._export_callback != None
+        return self._export_callback is not None
 
     def replace_reprocess_audio(self, f):
-        """"""
-        if self._audio_processing_callback != None:
+        if self._audio_processing_callback is not None:
             raise RuntimeError('replace_reprocess_audio can only be specified once')
         self._audio_processing_callback = f
         return f
 
     def build_importer(self,
-                        collection_path: str,
-                        resampled_path: str,
-                        temporary_directory_path: str,
-                        transcription_json_file_path: str,
-                        get_config_callback,
-                        set_config_callback,
-                        settings_change_callback: SettingsChangeCallback
-                    ) -> DataTransformer:
-
+                       collection_path: str,
+                       resampled_path: str,
+                       temporary_directory_path: str,
+                       transcription_json_file_path: str,
+                       get_config_callback,
+                       set_config_callback,
+                       settings_change_callback: SettingsChangeCallback
+                       ) -> DataTransformer:
         # check arguments
         if not Path(collection_path).is_dir():
             raise RuntimeError('path to collection does not exist')
@@ -589,11 +604,11 @@ class DataTransformerAbstractFactory:
         add_audio = lambda id, audio_path: dt._audio_store.update({id: audio_path})
 
         # Make attributes for dt to be called directly.
-        if self._import_directory_callback != None:
+        if self._import_directory_callback is not None:
             # Make wrapper for import_directory_callback
             f = self._import_directory_callback
-            def wrapper():
 
+            def wrapper():
                 nonlocal dt
                 nonlocal f
                 nonlocal collection_path
@@ -611,6 +626,7 @@ class DataTransformerAbstractFactory:
             setattr(dt, self._obj_to_attr_name[f], wrapper)
             # Construct the process function
             obj_to_attr_name = self._obj_to_attr_name
+
             def import_directory_process():
                 # do not reference self in this closure
                 nonlocal dt
@@ -638,6 +654,7 @@ class DataTransformerAbstractFactory:
         else:
             # make wrapper for import_files (accepts one argument)
             for _ext, f in self._import_extension_callbacks.items():
+
                 def wrapper(file_paths: str):
                     """
                     Attribute that is assigned to the DataTransformer. This
@@ -656,10 +673,11 @@ class DataTransformerAbstractFactory:
                 setattr(dt, self._obj_to_attr_name[f], wrapper)
             # Construct the process function
             audio_processing_callback = self._audio_processing_callback
-            if audio_processing_callback == None:
+            if audio_processing_callback is None:
                 audio_processing_callback = _default_audio_resampler
             import_extension_callbacks = self._import_extension_callbacks
             audio_extention = self._audio_extention
+
             def import_files_process():
                 """
                 Handler that is set to the .process() function.
@@ -695,7 +713,7 @@ class DataTransformerAbstractFactory:
                     for id in dt._annotation_store:
                         annotations.extend(dt._annotation_store[id])
                     fout.write(json.dumps(annotations))
-                return # import_files_process
+                return  # import_files_process
             setattr(dt, 'process', import_files_process) # Override this function
 
         # add validators
@@ -739,19 +757,20 @@ class DataTransformerAbstractFactory:
         )
         return dt
 
+
 def _default_settings_change_callback(settings):
     pass
 
-def make_importer(name: str,
-                    collection_path: str,
-                    resampled_path: str,
-                    temporary_directory_path: str,
-                    transcription_json_file_path: str,
-                    get_config_callback,
-                    set_config_callback,
-                    settings_change_callback=_default_settings_change_callback
 
-                ) -> DataTransformer:
+def make_importer(name: str,
+                  collection_path: str,
+                  resampled_path: str,
+                  temporary_directory_path: str,
+                  transcription_json_file_path: str,
+                  get_config_callback,
+                  set_config_callback,
+                  settings_change_callback=_default_settings_change_callback
+                  ) -> DataTransformer:
     if name not in DataTransformerAbstractFactory._transformer_factories:
         raise ValueError(f'data transformer factory with name "{name}" not found')
     dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[name]
@@ -768,15 +787,16 @@ def make_importer(name: str,
     )
     return dt
 
+
 def make_exporter(name: str,
-                    collection_path: str,
-                    resampled_path: str,
-                    temporary_directory_path: str,
-                    transcription_json_file_path: str,
-                    get_config_callback,
-                    set_config_callback,
-                    settings_change_callback=_default_settings_change_callback
-                ) -> DataTransformer:
+                  collection_path: str,
+                  resampled_path: str,
+                  temporary_directory_path: str,
+                  transcription_json_file_path: str,
+                  get_config_callback,
+                  set_config_callback,
+                  settings_change_callback=_default_settings_change_callback
+                  ) -> DataTransformer:
     if name not in DataTransformerAbstractFactory._transformer_factories:
         raise ValueError(f'data transformer factory with name "{name}" not found')
     dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[name]
@@ -789,14 +809,13 @@ def make_exporter(name: str,
         transcription_json_file_path,
         get_config_callback,
         set_config_callback,
-        settings_change_callback
-    )
+        settings_change_callback)
     return dt
+
 
 def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
     """
     Separate all files into lists by file extention.
-
     :param dir_path: Filesystem path to contents directory.
     :return: Dictionary of extentions as keys and lists of assocciated paths as values.
     """
@@ -817,11 +836,11 @@ def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
             extention_to_files[extention].append(f'{file_path}')
     return extention_to_files
 
+
 def _default_audio_resampler(audio_paths: List[str], resampled_dir_path: str, add_audio: AddAudioFunction, temp_dir_path: str):
     """
     A default audio resampler that converts any media accepted by sox to a
     standard format specified in process_item.
-
     :param audio_paths: list of paths to audio files to resample.
     :param resampled_dir_path: path to a directory to save the resampled files to.
     :param add_audio: callback to register the audio with the importer.
@@ -852,19 +871,6 @@ def _default_audio_resampler(audio_paths: List[str], resampled_dir_path: str, ad
             resampled_file_path = f'{resampled_dir_path.joinpath(file_name)}'
             add_audio(id, resampled_file_path)
 
-# # import other python files in this directory as data transformers.
-# def _import_instanciated_data_transformers():
-#     names = os.listdir('elpis/transformer')
-#     try:
-#         names.remove('__init__.py')
-#     except ValueError:
-#         pass # '__init__.py' not in the list and that's okay.
-#     # Only keep python files
-#     names = [name[:-len('.py')] for name in names if name.endswith('.py')]
-#     for importer_file_name in names:
-#         i = importlib.import_module('elpis.transformer.' + importer_file_name)
-#         print(dir(i))
-#         print(DataTransformerAbstractFactory._transformer_factories)
-# _import_instanciated_data_transformers()
 
+# Add your transformer to import_list.py and it will be loaded globally
 from . import import_list
