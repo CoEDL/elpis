@@ -33,7 +33,8 @@ def transcribe():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     transcription.transcribe(on_complete=lambda: print('Transcribed text!'))
     data = {
-        "status": transcription.status
+        "status": transcription.status,
+        "stage_status": transcription.stage_status
     }
     return jsonify({
         "status": 200,
