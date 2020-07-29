@@ -5,6 +5,8 @@
 # Put typical Kaldi binaries onto the path
 . ./path.sh
 
+export PATH=$PATH:/kaldi/src/online2bin
+
 # Apply cepstral mean variance normalisation and add delta features
 echo "==== Applying CMVN ===="
 /kaldi/src/featbin/apply-cmvn --utt2spk=ark:data/infer/utt2spk \

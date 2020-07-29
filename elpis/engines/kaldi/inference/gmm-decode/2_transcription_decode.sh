@@ -5,6 +5,8 @@
 # Put typical Kaldi binaries onto the path
 . ./path.sh
 
+export PATH=$PATH:/kaldi/src/online2bin
+
 # Decodes all audio in the wav.scp path specified above
 echo "==== Decoding (Transcription) ===="
 

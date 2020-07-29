@@ -5,6 +5,12 @@
 # Put typical Kaldi binaries onto the path
 . ./path.sh
 
+export PATH=$PATH:/kaldi/src/online2bin
+
+source /venv/bin/activate
+
+echo "${recid} ${audio}" > ./data/infer/split1/1/wav.scp
+
 echo "==== Converting Textgrid to ELAN ===="
 # python /kaldi-helpers/kaldi_helpers/output_scripts/textgrid_to_elan.py \
 python /elpis/elpis/engines/common/output/textgrid_to_elan.py \

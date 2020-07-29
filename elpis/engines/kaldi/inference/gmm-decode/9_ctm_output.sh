@@ -5,6 +5,8 @@
 # Put typical Kaldi binaries onto the path
 . ./path.sh
 
+export PATH=$PATH:/kaldi/src/online2bin
+
 # REPORT OUTPUT (CTM is the only concise format)
 echo "CTM output:"
 cat ./data/infer/align-words-best-wordkeys.ctm

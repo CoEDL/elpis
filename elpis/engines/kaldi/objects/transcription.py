@@ -12,7 +12,6 @@ import contextlib
 class KaldiTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.config['stage_status'] = {}
         stage_names = {
             "0_feature_vec.sh": "Extracting feature vectors",
             "1_cmvn.sh": "Applying CMVN",
@@ -25,7 +24,7 @@ class KaldiTranscription(BaseTranscription):
             "8_textgrid_elan.sh": "Converting Textgrid to ELAN",
             "9_ctm_output.sh": "CTM output"
         }
-        self.build_stage_status(stage_names)
+        super().build_stage_status(stage_names)
         self.audio_file_path = self.path.joinpath('audio.wav')
 
     @classmethod
@@ -104,9 +103,21 @@ class KaldiTranscription(BaseTranscription):
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-        dir_util.copy_tree(gmm_decode_path, f"{kaldi_infer_path.joinpath('gmm-decode')}")
-        subprocess.run('sh /elpis/elpis/engines/kaldi/inference/gmm-decode-long.sh'.split(),
+        # Copy parts of transcription process and chmod
+        dir_util.copy_tree(f'{gmm_decode_path}', f"{kaldi_infer_path.joinpath('gmm-decode')}")
+        stages = os.listdir(kaldi_infer_path.joinpath('gmm-decode'))
+        for file in stages:
+            os.chmod(kaldi_infer_path.joinpath('gmm-decode').joinpath(file), 0o774)
+        for stage in sorted(stages):
+            print(f"======== STAGE {stage} STARTING ========")
+            self.stage_status = (stage, 'in-progress', '')
+            p = subprocess.run(f'{kaldi_infer_path.joinpath("gmm-decode", stage)}', \
                        cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
+            print(f"======== STAGE {stage} COMPLETE ========")
+            self.stage_status = (stage, 'complete', '')
+        
+        # subprocess.run('sh /elpis/elpis/engines/kaldi/inference/gmm-decode-long.sh'.split(),
+                    #    cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
         file_util.copy_file(f"{kaldi_infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
         file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
         self.status = "transcribed"
@@ -126,9 +137,3 @@ class KaldiTranscription(BaseTranscription):
     def elan(self):
         with open(f'{self.path}/{self.hash}.eaf', 'rb') as fin:
             return fin.read()
-
-    def build_stage_status(self, stage_names: Dict[str, str]):
-        for stage_file, stage_name in stage_names.items():
-            stage_status = self.config['stage_status']
-            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': ''}})
-            self.config['stage_status'] = stage_status
