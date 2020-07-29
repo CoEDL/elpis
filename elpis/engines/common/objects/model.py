@@ -50,8 +50,8 @@ class Model(FSObject):  # TODO not thread safe
         self.config['log'] = value
 
     @stage_status.setter
-    def stage_status(self, vals: Tuple[str, str, str]):
-        stage, status, message = vals
+    def stage_status(self, status_info: Tuple[str, str, str]):
+        stage, status, message = status_info
         stage_status = self.config['stage_status']
         stage_status[stage]['status'] = status
         stage_status[stage]['message'] = message
