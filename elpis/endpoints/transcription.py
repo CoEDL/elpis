@@ -46,6 +46,7 @@ def status():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     data = {
         "status": transcription.status,
+        "stage_status": transcription.stage_status,
         "type": transcription.type
     }
     return jsonify({
