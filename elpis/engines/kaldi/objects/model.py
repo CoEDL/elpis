@@ -173,17 +173,10 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
                 # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/corpus.txt {{ .KALDI_OUTPUT_PATH }}/kaldi/data/local/
                 shutil.move(f"{output_path.joinpath('training', 'corpus.txt')}", f"{kaldi_data_local}")
-
-                # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/segments {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/
-                # testing/text {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/testing/utt2spk {{ .KALDI_OUTPUT_PATH }}/tmp/json_
-                # splitted/testing/wav.scp {{ .KALDI_OUTPUT_PATH }}/kaldi/data/test/
                 shutil.move(f"{output_path.joinpath('testing', 'segments')}", f"{kaldi_data_test.joinpath('segments')}")
                 shutil.move(f"{output_path.joinpath('testing', 'text')}", f"{kaldi_data_test.joinpath('text')}")
                 shutil.move(f"{output_path.joinpath('testing', 'utt2spk')}", f"{kaldi_data_test.joinpath('utt2spk')}")
                 shutil.move(f"{output_path.joinpath('testing', 'wav.scp')}", f"{kaldi_data_test.joinpath('wav.scp')}")
-                # - cp {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/segments {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted
-                # /training/text {{ .KALDI_OUTPUT_PATH }}/tmp/json_splitted/training/utt2spk {{ .KALDI_OUTPUT_PATH }}/tmp/json
-                # _splitted/training/wav.scp {{ .KALDI_OUTPUT_PATH }}/kaldi/data/train/
                 shutil.move(f"{output_path.joinpath('training', 'segments')}", f"{kaldi_data_train.joinpath('segments')}")
                 shutil.move(f"{output_path.joinpath('training', 'text')}", f"{kaldi_data_train.joinpath('text')}")
                 shutil.move(f"{output_path.joinpath('training', 'utt2spk')}", f"{kaldi_data_train.joinpath('utt2spk')}")
@@ -197,23 +190,13 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 with silence_phones_file_path.open(mode='w') as fout:
                     fout.write('SIL\nsil\nspn\n')
 
-                # task copy-helper-scripts
-                # - cp {{ .KALDI_TEMPLATES }}/cmd.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
                 shutil.copy(f"{template_path.joinpath('cmd.sh')}", f"{local_kaldi_path}")
-                # - cp {{ .KALDI_TEMPLATES }}/run.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/
-                # with open(f"{template_path.joinpath('run.sh')}", 'r') as fin, \
-                #         open(f"{local_kaldi_path.joinpath('run.sh')}", 'w') as fout:
-                #     fout.write(fin.read().replace('lm_order=1', f"lm_order={self.ngram}"))
-                # os.chmod(f"{local_kaldi_path.joinpath('run.sh')}", 0o774)
                 shutil.copytree(f"{template_path.joinpath('stages')}", local_kaldi_path.joinpath('stages'))
                 for file in os.listdir(local_kaldi_path.joinpath('stages')):
                     os.chmod(local_kaldi_path.joinpath('stages').joinpath(file), 0o774)
 
-                # - cp {{ .KALDI_TEMPLATES }}/score.sh {{ .KALDI_OUTPUT_PATH }}/kaldi/local/
                 shutil.copy(f"{template_path.joinpath('score.sh')}", f"{kaldi_local}")
-                # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/steps {{ .KALDI_OUTPUT_PATH }}/kaldi/steps
                 run(f"cp -L -r /kaldi/egs/wsj/s5/steps {local_kaldi_path}/steps")
-                # - cp -L -r {{ .KALDI_ROOT }}/egs/wsj/s5/utils {{ .KALDI_OUTPUT_PATH }}/kaldi/utils
                 run(f"cp -L -r /kaldi/egs/wsj/s5/utils {local_kaldi_path}/utils")
 
                 # modified extract-wavs

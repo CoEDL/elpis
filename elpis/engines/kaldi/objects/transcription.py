@@ -15,7 +15,7 @@ class KaldiTranscription(BaseTranscription):
         super().__init__(**kwargs)
         stage_names = {
             "0_feature_vec.sh": "Extracting feature vectors",
-            "1_cmvn.sh": "Applying CMVN",
+            "1_model_creation.sh": "Creating model",
             "2_transcription_decode.sh": "Decoding (transcription)",
             "3_transcription_best_path.sh": "Finding best path (transcription)",
             "4_word_boundaries.sh": "Adding word boundaries to FST",
@@ -123,7 +123,7 @@ class KaldiTranscription(BaseTranscription):
             self.stage_status = (stage, 'in-progress', '')
             # Setup logging
             args = ['bash', '-c', f'touch {run_log_path}; sh {kaldi_infer_path.joinpath("gmm-decode", stage)} >> {run_log_path}']
-            p = subprocess.run(args, cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
+            subprocess.run(args, cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
             print(f"======== STAGE {stage} COMPLETE ========")
             self.stage_status = (stage, 'complete', '')
         
