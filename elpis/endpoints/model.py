@@ -110,7 +110,8 @@ def train():
                         "data": "No current model exists (perhaps create one first)"})
     model.train(on_complete=lambda: print("Training complete!"))
     data = {
-        "status": model.status
+        "status": model.status,
+        "stage_status": model.stage_status
     }
     return jsonify({
         "status": 200,
@@ -125,13 +126,27 @@ def status():
         return jsonify({"status": 404,
                         "data": "No current model exists (perhaps create one first)"})
     data = {
-        "status": model.status
+        "status": model.status,
+        "stage_status": model.stage_status
     }
     return jsonify({
         "status": 200,
         "data": data
     })
 
+@bp.route("/log", methods=['GET'])
+def log():
+    model: Model = app.config['CURRENT_MODEL']
+    if model is None:
+        return jsonify({"status": 404,
+                        "data": "No current model exists (perhaps create one first)"})
+    data = {
+        "log": model.log
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 @bp.route("/results", methods=['GET'])
 def results():
