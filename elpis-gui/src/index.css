@@ -108,3 +108,9 @@ label.pad-right,
 .ui.table.settings .description {
     font-weight: normal
 }
+
+.stages { margin-top: 1em}
+
+.stage .divider {
+    margin: 0 0.5em
+}
