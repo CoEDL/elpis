@@ -93,10 +93,11 @@ class EspnetTranscription(BaseTranscription):
         prepare_log_path = Path(self.model.path) / "prepare_transcribe_log.txt"
         transcribe_log_path = Path(self.model.path) / "transcribe_log.txt"
         from elpis.engines.common.objects.command import run
-        run(f"cd {local_espnet_path}; ./run.sh --nj 1 --stage 0 --stop_stage 2 --recog_set infer &> {prepare_log_path}")
-        run(f"cd {local_espnet_path}; ./run.sh --nj 1 --stage 5 --recog_set infer &> {transcribe_log_path}")
-        file_util.copy_file(f"{infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
-        file_util.copy_file(f"{infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
+        run(f"cd {local_espnet_path}; ./decode.sh --nj 1 --stage 0 --stop_stage 2 --recog_set infer &> {prepare_log_path}")
+        run(f"cd {local_espnet_path}; ./decode.sh --nj 1 --stage 5 --recog_set infer &> {transcribe_log_path}")
+        # TODO Need to produce an output eaf.
+        #file_util.copy_file(f"{infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
+        #file_util.copy_file(f"{infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
         self.status = "transcribed"
         if on_complete is not None:
             on_complete()
