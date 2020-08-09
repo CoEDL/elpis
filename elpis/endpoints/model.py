@@ -36,9 +36,7 @@ def new():
     model.link_dataset(dataset)
     app.config['CURRENT_DATASET'] = dataset
     if 'engine' in request.json and request.json['engine'] == 'kaldi':
-        print("here")
         pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
-        print(request.json['pron_dict_name'])
         model.link_pron_dict(pron_dict)
         app.config['CURRENT_PRON_DICT'] = pron_dict
         model.build_kaldi_structure()
