@@ -23,15 +23,17 @@ const model = (state = initState, action) => {
                     error: action.response.data.error
                 }
             } else {
-                var {name} = action.response.data.data.config
+                const {name, dataset_name, pron_dict_name} = action.response.data.data.config
                 return {
                     ...initState,
-                    name
+                    name,
+                    datasetName: dataset_name,
+                    pronDictName: pron_dict_name
                 }
             }
 
         case actionTypes.MODEL_LOAD_SUCCESS:
-            var { config } = action.response.data.data
+            var { config } = action.response.data.data.config
             return {
                 ...state,
                 name: config.name,
@@ -81,6 +83,7 @@ const model = (state = initState, action) => {
                 console.log(data)
                 return { ...state }
             }
+
 
         default:
             return { ...state }

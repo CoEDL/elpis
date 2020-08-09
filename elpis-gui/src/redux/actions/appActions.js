@@ -65,7 +65,7 @@ const engineLoadFailure = error => ({
     response: { error }
 })
 
-/* * * * * * * * * * * *  LIST * * * * * * * * * * *  */
+/* * * * * * * * * * * *  ENGINE LIST * * * * * * * * * * *  */
 
 export function engineList() {
     const url = baseUrl + urls.api.engine.list
@@ -96,3 +96,39 @@ const engineListFailure = error => ({
     type: actionTypes.ENGINE_LIST_FAILURE,
     response: { error }
 })
+
+
+/* * * * * * * * * * * *  INTERFACE * * * * * * * * * * *  */
+
+// this loads all the names of datasets, pron_dicts, models that have been made
+
+export function interfaceObjectNames() {
+    const url = baseUrl + urls.api.interface.objectNames
+    var responseData
+    return async dispatch => {
+        dispatch(interfaceObjectNamesStarted())
+        await axios.get(url)
+            .then(response => {
+                responseData = response.data
+                dispatch(interfaceObjectNamesSuccess(response))
+            })
+            .catch(error => {
+                dispatch(interfaceObjectNamesFailure(error))
+                throw error
+        })
+        return responseData
+    }
+}
+
+const interfaceObjectNamesStarted = () => ({
+    type: actionTypes.CONFIG_OBJECT_NAMES_STARTED
+})
+const interfaceObjectNamesSuccess = response => ({
+    type: actionTypes.CONFIG_OBJECT_NAMES_SUCCESS,
+    response: { ...response }
+})
+const interfaceObjectNamesFailure = error => ({
+    type: actionTypes.CONFIG_OBJECT_NAMES_FAILURE,
+    response: { error }
+})
+
