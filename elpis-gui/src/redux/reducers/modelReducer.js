@@ -24,6 +24,7 @@ const model = (state = initState, action) => {
                 }
             } else {
                 const {name, dataset_name, pron_dict_name} = action.response.data.data.config
+                // pron_dict_name could be null if not using pron dicts
                 return {
                     ...initState,
                     name,
@@ -33,13 +34,14 @@ const model = (state = initState, action) => {
             }
 
         case actionTypes.MODEL_LOAD_SUCCESS:
-            var { config } = action.response.data.data.config
+            var { name, dataset_name, pron_dict_name, ngram } = action.response.data.data.config
+            // pron_dict_name could be null if not using pron dicts
             return {
                 ...state,
-                name: config.name,
-                datasetName: config.dataset_name,
-                pronDictName: config.pron_dict_name,
-                settings: {...state.settings, ngram: config.ngram},
+                name: name,
+                datasetName: dataset_name,
+                pronDictName: pron_dict_name,
+                settings: {...state.settings, ngram: ngram},
                 status: 'ready'
             }
 

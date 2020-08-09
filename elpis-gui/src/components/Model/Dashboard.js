@@ -165,7 +165,13 @@ const mapDispatchToProps = dispatch => ({
     modelLoad: (modelData, datasetData, pronDictData) => {
         dispatch(modelLoad(modelData))
             .then( response => dispatch(datasetLoad(datasetData)))
-            .then( response => dispatch(pronDictLoad(pronDictData)))
+            .then( response => {
+                if (pronDictData.name) {
+                    return dispatch(pronDictLoad(pronDictData))
+                } else {
+                    console.log("No pron dict to load for this model")
+                }
+            })
     }
 })
 

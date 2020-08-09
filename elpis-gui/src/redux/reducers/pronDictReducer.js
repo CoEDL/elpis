@@ -41,7 +41,6 @@ const pronDict = (state = initState, action) => {
             }
 
         case actionTypes.PRON_DICT_LIST_SUCCESS:
-            console.log("got pron dict list", action.response.data)
             var { list } = action.response.data.data
             return {
                 ...state,
