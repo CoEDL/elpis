@@ -46,9 +46,8 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     def has_been_trained(self):
         return self.status == 'trained'
 
-    def link(self, dataset: Dataset, pron_dict: PronDict):
-        self.dataset = dataset
-        self.config['dataset_name'] = dataset.name
+    def link_pron_dict(self, pron_dict: PronDict):
+        print("**** linking Kaldi model with pron dict")
         self.pron_dict = pron_dict
         self.config['pron_dict_name'] = pron_dict.name
 
