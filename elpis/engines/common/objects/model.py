@@ -4,7 +4,6 @@ from typing import Optional, Tuple, Dict
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.objects.path_structure import PathStructure
-from elpis.engines.common.objects.pron_dict import PronDict
 
 
 class ModelFiles(object):
@@ -63,8 +62,6 @@ class Model(FSObject):  # TODO not thread safe
             stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': ''}})
             self.config['stage_status'] = stage_status
 
-    def link(self, dataset: Dataset, pron_dict: PronDict):
+    def link_dataset(self, dataset: Dataset):
         self.dataset = dataset
         self.config['dataset_name'] = dataset.name
-        self.pron_dict = pron_dict
-        self.config['pron_dict_name'] = pron_dict.name

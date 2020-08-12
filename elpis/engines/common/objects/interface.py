@@ -220,7 +220,8 @@ class Interface(FSObject):
         hash_dir = self.config['models'][mname]
         m = self.engine.model.load(self.models_path.joinpath(hash_dir))
         m.dataset = self.get_dataset(m.config['dataset_name'])
-        m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
+        if m.config['pron_dict_name'] is not None:
+            m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
         return m
 
     def list_models(self):

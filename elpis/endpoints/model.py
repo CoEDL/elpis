@@ -31,12 +31,16 @@ def new():
             "status": 500,
             "error": e.human_message
         })
-    pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
-    dataset = interface.get_dataset(pron_dict.dataset.name)
-    model.link(dataset, pron_dict)
-    model.build_kaldi_structure()
+
+    dataset = interface.get_dataset(request.json['dataset_name'])
+    model.link_dataset(dataset)
     app.config['CURRENT_DATASET'] = dataset
-    app.config['CURRENT_PRON_DICT'] = pron_dict
+    if 'engine' in request.json and request.json['engine'] == 'kaldi':
+        pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
+        model.link_pron_dict(pron_dict)
+        app.config['CURRENT_PRON_DICT'] = pron_dict
+        model.build_kaldi_structure()
+
     app.config['CURRENT_MODEL'] = model
     data = {
         "config": model.config._load()

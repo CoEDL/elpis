@@ -37,7 +37,7 @@ def engine_load():
     engine_name = request.json["engine_name"]
     if engine_name not in ENGINES:
         return jsonify({"status": 404,
-                        "data": "No current dataset exists (perhaps create one first)"})
+                        "data": "Engine not found in ENGINES"})
     engine = ENGINES[engine_name]
     interface = app.config['INTERFACE']
     interface.set_engine(engine)
@@ -48,3 +48,21 @@ def engine_load():
         "status": 200,
         "data": data
     })
+
+
+@bp.route("/object-names", methods=['GET', 'POST'])
+def object_names():
+    interface: Interface = app.config['INTERFACE']
+    data = {
+        "object_names": {
+            "datasets": interface.list_datasets(),
+            "pron_dicts": interface.list_pron_dicts_verbose(),  # includes pd name and ds name
+            "models": interface.list_models()
+        }
+    }
+    print(data)
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
