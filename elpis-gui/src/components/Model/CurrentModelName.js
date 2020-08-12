@@ -23,8 +23,12 @@ class CurrentModelName extends Component {
             <Message color='olive'>
                     {t('dataset.common.currentDatasetLabel') + datasetName}
                     <br />
+                {pronDictName &&
+                    <>
                     {t('pronDict.common.currentPronDictLabel') + pronDictName}
                     <br />
+                    </>
+                }
                 { t('model.common.currentModelLabel') + name }
             </Message>
         ) : (
@@ -44,8 +48,8 @@ class CurrentModelName extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
-        datasetName: state.dataset.name,
-        pronDictName: state.pronDict.name
+        datasetName: state.model.datasetName,
+        pronDictName: state.model.pronDictName
     }
 }
 export default withRouter(

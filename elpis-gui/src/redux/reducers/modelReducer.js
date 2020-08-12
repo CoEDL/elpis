@@ -23,21 +23,25 @@ const model = (state = initState, action) => {
                     error: action.response.data.error
                 }
             } else {
-                var {name} = action.response.data.data.config
+                const {name, dataset_name, pron_dict_name} = action.response.data.data.config
+                // pron_dict_name could be null if not using pron dicts
                 return {
                     ...initState,
-                    name
+                    name,
+                    datasetName: dataset_name,
+                    pronDictName: pron_dict_name
                 }
             }
 
         case actionTypes.MODEL_LOAD_SUCCESS:
-            var { config } = action.response.data.data
+            var { name, dataset_name, pron_dict_name, ngram } = action.response.data.data.config
+            // pron_dict_name could be null if not using pron dicts
             return {
                 ...state,
-                name: config.name,
-                datasetName: config.dataset_name,
-                pronDictName: config.pron_dict_name,
-                settings: {...state.settings, ngram: config.ngram},
+                name: name,
+                datasetName: dataset_name,
+                pronDictName: pron_dict_name,
+                settings: {...state.settings, ngram: ngram},
                 status: 'ready'
             }
 
@@ -81,6 +85,7 @@ const model = (state = initState, action) => {
                 console.log(data)
                 return { ...state }
             }
+
 
         default:
             return { ...state }

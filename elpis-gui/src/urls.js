@@ -47,6 +47,9 @@ export default {
             "list": "/api/config/engine/list",
             "load": "/api/config/engine/load"
         },
+        "interface": {
+            "objectNames": "/api/config/object-names",
+        },
         "pronDict": {
             "new": "/api/pron-dict/new",
             "load": "/api/pron-dict/load",

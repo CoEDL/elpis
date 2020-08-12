@@ -45,7 +45,6 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
             let dataset_state = action.response.data.data.state;
-            console.log("dataset load success, dataset_state", dataset_state)
             let {
                 name,
                 files,
@@ -144,6 +143,8 @@ const dataset = (state = initState, action) => {
                 console.log( data )
                 return { ...state }
             }
+
+
 
         default:
             return { ...state }

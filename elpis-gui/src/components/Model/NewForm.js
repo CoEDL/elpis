@@ -4,7 +4,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import { Button, Form, Input, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { pronDictList } from 'redux/actions/pronDictActions';
+import { interfaceObjectNames } from 'redux/actions/appActions';
 import { modelNew } from 'redux/actions/modelActions';
 import urls from 'urls'
 
@@ -13,24 +13,29 @@ class NewForm extends Component {
 
     // Get me a list of all the data sets and pron dicts we have
     componentDidMount() {
-        const { pronDictList } = this.props
-        pronDictList()
+        const { interfaceObjectNames } = this.props
+        interfaceObjectNames()
     }
 
 
     render() {
-        const { t, error, currentPronDict, pronDicts, modelNew } = this.props;
-
+        const { t, engine, error, currentDataset, datasets, currentPronDict, pronDicts, modelNew } = this.props;
         /**
-         *  If we have a current pron dict, pre-select that in the form,
+         *  If we have a current dataset or pron-dict, pre-select them in the form,
          *  else preselect the first item in each list.
          *  This allows the values to be passed to onsubmit without having to explicitly select either
         */
+        let defaultDatasetName = ''
+        if (currentDataset) {
+            defaultDatasetName = currentDataset
+        } else if (datasets.length > 0) {
+            defaultDatasetName = datasets[0]
+        }
         let defaultPronDictName = ''
         if (currentPronDict) {
             defaultPronDictName = currentPronDict
         } else if (pronDicts.length > 0) {
-            defaultPronDictName = pronDicts[0]["name"]
+            defaultPronDictName = pronDicts[0].name
         }
 
         return (
@@ -38,6 +43,7 @@ class NewForm extends Component {
                 enableReinitialize
                 initialValues={{
                     name: 'm',
+                    dataset_name: defaultDatasetName,
                     pron_dict_name: defaultPronDictName
                 }}
                 validate={values => {
@@ -52,7 +58,16 @@ class NewForm extends Component {
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    const modelData = { name: values.name, pron_dict_name: values.pron_dict_name }
+                    const filtered_pd = pronDicts.filter(pd => (pd.name == values.pron_dict_name))
+                    const modelData = { name: values.name, engine }
+                    if (engine === 'kaldi'){
+                        // Get the dataset name from the pron dicts setting if we are using Kaldi
+                        modelData["pron_dict_name"] = filtered_pd[0].name
+                        modelData["dataset_name"] = filtered_pd[0].dataset_name
+                    } else {
+                        // Non-kaldi, use the specified dataset
+                        modelData["dataset_name"] = values.dataset_name
+                    }
                     modelNew(modelData, this.props.history)
                 }}
             >
@@ -75,14 +90,30 @@ class NewForm extends Component {
                                 <ErrorMessage component="div" className="error" name="name" />
                             </Form.Field>
 
+                            {/* For Kaldi engines, base the model on the pron dict. Pron dicts have single dataset dependency */}
+                            {engine && engine == 'kaldi' &&
                             <Form.Field>
                                 <label>{t('model.new.selectPronDictLabel')}</label>
                                 <Field component="select" name="pron_dict_name">
-                                { pronDicts.map(pronDict =>
-                                    (<option key={pronDict.name} value={pronDict.name}>{pronDict.name} ( {pronDict.dataset_name} ) </option>))
-                                }
+                                    {pronDicts.map(pronDict =>
+                                        (<option key={pronDict.name} value={pronDict.name}>{pronDict.name} | {pronDict.dataset_name}</option>))
+                                    }
                                 </Field>
                             </Form.Field>
+                            }
+
+                            {/* If the engine is not Kaldi, base the model on a dataset only */}
+                            {engine && engine !== 'kaldi' &&
+                            <Form.Field>
+                                <label>{t('model.new.selectDatasetLabel')}</label>
+                                <Field component="select" name="dataset_name">
+                                    {datasets.map(dataset =>
+                                        (<option key={dataset} value={dataset}>{dataset}</option>))
+                                    }
+                                </Field>
+                            </Form.Field>
+                            }
+
                             {error &&
                                 <p className={"error-message"}>{error}</p>
                             }
@@ -98,23 +129,23 @@ class NewForm extends Component {
 
 const mapStateToProps = state => {
     return {
+        engine: state.sideNav.engine,
         name: state.model.name,
-        pronDicts: state.pronDict.pronDictList,
+        datasets: state.config.datasetList,
+        pronDicts: state.config.pronDictList,
+        currentDataset: state.dataset.name,
         currentPronDict: state.pronDict.name,
         error: state.model.error
     }
 }
 const mapDispatchToProps = dispatch => ({
-    pronDictList: () => {
-        dispatch(pronDictList())
+    interfaceObjectNames: () => {
+        dispatch(interfaceObjectNames())
     },
     modelNew: (postData, history) => {
-        // need to pass the new name, the selected pron_dict_name. we get its dataset_name in flask
         dispatch(modelNew(postData))
             .then(response => {
-                console.log('model response', response)
                 if (response.status===500) {
-                    console.log('response.status', response.status)
                     throw Error(response.error)
                 }
                 return response
