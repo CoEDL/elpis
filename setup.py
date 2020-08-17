@@ -19,12 +19,12 @@ with open('README.md', 'r') as readme:
 
 setup(
     name='elpis',
-    version='0.93.08',
+    version='0.94.2',
     packages=find_packages(),
     url='https://github.com/CoEDL/elpis',
     install_requires=requirements,
     include_package_data=True,
-    license='',
+    license='Apache-2.0',
     author='CoEDL',
     author_email='b.foley@uq.edu.au',
     description='',

@@ -2,8 +2,9 @@ from pathlib import Path
 from elpis.engines.common.input.resample import resample
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 import subprocess
-from typing import Callable
+from typing import Callable, Dict
 import os
+import shutil
 from distutils import dir_util, file_util
 import wave
 import contextlib
@@ -12,6 +13,19 @@ import contextlib
 class KaldiTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        stage_names = {
+            "0_feature_vec.sh": "Extracting feature vectors",
+            "1_model_creation.sh": "Creating model",
+            "2_transcription_decode.sh": "Decoding (transcription)",
+            "3_transcription_best_path.sh": "Finding best path (transcription)",
+            "4_word_boundaries.sh": "Adding word boundaries to FST",
+            "5_lattice_to_ctm.sh": "Converting lattice to CTM",
+            "6_word_idx_to_words.sh": "Translating word indexes to words",
+            "7_ctm_textgrid.sh": "Converting CTM to Textgrid",
+            "8_textgrid_elan.sh": "Converting Textgrid to ELAN",
+            "9_ctm_output.sh": "CTM output"
+        }
+        super().build_stage_status(stage_names)
         self.audio_file_path = self.path.joinpath('audio.wav')
 
     @classmethod
@@ -56,6 +70,12 @@ class KaldiTranscription(BaseTranscription):
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
+        # wipe previous dir to avoid file_exists errors
+        infer_path = Path(self.model.path).joinpath(
+            'kaldi/exp/tri1_online')
+        if infer_path.exists():
+            shutil.rmtree(f'{infer_path}')
+            infer_path.mkdir(parents=True, exist_ok=True)
         # _process_audio_file above a file named audio.wav
         audio_file_name = 'audio.wav'
         # Get the speaker id from the model > kaldi/data/test/spk2utt file. it's the first "word".
@@ -86,11 +106,29 @@ class KaldiTranscription(BaseTranscription):
     def transcribe(self, on_complete: Callable = None):
         self.status = "transcribing"
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
+        gmm_decode_path = Path('/elpis/elpis/engines/kaldi/inference/gmm-decode')
+
+        # Setup logging path
+        run_log_path = self.path.joinpath('transcription.log')
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
-        subprocess.run('sh /elpis/elpis/engines/kaldi/inference/gmm-decode-long.sh'.split(),
-                       cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
+        # Copy parts of transcription process and chmod
+        dir_util.copy_tree(f'{gmm_decode_path}', f"{kaldi_infer_path.joinpath('gmm-decode')}")
+        stages = os.listdir(kaldi_infer_path.joinpath('gmm-decode'))
+        for file in stages:
+            os.chmod(kaldi_infer_path.joinpath('gmm-decode').joinpath(file), 0o774)
+        for stage in sorted(stages):
+            print(f"======== STAGE {stage} STARTING ========")
+            self.stage_status = (stage, 'in-progress', '')
+            # Setup logging
+            args = ['bash', '-c', f'touch {run_log_path}; sh {kaldi_infer_path.joinpath("gmm-decode", stage)} >> {run_log_path}']
+            subprocess.run(args, cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
+            print(f"======== STAGE {stage} COMPLETE ========")
+            self.stage_status = (stage, 'complete', '')
+        
+        # subprocess.run('sh /elpis/elpis/engines/kaldi/inference/gmm-decode-long.sh'.split(),
+                    #    cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
         file_util.copy_file(f"{kaldi_infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
         file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
         self.status = "transcribed"

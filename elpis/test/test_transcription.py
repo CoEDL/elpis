@@ -13,7 +13,7 @@ from . import test_pipeline
 def mock_model(tmpdir_factory):
     base_path = tmpdir_factory.mktemp("pipeline")
     base_path = Path(base_path)
-    if not base_path.joinpath('state').exists():
+    if not base_path.joinpath('/state').exists():
         kaldi = KaldiInterface(f'{base_path}/state')
 
         ds = kaldi.new_dataset('dataset_x')

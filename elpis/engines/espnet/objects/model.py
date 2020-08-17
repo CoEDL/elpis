@@ -102,7 +102,7 @@ class EspnetModel(BaseModel):
 
         def train():
             local_espnet_path = Path(self.path) / 'espnet-asr1'
-            run_log_path = Path(self.path) / 'run_log.txt'
+            run_log_path = Path(self.path) / 'train.log'
             print("SELF PATH {}".format(self.path))
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)

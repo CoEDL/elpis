@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from io import BufferedIOBase
 
@@ -60,10 +61,15 @@ class PronDict(FSObject):
         self.set_l2s_content(file.read())
         self.config['l2s'] = True
 
-    def set_l2s_content(self, content: str):
-        # TODO: this function uses parameter str, and must be bytes or UTF-16
-        with self.l2s_path.open(mode='wb') as fout:
+    def set_l2s_content(self, content: bytes):
+        tmp_l2s_path = self.path.joinpath('tmp_l2s.txt')
+        with tmp_l2s_path.open(mode='wb') as fout:
             fout.write(content)
+        # translate line endings from Win to Unix for Kaldi
+        with tmp_l2s_path.open(mode='r') as file_raw, self.l2s_path.open(mode='w', encoding='utf-8') as file_translated:
+            file_translated.write(file_raw.read().replace('\r\n', '\n'))
+        if os.path.exists(tmp_l2s_path):
+            os.remove(tmp_l2s_path)
         self.config['l2s'] = True
 
     def get_l2s_content(self):
@@ -73,9 +79,6 @@ class PronDict(FSObject):
         except FileNotFoundError:
             return False
 
-    def get_l2s(self):
-        with self.l2s_path.open(mode='r') as fin:
-            return fin.read()
 
     def generate_lexicon(self):
         # task make-prn-dict

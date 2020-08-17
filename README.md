@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/img/elpis.png" width="250px"/></p>
 
-# Elpis (Accelerated Transcription for Linguists)
+# Elpis (Accelerated Transcription)
 
 [![Build Status](https://travis-ci.org/CoEDL/elpis.svg?branch=master)](https://travis-ci.org/CoEDL/elpis)
 [![Coverage Status](https://coveralls.io/repos/github/CoEDL/elpis/badge.svg?branch=master)](https://coveralls.io/github/CoEDL/elpis?branch=master)

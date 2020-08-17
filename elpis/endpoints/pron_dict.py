@@ -3,7 +3,7 @@ from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.pron_dict import PronDict
-from elpis.engines.kaldi.errors import KaldiError
+from elpis.engines.common.errors import InterfaceError
 
 
 bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
@@ -12,7 +12,14 @@ bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
 @bp.route("/new", methods=['POST'])
 def new():
     interface: Interface = app.config['INTERFACE']
-    pron_dict = interface.new_pron_dict(request.json['name'])
+    try:
+        pron_dict = interface.new_pron_dict(request.json['name'])
+    except InterfaceError as e:
+        return jsonify({
+            "status": 500,
+            "error": e.human_message
+        })
+    print(f"****{request.json['name']}****")
     dataset = interface.get_dataset(request.json['dataset_name'])
     pron_dict.link(dataset)
     app.config['CURRENT_PRON_DICT'] = pron_dict
@@ -71,7 +78,7 @@ def l2s():
         file = request.files['file']
         pron_dict.set_l2s_fp(file)
     data = {
-        "l2s": pron_dict.get_l2s()
+        "l2s": pron_dict.get_l2s_content()
     }
     return jsonify({
         "status": 200,

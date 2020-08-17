@@ -3,6 +3,7 @@ from ..blueprint import Blueprint
 from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.dataset import Dataset
+from elpis.engines.common.errors import InterfaceError
 
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
@@ -10,13 +11,18 @@ bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 @bp.route("/new", methods=['POST'])
 def new():
     interface: Interface = app.config['INTERFACE']
-    dataset = interface.new_dataset(request.json['name'])
+    try:
+        dataset = interface.new_dataset(request.json['name'])
+    except InterfaceError as e:
+        return jsonify({
+            "status": 500,
+            "error": e.human_message
+        })
     print(f"****{request.json['name']}****")
     app.config['CURRENT_DATASET'] = dataset
     data = {
         "state": dataset.config._load()
     }
-    print(data)
     return jsonify({
         "status": 200,
         "data": data
@@ -70,15 +76,17 @@ def files(dataset: Dataset):
     if request.method == 'POST':
         for file in request.files.getlist("file"):
             dataset.add_fp(fp=file, fname=file.filename, destination='original')
+        data = {"files": dataset.files}
         dataset.auto_select_importer()
-        dataset.validate()
-        dataset.refresh_ui()
-    data = {
-        "files": dataset.files,
-        'settings': dataset.importer.get_settings(),
-        "ui": dataset.importer.get_ui(),
-        "importer_name": dataset.importer.get_name()
-    }
+        if dataset.importer is not None:
+            # maybe a comment here will force this file update?
+            dataset.validate()
+            dataset.refresh_ui()
+            data.update({
+                'settings': dataset.importer.get_settings(),
+                "ui": dataset.importer.get_ui(),
+                "importer_name": dataset.importer.get_name()
+            })
     return jsonify({
         "status": 200,
         "data": data
@@ -119,32 +127,6 @@ def settings_ui(dataset: Dataset):
     })
 
 
-@bp.route("/punctuation_to_explode_by", methods=['POST'])
-@require_dataset
-def punctuation_to_explode_by(dataset: Dataset):
-    if 'punctuation_to_explode_by' in request.json.keys():
-        dataset.punctuation_to_explode_by = request.json['punctuation_to_explode_by']
-    data = {
-        'punctuation_to_explode_by': dataset.punctuation_to_explode_by
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
-
-
-@bp.route("/punctuation_to_collapse_by", methods=['POST'])
-@require_dataset
-def punctuation_to_collapse_by(dataset: Dataset):
-    if 'punctuation_to_collapse_by' in request.json.keys():
-        dataset.punctuation_to_collapse_by = request.json['punctuation_to_collapse_by']
-    data = {
-        'punctuation_to_collapse_by': dataset.punctuation_to_collapse_by
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
 
 # TODO prepare endpoint returns file contents as text.
 # Probably nicer to send back JSON data instead

@@ -1,4 +1,4 @@
-from .clean_json import clean_json_data
+from .clean_json import clean_json_data, clean_json_utterance
 from .elan_to_json import process_eaf
 from .make_prn_dict import generate_pronunciation_dictionary
 from .make_wordlist import generate_word_list

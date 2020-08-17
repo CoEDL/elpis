@@ -2,7 +2,7 @@ from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
 from elpis.engines.common.objects.model import Model
-from elpis.engines.kaldi.errors import KaldiError
+from elpis.engines.common.errors import InterfaceError
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -24,25 +24,25 @@ def run(cmd: str) -> str:
 @bp.route("/new", methods=['POST'])
 def new():
     interface = app.config['INTERFACE']
-    model = interface.new_model(request.json["name"])
-    # use the selected pron dict
     try:
-        pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
-        # get its dataset
-        dataset = interface.get_dataset(pron_dict.dataset.name)
-    except KaldiError:
-        # Then it's fine, not all models need pronunciation dictionaries.
-        # But it means we need to get a dataset directly.
+        model = interface.new_model(request.json["name"])
+    except InterfaceError as e:
+        return jsonify({
+            "status": 500,
+            "error": e.human_message
+        })
 
-        # TODO This dataset will have to actually come from the interface, but
-        # for testing I'm just grabbing the first one.
-        datasets = interface.list_datasets()
-        dataset = interface.get_dataset(datasets[0])
-        pron_dict = None
+    dataset = interface.get_dataset(request.json['dataset_name'])
+    model.link_dataset(dataset)
     app.config['CURRENT_DATASET'] = dataset
-    app.config['CURRENT_PRON_DICT'] = pron_dict
-    model.link(dataset, pron_dict)
+    if 'engine' in request.json and request.json['engine'] == 'kaldi':
+        pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
+        model.link_pron_dict(pron_dict)
+        app.config['CURRENT_PRON_DICT'] = pron_dict
+    if 'engine' in request.json and request.json['engine'] == 'espnet':
+        pass
     model.build_structure()
+
     app.config['CURRENT_MODEL'] = model
     data = {
         "config": model.config._load()
@@ -77,9 +77,10 @@ def list_existing():
     data = {
         "list": [{
                 'name': model['name'],
-                'results': fake_results,
                 'dataset_name': model['dataset_name'],
-                'pron_dict_name': model['pron_dict_name']
+                'pron_dict_name': model['pron_dict_name'],
+                'status': model['status'],
+                'results': fake_results
                 } for model in interface.list_models_verbose()]
     }
     return jsonify({
@@ -115,7 +116,8 @@ def train():
                         "data": "No current model exists (perhaps create one first)"})
     model.train(on_complete=lambda: print("Training complete!"))
     data = {
-        "status": model.status
+        "status": model.status,
+        "stage_status": model.stage_status
     }
     return jsonify({
         "status": 200,
@@ -130,20 +132,33 @@ def status():
         return jsonify({"status": 404,
                         "data": "No current model exists (perhaps create one first)"})
     data = {
-        "status": model.status
+        "status": model.status,
+        "stage_status": model.stage_status
     }
     return jsonify({
         "status": 200,
         "data": data
     })
 
+@bp.route("/log", methods=['GET'])
+def log():
+    model: Model = app.config['CURRENT_MODEL']
+    if model is None:
+        return jsonify({"status": 404,
+                        "data": "No current model exists (perhaps create one first)"})
+    data = {
+        "log": model.log
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 @bp.route("/results", methods=['GET'])
 def results():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
         return jsonify({"status": 404, "data": "No current model exists (perhaps create one first)"})
-
     try:
         results = model.get_train_results()
     except FileNotFoundError:
