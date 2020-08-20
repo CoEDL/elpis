@@ -94,27 +94,33 @@ class DatasetFiles extends Component {
 
                                 <div>{loadingIcon}</div>
 
-                                <Header as='h3'>
-                                    { filesHeader }
-                                </Header>
+                                {filesHeader &&
+                                    <>
+                                    <Header as='h3'>
+                                        { filesHeader }
+                                    </Header>
+                                    <div className="file-list">
+                                        <Grid columns={3}>
+                                            <Grid.Column>
+                                                <List>
+                                                    {audioFileList}
+                                                </List>
+                                            </Grid.Column>
+                                            <Grid.Column>
+                                                <List>
+                                                    {transcriptionFilesList}
+                                                </List>
+                                            </Grid.Column>
+                                            <Grid.Column>
+                                                <List>
+                                                    {additionalTextFilesList}
+                                                </List>
+                                            </Grid.Column>
+                                        </Grid>
+                                    </div>
+                                    </>
+                                }
 
-                                <Grid columns={ 3 }>
-                                    <Grid.Column>
-                                        <List>
-                                            { audioFileList }
-                                        </List>
-                                    </Grid.Column>
-                                    <Grid.Column>
-                                        <List>
-                                            { transcriptionFilesList }
-                                        </List>
-                                    </Grid.Column>
-                                    <Grid.Column>
-                                        <List>
-                                            { additionalTextFilesList }
-                                        </List>
-                                    </Grid.Column>
-                                </Grid>
                             </Segment>
                             <Segment>
                                 <Header as='h3'>

@@ -18,17 +18,17 @@ function groupSettingsFromUI(ui) {
 }
 
 const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
-    console.group("GeneratedUI");
-    console.log({settings});
-    console.log({ui});
+    // console.group("GeneratedUI");
+    // console.log({settings});
+    // console.log({ui});
 
     if (ui === null || ui === undefined) {
-        console.groupEnd();
+        // console.groupEnd();
         return (<>No Settings.</>);
     }
 
     const handleStrChange = (ui_name, data) => {
-        console.log(ui_name, data)
+        // console.log(ui_name, data)
         let newSettings = { ...settings };
         newSettings[ui_name] = data.value
         changeSettingsCallback(newSettings)
@@ -46,9 +46,9 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
 
         // Construct table rows for group
         group.forEach(ui_name => {
-            console.group("Row for " + ui_name);
+            // console.group("Row for " + ui_name);
             if (ui['type'][ui_name] === "title") {
-                console.log("Building title");
+                // console.log("Building title");
                 header = (
                     <>
                         <Table.Row>
@@ -60,7 +60,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                     </>
                 );
             } else { // ui['type'][ui_name] == "settings"
-                console.log("Building input");
+                // console.log("Building input");
                 let data = ui['data'][ui_name];
                 let label = (data.display_name !== null) ? data.display_name : ui_name;
 
@@ -95,18 +95,18 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                             // <Select> does not like to display text if the key or value (?) is null.
                             // So convert null to string "- not selected -".
                             if (v === null || v === '') {
-                                console.log("pushing: ", {
-                                    key: "- not selected -",
-                                    value: "- not selected -",
-                                    text: "- not selected -"
-                                });
+                                // console.log("pushing: ", {
+                                //     key: "- not selected -",
+                                //     value: "- not selected -",
+                                //     text: "- not selected -"
+                                // });
                                 options.push({
                                     key: "- not selected -",
                                     value: "- not selected -",
                                     text: "- not selected -"
                                 })
                             } else {
-                                console.log("pushing: ", {key: v, value: v, text: v});
+                                // console.log("pushing: ", {key: v, value: v, text: v});
                                 options.push({key: v, value: v, text: v})
                             }
                         });
@@ -141,7 +141,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                 );
                 settingRows.push(row);
             }
-            console.groupEnd();
+            // console.groupEnd();
         });
 
         // Construct table
@@ -159,7 +159,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
         );
         tables.push(table);
     });
-    console.groupEnd();
+    // console.groupEnd();
     return (<>
         <Form>
             {tables}

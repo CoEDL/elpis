@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
+import { Button, Grid, Header, Icon, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import arraySort from 'array-sort'
@@ -37,7 +37,7 @@ class DatasetPrepare extends Component {
     }
 
     render() {
-        const { t, additionalTextFiles, wordlist } = this.props
+        const { t, additionalTextFiles, status, wordlist } = this.props
 
         const { column, direction } = this.state
 
@@ -84,10 +84,7 @@ class DatasetPrepare extends Component {
                 </Table.Body>
             </Table>
             </>
-
-        ) : (
-            <p>{t('dataset.prepare.noWords')}</p>
-        )
+        ) : null
 
         return (
             <div>
@@ -102,11 +99,25 @@ class DatasetPrepare extends Component {
 
                             <CurrentDatasetName />
 
-                            { listEl }
+                            {status === 'ready' &&
+                                <p>{ t('dataset.prepare.ready') }</p>
+                            }
+                            {status === 'loaded' &&
+                                <p>
+                                <Icon name='circle notched' size="big" loading />
+                                { t('dataset.prepare.preparing') }
+                                </p>
+                            }
+                            {status === 'wordlist-prepared' &&
+                                <>
+                                    {listEl}
 
-                            <Button as={Link} to={urls.gui.engine.index} disabled={interactionDisabled}>
-                                { t('common.nextButton') }
-                            </Button>
+                                    <Button as={Link} to={urls.gui.engine.index} disabled={interactionDisabled}>
+                                        { t('common.nextButton') }
+                                    </Button>
+                                </>
+                            }
+
 
                         </Grid.Column>
                     </Grid>
@@ -120,7 +131,8 @@ const mapStateToProps = state => {
     return {
         name: state.dataset.name,
         wordlist: state.dataset.wordlist,
-        additionalTextFiles: state.dataset.additionalTextFiles
+        additionalTextFiles: state.dataset.additionalTextFiles,
+        status: state.dataset.status
     }
 }
 

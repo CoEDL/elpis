@@ -47,6 +47,8 @@
             "bannerMessageDetailed": "Punctuation has been removed.",
             "wordlistHeader": "Wordlist",
             "frequencyHeader": "Frequency",
+            "ready": "Ready to process.",
+            "preparing": "The files are being processed.",
             "noWords": "No words found, please upload some files or check your import settings."
         }
     },

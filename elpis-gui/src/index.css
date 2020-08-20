@@ -114,3 +114,10 @@ label.pad-right,
 .stage .divider {
     margin: 0 0.5em
 }
+
+.file-list {
+    max-height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #aaa;
+    padding: 1em;
+}

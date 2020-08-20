@@ -136,7 +136,7 @@ const dataset = (state = initState, action) => {
                 const wordlist = Object.keys(wordlistObj).map( key => {
                     return ({ name: key, frequency: wordlistObj[key] })
                 })
-                if (wordlist.length > 0) return { ...state, wordlist }
+                if (wordlist.length > 0) return { ...state, wordlist, "status": "wordlist-prepared"}
                 else return { ...state }
             } else {
                 // Errors are formatted as { status: code, data: message }
