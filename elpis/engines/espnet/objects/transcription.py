@@ -7,6 +7,7 @@ import os
 from distutils import dir_util, file_util
 import wave
 import contextlib
+import json
 
 
 class EspnetTranscription(BaseTranscription):
@@ -86,6 +87,7 @@ class EspnetTranscription(BaseTranscription):
     def transcribe(self, on_complete: Callable = None):
         self.status = "transcribing"
         infer_path = self.model.path.joinpath('espnet-asr1', 'data', 'infer')
+        exp_path = self.model.path.joinpath('espnet-asr1', 'exp')
         os.makedirs(f"{infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('espnet-asr1', 'audio.wav')}")
@@ -95,8 +97,12 @@ class EspnetTranscription(BaseTranscription):
         from elpis.engines.common.objects.command import run
         run(f"cd {local_espnet_path}; ./decode.sh --nj 1 --stage 0 --stop_stage 2 --recog_set infer &> {prepare_log_path}")
         run(f"cd {local_espnet_path}; ./decode.sh --nj 1 --stage 5 --recog_set infer &> {transcribe_log_path}")
+        result_paths = list(exp_path.glob("train_nodev*/decode_infer*"))
+        assert len(result_paths) == 1, f"Incorrect number of result files ({len(result_path)})"
+        result_path = result_paths[0] / "data.json"
+        file_util.copy_file(result_path, f'{self.path}/results.txt')
+        self.convert_to_text()
         # TODO Need to produce an output eaf.
-        #file_util.copy_file(f"{infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
         #file_util.copy_file(f"{infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
         self.status = "transcribed"
         if on_complete is not None:
@@ -113,5 +119,16 @@ class EspnetTranscription(BaseTranscription):
             return fin.read()
 
     def elan(self):
-        with open(f'{self.path}/{self.hash}.eaf', 'rb') as fin:
+        # TODO once I know more about temporal data from ESPNet. For now, it targets the txt file.
+        with open(f'{self.path}/one-best-hypothesis.txt', 'r') as fin:
             return fin.read()
+
+    def convert_to_text(self):
+        with open(f'{self.path}/results.txt', 'r') as fin:
+            data = json.load(fin)
+        lines = [output["rec_text"].replace("<eos>", "\n") for utt_key, utt_data in data["utts"].items() for output in utt_data["output"]]
+        with open(f'{self.path}/one-best-hypothesis.txt', 'w') as fout:
+            fout.writelines(lines)
+
+    def convert_to_elan(self):
+        self.convert_to_text()  #TODO
