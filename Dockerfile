@@ -138,6 +138,7 @@ RUN echo "FLASK_ENV=development" >> ~/.zshrc
 RUN echo "FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshhrc
+RUN echo "export CHOKIDAR_USEPOLLING: \"true\"" >> ~/.zshhrc
 
 # Move ENV lines up. Putting here for now so I can build on top of cached builds
 ENV FLASK_ENV='development'
@@ -159,3 +160,5 @@ RUN pip3.6 install wheel pytest pylint && python setup.py develop
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
+
+EXPOSE 3000:3000
