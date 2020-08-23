@@ -19,6 +19,7 @@ node_modules/
 *.iml
 .idea/
 .devcontainer/
+devcontainer.json
 
 # Server
 log.txt
