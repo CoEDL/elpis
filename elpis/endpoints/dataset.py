@@ -4,6 +4,7 @@ from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.errors import InterfaceError
+import os
 
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
@@ -18,7 +19,6 @@ def new():
             "status": 500,
             "error": e.human_message
         })
-    print(f"****{request.json['name']}****")
     app.config['CURRENT_DATASET'] = dataset
     data = {
         "state": dataset.config._load()
@@ -37,6 +37,12 @@ def load():
     data = {
         "state": dataset.config._load()
     }
+    if os.path.exists(dataset.pathto.word_count_json):
+        with dataset.pathto.word_count_json.open() as fin:
+            wordlist = fin.read()
+        data.update({
+            "wordlist": wordlist
+        })
     return jsonify({
         "status": 200,
         "data": data

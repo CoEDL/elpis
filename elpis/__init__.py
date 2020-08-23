@@ -25,7 +25,6 @@ def create_app(test_config=None):
     #     static_dir = static_dir_build
     # else:
     #     static_dir = static_dir_watch
-    print('using static_dir:', static_dir)
     # Create a custom Flask instance defined in the app.py file. Same as a
     # normal Flask class but with a specialised blueprint function.
     app = Flask(__name__,
@@ -40,7 +39,6 @@ def create_app(test_config=None):
 
     elpis_path = Path(os.getcwd())
     app.config['ELPIS_PATH'] = elpis_path
-    print("elpis_path:", elpis_path)
 
     # For a single user, storing the interface object is okay to do in
     # the app.config, however, this would need to change for multi-user.
@@ -48,10 +46,8 @@ def create_app(test_config=None):
     # stores all the artifacts that user has generated.
     interface_path = Path(os.path.join(elpis_path, '/state'))
     if not interface_path.exists():
-        print("no interface exists")
         app.config['INTERFACE'] = Interface(interface_path)
     else:
-        print("interface exists, load it")
         app.config['INTERFACE'] = Interface(interface_path, use_existing=True)
     # app.config['CURRENT_DATASET'] = None # not okay for multi-user
     # app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user & need to remove later because it is Kaldi-specific.
@@ -71,7 +67,6 @@ def create_app(test_config=None):
     @app.route('/', defaults={'path': ''})
     @app.route("/<path:path>")
     def index(path):
-        print('in index with:', path)
         with open(f"{GUI_PUBLIC_DIR}/index.html", "r") as fin:
             content = fin.read()
             return content
