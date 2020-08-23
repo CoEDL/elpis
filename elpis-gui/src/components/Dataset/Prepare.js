@@ -102,6 +102,7 @@ class DatasetPrepare extends Component {
                               <p>{ t('engine.common.noCurrentEngineLabel') }</p>
                             }
 
+                            {/* eslint-disable-next-line no-restricted-globals */}
                             {currentEngine && !name &&
                               <p>{ t('dataset.common.noCurrentDatasetLabel') }</p>
                             }
