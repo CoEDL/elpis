@@ -4,15 +4,11 @@ from . import endpoints
 from .app import Flask
 from elpis.engines import Interface
 from pathlib import Path
-from requests import get
 
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
     GUI_PUBLIC_DIR = "/elpis-gui/build"
-
-    # Variable to control the use of a proxy to support webpackdevserver
-    WEBPACK_DEV_SERVER_PROXY = True
 
     # Setup static resources
     # create and configure the app
@@ -76,14 +72,9 @@ def create_app(test_config=None):
     @app.route("/<path:path>")
     def index(path):
         print('in index with:', path)
-        if (WEBPACK_DEV_SERVER_PROXY):
-            # If we are running the webpack dev server, 
-            # We proxy webpack requests through to the dev server
-            return proxy('http://localhost:3000/', path)
-        else:
-            with open(f"{GUI_PUBLIC_DIR}/index.html", "r") as fin:
-                content = fin.read()
-                return content
+        with open(f"{GUI_PUBLIC_DIR}/index.html", "r") as fin:
+            content = fin.read()
+            return content
 
     @app.route('/favicon.ico')
     def favicon():
@@ -91,20 +82,3 @@ def create_app(test_config=None):
             return fin.read()
 
     return app
-
-
-# Proxy Wrapper
-def proxy(host, path):
-    response = get(f"{host}{path}")
-    excluded_headers = [
-        "content-encoding",
-        "content-length",
-        "transfer-encoding",
-        "connection",
-    ]
-    headers = {
-        name: value
-        for name, value in response.raw.headers.items()
-        if name.lower() not in excluded_headers
-    }
-    return (response.content, response.status_code, headers)
