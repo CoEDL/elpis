@@ -19,9 +19,8 @@ def frequency(dataset: Dataset):
     Returns the frequency of all words in a dataset, also known
     as the wordlist file.
     """
-    #TODO(jack) support querying frequency across files
     fname = request.args.get("file")
-    dataset.process() # Why do we need to run this each time? Can we cache?
+    dataset.process() #NOTE(jack) Why do we need to run this each time? Can we cache?
     if fname is not None:
         # File specified, get the frequency of a specific file
         # We need to bork this, because filenames are stored with eaf extensions
