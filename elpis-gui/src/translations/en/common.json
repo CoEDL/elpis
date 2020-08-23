@@ -129,20 +129,19 @@
         },
         "results": {
             "title": "Results",
-            "description": "List of models that have been run here.",
-            "downloadButton": "Download a set of the model, settings and information about training information",
+            "description": "List of training sessions that have been run here.",
+            "downloadButton": "Download a set of the training, settings and information about training information",
             "downloadModalHeader": "Your files and settings are being compiled",
             "downloadModalContent": "Click Save on your browser's download dialog",
             "downloadOkButton": "OK",
             "newTranscribeButton": "Transcribe new audio",
-            "oops": "Oops, this is showing the most recently trained results, not necessarily for the selected model.",
             "noResults": "No results found"
         }
     },
     "transcription": {
         "new": {
             "title": "Transcribe some audio",
-            "selectModelLabel": "Select a model to use",
+            "selectModelLabel": "Select a training session to use",
             "dropFilesHint": "Upload or drop an audio file here",
             "dropFilesHintDragActive": "Here here..",
             "addAudioButton": "Add Audio",
