@@ -38,10 +38,6 @@ class DatasetPrepare extends Component {
 
     render() {
         const { t, additionalTextFiles, currentEngine, status, wordlist } = this.props
-
-        console.log("status", status)
-        console.log("wordlist", wordlist)
-
         const { column, direction } = this.state
 
         const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true
@@ -144,7 +140,7 @@ class DatasetPrepare extends Component {
 const mapStateToProps = state => {
     return {
         name: state.dataset.name,
-        currentEngine: state.sideNav.engine,
+        currentEngine: state.engine.engine,
         wordlist: state.dataset.wordlist,
         additionalTextFiles: state.dataset.additionalTextFiles,
         status: state.dataset.status

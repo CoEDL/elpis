@@ -15,7 +15,7 @@ class ModelResults extends Component {
     }
 
     render() {
-        const { t, results } = this.props;
+        const { t, currentEngine, name, results } = this.props;
 
         const resultsEl = results ? (
             <Segment>
@@ -52,7 +52,17 @@ class ModelResults extends Component {
 
                             <CurrentModelName />
 
-                            { resultsEl }
+                            {!currentEngine &&
+                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                            }
+
+                            {currentEngine && !name &&
+                              <p>{ t('model.common.noCurrentModelLabel') }</p>
+                            }
+
+                            {currentEngine && name &&
+                                resultsEl
+                            }
 
                         </Grid.Column>
 
@@ -66,7 +76,8 @@ class ModelResults extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
-        results: state.model.results
+        results: state.model.results,
+        currentEngine: state.engine.engine
     }
 }
 

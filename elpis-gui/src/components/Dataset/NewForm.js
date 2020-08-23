@@ -80,7 +80,6 @@ const mapDispatchToProps = dispatch => ({
         dispatch(datasetNew(name, history))
             .then(response => {
                 if (response.status===500) {
-                    console.log('response.status', response.status)
                     throw Error(response.error)
                 }
                 return response

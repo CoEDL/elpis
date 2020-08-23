@@ -12,7 +12,7 @@ import urls from 'urls'
 
 class ModelSettings extends Component {
     render() {
-        const { t, settings, modelSettings, name } = this.props;
+        const { t, currentEngine, settings, modelSettings, name } = this.props;
         return (
             <div>
                 <Branding />
@@ -30,60 +30,71 @@ class ModelSettings extends Component {
 
                             <CurrentModelName />
 
-                            <Message content={ t('model.settings.description') } />
+                            {!currentEngine &&
+                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                            }
 
-                            <Message attached content={ t('model.settings.ngramDescription') } />
+                            {currentEngine && !name &&
+                              <p>{ t('model.common.noCurrentModelLabel') }</p>
+                            }
 
-                            <Formik
-                                className="attached"
-                                enableReinitialize
-                                initialValues={ {
-                                    ngram: settings.ngram
-                                } }
-                                validate={ values => {
-                                    let errors = {};
-                                    if (!values.ngram) {
-                                        errors.ngram = 'Required';
-                                    } else if (
-                                        !/^[0-9]+$/i.test(values.ngram)
-                                    ) {
-                                        errors.ngram = 'Invalid ngram';
-                                    }
-                                    return errors;
-                                } }
-                                onSubmit={ (values, { setSubmitting }) => {
-                                    const postData = {ngram: values.ngram}
-                                    modelSettings(postData)
-                                    this.props.history.push(urls.gui.model.train)
-                                } }
-                            >
-                                { ({
-                                    values,
-                                    errors,
-                                    dirty,
-                                    touched,
-                                    handleSubmit,
-                                    handleChange,
-                                    isSubmitting,
-                                    /* and other goodies */
-                                }) => (
-                                        <Form onSubmit={handleChange }>
-                                            <Field component="select" name="ngram">
-                                                <option key="1" value="1">1</option>
-                                                <option key="2" value="2">2</option>
-                                                <option key="3" value="3">3</option>
-                                                <option key="4" value="4">4</option>
-                                                <option key="5" value="5">5</option>
-                                            </Field>
+                            {currentEngine && name &&
+                            <>
+                                <Message content={ t('model.settings.description') } />
+                                <Message attached content={ t('model.settings.ngramDescription') } />
+                                <Formik
+                                    className="attached"
+                                    enableReinitialize
+                                    initialValues={ {
+                                        ngram: settings.ngram
+                                    } }
+                                    validate={ values => {
+                                        let errors = {};
+                                        if (!values.ngram) {
+                                            errors.ngram = 'Required';
+                                        } else if (
+                                            !/^[0-9]+$/i.test(values.ngram)
+                                        ) {
+                                            errors.ngram = 'Invalid ngram';
+                                        }
+                                        return errors;
+                                    } }
+                                    onSubmit={ (values, { setSubmitting }) => {
+                                        const postData = {ngram: values.ngram}
+                                        modelSettings(postData)
+                                        this.props.history.push(urls.gui.model.train)
+                                    } }
+                                >
+                                    { ({
+                                        values,
+                                        errors,
+                                        dirty,
+                                        touched,
+                                        handleSubmit,
+                                        handleChange,
+                                        isSubmitting,
+                                        /* and other goodies */
+                                    }) => (
+                                            <Form onSubmit={handleChange }>
+                                                <Field component="select" name="ngram">
+                                                    <option key="1" value="1">1</option>
+                                                    <option key="2" value="2">2</option>
+                                                    <option key="3" value="3">3</option>
+                                                    <option key="4" value="4">4</option>
+                                                    <option key="5" value="5">5</option>
+                                                </Field>
 
-                                            <Divider />
+                                                <Divider />
 
-                                            <Button type="button" onClick={handleSubmit} disabled={!name}>
-                                                { t('common.nextButton') }
-                                            </Button>
-                                        </Form>
-                                    ) }
-                            </Formik>
+                                                <Button type="button" onClick={handleSubmit} disabled={!name}>
+                                                    { t('common.nextButton') }
+                                                </Button>
+                                            </Form>
+                                        ) }
+                                </Formik>
+                            </>
+                            }
+
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -95,7 +106,8 @@ class ModelSettings extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
-        settings: state.model.settings
+        settings: state.model.settings,
+        currentEngine: state.engine.engine
     }
 }
 

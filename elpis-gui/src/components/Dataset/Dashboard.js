@@ -103,13 +103,11 @@ class DatasetDashboard extends Component {
 
                             {currentEngine &&
                             <>
-
-                                {list.length == 0 &&
+                                {list.length === 0 &&
                                     <NewForm/>
                                 }
-
                                 {list.length > 0 &&
-                                    <>
+                                <>
                                     <Segment>
                                         <Button
                                             className='add'
@@ -119,13 +117,11 @@ class DatasetDashboard extends Component {
                                             as={Link}
                                             to={urls.gui.dataset.new} />
                                     </Segment>
-
                                     {listEl}
-
                                     <Button as={Link} to={urls.gui.dataset.files} disabled={!name}>
                                         {t('common.nextButton')}
                                     </Button>
-                                    </>
+                                </>
                                 }
                             </>
                             }
@@ -141,7 +137,7 @@ const mapStateToProps = state => {
     return {
         list: state.dataset.datasetList,
         name: state.dataset.name,
-        currentEngine: state.sideNav.engine
+        currentEngine: state.engine.engine
     }
 }
 

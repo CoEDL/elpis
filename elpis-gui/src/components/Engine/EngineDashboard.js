@@ -12,7 +12,6 @@ import urls from 'urls';
 
 const EngineDashboard = props => {
     let { t, currentEngine } = props;
-    console.log(currentEngine)
     return (
     <div>
         <Branding />
@@ -47,8 +46,8 @@ const EngineDashboard = props => {
 
 const mapStateToProps = state => {
     return {
-        list: state.sideNav.engine_list,
-        currentEngine: state.sideNav.engine
+        list: state.engine.engine_list,
+        currentEngine: state.engine.engine
     }
 }
 

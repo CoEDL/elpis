@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { engineList, engineLoad } from 'redux/actions/appActions';
+import { engineList, engineLoad } from 'redux/actions/engineActions';
+import { setCurrentStep } from 'redux/actions/sideNavActions'
 
 const SelectEngine = props => {
     let { t, currentEngine, list, engineList, engineLoad } = props;
@@ -36,8 +37,8 @@ const SelectEngine = props => {
 
 const mapStateToProps = state => {
     return {
-        list: state.sideNav.engine_list,
-        currentEngine: state.sideNav.engine
+        list: state.engine.engine_list,
+        currentEngine: state.engine.engine
     }
 }
 
@@ -48,7 +49,8 @@ const mapDispatchToProps = dispatch => ({
     engineLoad: postData => {
         dispatch(engineLoad(postData))
             .then(response => {
-                console.log("engineLoad", response)
+                // Rebuild the sidenav via set current step
+                dispatch(setCurrentStep(null))
             })
             .catch(error => console.log("error", error))
     }

@@ -46,12 +46,11 @@ function getNextStepName(stepName, engine) {
 
 const initialStepModelState = {
 	engine: null,
-	engine_list: [],
 	lastURL: null,
 	steps: {
 		engine: {
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Engine", path: urls.gui.engine.index }
+				{ done: false, doing: true, enabled: true, title: "Engine", path: urls.gui.engine.index }
 			],
 			engine_specific: null
 		},
@@ -63,8 +62,6 @@ const initialStepModelState = {
 			],
 			engine_specific: null
 		},
-		// Note: Pronunciation step will only be visible when state.engine == "kaldi".
-		// TODO: Prehaps store engine specific details in the engine step
 		pronunciation: {
 			substeps: [
 				{ done: false, doing: false, enabled: false, title: "Pronunciation", path: urls.gui.pronDict.index },
@@ -92,22 +89,14 @@ const initialStepModelState = {
 }
 
 const sideNav = (state = initialStepModelState, action) => {
-	switch (action.type) {
-		case actionTypes.ENGINE_LOAD_STARTED:
-		case actionTypes.ENGINE_LOAD_FAILURE:
-		case actionTypes.ENGINE_LIST_STARTED:
-		case actionTypes.ENGINE_LIST_FAILURE:
-			return {...state}
 
-		case actionTypes.ENGINE_LIST_SUCCESS:
-			let engine_list = action.response.data.data.engine_list;
-			return { ...state, engine_list };
+	switch (action.type) {
 
 		case actionTypes.ENGINE_LOAD_SUCCESS:
-			state = { ...state, engine: action.response.data.data.engine };
+			let engine = action.response.data.data.engine;
 			// Fall through to setting the current step
-			action['url'] = state.lastURL;
-			// No return here!
+			return { ...state, engine}
+
 
 		case actionTypes.APP_SET_CURRENT_STEP: {
 			let currentSubStepIndex = 0;
@@ -118,13 +107,13 @@ const sideNav = (state = initialStepModelState, action) => {
 			// Used to enable next groups of steps if user is on last substep
 			let rememberToEnableTheNextStep = false;
 
-			// Track down which is the current substep by matching path to URL
-			// Split the url into parts, remove the first / to avoid empty first item in array
-
 			// Iterate through main steps
 			for (let [stepName, step] of Object.entries(originalStepsState.steps)) {
 				step.substeps.forEach((substep, i) => {
-					if (action.url === substep.path) {
+					// model/new type pages aren't represented in the substeps, so match them to the first in each step
+					const searchReg = /\/new|\//ig
+					const path_match = (window.location.pathname.replace(searchReg,"") === substep.path.replace(searchReg,"")) ? 1 : 0
+					if (path_match){
 						// Found the current step!
 						currentStepName = stepName;
 						currentSubStepIndex = i;
@@ -197,11 +186,10 @@ const sideNav = (state = initialStepModelState, action) => {
 
 
 			let nextStepName = getNextStepName(currentStepName, state.engine)
-			// ->                           && if there is a next step
+
 			if (rememberToEnableTheNextStep && nextStepName ) {
 				rebuiltSteps[nextStepName].substeps[0].enabled = true
 			}
-
 			return { ...state, steps: rebuiltSteps, lastURL: action.url }
 		}
 		default:

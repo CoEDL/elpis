@@ -166,7 +166,7 @@ const mapStateToProps = state => {
         settings: state.dataset.settings,
         ui: state.dataset.ui,
         status: state.dataset.status,
-        currentEngine: state.sideNav.engine
+        currentEngine: state.engine.engine
     }
 }
 

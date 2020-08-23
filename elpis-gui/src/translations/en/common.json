@@ -64,6 +64,7 @@
     "pronDict": {
         "common": {
             "currentPronDictLabel": "Current pronunciation dictionary: ",
+            "noDatasetsLabel": "Recordings are required before making pronunciation dictionary.",
             "noCurrentPronDictLabel": "No current pronunciation dictionary.",
             "chooseOrNewLabel": "Choose one."
         },

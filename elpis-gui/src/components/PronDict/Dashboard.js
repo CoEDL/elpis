@@ -10,6 +10,7 @@ import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
 import NewForm from 'components/PronDict/NewForm';
 import CurrentPronDictName from "./CurrentPronDictName";
+import SelectEngine from 'components/Engine/SelectEngine'
 import urls from 'urls';
 
 class PronDictDashboard extends Component {
@@ -47,7 +48,7 @@ class PronDictDashboard extends Component {
     }
 
     render() {
-        const { t, name, list } = this.props;
+        const { t, currentEngine, datasetList, name, list } = this.props;
         const listArray = Array.from(list.keys())
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
@@ -106,33 +107,34 @@ class PronDictDashboard extends Component {
 
                             <CurrentPronDictName />
 
-                            {list.length == 0 &&
-                                <NewForm />
+                            {!currentEngine &&
+                               <SelectEngine />
                             }
 
-                            {list.length > 0 &&
+                            {currentEngine &&
+                            <>
+                                {list.length === 0 &&
+                                    <NewForm/>
+                                }
+                                {list.length > 0 &&
                                 <>
                                     <Segment>
-                                    <Button
-                                        className='add'
-                                        content={t('common.newButton')}
-                                        labelPosition='left'
-                                        icon='add'
-                                        as={Link}
-                                        to={urls.gui.pronDict.new} />
+                                        <Button
+                                            className='add'
+                                            content={t('common.newButton')}
+                                            labelPosition='left'
+                                            icon='add'
+                                            as={Link}
+                                            to={urls.gui.pronDict.new}/>
                                     </Segment>
-
-                                    <Segment>
-                                        {listEl}
-                                    </Segment>
-
+                                    {listEl}
                                     <Button as={Link} to={urls.gui.pronDict.l2s} disabled={!name}>
                                         {t('common.nextButton')}
                                     </Button>
-
                                 </>
+                                }
+                            </>
                             }
-
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -144,7 +146,8 @@ class PronDictDashboard extends Component {
 const mapStateToProps = state => {
     return {
         list: state.pronDict.pronDictList,
-        name: state.pronDict.name
+        name: state.pronDict.name,
+        currentEngine: state.engine.engine
     }
 }
 

@@ -229,7 +229,6 @@ const mapDispatchToProps = dispatch => ({
                 // So we can safely request the text and elan files here
                 dispatch(transcriptionGetText())
                 dispatch(transcriptionGetElan())
-                console.log("transcribe is done")
             })
     },
     transcriptionStatus: () => {
