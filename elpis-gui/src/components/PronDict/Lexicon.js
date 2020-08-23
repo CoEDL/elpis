@@ -75,7 +75,7 @@ class PronDictLexicon extends Component {
                                             value={lexicon} >
                                         </TextArea>
                                     </Form>
-                                    <Button.Group attached='bottom'>
+                                    <Button.Group size="tiny">
                                         <Button onClick={this.generateLexicon} disabled={interactionDisabled}>reset</Button>
                                         <Button onClick={this.saveLexicon} positive disabled={interactionDisabled}>save</Button>
                                     </Button.Group>

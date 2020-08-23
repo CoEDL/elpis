@@ -8,39 +8,47 @@ import urls from 'urls'
 class CurrentModelName extends Component {
 
     render() {
-        const { t, datasetName, pronDictName, name, match } = this.props
+        const { t, currentEngine, modelList, datasetName, pronDictName, name, match } = this.props
 
-        const link = (match.url !== urls.gui.model.index) ? (
-            <Link to={urls.gui.model.index}>
-                { t('common.chooseOrNewLabel') }
-            </Link>
-        ) : (
-            t('common.selectOneBelow')
-        )
-
-        const current = name ?
-        (
-            <Message color='olive'>
-                    {t('dataset.common.currentDatasetLabel') + datasetName}
-                    <br />
-                {pronDictName &&
-                    <>
-                    {t('pronDict.common.currentPronDictLabel') + pronDictName}
-                    <br />
-                    </>
-                }
-                { t('model.common.currentModelLabel') + name }
-            </Message>
-        ) : (
-            <Message color='purple'>
-                { t('model.common.noCurrentModelLabel') }
-                <br />
-                { link }
-            </Message>
-        )
+        const onDashboard = (match.url === urls.gui.model.index) ? true : false
 
         return (
-            <>{ current }</>
+            <>
+                {name &&
+                <Message color='olive'>
+                    { t('model.common.currentModelLabel') + name }
+                    <br />
+                    { t('pronDict.common.currentPronDictLabel') + pronDictName }
+                    <br />
+                    {t('dataset.common.currentDatasetLabel') + datasetName }
+                </Message>
+                }
+
+                {!currentEngine &&
+                <Message color='purple'>
+                    { t('engine.common.noCurrentEngineLabel') }
+                </Message>
+                }
+
+                {currentEngine && !name &&
+                <Message color='purple'>
+                    {onDashboard && modelList.length === 0 &&
+                        t('common.makeNewOne')
+                    }
+                    {onDashboard && modelList.length > 0 &&
+                        t('common.selectOneBelow')
+                    }
+                    {!onDashboard &&
+                        <>
+                            <p>{ t('model.common.currentModelLabel') }</p>
+                            <Link to={urls.gui.model.index}>
+                                { t('common.chooseOrNewLabel') }
+                            </Link>
+                        </>
+                    }
+                </Message>
+                }
+            </>
         )
     }
 }
@@ -48,8 +56,10 @@ class CurrentModelName extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
+        modelList: state.model.modelList,
         datasetName: state.model.datasetName,
-        pronDictName: state.model.pronDictName
+        pronDictName: state.model.pronDictName,
+        currentEngine: state.engine.engine
     }
 }
 export default withRouter(

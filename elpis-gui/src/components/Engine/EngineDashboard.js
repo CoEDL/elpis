@@ -26,9 +26,9 @@ const EngineDashboard = props => {
                     </Header>
                     <CurrentEngineName />
 
-                    <SelectEngine />
-
-                    <Divider />
+                    <Segment>
+                        <SelectEngine />
+                    </Segment>
 
                     <Button
                         as={Link}

@@ -137,11 +137,8 @@ class DatasetFiles extends Component {
                                     <Header as='h3'>
                                         { t('dataset.files.importSettingsHeader') }
                                     </Header>
-
                                     <GeneratedUI settings={settings} ui={ui} changeSettingsCallback={datasetSettings} />
                                 </Segment>
-
-                                <Divider />
 
                                 <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
                                     { t('common.nextButton') }
