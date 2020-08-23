@@ -159,3 +159,4 @@ RUN pip3.6 install wheel pytest pylint && python setup.py develop
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
+EXPOSE 3000:3000
