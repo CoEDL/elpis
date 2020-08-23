@@ -28,7 +28,7 @@ class CurrentEngineName extends Component {
 
 const mapStateToProps = state => {
     return {
-        engine_name: state.sideNav.engine
+        engine_name: state.engine.engine
     }
 }
 export default withRouter(

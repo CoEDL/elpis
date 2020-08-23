@@ -8,38 +8,52 @@ import urls from 'urls'
 class CurrentDatasetName extends Component {
 
     render() {
-        const { t, name, match } = this.props
+        const { t, currentEngine, name, datasetList, match } = this.props
 
-        const link = (match.url !== urls.gui.dataset.index) ? (
-            <Link to={urls.gui.dataset.index}>
-                { t('common.chooseOrNewLabel') }
-            </Link>
-        ) : (
-            t('common.selectOneBelow')
-        )
-
-        const current = name ?
-        (
-            <Message color='olive'>
-                { t('dataset.common.currentDatasetLabel') + name }
-            </Message>
-        ) : (
-            <Message color='purple'>
-                { t('dataset.common.noCurrentDatasetLabel') }
-                <br />
-                { link }
-            </Message>
-        )
+        const onDashboard = (match.url === urls.gui.dataset.index) ? true : false
 
         return (
-            <>{ current }</>
+            <>
+                {name &&
+                <Message color='olive'>
+                    { t('dataset.common.currentDatasetLabel') + name }
+                </Message>
+                }
+
+                {!currentEngine &&
+                <Message color='purple'>
+                    { t('engine.common.noCurrentEngineLabel') }
+                </Message>
+                }
+
+                {currentEngine && !name &&
+                <Message color='purple'>
+                    {onDashboard && datasetList.length === 0 &&
+                        t('common.makeNewOne')
+                    }
+                    {onDashboard && datasetList.length > 0 &&
+                        t('common.selectOneBelow')
+                    }
+                    {!onDashboard &&
+                        <>
+                            <p>{ t('dataset.common.noCurrentDatasetLabel') }</p>
+                            <Link to={urls.gui.dataset.index}>
+                                { t('common.chooseOrNewLabel') }
+                            </Link>
+                        </>
+                    }
+                </Message>
+                }
+            </>
         )
     }
 }
 
 const mapStateToProps = state => {
     return {
-        name: state.dataset.name
+        name: state.dataset.name,
+        datasetList: state.dataset.datasetList,
+        currentEngine: state.engine.engine
     }
 }
 export default withRouter(

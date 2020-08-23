@@ -34,7 +34,7 @@ class PronDictLexicon extends Component {
 
     render() {
 
-        const { t, lexicon, name } = this.props
+        const { t, currentEngine, lexicon, name } = this.props
 
         const interactionDisabled = name ? false : true
 
@@ -55,25 +55,37 @@ class PronDictLexicon extends Component {
 
                             <CurrentPronDictName />
 
-                            <Message content={ t('pronDict.lexicon.description') } />
+                            {!currentEngine &&
+                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                            }
 
-                            <div className="form-wrapper">
-                                <Form>
-                                    <TextArea
-                                        className="lexicon"
-                                        onChange={this.handleChange}
-                                        value={lexicon} >
-                                    </TextArea>
-                                </Form>
-                                <Button.Group attached='bottom'>
-                                    <Button onClick={this.generateLexicon} disabled={interactionDisabled}>reset</Button>
-                                    <Button onClick={this.saveLexicon} positive disabled={interactionDisabled}>save</Button>
-                                </Button.Group>
-                            </div>
+                            {currentEngine && !name &&
+                              <p>{ t('pronDict.common.noCurrentPronDictLabel') }</p>
+                            }
 
-                            <Button as={Link} to={urls.gui.model.index} disabled={interactionDisabled}>
-                                {t('common.nextButton')}
-                            </Button>
+                            {currentEngine && name &&
+                            <>
+                                <Message content={ t('pronDict.lexicon.description') } />
+
+                                <div className="form-wrapper">
+                                    <Form>
+                                        <TextArea
+                                            className="lexicon"
+                                            onChange={this.handleChange}
+                                            value={lexicon} >
+                                        </TextArea>
+                                    </Form>
+                                    <Button.Group size="tiny">
+                                        <Button onClick={this.generateLexicon} disabled={interactionDisabled}>reset</Button>
+                                        <Button onClick={this.saveLexicon} positive disabled={interactionDisabled}>save</Button>
+                                    </Button.Group>
+                                </div>
+
+                                <Button as={Link} to={urls.gui.model.index} disabled={interactionDisabled}>
+                                    {t('common.nextButton')}
+                                </Button>
+                            </>
+                            }
 
                         </Grid.Column>
                     </Grid>
@@ -87,7 +99,8 @@ const mapStateToProps = (state) => {
     return {
         name: state.pronDict.name,
         l2s: state.pronDict.l2s,
-        lexicon: state.pronDict.lexicon
+        lexicon: state.pronDict.lexicon,
+        currentEngine: state.engine.engine
     }
 }
 

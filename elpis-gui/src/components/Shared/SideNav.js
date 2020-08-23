@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { List, Accordion } from 'semantic-ui-react';
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { setCurrentStep } from 'redux/actions/appActions'
+import { setCurrentStep } from 'redux/actions/sideNavActions'
 import { stepToOrder } from '../../redux/reducers/sideNavReducer'
 import './SideNav.css'
 
@@ -84,7 +84,7 @@ class SideNav extends Component {
 const mapStateToProps = (state, ownProps) => {
 	return {
 		steps: state.sideNav.steps,
-		engine: state.sideNav.engine,
+		engine: state.engine.engine,
 		ownProps: ownProps
 	}
 }

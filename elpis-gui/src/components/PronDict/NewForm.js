@@ -16,7 +16,7 @@ class NewForm extends Component {
     }
 
     render() {
-        const { t, error, currentDataset, datasets, pronDictNew } = this.props;
+        const { t, currentEngine, error, currentDataset, datasets, pronDictNew } = this.props;
 
         let defaultDatasetName = ''
         if (currentDataset) {
@@ -68,18 +68,24 @@ class NewForm extends Component {
                                 <ErrorMessage component="div" className="error" name="name" />
                             </Form.Field>
 
-                            <Form.Field>
-                                <label>select a group of recordings</label>
-                                <Field component="select" name="dataset_name">
-                                    {datasets.map(name =>
-                                        (<option key={name} value={name}>{name}</option>))
-                                    }
-                                </Field>
-                            </Form.Field>
+                            {currentEngine && datasets.length === 0 &&
+                                <p>{ t('pronDict.common.noDatasetsLabel') }</p>
+                            }
+
+                            {currentEngine && datasets.length > 0 &&
+                                <Form.Field>
+                                    <label>select a group of recordings</label>
+                                    <Field component="select" name="dataset_name">
+                                        {datasets.map(name =>
+                                            (<option key={name} value={name}>{name}</option>))
+                                        }
+                                    </Field>
+                                </Form.Field>
+                            }
                             {error &&
                                 <p className={"error-message"}>{error}</p>
                             }
-                            <Button type="button" onClick={handleSubmit}>
+                            <Button type="button" onClick={handleSubmit} disabled={datasets.length===0}>
                                 {t('common.addNewButton')}
                             </Button>
                         </Form>
@@ -94,7 +100,8 @@ const mapStateToProps = state => {
         name: state.pronDict.name,
         currentDataset: state.dataset.name,
         datasets: state.dataset.datasetList,
-        error: state.pronDict.error
+        error: state.pronDict.error,
+        currentEngine: state.engine.engine
     }
 }
 const mapDispatchToProps = dispatch => ({
@@ -104,9 +111,7 @@ const mapDispatchToProps = dispatch => ({
     pronDictNew: (postData, history) => {
         dispatch(pronDictNew(postData))
             .then(response => {
-                console.log('pron dict response', response)
                 if (response.status===500) {
-                    console.log('response.status', response.status)
                     throw Error(response.error)
                 }
                 return response

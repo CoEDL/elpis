@@ -23,7 +23,7 @@ class PronDictL2S extends Component {
     }
 
     render() {
-        const { t, l2s, name } = this.props;
+        const { t, currentEngine, l2s, name } = this.props;
 
         const interactionDisabled = name ? false : true
 
@@ -50,46 +50,57 @@ class PronDictL2S extends Component {
 
                             <CurrentPronDictName />
 
-                            <Message content={ t('pronDict.l2s.description') } />
+                            {!currentEngine &&
+                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                            }
 
-                            { ! pron &&
+                            {currentEngine && !name &&
+                              <p>{ t('pronDict.common.noCurrentPronDictLabel') }</p>
+                            }
+
+                            {currentEngine && name &&
+                            <>
+                                <Message content={t('pronDict.l2s.description')}/>
+                                {!pron &&
                                 <Segment>
                                     <Dropzone
                                         disabled={interactionDisabled}
                                         className="dropzone"
-                                        onDrop={ this.onDrop }
-                                        getDataTransferItems={ evt => fromEvent(evt) }>
-                                        { ({ getRootProps, getInputProps, isDragActive }) => {
+                                        onDrop={this.onDrop}
+                                        getDataTransferItems={evt => fromEvent(evt)}>
+                                        {({getRootProps, getInputProps, isDragActive}) => {
                                             return (
                                                 <div
-                                                    { ...getRootProps() }
-                                                    className={ classNames("dropzone", {
+                                                    {...getRootProps()}
+                                                    className={classNames("dropzone", {
                                                         "dropzone_active": isDragActive
-                                                    }) }
+                                                    })}
                                                 >
-                                                    <input { ...getInputProps() } />
+                                                    <input {...getInputProps()} />
 
                                                     {
                                                         isDragActive ? (
-                                                            <p>{ t('pronDict.l2s.dropFilesHintDragActive') } </p>
-                                                        ) : (<p>{ t('pronDict.l2s.dropFilesHint') }</p>)
+                                                            <p>{t('pronDict.l2s.dropFilesHintDragActive')} </p>
+                                                        ) : (<p>{t('pronDict.l2s.dropFilesHint')}</p>)
                                                     }
                                                     <Button>{t('pronDict.l2s.uploadButton')}</Button>
                                                 </div>
                                             );
-                                        } }
+                                        }}
                                     </Dropzone>
                                 </Segment>
-                            }
+                                }
 
-                            <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
-                                {t('common.nextButton')}
-                            </Button>
+                                <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
+                                    {t('common.nextButton')}
+                                </Button>
 
-                            {pron &&
+                                {pron &&
                                 <Segment>
-                                    { pron }
+                                    {pron}
                                 </Segment>
+                                }
+                            </>
                             }
 
                         </Grid.Column>
@@ -104,6 +115,7 @@ const mapStateToProps = state => {
     return {
         l2s: state.pronDict.l2s,
         name: state.pronDict.name,
+        currentEngine: state.engine.engine
     }
 }
 

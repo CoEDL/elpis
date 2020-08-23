@@ -35,7 +35,7 @@ class ModelTrain extends Component {
     }
 
     render() {
-        const { t, name, settings, status, stage_status } = this.props;
+        const { t, currentEngine, name, settings, status, stage_status } = this.props;
 
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />
@@ -59,50 +59,62 @@ class ModelTrain extends Component {
 
                             <CurrentModelName />
 
-                            <Card fluid>
-                                <Card.Content header={ t('model.train.settingsHeader') } />
-                                <Card.Content description={ t('model.settings.ngramLabel') + ' ' + settings.ngram } />
-                            </Card>
+                            {!currentEngine &&
+                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                            }
 
-                            <Message icon>
-                                { loadingIcon }
-                                <Message.Content>
-                                    <Message.Header>{ status }</Message.Header>
-                                    {stage_status &&
-                                    <div className="stages">
-                                        {Object.keys(stage_status).map((stage, i) => {
-                                                let name = stage_status[stage]["name"]
-                                                let status = stage_status[stage]["status"]
-                                                let message = stage_status[stage]["message"]
-                                                return (
-                                                    <p key={stage} className="stage">
-                                                        <span className="name">{name}</span>
-                                                        <span className="divider">{status && <>|</>}</span>
-                                                        <span className="status">{status}</span>
-                                                        <span className="divider">{message && <>|</>}</span>
-                                                        <span className="message">{message}</span>
-                                                    </p>
-                                                )
-                                            }
-                                        )}
-                                    </div>
-                                    }
-                                </Message.Content>
-                            </Message>
+                            {currentEngine && !name &&
+                              <p>{ t('model.common.noCurrentModelLabel') }</p>
+                            }
 
-                            <Segment>
+                            {currentEngine && name &&
+                            <>
 
-                                <Button onClick={this.handleModelTrain} disabled={!name || status !== 'ready'}>
-                                    { t('model.train.trainButton') }
-                                </Button>
+                                <Card fluid>
+                                    <Card.Content header={t('model.train.settingsHeader')}/>
+                                    <Card.Content description={t('model.settings.ngramLabel') + ' ' + settings.ngram}/>
+                                </Card>
 
-                                <Button as={Link} to={urls.gui.model.results}
-                                        disabled={status === 'ready' || status === "training"}>
-                                    {t('common.nextButton')}
-                                </Button>
+                                <Message icon>
+                                    {loadingIcon}
+                                    <Message.Content>
+                                        <Message.Header>{status}</Message.Header>
+                                        {stage_status &&
+                                        <div className="stages">
+                                            {Object.keys(stage_status).map((stage, i) => {
+                                                    let name = stage_status[stage]["name"]
+                                                    let status = stage_status[stage]["status"]
+                                                    let message = stage_status[stage]["message"]
+                                                    return (
+                                                        <p key={stage} className="stage">
+                                                            <span className="name">{name}</span>
+                                                            <span className="divider">{status && <>|</>}</span>
+                                                            <span className="status">{status}</span>
+                                                            <span className="divider">{message && <>|</>}</span>
+                                                            <span className="message">{message}</span>
+                                                        </p>
+                                                    )
+                                                }
+                                            )}
+                                        </div>
+                                        }
+                                    </Message.Content>
+                                </Message>
 
-                            </Segment>
+                                <Segment>
 
+                                    <Button onClick={this.handleModelTrain} disabled={!name || status !== 'ready'}>
+                                        {t('model.train.trainButton')}
+                                    </Button>
+
+                                    <Button as={Link} to={urls.gui.model.results}
+                                            disabled={status === 'ready' || status === "training"}>
+                                        {t('common.nextButton')}
+                                    </Button>
+
+                                </Segment>
+                            </>
+                            }
 
                         </Grid.Column>
                     </Grid>
@@ -118,7 +130,8 @@ const mapStateToProps = state => {
         name: state.model.name,
         settings: state.model.settings,
         status: state.model.status,
-        stage_status: state.model.stage_status
+        stage_status: state.model.stage_status,
+        currentEngine: state.engine.engine
     }
 }
 const mapDispatchToProps = dispatch => ({

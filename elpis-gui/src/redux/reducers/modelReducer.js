@@ -42,6 +42,7 @@ const model = (state = initState, action) => {
                 datasetName: dataset_name,
                 pronDictName: pron_dict_name,
                 settings: {...state.settings, ngram: ngram},
+                results: {}, // TODO include results in model load api
                 status: 'ready'
             }
 
@@ -79,6 +80,7 @@ const model = (state = initState, action) => {
 
         case actionTypes.MODEL_RESULTS_SUCCESS:
             var { data, status } = action.response.data
+            console.log(data, status)
             if (status == 200) {
                 return { ...state, results: data.results }
             } else {

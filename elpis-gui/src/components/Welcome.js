@@ -39,7 +39,7 @@ class StepWelcome extends Component {
 
 						<Segment>
 							<p>
-								Start by <Link to={urls.gui.dataset.new}>making a new group of recordings</Link> or <Link to={urls.gui.dataset.index}>or use one you have started before</Link>.
+								<Link to={urls.gui.engine.index}>Start here</Link>
 							</p>
 						</Segment>
 

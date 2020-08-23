@@ -11,6 +11,7 @@ import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
 import NewForm from 'components/Model/NewForm';
 import CurrentModelName from "./CurrentModelName";
+import SelectEngine from 'components/Engine/SelectEngine'
 import urls from 'urls';
 
 class ModelDashboard extends Component {
@@ -49,7 +50,7 @@ class ModelDashboard extends Component {
     }
 
     render() {
-        const { t, name, list } = this.props
+        const { t, currentEngine, name, list } = this.props
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
@@ -115,12 +116,16 @@ class ModelDashboard extends Component {
 
                             <CurrentModelName />
 
-
-                            {list.length == 0 &&
-                                <NewForm />
+                            {!currentEngine &&
+                               <SelectEngine />
                             }
 
-                            {list.length > 0 &&
+                            {currentEngine &&
+                            <>
+                                {list.length == 0 &&
+                                    <NewForm/>
+                                }
+                                {list.length > 0 &&
                                 <>
                                     <Segment>
                                         <Button
@@ -129,20 +134,16 @@ class ModelDashboard extends Component {
                                             labelPosition='left'
                                             icon='add'
                                             as={Link}
-                                            to={urls.gui.model.new} />
+                                            to={urls.gui.model.new}/>
                                     </Segment>
-
-                                    <Segment>
-                                        {listEl}
-                                    </Segment>
-
+                                    {listEl}
                                     <Button as={Link} to={urls.gui.model.settings} disabled={!name}>
                                         {t('common.nextButton')}
                                     </Button>
-
                                 </>
+                                }
+                            </>
                             }
-
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -154,7 +155,8 @@ class ModelDashboard extends Component {
 const mapStateToProps = state => {
     return {
         name: state.model.name,
-        list: state.model.modelList
+        list: state.model.modelList,
+        currentEngine: state.engine.engine
     }
 }
 

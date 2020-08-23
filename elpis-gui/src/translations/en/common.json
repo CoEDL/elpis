@@ -2,6 +2,15 @@
     "welcome": {
         "title": "Elpis"
     },
+    "engine": {
+        "select": {
+            "title": "Engine"
+        },
+        "common": {
+            "currentEngineLabel": "Current engine: ",
+            "noCurrentEngineLabel": "No engine selected yet."
+        }
+    },
     "dataset": {
         "common": {
             "currentDatasetLabel": "Current recordings: ",
@@ -52,18 +61,10 @@
             "noWords": "No words found, please upload some files or check your import settings."
         }
     },
-    "engine": {
-        "select": {
-            "title": "Select Engine"
-        },
-        "common": {
-            "currentEngineLabel": "Current engine: ",
-            "noCurrentEngineLabel": "No engine selected yet."
-        }
-    },
     "pronDict": {
         "common": {
             "currentPronDictLabel": "Current pronunciation dictionary: ",
+            "noDatasetsLabel": "Recordings are required before making pronunciation dictionary.",
             "noCurrentPronDictLabel": "No current pronunciation dictionary.",
             "chooseOrNewLabel": "Choose one."
         },
@@ -165,6 +166,9 @@
         "addNewButton": "Add New",
         "nextButton": "Next",
         "newButton": "New",
+        "firstSelectAnEngine": "First, select an engine.",
+        "makeNewOne": "Make a new one using the form below.",
+        "selectExisting": "Or select an existing one from the list.",
         "selectOneBelow": "Make a new one, or select one from the list below.",
         "choose": "Choose",
         "chooseOrNewLabel": "Choose one.",

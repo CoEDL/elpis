@@ -4,7 +4,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import { Button, Form, Input, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { interfaceObjectNames } from 'redux/actions/appActions';
+import { interfaceObjectNames } from 'redux/actions/configActions';
 import { modelNew } from 'redux/actions/modelActions';
 import urls from 'urls'
 
@@ -17,6 +17,7 @@ class NewForm extends Component {
         interfaceObjectNames()
     }
 
+    // TODO handle error when attempting to make a new model with no dataset / pron dict selected
 
     render() {
         const { t, engine, error, currentDataset, datasets, currentPronDict, pronDicts, modelNew } = this.props;
@@ -129,7 +130,7 @@ class NewForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        engine: state.sideNav.engine,
+        engine: state.engine.engine,
         name: state.model.name,
         datasets: state.config.datasetList,
         pronDicts: state.config.pronDictList,
