@@ -9,4 +9,3 @@ pympi-ling
 pystache
 setuptools
 werkzeug
-requests
