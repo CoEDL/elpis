@@ -115,7 +115,6 @@ class ModelDashboard extends Component {
 
                             <CurrentModelName />
 
-
                             {list.length == 0 &&
                                 <NewForm />
                             }

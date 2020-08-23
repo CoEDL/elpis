@@ -9,6 +9,7 @@ import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
 import NewForm from 'components/Dataset/NewForm';
 import CurrentDatasetName from "./CurrentDatasetName";
+import SelectEngine from 'components/Engine/SelectEngine'
 import urls from 'urls';
 
 class DatasetDashboard extends Component {
@@ -45,7 +46,7 @@ class DatasetDashboard extends Component {
     }
 
     render() {
-        const { t, name, list } = this.props;
+        const { t, currentEngine, name, list } = this.props;
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
@@ -96,12 +97,19 @@ class DatasetDashboard extends Component {
 
                             <CurrentDatasetName />
 
-                            {list.length==0 &&
-                                <NewForm />
+                            {!currentEngine &&
+                               <SelectEngine />
                             }
 
-                            {list.length > 0 &&
-                                <>
+                            {currentEngine &&
+                            <>
+
+                                {list.length == 0 &&
+                                    <NewForm/>
+                                }
+
+                                {list.length > 0 &&
+                                    <>
                                     <Segment>
                                         <Button
                                             className='add'
@@ -112,17 +120,15 @@ class DatasetDashboard extends Component {
                                             to={urls.gui.dataset.new} />
                                     </Segment>
 
-                                    <Segment>
-                                        {listEl}
-                                    </Segment>
+                                    {listEl}
 
                                     <Button as={Link} to={urls.gui.dataset.files} disabled={!name}>
                                         {t('common.nextButton')}
                                     </Button>
-
-                                </>
+                                    </>
+                                }
+                            </>
                             }
-
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -134,7 +140,8 @@ class DatasetDashboard extends Component {
 const mapStateToProps = state => {
     return {
         list: state.dataset.datasetList,
-        name: state.dataset.name
+        name: state.dataset.name,
+        currentEngine: state.sideNav.engine
     }
 }
 

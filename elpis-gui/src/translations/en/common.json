@@ -2,6 +2,15 @@
     "welcome": {
         "title": "Elpis"
     },
+    "engine": {
+        "select": {
+            "title": "Engine"
+        },
+        "common": {
+            "currentEngineLabel": "Current engine: ",
+            "noCurrentEngineLabel": "No engine selected yet."
+        }
+    },
     "dataset": {
         "common": {
             "currentDatasetLabel": "Current recordings: ",
@@ -50,15 +59,6 @@
             "ready": "Ready to process.",
             "preparing": "The files are being processed.",
             "noWords": "No words found, please upload some files or check your import settings."
-        }
-    },
-    "engine": {
-        "select": {
-            "title": "Select Engine"
-        },
-        "common": {
-            "currentEngineLabel": "Current engine: ",
-            "noCurrentEngineLabel": "No engine selected yet."
         }
     },
     "pronDict": {

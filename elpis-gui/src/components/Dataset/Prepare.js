@@ -37,7 +37,10 @@ class DatasetPrepare extends Component {
     }
 
     render() {
-        const { t, additionalTextFiles, status, wordlist } = this.props
+        const { t, additionalTextFiles, currentEngine, status, wordlist } = this.props
+
+        console.log("status", status)
+        console.log("wordlist", wordlist)
 
         const { column, direction } = this.state
 
@@ -99,6 +102,14 @@ class DatasetPrepare extends Component {
 
                             <CurrentDatasetName />
 
+                            {!currentEngine &&
+                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                            }
+
+                            {currentEngine && !name &&
+                              <p>{ t('dataset.common.noCurrentDatasetLabel') }</p>
+                            }
+
                             {status === 'ready' &&
                                 <p>{ t('dataset.prepare.ready') }</p>
                             }
@@ -112,7 +123,10 @@ class DatasetPrepare extends Component {
                                 <>
                                     {listEl}
 
-                                    <Button as={Link} to={urls.gui.engine.index} disabled={interactionDisabled}>
+                                    <Button as={Link}
+                                            to={(currentEngine==="kaldi") ? urls.gui.pronDict.index :
+                                                urls.gui.model.index}
+                                            disabled={interactionDisabled}>
                                         { t('common.nextButton') }
                                     </Button>
                                 </>
@@ -130,6 +144,7 @@ class DatasetPrepare extends Component {
 const mapStateToProps = state => {
     return {
         name: state.dataset.name,
+        currentEngine: state.sideNav.engine,
         wordlist: state.dataset.wordlist,
         additionalTextFiles: state.dataset.additionalTextFiles,
         status: state.dataset.status

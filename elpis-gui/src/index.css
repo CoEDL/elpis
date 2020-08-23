@@ -121,3 +121,12 @@ label.pad-right,
     border: 1px solid #aaa;
     padding: 1em;
 }
+
+.top-nav {
+    background: pink;
+    font-weight: 400;
+}
+
+.top-nav .ui.selection.dropdown {
+    min-width: 8em;
+}

@@ -6,6 +6,7 @@ import { translate } from 'react-i18next';
 import { datasetSettings, datasetPrepare } from 'redux/actions/datasetActions';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
+import SelectEngine from 'components/Engine/SelectEngine'
 import FileUpload from './FileUpload';
 import CurrentDatasetName from "./CurrentDatasetName";
 import GeneratedUI from './GeneratedUI';
@@ -22,6 +23,7 @@ class DatasetFiles extends Component {
     render() {
 
         const { t,
+            currentEngine,
             name,
             status,
             audioFiles,
@@ -86,56 +88,66 @@ class DatasetFiles extends Component {
 
                             <CurrentDatasetName />
 
-                            <Message attached content={ t('dataset.files.description') } />
+                            {!currentEngine &&
+                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                            }
 
-                            <Segment className="attached">
+                            {currentEngine && !name &&
+                              <p>{ t('dataset.common.noCurrentDatasetLabel') }</p>
+                            }
 
-                                <FileUpload name={name} />
+                            {currentEngine && name &&
+                                <>
+                                <Message attached content={ t('dataset.files.description') } />
+                                <Segment className="attached">
 
-                                <div>{loadingIcon}</div>
+                                    <FileUpload name={name} />
 
-                                {filesHeader &&
-                                    <>
+                                    <div>{loadingIcon}</div>
+
+                                    {filesHeader &&
+                                        <>
+                                        <Header as='h3'>
+                                            { filesHeader }
+                                        </Header>
+                                        <div className="file-list">
+                                            <Grid columns={3}>
+                                                <Grid.Column>
+                                                    <List>
+                                                        {audioFileList}
+                                                    </List>
+                                                </Grid.Column>
+                                                <Grid.Column>
+                                                    <List>
+                                                        {transcriptionFilesList}
+                                                    </List>
+                                                </Grid.Column>
+                                                <Grid.Column>
+                                                    <List>
+                                                        {additionalTextFilesList}
+                                                    </List>
+                                                </Grid.Column>
+                                            </Grid>
+                                        </div>
+                                        </>
+                                    }
+
+                                </Segment>
+                                <Segment>
                                     <Header as='h3'>
-                                        { filesHeader }
+                                        { t('dataset.files.importSettingsHeader') }
                                     </Header>
-                                    <div className="file-list">
-                                        <Grid columns={3}>
-                                            <Grid.Column>
-                                                <List>
-                                                    {audioFileList}
-                                                </List>
-                                            </Grid.Column>
-                                            <Grid.Column>
-                                                <List>
-                                                    {transcriptionFilesList}
-                                                </List>
-                                            </Grid.Column>
-                                            <Grid.Column>
-                                                <List>
-                                                    {additionalTextFilesList}
-                                                </List>
-                                            </Grid.Column>
-                                        </Grid>
-                                    </div>
-                                    </>
-                                }
 
-                            </Segment>
-                            <Segment>
-                                <Header as='h3'>
-                                    { t('dataset.files.importSettingsHeader') }
-                                </Header>
+                                    <GeneratedUI settings={settings} ui={ui} changeSettingsCallback={datasetSettings} />
+                                </Segment>
 
-                                <GeneratedUI settings={settings} ui={ui} changeSettingsCallback={datasetSettings} />
-                            </Segment>
+                                <Divider />
 
-                            <Divider />
-
-                            <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
-                                { t('common.nextButton') }
-                            </Button>
-
+                                <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
+                                    { t('common.nextButton') }
+                                </Button>
+                                </>
+                            }
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -153,7 +165,8 @@ const mapStateToProps = state => {
         importer_name: state.dataset.importer_name,
         settings: state.dataset.settings,
         ui: state.dataset.ui,
-        status: state.dataset.status
+        status: state.dataset.status,
+        currentEngine: state.sideNav.engine
     }
 }
 

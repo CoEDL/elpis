@@ -7,8 +7,8 @@ const enableAll = true
 
 // Define a total ordering on the steps.
 const stepOrderDefinition = [
-	'recordings',
 	'engine',
+	'recordings',
 	'pronunciation',
 	'train',
 	'transcribe'
@@ -49,17 +49,17 @@ const initialStepModelState = {
 	engine_list: [],
 	lastURL: null,
 	steps: {
+		engine: {
+			substeps: [
+				{ done: false, doing: false, enabled: false, title: "Engine", path: urls.gui.engine.index }
+			],
+			engine_specific: null
+		},
 		recordings: {
 			substeps: [
 				{ done: false, doing: false, enabled: false, title: "Recordings", path: urls.gui.dataset.index },
 				{ done: false, doing: false, enabled: false, title: "Files", path: urls.gui.dataset.files },
 				{ done: false, doing: false, enabled: false, title: "Wordlist", path: urls.gui.dataset.prepare }
-			],
-			engine_specific: null
-		},
-		engine: {
-			substeps: [
-				{ done: false, doing: false, enabled: false, title: "Engine", path: urls.gui.engine.index }
 			],
 			engine_specific: null
 		},
