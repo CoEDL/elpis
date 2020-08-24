@@ -93,24 +93,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                             let options = [];
                             // Build options
                             data.options.forEach(v => {
-                                // <Select> does not like to display text if the key or value (?) is null.
-                                // So convert null to string "- not selected -".
-                                if (v === null || v === '') {
-                                    // console.log("pushing: ", {
-                                    //     key: "- not selected -",
-                                    //     value: "- not selected -",
-                                    //     text: "- not selected -"
-                                    // });
-                                    // This shouldn't be needed?
-                                    // options.push({
-                                    //     key: "- not selected -",
-                                    //     value: "- not selected -",
-                                    //     text: "- not selected -"
-                                    // })
-                                } else {
-                                    // console.log("pushing: ", {key: v, value: v, text: v});
-                                    options.push({key: v, value: v, text: v})
-                                }
+                                options.push({key: v, value: v, text: v})
                             });
                             dataEntryElement = (<Select
                                 // value={settings[ui_name]}
