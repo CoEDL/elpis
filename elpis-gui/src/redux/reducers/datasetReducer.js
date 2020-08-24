@@ -41,7 +41,7 @@ const dataset = (state = initState, action) => {
                 }
             }
         }
-
+        
         case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
             let {name, files, importer} = action.response.data.data.state;
