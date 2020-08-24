@@ -115,6 +115,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                             dataEntryElement = (<Select
                                 // value={settings[ui_name]}
                                 options={options}
+                                // default value is first option
                                 defaultValue={options[0].value}
                                 onChange={(event, data) => {
                                     let newSettings = {...settings};
@@ -128,9 +129,12 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                                     if (ui_name === "selection_mechanism") {
                                         // Hide other selection mechanisms and show current one
                                         for (const option of data.options) {
+                                            newSettings[option.value] = null;
                                             ui['data'][option.value]['shown'] = false;
                                         }
                                         ui['data'][data.value]['shown'] = true;
+                                        // Update new settings with default value of selected mechanism
+                                        newSettings[data.value] = ui['data'][data.value]['options'][0]
                                     }
                                     changeSettingsCallback(newSettings)
                                 }}
