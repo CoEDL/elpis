@@ -101,19 +101,21 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                                     //     value: "- not selected -",
                                     //     text: "- not selected -"
                                     // });
-                                    options.push({
-                                        key: "- not selected -",
-                                        value: "- not selected -",
-                                        text: "- not selected -"
-                                    })
+                                    // This shouldn't be needed?
+                                    // options.push({
+                                    //     key: "- not selected -",
+                                    //     value: "- not selected -",
+                                    //     text: "- not selected -"
+                                    // })
                                 } else {
                                     // console.log("pushing: ", {key: v, value: v, text: v});
                                     options.push({key: v, value: v, text: v})
                                 }
                             });
                             dataEntryElement = (<Select
-                                value={settings[ui_name]}
+                                // value={settings[ui_name]}
                                 options={options}
+                                defaultValue={options[0].value}
                                 onChange={(event, data) => {
                                     let newSettings = {...settings};
                                     // Convert from "not selected" string back to null.
@@ -124,7 +126,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                                     }
                                     // Special dropdown logic for selection mechanism
                                     if (ui_name === "selection_mechanism") {
-                                        // Hide other selection mechanisms and show selected one
+                                        // Hide other selection mechanisms and show current one
                                         for (const option of data.options) {
                                             ui['data'][option.value]['shown'] = false;
                                         }
