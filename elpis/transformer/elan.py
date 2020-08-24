@@ -45,18 +45,25 @@ elan.set_default_context({
 
 elan.general_setting_title(title='Tiers',
                            description='Choose the tier that your transcriptions are on, just choose one of these.')
+elan.general_setting(key='selection_mechanism',
+                     ui_format='select',
+                     display_name='Selection Mechanism',
+                     options=['tier_type', 'tier_name', 'tier_order'])
 elan.general_setting(key='tier_type',
                      ui_format='select',
                      display_name='Tier Type',
-                     options=[''])
+                     options=[''],
+                     shown=False)
 elan.general_setting(key='tier_name',
                      ui_format='select',
                      display_name='Tier Name',
-                     options=[''])
+                     options=[''],
+                     shown=False)
 elan.general_setting(key='tier_order',
                      ui_format='select',
                      display_name='Tier Order',
-                     options=[''])
+                     options=[''],
+                     shown=False)
 
 elan.general_setting_title(title='Punctuation',
                            description='What to do with punctuation.')
