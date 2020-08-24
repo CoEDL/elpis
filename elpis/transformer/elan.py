@@ -52,17 +52,18 @@ elan.general_setting(key='selection_mechanism',
 elan.general_setting(key='tier_type',
                      ui_format='select',
                      display_name='Tier Type',
-                     options=[''],
-                     shown=True)
+                     options=[],
+                     shown=True,
+                     default='default-lt')
 elan.general_setting(key='tier_name',
                      ui_format='select',
                      display_name='Tier Name',
-                     options=[''],
+                     options=[],
                      shown=False)
 elan.general_setting(key='tier_order',
                      ui_format='select',
                      display_name='Tier Order',
-                     options=[''],
+                     options=[],
                      shown=False)
 
 elan.general_setting_title(title='Punctuation',
@@ -135,7 +136,7 @@ def update_ui(file_paths: List[Path], ui):
             
     ui['data']['tier_type']['options'] = list(_tier_types)
     ui['data']['tier_name']['options'] = list(_tier_names)
-    ui['data']['tier_order']['options'] = [None] + [i for i in range(tier_max_count)]
+    ui['data']['tier_order']['options'] = [i for i in range(tier_max_count)]
     return ui
 
 @elan.import_files('eaf')
