@@ -20,6 +20,10 @@ class DatasetFiles extends Component {
         history.push(urls.gui.dataset.prepare)
     }
 
+    handleDeleteButton = (file) => {
+        datasetDelete(file)
+    }
+
     render() {
 
         const { t,

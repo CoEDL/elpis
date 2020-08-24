@@ -143,8 +143,8 @@ const datasetFilesFailure = error => ({
 
 /* * * * * * * * * * * *  FILES DELETE * * * * * * * * * * *  */
 
-export function datasetDelete(postData, fileName) {
-    const url = baseUrl + urls.api.dataset.delete + '/' + fileName
+export function datasetDelete(postData) {
+    const url = baseUrl + urls.api.dataset.delete + '/' + postData
     const config = { headers: { 'content-type': 'multipart/form-data' } }
     var responseData
     return async dispatch => {
