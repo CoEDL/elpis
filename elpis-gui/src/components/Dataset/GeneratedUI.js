@@ -100,12 +100,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                             }
                             dataEntryElement = (<Select
                                 value={settings[ui_name]}
-                                // value={ui_name === "selection_mechanism" 
-                                //     ? options[0].value
-                                //     : settings[ui_name]}
                                 options={options}
-                                // default value is first option
-                                // defaultValue={options[0].value}
                                 onChange={(event, data) => {
                                     console.log(settings[ui_name])
                                     let newSettings = {...settings};
