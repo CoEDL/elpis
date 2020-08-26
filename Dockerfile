@@ -47,7 +47,8 @@ RUN apt-get update && apt-get install -y \
     zsh \
     unzip \
     tree \
-    ffmpeg
+    ffmpeg \
+    ghostscript
 
 # Get and Build Kaldi
 WORKDIR /
@@ -112,32 +113,30 @@ RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/
 # Clean up package manager
 RUN apt-get clean autoclean
 
-# Oh-My-Zsh
-RUN apt-get install zsh
-RUN chsh -s /usr/bin/zsh root
-RUN cd /tmp && sh -c sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
-RUN echo "ZSH_THEME=\"agnoster\"" >> ~/.zshhrc
-
 # Add random number generator to skip Docker building cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 # Elpis
 WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
-
 # Elpis GUI
-WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
 
 # Example data
 WORKDIR /tmp
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
-
-RUN echo "FLASK_ENV=development" >> ~/.zshrc
-RUN echo "FLASK_APP=elpis" >> ~/.zshrc
+# Set up zsh & ENV variables
+WORKDIR /root
+RUN apt-get install zsh
+RUN chsh -s /usr/bin/zsh root
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell
+RUN echo "export FLASK_ENV=development" >> ~/.zshrc
+RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
-RUN echo "export LANG=C.UTF-8" >> ~/.zshhrc
+RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
+RUN echo "export PATH=$PATH:/kaldi/src/bin/" >> ~/.zshrc
+RUN cat ~/.zshrc >> ~/.bashrc
 
 # Move ENV lines up. Putting here for now so I can build on top of cached builds
 ENV FLASK_ENV='development'
