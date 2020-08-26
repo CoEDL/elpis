@@ -422,7 +422,8 @@ class DataTransformerAbstractFactory:
                        default: Union[List[str], Set[str], int, str] = '',
                        display_name: str = '',
                        description: str = '',
-                       options: Optional[List[str]] = None):
+                       options: Optional[List[str]] = None,
+                       shown: bool = True):
         """
         Add a field to the import context.
         :param key: the name of the field.
@@ -431,6 +432,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -441,7 +443,8 @@ class DataTransformerAbstractFactory:
             'ui_format': ui_format,
             'display_name': display_name,
             'description': description,
-            'options': options
+            'options': options,
+            'shown': shown
         }
         self._import_ui_type_config[key] = 'setting'
         self._import_ui_order_config.append(key)
@@ -452,7 +455,8 @@ class DataTransformerAbstractFactory:
                        default: Union[List[str], Set[str], int, str] = '',
                        display_name: str = '',
                        description: str = '',
-                       options: Optional[List[str]] = None):
+                       options: Optional[List[str]] = None,
+                       shown: bool = True):
         """
         Add a field to the export context.
         :param key: the name of the field.
@@ -461,6 +465,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -471,7 +476,8 @@ class DataTransformerAbstractFactory:
             'ui_format': ui_format,
             'display_name': display_name,
             'description': description,
-            'options': options
+            'options': options,
+            'shown': shown
         }
         self._export_ui_type_config[key] = 'setting'
         self._export_ui_order_config.append(key)
@@ -482,7 +488,8 @@ class DataTransformerAbstractFactory:
                         default: Union[List[str], Set[str], int, str] = '',
                         display_name: str = '',
                         description: str = '',
-                        options: Optional[List[str]] = None):
+                        options: Optional[List[str]] = None,
+                        shown: bool = True):
         """
         Add a field to the both import and export context.
         :param key: the name of the field.
@@ -491,6 +498,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -503,13 +511,15 @@ class DataTransformerAbstractFactory:
                             default=default,
                             display_name=display_name,
                             description=description,
-                            options=options)
+                            options=options,
+                            shown=shown)
         self.export_setting(key=key,
                             ui_format=ui_format,
                             default=default,
                             display_name=display_name,
                             description=description,
-                            options=options)
+                            options=options,
+                            shown=shown)
 
     def import_setting_title(self, title: str, description: str):
         key = '_title_' + str(self._import_title_count)
