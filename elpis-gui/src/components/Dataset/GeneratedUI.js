@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Select, Form, Input, Table, TextArea } from 'semantic-ui-react';
 
 function groupSettingsFromUI(ui) {
@@ -34,6 +34,31 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
         changeSettingsCallback(newSettings)
     }
 
+    const handleSelectChange = (ui_name, data) => {
+        console.log(settings)
+        let newSettings = {...settings};
+        // Convert from "not selected" string back to null.
+        // if (data.value === "- not selected -") {
+        //     newSettings[ui_name] = null;
+        // } else {
+        //     newSettings[ui_name] = data.value;
+        // }
+        // Special dropdown logic for selection mechanism
+        if (ui_name === "selection_mechanism") {
+            // Hide other selection mechanisms and show current one
+            for (const option of data.options) {
+                if (option.value !== '-- none selected --') {
+                    newSettings[option.value] = null;
+                    ui['data'][option.value]['shown'] = false;
+                }
+            }
+            ui['data'][data.value]['shown'] = true;
+            // Update new settings with default value of selected mechanism
+            newSettings[data.value] = ui['data'][data.value]['options'][0]
+        }
+        changeSettingsCallback(newSettings)
+    }
+    
     // Sort names into groups by title followed by settings.
     let settingGroups = groupSettingsFromUI(ui);
 
@@ -64,7 +89,6 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                 let data = ui['data'][ui_name];
                 if (data.shown) {
                     let label = (data.display_name !== null) ? data.display_name : ui_name;
-
                     // Switch input type based on ui specification
                     let dataEntryElement;
                     switch (data.ui_format) {
@@ -95,33 +119,11 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                             data.options.forEach(v => {
                                 options.push({key: v, value: v, text: v})
                             });
-                            if (ui_name === "selection_mechanism") {
-                                settings[options[0].value] = ui['data'][options[0].value]['options'][0];
-                            }
                             dataEntryElement = (<Select
-                                value={settings[ui_name]}
+                                defaultValue={settings[ui_name]}
                                 options={options}
                                 onChange={(event, data) => {
-                                    console.log(settings[ui_name])
-                                    let newSettings = {...settings};
-                                    // Convert from "not selected" string back to null.
-                                    if (data.value === "- not selected -") {
-                                        newSettings[ui_name] = null;
-                                    } else {
-                                        newSettings[ui_name] = data.value;
-                                    }
-                                    // Special dropdown logic for selection mechanism
-                                    if (ui_name === "selection_mechanism") {
-                                        // Hide other selection mechanisms and show current one
-                                        for (const option of data.options) {
-                                            newSettings[option.value] = null;
-                                            ui['data'][option.value]['shown'] = false;
-                                        }
-                                        ui['data'][data.value]['shown'] = true;
-                                        // Update new settings with default value of selected mechanism
-                                        newSettings[data.value] = ui['data'][data.value]['options'][0]
-                                    }
-                                    changeSettingsCallback(newSettings)
+                                    handleSelectChange(ui_name, data)
                                 }}
                                 selection
                             />);
