@@ -17,10 +17,22 @@ function groupSettingsFromUI(ui) {
     return settingGroups;
 }
 
+
 const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
     // console.group("GeneratedUI");
     // console.log({settings});
     // console.log({ui});
+
+    const forceUpdate = React.useState()[1].bind(null, {})  // see NOTE above
+
+    // On initialisation of component, show the tier name and set it properly
+    useEffect(() => {
+        if (settings !== null) {
+            ui['data']['tier_name']['shown'] = true;
+            settings['tier_name'] = ui['data']['tier_name']['options'][0]
+            changeSettingsCallback(settings)
+        }
+    }, [ui])
 
     if (ui === null || ui === undefined) {
         // console.groupEnd();
@@ -35,22 +47,14 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
     }
 
     const handleSelectChange = (ui_name, data) => {
-        console.log(settings)
+        console.log("test")
+        // console.log(settings)
         let newSettings = {...settings};
-        // Convert from "not selected" string back to null.
-        // if (data.value === "- not selected -") {
-        //     newSettings[ui_name] = null;
-        // } else {
-        //     newSettings[ui_name] = data.value;
-        // }
-        // Special dropdown logic for selection mechanism
         if (ui_name === "selection_mechanism") {
             // Hide other selection mechanisms and show current one
             for (const option of data.options) {
-                if (option.value !== '-- none selected --') {
-                    newSettings[option.value] = null;
-                    ui['data'][option.value]['shown'] = false;
-                }
+                newSettings[option.value] = null;
+                ui['data'][option.value]['shown'] = false;
             }
             ui['data'][data.value]['shown'] = true;
             // Update new settings with default value of selected mechanism
