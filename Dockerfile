@@ -136,9 +136,10 @@ RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshhrc
 RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
+RUN echo "alias run=\"flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
-# Move ENV lines up. Putting here for now so I can build on top of cached builds
+# Move ENV lines up. Putting here for now to build on top of cached builds
 ENV FLASK_ENV='development'
 ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
