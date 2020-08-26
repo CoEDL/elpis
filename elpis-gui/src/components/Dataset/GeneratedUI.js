@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Select, Form, Input, Table, TextArea } from 'semantic-ui-react';
 
 function groupSettingsFromUI(ui) {
@@ -17,10 +17,22 @@ function groupSettingsFromUI(ui) {
     return settingGroups;
 }
 
+
 const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
     // console.group("GeneratedUI");
     // console.log({settings});
     // console.log({ui});
+
+    const forceUpdate = React.useState()[1].bind(null, {})  // see NOTE above
+
+    // On initialisation of component, show the tier name and set it properly
+    useEffect(() => {
+        if (settings !== null) {
+            ui['data']['tier_name']['shown'] = true;
+            settings['tier_name'] = ui['data']['tier_name']['options'][0]
+            changeSettingsCallback(settings)
+        }
+    }, [ui])
 
     if (ui === null || ui === undefined) {
         // console.groupEnd();
@@ -34,6 +46,23 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
         changeSettingsCallback(newSettings)
     }
 
+    const handleSelectChange = (ui_name, data) => {
+        console.log("test")
+        // console.log(settings)
+        let newSettings = {...settings};
+        if (ui_name === "selection_mechanism") {
+            // Hide other selection mechanisms and show current one
+            for (const option of data.options) {
+                newSettings[option.value] = null;
+                ui['data'][option.value]['shown'] = false;
+            }
+            ui['data'][data.value]['shown'] = true;
+            // Update new settings with default value of selected mechanism
+            newSettings[data.value] = ui['data'][data.value]['options'][0]
+        }
+        changeSettingsCallback(newSettings)
+    }
+    
     // Sort names into groups by title followed by settings.
     let settingGroups = groupSettingsFromUI(ui);
 
@@ -62,84 +91,62 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
             } else { // ui['type'][ui_name] == "settings"
                 // console.log("Building input");
                 let data = ui['data'][ui_name];
-                let label = (data.display_name !== null) ? data.display_name : ui_name;
-
-                // Switch input type based on ui specification
-                let dataEntryElement;
-                switch (data.ui_format) {
-                    case 'text': {
-                        dataEntryElement = (<Input
-                                type='text'
-                                value={settings[ui_name]}
-                                onChange={(event, data) => {
-                                    handleStrChange(ui_name, data)
-                                }} />);
-                        }
-                        break;
-                    case 'textarea': {
-                        dataEntryElement = (<TextArea
-                                value={settings[ui_name]}
-                                onChange={(event, data) => {
-                                    handleStrChange(ui_name, data)
-                                }} />);
-                        }
-                        break;
-                    case 'int': {
-                        dataEntryElement = (<Input type='number'/>); /* TODO */
-                        }
-                        break;
-                    case 'select': {
-                        let options = [];
-                        // Build options
-                        data.options.forEach(v => {
-                            // <Select> does not like to display text if the key or value (?) is null.
-                            // So convert null to string "- not selected -".
-                            if (v === null || v === '') {
-                                // console.log("pushing: ", {
-                                //     key: "- not selected -",
-                                //     value: "- not selected -",
-                                //     text: "- not selected -"
-                                // });
-                                options.push({
-                                    key: "- not selected -",
-                                    value: "- not selected -",
-                                    text: "- not selected -"
-                                })
-                            } else {
-                                // console.log("pushing: ", {key: v, value: v, text: v});
-                                options.push({key: v, value: v, text: v})
+                if (data.shown) {
+                    let label = (data.display_name !== null) ? data.display_name : ui_name;
+                    // Switch input type based on ui specification
+                    let dataEntryElement;
+                    switch (data.ui_format) {
+                        case 'text': {
+                            dataEntryElement = (<Input
+                                    type='text'
+                                    value={settings[ui_name]}
+                                    onChange={(event, data) => {
+                                        handleStrChange(ui_name, data)
+                                    }} />);
                             }
-                        });
-                        dataEntryElement = (<Select
-                            value={settings[ui_name]}
-                            options={options}
-                            onChange={(event, data) => {
-                                let newSettings = {...settings};
-                                // Convert from "not selected" string back to null.
-                                if (data.value === "- not selected -") {
-                                    newSettings[ui_name] = null;
-                                } else {
-                                    newSettings[ui_name] = data.value;
-                                }
-                                changeSettingsCallback(newSettings)
-                            }}
-                            selection
-                        />);
-                        // TODO: add a onChange that dispatches the setting (do this for int and string as well)
+                            break;
+                        case 'textarea': {
+                            dataEntryElement = (<TextArea
+                                    value={settings[ui_name]}
+                                    onChange={(event, data) => {
+                                        handleStrChange(ui_name, data)
+                                    }} />);
+                            }
+                            break;
+                        case 'int': {
+                            dataEntryElement = (<Input type='number'/>); /* TODO */
+                            }
+                            break;
+                        case 'select': {
+                            let options = [];
+                            // Build options
+                            data.options.forEach(v => {
+                                options.push({key: v, value: v, text: v})
+                            });
+                            dataEntryElement = (<Select
+                                defaultValue={settings[ui_name]}
+                                options={options}
+                                onChange={(event, data) => {
+                                    handleSelectChange(ui_name, data)
+                                }}
+                                selection
+                            />);
+                            // TODO: add a onChange that dispatches the setting (do this for int and string as well)
+                            }
+                            break;
+                        default: {
                         }
-                        break;
-                    default: {
                     }
-                }
 
-                // Construct row for individual setting
-                let row = (
-                    <Table.Row key={ui_name}>
-                        <Table.Cell collapsing>{label}</Table.Cell>
-                        <Table.Cell>{dataEntryElement}</Table.Cell>
-                    </Table.Row>
-                );
-                settingRows.push(row);
+                    // Construct row for individual setting
+                    let row = (
+                        <Table.Row key={ui_name}>
+                            <Table.Cell collapsing>{label}</Table.Cell>
+                            <Table.Cell>{dataEntryElement}</Table.Cell>
+                        </Table.Row>
+                    );
+                    settingRows.push(row);
+                }
             }
             // console.groupEnd();
         });
