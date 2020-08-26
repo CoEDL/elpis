@@ -130,12 +130,12 @@ RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 WORKDIR /root
 RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
-RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 RUN echo "export FLASK_ENV=development" >> ~/.zshrc
 RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
-RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
-RUN echo "export PATH=$PATH:/kaldi/src/bin/" >> ~/.zshrc
+RUN echo "export LANG=C.UTF-8" >> ~/.zshhrc
+RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # Move ENV lines up. Putting here for now so I can build on top of cached builds
@@ -149,9 +149,8 @@ RUN npm install && \
     npm run build
 
 WORKDIR /elpis
-ENV VIRTUAL_ENV=/venv
-RUN /usr/bin/python3 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN /usr/bin/python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
 
 RUN pip3.6 install wheel pytest pylint && python setup.py develop
 
