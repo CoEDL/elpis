@@ -50,6 +50,14 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     ghostscript
 
+# Install ESPnet dependencies (some may be covered above but listing all for
+# the sake of completeness)
+RUN apt-get install -y cmake \
+    sox \
+    ffmpeg \
+    flac \
+    bc
+
 # Get and Build Kaldi
 WORKDIR /
 
@@ -154,6 +162,18 @@ RUN /usr/bin/python3 -m venv /venv
 ENV PATH="/venv/bin:$PATH"
 
 RUN pip3.6 install wheel pytest pylint && python setup.py develop
+
+# Setting up ESPnet
+WORKDIR /
+RUN git clone https://github.com/persephone-tools/espnet.git
+WORKDIR /espnet
+RUN git checkout elpis
+# Explicitly installing only the CPU version. We should update this to be an
+# nvidia-docker image and install GPU-supported version of ESPnet.
+WORKDIR /espnet/tools
+RUN make KALDI=/kaldi CUPY_VERSION='' -j 4
+
+WORKDIR /elpis
 
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
