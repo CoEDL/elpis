@@ -192,13 +192,11 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
         annotations: List[Tuple[str, str, str]] = []
         annotation_data: List[dict] = []
 
-        # Determine tier_name
-        # First try using tier order to get tier name
-        if tier_order is not None and int(tier_order) >= 0:
-            # Watch out for files that may not have this many tiers
-            # tier_order is 1-index but List indexing is 0-index
+        # Try using tier_order. Watch out for mixed type, empty str if not selected, int if selected
+        if isinstance(tier_order, int):
+            print('*** tier_order', tier_order)
             try:
-                tier_name = tier_names[tier_order-1]
+                tier_name = tier_names[tier_order]
                 print(f"using tier order {tier_order} to get tier name {tier_name}")
             except IndexError:
                 print("couldn't find a tier")
