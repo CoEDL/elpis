@@ -62,9 +62,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
             // Update new settings with default value of selected mechanism
             newSettings[data.value] = ui['data'][data.value]['options'][0]
         }
-        if (newSettings[ui_name]) {
-            newSettings[ui_name] = data.value
-        }
+        newSettings[ui_name] = data.value
         changeSettingsCallback(newSettings)
     }
     
