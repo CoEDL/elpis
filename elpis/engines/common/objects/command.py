@@ -11,9 +11,9 @@ def run(cmdline: str) -> subprocess.CompletedProcess:
     args = ['bash', '-c', cmdline]
     process = subprocess.run(
         args,
-        check=True,
+        check=False,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
+        stderr=subprocess.PIPE,
         universal_newlines=True
     )
     return process

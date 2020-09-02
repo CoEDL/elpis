@@ -218,24 +218,57 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 os.remove(run_log_path)
             stages = os.listdir(local_kaldi_path.joinpath('stages'))
             run(f"touch {run_log_path};")
+
+            # organise stage logs in a dir
+            train_log_dir = self.path.joinpath('train-logs')
+            if os.path.exists(train_log_dir ):
+                shutil.rmtree(train_log_dir )
+            os.mkdir(train_log_dir )
+
+            stage_count = 0
+
             for stage in sorted(stages):
                 print(f"======== STAGE {stage} STARTING ========")
                 self.stage_status = (stage, 'in-progress', '')
-                
+
+                # Create log file
+                stage_log_path = self.path.joinpath(os.path.join(train_log_dir, f'stage_{stage_count}.log'))
+                with open(stage_log_path, 'w+'):
+                    pass
+
+                #  Manipulate stage templates with user-defined settings
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'r') as file :
                     filedata = file.read()
-
+                # Add settings to replace here
                 filedata = filedata.replace('lm_order=1', f'lm_order={self.ngram}')
-
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'w') as file:
                     file.write(filedata)
-                p = run(f"cd {local_kaldi_path}; stages/{stage} >> {run_log_path}")
-                print(p.stdout)
-                print(f"======== STAGE {stage} COMPLETE ========")
-                self.stage_status = (stage, 'complete', '')
 
-            self.log = run(f"cd {local_kaldi_path}; cat {run_log_path}").stdout
-            print('train double done.')
+                # Run the command
+                p = run(f"cd {local_kaldi_path}; stages/{stage} >> {stage_log_path}")
+
+                # This is not so precise
+                # returncode 1 might be because a file that a stage attempts to read hasn't been created by a prev stage
+                print('returncode', p.returncode)
+                print('stdout', p.stdout)
+                print('stderr', p.stderr)
+                #  But let's try breaking on returncode 1 anyway.. future work might parse the log for "Error"
+                if p.returncode == 1:
+                    # Bail
+                    print(f"======== STAGE {stage} FAILED ========")
+                    self.stage_status = (stage, 'failed', '')
+                    break
+                else:
+                    # Continue
+                    print(f"======== STAGE {stage} COMPLETE ========")
+                    self.stage_status = (stage, 'complete', '')
+                    stage_count = stage_count + 1
+
+            # Concat all the files in the train-log dir
+            self.log = run(f"cd {train_log_dir}; cat *.log").stdout
+            # Dump self.log to train.log
+            with open(run_log_path, 'w') as file:
+                file.write(self.log)
 
         def run_training_in_background():
             def background_train_task():
