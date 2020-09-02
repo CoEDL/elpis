@@ -28,8 +28,12 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
     // On initialisation of component, show the tier name and set it properly
     useEffect(() => {
         if (settings !== null) {
-            ui['data']['tier_name']['shown'] = true;
-            settings['tier_name'] = ui['data']['tier_name']['options'][0]
+            const selection_mechanism = settings['selection_mechanism']
+            ui['data'][selection_mechanism]['shown'] = true;
+            // If settings haven't been set, set to the first option
+            if (settings[selection_mechanism] === "") {
+                settings[selection_mechanism] = ui['data'][selection_mechanism]['options'][0]
+            }
             changeSettingsCallback(settings)
         }
     }, [ui])
