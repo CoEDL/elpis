@@ -140,7 +140,7 @@ def update_ui(file_paths: List[Path], ui):
     return ui
 
 @elan.import_files('eaf')
-def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
+def import_eaf_file(eaf_paths, context, reset_annotations, add_annotation, tmp_dir):
     """
     Import handler for processing all .wav and .eaf files.
 
@@ -170,6 +170,8 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
     # Convert dirty words and tokens from str to set, split by '\n'
     special_cases = set(context['special_cases'].splitlines())
     translation_tags = set(context['translation_tags'].splitlines())
+
+    reset_annotations()
 
     for input_elan_file in eaf_paths:
         # Get paths to files
