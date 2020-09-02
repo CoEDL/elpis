@@ -195,7 +195,6 @@ def import_eaf_file(eaf_paths, context, add_annotation, tmp_dir):
         # Determine tier_name
         # First try using tier order to get tier name
         if tier_order is not None and int(tier_order) >= 0:
-        # if tier_order and tier_order is not None:
             # Watch out for files that may not have this many tiers
             # tier_order is 1-index but List indexing is 0-index
             try:
