@@ -45,12 +45,14 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
             let {name, files, importer} = action.response.data.data.state;
-
-            const wordlistObj = JSON.parse(action.response.data.data.wordlist)
-            const wordlist = Object.keys(wordlistObj).map( key => {
-                return ({ name: key, frequency: wordlistObj[key] })
-            })
-            status = wordlist.length > 0 ? 'wordlist-prepared' : ''
+            let wordlist = {}
+            if (action.response.data.data.wordlist) {
+                const wordlistObj = JSON.parse(action.response.data.data.wordlist)
+                wordlist = Object.keys(wordlistObj).map( key => {
+                    return ({ name: key, frequency: wordlistObj[key] })
+                })
+            }
+           const status = wordlist.length > 0 ? 'wordlist-prepared' : ''
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort();
             additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort();
