@@ -47,8 +47,6 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
     }
 
     const handleSelectChange = (ui_name, data) => {
-        console.log("test")
-        // console.log(settings)
         let newSettings = {...settings};
         if (ui_name === "selection_mechanism") {
             // Hide other selection mechanisms and show current one
@@ -59,6 +57,9 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
             ui['data'][data.value]['shown'] = true;
             // Update new settings with default value of selected mechanism
             newSettings[data.value] = ui['data'][data.value]['options'][0]
+        }
+        if (newSettings[ui_name]) {
+            newSettings[ui_name] = data.value
         }
         changeSettingsCallback(newSettings)
     }
