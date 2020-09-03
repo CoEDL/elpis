@@ -20,7 +20,7 @@ from pympi.Elan import Eaf
 from langid.langid import LanguageIdentifier, model
 from nltk.corpus import words
 from praatio import tgio
-from typing import Dict, List, Set, Tuple
+from typing import Callable, Dict, List, Set, Tuple
 from pathlib import Path
 
 from elpis.engines.common.input.clean_json import clean_json_utterance
@@ -140,34 +140,32 @@ def update_ui(file_paths: List[Path], ui):
     return ui
 
 @elan.import_files('eaf')
-def import_eaf_file(eaf_paths, context, reset_annotations, add_annotation, tmp_dir):
+def import_eaf_file(eaf_paths: List[str],
+                    context: Dict[str, str],
+                    reset_annotations: Callable,
+                    add_annotation: Callable,
+                    tmp_dir):
     """
-    Import handler for processing all .wav and .eaf files.
-
-    :param wav_paths: List of string paths to Wave files.
-    :param eaf_paths: List of string paths to Elan files.
-    """
-
-    """
-    Import handler for processing all .eaf files.
-
-    Method to process a particular tier in an eaf file (ELAN Annotation Format). It stores the transcriptions in the 
-    following format:
-                    {'speaker_id': <speaker_id>,
-                    'audio_file_name': <file_name>,
-                    'transcript': <transcription_label>,
-                    'start_ms': <start_time_in_milliseconds>,
-                    'stop_ms': <stop_time_in_milliseconds>}
+    Import handler for processing .eaf files.
 
     :param eaf_paths: List of string paths to Elan files.
-    :return: a list of dictionaries, where each dictionary is an annotation
+    :param context: The settings that will be used to process data from the Elan files.
+    :param reset_annotations: Callback to wipe all annotations that have been previously read.
+        Settings such as the tier type/name/order will determine which annotations are read
+        into the dataset _annotation_store. When settings are changed—
+        (Wait, what? Users change their minds?? OMG yes.)
+        —reset_annotations will reset dataset _annotation_store to {}, ready for annotations derived from the new
+        settings to be added. Without this, changing settings will result in annotations derived from application
+        of new settings being appended to previous annotations.
+    :param add_annotation: Callback to append an annotation from selected tier
+    :param tmp_dir: Honestly, no idea...
     """
+
     tier_order = context['tier_order']
     tier_name = context['tier_name']
     tier_type = context['tier_type']
     punctuation_to_collapse_by = context['punctuation_to_collapse_by']
     punctuation_to_explode_by = context['punctuation_to_explode_by']
-    # Convert dirty words and tokens from str to set, split by '\n'
     special_cases = set(context['special_cases'].splitlines())
     translation_tags = set(context['translation_tags'].splitlines())
 
@@ -181,14 +179,6 @@ def import_eaf_file(eaf_paths, context, reset_annotations, add_annotation, tmp_d
         input_eaf = Eaf(input_elan_file)
         tier_types: List[str] = list(input_eaf.get_linguistic_type_names())
         tier_names: List[str] = list(input_eaf.get_tier_names())
-
-        # TODO: Check if this is necessary? It is possible to process transcription and audio file separately.
-        # # Look for wav file matching the eaf file in same directory
-        # if os.path.isfile(os.path.join(input_directory, file_name + ".wav")):
-        #     print("WAV file found for " + file_name, file=sys.stderr)
-        # else:
-        #     raise ValueError(f"WAV file not found for {full_file_name}. "
-        #                     f"Please put it next to the eaf file in {input_directory}.")
 
         # Get annotations and parameters (things like speaker id) on the target tier
         annotations: List[Tuple[str, str, str]] = []
@@ -217,7 +207,7 @@ def import_eaf_file(eaf_paths, context, reset_annotations, add_annotation, tmp_d
             print(f"using tier name {tier_name}")
             annotations = input_eaf.get_annotation_data_for_tier(tier_name)
         else:
-            pass # TODO: Alert user of a skip due to missing tier_name in file
+            pass  # TODO: Alert user of a skip due to missing tier_name in file
 
         if annotations:
             annotations = sorted(annotations)
@@ -235,6 +225,7 @@ def import_eaf_file(eaf_paths, context, reset_annotations, add_annotation, tmp_d
                 "start_ms": start,
                 "stop_ms": end
             }
+
             # TODO: re-enable later
             # if "PARTICIPANT" in parameters:
             #     obj["speaker_id"] = speaker_id

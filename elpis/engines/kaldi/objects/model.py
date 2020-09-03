@@ -11,6 +11,7 @@ from elpis.engines.common.objects.pron_dict import PronDict
 from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
 from elpis.engines.common.objects.path_structure import PathStructure
 from collections import OrderedDict
+from subprocess import CalledProcessError
 
 
 class KaldiModel(BaseModel):  # TODO not thread safe
@@ -209,26 +210,23 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')
 
-            # Setup for Training complete
-            ######################################################################
-
-            # task _test-train
+            # Prepare (dump, recreate) main train log file
             run_log_path = self.path.joinpath('train.log')
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
-            stages = os.listdir(local_kaldi_path.joinpath('stages'))
             run(f"touch {run_log_path};")
 
-            # organise stage logs in a dir
+            # Organise stage logs in a dir
             train_log_dir = self.path.joinpath('train-logs')
-            if os.path.exists(train_log_dir ):
-                shutil.rmtree(train_log_dir )
+            if os.path.exists(train_log_dir):
+                shutil.rmtree(train_log_dir)
             os.mkdir(train_log_dir )
 
             stage_count = 0
+            stages = os.listdir(local_kaldi_path.joinpath('stages'))
 
             for stage in sorted(stages):
-                print(f"======== STAGE {stage} STARTING ========")
+                print(f"Stage {stage} starting")
                 self.stage_status = (stage, 'in-progress', '')
 
                 # Create log file
@@ -237,6 +235,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                     pass
 
                 #  Manipulate stage templates with user-defined settings
+                # TODO replace with jinja templates or something similar
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'r') as file :
                     filedata = file.read()
                 # Add settings to replace here
@@ -244,31 +243,35 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'w') as file:
                     file.write(filedata)
 
-                # Run the command
-                p = run(f"cd {local_kaldi_path}; stages/{stage} >> {stage_log_path}")
-
-                # This is not so precise
-                # returncode 1 might be because a file that a stage attempts to read hasn't been created by a prev stage
-                print('returncode', p.returncode)
-                print('stdout', p.stdout)
-                print('stderr', p.stderr)
-                #  But let's try breaking on returncode 1 anyway.. future work might parse the log for "Error"
-                if p.returncode == 1:
-                    # Bail
-                    print(f"======== STAGE {stage} FAILED ========")
-                    self.stage_status = (stage, 'failed', '')
-                    break
-                else:
-                    # Continue
-                    print(f"======== STAGE {stage} COMPLETE ========")
+                # Run the command, log output. Also redirect Kaldi sterr output to log. These are often not errors :-(
+                try:
+                    stage_process = run(f"cd {local_kaldi_path}; stages/{stage} >> {stage_log_path}")
+                    with open(stage_log_path, 'a+') as file:
+                        print('stdout', stage_process.stdout, file=file)
+                        print('stderr', stage_process.stderr, file=file)
+                        print('done', file=file)
+                    print(f"Stage {stage} complete")
                     self.stage_status = (stage, 'complete', '')
                     stage_count = stage_count + 1
+                except CalledProcessError as error:
+                    with open(stage_log_path, 'a+') as file:
+                        print('stderr', error.stderr, file=file)
+                        print('failed', file=file)
+                    print(f"Stage {stage} failed")
+                    self.stage_status = (stage, 'failed', '')
+                    break
 
+            self.log = ''
             # Concat all the files in the train-log dir
-            self.log = run(f"cd {train_log_dir}; cat *.log").stdout
-            # Dump self.log to train.log
-            with open(run_log_path, 'w') as file:
-                file.write(self.log)
+            log_filenames = os.listdir(train_log_dir)
+            log_filenames.sort()
+            with open(run_log_path, 'w') as outfile:
+                for log_file in log_filenames:
+                    with open(os.path.join(train_log_dir, log_file)) as infile:
+                        log_contents = infile.read()
+                        outfile.write(log_contents)
+                        outfile.write("\n")
+                        self.log += log_contents
 
         def run_training_in_background():
             def background_train_task():

@@ -598,6 +598,7 @@ class DataTransformerAbstractFactory:
         )
 
         # Callbacks to add data to the internal stores
+
         def reset_annotations():
             nonlocal dt
             dt._annotation_store = {}
