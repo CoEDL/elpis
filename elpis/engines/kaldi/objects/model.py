@@ -1,5 +1,6 @@
 import pystache
 import os
+import re
 import shutil
 from pathlib import Path
 from typing import Callable, Dict, Tuple
@@ -273,8 +274,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             line_split = line.split(None, 1)
             wer = line_split[0]
             line_results = line_split[1]
-            line_results = line_results.replace('[', '')
-            line_results = line_results.replace(']', '')
+            line_results = re.sub("[\[\]]", "", line_results)
             results_split = line_results.split(',')
             count_val = results_split[0].strip()
             ins_val = results_split[1].replace(' ins', '').strip()

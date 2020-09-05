@@ -104,15 +104,6 @@ class EspnetTranscription(BaseTranscription):
         exp_path = self.model.path.joinpath('espnet-asr1', 'exp')
         os.makedirs(f"{infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{infer_path}")
-        #os.makedirs(f"{infer_path}", exist_ok=True)
-        #try:
-        #    shutil.rmtree(f"{infer_path}")
-        #except FileNotFoundError:
-        #    pass
-        #fs = shutil.copytree(f'{self.path}', f"{infer_path}")
-        #print("fs: {}".format(fs))
-        #print("self.path: {}".format(self.path))
-        #print("infer_path: {}".format(infer_path))
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('espnet-asr1', 'audio.wav')}")
         local_espnet_path = Path(self.model.path) / "espnet-asr1" # TODO This is now not a single point of control. Make this dir an attribute of the model.
         prepare_log_path = Path(self.model.path) / "prepare_transcribe_log.txt"
@@ -126,15 +117,6 @@ class EspnetTranscription(BaseTranscription):
         file_util.copy_file(result_path, f'{self.path}/results.txt')
         self.convert_to_text()
         # TODO Need to produce an output eaf.
-        #run(f"cd {local_espnet_path}; ./decode.sh --nj 1 --stage 0 --stop_stage 2 --recog_set infer &> {prepare_log_path}")
-        #run(f"cd {local_espnet_path}; ./decode.sh --nj 1 --stage 5 --recog_set infer &> {transcribe_log_path}")
-        # TODO Need to produce an output eaf.
-        #transcribe_json = infer_path / ".." / ".." / "exp/train_nodev_pytorch_train_mtlalpha1.0/decode_infer_decode_ctcweight1.0_nolm/data.json"
-        #file_util.copy_file(f"{transcribe_json}", f'{self.path}/one-best-hypothesis.txt')
-        #file_util.copy_file(f"{transcribe_json}", f'{self.path}/{self.hash}.eaf')
-
-        #file_util.copy_file(f"{infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
-        #file_util.copy_file(f"{infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
         self.status = "transcribed"
         if on_complete is not None:
             on_complete()

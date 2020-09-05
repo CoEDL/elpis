@@ -52,8 +52,8 @@ class EspnetModel(BaseModel):
 
     def build_structure(self):
         print("BUILD STRUCTURE")
-        # NOTE Since the ESPnet data is similari informatting requirements to
-        # Kaldi structure, code is unfortunately being duplicated from KaldiModel.
+        # NOTE Since the ESPnet data is similar to Kaldi in terms of formatting requirements,
+        # code is unfortunately being duplicated from KaldiModel.
         # I'm not sure the best way to get around this, but calling create_kaldi_structure()
         # here does limit that duplication somewhat.
         output_path = self.path.joinpath('output')
@@ -82,28 +82,27 @@ class EspnetModel(BaseModel):
 
             # First make a copy of the ESPNET Elpis recipe
             model_path = Path(self.path)
-            local_espnet_path = model_path / "espnet-asr1"
+            local_espnet_path = model_path.joinpath("espnet-asr1")
             shutil.copytree("/espnet/egs/elpis/asr1", f"{local_espnet_path}")
 
             # Then move the train/test data across.
-            src_train_dir = model_path / "output" / "training"
-            tgt_train_dir = local_espnet_path / "data" / "train"
+            src_train_dir = model_path.joinpath("output/training")
+            tgt_train_dir = local_espnet_path.joinpath("data/train")
             shutil.copytree(src_train_dir, tgt_train_dir)
 
-            src_test_dir = model_path / "output" / "testing"
-            tgt_test_dir = local_espnet_path / "data" / "test"
+            src_test_dir = model_path.joinpath("output/testing")
+            tgt_test_dir = local_espnet_path.joinpath("data/test")
             shutil.copytree(src_test_dir, tgt_test_dir)
 
             # Then move the WAVs across
-            src_wav_dir = Path(self.dataset.path) / "resampled"
+            src_wav_dir = Path(self.dataset.path).joinpath("resampled")
             for wav in src_wav_dir.glob("*.wav"):
                 shutil.copy(wav, local_espnet_path)
-            #shutil.copytree(src_wav_dir, local_espnet_path, dirs_exist_ok=True)
 
         def train():
-            local_espnet_path = Path(self.path) / 'espnet-asr1'
-            run_log_path = Path(self.path) / 'train.log'
-            print("SELF PATH {}".format(self.path))
+            local_espnet_path = Path(self.path).joinpath("espnet-asr1")
+            run_log_path = Path(self.path).joinpath('train.log')
+            print(f"SELF PATH {self.path}")
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
             p = run(f"cd {local_espnet_path}; ./run.sh --nj 1 &> {run_log_path}")
@@ -128,7 +127,6 @@ class EspnetModel(BaseModel):
         return
 
     def get_train_results(self):
-        from pathlib import Path
         path_gen = Path(self.path).glob("espnet-asr1/exp/train*/decode*/result.txt")
         log_file = next(path_gen) # TODO Assumes just one decode directory, but if we apply the same model to data several times, this won't be true.
 
