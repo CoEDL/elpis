@@ -118,7 +118,8 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 # Elpis
 WORKDIR /
-RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --branch bf-sphinx-test --depth=1 https://github.com/CoEDL/elpis.git
+
 # Elpis GUI
 RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
 
