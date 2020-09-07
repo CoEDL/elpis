@@ -19,7 +19,7 @@ if 'dsy' not in elpis.list_datasets():
     ds = elpis.new_dataset('dsy')
     ds.add_directory('/recordings/transcribed', extensions=['eaf', 'wav'])
     ds.auto_select_importer() # Selects Elan because of eaf file.
-    ds.importer.set_setting('tier_name', 'tx')
+    ds.importer.set_setting('tier_name', 'Phrase')
     ds.process()
 else:
     ds = elpis.get_dataset('dsy')
