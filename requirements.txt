@@ -9,7 +9,4 @@ pympi-ling
 pystache
 setuptools
 werkzeug
-sphinx
-sphinx-autodoc-typehints<1.11.0
-sphinx-rtd-theme
 recommonmark
