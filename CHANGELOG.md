@@ -15,3 +15,5 @@ Date is year-month-day format.
 ### Changed
 - Separated log files into individual logs for each stage while processing, and build complete log when done.
 - Fixed annotations not resetting when changing tier settings.
+- Moved CLI example into a Kaldi dir
+- Fixed Kaldi Elan CLI example, now links dataset and pronunciation dictionary independently
