@@ -1,6 +1,7 @@
 """ Support for training ESPnet models."""
 import os
 from pathlib import Path
+import re
 import shutil
 import threading
 from typing import Callable
@@ -127,18 +128,31 @@ class EspnetModel(BaseModel):
         return
 
     def get_train_results(self):
-        path_gen = Path(self.path).glob("espnet-asr1/exp/train*/decode*/result.txt")
-        log_file = next(path_gen) # TODO Assumes just one decode directory, but if we apply the same model to data several times, this won't be true.
+        path_gen = Path(self.path).glob("espnet-asr1/exp/train*/decode_test*/result.txt")
 
+        # Assumes just one decode_test* directory, which is true in the current
+        # implementation (transcription will use decode_infer*...)
+        log_file = next(path_gen)
         with open(log_file) as f:
-            sum_avg_line = f.readlines()[34]
-            per = sum_avg_line.split()[-3]
-            ins = sum_avg_line.split()[-4]
-            del_ = sum_avg_line.split()[-5]
-            sub = sum_avg_line.split()[-6]
+            text = f.read()
+
+        # Regex to detect floating point numbers
+        val = r"[^ ]+"
+        avg_line_re = (rf"Sum/Avg *\| *\d+ *\d+ *\| *{val} *" +
+                       rf"(?P<sub>{val}) *(?P<del>{val}) *(?P<ins>{val}) *(?P<per>{val}) *{val}"
+                       )
+        try:
+            sub = re.search(avg_line_re, text).group("sub")
+            del_ = re.search(avg_line_re, text).group("del")
+            ins = re.search(avg_line_re, text).group("ins")
+            per = re.search(avg_line_re, text).group("per")
+        except AttributeError:
+            per = sub = ins = del_ = None
+
         results = {"per": per,
                    "sub_val": sub,
                    "ins_val": ins,
                    "del_val": del_}
+
         print(results)
         return results
