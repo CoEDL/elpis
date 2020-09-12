@@ -112,7 +112,7 @@ class EspnetTranscription(BaseTranscription):
         run(f"cd {local_espnet_path}; ./decode.sh --nj 1 --stage 0 --stop_stage 2 --recog_set infer &> {prepare_log_path}")
         run(f"cd {local_espnet_path}; ./decode.sh --nj 1 --stage 5 --recog_set infer &> {transcribe_log_path}")
         result_paths = list(exp_path.glob("train_nodev*/decode_infer*"))
-        assert len(result_paths) == 1, f"Incorrect number of result files ({len(result_path)})"
+        assert len(result_paths) == 1, f"Incorrect number of result files ({len(result_paths)})"
         result_path = result_paths[0] / "data.json"
         file_util.copy_file(result_path, f'{self.path}/results.txt')
         self.convert_to_text()
