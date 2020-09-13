@@ -31,7 +31,7 @@ Open VSCode, then open the Extentions pannel on the left side bar. In the search
  * Remote - SSH
  * Remote - SSH: Editing Configuration Files
  * Remote - SSH: Explorer
- * Remote - WSL (if your working on windows)
+ * Remote - WSL (if you're working on windows)
 
 ![VSCode Extentions](assets/dev-in-vscode/vsc-extentions.png)
 
@@ -101,7 +101,7 @@ This will enable the python extension, debugging, linting and unit testing facil
 
 ### 5.3 Run Config
 
-Going one step further, we can setup some default run configurations so that when `F5` is pressed, the server and is debuggable from within the editor. To crate a run config to start the server, in the `.vscode` directory, create a new file called `launch.json` with the following contents:
+Going one step further, we can setup some default run configurations so that when `F5` is pressed, the server is debuggable from within the editor. To crate a run config to start the server, in the `.vscode` directory, create a new file called `launch.json` with the following contents:
 ```json
 {
     "version": "0.2.0",
@@ -133,7 +133,7 @@ Now press `F5` (or the play button) and see the server run. Try using breakpoint
 
 ## 5.4 Terminal
 
-Notice that when you press ctrl-` the terminal that opens is in the container.
+Notice that when you press `ctrl-\`` the terminal that opens is in the container.
 
 ## 6. Elpis-GUI
 
@@ -173,10 +173,13 @@ To use hot reload:
 
 ```json
 "forwardPorts": [
-    3000, // Forward the default webpack dev server port
+    3000, 
     5000 // Forward the default flask server port
 ],
 ```
+
+Port 3000: Webpack Dev Server
+Port 5000: Flask WSGI Server
 
 
 2. Update your `launch.json` to include the following as a launch configuration
@@ -208,7 +211,7 @@ To use hot reload:
 
 If there are any problems with repositories being out of sync, the best thing to do is rebuild the dev docker container from within VSCode. To do this, click the *Dev Container* option in the bottom left corner of VSCode or use the command pallet (cmd-shift-p) to find the `Remote-Containers: Rebuild container` and select it. This option will pull the newest elpis docker image.
 
-If there are further issues, check the `Dev Container` terminal (normally number 2.) (ctrl-`) for any errors that might have occurred while building the image.
+If there are further issues, check the `Dev Container` terminal (normally number 2.) (`ctrl-\``) for any errors that might have occurred while building the image.
 
 ## 8. End
 
