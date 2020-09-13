@@ -174,7 +174,7 @@ To use hot reload:
 ```json
 "forwardPorts": [
     3000, 
-    5000 // Forward the default flask server port
+    5000
 ],
 ```
 
