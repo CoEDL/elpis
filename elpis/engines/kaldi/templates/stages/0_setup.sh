@@ -3,6 +3,10 @@
 . ./path.sh || exit 1
 . ./cmd.sh || exit 1
 
+echo
+echo "===== SETUP ====="
+echo
+
 nj=1       # number of parallel jobs - 1 is perfect for such a small data set
 lm_order=1 # language model order (n-gram quantity) - 1 is enough for digits grammar
 

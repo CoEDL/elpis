@@ -247,13 +247,14 @@ class DataTransformerAbstractFactory:
 
         Store the decorated function as a callback to process files with the
         given extention. The parameter to the decorator is the file extention.
-        The decorated function (f) should always have four parameters, being:
+        The decorated function (f) should always have five parameters, being:
             1. List containing the file paths of all the files in the import
                 directory with the specified extention.
             2. A dictionary context variable that can be used to access
                 specialised settings.
-            3. A callback to add annotation data to audio files.
-            4. Path to a temporary directory
+            3. A callback to reset annotation data.
+            4. A callback to add annotation data to audio files.
+            5. Path to a temporary directory
         
         This decorator is indended for the (audio file, transcription file)
         unique distinct pair usecase.
@@ -288,8 +289,8 @@ class DataTransformerAbstractFactory:
                 raise NameError('bad function name. Name is attribute of DataTransformer')
 
             sig = signature(f)
-            if len(sig.parameters) != 4:
-                raise RuntimeError(f'import function "{f.__name__}" must have four parameters, currently has {len(sig.parameters)}')
+            if len(sig.parameters) != 5:
+                raise RuntimeError(f'import function "{f.__name__}" must have five parameters, currently has {len(sig.parameters)}')
 
             # Store the closure by file extention
             self._import_extension_callbacks[extention] = f
@@ -422,7 +423,8 @@ class DataTransformerAbstractFactory:
                        default: Union[List[str], Set[str], int, str] = '',
                        display_name: str = '',
                        description: str = '',
-                       options: Optional[List[str]] = None):
+                       options: Optional[List[str]] = None,
+                       shown: bool = True):
         """
         Add a field to the import context.
         :param key: the name of the field.
@@ -431,6 +433,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -441,7 +444,8 @@ class DataTransformerAbstractFactory:
             'ui_format': ui_format,
             'display_name': display_name,
             'description': description,
-            'options': options
+            'options': options,
+            'shown': shown
         }
         self._import_ui_type_config[key] = 'setting'
         self._import_ui_order_config.append(key)
@@ -452,7 +456,8 @@ class DataTransformerAbstractFactory:
                        default: Union[List[str], Set[str], int, str] = '',
                        display_name: str = '',
                        description: str = '',
-                       options: Optional[List[str]] = None):
+                       options: Optional[List[str]] = None,
+                       shown: bool = True):
         """
         Add a field to the export context.
         :param key: the name of the field.
@@ -461,6 +466,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -471,7 +477,8 @@ class DataTransformerAbstractFactory:
             'ui_format': ui_format,
             'display_name': display_name,
             'description': description,
-            'options': options
+            'options': options,
+            'shown': shown
         }
         self._export_ui_type_config[key] = 'setting'
         self._export_ui_order_config.append(key)
@@ -482,7 +489,8 @@ class DataTransformerAbstractFactory:
                         default: Union[List[str], Set[str], int, str] = '',
                         display_name: str = '',
                         description: str = '',
-                        options: Optional[List[str]] = None):
+                        options: Optional[List[str]] = None,
+                        shown: bool = True):
         """
         Add a field to the both import and export context.
         :param key: the name of the field.
@@ -491,6 +499,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -503,13 +512,15 @@ class DataTransformerAbstractFactory:
                             default=default,
                             display_name=display_name,
                             description=description,
-                            options=options)
+                            options=options,
+                            shown=shown)
         self.export_setting(key=key,
                             ui_format=ui_format,
                             default=default,
                             display_name=display_name,
                             description=description,
-                            options=options)
+                            options=options,
+                            shown=shown)
 
     def import_setting_title(self, title: str, description: str):
         key = '_title_' + str(self._import_title_count)
@@ -587,6 +598,12 @@ class DataTransformerAbstractFactory:
         )
 
         # Callbacks to add data to the internal stores
+
+        def reset_annotations():
+            nonlocal dt
+            dt._annotation_store = {}
+            return
+
         def add_annotation(id, obj):
             nonlocal dt
             # check the object type
@@ -612,6 +629,7 @@ class DataTransformerAbstractFactory:
                 nonlocal dt
                 nonlocal f
                 nonlocal collection_path
+                nonlocal reset_annotations
                 nonlocal add_annotation
                 nonlocal add_audio
                 nonlocal temporary_directory_path
@@ -619,6 +637,7 @@ class DataTransformerAbstractFactory:
                     collection_path,
                     # resampled_path, # TODO: this line needs to be here so add the parameter to tests
                     copyJSONable(dt.get_settings()),
+                    reset_annotations,
                     add_annotation,
                     add_audio,
                     temporary_directory_path
@@ -662,11 +681,13 @@ class DataTransformerAbstractFactory:
                     """
                     nonlocal dt
                     nonlocal f
+                    nonlocal reset_annotations
                     nonlocal add_annotation
                     nonlocal temporary_directory_path
                     return f(
                         file_paths,
                         copyJSONable(dt.get_settings()),
+                        reset_annotations,
                         add_annotation,
                         temporary_directory_path
                     )
@@ -686,6 +707,7 @@ class DataTransformerAbstractFactory:
                 nonlocal dt
                 nonlocal collection_path
                 nonlocal resampled_path
+                nonlocal reset_annotations
                 nonlocal add_annotation
                 nonlocal add_audio
                 nonlocal temporary_directory_path
@@ -705,7 +727,7 @@ class DataTransformerAbstractFactory:
                     # only process the file type collection if a handler exists for it
                     callback = import_extension_callbacks.get(extention, None)
                     if callback is not None:
-                        callback(file_paths, dt.get_settings(), add_annotation, temporary_directory_path)
+                        callback(file_paths, dt.get_settings(), reset_annotations, add_annotation, temporary_directory_path)
 
                 # save transcription data to file
                 with Path(transcription_json_file_path).open(mode='w') as fout:
