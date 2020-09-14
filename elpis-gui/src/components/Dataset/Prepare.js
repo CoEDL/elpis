@@ -37,7 +37,7 @@ class DatasetPrepare extends Component {
     }
 
     render() {
-        const { t, additionalTextFiles, currentEngine, status, wordlist } = this.props
+        const { t, additionalTextFiles, currentEngine, name, status, wordlist } = this.props
         const { column, direction } = this.state
 
         const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true
