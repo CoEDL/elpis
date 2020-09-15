@@ -98,10 +98,10 @@ def files(dataset: Dataset):
         "data": data
     })
 
-@bp.route("/files/delete/<filename>", methods=['POST'])
-def delete_file(dataset: Dataset, filename: str):
+@bp.route("/files/delete", methods=['POST'])
+@require_dataset
+def delete(dataset: Dataset):
     if request.method == 'POST':
-        dataset.remove_file(filename)
         data = {"files": dataset.files}
         if dataset.importer is not None:
             # maybe a comment here will force this file update?
@@ -114,7 +114,7 @@ def delete_file(dataset: Dataset, filename: str):
             })
     return jsonify({
         "status": 200,
-        "data": data
+        "data": data,
     })
 
 
