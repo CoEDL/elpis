@@ -125,6 +125,7 @@ export function datasetFiles(postData) {
                 dispatch(datasetFilesFailure(error))
                 throw error
             })
+        console.log(responseData)
         return responseData
     }
 }
@@ -144,7 +145,8 @@ const datasetFilesFailure = error => ({
 /* * * * * * * * * * * *  FILES DELETE * * * * * * * * * * *  */
 
 export function datasetDelete(postData) {
-    const url = baseUrl + urls.api.dataset.delete + '/' + postData
+    console.log(postData.getAll("file"))
+    const url = baseUrl + urls.api.dataset.delete
     const config = { headers: { 'content-type': 'multipart/form-data' } }
     var responseData
     return async dispatch => {
@@ -158,6 +160,7 @@ export function datasetDelete(postData) {
                 dispatch(datasetDeleteFailure(error))
                 throw error
             })
+        console.log(responseData)
         return responseData
     }
 }

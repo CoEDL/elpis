@@ -110,6 +110,15 @@ const dataset = (state = initState, action) => {
                 return { ...state, status: 'ready' }
             }
 
+        case actionTypes.DATASET_DELETE_SUCCESS:
+            var { data, status } = action.response.data
+            if (status == 200) {
+                return {
+                    ...state,
+                    ui: data.ui
+                }
+            }
+
         case actionTypes.DATASET_SETTINGS_SUCCESS:
             var { data, status } = action.response.data
             if (status === 200) {

@@ -21,7 +21,9 @@ class DatasetFiles extends Component {
     }
 
     handleDeleteButton = (file) => {
-        datasetDelete(file)
+        var deleteData = new FormData()
+        deleteData.append('file', file);
+        datasetDelete(deleteData)
     }
 
     render() {
@@ -222,7 +224,10 @@ const mapDispatchToProps = dispatch => ({
             .then((response) => {
                 history.push(urls.gui.dataset.prepare)
             })
-    }
+    },
+    datasetDelete: postData => {
+        dispatch(datasetDelete(postData));
+    },
 })
 
 export default withRouter(
