@@ -23,11 +23,10 @@ class DatasetFiles extends Component {
     handleDeleteButton = (file) => {
         var deleteData = new FormData()
         deleteData.append('file', file);
-        datasetDelete(deleteData)
+        this.props.datasetDelete(deleteData)
     }
 
     render() {
-
         const { t,
             currentEngine,
             name,

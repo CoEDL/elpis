@@ -106,16 +106,21 @@ const dataset = (state = initState, action) => {
                     importer_name: data.importer_name
                 }
             } else {
-                console.log(data)
                 return { ...state, status: 'ready' }
             }
 
         case actionTypes.DATASET_DELETE_SUCCESS:
             var { data, status } = action.response.data
             if (status == 200) {
+                // action.data is an array of filenames. parse this, split into separate lists
+                audioFiles = data.files.filter(file => getFileExtension(file) === 'wav').sort()
+                transcriptionFiles = data.files.filter(file => getFileExtension(file) === 'eaf').sort()
+                additionalTextFiles = data.files.filter(file => getFileExtension(file) === 'txt').sort()
                 return {
                     ...state,
-                    ui: data.ui
+                    audioFiles,
+                    transcriptionFiles,
+                    additionalTextFiles,
                 }
             }
 
