@@ -32,6 +32,10 @@ def create_app(test_config=None):
                 static_folder=GUI_PUBLIC_DIR + static_dir,
                 static_url_path=static_dir)
 
+    import logging
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
+
     # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(
         SECRET_KEY='dev'
