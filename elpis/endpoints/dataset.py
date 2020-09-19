@@ -102,16 +102,9 @@ def files(dataset: Dataset):
 @require_dataset
 def delete(dataset: Dataset):
     if request.method == 'POST':
+        dataset.remove_file(request.form["file"])
+        dataset.refresh_ui()
         data = {"files": dataset.files}
-        if dataset.importer is not None:
-            # maybe a comment here will force this file update?
-            dataset.validate()
-            dataset.refresh_ui()
-            data.update({
-                'settings': dataset.importer.get_settings(),
-                "ui": dataset.importer.get_ui(),
-                "importer_name": dataset.importer.get_name()
-            })
     return jsonify({
         "status": 200,
         "data": data,
