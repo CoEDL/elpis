@@ -35,14 +35,21 @@ def new():
 @bp.route("/load", methods=['POST'])
 def load():
     interface: Interface = app.config['INTERFACE']
-    pron_dict = interface.get_pron_dict(request.json['name'])
+    try:
+        pron_dict = interface.get_pron_dict(request.json['name'])
+        dataset = pron_dict.dataset
+        data = {
+            "config": pron_dict.config._load(),
+            "l2s": pron_dict.get_l2s_content(),
+            "lexicon": pron_dict.get_lexicon_content()
+        }
+    except KaldiError:
+        datasets = interface.list_datasets()
+        dataset = interface.get_dataset(datasets[0])
+        pron_dict = None
+        data = {}
     app.config['CURRENT_PRON_DICT'] = pron_dict
-    app.config['CURRENT_DATASET'] = pron_dict.dataset
-    data = {
-        "config": pron_dict.config._load(),
-        "l2s": pron_dict.get_l2s_content(),
-        "lexicon": pron_dict.get_lexicon_content()
-    }
+    app.config['CURRENT_DATASET'] = dataset
     return jsonify({
         "status": 200,
         "data": data

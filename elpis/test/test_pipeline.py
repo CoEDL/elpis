@@ -72,7 +72,7 @@ def pipeline_upto_step_3(pipeline_upto_step_2):
     # Link dataset and pd to a new model, then train the model.
     m = kaldi.new_model('model_z')
     m.link(ds, pd)
-    m.build_kaldi_structure() # TODO: remove this line
+    m.build_structure() # TODO: remove this line
     m.train() # may take a while
 
     return (kaldi, ds, pd, m)

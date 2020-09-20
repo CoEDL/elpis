@@ -105,20 +105,20 @@ class DataTransformer:
         To be overriden.
         """
         pass
-    
+
     def get_name(self) -> str:
         return self._callback_get_config()['name']
 
     def get_ui(self) -> Dict:
         return self._callback_get_config()['ui']
-    
+
     # TODO: add import/export settings to the state
     def get_state(self) -> str:
         return self._callback_get_config()
 
     def get_settings(self):
         return self._callback_get_config()['settings']
-    
+
     def set_setting(self, key, value):
         """
         Ensures the callback is called when the context is modified.
@@ -132,7 +132,7 @@ class DataTransformer:
         self._settings_change_callback(settings_for_callback)
         config['settings'] = settings
         self._callback_set_config(config)
-    
+
     def validate_files(self, extention: str, file_paths: Path):
         """ TODO fix up this doc"""
         """ Returns None if everything is okay, otherwise string with error message."""
@@ -205,7 +205,7 @@ class DataTransformerAbstractFactory:
 
         self._attributes = {}
         self._obj_to_attr_name = {}
-    
+
     def set_audio_extention(self, ext: str):
         """
         Setter for the audio extention that will be used to scan for audio
@@ -255,10 +255,10 @@ class DataTransformerAbstractFactory:
             3. A callback to reset annotation data.
             4. A callback to add annotation data to audio files.
             5. Path to a temporary directory
-        
+
         This decorator is indended for the (audio file, transcription file)
         unique distinct pair usecase.
-        
+
         The callback is used either when the DataTransformer process() function
         is called or the if the function is called directly from the
         DataTransformer object. If called directly, then only the file_paths
@@ -342,7 +342,7 @@ class DataTransformerAbstractFactory:
             3. A callback to add annotaion data to audio files.
             4. A callback to add audio files.
             5. Path to a temporary directory.
-        
+
         The callback is used either when the DataTransformer process() function
         is called or the if the function is called directly (without passing
         patameters) from the DataTransformer object.
@@ -368,7 +368,7 @@ class DataTransformerAbstractFactory:
         sig = signature(f)
         if len(sig.parameters) != 5:
             raise RuntimeError(f'import function "{f.__name__}" must have five parameters, currently has f{len(sig.parameters)}')
-        
+
         # Store the closure by file extention
         self._import_directory_callback = f
         self._attributes[f.__name__] = f
@@ -387,10 +387,10 @@ class DataTransformerAbstractFactory:
                 specialised settings.
             3. Output directory.
             4. Path to a temporary directory
-        
+
         This decorator is indended for the (audio file, transcription file)
         unique distinct pair usecase.
-        
+
         The callback is used by directly calling it from the DataTransformer
         object. If called directly, then only the annotations and the
         output_dir arguments should be passed to the function as the
@@ -449,7 +449,7 @@ class DataTransformerAbstractFactory:
         }
         self._import_ui_type_config[key] = 'setting'
         self._import_ui_order_config.append(key)
-    
+
     def export_setting(self,
                        key: str = '',
                        ui_format: Optional[str] = None,
@@ -551,7 +551,7 @@ class DataTransformerAbstractFactory:
         if len(self._import_extension_callbacks) != 0:
             return True
         return False
-    
+
     def is_export_capable(self):
         return self._export_callback is not None
 
@@ -741,7 +741,7 @@ class DataTransformerAbstractFactory:
         # add validators
         for ext, f in self._import_file_validator_callback.items():
             dt._validaters[ext] = f
-        
+
         # Add ui refresher
         dt._ui_updater = self._update_ui_callback
 
@@ -749,7 +749,7 @@ class DataTransformerAbstractFactory:
         dt._extentions = self._import_file_validator_callback.keys()
 
         return dt
-    
+
     def build_exporter(self,
                         path_to_ctm_file: str,
                         path_to_audio_file: str,
@@ -851,7 +851,7 @@ def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
             # skip directories
             continue
         extention = file_path.name.split('.')[-1]
-        # Make dictionary of files separated by 
+        # Make dictionary of files separated by
         if extention not in extention_to_files:
             extention_to_files[extention] = [f'{file_path}']
         else:
@@ -870,7 +870,7 @@ def _default_audio_resampler(audio_paths: List[str], resampled_dir_path: str, ad
         function runs and will be deleted immediately after the function ends.
         Must be the last parameter as this path is prepended on build().
     """
-    
+
     temp_dir_path = Path(temp_dir_path)
     resampled_dir_path = Path(resampled_dir_path)
 
