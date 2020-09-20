@@ -122,6 +122,10 @@ class EspnetModel(BaseModel):
 
         if on_complete is None:
             print("oncomplete is none")
+            self.status = 'training'
+            prepare_for_training()
+            train()
+            self.status = 'trained'
         else:
             print("oncomplete is not none")
             run_training_in_background()
