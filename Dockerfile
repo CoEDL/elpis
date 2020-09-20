@@ -5,31 +5,52 @@
 
 FROM ubuntu:18.04
 
+
 ########################## BEGIN INSTALLATION #########################
 
-RUN apt-get update && apt-get install -y --fix-missing  \
+RUN apt-get update && apt-get install -y --fix-missing \
     autoconf \
     automake \
-    libtool-bin \
-    make \
-    gcc \
+    bzip2 \
+    curl \
     g++ \
+    gcc \
     gfortran \
     git \
-    subversion \
-    curl \
-    wget \
-    libjson-c3 \
-    libjson-c-dev \
-    zlib1g-dev \
-    bzip2 \
+    glpk-utils \
     gsl-bin libgsl-dev \
     libatlas-base-dev \
-    glpk-utils \
-    libglib2.0-dev
+    libglib2.0-dev \
+    libjson-c-dev \
+    libjson-c3 \
+    libtool-bin \
+    make \
+    subversion \
+    tree \
+    unzip \
+    vim \
+    wget \
+    zlib1g-dev \
+    zsh
 
-# Python 2.7 required for building Kaldi
-RUN apt-get update && apt-get install -y  \
+WORKDIR /tmp
+
+RUN echo "===> Install Python 3.6" && \
+    wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz && \
+    tar xvf Python-3.6.6.tgz && \
+    cd Python-3.6.6 && \
+    ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
+    make -j8 build_all && \
+    make altinstall
+
+RUN echo "===> Install Python 3.6 packages" && \
+    apt-get install -y python3-dev python3-pip python3-certifi python3-venv
+
+
+########################## KALDI INSTALLATION #########################
+
+RUN echo "===> Install Python 2.7 for Kaldi" && \
+    apt-get update && apt-get install -y  \
     python2.7 \
     python-pip \
     python-yaml \
@@ -39,29 +60,16 @@ RUN apt-get update && apt-get install -y  \
     pip install tornado && \
     ln -s /usr/bin/python2.7 /usr/bin/python ; ln -s -f bash /bin/sh
 
-# Add sox and graphviz for kaldi, vim and nano to edit scripts
-RUN apt-get update && apt-get install -y \
+RUN echo "===> Install Kaldi dependencies" && \
+    apt-get update && apt-get install -y \
     sox \
     graphviz \
-    vim \
-    zsh \
-    unzip \
-    tree \
-    ffmpeg \
-    ghostscript
+    ghostscript\
+    ffmpeg
 
-# Install ESPnet dependencies (some may be covered above but listing all for
-# the sake of completeness)
-RUN apt-get install -y cmake \
-    sox \
-    ffmpeg \
-    flac \
-    bc
-
-# Get and Build Kaldi
 WORKDIR /
 
-RUN echo "===> install Kaldi (latest from source)"  && \
+RUN echo "===> install Kaldi (not the latest!)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
     make && \
@@ -85,21 +93,45 @@ RUN apt-get install gawk && \
 
 RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
+
+########################## ESPNET INSTALLATION #########################
+
+# Some ESPnet dependencies may be covered above but listing all for the sake of completeness
+RUN echo "===> Install ESPnet dependencies" && \
+    apt-get update && apt-get install -y cmake \
+    sox \
+    ffmpeg \
+    flac \
+    bc
+
+WORKDIR /
+
+# Setting up ESPnet for Elpis from Persephone repository
+RUN git clone https://github.com/persephone-tools/espnet.git
+
+WORKDIR /espnet
+
+RUN git checkout elpis
+
+# Explicitly installing only the CPU version. We should update this to be an
+# nvidia-docker image and install GPU-supported version of ESPnet.
+WORKDIR /espnet/tools
+
+RUN echo "===> install ESPnet" && \
+    make KALDI=/kaldi CUPY_VERSION='' -j 4
+
+
+########################## DEV HELPERS INSTALLATION ####################
+
 WORKDIR /tmp
 
-# Add python 3.6
-RUN wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz && \
-    tar xvf Python-3.6.6.tgz && \
-    cd Python-3.6.6 && \
-    ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
-    make -j8 build_all && \
-    make altinstall
-
-# Add python packages and their dependencies
-RUN apt-get install -y python3-dev python3-pip python3-certifi python3-venv
-
 # Add a task runner
-RUN curl -s https://taskfile.org/install.sh | sh && mv ./bin/task /bin/
+#RUN curl -s https://taskfile.org/install.sh | sh && mv ./bin/task /bin/
+
+# Add moustache templates as mo
+#RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/mo && \
+#    chmod +x mo && \
+#    mv mo /usr/local/bin
 
 # Add jq
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
@@ -113,66 +145,72 @@ RUN apt-get install -y nodejs build-essential npm && \
     hash -d npm \
     npm install -g xml-js
 
-# Add moustache templates as mo
-RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/mo && \
-    chmod +x mo && \
-    mv mo /usr/local/bin
-
 # Clean up package manager
 RUN apt-get clean autoclean
 
 # Add random number generator to skip Docker building cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
-# Elpis
+
+########################## ELPIS INSTALLATION ########################
+
 WORKDIR /
+
+# Elpis
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 
 # Elpis GUI
 RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
 
-# Example data
+WORKDIR /elpis-gui
+
+RUN npm install && \
+    npm run build
+
 WORKDIR /tmp
+
+# Example data
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
-# Set up zsh & ENV variables
+
+########################## ZSH CONFIG & ENV  ##########################
+
 WORKDIR /root
+
+# ZSH config
 RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
+
+# ENV
 RUN echo "export FLASK_ENV=development" >> ~/.zshrc
 RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshhrc
 RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
 RUN echo "alias run=\"flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
+RUN echo "alias run-win=\"flask run --host=127.0.0.1 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
-
-# Move ENV lines up. Putting here for now to build on top of cached builds
+# Make ENV vars available for non-interactive running
 ENV FLASK_ENV='development'
 ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
+# Don't do this, it breaks `python setup.py develop` below
+#RUN source $HOME/.bashrc
 
-WORKDIR /elpis-gui
-RUN npm install && \
-    npm run build
+
+########################## RUN THE APP ##########################
 
 WORKDIR /elpis
+
 RUN /usr/bin/python3 -m venv /venv
+
 ENV PATH="/venv/bin:$PATH"
 
-RUN pip3.6 install wheel pytest pylint && python setup.py develop
+RUN apt-get update && apt-get install libffi-dev
 
-# Setting up ESPnet
-WORKDIR /
-RUN git clone https://github.com/persephone-tools/espnet.git
-WORKDIR /espnet
-RUN git checkout elpis
-# Explicitly installing only the CPU version. We should update this to be an
-# nvidia-docker image and install GPU-supported version of ESPnet.
-WORKDIR /espnet/tools
-RUN make KALDI=/kaldi CUPY_VERSION='' -j 4
+RUN pip3.6 install wheel pytest pylint && python setup.py develop
 
 WORKDIR /elpis
 

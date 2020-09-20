@@ -6,7 +6,11 @@ Date is year-month-day format.
 
 
 ## [1.0.0] - 2020-09-20
+### Added
+- ESPnet
+
 ### Changed
+- Rearranged Dockerfile
 - Fixed changelog date for docs
 
 ## [0.94.6] - 2020-09-07
