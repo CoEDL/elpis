@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Date is year-month-day format.
 
 
+## [0.95.0] - 2020-09-20
+### Added
+- ESPnet
+
+### Changed
+- Fixed changelog date
+
 ## [0.94.6] - 2020-09-08
 
 ### Changed
