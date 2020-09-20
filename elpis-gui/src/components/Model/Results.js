@@ -24,6 +24,7 @@ class ModelResults extends Component {
                     <Table.Body>
                         <Table.Row>
                             <Table.Cell>WER {results.wer}</Table.Cell>
+                            <Table.Cell>PER {results.per}</Table.Cell>
                             <Table.Cell>{results.count_val}</Table.Cell>
                             <Table.Cell>DEL {results.del_val}</Table.Cell>
                             <Table.Cell>INS {results.ins_val}</Table.Cell>
