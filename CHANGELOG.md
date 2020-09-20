@@ -6,6 +6,9 @@ Date is year-month-day format.
 
 
 ## [1.0.0] - 2020-09-20
+### Added
+- ESPnet
+
 ### Changed
 - Fixed changelog date for docs
 
