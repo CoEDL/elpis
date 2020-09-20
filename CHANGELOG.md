@@ -5,10 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Date is year-month-day format.
 
 
-## [Unreleased]
+## [1.0.0] - 2020-09-20
+### Changed
+- Fixed changelog date for docs
 
-
-## [0.94.6] - 2020-08-07
+## [0.94.6] - 2020-09-07
 ### Added
 - Docs
 
