@@ -72,7 +72,7 @@ Notice the little green box now specifies that the editor is open in a docker co
 
 ## 5. Setup Python Development Environment
 
-The `setup.sh` does all the hard work of installing linters and testing software...
+The `setup.py` does all the hard work of installing linters and testing software...
 
 ### 5.1 Install the Python Extension
 
