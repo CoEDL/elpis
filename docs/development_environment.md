@@ -37,13 +37,17 @@ Open VSCode, then open the Extentions pannel on the left side bar. In the search
 
 ## 3. Clone Repository
 
-Clone Elpis:
+Setup your project directory.
 
-1. git clone https://github.com/CoEDL/elpis.git
+1. `mkdir elpis-project && cd elpis-project`
+
+Clone Elpis.
+
+1. `git clone https://github.com/CoEDL/elpis.git`
 
 If you are planning on developing the Elpis GUI clone it as well.
 
-2. git clone https://github.com/CoEDL/elpis-gui.git
+2. `git clone https://github.com/CoEDL/elpis-gui.git`
 
 Your final directory structure should look something like this with the two repositories side by side.
 Root can be any arbitrary directory.
