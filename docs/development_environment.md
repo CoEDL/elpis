@@ -236,7 +236,7 @@ Port 3000: Webpack Dev Server
 Port 5000: Flask WSGI Server
 
 
-2. Update your `launch.json` to include the following as a launch configuration
+2. Update your `launch.json` to include the following as a launch configuration. Append it after the previous launch configuration.
 ```json
 {
     "name": "Node: Elpis-Gui",
@@ -253,6 +253,7 @@ Port 5000: Flask WSGI Server
     "console": "integratedTerminal",
 }
 ```
+
 #### Caveats for hot-reload
 
 * Currently hot-reload does not preserve state #TODO
