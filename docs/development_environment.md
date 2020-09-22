@@ -159,7 +159,7 @@ Notice that when you press `ctrl-\`` the terminal that opens is in the container
 
 ## 7. Elpis-GUI
 
-If you wish to develop the front end code along with the server, you can add an additional mount and override the `/elpis-gui` directory. Notice the second mount in the following code and replace `/path/to/elpis-gui` with the path to the `elpis-gui` git repository.
+If you wish to develop the front end code along with the server, you can add an additional mount and override the `/elpis-gui` directory. Notice the second mount in the following code and replace `/path/to/elpis-gui` with the path to the `elpis-gui` git repository. If you followed the instructions for cloning the repository above your mount for the GUI should look like this `"type=bind,source=${localWorkspaceFolder}/../elpis-gui,target=/elpis-gui"`.
 
 ```json
 {
