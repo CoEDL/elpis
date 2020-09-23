@@ -2,7 +2,7 @@
 
 Developing Elpis can be difficult at times as the software is run in a Docker container. This Docker container simplifies the installation of Elpis and its dependencies, but it also adds a barrier to quality development experience as the Python runtime and the code base are all on the container and not easily accessible on the local OS.
 
-In the past, developers mounted volumes, exposed ports and ran commands in terminals connected to the docker image. With Elpis changing frequently, all these commands change as well and it is easy to lose track.
+In the past, developers mounted volumes, exposed ports and ran commands in terminals connected to the Docker image. With Elpis changing frequently, all these commands change as well and it is easy to lose track.
 
 This tutorial aims to bring about the best possible development experience by setting up the VSCode editor to enable:
 * Python linting
@@ -20,7 +20,7 @@ This works by using VSCode extensions that install another layer on-top of the E
 
 Download VSCode ([Link](https://code.visualstudio.com/)).
 
-Make a Docker account and download docker ([Link](https://hub.docker.com)).
+Make a Docker account and download Docker ([Link](https://hub.docker.com)).
 
 ## 2. Install Extensions
 
@@ -93,7 +93,7 @@ We are now ready to open the VSCode in the container. The first time this happen
 
 ![Reopen in container](assets/dev-in-vscode/vsc-reopen-in-con.png)
 
-Notice the little green box now specifies that the editor is open in a docker container:
+Notice the little green box now specifies that the editor is open in a Docker container:
 
 ![VSCode in container](assets/dev-in-vscode/vsc-in-container.png)
 
@@ -255,7 +255,7 @@ It should look like this if you followed the previous examples:
 
 ## 8. Troubleshooting
 
-If there are any problems with repositories being out of sync, the best thing to do is rebuild the dev docker container from within VSCode. To do this, click the *Dev Container* option in the bottom left corner of VSCode or use the command pallet (cmd-shift-p) to find the `Remote-Containers: Rebuild container` and select it. This option will pull the newest elpis docker image.
+If there are any problems with repositories being out of sync, the best thing to do is rebuild the dev Docker container from within VSCode. To do this, click the *Dev Container* option in the bottom left corner of VSCode or use the command pallet (cmd-shift-p) to find the `Remote-Containers: Rebuild container` and select it. This option will pull the newest elpis Docker image.
 
 If there are further issues, check the `Dev Container` terminal (normally number 2.) (`ctrl-\``) for any errors that might have occurred while building the image.
 
