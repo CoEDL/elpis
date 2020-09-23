@@ -140,6 +140,13 @@ RUN apt-get update && apt-get install -y nodejs build-essential npm && \
 # Clean up package manager
 RUN apt-get clean autoclean
 
+WORKDIR /root
+
+# ZSH
+RUN apt-get install zsh
+RUN chsh -s /usr/bin/zsh root
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
+
 # Add random number generator to skip Docker building cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
@@ -150,12 +157,16 @@ WORKDIR /
 
 # Elpis
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
+WORKDIR /elpis
+RUN /usr/bin/python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+RUN pip3.6 install wheel pytest pylint && python setup.py develop
+
+WORKDIR /
 
 # Elpis GUI
 RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
-
 WORKDIR /elpis-gui
-
 RUN npm install && \
     npm run build
 
@@ -165,42 +176,22 @@ WORKDIR /tmp
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
 
-########################## ZSH CONFIG & ENV  ##########################
+########################## RUN THE APP ##########################
 
-WORKDIR /root
-
-# ZSH config
-RUN apt-get install zsh
-RUN chsh -s /usr/bin/zsh root
-RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
-
-# ENV
+# ENV vars for interactive running
 RUN echo "export FLASK_ENV=development" >> ~/.zshrc
 RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
-RUN echo "export LANG=C.UTF-8" >> ~/.zshhrc
+RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
 RUN echo "alias run=\"flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
-RUN echo "alias run-win=\"flask run --host=127.0.0.1 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
-# Make ENV vars available for non-interactive running
+
+# ENV vars for non-interactive running
 ENV FLASK_ENV='development'
 ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
-# Don't do this, it breaks `python setup.py develop` below
-#RUN source $HOME/.bashrc
-
-
-########################## RUN THE APP ##########################
-
-WORKDIR /elpis
-
-RUN /usr/bin/python3 -m venv /venv
-
-ENV PATH="/venv/bin:$PATH"
-
-RUN pip3.6 install wheel pytest pylint && python setup.py develop
 
 WORKDIR /elpis
 
