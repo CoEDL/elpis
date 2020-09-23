@@ -43,11 +43,11 @@ Setup your project directory.
 
 Clone Elpis.
 
-1. `git clone https://github.com/CoEDL/elpis.git`
+2. `git clone https://github.com/CoEDL/elpis.git`
 
 If you are planning on developing the Elpis GUI clone it as well.
 
-2. `git clone https://github.com/CoEDL/elpis-gui.git`
+3. `git clone https://github.com/CoEDL/elpis-gui.git`
 
 Your final directory structure should look something like this with the two repositories side by side.
 Root can be any arbitrary directory.
@@ -59,11 +59,13 @@ root
 └── elpis-gui
 ```
 
+4. Now that you have cloned the repository, you can open the folder `elpis` using VSCode
+
 NOTE: These setup instructions assume that you follow these instructions for cloning the repository.
 
 ## 4. Add `devcontainer.json`
 
-In the root Elpis project directory, create a folder called `.devcontainer`. In `.devcontainer` create a file called `devcontainer.json`, which specifies how the VSCode editor will connect to the Docker container. The file contents are:
+In the `elpis` folder directory, create a folder called `.devcontainer`. In `.devcontainer` create a file called `devcontainer.json`, which specifies how the VSCode editor will connect to the Docker container. The file contents are:
 
 ```json
 {
@@ -108,7 +110,7 @@ Navigate to the extensions panel on the left bar once again and search for the P
 
 ### 6.2 Settings
 
-In the root project directory, create a `.vscode` directory, in that crate a `settings.json` file with the following contents:
+In the `elpis` folder, create a `.vscode` directory, in that crate a `settings.json` file with the following contents:
 ```json
 {
     "terminal.integrated.shell.linux": "/bin/zsh",
