@@ -1,5 +1,6 @@
 import pystache
 import os
+import re
 import shutil
 from pathlib import Path
 from typing import Callable, Dict, Tuple
@@ -11,6 +12,7 @@ from elpis.engines.common.objects.pron_dict import PronDict
 from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
 from elpis.engines.common.objects.path_structure import PathStructure
 from collections import OrderedDict
+from subprocess import CalledProcessError
 
 
 class KaldiModel(BaseModel):  # TODO not thread safe
@@ -37,7 +39,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self = super().load(base_path)
         self.pron_dict = None
         return self
-    
+
     @property
     def state(self):
         # TODO: fix this
@@ -58,11 +60,11 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     def ngram(self, value: int) -> None:
         self.config['ngram'] = value
 
-    def build_kaldi_structure(self):
+    def build_structure(self):
         # task json-to-kaldi
         output_path = self.path.joinpath('output')
         output_path.mkdir(parents=True, exist_ok=True)
-        
+
         # Copy cleaned corpus from dataset to the model
         dataset_corpus_txt = self.dataset.path.joinpath('cleaned', 'corpus.txt')
         model_corpus_txt = self.path.joinpath('corpus.txt')
@@ -76,6 +78,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         )
 
     def train(self, on_complete:Callable=None):
+
 
         def prepare_for_training():
             print("prepare_for_training")
@@ -209,33 +212,68 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')
 
-            # Setup for Training complete
-            ######################################################################
-
-            # task _test-train
+            # Prepare (dump, recreate) main train log file
             run_log_path = self.path.joinpath('train.log')
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
-            stages = os.listdir(local_kaldi_path.joinpath('stages'))
             run(f"touch {run_log_path};")
+
+            # Organise stage logs in a dir
+            train_log_dir = self.path.joinpath('train-logs')
+            if os.path.exists(train_log_dir):
+                shutil.rmtree(train_log_dir)
+            os.mkdir(train_log_dir )
+
+            stage_count = 0
+            stages = os.listdir(local_kaldi_path.joinpath('stages'))
+
             for stage in sorted(stages):
-                print(f"======== STAGE {stage} STARTING ========")
+                print(f"Stage {stage} starting")
                 self.stage_status = (stage, 'in-progress', '')
-                
+
+                # Create log file
+                stage_log_path = self.path.joinpath(os.path.join(train_log_dir, f'stage_{stage_count}.log'))
+                with open(stage_log_path, 'w+'):
+                    pass
+
+                #  Manipulate stage templates with user-defined settings
+                # TODO replace with jinja templates or something similar
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'r') as file :
                     filedata = file.read()
-
+                # Add settings to replace here
                 filedata = filedata.replace('lm_order=1', f'lm_order={self.ngram}')
-
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'w') as file:
                     file.write(filedata)
-                p = run(f"cd {local_kaldi_path}; stages/{stage} >> {run_log_path}")
-                print(p.stdout)
-                print(f"======== STAGE {stage} COMPLETE ========")
-                self.stage_status = (stage, 'complete', '')
 
-            self.log = run(f"cd {local_kaldi_path}; cat {run_log_path}").stdout
-            print('train double done.')
+                # Run the command, log output. Also redirect Kaldi sterr output to log. These are often not errors :-(
+                try:
+                    stage_process = run(f"cd {local_kaldi_path}; stages/{stage} >> {stage_log_path}")
+                    with open(stage_log_path, 'a+') as file:
+                        print('stdout', stage_process.stdout, file=file)
+                        print('stderr', stage_process.stderr, file=file)
+                        print('done', file=file)
+                    print(f"Stage {stage} complete")
+                    self.stage_status = (stage, 'complete', '')
+                    stage_count = stage_count + 1
+                except CalledProcessError as error:
+                    with open(stage_log_path, 'a+') as file:
+                        print('stderr', error.stderr, file=file)
+                        print('failed', file=file)
+                    print(f"Stage {stage} failed")
+                    self.stage_status = (stage, 'failed', '')
+                    break
+
+            self.log = ''
+            # Concat all the files in the train-log dir
+            log_filenames = os.listdir(train_log_dir)
+            log_filenames.sort()
+            with open(run_log_path, 'w') as outfile:
+                for log_file in log_filenames:
+                    with open(os.path.join(train_log_dir, log_file)) as infile:
+                        log_contents = infile.read()
+                        outfile.write(log_contents)
+                        outfile.write("\n")
+                        self.log += log_contents
 
         def run_training_in_background():
             def background_train_task():
@@ -255,3 +293,30 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         else:
             run_training_in_background()
         return
+
+    def get_train_results(self):
+        log_file = self.path.joinpath('train.log')
+        results = {}
+        with log_file.open() as fin:
+            wer_lines = []
+            for line in reversed(list(fin)):
+                line = line.rstrip()
+                if "%WER" in line:
+                    # use line to sort by best val
+                    line_r = line.replace('%WER ', '')
+                    wer_lines.append(line_r)
+            wer_lines.sort(reverse = True)
+            line = wer_lines[0]
+            line_split = line.split(None, 1)
+            wer = line_split[0]
+            line_results = line_split[1]
+            line_results = re.sub("[\[\]]", "", line_results)
+            results_split = line_results.split(',')
+            count_val = results_split[0].strip()
+            ins_val = results_split[1].replace(' ins', '').strip()
+            del_val = results_split[2].replace(' del', '').strip()
+            sub_val = results_split[3].replace(' sub', '').strip()
+            results = {'wer': wer, 'count_val': count_val, 'ins_val': ins_val, 'del_val': del_val,
+                    'sub_val': sub_val}
+            print(results)
+        return results

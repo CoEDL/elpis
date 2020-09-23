@@ -14,12 +14,12 @@ from setuptools import setup, find_packages
 
 requirements = [dependency.strip() for dependency in open("requirements.txt", "r").readlines()]
 
-with open('README.md', 'r') as readme:
+with open('README.md', 'r', encoding="utf-8") as readme:
     long_description = readme.read()
 
 setup(
     name='elpis',
-    version='0.94.6',
+    version='0.95.0',
     packages=find_packages(),
     url='https://github.com/CoEDL/elpis',
     install_requires=requirements,

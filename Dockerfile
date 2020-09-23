@@ -47,7 +47,16 @@ RUN apt-get update && apt-get install -y \
     zsh \
     unzip \
     tree \
-    ffmpeg
+    ffmpeg \
+    ghostscript
+
+# Install ESPnet dependencies (some may be covered above but listing all for
+# the sake of completeness)
+RUN apt-get install -y cmake \
+    sox \
+    ffmpeg \
+    flac \
+    bc
 
 # Get and Build Kaldi
 WORKDIR /
@@ -98,7 +107,7 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
 # Add node, npm and xml-js
-RUN apt-get install -y nodejs build-essential npm && \
+RUN apt-get update && apt-get install -y nodejs build-essential npm && \
     #ln -s /usr/bin/nodejs /usr/bin/node && \
     npm install -g npm \
     hash -d npm \
@@ -112,12 +121,6 @@ RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/
 # Clean up package manager
 RUN apt-get clean autoclean
 
-# Oh-My-Zsh
-RUN apt-get install zsh
-RUN chsh -s /usr/bin/zsh root
-RUN cd /tmp && sh -c sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
-RUN echo "ZSH_THEME=\"agnoster\"" >> ~/.zshhrc
-
 # Add random number generator to skip Docker building cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
@@ -126,20 +129,26 @@ WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 
 # Elpis GUI
-WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
 
 # Example data
 WORKDIR /tmp
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
-
-RUN echo "FLASK_ENV=development" >> ~/.zshrc
-RUN echo "FLASK_APP=elpis" >> ~/.zshrc
+# Set up zsh & ENV variables
+WORKDIR /root
+RUN apt-get install zsh
+RUN chsh -s /usr/bin/zsh root
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
+RUN echo "export FLASK_ENV=development" >> ~/.zshrc
+RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshhrc
+RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
+RUN echo "alias run=\"flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
+RUN cat ~/.zshrc >> ~/.bashrc
 
-# Move ENV lines up. Putting here for now so I can build on top of cached builds
+# Move ENV lines up. Putting here for now to build on top of cached builds
 ENV FLASK_ENV='development'
 ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
@@ -150,11 +159,22 @@ RUN npm install && \
     npm run build
 
 WORKDIR /elpis
-ENV VIRTUAL_ENV=/venv
-RUN /usr/bin/python3 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN /usr/bin/python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
 
 RUN pip3.6 install wheel pytest pylint && python setup.py develop
+
+# Setting up ESPnet
+WORKDIR /
+RUN git clone https://github.com/persephone-tools/espnet.git
+WORKDIR /espnet
+RUN git checkout elpis
+# Explicitly installing only the CPU version. We should update this to be an
+# nvidia-docker image and install GPU-supported version of ESPnet.
+WORKDIR /espnet/tools
+RUN make KALDI=/kaldi CUPY_VERSION='' -j 4
+
+WORKDIR /elpis
 
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 

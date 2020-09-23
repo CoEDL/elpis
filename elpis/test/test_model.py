@@ -37,7 +37,7 @@ def test_model_training(pipeline_upto_step_1):
     m = kaldi.new_model('model_z')
     m.link(ds, pd)
     assert m.has_been_trained() == False
-    m.build_kaldi_structure()
+    m.build_structure()
     m.train()
     assert m.has_been_trained() == True
     return

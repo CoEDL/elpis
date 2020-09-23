@@ -28,7 +28,7 @@ def mock_model(tmpdir_factory):
 
         m = kaldi.new_model('model_z')
         m.link(ds, pd)
-        m.build_kaldi_structure() # TODO: remove this line
+        m.build_structure() # TODO: remove this line
         m.train() # may take a while
     else:
         kaldi = KaldiInterface.load(f'{base_path}/state')
@@ -244,7 +244,7 @@ def test_linking(mock_model, tmpdir):
 #     pd.generate_lexicon()
 #     m = kaldi.new_model('model_z')
 #     m.link(ds, pd)
-#     m.build_kaldi_structure()
+#     m.build_structure()
 #     m.train()
 #     t = kaldi.new_transcription('transcription_w')
 #     t.link(m)

@@ -48,7 +48,8 @@ else:
 # Link dataset and pd to a new model, then train the model.
 if 'mx' not in elpis.list_models():
     m = elpis.new_model('mx')
-    m.link(ds, pd)
+    m.link_dataset(ds)
+    m.link_pron_dict(pd)
     m.build_kaldi_structure()
     m.train() # may take a while
 else:

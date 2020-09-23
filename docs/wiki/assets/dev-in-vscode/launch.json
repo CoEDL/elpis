@@ -1,0 +1,51 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Flask",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "env": {
+        "FLASK_APP": "elpis",
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "0"
+      },
+      "args": [
+        "run",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "5000",
+        "--no-debugger",
+        "--no-reload"
+      ],
+      "jinja": true
+    },
+    {
+      "name": "Node: Elpis-Gui",
+      "type": "node",
+      "request": "launch",
+      "cwd": "/elpis-gui/",
+      "env": {
+        "NODE_ENV": "development",
+        "NODE_PATH": "src/",
+        "WDS_SOCKET_PORT": "3000"
+      },
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "start"
+      ],
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Server/Client",
+      "configurations": [
+        "Python: Flask",
+        "Node: Elpis-Gui"
+      ]
+    }
+  ]
+}

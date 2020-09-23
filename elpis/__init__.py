@@ -8,33 +8,43 @@ from requests import get
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
-    GUI_PUBLIC_DIR = "/elpis-gui/build"
+    GUI_BUILD_DIR = "/elpis-gui/build"
+    GUI_PUBLIC_DIR = "/elpis-gui/public"
 
     # Variable to control the use of a proxy to support webpackdevserver
     WEBPACK_DEV_SERVER_PROXY = False
 
-    # Setup static resources
-    # create and configure the app
-    # auto detect for yarn watch or yarn build
-    static_dir_watch = '/js'
-    static_dir_build = '/static'
-    if 'js' in os.listdir(GUI_PUBLIC_DIR):
-        # using yarn watch
-        static_dir = static_dir_watch
+    if WEBPACK_DEV_SERVER_PROXY:
+        app = Flask(__name__,
+                    instance_relative_config=True,
+                    static_folder=GUI_PUBLIC_DIR)
     else:
-        static_dir = static_dir_build
+        # Setup static resources
+        # create and configure the app
+        # auto detect for yarn watch or yarn build
+        static_dir_watch = '/js'
+        static_dir_build = '/static'
+        if 'js' in os.listdir(GUI_BUILD_DIR):
+            # using yarn watch
+            static_dir = static_dir_watch
+        else:
+            static_dir = static_dir_build
 
-    # if os.environ.get('FLASK_ENV') == 'production':
-    #     static_dir = static_dir_build
-    # else:
-    #     static_dir = static_dir_watch
-    print('using static_dir:', static_dir)
-    # Create a custom Flask instance defined in the app.py file. Same as a
-    # normal Flask class but with a specialised blueprint function.
-    app = Flask(__name__,
-                instance_relative_config=True,
-                static_folder=GUI_PUBLIC_DIR + static_dir,
-                static_url_path=static_dir)
+        # if os.environ.get('FLASK_ENV') == 'production':
+        #     static_dir = static_dir_build
+        # else:
+        #     static_dir = static_dir_watch
+        print('using static_dir:', static_dir)
+        # Create a custom Flask instance defined in the app.py file. Same as a
+        # normal Flask class but with a specialised blueprint function.
+        app = Flask(__name__,
+                    instance_relative_config=True,
+                    static_folder=GUI_BUILD_DIR + static_dir,
+                    static_url_path=static_dir)
+
+    import logging
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
 
     # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(
@@ -43,7 +53,6 @@ def create_app(test_config=None):
 
     elpis_path = Path(os.getcwd())
     app.config['ELPIS_PATH'] = elpis_path
-    print("elpis_path:", elpis_path)
 
     # For a single user, storing the interface object is okay to do in
     # the app.config, however, this would need to change for multi-user.
@@ -51,10 +60,8 @@ def create_app(test_config=None):
     # stores all the artifacts that user has generated.
     interface_path = Path(os.path.join(elpis_path, '/state'))
     if not interface_path.exists():
-        print("no interface exists")
         app.config['INTERFACE'] = Interface(interface_path)
     else:
-        print("interface exists, load it")
         app.config['INTERFACE'] = Interface(interface_path, use_existing=True)
     # app.config['CURRENT_DATASET'] = None # not okay for multi-user
     # app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user & need to remove later because it is Kaldi-specific.
@@ -80,7 +87,7 @@ def create_app(test_config=None):
             # We proxy webpack requests through to the dev server
             return proxy('http://localhost:3000/', path)
         else:
-            with open(f"{GUI_PUBLIC_DIR}/index.html", "r") as fin:
+            with open(f"{GUI_BUILD_DIR}/index.html", "r") as fin:
                 content = fin.read()
                 return content
 
@@ -91,6 +98,7 @@ def create_app(test_config=None):
 
     return app
 
+  
 # Proxy Wrapper
 def proxy(host, path):
     response = get(f"{host}{path}")

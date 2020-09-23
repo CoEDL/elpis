@@ -46,8 +46,6 @@ def clean_utterance(utterance: Dict[str, str],
     """
     # TODO add interface setting to include user specific tags
     # translation_tags = {"@eng@", "<ind:", "<eng:"}
-    print(f'#### special_cases {special_cases}')
-    print(f'#### translation_tags {translation_tags}')
     # TODO add interface setting to skip this as caps are significant in some languages
     utterance_string = utterance.get("transcript").lower()
     dirty_words = utterance_string.split()
