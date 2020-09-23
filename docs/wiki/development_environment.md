@@ -99,7 +99,7 @@ Notice the little green box now specifies that the editor is open in a Docker co
 
 ## 6. Setup Python Development Environment
 
-The `setup.py` file does all the hard work of installing linters and testing software which are listed in `requirements.txt`. Right-click the `elpis` folder in the File Explorer and select "Open in Integrated Terminal". Run the following command to install Elpis' dependencies.  
+The `setup.py` file does all the hard work of installing linters and testing software which are listed in `requirements.txt`. Open a new terminal (from the menu select "Terminal > New Terminal") and run the following command to install Elpis' dependencies.  
 `python setup.py develop`
 
 ### 6.1 Settings
@@ -119,7 +119,7 @@ In the root project directory, create a `.vscode` directory, in that create a `s
 }
 ```
 
-This will enable the Dockerpython extension, debugging, linting and unit testing facilities.
+This will enable the Python extension, debugging, linting and unit testing facilities.
 
 ### 6.2 Run Config
 
