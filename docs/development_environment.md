@@ -104,7 +104,7 @@ The `setup.py` file does all the hard work of installing linters and testing sof
 
 ### 6.1 Settings
 
-In the root project directory, create a `.vscode` directory, in that crate a `settings.json` file with the following contents:
+In the root project directory, create a `.vscode` directory, in that create a `settings.json` file with the following contents:
 ```json
 {
     "terminal.integrated.shell.linux": "/bin/zsh",
