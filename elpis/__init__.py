@@ -9,32 +9,38 @@ from requests import get
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
     GUI_BUILD_DIR = "/elpis-gui/build"
+    GUI_PUBLIC_DIR = "/elpis-gui/public"
 
     # Variable to control the use of a proxy to support webpackdevserver
     WEBPACK_DEV_SERVER_PROXY = False
 
-    # Setup static resources
-    # create and configure the app
-    # auto detect for yarn watch or yarn build
-    static_dir_watch = '/js'
-    static_dir_build = '/static'
-    if 'js' in os.listdir(GUI_BUILD_DIR):
-        # using yarn watch
-        static_dir = static_dir_watch
+    if WEBPACK_DEV_SERVER_PROXY:
+        app = Flask(__name__,
+                    instance_relative_config=True,
+                    static_folder=GUI_PUBLIC_DIR)
     else:
-        static_dir = static_dir_build
+        # Setup static resources
+        # create and configure the app
+        # auto detect for yarn watch or yarn build
+        static_dir_watch = '/js'
+        static_dir_build = '/static'
+        if 'js' in os.listdir(GUI_BUILD_DIR):
+            # using yarn watch
+            static_dir = static_dir_watch
+        else:
+            static_dir = static_dir_build
 
-    # if os.environ.get('FLASK_ENV') == 'production':
-    #     static_dir = static_dir_build
-    # else:
-    #     static_dir = static_dir_watch
-    print('using static_dir:', static_dir)
-    # Create a custom Flask instance defined in the app.py file. Same as a
-    # normal Flask class but with a specialised blueprint function.
-    app = Flask(__name__,
-                instance_relative_config=True,
-                static_folder=GUI_BUILD_DIR + static_dir,
-                static_url_path=static_dir)
+        # if os.environ.get('FLASK_ENV') == 'production':
+        #     static_dir = static_dir_build
+        # else:
+        #     static_dir = static_dir_watch
+        print('using static_dir:', static_dir)
+        # Create a custom Flask instance defined in the app.py file. Same as a
+        # normal Flask class but with a specialised blueprint function.
+        app = Flask(__name__,
+                    instance_relative_config=True,
+                    static_folder=GUI_BUILD_DIR + static_dir,
+                    static_url_path=static_dir)
 
     # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(
@@ -86,7 +92,7 @@ def create_app(test_config=None):
 
     @app.route('/favicon.ico')
     def favicon():
-        with open(f"{GUI_BUILD_DIR}/favicon.ico", "rb") as fin:
+        with open(f"{GUI_PUBLIC_DIR}/favicon.ico", "rb") as fin:
             return fin.read()
 
     return app
