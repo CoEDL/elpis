@@ -243,7 +243,7 @@ It should look like this if you followed the previous examples:
     },
     "runtimeExecutable": "npm",
     "runtimeArgs": ["start"],
-    "console": "integratedTerminal",
+    "console": "integratedTerminal"
 }
 ```
 
