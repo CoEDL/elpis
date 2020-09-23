@@ -5,13 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Date is year-month-day format.
 
 
-## [1.0.0] - 2020-09-20
+## [0.95.1] - 2020-09-23
+### Changed
+- Rearranged Dockerfile to group like things and install ESPnet earlier
+
+
+## [0.95.0] - 2020-09-20
 ### Added
 - ESPnet
 
 ### Changed
 - Rearranged Dockerfile
 - Fixed changelog date for docs
+
 
 ## [0.94.6] - 2020-09-07
 ### Added

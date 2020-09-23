@@ -22,6 +22,7 @@ class EspnetModel(BaseModel):
         # ESPnet doesn't use an n-gram language model, so this will not change
         # from None.
         self.config['ngram'] = None
+        self.config['engine'] = 'espnet'
 
     @classmethod
     def load(cls, base_path: Path):

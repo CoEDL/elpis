@@ -139,7 +139,7 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
 # Add node, npm and xml-js
-RUN apt-get install -y nodejs build-essential npm && \
+RUN apt-get update && apt-get install -y nodejs build-essential npm && \
     #ln -s /usr/bin/nodejs /usr/bin/node && \
     npm install -g npm \
     hash -d npm \
