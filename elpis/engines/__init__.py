@@ -4,8 +4,10 @@ from typing import Type
 from elpis.engines.common.objects.interface import Interface
 from elpis.engines.common.objects.model import Model
 from elpis.engines.common.objects.transcription import Transcription
+from elpis.engines.espnet.objects.model import EspnetModel
 from elpis.engines.kaldi.objects.model import KaldiModel
 from elpis.engines.kaldi.objects.transcription import KaldiTranscription
+from elpis.engines.espnet.objects.transcription import EspnetTranscription
 
 
 class Engine(ABC):
@@ -29,7 +31,12 @@ class KaldiEngine(Engine):
     def __init__(self):
         super().__init__(KaldiModel, KaldiTranscription)
 
+class EspnetEngine(Engine):
+    def __init__(self):
+        super().__init__(EspnetModel, EspnetTranscription)
+
 
 ENGINES = {
     "kaldi": KaldiEngine(),
+    "espnet": EspnetEngine(),
 }
