@@ -274,9 +274,9 @@ The End.
 ## Download sample files
 
 These are the complete files as used in this guide, set up for both Elpis and Elpis-GUI, with hot reloading.
-* [devcontainer.js](development_environment/devcontainer.json)
-* [launch.json](development_environment/launch.json)
-* [settings.json](development_environment/settings.json)
+* [devcontainer.js](assets/dev-in-vscode/devcontainer.json)
+* [launch.json](assets/dev-in-vscode/launch.json)
+* [settings.json](assets/dev-in-vscode/settings.json)
 
 ## References
 
