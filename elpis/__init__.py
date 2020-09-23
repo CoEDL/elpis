@@ -8,7 +8,7 @@ from requests import get
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
-    GUI_PUBLIC_DIR = "/elpis-gui/build"
+    GUI_BUILD_DIR = "/elpis-gui/build"
 
     # Variable to control the use of a proxy to support webpackdevserver
     WEBPACK_DEV_SERVER_PROXY = False
@@ -18,7 +18,7 @@ def create_app(test_config=None):
     # auto detect for yarn watch or yarn build
     static_dir_watch = '/js'
     static_dir_build = '/static'
-    if 'js' in os.listdir(GUI_PUBLIC_DIR):
+    if 'js' in os.listdir(GUI_BUILD_DIR):
         # using yarn watch
         static_dir = static_dir_watch
     else:
@@ -33,7 +33,7 @@ def create_app(test_config=None):
     # normal Flask class but with a specialised blueprint function.
     app = Flask(__name__,
                 instance_relative_config=True,
-                static_folder=GUI_PUBLIC_DIR + static_dir,
+                static_folder=GUI_BUILD_DIR + static_dir,
                 static_url_path=static_dir)
 
     # When making this multi-user, the secret key would require to be a secure hash.
@@ -80,13 +80,13 @@ def create_app(test_config=None):
             # We proxy webpack requests through to the dev server
             return proxy('http://localhost:3000/', path)
         else:
-            with open(f"{GUI_PUBLIC_DIR}/index.html", "r") as fin:
+            with open(f"{GUI_BUILD_DIR}/index.html", "r") as fin:
                 content = fin.read()
                 return content
 
     @app.route('/favicon.ico')
     def favicon():
-        with open(f"{GUI_PUBLIC_DIR}/favicon.ico", "rb") as fin:
+        with open(f"{GUI_BUILD_DIR}/favicon.ico", "rb") as fin:
             return fin.read()
 
     return app
