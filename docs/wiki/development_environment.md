@@ -119,7 +119,7 @@ In the root project directory, create a `.vscode` directory, in that create a `s
 }
 ```
 
-This will enable the python extension, debugging, linting and unit testing facilities.
+This will enable the Dockerpython extension, debugging, linting and unit testing facilities.
 
 ### 6.2 Run Config
 
