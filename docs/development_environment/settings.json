@@ -1,0 +1,11 @@
+{
+  "terminal.integrated.shell.linux": "/bin/zsh",
+  "python.pythonPath": "/venv/bin/python3",
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintPath": "/venv/bin/pylint",
+  "python.linting.enabled": true,
+  "python.testing.pytestArgs": [],
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.pytestEnabled": true
+}

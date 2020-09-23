@@ -48,6 +48,9 @@ Clone Elpis.
 If you are planning on developing the Elpis GUI clone it as well.
 
 2. `git clone https://github.com/CoEDL/elpis-gui.git`
+3. `cd elpis-gui`
+4. `npm install`
+5. `npm run build`
 
 Your final directory structure should look something like this with the two repositories side by side.
 
@@ -57,7 +60,7 @@ elpis-project
 └── elpis-gui
 ```
 
-NOTE: These setup instructions assume that you follow these instructions for cloning the repository.
+NOTE: The following setup instructions assume that you follow these instructions for cloning the repository.
 
 ## 4. Add `devcontainer.json`
 
@@ -72,7 +75,7 @@ In the `elpis-project/elpis` directory, create a folder called `.devcontainer`. 
     
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/zsh",
-		"python.pythonPath": "/venv/bin/python",
+		"python.pythonPath": "/venv/bin/python3",
 		"python.linting.pylintEnabled": true,
 		"python.linting.pylintPath": "/venv/bin/pylint",
 		"python.linting.enabled": true
@@ -96,15 +99,10 @@ Notice the little green box now specifies that the editor is open in a docker co
 
 ## 6. Setup Python Development Environment
 
-The `setup.py` does all the hard work of installing linters and testing software...
+The `setup.py` file does all the hard work of installing linters and testing software which are listed in `requirements.txt`. Right-click the `elpis` folder in the File Explorer and select "Open in Integrated Terminal". Run the following command to install Elpis' dependencies.  
+`python setup.py develop`
 
-### 6.1 Install the Python Extension
-
-Navigate to the extensions panel on the left bar once again and search for the Python extension. You'll notice that it must be installed again, but this time, it must be installed on the remote VSCode server. Click to install it. After installing, reload the editor (the install button will have turned into a blue reload button).
-
-![Install Python](assets/dev-in-vscode/vsc-install-python.png)
-
-### 6.2 Settings
+### 6.1 Settings
 
 In the root project directory, create a `.vscode` directory, in that crate a `settings.json` file with the following contents:
 ```json
@@ -123,7 +121,7 @@ In the root project directory, create a `.vscode` directory, in that crate a `se
 
 This will enable the python extension, debugging, linting and unit testing facilities.
 
-### 6.3 Run Config
+### 6.2 Run Config
 
 Going one step further, we can setup some default run configurations so that when `F5` is pressed, the server is debuggable from within the editor. To crate a run config to start the server, in the `.vscode` directory, create a new file called `launch.json` with the following contents:
 ```json
@@ -155,9 +153,9 @@ Going one step further, we can setup some default run configurations so that whe
 
 Now press `F5` (or the play button) and see the server run. Try using breakpoints to pause the server at a line of code. Try the `elpis/elpis/__init__.py` file pause the program around line 72 on the print statement in the index function. To get the server to pause you will need to open a browser and load `0.0.0.0:5000/index.html` to run that section of code.
 
-## 6.4 Terminal
+### 6.3 Terminal
 
-Notice that when you press `ctrl-\`` the terminal that opens is in the container.
+Notice that when you press <code>ctrl+`</code> the terminal that opens is in the container.
 
 ## 7. Elpis-GUI
 
@@ -191,7 +189,7 @@ A more advanced method for developing the `elpis-gui` is to use the Webpack Dev 
 
 To use hot reload:
 
-1. Update your `devcontainer.json` to include
+7.1.1. Update your `devcontainer.json` to include
 
 ```json
 "forwardPorts": [
@@ -202,7 +200,7 @@ To use hot reload:
 
 This will open port 5000 to access the Flask WSGI and port 3000 to access the Webpack Development Server.
 
-It should look like this if you follow the previous examples:
+It should look like this if you followed the previous examples:
 
 ```json
 {
@@ -215,7 +213,7 @@ It should look like this if you follow the previous examples:
     ],
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/zsh",
-		"python.pythonPath": "/venv/bin/python",
+		"python.pythonPath": "/venv/bin/python3",
 		"python.linting.pylintEnabled": true,
 		"python.linting.pylintPath": "/venv/bin/pylint",
 		"python.linting.enabled": true
@@ -230,11 +228,8 @@ It should look like this if you follow the previous examples:
 }
 ```
 
-Port 3000: Webpack Dev Server
-Port 5000: Flask WSGI Server
 
-
-2. Update your `launch.json` to include the following as a launch configuration. Append it after the previous launch configuration.
+7.1.2. Update your `launch.json` to include the following as a launch configuration. Append it after the previous launch configuration.
 ```json
 {
     "name": "Node: Elpis-Gui",
@@ -254,6 +249,7 @@ Port 5000: Flask WSGI Server
 
 #### Caveats for hot-reload
 
+* The Node configuration may take a while to start up. Wait for it... 
 * Currently hot-reload does not preserve state #TODO
 * Hot-reload can be buggy due to the flask intermediary, just reload a couple times it'll get there
 
@@ -274,6 +270,13 @@ Now you have an environment that is well connected within the container and can 
 * Simple terminal access to the Docker container
 
 The End.
+
+## Download sample files
+
+These are the complete files as used in this guide, set up for both Elpis and Elpis-GUI, with hot reloading.
+* [devcontainer.js](development_environment/devcontainer.json)
+* [launch.json](development_environment/launch.json)
+* [settings.json](development_environment/settings.json)
 
 ## References
 
