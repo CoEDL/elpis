@@ -208,8 +208,6 @@ RUN /usr/bin/python3 -m venv /venv
 
 ENV PATH="/venv/bin:$PATH"
 
-RUN apt-get update && apt-get install libffi-dev
-
 RUN pip3.6 install wheel pytest pylint && python setup.py develop
 
 WORKDIR /elpis
