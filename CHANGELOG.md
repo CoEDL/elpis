@@ -15,7 +15,6 @@ Date is year-month-day format.
 - ESPnet
 
 ### Changed
-- Rearranged Dockerfile
 - Fixed changelog date for docs
 
 
