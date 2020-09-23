@@ -125,14 +125,6 @@ RUN echo "===> install ESPnet" && \
 
 WORKDIR /tmp
 
-# Add a task runner
-#RUN curl -s https://taskfile.org/install.sh | sh && mv ./bin/task /bin/
-
-# Add moustache templates as mo
-#RUN curl -sSO https://raw.githubusercontent.com/tests-always-included/mo/master/mo && \
-#    chmod +x mo && \
-#    mv mo /usr/local/bin
-
 # Add jq
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
