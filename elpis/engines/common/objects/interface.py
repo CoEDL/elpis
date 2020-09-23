@@ -55,7 +55,7 @@ class Interface(FSObject):
                     pass
             else:
                 raise InvalidInterfaceError
-        
+
         # === Create a new interface object ==============================
         except InvalidInterfaceError:
             # Must wipe the interface and make a new one
@@ -258,6 +258,7 @@ class Interface(FSObject):
     def new_transcription(self, tname):
         if self.engine is None:
             raise RuntimeError("Engine must be set prior to transcription")
+        print("{}".format(self.engine))
         t = self.engine.transcription(parent_path=self.transcriptions_path, name=tname)
         transcriptions = self.config['transcriptions']
         transcriptions[tname] = t.hash

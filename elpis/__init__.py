@@ -42,6 +42,10 @@ def create_app(test_config=None):
                     static_folder=GUI_BUILD_DIR + static_dir,
                     static_url_path=static_dir)
 
+    import logging
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
+
     # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(
         SECRET_KEY='dev'
@@ -49,7 +53,6 @@ def create_app(test_config=None):
 
     elpis_path = Path(os.getcwd())
     app.config['ELPIS_PATH'] = elpis_path
-    print("elpis_path:", elpis_path)
 
     # For a single user, storing the interface object is okay to do in
     # the app.config, however, this would need to change for multi-user.
@@ -57,10 +60,8 @@ def create_app(test_config=None):
     # stores all the artifacts that user has generated.
     interface_path = Path(os.path.join(elpis_path, '/state'))
     if not interface_path.exists():
-        print("no interface exists")
         app.config['INTERFACE'] = Interface(interface_path)
     else:
-        print("interface exists, load it")
         app.config['INTERFACE'] = Interface(interface_path, use_existing=True)
     # app.config['CURRENT_DATASET'] = None # not okay for multi-user
     # app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user & need to remove later because it is Kaldi-specific.
@@ -97,6 +98,7 @@ def create_app(test_config=None):
 
     return app
 
+  
 # Proxy Wrapper
 def proxy(host, path):
     response = get(f"{host}{path}")

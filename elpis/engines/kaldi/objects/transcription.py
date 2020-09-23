@@ -1,5 +1,6 @@
 from pathlib import Path
 from elpis.engines.common.input.resample import resample
+from elpis.engines.common.objects.command import run
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 import subprocess
 from typing import Callable, Dict
@@ -8,6 +9,7 @@ import shutil
 from distutils import dir_util, file_util
 import wave
 import contextlib
+from subprocess import CalledProcessError
 
 
 class KaldiTranscription(BaseTranscription):
@@ -105,11 +107,26 @@ class KaldiTranscription(BaseTranscription):
 
     def transcribe(self, on_complete: Callable = None):
         self.status = "transcribing"
+        local_kaldi_path = self.model.path.joinpath('kaldi')
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
+        # TODO move this to templates/infer/stages/ and move the train templates into templates/train/stages
         gmm_decode_path = Path('/elpis/elpis/engines/kaldi/inference/gmm-decode')
 
-        # Setup logging path
+        # Prepare (dump, recreate) main transcription log file
         run_log_path = self.path.joinpath('transcription.log')
+        if os.path.isfile(run_log_path):
+            os.remove(run_log_path)
+        run(f"touch {run_log_path};")
+
+        # Organise stage logs in a dir
+        transcription_log_dir = self.path.joinpath('transcription-logs')
+        if os.path.exists(transcription_log_dir):
+            shutil.rmtree(transcription_log_dir)
+        os.mkdir(transcription_log_dir )
+
+        stage_count = 0
+
+        # Build stage scripts
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
@@ -118,20 +135,52 @@ class KaldiTranscription(BaseTranscription):
         stages = os.listdir(kaldi_infer_path.joinpath('gmm-decode'))
         for file in stages:
             os.chmod(kaldi_infer_path.joinpath('gmm-decode').joinpath(file), 0o774)
+
+        print('*** kaldi_infer_path', kaldi_infer_path)
+
         for stage in sorted(stages):
-            print(f"======== STAGE {stage} STARTING ========")
+            print(f"Stage {stage} starting")
             self.stage_status = (stage, 'in-progress', '')
-            # Setup logging
-            args = ['bash', '-c', f'touch {run_log_path}; sh {kaldi_infer_path.joinpath("gmm-decode", stage)} >> {run_log_path}']
-            subprocess.run(args, cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
-            print(f"======== STAGE {stage} COMPLETE ========")
-            self.stage_status = (stage, 'complete', '')
-        
-        # subprocess.run('sh /elpis/elpis/engines/kaldi/inference/gmm-decode-long.sh'.split(),
-                    #    cwd=f'{self.model.path.joinpath("kaldi")}', check=True)
+
+            # Create log file
+            stage_log_path = self.path.joinpath(os.path.join(transcription_log_dir, f'stage_{stage_count}.log'))
+            with open(stage_log_path, 'w+'):
+                pass
+
+            # Run the command, log output. Also redirect Kaldi sterr output to log. These are often not errors :-(
+            # These scripts must run from the kaldi dir (so set cwd)
+            try:
+                script_path = kaldi_infer_path.joinpath("gmm-decode", stage)
+                stage_process = run(f"sh {script_path} >> {stage_log_path}", cwd=f"{local_kaldi_path}")
+                with open(stage_log_path, 'a+') as file:
+                    print('stdout', stage_process.stdout, file=file)
+                    print('stderr', stage_process.stderr, file=file)
+                    print('done', file=file)
+                print(f"Stage {stage} complete")
+                self.stage_status = (stage, 'complete', '')
+                stage_count = stage_count + 1
+            except CalledProcessError as error:
+                with open(stage_log_path, 'a+') as file:
+                    print('stderr', error.stderr, file=file)
+                    print('failed', file=file)
+                print(f"Stage {stage} failed")
+                self.stage_status = (stage, 'failed', '')
+                break
+
+        # Concat all the files in the transcription-log dir
+        log_filenames = os.listdir(transcription_log_dir)
+        log_filenames.sort()
+        with open(run_log_path, 'w') as outfile:
+            for log_file in log_filenames:
+                with open(os.path.join(transcription_log_dir, log_file)) as infile:
+                    outfile.write(infile.read())
+                    outfile.write("\n")
+
         file_util.copy_file(f"{kaldi_infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
         file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
+
         self.status = "transcribed"
+
         if on_complete is not None:
             on_complete()
 

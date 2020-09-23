@@ -105,20 +105,20 @@ class DataTransformer:
         To be overriden.
         """
         pass
-    
+
     def get_name(self) -> str:
         return self._callback_get_config()['name']
 
     def get_ui(self) -> Dict:
         return self._callback_get_config()['ui']
-    
+
     # TODO: add import/export settings to the state
     def get_state(self) -> str:
         return self._callback_get_config()
 
     def get_settings(self):
         return self._callback_get_config()['settings']
-    
+
     def set_setting(self, key, value):
         """
         Ensures the callback is called when the context is modified.
@@ -132,7 +132,7 @@ class DataTransformer:
         self._settings_change_callback(settings_for_callback)
         config['settings'] = settings
         self._callback_set_config(config)
-    
+
     def validate_files(self, extention: str, file_paths: Path):
         """ TODO fix up this doc"""
         """ Returns None if everything is okay, otherwise string with error message."""
@@ -205,7 +205,7 @@ class DataTransformerAbstractFactory:
 
         self._attributes = {}
         self._obj_to_attr_name = {}
-    
+
     def set_audio_extention(self, ext: str):
         """
         Setter for the audio extention that will be used to scan for audio
@@ -247,17 +247,18 @@ class DataTransformerAbstractFactory:
 
         Store the decorated function as a callback to process files with the
         given extention. The parameter to the decorator is the file extention.
-        The decorated function (f) should always have four parameters, being:
+        The decorated function (f) should always have five parameters, being:
             1. List containing the file paths of all the files in the import
                 directory with the specified extention.
             2. A dictionary context variable that can be used to access
                 specialised settings.
-            3. A callback to add annotation data to audio files.
-            4. Path to a temporary directory
-        
+            3. A callback to reset annotation data.
+            4. A callback to add annotation data to audio files.
+            5. Path to a temporary directory
+
         This decorator is indended for the (audio file, transcription file)
         unique distinct pair usecase.
-        
+
         The callback is used either when the DataTransformer process() function
         is called or the if the function is called directly from the
         DataTransformer object. If called directly, then only the file_paths
@@ -288,8 +289,8 @@ class DataTransformerAbstractFactory:
                 raise NameError('bad function name. Name is attribute of DataTransformer')
 
             sig = signature(f)
-            if len(sig.parameters) != 4:
-                raise RuntimeError(f'import function "{f.__name__}" must have four parameters, currently has {len(sig.parameters)}')
+            if len(sig.parameters) != 5:
+                raise RuntimeError(f'import function "{f.__name__}" must have five parameters, currently has {len(sig.parameters)}')
 
             # Store the closure by file extention
             self._import_extension_callbacks[extention] = f
@@ -341,7 +342,7 @@ class DataTransformerAbstractFactory:
             3. A callback to add annotaion data to audio files.
             4. A callback to add audio files.
             5. Path to a temporary directory.
-        
+
         The callback is used either when the DataTransformer process() function
         is called or the if the function is called directly (without passing
         patameters) from the DataTransformer object.
@@ -367,7 +368,7 @@ class DataTransformerAbstractFactory:
         sig = signature(f)
         if len(sig.parameters) != 5:
             raise RuntimeError(f'import function "{f.__name__}" must have five parameters, currently has f{len(sig.parameters)}')
-        
+
         # Store the closure by file extention
         self._import_directory_callback = f
         self._attributes[f.__name__] = f
@@ -386,10 +387,10 @@ class DataTransformerAbstractFactory:
                 specialised settings.
             3. Output directory.
             4. Path to a temporary directory
-        
+
         This decorator is indended for the (audio file, transcription file)
         unique distinct pair usecase.
-        
+
         The callback is used by directly calling it from the DataTransformer
         object. If called directly, then only the annotations and the
         output_dir arguments should be passed to the function as the
@@ -422,7 +423,8 @@ class DataTransformerAbstractFactory:
                        default: Union[List[str], Set[str], int, str] = '',
                        display_name: str = '',
                        description: str = '',
-                       options: Optional[List[str]] = None):
+                       options: Optional[List[str]] = None,
+                       shown: bool = True):
         """
         Add a field to the import context.
         :param key: the name of the field.
@@ -431,6 +433,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -441,18 +444,20 @@ class DataTransformerAbstractFactory:
             'ui_format': ui_format,
             'display_name': display_name,
             'description': description,
-            'options': options
+            'options': options,
+            'shown': shown
         }
         self._import_ui_type_config[key] = 'setting'
         self._import_ui_order_config.append(key)
-    
+
     def export_setting(self,
                        key: str = '',
                        ui_format: Optional[str] = None,
                        default: Union[List[str], Set[str], int, str] = '',
                        display_name: str = '',
                        description: str = '',
-                       options: Optional[List[str]] = None):
+                       options: Optional[List[str]] = None,
+                       shown: bool = True):
         """
         Add a field to the export context.
         :param key: the name of the field.
@@ -461,6 +466,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -471,7 +477,8 @@ class DataTransformerAbstractFactory:
             'ui_format': ui_format,
             'display_name': display_name,
             'description': description,
-            'options': options
+            'options': options,
+            'shown': shown
         }
         self._export_ui_type_config[key] = 'setting'
         self._export_ui_order_config.append(key)
@@ -482,7 +489,8 @@ class DataTransformerAbstractFactory:
                         default: Union[List[str], Set[str], int, str] = '',
                         display_name: str = '',
                         description: str = '',
-                        options: Optional[List[str]] = None):
+                        options: Optional[List[str]] = None,
+                        shown: bool = True):
         """
         Add a field to the both import and export context.
         :param key: the name of the field.
@@ -491,6 +499,7 @@ class DataTransformerAbstractFactory:
         :param display_name: (Optional) human-readable name for the setting.
         :param description: (Optional) human-readable description of what the setting is for.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
+        :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
             ValueError: if the key has already been specified as an import or export setting, or in the default context.
         """
@@ -503,13 +512,15 @@ class DataTransformerAbstractFactory:
                             default=default,
                             display_name=display_name,
                             description=description,
-                            options=options)
+                            options=options,
+                            shown=shown)
         self.export_setting(key=key,
                             ui_format=ui_format,
                             default=default,
                             display_name=display_name,
                             description=description,
-                            options=options)
+                            options=options,
+                            shown=shown)
 
     def import_setting_title(self, title: str, description: str):
         key = '_title_' + str(self._import_title_count)
@@ -540,7 +551,7 @@ class DataTransformerAbstractFactory:
         if len(self._import_extension_callbacks) != 0:
             return True
         return False
-    
+
     def is_export_capable(self):
         return self._export_callback is not None
 
@@ -587,6 +598,12 @@ class DataTransformerAbstractFactory:
         )
 
         # Callbacks to add data to the internal stores
+
+        def reset_annotations():
+            nonlocal dt
+            dt._annotation_store = {}
+            return
+
         def add_annotation(id, obj):
             nonlocal dt
             # check the object type
@@ -612,6 +629,7 @@ class DataTransformerAbstractFactory:
                 nonlocal dt
                 nonlocal f
                 nonlocal collection_path
+                nonlocal reset_annotations
                 nonlocal add_annotation
                 nonlocal add_audio
                 nonlocal temporary_directory_path
@@ -619,6 +637,7 @@ class DataTransformerAbstractFactory:
                     collection_path,
                     # resampled_path, # TODO: this line needs to be here so add the parameter to tests
                     copyJSONable(dt.get_settings()),
+                    reset_annotations,
                     add_annotation,
                     add_audio,
                     temporary_directory_path
@@ -662,11 +681,13 @@ class DataTransformerAbstractFactory:
                     """
                     nonlocal dt
                     nonlocal f
+                    nonlocal reset_annotations
                     nonlocal add_annotation
                     nonlocal temporary_directory_path
                     return f(
                         file_paths,
                         copyJSONable(dt.get_settings()),
+                        reset_annotations,
                         add_annotation,
                         temporary_directory_path
                     )
@@ -686,6 +707,7 @@ class DataTransformerAbstractFactory:
                 nonlocal dt
                 nonlocal collection_path
                 nonlocal resampled_path
+                nonlocal reset_annotations
                 nonlocal add_annotation
                 nonlocal add_audio
                 nonlocal temporary_directory_path
@@ -705,7 +727,7 @@ class DataTransformerAbstractFactory:
                     # only process the file type collection if a handler exists for it
                     callback = import_extension_callbacks.get(extention, None)
                     if callback is not None:
-                        callback(file_paths, dt.get_settings(), add_annotation, temporary_directory_path)
+                        callback(file_paths, dt.get_settings(), reset_annotations, add_annotation, temporary_directory_path)
 
                 # save transcription data to file
                 with Path(transcription_json_file_path).open(mode='w') as fout:
@@ -719,7 +741,7 @@ class DataTransformerAbstractFactory:
         # add validators
         for ext, f in self._import_file_validator_callback.items():
             dt._validaters[ext] = f
-        
+
         # Add ui refresher
         dt._ui_updater = self._update_ui_callback
 
@@ -727,7 +749,7 @@ class DataTransformerAbstractFactory:
         dt._extentions = self._import_file_validator_callback.keys()
 
         return dt
-    
+
     def build_exporter(self,
                         path_to_ctm_file: str,
                         path_to_audio_file: str,
@@ -829,7 +851,7 @@ def _filter_files_by_extention(dir_path: str) -> Dict[str, List[str]]:
             # skip directories
             continue
         extention = file_path.name.split('.')[-1]
-        # Make dictionary of files separated by 
+        # Make dictionary of files separated by
         if extention not in extention_to_files:
             extention_to_files[extention] = [f'{file_path}']
         else:
@@ -848,7 +870,7 @@ def _default_audio_resampler(audio_paths: List[str], resampled_dir_path: str, ad
         function runs and will be deleted immediately after the function ends.
         Must be the last parameter as this path is prepended on build().
     """
-    
+
     temp_dir_path = Path(temp_dir_path)
     resampled_dir_path = Path(resampled_dir_path)
 
