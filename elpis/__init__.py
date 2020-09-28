@@ -12,7 +12,7 @@ def create_app(test_config=None):
     GUI_PUBLIC_DIR = "/elpis-gui/public"
 
     # Variable to control the use of a proxy to support webpackdevserver
-    WEBPACK_DEV_SERVER_PROXY = False
+    WEBPACK_DEV_SERVER_PROXY = os.environ["WEBPACK_DEV_SERVER_PROXY"]
 
     if WEBPACK_DEV_SERVER_PROXY:
         app = Flask(__name__,

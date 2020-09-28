@@ -247,6 +247,31 @@ It should look like this if you followed the previous examples:
 }
 ```
 
+You also need to set an additional environment variable for the Flask launch configuration. By setting `"WEBPACK_DEV_SERVER_PROXY": "True"` in `"env"` of the Flask configuration it will redirect front end requests to the webpack dev server. Your Flask launch config should look like this:
+
+```json
+{
+    "name": "Python: Flask",
+    "type": "python",
+    "request": "launch",
+    "module": "flask",
+    "env": {
+        "FLASK_APP": "elpis",
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "0",
+        "WEBPACK_DEV_SERVER_PROXY": "True"
+    },
+    "args": [
+        "run",
+        "--host","0.0.0.0",
+        "--port","5000",
+        "--no-debugger",
+        "--no-reload"
+    ],
+    "jinja": true
+}
+```
+
 #### Caveats for hot-reload
 
 * The Node configuration may take a while to start up. Wait for it... 
