@@ -14,13 +14,13 @@ This tutorial aims to bring about the best possible development experience by se
 This works by using VSCode extensions that install another layer on-top of the Elpis image that runs a VSCode server that allows the editor access to the Python runtime and seamless access to the container.
 
 ![s](assets/dev-in-vscode/architecture-containers.png)
-(ref 1)
+[1]
 
 ## 1. Install Docker and VSCode
 
 Download VSCode ([Link](https://code.visualstudio.com/)).
 
-Make a Docker account and download Docker ([Link](https://hub.docker.com)).
+Make a Docker account and download Docker ([Link](https://www.docker.com/products/docker-desktop)).
 
 ## 2. Install Extensions
 
@@ -47,10 +47,10 @@ Clone Elpis.
 
 If you are planning on developing the Elpis GUI clone it as well.
 
-2. `git clone https://github.com/CoEDL/elpis-gui.git`
-3. `cd elpis-gui`
-4. `npm install`
-5. `npm run build`
+3. `git clone https://github.com/CoEDL/elpis-gui.git`
+4. `cd elpis-gui`
+5. `npm install`
+6. `npm run build`
 
 Your final directory structure should look something like this with the two repositories side by side.
 
@@ -89,7 +89,11 @@ In the `elpis-project/elpis` directory, create a folder called `.devcontainer`. 
 
 ## 5. Re-open VSCode in the Container
 
-We are now ready to open the VSCode in the container. The first time this happens, Docker will need to build the container from the beginning. For Elpis this usually takes two hours. This build will only have to happen once. To start, click the little green box in the bottom left-hand corner then select "Reopen in Container" or if you reopen the editor, a notification will pop up with the same option.
+We are now ready to open the VSCode in the container. The first time this happens, Docker will need to build the container from the beginning. For Elpis this usually takes two hours. This build will only have to happen once. 
+
+Open the `elpis-project/elpis` directory in VSCode.
+ 
+To start the container, click the little green box in the bottom left-hand corner then select "Reopen in Container" or if you reopen the editor, a notification will pop up with the same option.
 
 ![Reopen in container](assets/dev-in-vscode/vsc-reopen-in-con.png)
 

@@ -9,7 +9,8 @@
       "env": {
         "FLASK_APP": "elpis",
         "FLASK_ENV": "development",
-        "FLASK_DEBUG": "0"
+        "FLASK_DEBUG": "0",
+        "WEBPACK_DEV_SERVER_PROXY": "True"
       },
       "args": [
         "run",
