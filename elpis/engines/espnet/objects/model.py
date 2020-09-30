@@ -23,7 +23,7 @@ class EspnetModel(BaseModel):
         # ESPnet doesn't use an n-gram language model, so this will not change
         # from None.
         self.config['ngram'] = None
-        self.config['engine_name'] = 'espnet'
+        self.config['engine'] = 'espnet'
         self.config['status'] = 'untrained'
         stage_names = {
             "train": "Train"
@@ -63,6 +63,9 @@ class EspnetModel(BaseModel):
     @status.setter
     def status(self, value: str):
         self.config['status'] = value
+
+    def has_been_trained(self):
+        return self.status == 'trained'
 
     def link(self, dataset: Dataset, _pron_dict):
         self.dataset = dataset

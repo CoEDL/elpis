@@ -56,7 +56,7 @@ class Model(FSObject):  # TODO not thread safe
         stage_status = self.config['stage_status']
         stage_status[stage]['status'] = status
         stage_status[stage]['message'] = message
-        stage_status[stage]['log'] = message
+        stage_status[stage]['log'] = log
         self.config['stage_status'] = stage_status
 
     def build_stage_status(self, stage_names: Dict[str, str]):

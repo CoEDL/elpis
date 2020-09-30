@@ -72,7 +72,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
     def train(self, on_complete:Callable=None):
 
-
         def prepare_for_training():
             print("prepare_for_training")
             # task make-kaldi-subfolders
@@ -219,7 +218,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
             for stage in sorted(stages):
                 print(f"Stage {stage} starting")
-                self.stage_status = (stage, 'in-progress', '')
+                self.stage_status = (stage, 'in-progress', '', 'starting')
 
                 # Create log file
                 stage_log_path = self.path.joinpath(os.path.join(train_log_dir, f'stage_{stage_count}.log'))
