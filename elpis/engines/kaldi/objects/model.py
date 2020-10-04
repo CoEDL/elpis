@@ -1,4 +1,3 @@
-import pystache
 import os
 import re
 import shutil
@@ -13,6 +12,7 @@ from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
 from elpis.engines.common.objects.path_structure import PathStructure
 from collections import OrderedDict
 from subprocess import CalledProcessError
+from jinja2 import Template
 
 
 class KaldiModel(BaseModel):  # TODO not thread safe
@@ -133,20 +133,21 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
             with path_file_path.open(mode='w') as fout:
                 with path_resource.open() as fin:
-                    content = pystache.render(
-                        fin.read(),
+                    template = Template(fin.read())
+                    content = template.render(
                         {
                             'KALDI_ROOT': '/kaldi',
                             'HELPERS_PATH': '/kaldi-helpers',
                             'CORPUS_PATH': f'..{self.dataset.pathto.original}'
                         }
                     )
+                    print(content)
                     fout.write(content)
 
             with mfcc_file_path.open(mode='w') as fout:
                 with mfcc_resource.open() as fin:
-                    content = pystache.render(
-                        fin.read(),
+                    template = Template(fin.read())
+                    content = template.render(
                         {
                             'MFCC_SAMPLE_FREQUENCY': '44100',
                             'MFCC_FRAME_LENGTH': '25',
@@ -155,17 +156,19 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                             'MFCC_NUM_CEPS': '7',
                         }
                     )
+                    print(content)
                     fout.write(content)
 
             with decode_config_file_path.open(mode='w') as fout:
                 with decode_config_resource.open() as fin:
-                    content = pystache.render(
-                        fin.read(),
+                    template = Template(fin.read())
+                    content = template.render(
                         {
                             'DECODE_BEAM': '11.0',
                             'DECODE_FIRST_BEAM': '8.0'
                         }
                     )
+                    print(content)
                     fout.write(content)
             try:
                 # task copy-generated-files

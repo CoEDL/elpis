@@ -1,5 +1,6 @@
 appdirs
 Flask
+Jinja2
 langid
 nltk
 numpy
