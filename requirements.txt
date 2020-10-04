@@ -7,6 +7,5 @@ numpy
 praatio
 pydub
 pympi-ling
-pystache
 setuptools
 werkzeug
