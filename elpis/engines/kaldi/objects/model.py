@@ -133,21 +133,18 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
             with path_file_path.open(mode='w') as fout:
                 with path_resource.open() as fin:
-                    template = Template(fin.read())
-                    content = template.render(
+                    content = Template(fin.read()).render(
                         {
                             'KALDI_ROOT': '/kaldi',
                             'HELPERS_PATH': '/kaldi-helpers',
                             'CORPUS_PATH': f'..{self.dataset.pathto.original}'
                         }
                     )
-                    print(content)
                     fout.write(content)
 
             with mfcc_file_path.open(mode='w') as fout:
                 with mfcc_resource.open() as fin:
-                    template = Template(fin.read())
-                    content = template.render(
+                    content = Template(fin.read()).render(
                         {
                             'MFCC_SAMPLE_FREQUENCY': '44100',
                             'MFCC_FRAME_LENGTH': '25',
@@ -156,19 +153,16 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                             'MFCC_NUM_CEPS': '7',
                         }
                     )
-                    print(content)
                     fout.write(content)
 
             with decode_config_file_path.open(mode='w') as fout:
                 with decode_config_resource.open() as fin:
-                    template = Template(fin.read())
-                    content = template.render(
+                    content = Template(fin.read()).render(
                         {
                             'DECODE_BEAM': '11.0',
                             'DECODE_FIRST_BEAM': '8.0'
                         }
                     )
-                    print(content)
                     fout.write(content)
             try:
                 # task copy-generated-files
