@@ -141,6 +141,39 @@ const datasetFilesFailure = error => ({
     response: { error }
 })
 
+/* * * * * * * * * * * *  FILES DELETE * * * * * * * * * * *  */
+
+export function datasetDelete(postData) {
+    const url = baseUrl + urls.api.dataset.delete
+    const config = { headers: { 'content-type': 'multipart/form-data' } }
+    var responseData
+    return async dispatch => {
+        dispatch(datasetDeleteStarted())
+        await axios.post(url, postData, config)
+            .then(response => {
+                responseData = response.data
+                dispatch(datasetDeleteSuccess(response))
+            })
+            .catch(error => {
+                dispatch(datasetDeleteFailure(error))
+                throw error
+            })
+        console.log(responseData["data"])
+        return responseData
+    }
+}
+
+const datasetDeleteStarted = () => ({
+    type: actionTypes.DATASET_DELETE_STARTED
+})
+const datasetDeleteSuccess = response => ({
+    type: actionTypes.DATASET_DELETE_SUCCESS,
+    response: { ...response }
+})
+const datasetDeleteFailure = error => ({
+    type: actionTypes.DATASET_DELETE_FAILURE,
+    response: { error }
+})
 
 /* * * * * * * * * * * *  SETTINGS * * * * * * * * * * *  */
 

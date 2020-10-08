@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
-import { Button, Divider, Grid, Header, Icon, List, Message, Segment, Input, Form } from 'semantic-ui-react';
+import { Button, Divider, Grid, Header, Icon, List, Message, Segment, Input, Form, Label } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { datasetSettings, datasetPrepare } from 'redux/actions/datasetActions';
+import { datasetSettings, datasetPrepare, datasetDelete } from 'redux/actions/datasetActions';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
 import SelectEngine from 'components/Engine/SelectEngine'
@@ -15,13 +15,18 @@ import urls from 'urls'
 class DatasetFiles extends Component {
 
     handleNextButton = () => {
-        const { history, datasetPrepare} = this.props
+        const { history, datasetPrepare } = this.props
         datasetPrepare(history)
         history.push(urls.gui.dataset.prepare)
     }
 
-    render() {
+    handleDeleteButton = (file) => {
+        var deleteData = new FormData()
+        deleteData.append('file', file);
+        this.props.datasetDelete(deleteData)
+    }
 
+    render() {
         const { t,
             currentEngine,
             name,
@@ -42,28 +47,61 @@ class DatasetFiles extends Component {
             </div>
         ) : null
 
-        const audioFileList = audioFiles.map(file => (
+        const audioFilesList = audioFiles.map(file => (
             <List.Item key={ file }>
-                <List.Content>{ file }</List.Content>
+                <Button as='div' labelPosition='left'>
+                    <Label as='a' basic>
+                        { file }
+                    </Label>
+                    <Button icon onClick={() => this.handleDeleteButton(file)}>
+                        <Icon name='trash' />
+                    </Button>
+                </Button>
             </List.Item>
         ))
         const transcriptionFilesList = transcriptionFiles.map(file => (
             <List.Item key={ file }>
-                <List.Content>{ file }</List.Content>
+                <Button as='div' labelPosition='left'>
+                    <Label as='a' basic>
+                        { file }
+                    </Label>
+                    <Button icon onClick={() => this.handleDeleteButton(file)}>
+                        <Icon name='trash' />
+                    </Button>
+                </Button>
             </List.Item>
         ))
         const additionalTextFilesList = additionalTextFiles.map(file => (
             <List.Item key={ file }>
-                <List.Content>{ file }</List.Content>
+                <Button as='div' labelPosition='left'>
+                    <Label as='a' basic>
+                        { file }
+                    </Label>
+                    <Button icon onClick={() => this.handleDeleteButton(file)}>
+                        <Icon name='trash' />
+                    </Button>
+                </Button>
             </List.Item>
         ))
 
         const filesHeader = (
-            audioFileList.length > 0 ||
+            audioFilesList.length > 0 ||
             transcriptionFilesList.length > 0 ||
             additionalTextFilesList.length > 0) ? (
                  t('dataset.files.filesHeader')
             ) : null
+
+        const audioFilesHeader = audioFilesList.length > 0 
+            ? t('dataset.files.audioFilesHeader') 
+            : null
+
+        const transcriptionFilesHeader = transcriptionFilesList.length > 0 
+            ? t('dataset.files.transcriptionFilesHeader') 
+            : null
+
+        const additionalTextFilesHeader = additionalTextFilesList.length > 0 
+            ? t('dataset.files.additionalTextFilesHeader') 
+            : null
 
         // const writeCountOptions = []
         // for (var i = 1; i <= settings.tier_max_count; i++) {
@@ -113,18 +151,27 @@ class DatasetFiles extends Component {
                                         <div className="file-list">
                                             <Grid columns={3}>
                                                 <Grid.Column>
+                                                    <Header as='h4'>
+                                                        { audioFilesHeader }
+                                                    </Header>
                                                     <List>
-                                                        {audioFileList}
+                                                        { audioFilesList }
                                                     </List>
                                                 </Grid.Column>
                                                 <Grid.Column>
+                                                    <Header as='h4'>
+                                                        { transcriptionFilesHeader }
+                                                    </Header>
                                                     <List>
-                                                        {transcriptionFilesList}
+                                                        { transcriptionFilesList }
                                                     </List>
                                                 </Grid.Column>
                                                 <Grid.Column>
+                                                    <Header as='h4'>
+                                                        { additionalTextFilesHeader }
+                                                    </Header>
                                                     <List>
-                                                        {additionalTextFilesList}
+                                                        { additionalTextFilesList }
                                                     </List>
                                                 </Grid.Column>
                                             </Grid>
@@ -176,7 +223,10 @@ const mapDispatchToProps = dispatch => ({
             .then((response) => {
                 history.push(urls.gui.dataset.prepare)
             })
-    }
+    },
+    datasetDelete: postData => {
+        dispatch(datasetDelete(postData));
+    },
 })
 
 export default withRouter(

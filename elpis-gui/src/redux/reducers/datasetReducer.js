@@ -41,7 +41,7 @@ const dataset = (state = initState, action) => {
                 }
             }
         }
-
+        
         case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
             let {name, files, importer} = action.response.data.data.state;
@@ -106,8 +106,22 @@ const dataset = (state = initState, action) => {
                     importer_name: data.importer_name
                 }
             } else {
-                console.log(data)
                 return { ...state, status: 'ready' }
+            }
+
+        case actionTypes.DATASET_DELETE_SUCCESS:
+            var { data, status } = action.response.data
+            if (status == 200) {
+                // action.data is an array of filenames. parse this, split into separate lists
+                audioFiles = data.files.filter(file => getFileExtension(file) === 'wav').sort()
+                transcriptionFiles = data.files.filter(file => getFileExtension(file) === 'eaf').sort()
+                additionalTextFiles = data.files.filter(file => getFileExtension(file) === 'txt').sort()
+                return {
+                    ...state,
+                    audioFiles,
+                    transcriptionFiles,
+                    additionalTextFiles,
+                }
             }
 
         case actionTypes.DATASET_SETTINGS_SUCCESS:

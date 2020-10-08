@@ -39,6 +39,7 @@ export default {
             "load": "/api/dataset/load",
             "list": "/api/dataset/list",
             "files": "/api/dataset/files",
+            "delete": "/api/dataset/files/delete",
             "settings": "/api/dataset/import/settings",
             "ui": "/api/dataset/import/ui",
             "prepare": "/api/dataset/prepare"
