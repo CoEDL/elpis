@@ -98,6 +98,18 @@ def files(dataset: Dataset):
         "data": data
     })
 
+@bp.route("/files/delete", methods=['POST'])
+@require_dataset
+def delete(dataset: Dataset):
+    if request.method == 'POST':
+        dataset.remove_file(request.form["file"])
+        dataset.refresh_ui()
+        data = {"files": dataset.files}
+    return jsonify({
+        "status": 200,
+        "data": data,
+    })
+
 
 @bp.route("/import/settings", methods=['GET', 'POST'])
 @require_dataset
