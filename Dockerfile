@@ -198,3 +198,4 @@ WORKDIR /elpis
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
+EXPOSE 3000:3000

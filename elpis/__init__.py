@@ -4,33 +4,43 @@ from . import endpoints
 from .app import Flask
 from elpis.engines import Interface
 from pathlib import Path
-
+from requests import get
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
-    GUI_PUBLIC_DIR = "/elpis-gui/build"
+    GUI_BUILD_DIR = "/elpis-gui/build"
+    GUI_PUBLIC_DIR = "/elpis-gui/public"
 
-    # Setup static resources
-    # create and configure the app
-    # auto detect for yarn watch or yarn build
-    static_dir_watch = '/js'
-    static_dir_build = '/static'
-    if 'js' in os.listdir(GUI_PUBLIC_DIR):
-        # using yarn watch
-        static_dir = static_dir_watch
+    # Variable to control the use of a proxy to support webpackdevserver
+    WEBPACK_DEV_SERVER_PROXY = os.environ["WEBPACK_DEV_SERVER_PROXY"]
+
+    if WEBPACK_DEV_SERVER_PROXY:
+        app = Flask(__name__,
+                    instance_relative_config=True,
+                    static_folder=GUI_PUBLIC_DIR)
     else:
-        static_dir = static_dir_build
+        # Setup static resources
+        # create and configure the app
+        # auto detect for yarn watch or yarn build
+        static_dir_watch = '/js'
+        static_dir_build = '/static'
+        if 'js' in os.listdir(GUI_BUILD_DIR):
+            # using yarn watch
+            static_dir = static_dir_watch
+        else:
+            static_dir = static_dir_build
 
-    # if os.environ.get('FLASK_ENV') == 'production':
-    #     static_dir = static_dir_build
-    # else:
-    #     static_dir = static_dir_watch
-    # Create a custom Flask instance defined in the app.py file. Same as a
-    # normal Flask class but with a specialised blueprint function.
-    app = Flask(__name__,
-                instance_relative_config=True,
-                static_folder=GUI_PUBLIC_DIR + static_dir,
-                static_url_path=static_dir)
+        # if os.environ.get('FLASK_ENV') == 'production':
+        #     static_dir = static_dir_build
+        # else:
+        #     static_dir = static_dir_watch
+        print('using static_dir:', static_dir)
+        # Create a custom Flask instance defined in the app.py file. Same as a
+        # normal Flask class but with a specialised blueprint function.
+        app = Flask(__name__,
+                    instance_relative_config=True,
+                    static_folder=GUI_BUILD_DIR + static_dir,
+                    static_url_path=static_dir)
 
     import logging
     log = logging.getLogger('werkzeug')
@@ -71,9 +81,15 @@ def create_app(test_config=None):
     @app.route('/', defaults={'path': ''})
     @app.route("/<path:path>")
     def index(path):
-        with open(f"{GUI_PUBLIC_DIR}/index.html", "r") as fin:
-            content = fin.read()
-            return content
+        print('in index with:', path)
+        if (WEBPACK_DEV_SERVER_PROXY):
+            # If we are running the webpack dev server, 
+            # We proxy webpack requests through to the dev server
+            return proxy('http://localhost:3000/', path)
+        else:
+            with open(f"{GUI_BUILD_DIR}/index.html", "r") as fin:
+                content = fin.read()
+                return content
 
     @app.route('/favicon.ico')
     def favicon():
@@ -81,3 +97,20 @@ def create_app(test_config=None):
             return fin.read()
 
     return app
+
+  
+# Proxy Wrapper
+def proxy(host, path):
+    response = get(f"{host}{path}")
+    excluded_headers = [
+        "content-encoding",
+        "content-length",
+        "transfer-encoding",
+        "connection",
+    ]
+    headers = {
+        name: value
+        for name, value in response.raw.headers.items()
+        if name.lower() not in excluded_headers
+    }
+    return (response.content, response.status_code, headers) 
