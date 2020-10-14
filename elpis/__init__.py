@@ -6,13 +6,14 @@ from elpis.engines import Interface
 from pathlib import Path
 from requests import get
 
+
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
     GUI_BUILD_DIR = "/elpis-gui/build"
     GUI_PUBLIC_DIR = "/elpis-gui/public"
 
     # Variable to control the use of a proxy to support webpackdevserver
-    WEBPACK_DEV_SERVER_PROXY = os.environ["WEBPACK_DEV_SERVER_PROXY"]
+    WEBPACK_DEV_SERVER_PROXY = os.environ.get("WEBPACK_DEV_SERVER_PROXY", None)
 
     if WEBPACK_DEV_SERVER_PROXY:
         app = Flask(__name__,
@@ -113,4 +114,4 @@ def proxy(host, path):
         for name, value in response.raw.headers.items()
         if name.lower() not in excluded_headers
     }
-    return (response.content, response.status_code, headers) 
+    return response.content, response.status_code, headers
