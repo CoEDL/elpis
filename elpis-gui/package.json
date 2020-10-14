@@ -19,7 +19,7 @@
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "~2.1.1",
+    "react-scripts": "~3.4.0",
     "react-timeout": "^1.2.0",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.7",
@@ -44,6 +44,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "cra-build-watch": "^1.4.1"
+    "cra-build-watch": "^3.2.0"
   }
 }

@@ -18,7 +18,7 @@ const SelectEngine = props => {
 
     // If the engines list has not been populated, fetch the list and display a wait message.
     if (list.length === 0) {
-        useEffect(engineList); // Alternative to componentDidMount
+        engineList()
         return (
             <div>Updating engine list...</div>
         )
