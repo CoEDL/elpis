@@ -276,11 +276,23 @@ You also need to set an additional environment variable for the Flask launch con
 }
 ```
 
+7.1.3. To run both the webpack dev server and the flask server you need to click on the VSCode run/debug menu.
+
+![Debug/Run Menu](assets/dev-in-vscode/debug-run-vscode.png)
+
+Then select the `Node: Elpis GUI` from the launch drop down and hit the green arrow to run.
+
+![Launch Selector](assets/dev-in-vscode/launch-selector.png)
+
+You can then do the same for the `Python: Flask` server.
+
+It will take some time for the GUI to be compiled, wait about a minute and then you can access the GUI by going to `127.0.0.0:5000`.
+
 #### Caveats for hot-reload
 
 * The Node configuration may take a while to start up. Wait for it... 
 * Currently hot-reload does not preserve state #TODO
-* Hot-reload can be buggy due to the flask intermediary, just reload a couple times it'll get there
+* Hot-reload can be buggy due to the flask intermediary, if you see a blank screen hard reload the page until the request succeeds.
 
 ## 8. Troubleshooting
 
