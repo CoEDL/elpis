@@ -1,4 +1,3 @@
-import pystache
 import os
 import re
 import shutil
@@ -13,6 +12,7 @@ from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
 from elpis.engines.common.objects.path_structure import PathStructure
 from collections import OrderedDict
 from subprocess import CalledProcessError
+from jinja2 import Template
 
 
 class KaldiModel(BaseModel):  # TODO not thread safe
@@ -133,8 +133,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
             with path_file_path.open(mode='w') as fout:
                 with path_resource.open() as fin:
-                    content = pystache.render(
-                        fin.read(),
+                    content = Template(fin.read()).render(
                         {
                             'KALDI_ROOT': '/kaldi',
                             'HELPERS_PATH': '/kaldi-helpers',
@@ -145,8 +144,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
             with mfcc_file_path.open(mode='w') as fout:
                 with mfcc_resource.open() as fin:
-                    content = pystache.render(
-                        fin.read(),
+                    content = Template(fin.read()).render(
                         {
                             'MFCC_SAMPLE_FREQUENCY': '44100',
                             'MFCC_FRAME_LENGTH': '25',
@@ -159,8 +157,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
             with decode_config_file_path.open(mode='w') as fout:
                 with decode_config_resource.open() as fin:
-                    content = pystache.render(
-                        fin.read(),
+                    content = Template(fin.read()).render(
                         {
                             'DECODE_BEAM': '11.0',
                             'DECODE_FIRST_BEAM': '8.0'

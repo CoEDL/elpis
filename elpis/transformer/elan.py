@@ -133,7 +133,7 @@ def update_ui(file_paths: List[Path], ui):
         tier_count = len(list(input_eaf.get_tier_names()))
         if tier_count > tier_max_count:
             tier_max_count = tier_count
-            
+
     ui['data']['tier_type']['options'] = list(_tier_types)
     ui['data']['tier_name']['options'] = list(_tier_names)
     ui['data']['tier_order']['options'] = [i for i in range(tier_max_count)]
@@ -223,12 +223,9 @@ def import_eaf_file(eaf_paths: List[str],
                 "audio_file_name": f"{file_name}.wav",
                 "transcript": annotation,
                 "start_ms": start,
-                "stop_ms": end
+                "stop_ms": end,
+                "speaker_id": speaker_id
             }
-
-            # TODO: re-enable later
-            # if "PARTICIPANT" in parameters:
-            #     obj["speaker_id"] = speaker_id
 
             utterance_cleaned = clean_json_utterance(utterance=utterance,
                                                      punctuation_to_collapse_by=punctuation_to_collapse_by,

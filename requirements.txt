@@ -1,12 +1,12 @@
 appdirs
 Flask
+Jinja2
 langid
 nltk
 numpy
 praatio
 pydub
 pympi-ling
-pystache
+requests
 setuptools
 werkzeug
-requests

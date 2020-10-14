@@ -609,7 +609,7 @@ class DataTransformerAbstractFactory:
             # check the object type
             if type(obj) != dict:
                 raise TypeError('annotation top level variable must be a dictionary')
-            fields = { 'audio_file_name', 'transcript', 'start_ms', 'stop_ms' }
+            fields = { 'audio_file_name', 'transcript', 'start_ms', 'stop_ms', 'speaker_id'}
             if set(obj.keys()) != fields:
                 raise TypeError('annotation object contains an incorrect field name')
             # add the annotation
