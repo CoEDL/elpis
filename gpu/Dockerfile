@@ -40,7 +40,7 @@ RUN echo "===> Install Python 3.6" && \
     tar xvf Python-3.6.6.tgz && \
     cd Python-3.6.6 && \
     ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
-    make -j8 build_all && \
+    make -j`nproc` build_all && \
     make altinstall
 
 RUN echo "===> Install Python 3.6 packages" && \
@@ -72,13 +72,13 @@ WORKDIR /
 RUN echo "===> install Kaldi (not the latest!)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
-    make && \
+    make -j`nproc` && \
     ./install_portaudio.sh && \
     cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend  && make && \
-    cd /kaldi/src/online2 && make depend && make && \
-    cd /kaldi/src/online2bin && make depend && make
+    make depend -j`nproc` && make -j`nproc` && \
+    cd /kaldi/src/online2 && make depend -j`nproc` && make -j`nproc` && \
+    cd /kaldi/src/online2bin && make depend -j`nproc` && make -j`nproc`
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
@@ -242,12 +242,12 @@ RUN echo "===> Install ESPnet dependencies" && \
 
 WORKDIR /
 
-# Basic ESPnet installation (for CUDA and installers stuff).
-RUN git clone --depth=1 https://github.com/espnet/espnet
+RUN git clone --depth=1 -b elpis https://github.com/persephone-tools/espnet.git
 
-# Update of ESPnet recipe for Elpis from Persephone repository (TODO: find a better way later).
-RUN git clone --depth=1 -b elpis https://github.com/persephone-tools/espnet.git /tmp/espnet
-RUN mv /tmp/espnet/egs/elpis /espnet/egs/elpis
+RUN git clone --depth=1 https://github.com/espnet/espnet /tmp/espnet
+RUN mv /tmp/espnet/tools/setup_anaconda.sh /espnet/tools/setup_anaconda.sh
+RUN mv /tmp/espnet/tools/setup_cuda_env.sh /espnet/tools/setup_cuda_env.sh
+RUN rm -rf /tmp/espnet
 
 WORKDIR /espnet/tools
 
@@ -261,15 +261,14 @@ RUN echo "ESPnet build with CUDA" && \
     . ./setup_cuda_env.sh /usr/local/cuda;  \
     if [ "${CUDA_VER}" = "10.1" ]; then \
         # warpctc is not supported from Pytorch 1.3.1
-        MY_OPTS="${MY_OPTS} TH_VERSION=1.6.0";  \
+        MY_OPTS="${MY_OPTS} TH_VERSION=1.3.1";  \
     fi; \
     echo "Make with options ${MY_OPTS}" && \
     ln -s /kaldi ./ && \
     ./setup_anaconda.sh /miniconda espnet 3.7.4 && \
-    make KALDI=/kaldi ${MY_OPTS} -j 4
+    make KALDI=/kaldi ${MY_OPTS} -j`nproc`
 
-# There will be a warning saying that cuda *seems* not available in torch, but it will be: just not forget to run the image with "--gpus all" and it will be available.
-# NOTE: we can later remove the useless dependencies by applying a rm command on specific files inside tools folder.
+# There will be a warning saying that cuda *seems* not available in torch, but it will be: just not forget to run the image with "--gpus all" and it will be available. During docker building, nvidia-smi and cuda stuff are not fully available, but they are during runtime; the only way I found to force this visibility during building is described (here)[https://stackoverflow.com/questions/59691207/docker-build-with-nvidia-runtime], but I did not try it because it is quite invasive…
 
 # NOTE: needed because /espnet/egs/elpis/asr1/path.sh needs venv (and /miniconda is not so easily movable, to be checked one day…)
 RUN ln -s /miniconda/envs/espnet /espnet/tools/venv
