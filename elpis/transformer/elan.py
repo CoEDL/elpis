@@ -43,50 +43,47 @@ elan.set_default_context({
 
 # TODO: ensure the order the settings are defined in is the order they are shown in. Also document this behaviour
 
-elan.general_setting_title(title='Tiers',
-                           description='Choose the tier that your transcriptions are on, just choose one of these.')
+elan.general_setting_title(title='tiers')
 elan.general_setting(key='selection_mechanism',
                      ui_format='select',
-                     display_name='Selection Mechanism',
+                     display_name='selectionMechanism',
                      options=['tier_name', 'tier_type', 'tier_order'],
                      default='tier_name')
 elan.general_setting(key='tier_name',
                      ui_format='select',
-                     display_name='Tier Name',
+                     display_name='name',
                      options=[],
                      shown=False)
 elan.general_setting(key='tier_type',
                      ui_format='select',
-                     display_name='Tier Type',
+                     display_name='type',
                      options=[],
                      shown=False)
 elan.general_setting(key='tier_order',
                      ui_format='select',
-                     display_name='Tier Order',
+                     display_name='order',
                      options=[],
                      shown=False)
 
-elan.general_setting_title(title='Punctuation',
-                           description='What to do with punctuation.')
+elan.general_setting_title(title='punctuation')
 elan.general_setting(key='punctuation_to_explode_by',
                      ui_format='text',
-                     display_name='Replace these with spaces',
+                     display_name='explosion',
                      default=string.punctuation + ',…‘’“”°')
 elan.general_setting(key='punctuation_to_collapse_by',
                      ui_format='text',
-                     display_name='Remove these',
+                     display_name='collapsing',
                      default='')
 
 # These settings are string that end up being converted to sets
-elan.general_setting_title(title='Cleaning',
-                           description='Remove text from annotations, add one per line.')
+elan.general_setting_title(title='cleaning')
 elan.general_setting(key='special_cases',
                      ui_format='textarea',
-                     display_name='Words to remove',
+                     display_name='words',
                      default="<silence>")
 elan.general_setting(key='translation_tags',
                      ui_format='textarea',
-                     display_name='Tags to remove',
+                     display_name='tags',
                      default="@eng@")
 
 # TODO: limitation, settings must be defined before used in functions so that they are registered and visible.

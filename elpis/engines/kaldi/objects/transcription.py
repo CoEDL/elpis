@@ -16,16 +16,16 @@ class KaldiTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         stage_names = {
-            "0_feature_vec.sh": "Extracting feature vectors",
-            "1_model_creation.sh": "Creating model",
-            "2_transcription_decode.sh": "Decoding (transcription)",
-            "3_transcription_best_path.sh": "Finding best path (transcription)",
-            "4_word_boundaries.sh": "Adding word boundaries to FST",
-            "5_lattice_to_ctm.sh": "Converting lattice to CTM",
-            "6_word_idx_to_words.sh": "Translating word indexes to words",
-            "7_ctm_textgrid.sh": "Converting CTM to Textgrid",
-            "8_textgrid_elan.sh": "Converting Textgrid to ELAN",
-            "9_ctm_output.sh": "CTM output"
+            "0_feature_vec.sh": "featureExtraction",
+            "1_model_creation.sh": "modelCreation",
+            "2_transcription_decode.sh": "transcriptionDecoding",
+            "3_transcription_best_path.sh": "transcriptionBestPath",
+            "4_word_boundaries.sh": "wordBoundaries",
+            "5_lattice_to_ctm.sh": "latticeConversion",
+            "6_word_idx_to_words.sh": "wordIndexTranslation",
+            "7_ctm_textgrid.sh": "ctmConversion",
+            "8_textgrid_elan.sh": "textgridConversion",
+            "9_ctm_output.sh": "ctmOutput"
         }
         super().build_stage_status(stage_names)
         self.audio_file_path = self.path.joinpath('audio.wav')

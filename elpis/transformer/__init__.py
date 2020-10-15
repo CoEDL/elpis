@@ -422,7 +422,6 @@ class DataTransformerAbstractFactory:
                        ui_format: Optional[str] = None,
                        default: Union[List[str], Set[str], int, str] = '',
                        display_name: str = '',
-                       description: str = '',
                        options: Optional[List[str]] = None,
                        shown: bool = True):
         """
@@ -430,8 +429,7 @@ class DataTransformerAbstractFactory:
         :param key: the name of the field.
         :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
         :param default: (Optional) default value of the field.
-        :param display_name: (Optional) human-readable name for the setting.
-        :param description: (Optional) human-readable description of what the setting is for.
+        :param display_name: (Optional) id for translatable human-readable name and description of the setting.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
         :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
@@ -443,7 +441,6 @@ class DataTransformerAbstractFactory:
         self._import_ui_data_config[key] = {
             'ui_format': ui_format,
             'display_name': display_name,
-            'description': description,
             'options': options,
             'shown': shown
         }
@@ -455,7 +452,6 @@ class DataTransformerAbstractFactory:
                        ui_format: Optional[str] = None,
                        default: Union[List[str], Set[str], int, str] = '',
                        display_name: str = '',
-                       description: str = '',
                        options: Optional[List[str]] = None,
                        shown: bool = True):
         """
@@ -463,8 +459,7 @@ class DataTransformerAbstractFactory:
         :param key: the name of the field.
         :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
         :param default: (Optional) default value of the field.
-        :param display_name: (Optional) human-readable name for the setting.
-        :param description: (Optional) human-readable description of what the setting is for.
+        :param display_name: (Optional) id for translatable human-readable name and description of the setting.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
         :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
@@ -476,7 +471,6 @@ class DataTransformerAbstractFactory:
         self._export_ui_data_config[key] = {
             'ui_format': ui_format,
             'display_name': display_name,
-            'description': description,
             'options': options,
             'shown': shown
         }
@@ -488,7 +482,6 @@ class DataTransformerAbstractFactory:
                         ui_format: Optional[str] = None,
                         default: Union[List[str], Set[str], int, str] = '',
                         display_name: str = '',
-                        description: str = '',
                         options: Optional[List[str]] = None,
                         shown: bool = True):
         """
@@ -496,8 +489,7 @@ class DataTransformerAbstractFactory:
         :param key: the name of the field.
         :param ui_format: (Optional) determine the format of the UI element (eg text, textarea, etc).
         :param default: (Optional) default value of the field.
-        :param display_name: (Optional) human-readable name for the setting.
-        :param description: (Optional) human-readable description of what the setting is for.
+        :param display_name: (Optional) id for translatable human-readable name and description of the setting.
         :param options: (Optional) if set, this will be dynamically populated when files are parsed.
         :param shown: (Optional) if set, will determine whether the setting is shown by default.
         :raises:
@@ -511,38 +503,34 @@ class DataTransformerAbstractFactory:
                             ui_format=ui_format,
                             default=default,
                             display_name=display_name,
-                            description=description,
                             options=options,
                             shown=shown)
         self.export_setting(key=key,
                             ui_format=ui_format,
                             default=default,
                             display_name=display_name,
-                            description=description,
                             options=options,
                             shown=shown)
 
-    def import_setting_title(self, title: str, description: str):
+    def import_setting_title(self, title: str):
         key = '_title_' + str(self._import_title_count)
         self._import_title_count += 1
-        self._import_ui_data_config[key] = {'title': title,
-                                            'description': description}
+        self._import_ui_data_config[key] = {'title': title}
         self._import_ui_type_config[key] = 'title'
         self._import_ui_order_config.append(key)
         return
 
-    def export_setting_title(self, title: str, description: str):
+    def export_setting_title(self, title: str):
         key = '_title_' + str(self._export_title_count)
         self._export_title_count += 1
-        self._export_ui_data_config[key] = {'title': title,
-                                            'description': description}
+        self._export_ui_data_config[key] = {'title': title}
         self._export_ui_type_config[key] = 'title'
         self._export_ui_order_config.append(key)
         return
 
-    def general_setting_title(self, title: str, description: str):
-        self.import_setting_title(title=title, description=description)
-        self.export_setting_title(title=title, description=description)
+    def general_setting_title(self, title: str):
+        self.import_setting_title(title=title)
+        self.export_setting_title(title=title)
         return
 
     def is_import_capable(self):
