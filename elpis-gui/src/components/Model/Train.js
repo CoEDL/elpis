@@ -78,7 +78,7 @@ class ModelTrain extends Component {
                                 <Message icon>
                                     {loadingIcon}
                                     <Message.Content>
-                                        <Message.Header>{status}</Message.Header>
+                                        <Message.Header>{t('status.' + status)}</Message.Header>
                                         {stage_status &&
                                         <div className="stages">
                                             {Object.keys(stage_status).map((stage, i) => {
@@ -87,9 +87,9 @@ class ModelTrain extends Component {
                                                     let message = stage_status[stage]["message"]
                                                     return (
                                                         <p key={stage} className="stage">
-                                                            <span className="name">{name}</span>
+                                                            <span className="name">{t('model.engines.' + currentEngine + '.stages.' + name)}</span>
                                                             <span className="divider">{status && <>|</>}</span>
-                                                            <span className="status">{status}</span>
+                                                            <span className="status">{t('status.' + status)}</span>
                                                             <span className="divider">{message && <>|</>}</span>
                                                             <span className="message">{message}</span>
                                                         </p>

@@ -26,7 +26,7 @@ const SelectEngine = props => {
         // Otherwise if list is populated, allow engine selections.
         return (
             <Dropdown
-                placeholder={currentEngine?currentEngine:"select engine"}
+                placeholder={currentEngine?currentEngine: t('engine.select.shortcutPlaceholder')}
                 selection
                 options={options}
                 value={currentEngine}

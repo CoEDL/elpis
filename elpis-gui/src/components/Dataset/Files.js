@@ -43,7 +43,7 @@ class DatasetFiles extends Component {
 
         const loadingIcon = (status === 'loading') ? (
             <div className="status">
-                <Icon name='circle notched' size="big" loading /> Uploading files
+                <Icon name='circle notched' size="big" loading /> {t('dataset.fileUpload.uploading')}
             </div>
         ) : null
 
@@ -91,16 +91,16 @@ class DatasetFiles extends Component {
                  t('dataset.files.filesHeader')
             ) : null
 
-        const audioFilesHeader = audioFilesList.length > 0 
-            ? t('dataset.files.audioFilesHeader') 
+        const audioFilesHeader = audioFilesList.length > 0
+            ? t('dataset.files.audioFilesHeader')
             : null
 
-        const transcriptionFilesHeader = transcriptionFilesList.length > 0 
-            ? t('dataset.files.transcriptionFilesHeader') 
+        const transcriptionFilesHeader = transcriptionFilesList.length > 0
+            ? t('dataset.files.transcriptionFilesHeader')
             : null
 
-        const additionalTextFilesHeader = additionalTextFilesList.length > 0 
-            ? t('dataset.files.additionalTextFilesHeader') 
+        const additionalTextFilesHeader = additionalTextFilesList.length > 0
+            ? t('dataset.files.additionalTextFilesHeader')
             : null
 
         // const writeCountOptions = []
@@ -184,7 +184,7 @@ class DatasetFiles extends Component {
                                     <Header as='h3'>
                                         { t('dataset.files.importSettingsHeader') }
                                     </Header>
-                                    <GeneratedUI settings={settings} ui={ui} changeSettingsCallback={datasetSettings} />
+                                    <GeneratedUI props={this.props} settings={settings} ui={ui} changeSettingsCallback={datasetSettings} />
                                 </Segment>
 
                                 <Button onClick={this.handleNextButton} disabled={interactionDisabled}>

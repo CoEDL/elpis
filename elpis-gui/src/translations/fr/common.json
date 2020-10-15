@@ -1,0 +1,281 @@
+{
+    "welcome": {
+        "title": "Elpis",
+        "description": "Elpis est un outil de reconnaissance automatique de la parole que vous pouvez utiliser pour de la transcription phonétique. Il fonctionne en quatre étapes : \n 1) Ajoutez des enregistrements audio et leurs transcriptions déjà réalisées ; \n 2) Créez un dictionnaire de prononciation ; \n 3) Entraînez un modèle de reconnaissance automatique de la parole ; \n 4) Utilisez-le pour transcrire un nouvel enregistrement audio. \n",
+        "start": "Commencez ici…"
+    },
+    "navigation": {
+        "engine": {
+            "title": "Moteur"
+        },
+        "recordings": {
+            "title": "Enregistrements",
+            "files": "Fichiers",
+            "wordlist": "Liste de mots"
+        },
+        "pronunciation": {
+            "title": "Prononciation",
+            "letterToSound": "Correspondances graphophonémiques",
+            "dictionary": "Dictionnaire"
+        },
+        "training": {
+            "title": "Apprentissage",
+            "settings": "Paramètres",
+            "train": "Entraînement",
+            "results": "Résultats"
+        },
+        "transcriptions": {
+            "title": "Nouvelles transcriptions"
+        }
+    },
+    "engine": {
+        "select": {
+            "title": "Moteur",
+            "shortcutPlaceholder": "sélectionnez le moteur"
+        },
+        "common": {
+            "currentEngineLabel": "Moteur utilisé : ",
+            "noCurrentEngineLabel": "Pas encore de moteur sélectionné."
+        }
+    },
+    "dataset": {
+        "common": {
+            "currentDatasetLabel": "Enregistrements actuels : ",
+            "noCurrentDatasetLabel": "Aucun groupe d’enregistrements pour le moment."
+        },
+        "dashboard": {
+            "title": "Enregistrements",
+            "noneMessage": "Aucun groupe d’enregistrements pour le moment."
+        },
+        "new": {
+            "title": "Nouveau groupe d’enregistrements.",
+            "nameLabel": "Nom",
+            "namePlaceholder": "Nom"
+        },
+        "files": {
+            "title": "Ajouter des fichiers",
+            "description": "Téléversez ici vos fichiers d’enregistrement et de transcription linguistiques. \n Veuillez utiliser le format audio WAV 44,1 kHz et des fichiers de transcription Elan (.eaf). \n Les fichiers audio et de transcription doivent avoir des noms appariés. \n Vous pouvez aussi téléverser des fichiers textuels comme des listes de mots ou des histoires sans audio.",
+            "filesHeader": "Fichiers téléversés",
+            "audioFilesHeader": "Fichiers audio",
+            "transcriptionFilesHeader": "Fichiers de transcription",
+            "additionalTextFilesHeader": "Fichiers textuels additionnels",
+            "importSettingsHeader": "Paramètres d’importation",
+            "noSettings": "Aucun paramètre.",
+            "generalSettingsHeader": "Paramètres généraux",
+            "settingsTierHeader": "Échelon",
+            "settingsPunctuationHeader": "Ponctuation",
+            "puncLabel": "Développer les mots par",
+            "tierOrderDescription": "Choisissez l’échelon auquel se trouvent vos transcriptions",
+            "tierTypeDescription": "ou choisissez selon le type d’échelon",
+            "tierNameDescription": "ou utilisez un nom d’échelon.",
+            "puncDescription": "La ponctuation sera supprimée des transcriptions. Ajoutez ici les signes de ponctuation que vous désirez remplacer par des espaces.",
+            "uploadButton": "Téléverser",
+            "saveButton": "Enregistrer les paramètres"
+        },
+        "fileUpload": {
+            "audioLabel": "Fichiers audio :",
+            "transcriptionLabel": "Fichiers de transcription :",
+            "additionalLabel": "Fichiers textuels additionnels :",
+            "dropFilesHint": "Téléversez vos fichiers ici (glisser-déposer possible)",
+            "dropFilesHintDragActive": "Déposez les fichiers ici…",
+            "uploading": "Téléversement en cours"
+        },
+        "prepare": {
+            "title": "Liste de mots",
+            "header": "Fréquence des mots des fichiers d’entraînement",
+            "description": "Seul le texte des fichiers de transcription est montré, pas les mots des textes additionnels qui ont été téléversés.",
+            "bannerMessage": "Le texte a été nettoyé et normalisé.",
+            "bannerMessageDetailed": "La ponctuation a été supprimée.",
+            "wordlistHeader": "Liste de mots",
+            "frequencyHeader": "Fréquence",
+            "ready": "Prêt pour le traitement.",
+            "preparing": "Les fichiers sont en cours de traitement…",
+            "noWords": "Aucun mot trouvé, veuillez téléverser quelques fichiers ou vérifier vos paramètres d’importation."
+        }
+    },
+    "pronDict": {
+        "common": {
+            "currentPronDictLabel": "Dictionnaire de prononciation utilisé : ",
+            "noDatasetsLabel": "Les enregistrements sont requis pour construire un dictionnaire de prononciation.",
+            "noCurrentPronDictLabel": "Aucun dictionnaire de prononciation utilisé.",
+            "chooseOrNewLabel": "En choisir un."
+        },
+        "dashboard": {
+            "title": "Dictionnaire de prononciation",
+            "noneMessage": "Pas encore de dictionnaire de prononciation"
+        },
+        "new": {
+            "title": "Nouveau dictionnaire de prononciation",
+            "nameLabel": "Nom",
+            "namePlaceholder": "Nom",
+            "select": "Sélectionner un groupe d’enregistrements"
+        },
+        "l2s": {
+            "title": "Téléversez des règles de correspondances graphophonémiques",
+            "header": "Fichier de correspondances graphophonémiques",
+            "description": "Le fichier de correspondances graphophonémiques est utilisé pour construire un dictionnaire de prononciation dictionary pour le corpus. Faites-en un avec une première colonne listant tous les caractères présents dans votre corpus, puis une seconde colonne (séparée par une espace) listant les symboles représentant la prononciation de chaque caractère (vous pouvez pour ces symboles utiliser l’IPA ou le SAMPA). Vous pouvez ajouter des commentaires dans ce fichier en commençant une ligne avec #. Exemple : \n\n # Ceci est un commentaire \n n n \n ng ŋ \n r r \n y j",
+            "dropFilesHint": "Téléversez vos fichiers de correspondances ici (glisser-déposer possible)",
+            "dropFilesHintDragActive": "Déposez les fichiers ici…",
+            "uploadButton": "Téléverser"
+        },
+        "lexicon": {
+            "title": "Vérifiez le dictionnaire de prononciation",
+            "description": "Le dictionnaire de prononciation est généré par la liste de mots et les règles de correspondances graphophonémiques que vous avez téléversés. \n\n Les caractères entre parenthèses n’ont pas été trouvés dans les correspondances graphophonémiques. Veuillez les ajouter, retéléverser ce fichier de correspondances graphophonémiques et vérifier le lexique",
+            "reset": "réinitialiser",
+            "save": "sauvegarder"
+        }
+    },
+    "model": {
+        "common": {
+            "currentModelLabel": "Session d’entraînement actuelle : ",
+            "noCurrentModelLabel": "Pas de session d’entraînement en cours",
+            "chooseOrNewLabel": "En choisir une."
+        },
+        "dashboard": {
+            "title": "Entraînement",
+            "noneMessage": "Pas encore de session d’entraînement"
+        },
+        "new": {
+            "title": "Nouvelle session d’entraînement",
+            "nameLabel": "Nom",
+            "namePlaceholder": "Nom",
+            "selectDatasetLabel": "Sélectionnez les enregistrements pour cette session",
+            "selectPronDictLabel": "Sélectionnez un dictionnaire de prononciation pour cette session"
+        },
+        "settings": {
+            "title": "Paramètres",
+            "description": "Ces paramètres sont utilisés pour ajuster l’entraînement",
+            "advancedHeader": "Avancé",
+            "audioLabel": "Fréquence audio",
+            "mfccLabel": "MFCC",
+            "ngramDescription": "Le n-gramme permet ou non au système d’apprendre des mots simples ou des mots avec leur voisinage. Une valeur de 1 va paramétrer le système pour apprendre des mots simples. Pour prendre en compte le voisinage, choisissez une valeur de 2 ou 3.",
+            "ngramLabel": "n-gramme",
+            "beamLabel": "Rayon"
+        },
+        "train": {
+            "title": "Entraînement",
+            "settingsHeader": "Paramètres",
+            "preparingAcousticHeader": "Préparation des informations acoustiques",
+            "featuresExtractionHeader": "Extraction des caractéristiques",
+            "preparingLanguageDataHeader": "Préparation des informations linguistiques",
+            "logsHeader": "Journalisation",
+            "logsDescription": "Détail sanglain pour Kaldi (arrivée prochaine)",
+            "trainButton": "Démarrer l’entraînement",
+            "statusButton": "Voir l’avancement"
+        },
+        "results": {
+            "title": "Résultats",
+            "description": "Liste des sessions d’entraînement qui ont été réalisées.",
+            "downloadButton": "Télécharger un assortiment incorponant l’entraînement, les paramètres et les informations d’entraînement",
+            "downloadModalHeader": "Vos fichiers et paramètres sont en cours de compilation",
+            "downloadModalContent": "Cliquez sur Sauvegarder dans la boîte de dialogue de votre navigateur",
+            "downloadOkButton": "Bon",
+            "newTranscribeButton": "Transcrire un nouvel audio",
+            "noResults": "Aucun résultat trouvé"
+        },
+        "generated": {
+            "elan": {
+                "tiers": {
+                    "title": "Échelons",
+                    "description": "Choisissez l’échelon auquel se trouvent vos transcriptions, parmi :",
+                    "selectionMechanism": "Mécanisme de sélection",
+                    "name": "Nom d’échelon",
+                    "type": "Type d’échelon",
+                    "order": "Ordre d’échelon"
+                },
+                "punctuation": {
+                    "title": "Ponctuation",
+                    "description": "Que faire de la ponctuation ?",
+                    "explosion": "Caractères remplacés par des espaces :",
+                    "collapsing": "Caractères supprimés :"
+                },
+                "cleaning": {
+                    "title": "Nettoyage",
+                    "description": "Suppression d’expressions dans les annotation, une par ligne.",
+                    "words": "Mots à supprimer :",
+                    "tags": "Étiquettes à supprimer :"
+                }
+            }
+        },
+        "engines": {
+            "kaldi": {
+                "stages": {
+                    "setup": "Configuration",
+                    "acousticPreparation": "Préparation des données acoustiques",
+                    "featureExtraction": "Extraction des traits",
+                    "dataPreparation": "Préparation des données linguistiques",
+                    "modelCreation": "Création du modèle linguistique",
+                    "monophoneTraining": "Entraînement des monophones",
+                    "triphoneTraining": "Entraînement des triphones"
+                }
+            }
+        }
+    },
+    "transcription": {
+        "new": {
+            "title": "Transcrire de l’audio",
+            "selectModelLabel": "Sélectionnez une session d’entraînement à utiliser",
+            "dropFilesHint": "Téléversez votre fichier ici (glisser-déposer possible)",
+            "dropFilesHintDragActive": "Déposez le fichier ici…",
+            "addAudioButton": "Ajouter un audio",
+            "chooseModelHeader": "Choisissez une session d’entraînement",
+            "usingAudio": "{{filename}} téléversé",
+            "transcribe": "Transcrire",
+            "nextButton": "Suivant",
+            "uploadButton": "Téléverser"
+        },
+        "results": {
+            "title": "Résultats transcrits",
+            "usingAudio": "Pour {{filename}}",
+            "resultsHeader": "Transcription comme texte",
+            "downloadButtonNotReadyYet": "Un bouton de téléchargement sera disponible lorsque les données auront été transcrites et que le fichier aura été généré",
+            "downloadLabel": "Télécharger",
+            "downloadTextButton": "fichier texte",
+            "downloadElanButton": "fichier Elan",
+            "wer": "WER",
+            "per": "PER",
+            "del": "DEL",
+            "ins": "INS",
+            "sub": "SUB"
+        },
+        "engines": {
+            "kaldi": {
+                "stages": {
+                    "featureExtraction": "Extraction des vecteurs de traits",
+                    "modelCreation": "Création du modèle",
+                    "transcriptionDecoding": "Décodage (transcription)",
+                    "transcriptionBestPath": "Recherche du meilleur chemin (transcription)",
+                    "wordBoundaries": "Ajout des limites de mots au transducteur fini",
+                    "latticeConversion": "Conversion du réseau en conversation chronobalisée",
+                    "wordIndexTranslation": "Traduction des index de mots en mots",
+                    "ctmConversion": "Conversion de la conversation chronobalisée en grille textuelle",
+                    "textgridConversion": "Conversion de la grille textuelle au format Elan",
+                    "ctmOutput": "Sortie de la conversation chronobalisée"
+                }
+            }
+        }
+    },
+    "common": {
+        "addNewButton": "Ajouter",
+        "nextButton": "Suivant",
+        "newButton": "Nouveau",
+        "resetButton": "Réinitialiser",
+        "firstSelectAnEngine": "Pour commencer, sélectionnez un moteur.",
+        "makeNewOne": "Créez-en un nouveau en utilisant le formulaire ci-dessous.",
+        "selectExisting": "Ou sélectionnez-en un existant dans la liste.",
+        "selectOneBelow": "Créez-en un nouveau, ou sélectionnez-en un dans la liste.",
+        "choose": "Choisissez",
+        "chooseOrNewLabel": "Choisissez-en un.",
+        "invalidCharacterErrorMessage": "Veuillez utiliser ces caractères : \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
+    },
+    "status": {
+        "ready": "étape prête",
+        "training": "entraînement en cours…",
+        "trained": "entraîné",
+        "transcribing": "transcription en cours…",
+        "transcribed": "transcrit",
+        "in-progress": "étape en cours",
+        "complete": "étape terminée",
+        "failed": "étape échouée"
+    }
+}

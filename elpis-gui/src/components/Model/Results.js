@@ -23,12 +23,12 @@ class ModelResults extends Component {
                 <Table celled>
                     <Table.Body>
                         <Table.Row>
-                            <Table.Cell>WER {results.wer}</Table.Cell>
-                            <Table.Cell>PER {results.per}</Table.Cell>
+                            <Table.Cell>{t('transcription.results.wer')} {results.wer}</Table.Cell>
+                            <Table.Cell>{t('transcription.results.per')} {results.per}</Table.Cell>
                             <Table.Cell>{results.count_val}</Table.Cell>
-                            <Table.Cell>DEL {results.del_val}</Table.Cell>
-                            <Table.Cell>INS {results.ins_val}</Table.Cell>
-                            <Table.Cell>SUB {results.sub_val}</Table.Cell>
+                            <Table.Cell>{t('transcription.results.del')} {results.del_val}</Table.Cell>
+                            <Table.Cell>{t('transcription.results.ins')} {results.ins_val}</Table.Cell>
+                            <Table.Cell>{t('transcription.results.sub')} {results.sub_val}</Table.Cell>
                         </Table.Row>
                     </Table.Body>
                 </Table>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Image, Segment } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
+import { translate } from 'react-i18next';
 import elpisLogo from './elpis.png'
 import { connect } from 'react-redux';
 import { configReset } from 'redux/actions/configActions';
@@ -14,6 +15,7 @@ class StepBranding extends Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <Segment clearing as='h1' className="top-nav">
                 <Link to="/">
@@ -21,7 +23,7 @@ class StepBranding extends Component {
                 </Link>
                 <div className={"right"}>
                     <SelectEngine />
-                    <Button basic onClick={this.reset}>reset</Button>
+                    <Button basic onClick={this.reset}>{t('common.resetButton')}</Button>
                 </div>
             </Segment>
         )
@@ -36,4 +38,4 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(null, mapDispatchToProps)(StepBranding)
+export default connect(null, mapDispatchToProps)(translate('common')(StepBranding))

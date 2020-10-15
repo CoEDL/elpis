@@ -18,11 +18,11 @@ function groupSettingsFromUI(ui) {
 }
 
 
-const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
+const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
     // console.group("GeneratedUI");
     // console.log({settings});
     // console.log({ui});
-
+    const { t } = props
     const forceUpdate = React.useState()[1].bind(null, {})  // see NOTE above
 
     // On initialisation of component, show the tier name and set it properly
@@ -40,7 +40,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
 
     if (ui === null || ui === undefined) {
         // console.groupEnd();
-        return (<>No Settings.</>);
+        return (<>{t('dataset.files.noSettings')}</>);
     }
 
     const handleStrChange = (ui_name, data) => {
@@ -65,7 +65,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
         newSettings[ui_name] = data.value
         changeSettingsCallback(newSettings)
     }
-    
+
     // Sort names into groups by title followed by settings.
     let settingGroups = groupSettingsFromUI(ui);
 
@@ -75,19 +75,21 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
     settingGroups.forEach(group => {
         let header = null;
         let settingRows = [];
+        let currentBlock = null;
 
         // Construct table rows for group
         group.forEach(ui_name => {
             // console.group("Row for " + ui_name);
             if (ui['type'][ui_name] === "title") {
+                currentBlock = ui['data'][ui_name]['title']
                 // console.log("Building title");
                 header = (
                     <>
                         <Table.Row>
-                            <Table.HeaderCell colSpan='2'>{ui['data'][ui_name]['title']}</Table.HeaderCell>
+                            <Table.HeaderCell colSpan='2'>{t('model.generated.elan.' + ui['data'][ui_name]['title'] + '.title')}</Table.HeaderCell>
                         </Table.Row>
                         <Table.Row>
-                            <Table.HeaderCell colSpan='2' className='description'>{ui['data'][ui_name]['description']}</Table.HeaderCell>
+                            <Table.HeaderCell colSpan='2' className='description'>{t('model.generated.elan.' + ui['data'][ui_name]['title'] + '.description')}</Table.HeaderCell>
                         </Table.Row>
                     </>
                 );
@@ -144,7 +146,7 @@ const GeneratedUI = ({settings, ui, changeSettingsCallback}) => {
                     // Construct row for individual setting
                     let row = (
                         <Table.Row key={ui_name}>
-                            <Table.Cell collapsing>{label}</Table.Cell>
+                            <Table.Cell collapsing>{t('model.generated.elan.' + currentBlock + '.' + label)}</Table.Cell>
                             <Table.Cell>{dataEntryElement}</Table.Cell>
                         </Table.Row>
                     );

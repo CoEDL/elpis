@@ -130,3 +130,7 @@ label.pad-right,
 .top-nav .ui.selection.dropdown {
     min-width: 8em;
 }
+
+.keep-line-breaks {
+    white-space: pre-line;
+}
