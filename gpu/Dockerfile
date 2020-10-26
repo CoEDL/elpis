@@ -242,8 +242,10 @@ RUN echo "===> Install ESPnet dependencies" && \
 
 WORKDIR /
 
+# Pinned and tested version (from forked repository).
 RUN git clone --depth=1 -b elpis https://github.com/persephone-tools/espnet.git
 
+# Necessary installers (from main repository) for Anaconda and Cuda stuffs.
 RUN git clone --depth=1 https://github.com/espnet/espnet /tmp/espnet
 RUN mv /tmp/espnet/tools/setup_anaconda.sh /espnet/tools/setup_anaconda.sh
 RUN mv /tmp/espnet/tools/setup_cuda_env.sh /espnet/tools/setup_cuda_env.sh
@@ -268,7 +270,7 @@ RUN echo "ESPnet build with CUDA" && \
     ./setup_anaconda.sh /miniconda espnet 3.7.4 && \
     make KALDI=/kaldi ${MY_OPTS} -j`nproc`
 
-# There will be a warning saying that cuda *seems* not available in torch, but it will be: just not forget to run the image with "--gpus all" and it will be available. During docker building, nvidia-smi and cuda stuff are not fully available, but they are during runtime; the only way I found to force this visibility during building is described (here)[https://stackoverflow.com/questions/59691207/docker-build-with-nvidia-runtime], but I did not try it because it is quite invasive…
+# There will be a warning saying that cuda *seems* not to be available in torch, but it will be: just don't forget to run the image with "--gpus all" and it will be available. During docker building, nvidia-smi and cuda stuff are not fully available, but they are during runtime; the only way I found to force this visibility during building is described (here)[https://stackoverflow.com/questions/59691207/docker-build-with-nvidia-runtime], but I did not try it because it is quite invasive…
 
 # NOTE: needed because /espnet/egs/elpis/asr1/path.sh needs venv (and /miniconda is not so easily movable, to be checked one day…)
 RUN ln -s /miniconda/envs/espnet /espnet/tools/venv
