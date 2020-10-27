@@ -42,7 +42,26 @@ docker run -it -p 5000:5000/tcp \
 
 ### CUDA (beta, for ESPnet).
 
-If you have a CUDA-compatible GPU it is possible to achieve better performance by utilising the GPU in training your models. For this purpose, CUDA drivers must be installed on host machine (look if `nvidia-smi` works), and you can try the CUDA-specific Dockerfile (`gpu/Dockerfile` in root folder):
+If you have a CUDA-compatible GPU it is possible to achieve better performance by utilising the GPU in training your models. For this purpose, CUDA driver and runtime must be installed on host machine (more informations [here](https://www.celantur.com/blog/run-cuda-in-docker-on-linux/) and [there](https://github.com/NVIDIA/nvidia-docker)):
+
+Driver installation – if necessary (XXX is the version number):
+
+```
+sudo apt-get install nvidia-driver-XXX
+```
+
+Runtime installation (beware of distributions not yet supported…):
+
+```
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add -
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list |\
+    sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+sudo apt-get update
+sudo apt-get install nvidia-container-runtime
+```
+
+Then you can try the CUDA-specific Dockerfile (`gpu/Dockerfile` in root folder):
 
 ```
 cd ~/elpis-sandbox/elpis
@@ -59,7 +78,7 @@ docker run --gpus all -it -p 5000:5000/tcp \
     -v ~/elpis-sandbox/elpis-gui:/elpis-gui \
     -v ~/elpis-sandbox/espnet/egs/elpis:/espnet/egs/elpis \
     -v ~/elpis-sandbox/espnet/utils/:/espnet/utils/ \
-    --entrypoint /bin/zsh
+    --entrypoint /bin/zsh \
     coedl/elpis-cuda:latest
 ```
 
