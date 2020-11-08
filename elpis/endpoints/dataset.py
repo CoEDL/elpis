@@ -4,6 +4,7 @@ from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.errors import InterfaceError
+from .utils.wrappers import require_dataset, file_param
 
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
@@ -53,17 +54,6 @@ def list_existing():
         "status": 200,
         "data": data
     })
-
-
-def require_dataset(f):
-    def wrapper(*args, **kwargs):
-        dataset: Dataset = app.config['CURRENT_DATASET']
-        if dataset is None:
-            return jsonify({"status": 404,
-                            "data": "No current dataset exists (perhaps create one first)"})
-        return f(dataset, *args, **kwargs)
-    wrapper.__name__ = f.__name__
-    return wrapper
 
 # Handle file uploads. For now, default to the "original" dir.
 # Dataset.add_fp() will check file names, moving corpora files to own dir
@@ -145,3 +135,14 @@ def prepare(dataset: Dataset):
         "status": 200,
         "data": data
     })
+
+# Annotations
+@bp.route("/annotations")
+@require_dataset
+@file_param
+def annotations(dataset: Dataset, file_name: str = None):
+    """
+    Returns the annotations for a dataset, or a specified file.
+    """
+    #TODO(jack)
+    pass

@@ -231,7 +231,9 @@ class Dataset(FSObject):
             fout.write(fp.read())
         
         if fname not in self.config['files']:
+            # Append file path to the list of files in the dataset
             self.__files.append(path)
+            # Overwrite the list of files in config, including the new file in the list of files
             self.config['files'] = [f'{f.name}' for f in self.__files]
         else:
             # already existed but has been overriden, name is already in the config
