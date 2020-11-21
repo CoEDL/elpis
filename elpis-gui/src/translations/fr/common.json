@@ -121,8 +121,8 @@
         "lexicon": {
             "title": "Vérifiez le dictionnaire de prononciation",
             "description": "Le dictionnaire de prononciation est généré par la liste de mots et les règles de correspondances graphophonémiques que vous avez téléversés. \n\n Les caractères entre parenthèses n’ont pas été trouvés dans les correspondances graphophonémiques. Veuillez les ajouter, retéléverser ce fichier de correspondances graphophonémiques et vérifier le lexique",
-            "reset": "réinitialiser",
-            "save": "sauvegarder"
+            "reset": "Réinitialiser",
+            "save": "Sauvegarder"
         }
     },
     "model": {
@@ -230,8 +230,8 @@
             "resultsHeader": "Transcription comme texte",
             "downloadButtonNotReadyYet": "Un bouton de téléchargement sera disponible lorsque les données auront été transcrites et que le fichier aura été généré",
             "downloadLabel": "Télécharger",
-            "downloadTextButton": "fichier texte",
-            "downloadElanButton": "fichier Elan",
+            "downloadTextButton": "Fichier texte",
+            "downloadElanButton": "Fichier Elan",
             "wer": "WER",
             "per": "PER",
             "del": "DEL",

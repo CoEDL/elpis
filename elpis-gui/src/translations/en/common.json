@@ -121,8 +121,8 @@
         "lexicon": {
             "title": "Review the pronunciation dictionary",
             "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
-            "reset": "reset",
-            "save": "save"
+            "reset": "Reset",
+            "save": "Save"
         }
     },
     "model": {
@@ -230,7 +230,7 @@
             "resultsHeader": "Transcription as text",
             "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
             "downloadLabel": "Download",
-            "downloadTextButton": "text file",
+            "downloadTextButton": "Text file",
             "downloadElanButton": "Elan file",
             "wer": "WER",
             "per": "PER",
