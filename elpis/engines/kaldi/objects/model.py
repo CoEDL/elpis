@@ -24,13 +24,13 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
         self.config['ngram'] = 1  # default to 1 to make playing quicker
         stage_names = {
-            "0_setup.sh": "Set up",
-            "1_prep_acoustic.sh": "Prepare acoustic data",
-            "2_feature_ext.sh": "Extract features",
-            "3_prep_lang_data.sh": "Prepare language data",
-            "4_lang_model_cr.sh": "Create language model",
-            "5_mono.sh": "Monophone training",
-            "6_tri1.sh": "Triphone training"
+            "0_setup.sh": "setup",
+            "1_prep_acoustic.sh": "acousticPreparation",
+            "2_feature_ext.sh": "featureExtraction",
+            "3_prep_lang_data.sh": "dataPreparation",
+            "4_lang_model_cr.sh": "modelCreation",
+            "5_mono.sh": "monophoneTraining",
+            "6_tri1.sh": "triphoneTraining"
         }
         super().build_stage_status(stage_names)
 
