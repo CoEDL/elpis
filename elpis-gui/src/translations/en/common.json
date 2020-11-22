@@ -1,10 +1,37 @@
 {
     "welcome": {
-        "title": "Elpis"
+        "title": "Elpis",
+        "description": "Elpis is a speech recognition tool, which you can use to transcribe audio. It works in four parts:\nStep 1) Add some language recordings and their transcriptions that you already have\nStep 2) Creating a pronunciation dictionary\nStep 3) Training the speech recognition \"models\"\nStep 4) Use it to tanscribe new audio\n",
+        "start": "Start here"
+    },
+    "navigation": {
+        "engine": {
+            "title": "Engine"
+        },
+        "recordings": {
+            "title": "Recordings",
+            "files": "Files",
+            "wordlist": "Wordlist"
+        },
+        "pronunciation": {
+            "title": "Pronunciation",
+            "letterToSound": "Letter to sound",
+            "dictionary": "Dictionary"
+        },
+        "training": {
+            "title": "Training",
+            "settings": "Settings",
+            "train": "Train",
+            "results": "Results"
+        },
+        "transcriptions": {
+            "title": "New transcriptions"
+        }
     },
     "engine": {
         "select": {
-            "title": "Engine"
+            "title": "Engine",
+            "shortcutPlaceholder": "select engine"
         },
         "common": {
             "currentEngineLabel": "Current engine: ",
@@ -33,6 +60,7 @@
             "transcriptionFilesHeader": "Transcription files",
             "additionalTextFilesHeader": "Additional text files",
             "importSettingsHeader": "Import Settings",
+            "noSettings": "No settings.",
             "generalSettingsHeader": "General Settings",
             "settingsTierHeader": "Tiers",
             "settingsPunctuationHeader": "Punctuation",
@@ -49,7 +77,8 @@
             "transcriptionLabel": "Transcription files:",
             "additionalLabel": "Additional Text files:",
             "dropFilesHint": "Upload or drop your files here",
-            "dropFilesHintDragActive": "Drop files here.."
+            "dropFilesHintDragActive": "Drop files here…",
+            "uploading": "Uploading files"
         },
         "prepare": {
             "title": "Wordlist",
@@ -78,7 +107,8 @@
         "new": {
             "title": "New pronunciation dictionary",
             "nameLabel": "Name",
-            "namePlaceholder": "Name"
+            "namePlaceholder": "Name",
+            "select": "Select a group of recordings"
         },
         "l2s": {
             "title": "Upload Letter to Sound rules",
@@ -90,7 +120,9 @@
         },
         "lexicon": {
             "title": "Review the pronunciation dictionary",
-            "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again."
+            "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
+            "reset": "Reset",
+            "save": "Save"
         }
     },
     "model": {
@@ -140,6 +172,43 @@
             "downloadOkButton": "OK",
             "newTranscribeButton": "Transcribe new audio",
             "noResults": "No results found"
+        },
+        "generated": {
+            "elan": {
+                "tiers": {
+                    "title": "Tiers",
+                    "description": "Choose the tier that your transcriptions are on, just choose one of these.",
+                    "selectionMechanism": "Selection Mechanism",
+                    "name": "Tier name",
+                    "type": "Tier type",
+                    "order": "Tier order"
+                },
+                "punctuation": {
+                    "title": "Punctuation",
+                    "description": "What to do with punctuation.",
+                    "explosion": "Replace these with spaces",
+                    "collapsing": "Remove these"
+                },
+                "cleaning": {
+                    "title": "Cleaning",
+                    "description": "Remove text from annotations, add one per line.",
+                    "words": "Words to remove",
+                    "tags": "Tags to remove"
+                }
+            }
+        },
+        "engines": {
+            "kaldi": {
+                "stages": {
+                    "setup": "Set up",
+                    "acousticPreparation": "Prepare acoustic data",
+                    "featureExtraction": "Extract features",
+                    "dataPreparation": "Prepare language data",
+                    "modelCreation": "Create language model",
+                    "monophoneTraining": "Monophone training",
+                    "triphoneTraining": "Triphone training"
+                }
+            }
         }
     },
     "transcription": {
@@ -161,14 +230,36 @@
             "resultsHeader": "Transcription as text",
             "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
             "downloadLabel": "Download",
-            "downloadTextButton": "text file",
-            "downloadElanButton": "Elan file"
+            "downloadTextButton": "Text file",
+            "downloadElanButton": "Elan file",
+            "wer": "WER",
+            "per": "PER",
+            "del": "DEL",
+            "ins": "INS",
+            "sub": "SUB"
+        },
+        "engines": {
+            "kaldi": {
+                "stages": {
+                    "featureExtraction": "Extracting feature vectors",
+                    "modelCreation": "Creating model",
+                    "transcriptionDecoding": "Decoding (transcription)",
+                    "transcriptionBestPath": "Finding best path (transcription)",
+                    "wordBoundaries": "Adding word boundaries to FST",
+                    "latticeConversion": "Converting lattice to CTM",
+                    "wordIndexTranslation": "Translating word indexes to words",
+                    "ctmConversion": "Converting CTM to Textgrid",
+                    "textgridConversion": "Converting Textgrid to ELAN",
+                    "ctmOutput": "CTM output"
+                }
+            }
         }
     },
     "common": {
         "addNewButton": "Add New",
         "nextButton": "Next",
         "newButton": "New",
+        "resetButton": "Reset",
         "firstSelectAnEngine": "First, select an engine.",
         "makeNewOne": "Make a new one using the form below.",
         "selectExisting": "Or select an existing one from the list.",
@@ -176,5 +267,15 @@
         "choose": "Choose",
         "chooseOrNewLabel": "Choose one.",
         "invalidCharacterErrorMessage": "Please use these characters: \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
+    },
+    "status": {
+        "ready": "ready",
+        "training": "training",
+        "trained": "trained",
+        "transcribing": "transcribing",
+        "transcribed": "transcribed",
+        "in-progress": "in-progress",
+        "complete": "complete",
+        "failed": "failed"
     }
 }

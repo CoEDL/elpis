@@ -74,7 +74,7 @@ class NewForm extends Component {
 
                             {currentEngine && datasets.length > 0 &&
                                 <Form.Field>
-                                    <label>select a group of recordings</label>
+                                    <label>{ t('pronDict.new.select')}</label>
                                     <Field component="select" name="dataset_name">
                                         {datasets.map(name =>
                                             (<option key={name} value={name}>{name}</option>))

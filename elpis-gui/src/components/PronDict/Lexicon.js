@@ -76,8 +76,8 @@ class PronDictLexicon extends Component {
                                         </TextArea>
                                     </Form>
                                     <Button.Group size="tiny">
-                                        <Button onClick={this.generateLexicon} disabled={interactionDisabled}>reset</Button>
-                                        <Button onClick={this.saveLexicon} positive disabled={interactionDisabled}>save</Button>
+                                        <Button onClick={this.generateLexicon} disabled={interactionDisabled}>{ t('pronDict.lexicon.reset') }</Button>
+                                        <Button onClick={this.saveLexicon} positive disabled={interactionDisabled}>{ t('pronDict.lexicon.save') }</Button>
                                     </Button.Group>
                                 </div>
 

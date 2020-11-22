@@ -12,13 +12,23 @@ import store from './redux/store'
 import {I18nextProvider} from 'react-i18next';
 import i18next from 'i18next';
 import common_en from "./translations/en/common.json";
+import common_fr from "./translations/fr/common.json";
+
+// We should add soon a language selection button (with dynamic text switching) and keep this code for best default language detection…
+let available_languages = ['en', 'fr']; // Should be better to make it dynamic (folder names in translation?) and non redundant with i18next.init below.
+let favorite_languages = Array.from(navigator.languages);
+if(!favorite_languages.includes('en')){favorite_languages.push('en');}
+let favorite_language = favorite_languages.filter(language => available_languages.includes(language))[0];
 
 i18next.init({
   interpolation: { escapeValue: false },  // React already does escaping
-  lng: 'en',                              // language to use
+  lng: favorite_language,                              // language to use
   resources: {
       en: {
           common: common_en               // 'common' is our custom namespace
+      },
+      fr: {
+          common: common_fr               // 'common' is our custom namespace
       }
     }
 });

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { List, Accordion } from 'semantic-ui-react';
 import { connect } from 'react-redux'
+import { translate } from 'react-i18next';
 import classNames from 'classnames'
 import { setCurrentStep } from 'redux/actions/sideNavActions'
 import { stepToOrder } from '../../redux/reducers/sideNavReducer'
@@ -21,7 +22,7 @@ class SideNav extends Component {
 	}
 
 	render() {
-		const { engine, steps } = this.props
+		const { t, steps } = this.props
 
 		return (
 			<Accordion styled>
@@ -62,7 +63,7 @@ class SideNav extends Component {
 															onClick={ () => this.handleStepSelect(substep, i, j) }
 															key={ substep.title }>
 
-															<div style={{ paddingLeft: "1.4em" }}>{substep.title} </div>
+															<div style={{ paddingLeft: "1.4em" }}>{t(substep.title)} </div>
 
 														</List.Item>
 													)
@@ -84,7 +85,6 @@ class SideNav extends Component {
 const mapStateToProps = (state, ownProps) => {
 	return {
 		steps: state.sideNav.steps,
-		engine: state.engine.engine,
 		ownProps: ownProps
 	}
 }
@@ -95,4 +95,4 @@ const mapDispatchToProps = dispatch => ({
 	}
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SideNav))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(SideNav)))

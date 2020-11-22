@@ -74,7 +74,7 @@ class NewTranscription extends Component {
     }
 
     render = () => {
-        const { t, filename, list, status, stage_status, text, modelName } = this.props;
+        const { t, currentEngine, filename, list, status, stage_status, text, modelName } = this.props;
 
         //Only show trained models
         const listTrained = list.filter(model => model.status === 'trained')
@@ -160,7 +160,7 @@ class NewTranscription extends Component {
                             <Message icon>
                                 { loadingIcon }
                                 <Message.Content>
-                                    <Message.Header>{ status }</Message.Header>
+                                    <Message.Header>{t('status.' + status)}</Message.Header>
                                     {stage_status &&
                                     <div className="stages">
                                         {Object.keys(stage_status).map((stage, i) => {
@@ -169,9 +169,9 @@ class NewTranscription extends Component {
                                                 let message = stage_status[stage]["message"]
                                                 return (
                                                     <p key={stage} className="stage">
-                                                        <span className="name">{name}</span>
+                                                        <span className="name">{t('transcription.engines.' + currentEngine + '.stages.' + name)}</span>
                                                         <span className="divider">{status && <>|</>}</span>
-                                                        <span className="status">{status}</span>
+                                                        <span className="status">{t('status.' + status)}</span>
                                                         <span className="divider">{message && <>|</>}</span>
                                                         <span className="message">{message}</span>
                                                     </p>
@@ -213,7 +213,8 @@ const mapStateToProps = state => {
         status: state.transcription.status,
         stage_status: state.transcription.stage_status,
         text: state.transcription.text,
-        elan: state.transcription.elan
+        elan: state.transcription.elan,
+        currentEngine: state.engine.engine
     }
 }
 const mapDispatchToProps = dispatch => ({

@@ -24,22 +24,13 @@ class StepWelcome extends Component {
 
 						<Segment>
 
-							<p>
-								Elpis is a speech recognition tool, which you can use to transcribe audio.
-								It works in four parts:
-							</p>
-							<p>
-								Step 1) Add some language recordings and their transcriptions that you already have <br />
-								Step 2) Creating a pronunciation dictionary <br />
-								Step 3) Training the speech recognition "models" <br />
-								Step 4) Use it to tanscribe new audio
-							</p>
+							<div className="keep-line-breaks">{ t('welcome.description') }</div>
 
 						</Segment>
 
 						<Segment>
 							<p>
-								<Link to={urls.gui.engine.index}>Start here</Link>
+								<Link to={urls.gui.engine.index}>{t('welcome.start')}</Link>
 							</p>
 						</Segment>
 
