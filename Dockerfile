@@ -40,7 +40,7 @@ RUN echo "===> Install Python 3.6" && \
     tar xvf Python-3.6.6.tgz && \
     cd Python-3.6.6 && \
     ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
-    make -j8 build_all && \
+    make -j`nproc` build_all && \
     make altinstall
 
 RUN echo "===> Install Python 3.6 packages" && \
@@ -72,13 +72,13 @@ WORKDIR /
 RUN echo "===> install Kaldi (not the latest!)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
-    make && \
+    make -j`nproc` && \
     ./install_portaudio.sh && \
     cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend  && make && \
-    cd /kaldi/src/online2 && make depend && make && \
-    cd /kaldi/src/online2bin && make depend && make
+    make depend -j`nproc` && make -j`nproc` && \
+    cd /kaldi/src/online2 && make depend -j`nproc` && make -j`nproc` && \
+    cd /kaldi/src/online2bin && make depend -j`nproc` && make -j`nproc`
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
@@ -130,8 +130,9 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
-# Add node, npm and xml-js
-RUN apt-get update && apt-get install -y nodejs build-essential npm && \
+# Add node 15, npm and xml-js
+RUN curl -sL https://deb.nodesource.com/setup_15.x | bash -
+RUN apt-get update && apt-get install -y nodejs build-essential && \
     #ln -s /usr/bin/nodejs /usr/bin/node && \
     npm install -g npm \
     hash -d npm \
@@ -169,6 +170,9 @@ RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
 WORKDIR /elpis-gui
 RUN npm install && \
     npm run build
+
+# For /elpis (elan conversion) 
+RUN npm install xslt3
 
 WORKDIR /tmp
 

@@ -1,4 +1,5 @@
 appdirs
+dict2xml
 Flask
 Jinja2
 langid

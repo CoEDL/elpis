@@ -102,8 +102,9 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
-# Add node, npm and xml-js
-RUN apt-get update && apt-get install -y nodejs build-essential npm && \
+# Add node 15, npm and xml-js
+RUN curl -sL https://deb.nodesource.com/setup_15.x | bash -
+RUN apt-get update && apt-get install -y nodejs build-essential && \
     #ln -s /usr/bin/nodejs /usr/bin/node && \
     npm install -g npm \
     hash -d npm \
@@ -225,6 +226,9 @@ WORKDIR /elpis-gui
 RUN npm install && \
     npm run build
 
+# For /elpis (elan conversion) 
+RUN npm install xslt3
+
 WORKDIR /tmp
 
 # Example data
@@ -297,3 +301,4 @@ WORKDIR /elpis
 ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
+EXPOSE 3000:3000
