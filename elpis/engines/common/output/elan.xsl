@@ -30,7 +30,7 @@
         </xsl:variable>
         <xsl:call-template name="TIME_ORDER">
             <xsl:with-param name="time_slots" select="$time_slots"/>
-        </xsl:call-template>        
+        </xsl:call-template>
         <xsl:call-template name="TIER">
             <xsl:with-param name="time_slots" select="$time_slots"/>
         </xsl:call-template>
@@ -172,6 +172,5 @@
         </xsl:attribute>
     </LINGUISTIC_TYPE>
 </xsl:template>
-
 
 </xsl:stylesheet>

@@ -3,6 +3,7 @@ dict2xml
 Flask
 Jinja2
 langid
+librosa
 nltk
 numpy
 praatio

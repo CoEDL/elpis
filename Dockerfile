@@ -8,6 +8,9 @@ FROM ubuntu:18.04
 
 ########################## BEGIN INSTALLATION #########################
 
+ENV PYTHON_VERSION 3.8.6
+ENV PYTHON_VER 3.8
+
 RUN apt-get update && apt-get install -y --fix-missing \
     autoconf \
     automake \
@@ -35,16 +38,16 @@ RUN apt-get update && apt-get install -y --fix-missing \
 
 WORKDIR /tmp
 
-RUN echo "===> Install Python 3.6" && \
-    wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz && \
-    tar xvf Python-3.6.6.tgz && \
-    cd Python-3.6.6 && \
+RUN echo "===> Install Python $PYTHON_VER" && \
+    wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz && \
+    tar xvf Python-$PYTHON_VERSION.tgz && \
+    cd Python-$PYTHON_VERSION && \
     ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
     make -j`nproc` build_all && \
     make altinstall
 
-RUN echo "===> Install Python 3.6 packages" && \
-    apt-get install -y python3-dev python3-pip python3-certifi python3-venv
+RUN echo "===> Install Python $PYTHON_VER packages" && \
+    apt-get install -y python$PYTHON_VER-dev python3-certifi python$PYTHON_VER-venv
 
 
 ########################## KALDI INSTALLATION #########################
@@ -159,9 +162,13 @@ WORKDIR /
 # Elpis
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
-RUN /usr/bin/python3 -m venv /venv
+RUN /usr/bin/python$PYTHON_VER -m venv /venv
 ENV PATH="/venv/bin:$PATH"
-RUN pip3.6 install wheel pytest pylint && python setup.py develop
+# Recent version of pip is needed to install llvmlite (needed by librosa) flawlessly.
+RUN pip$PYTHON_VER install --upgrade pip
+# Needed because numba (for librosa) needs numpy but it seems not installed automatically with pip…  Also, llvmlite version installed by librosa won’t satisfy requirements for numba, without flexibility, so it is better to install them before…
+RUN pip$PYTHON_VER install numpy numba
+RUN pip$PYTHON_VER install wheel pytest pylint && python$PYTHON_VER setup.py develop
 
 WORKDIR /
 
@@ -171,7 +178,7 @@ WORKDIR /elpis-gui
 RUN npm install && \
     npm run build
 
-# For /elpis (elan conversion) 
+# For /elpis (elan conversion)
 RUN npm install xslt3
 
 WORKDIR /tmp

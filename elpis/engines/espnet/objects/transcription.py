@@ -1,5 +1,6 @@
 from pathlib import Path
 from elpis.engines.common.input.resample import resample
+from elpis.engines.common.input.vad import get_chunks
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 from elpis.engines.common.output.raw_to_elan import convert_raw_to_elan
 import subprocess
@@ -68,7 +69,7 @@ class EspnetTranscription(BaseTranscription):
     def _generate_inference_files(self, utt_duration=10.0):
         """ Prepare the files we need for inference, based on the audio we receive.
 
-            utt_duration says how long we want each utterance to be, in ms. Long audio
+            utt_duration says how long we want each utterance to be, in seconds. Long audio
             gets broken into utterances of that length.
         """
         # _process_audio_file above a file named audio.wav
@@ -78,18 +79,10 @@ class EspnetTranscription(BaseTranscription):
             'espnet-asr1/data/test/spk2utt')
         with model_spk2utt_path.open(mode='r') as fin:
             spk_id = fin.read().split()[0]
-        # Expecting to start at 0 time. Could benefit from VAD here?
-        start = 0.00
         # Duration of the audio
         abs_audio_file_path = Path(self.path).joinpath(audio_file_name)
-        with contextlib.closing(wave.open(str(abs_audio_file_path), 'r')) as fin:
-            frames = fin.getnframes()
-            rate = fin.getframerate()
-            stop = frames / float(rate)
-
-        num_utters = int(stop / utt_duration) + 1
-        utt_ids = [f"{spk_id}-utterance{i:05.0f}" for i in range(num_utters)]
-        segments = [(i*utt_duration, (i+1)*utt_duration - 0.001) for i in range(num_utters)]
+        segments = get_chunks(abs_audio_file_path, method="duration", parameter=utt_duration)
+        utt_ids = [f"{spk_id}-utterance{i:05.0f}" for i in range(len(segments))]
         self.segment_data = zip(utt_ids, segments)
         # Arbitrary id for each utterance. assuming one utterance for now
         #utt_id = spk_id + '-utterance0'
