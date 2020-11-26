@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import threading
 from typing import Callable
 
@@ -23,6 +24,9 @@ class EspnetModel(BaseModel):
         # from None.
         self.config['ngram'] = None
         self.config['engine'] = 'espnet'
+        self.venv_path = Path("/espnet/tools/venv/bin/python3")
+        self.config['gpus'] = int(subprocess.check_output(f"{self.venv_path} -c 'import torch; print(torch.cuda.device_count())'", shell=True))
+        print(f"Number of GPUs: {self.config['gpus']}")
 
     @classmethod
     def load(cls, base_path: Path):
@@ -107,7 +111,7 @@ class EspnetModel(BaseModel):
             print(f"SELF PATH {self.path}")
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
-            p = run(f"cd {local_espnet_path}; ./run.sh --nj 1 &> {run_log_path}")
+            p = run(f"cd {local_espnet_path}; ./run.sh --ngpu {self.config['gpus']} --nj 1 &> {run_log_path}")
             print(p.stdout)
             print('train double done.')
 

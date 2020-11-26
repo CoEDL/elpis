@@ -12,7 +12,6 @@ mkdir ~/elpis-sandbox
 cd ~/elpis-sandbox
 git clone --depth=1 https://github.com/CoEDL/elpis.git
 git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
-git clone --depth=1 https://github.com/persephone-tools/persephone
 git clone --depth=1 -b elpis https://github.com/persephone-tools/espnet
 ```
 
@@ -61,6 +60,17 @@ sudo apt-get update
 sudo apt-get install nvidia-container-runtime
 ```
 
+But sometimes an older version (like *ubuntu20.04* runtime on your Ubuntu 20.10 distribution) can work, so you can try to force the distribution variable if necessary, for example with:
+
+```
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add -
+distribution=ubuntu20.04
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list |\
+    sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+sudo apt-get update
+sudo apt-get install nvidia-container-runtime
+```
+
 Then you can try the CUDA-specific Dockerfile (`gpu/Dockerfile` in root folder):
 
 ```
@@ -80,12 +90,6 @@ docker run --gpus all -it -p 5000:5000/tcp \
     -v ~/elpis-sandbox/espnet/utils/:/espnet/utils/ \
     --entrypoint /bin/zsh \
     coedl/elpis-cuda:latest
-```
-
-After, to be sure that CUDA mode for model training is enabled, check in the `elpis-sandbox/elpis/elpis/engines/espnet/objects/model.py` file that the command includes the `--ngpu x` (x is the number of GPUs) argument as:
-
-```
-p = run(f"cd {local_espnet_path}; ./run.sh --nj 1 --ngpu 1 &> {run_log_path}")
 ```
 
 **This feature is currently in a beta stage. Utilising the GPU for training is only currently recommended for those who know what they're doing or those particularly interested in achieving higher performance.**

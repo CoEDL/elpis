@@ -8,26 +8,6 @@ def get_chunks(audio_path, method, parameter):
     time_voice_sections = get_voice_sections(audio_data, threshold)
     return time_voice_sections
 
-def get_voice_sections(audio_data, threshold):
-    frame_voice_sections = librosa.effects.split(audio_data["signal"], top_db=threshold)
-    time_voice_sections = [(start/audio_data["rate"], end/audio_data["rate"]) for index, (start, end) in enumerate(frame_voice_sections, 1)]
-    return time_voice_sections
-
-def get_continuum(audio_data, max_duration, size=20):
-    thresholds = numpy.array(audio_data["top db"]) - range(size)
-    values = []
-    for index, threshold in enumerate(thresholds):
-        timestamps = get_voice_sections(audio_data, threshold)
-        durations = [end - begin for begin, end in timestamps]
-        limited_durations = [duration for duration in durations if duration <= max_duration]
-        values.append({
-            "timestamps": list(timestamps),
-            "threshold": threshold,
-            "durations": durations,
-            "size": len(durations),
-            "limited size": len(limited_durations)})
-    return values
-
 def read_audio_path(audio_path):
     audio_signal, sampling_rate = librosa.load(audio_path)
     transform = librosa.stft(audio_signal)
@@ -46,3 +26,23 @@ def find_best_threshold(audio_data, method, parameter):
     elif method == "threshold":
         threshold = parameter if parameter < audio_data["top db"] else audio_data["top db"]
     return threshold
+
+def get_continuum(audio_data, max_duration, size=20):
+    thresholds = numpy.array(audio_data["top db"]) - range(size)
+    values = []
+    for index, threshold in enumerate(thresholds):
+        timestamps = get_voice_sections(audio_data, threshold)
+        durations = [end - begin for begin, end in timestamps]
+        limited_durations = [duration for duration in durations if duration <= max_duration]
+        values.append({
+            "timestamps": list(timestamps),
+            "threshold": threshold,
+            "durations": durations,
+            "size": len(durations),
+            "limited size": len(limited_durations)})
+    return values
+
+def get_voice_sections(audio_data, threshold):
+    frame_voice_sections = librosa.effects.split(audio_data["signal"], top_db=threshold)
+    time_voice_sections = [(start/audio_data["rate"], end/audio_data["rate"]) for index, (start, end) in enumerate(frame_voice_sections, 1)]
+    return time_voice_sections
