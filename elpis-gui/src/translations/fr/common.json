@@ -86,7 +86,7 @@
             "description": "Seul le texte des fichiers de transcription est montré, pas les mots des textes additionnels qui ont été téléversés.",
             "bannerMessage": "Le texte a été nettoyé et normalisé.",
             "bannerMessageDetailed": "La ponctuation a été supprimée.",
-            "wordlistHeader": "Liste de mots",
+            "wordlistHeader": "Mot",
             "frequencyHeader": "Fréquence",
             "ready": "Prêt pour le traitement.",
             "preparing": "Les fichiers sont en cours de traitement…",

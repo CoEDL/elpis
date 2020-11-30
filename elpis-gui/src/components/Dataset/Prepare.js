@@ -57,13 +57,13 @@ class DatasetPrepare extends Component {
                             sorted={ column === 'name' ? direction : null }
                                 onClick={this.handleSort('name', wordlist) }
                         >
-                            Word
+                            { t('dataset.prepare.wordlistHeader') }
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'frequency' ? direction : null }
                                 onClick={this.handleSort('frequency', wordlist) }
                         >
-                            Frequency
+                            { t('dataset.prepare.frequencyHeader') }
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
