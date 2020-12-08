@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --fix-missing \
     libjson-c3 \
     libtool-bin \
     make \
+    software-properties-common \
     subversion \
     tree \
     unzip \
@@ -35,16 +36,18 @@ RUN apt-get update && apt-get install -y --fix-missing \
 
 WORKDIR /tmp
 
-RUN echo "===> Install Python 3.6" && \
-    wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz && \
-    tar xvf Python-3.6.6.tgz && \
-    cd Python-3.6.6 && \
-    ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
-    make -j8 build_all && \
-    make altinstall
+#RUN echo "===> Install Python 3.7" && \
+#    wget https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz && \
+#    tar xvf Python-3.7.9.tgz && \
+#    cd Python-3.7.9 && \
+#    ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
+#    make -j8 build_all && \
+#    make altinstall
 
-RUN echo "===> Install Python 3.6 packages" && \
-    apt-get install -y python3-dev python3-pip python3-certifi python3-venv
+RUN echo "===> Install Python 3.7 packages" && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3.7-dev python3.7-venv
 
 
 ########################## KALDI INSTALLATION #########################
@@ -158,9 +161,9 @@ WORKDIR /
 # Elpis
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
-RUN /usr/bin/python3 -m venv /venv
+RUN /usr/bin/python3.7 -m venv /venv
 ENV PATH="/venv/bin:$PATH"
-RUN pip3.6 install wheel pytest pylint && python setup.py develop
+RUN pip3.7 install wheel pytest pylint && python setup.py develop
 
 WORKDIR /
 

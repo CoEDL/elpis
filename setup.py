@@ -19,7 +19,7 @@ with open('README.md', 'r', encoding="utf-8") as readme:
 
 setup(
     name='elpis',
-    version='0.95.1',
+    version='0.95.2',
     packages=find_packages(),
     url='https://github.com/CoEDL/elpis',
     install_requires=requirements,
