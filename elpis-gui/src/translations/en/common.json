@@ -86,7 +86,7 @@
             "description": "This is showing only the text from the transcription files, not words from additional text that was uploaded.",
             "bannerMessage": "Text has been cleaned and normalised OK",
             "bannerMessageDetailed": "Punctuation has been removed.",
-            "wordlistHeader": "Wordlist",
+            "wordlistHeader": "Word",
             "frequencyHeader": "Frequency",
             "ready": "Ready to process.",
             "preparing": "The files are being processed.",
