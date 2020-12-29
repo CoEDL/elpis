@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { engineList, engineLoad } from 'redux/actions/engineActions';
 import { setCurrentStep } from 'redux/actions/sideNavActions'
 
 const SelectEngine = props => {
-    let { t, currentEngine, list, engineList, engineLoad } = props;
+    let { currentEngine, list, engineList, engineLoad } = props;
+    const { t, i18n } = useTranslation("common");
 
     let handleChange = (_event, data) => {
         let engine_name = data.value;
@@ -60,6 +61,4 @@ export default
     connect(
         mapStateToProps,
         mapDispatchToProps
-    )(
-        translate('common')(SelectEngine)
-    )
+    )(SelectEngine)

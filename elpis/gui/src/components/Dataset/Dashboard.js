@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { datasetList, datasetLoad } from 'redux/actions/datasetActions';
 import arraySort from 'array-sort'
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
-import NewForm from 'components/Dataset/NewForm';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
+import NewForm from './NewForm';
 import CurrentDatasetName from "./CurrentDatasetName";
-import SelectEngine from 'components/Engine/SelectEngine'
+import SelectEngine from '../Engine/SelectEngine'
 import urls from 'urls';
 
 class DatasetDashboard extends Component {
@@ -154,4 +154,6 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(DatasetDashboard))
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation("common")(DatasetDashboard)
+)

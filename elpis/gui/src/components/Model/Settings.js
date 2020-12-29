@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Button, Divider, Form, Grid, Header, Input, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { Formik, Field } from 'formik';
 import { modelSettings } from 'redux/actions/modelActions';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
 import CurrentModelName from "./CurrentModelName";
 import urls from 'urls'
 
@@ -117,4 +117,6 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(ModelSettings));
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation("common")(ModelSettings)
+);

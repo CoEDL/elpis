@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Button, Divider, Form, Grid, Header, Message, Segment, TextArea } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { pronDictBuildLexicon, pronDictSaveLexicon, pronDictUpdateLexicon } from 'redux/actions/pronDictActions';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
 import CurrentPronDictName from "./CurrentPronDictName";
 import urls from 'urls'
 
@@ -118,4 +118,6 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(PronDictLexicon))
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation("common")(PronDictLexicon)
+)

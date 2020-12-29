@@ -1,6 +1,6 @@
 {
   "name": "elpis-gui",
-  "version": "0.95.2",
+  "version": "0.95.3",
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
@@ -10,11 +10,13 @@
     "downloadjs": "^1.4.7",
     "file-selector": "^0.1.6",
     "formik": "^1.5.1",
-    "i18next": "^14.0.1",
+    "i18next": "^19.8.4",
+    "i18next-browser-languagedetector": "^6.0.1",
+    "i18next-http-backend": "^1.0.21",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^10.1.4",
-    "react-i18next": "^9.0.10",
+    "react-i18next": "^11.8.3",
     "react-lazylog": "^3.2.0",
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",

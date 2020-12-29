@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, {Component} from 'react';
+import {BrowserRouter as Router, Route} from "react-router-dom";
 import './App.css'
 
 import Welcome from './Welcome'
@@ -30,27 +30,27 @@ class App extends Component {
             <div className="App">
                 <Router>
                     <PageContainer>
-                        <Route path="/" exact component={ Welcome } />
+                        <Route path="/" exact component={Welcome}/>
 
-                        <Route path={urls.gui.engine.index} exact component={EngineDashboard} />
+                        <Route path={urls.gui.engine.index} exact component={EngineDashboard}/>
 
-                        <Route path={urls.gui.dataset.index} exact component={ DatasetDashboard } />
-                        <Route path={urls.gui.dataset.new} component={ DatasetNew } />
-                        <Route path={urls.gui.dataset.files} component={ DatasetFiles } />
-                        <Route path={urls.gui.dataset.prepare} exact component={ DatasetPrepare } />
+                        <Route path={urls.gui.dataset.index} exact component={DatasetDashboard}/>
+                        <Route path={urls.gui.dataset.new} component={DatasetNew}/>
+                        <Route path={urls.gui.dataset.files} component={DatasetFiles}/>
+                        <Route path={urls.gui.dataset.prepare} exact component={DatasetPrepare}/>
 
-                        <Route path={urls.gui.pronDict.index} exact component={PronDictDashboard} />
-                        <Route path={urls.gui.pronDict.new} component={PronDictNew} />
-                        <Route path={urls.gui.pronDict.l2s} component={PronDictL2S} />
-                        <Route path={urls.gui.pronDict.lexicon} component={PronDictLexicon} />
+                        <Route path={urls.gui.pronDict.index} exact component={PronDictDashboard}/>
+                        <Route path={urls.gui.pronDict.new} component={PronDictNew}/>
+                        <Route path={urls.gui.pronDict.l2s} component={PronDictL2S}/>
+                        <Route path={urls.gui.pronDict.lexicon} component={PronDictLexicon}/>
 
-                        <Route path={urls.gui.model.index} exact component={ ModelDashboard } />
-                        <Route path={urls.gui.model.new} component={ ModelNew } />
-                        <Route path={urls.gui.model.settings} component={ ModelSettings } />
-                        <Route path={urls.gui.model.train} exact component={ ModelTrain } />
-                        <Route path={urls.gui.model.results} exact component={ ModelResults } />
+                        <Route path={urls.gui.model.index} exact component={ModelDashboard}/>
+                        <Route path={urls.gui.model.new} component={ModelNew}/>
+                        <Route path={urls.gui.model.settings} component={ModelSettings}/>
+                        <Route path={urls.gui.model.train} exact component={ModelTrain}/>
+                        <Route path={urls.gui.model.results} exact component={ModelResults}/>
 
-                        <Route path={urls.gui.transcription.new} component={ NewTranscription } />
+                        <Route path={urls.gui.transcription.new} component={NewTranscription}/>
                     </PageContainer>
                 </Router>
             </div>
@@ -59,5 +59,4 @@ class App extends Component {
 }
 
 
-
-export default App;
+export default (App);

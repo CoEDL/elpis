@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Button, Image, Segment } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import elpisLogo from './elpis.png'
 import { connect } from 'react-redux';
 import { configReset } from 'redux/actions/configActions';
-import SelectEngine from 'components/Engine/SelectEngine'
+import SelectEngine from '../Engine/SelectEngine'
+import SelectLanguage from "./SelectLanguage";
 
 class StepBranding extends Component {
 
@@ -22,6 +23,7 @@ class StepBranding extends Component {
                     <Image floated="left" src={elpisLogo} className="logo" alt="logo" />
                 </Link>
                 <div className={"right"}>
+                    <SelectLanguage />
                     <SelectEngine />
                     <Button basic onClick={this.reset}>{t('common.resetButton')}</Button>
                 </div>
@@ -38,4 +40,6 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(null, mapDispatchToProps)(translate('common')(StepBranding))
+export default connect(null, mapDispatchToProps)(
+    withTranslation("common")(StepBranding)
+)

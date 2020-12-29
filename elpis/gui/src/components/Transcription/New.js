@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Button, Divider, Dropdown, Form, Grid, Header, Icon, List, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
@@ -17,9 +17,9 @@ import {
 import { modelLoad, modelList } from 'redux/actions/modelActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
 import { pronDictLoad } from 'redux/actions/pronDictActions';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
-import CurrentModelName from "components/Model/CurrentModelName";
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
+import CurrentModelName from "../Model/CurrentModelName";
 import urls from 'urls'
 
 class NewTranscription extends Component {
@@ -252,4 +252,6 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewTranscription));
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation("common")(NewTranscription)
+);

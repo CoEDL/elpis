@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { Message } from 'semantic-ui-react';
 import urls from 'urls'
 
@@ -64,6 +64,6 @@ const mapStateToProps = state => {
 }
 export default withRouter(
     connect(mapStateToProps)(
-        translate('common')(CurrentModelName)
+        withTranslation("common")(CurrentModelName)
     )
 )
