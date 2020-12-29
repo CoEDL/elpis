@@ -25,7 +25,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
     libjson-c3 \
     libtool-bin \
     make \
-    nproc \
     software-properties-common \
     subversion \
     tree \
