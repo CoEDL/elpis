@@ -1,0 +1,281 @@
+{
+    "welcome": {
+        "title": "Elpis",
+        "description": "Elpis is a speech recognition tool, which you can use to transcribe audio. It works in four parts:\nStep 1) Add some language recordings and their transcriptions that you already have\nStep 2) Creating a pronunciation dictionary\nStep 3) Training the speech recognition \"models\"\nStep 4) Use it to tanscribe new audio\n",
+        "start": "Start here"
+    },
+    "navigation": {
+        "engine": {
+            "title": "Engine"
+        },
+        "recordings": {
+            "title": "Recordings",
+            "files": "Files",
+            "wordlist": "Wordlist"
+        },
+        "pronunciation": {
+            "title": "Pronunciation",
+            "letterToSound": "Letter to sound",
+            "dictionary": "Dictionary"
+        },
+        "training": {
+            "title": "Training",
+            "settings": "Settings",
+            "train": "Train",
+            "results": "Results"
+        },
+        "transcriptions": {
+            "title": "New transcriptions"
+        }
+    },
+    "engine": {
+        "select": {
+            "title": "Engine",
+            "shortcutPlaceholder": "select engine"
+        },
+        "common": {
+            "currentEngineLabel": "Current engine: ",
+            "noCurrentEngineLabel": "No engine selected yet."
+        }
+    },
+    "dataset": {
+        "common": {
+            "currentDatasetLabel": "Current recordings: ",
+            "noCurrentDatasetLabel": "No groups of recordings yet."
+        },
+        "dashboard": {
+            "title": "Recordings",
+            "noneMessage": "No groups of recordings yet."
+        },
+        "new": {
+            "title": "New group of recordings",
+            "nameLabel": "Name",
+            "namePlaceholder": "Name"
+        },
+        "files": {
+            "title": "Add files",
+            "description": "Upload your language recording and transcription files here. \n Please use 44.1kHz WAV format audio, and .eaf Elan transcription files. \n Audio files and transcription files need to have matching filenames. \n You can also upload text files like wordlists or stories that don't have audio.",
+            "filesHeader": "Uploaded files",
+            "audioFilesHeader": "Audio files",
+            "transcriptionFilesHeader": "Transcription files",
+            "additionalTextFilesHeader": "Additional text files",
+            "importSettingsHeader": "Import Settings",
+            "noSettings": "No settings.",
+            "generalSettingsHeader": "General Settings",
+            "settingsTierHeader": "Tiers",
+            "settingsPunctuationHeader": "Punctuation",
+            "puncLabel": "Expand words by",
+            "tierOrderDescription": "Choose the tier that your transcriptions are on",
+            "tierTypeDescription": "or choose by tier type",
+            "tierNameDescription": "or use a tier name.",
+            "puncDescription": "Punctuation will be removed from the transcriptions. Add punctuation marks here that you want to be replaced by spaces when removed.",
+            "uploadButton": "Upload",
+            "saveButton": "Save Settings"
+        },
+        "fileUpload": {
+            "audioLabel": "Audio files:",
+            "transcriptionLabel": "Transcription files:",
+            "additionalLabel": "Additional Text files:",
+            "dropFilesHint": "Upload or drop your files here",
+            "dropFilesHintDragActive": "Drop files here…",
+            "uploading": "Uploading files"
+        },
+        "prepare": {
+            "title": "Wordlist",
+            "header": "Word frequency of training files",
+            "description": "This is showing only the text from the transcription files, not words from additional text that was uploaded.",
+            "bannerMessage": "Text has been cleaned and normalised OK",
+            "bannerMessageDetailed": "Punctuation has been removed.",
+            "wordlistHeader": "Word",
+            "frequencyHeader": "Frequency",
+            "ready": "Ready to process.",
+            "preparing": "The files are being processed.",
+            "noWords": "No words found, please upload some files or check your import settings."
+        }
+    },
+    "pronDict": {
+        "common": {
+            "currentPronDictLabel": "Current pronunciation dictionary: ",
+            "noDatasetsLabel": "Recordings are required before making pronunciation dictionary.",
+            "noCurrentPronDictLabel": "No current pronunciation dictionary.",
+            "chooseOrNewLabel": "Choose one."
+        },
+        "dashboard": {
+            "title": "Pronunciation Dictionary",
+            "noneMessage": "No pronunciation dictionary yet"
+        },
+        "new": {
+            "title": "New pronunciation dictionary",
+            "nameLabel": "Name",
+            "namePlaceholder": "Name",
+            "select": "Select a group of recordings"
+        },
+        "l2s": {
+            "title": "Upload Letter to Sound rules",
+            "header": "Letter to sound file",
+            "description": "The letter to sound file is used to build a pronunciation dictionary for the corpus. Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols. You can include comments in this file by beginning the comment line with #. For example: \n\n # This is a comment \n n n \n ng ŋ \n r r \n y j",
+            "dropFilesHint": "Upload your l2s file, or drop one here",
+            "dropFilesHintDragActive": "Here here..",
+            "uploadButton": "Upload"
+        },
+        "lexicon": {
+            "title": "Review the pronunciation dictionary",
+            "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
+            "reset": "Reset",
+            "save": "Save"
+        }
+    },
+    "model": {
+        "common": {
+            "currentModelLabel": "Current training session: ",
+            "noCurrentModelLabel": "No current training session.",
+            "chooseOrNewLabel": "Choose one."
+        },
+        "dashboard": {
+            "title": "Training",
+            "noneMessage": "No training sessions yet"
+        },
+        "new": {
+            "title": "New training session",
+            "nameLabel": "Name",
+            "namePlaceholder": "Name",
+            "selectDatasetLabel": "Select recordings for this session",
+            "selectPronDictLabel": "Select a pronunciation dictionary for this session"
+        },
+        "settings": {
+            "title": "Settings",
+            "description": "These settings are used to adjust the training.",
+            "advancedHeader": "Advanced",
+            "audioLabel": "Audio Frequency",
+            "mfccLabel": "MFCC stuff",
+            "ngramDescription": "The n-gram adjusts whether the system learns single words or words and their neighbours. A value of 1 will set the system to learn single words. To make the system learn from words and their neighbouring words, set the n-gram to 2 or 3.",
+            "ngramLabel": "n-gram",
+            "beamLabel": "Beam size"
+        },
+        "train": {
+            "title": "Train",
+            "settingsHeader": "Settings",
+            "preparingAcousticHeader": "Preparing acoustic information",
+            "featuresExtractionHeader": "Features extraction",
+            "preparingLanguageDataHeader": "Preparing language information",
+            "logsHeader": "Logs",
+            "logsDescription": "gory detail from Kaldi (coming soon)",
+            "trainButton": "Start training",
+            "statusButton": "Check progress"
+        },
+        "results": {
+            "title": "Results",
+            "description": "List of training sessions that have been run here.",
+            "downloadButton": "Download a set of the training, settings and information about training information",
+            "downloadModalHeader": "Your files and settings are being compiled",
+            "downloadModalContent": "Click Save on your browser's download dialog",
+            "downloadOkButton": "OK",
+            "newTranscribeButton": "Transcribe new audio",
+            "noResults": "No results found"
+        },
+        "generated": {
+            "elan": {
+                "tiers": {
+                    "title": "Tiers",
+                    "description": "Choose the tier that your transcriptions are on, just choose one of these.",
+                    "selectionMechanism": "Selection Mechanism",
+                    "name": "Tier name",
+                    "type": "Tier type",
+                    "order": "Tier order"
+                },
+                "punctuation": {
+                    "title": "Punctuation",
+                    "description": "What to do with punctuation.",
+                    "explosion": "Replace these with spaces",
+                    "collapsing": "Remove these"
+                },
+                "cleaning": {
+                    "title": "Cleaning",
+                    "description": "Remove text from annotations, add one per line.",
+                    "words": "Words to remove",
+                    "tags": "Tags to remove"
+                }
+            }
+        },
+        "engines": {
+            "kaldi": {
+                "stages": {
+                    "setup": "Set up",
+                    "acousticPreparation": "Prepare acoustic data",
+                    "featureExtraction": "Extract features",
+                    "dataPreparation": "Prepare language data",
+                    "modelCreation": "Create language model",
+                    "monophoneTraining": "Monophone training",
+                    "triphoneTraining": "Triphone training"
+                }
+            }
+        }
+    },
+    "transcription": {
+        "new": {
+            "title": "Transcribe some audio",
+            "selectModelLabel": "Select a training session to use",
+            "dropFilesHint": "Upload or drop an audio file here",
+            "dropFilesHintDragActive": "Here here..",
+            "addAudioButton": "Add Audio",
+            "chooseModelHeader": "Choose a training session",
+            "usingAudio": "Uploaded {{filename}}",
+            "transcribe": "Transcribe",
+            "nextButton": "Go",
+            "uploadButton": "Upload"
+        },
+        "results": {
+            "title": "Transcribed results",
+            "usingAudio": "For {{filename}}",
+            "resultsHeader": "Transcription as text",
+            "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
+            "downloadLabel": "Download",
+            "downloadTextButton": "Text file",
+            "downloadElanButton": "Elan file",
+            "wer": "WER",
+            "per": "PER",
+            "del": "DEL",
+            "ins": "INS",
+            "sub": "SUB"
+        },
+        "engines": {
+            "kaldi": {
+                "stages": {
+                    "featureExtraction": "Extracting feature vectors",
+                    "modelCreation": "Creating model",
+                    "transcriptionDecoding": "Decoding (transcription)",
+                    "transcriptionBestPath": "Finding best path (transcription)",
+                    "wordBoundaries": "Adding word boundaries to FST",
+                    "latticeConversion": "Converting lattice to CTM",
+                    "wordIndexTranslation": "Translating word indexes to words",
+                    "ctmConversion": "Converting CTM to Textgrid",
+                    "textgridConversion": "Converting Textgrid to ELAN",
+                    "ctmOutput": "CTM output"
+                }
+            }
+        }
+    },
+    "common": {
+        "addNewButton": "Add New",
+        "nextButton": "Next",
+        "newButton": "New",
+        "resetButton": "Reset",
+        "firstSelectAnEngine": "First, select an engine.",
+        "makeNewOne": "Make a new one using the form below.",
+        "selectExisting": "Or select an existing one from the list.",
+        "selectOneBelow": "Make a new one, or select one from the list below.",
+        "choose": "Choose",
+        "chooseOrNewLabel": "Choose one.",
+        "invalidCharacterErrorMessage": "Please use these characters: \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
+    },
+    "status": {
+        "ready": "ready",
+        "training": "training",
+        "trained": "trained",
+        "transcribing": "transcribing",
+        "transcribed": "transcribed",
+        "in-progress": "in-progress",
+        "complete": "complete",
+        "failed": "failed"
+    }
+}
