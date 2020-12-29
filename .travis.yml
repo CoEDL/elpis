@@ -13,7 +13,7 @@ script:
       ls /;
       git pull origin cnc; 
       git checkout -b cnc;
-      sh ./test.sh;
+      sh ./elpis/test/test.sh;
       pwd;
       ls;
       echo 'Now installing things';

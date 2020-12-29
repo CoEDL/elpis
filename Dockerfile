@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --fix-missing \
     libjson-c3 \
     libtool-bin \
     make \
+    nproc \
     software-properties-common \
     subversion \
     tree \
@@ -35,14 +36,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
     zsh
 
 WORKDIR /tmp
-
-#RUN echo "===> Install Python 3.7" && \
-#    wget https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz && \
-#    tar xvf Python-3.7.9.tgz && \
-#    cd Python-3.7.9 && \
-#    ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
-#    make -j8 build_all && \
-#    make altinstall
 
 RUN echo "===> Install Python 3.7 packages" && \
     add-apt-repository ppa:deadsnakes/ppa && \
@@ -72,16 +65,16 @@ RUN echo "===> Install Kaldi dependencies" && \
 
 WORKDIR /
 
-RUN echo "===> install Kaldi (not the latest!)"  && \
+RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
-    make && \
+    make -j $(nproc) && \
     ./install_portaudio.sh && \
     cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend  && make && \
-    cd /kaldi/src/online2 && make depend && make && \
-    cd /kaldi/src/online2bin && make depend && make
+    make depend -j $(nproc) && make -j $(nproc) && \
+    cd /kaldi/src/online2 && make depend -j $(nproc) && make -j $(nproc) && \
+    cd /kaldi/src/online2bin && make depend -j $(nproc) && make -j $(nproc)
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
@@ -121,7 +114,7 @@ RUN git checkout elpis
 WORKDIR /espnet/tools
 
 RUN echo "===> install ESPnet" && \
-    make KALDI=/kaldi CUPY_VERSION='' -j 4
+    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
 
 
 ########################## DEV HELPERS INSTALLATION ####################

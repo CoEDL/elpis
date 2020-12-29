@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Date is year-month-day format.
 
 
+## [0.96.0] - 2020-12-29
+### Changed
+- Monorepo: brought https://github.com/coedl/elpis-gui into this repo under elpis/gui.
+- Significant restructure: moved gpu and examples under /elpis
+
 ## [0.95.2] - 2020-12-08
 ### Changed
 - Dockerfile to use Python 3.7 as default for Elpis
@@ -12,7 +17,7 @@ Date is year-month-day format.
 
 ## [0.95.1] - 2020-09-23
 ### Changed
-- Rearranged Dockerfile to group like things and install ESPnet earlier
+- Rearranged Dockerfile to group like things and install ESPne earlier
 
 
 ## [0.95.0] - 2020-09-20

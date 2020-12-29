@@ -18,7 +18,6 @@ node_modules/
 *.xml
 *.iml
 .idea/
-.devcontainer/
 
 # Server
 log.txt
