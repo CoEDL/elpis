@@ -3,12 +3,13 @@
 # image - based on Ubuntu + SRILM                                     #
 #######################################################################
 
-FROM ubuntu:18.04
-
+FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-RUN apt-get update && apt-get install -y --fix-missing \
+ENV TZ=UTC
+
+RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install -y --fix-missing \
     autoconf \
     automake \
     bzip2 \
@@ -22,7 +23,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
     libatlas-base-dev \
     libglib2.0-dev \
     libjson-c-dev \
-    libjson-c3 \
     libtool-bin \
     libssl-dev \
     libsqlite3-dev \
@@ -48,15 +48,20 @@ RUN echo "===> Install Python 3.7 packages" && \
 ########################## KALDI INSTALLATION #########################
 
 RUN echo "===> Install Python 2.7 for Kaldi" && \
+    add-apt-repository universe && \
     apt-get update && apt-get install -y  \
     python2.7 \
-    python-pip \
     python-yaml \
     python-simplejson \
-    python-gi && \
-    pip install ws4py==0.3.2 && \
-    pip install tornado && \
-    ln -s /usr/bin/python2.7 /usr/bin/python ; ln -s -f bash /bin/sh
+    python-gi
+
+RUN curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py && \
+    python2 get-pip.py
+
+RUN pip install ws4py==0.3.2 && \
+    pip install tornado
+
+RUN ln -s /usr/bin/python2.7 /usr/bin/python ; ln -s -f bash /bin/sh
 
 RUN echo "===> Install Kaldi dependencies" && \
     apt-get update && apt-get install -y \

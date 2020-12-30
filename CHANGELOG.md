@@ -7,8 +7,9 @@ Date is year-month-day format.
 
 ## [0.96.0] - 2020-12-29
 ### Changed
-- Monorepo: brought https://github.com/coedl/elpis-gui into this repo under elpis/gui.
+- Monorepo: brought https://github.com/coedl/elpis-gui into this repo under elpis/gui
 - Significant restructure: moved gpu and examples under /elpis
+- Updated Docker image to an Ubuntu 20.04 base image
 
 ## [0.95.2] - 2020-12-08
 ### Changed
@@ -33,7 +34,7 @@ Date is year-month-day format.
 - Docs
 
 ### Changed
-- Separated log files into individual logs for each stage while processing, and build complete log when done.
-- Fixed annotations not resetting when changing tier settings.
+- Separated log files into individual logs for each stage while processing, and build complete log when done
+- Fixed annotations not resetting when changing tier settings
 - Moved CLI example into a Kaldi dir
 - Fixed Kaldi Elan CLI example, now links dataset and pronunciation dictionary independently
