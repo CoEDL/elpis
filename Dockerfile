@@ -24,6 +24,9 @@ RUN apt-get update && apt-get install -y --fix-missing \
     libjson-c-dev \
     libjson-c3 \
     libtool-bin \
+    libssl-dev \
+    libsqlite3-dev \
+    libbz2-dev \
     make \
     software-properties-common \
     subversion \
@@ -67,13 +70,13 @@ WORKDIR /
 RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
-    make -j $(nproc) && \
+    make && \
     ./install_portaudio.sh && \
     cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend -j $(nproc) && make -j $(nproc) && \
-    cd /kaldi/src/online2 && make depend -j $(nproc) && make -j $(nproc) && \
-    cd /kaldi/src/online2bin && make depend -j $(nproc) && make -j $(nproc)
+    make depend && make && \
+    cd /kaldi/src/online2 && make depend && make && \
+    cd /kaldi/src/online2bin && make depend && make
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
