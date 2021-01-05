@@ -39,10 +39,10 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
 
 WORKDIR /tmp
 
-RUN echo "===> Install Python 3.7 packages" && \
+RUN echo "===> Install Python 3.8 packages" && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && \
-    apt-get install -y python3.7-dev python3.7-venv
+    apt-get install -y python3.8-dev python3.8-venv
 
 
 ########################## KALDI INSTALLATION #########################
@@ -161,14 +161,14 @@ WORKDIR /
 # Elpis
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
-RUN /usr/bin/python3.7 -m venv /venv
+RUN /usr/bin/python3.8 -m venv /venv
 ENV PATH="/venv/bin:$PATH"
-RUN pip3.7 install wheel pytest pylint && python setup.py develop
+RUN pip3.8 install wheel pytest pylint && python setup.py develop
 
 WORKDIR /
 
 # Elpis GUI
-RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
+RUN ln -s /elpis/elpis/gui /elpis-gui
 WORKDIR /elpis-gui
 RUN npm install && \
     npm run build
