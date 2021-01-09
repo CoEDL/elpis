@@ -163,7 +163,8 @@ RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN /usr/bin/python3.8 -m venv /venv
 ENV PATH="/venv/bin:$PATH"
-RUN pip install poetry && poetry install
+RUN pip install poetry && poetry config virtualenvs.create false --local && \
+    poetry install
 
 WORKDIR /
 
