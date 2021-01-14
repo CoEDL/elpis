@@ -1,17 +1,18 @@
 #######################################################################
-# Dockerfile to build Kaldi/ESPnet (speech recognition engine         #
-# container image - based on Ubuntu + SRILM + CUDA 10.1)              #
+# Dockerfile to build Kaldi (speech recognition engine container      #
+# image - based on Ubuntu + SRILM                                     #
 #######################################################################
 
-FROM ubuntu:18.04
-
+FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
 ENV PYTHON_VERSION 3.8.6
 ENV PYTHON_VER 3.8
 
-RUN apt-get update && apt-get install -y --fix-missing \
+ENV TZ=UTC
+
+RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install -y --fix-missing \
     autoconf \
     automake \
     bzip2 \
@@ -25,9 +26,12 @@ RUN apt-get update && apt-get install -y --fix-missing \
     libatlas-base-dev \
     libglib2.0-dev \
     libjson-c-dev \
-    libjson-c3 \
     libtool-bin \
+    libssl-dev \
+    libsqlite3-dev \
+    libbz2-dev \
     make \
+    software-properties-common \
     subversion \
     tree \
     unzip \
@@ -38,30 +42,29 @@ RUN apt-get update && apt-get install -y --fix-missing \
 
 WORKDIR /tmp
 
-RUN echo "===> Install Python $PYTHON_VER" && \
-    wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz && \
-    tar xvf Python-$PYTHON_VERSION.tgz && \
-    cd Python-$PYTHON_VERSION && \
-    ./configure --enable-optimizations --enable-loadable-sqlite-extensions && \
-    make -j`nproc` build_all && \
-    make altinstall
-
-RUN echo "===> Install Python $PYTHON_VER packages" && \
-    apt-get install -y python$PYTHON_VER-dev python3-certifi python$PYTHON_VER-venv
+RUN echo "===> Install Python 3.8 packages" && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3.8-dev python3.8-venv
 
 
 ########################## KALDI INSTALLATION #########################
 
 RUN echo "===> Install Python 2.7 for Kaldi" && \
+    add-apt-repository universe && \
     apt-get update && apt-get install -y  \
     python2.7 \
-    python-pip \
     python-yaml \
     python-simplejson \
-    python-gi && \
-    pip install ws4py==0.3.2 && \
-    pip install tornado && \
-    ln -s /usr/bin/python2.7 /usr/bin/python ; ln -s -f bash /bin/sh
+    python-gi
+
+RUN curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py && \
+    python2 get-pip.py
+
+RUN pip install ws4py==0.3.2 && \
+    pip install tornado
+
+RUN ln -s /usr/bin/python2.7 /usr/bin/python ; ln -s -f bash /bin/sh
 
 RUN echo "===> Install Kaldi dependencies" && \
     apt-get update && apt-get install -y \
@@ -72,7 +75,7 @@ RUN echo "===> Install Kaldi dependencies" && \
 
 WORKDIR /
 
-RUN echo "===> install Kaldi (not the latest!)"  && \
+RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
     make -j`nproc` && \
@@ -83,7 +86,7 @@ RUN echo "===> install Kaldi (not the latest!)"  && \
     cd /kaldi/src/online2 && make depend -j`nproc` && make -j`nproc` && \
     cd /kaldi/src/online2bin && make depend -j`nproc` && make -j`nproc`
 
-COPY ../../deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
+COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
 WORKDIR /kaldi/tools
 
@@ -217,18 +220,21 @@ WORKDIR /
 # Elpis
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
-RUN /usr/bin/python$PYTHON_VER -m venv /venv
+RUN /usr/bin/python3.8 -m venv /venv
 ENV PATH="/venv/bin:$PATH"
-# Recent version of pip is needed to install llvmlite (needed by librosa) flawlessly.
-RUN pip$PYTHON_VER install --upgrade pip
-# Needed because numba (for librosa) needs numpy but it seems not installed automatically with pip…  Also, llvmlite version installed by librosa won’t satisfy requirements for numba, without flexibility, so it is better to install them before…
-RUN pip$PYTHON_VER install numpy numba
-RUN pip$PYTHON_VER install wheel pytest pylint && python$PYTHON_VER setup.py develop
+RUN pip install poetry && poetry config virtualenvs.create false --local && \
+    poetry install
+
+# # Recent version of pip is needed to install llvmlite (needed by librosa) flawlessly.
+# RUN pip$PYTHON_VER install --upgrade pip
+# # Needed because numba (for librosa) needs numpy but it seems not installed automatically with pip…  Also, llvmlite version installed by librosa won’t satisfy requirements for numba, without flexibility, so it is better to install them before…
+# RUN pip$PYTHON_VER install numpy numba
+# RUN pip$PYTHON_VER install wheel pytest pylint && python$PYTHON_VER setup.py develop
 
 WORKDIR /
 
 # Elpis GUI
-RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
+RUN ln -s /elpis/elpis/gui /elpis-gui
 WORKDIR /elpis-gui
 RUN npm install && \
     npm run build
@@ -252,6 +258,11 @@ RUN echo "===> Install ESPnet dependencies" && \
     bc
 
 WORKDIR /
+
+# Because Espnet dependencies need GCC compiler version ≤ 8.
+RUN apt -y install gcc-8 g++-8 && \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8 && \
+    update-alternatives --config gcc
 
 # Pinned and tested version (from forked repository).
 RUN git clone --depth=1 -b elpis https://github.com/persephone-tools/espnet.git
@@ -294,7 +305,7 @@ RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
-RUN echo "alias run=\"flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
+RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # ENV vars for non-interactive running
@@ -305,7 +316,7 @@ ENV LANG=C.UTF-8
 
 WORKDIR /elpis
 
-ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
+ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
 EXPOSE 3000:3000

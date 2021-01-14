@@ -85,7 +85,6 @@ Then, run it by adding the `--gpus all` argument in `docker run`:
 ```
 docker run --gpus all -it -p 5000:5000/tcp \
     -v ~/elpis-sandbox/elpis:/elpis \
-    -v ~/elpis-sandbox/elpis-gui:/elpis-gui \
     -v ~/elpis-sandbox/espnet/egs/elpis:/espnet/egs/elpis \
     -v ~/elpis-sandbox/espnet/utils/:/espnet/utils/ \
     --entrypoint /bin/zsh \
