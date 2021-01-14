@@ -83,7 +83,7 @@ RUN echo "===> install Kaldi (not the latest!)"  && \
     cd /kaldi/src/online2 && make depend -j`nproc` && make -j`nproc` && \
     cd /kaldi/src/online2bin && make depend -j`nproc` && make -j`nproc`
 
-COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
+COPY ../../deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
 WORKDIR /kaldi/tools
 

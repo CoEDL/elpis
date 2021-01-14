@@ -1,0 +1,32 @@
+.stepList {
+    position: relative
+}
+
+.stepList .item {
+    position: relative;
+}
+
+.stepList .item > div {
+    padding: 0 1em !important;
+}
+.ui.styled.accordion .active.title.stepDone,
+.substepDone {
+    background-color: #E0C6EE;
+}
+
+.ui.styled.accordion .active.title.stepDoing,
+.substepDoing {
+    background-color: #D3A0F0;
+}
+
+
+.firstSubstep {
+    font-weight: bold;
+}
+
+.ui.styled.accordion .content {
+    padding: 0 !important;
+}
+.ui.list .item {
+    padding: 0.5em 0 !important;
+}

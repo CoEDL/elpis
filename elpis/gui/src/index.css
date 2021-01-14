@@ -1,0 +1,136 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.dropzone {
+    padding: 3em;
+    border: 3px dotted #aaa;
+    border-radius: 1rem;
+}
+
+.dropzone_active {
+    background-color: orange;
+}
+
+.status {
+    margin-top:1em;
+}
+
+.logo {
+    height: 50px !important;
+    width: auto !important;
+    display: block;
+}
+
+.accordion {
+    margin-bottom: 2rem;
+}
+
+.kaldi-log {
+    height: 200px;
+    width: 100%;
+    border: 1px solid #aaa;
+}
+
+.dataset-list {
+    padding-left: 0;
+}
+
+.dataset-list li {
+    padding: 0.5rem;
+    list-style-type: none;
+}
+
+
+.button.current {
+    background-color: #D3A0F0 !important;
+}
+
+.ReactVirtualized__Grid__innerScrollContainer {
+    max-height: none !important;
+    min-height: 100px !important;
+}
+
+li.no-lst {
+    list-style-type: none
+}
+
+.ui.form .error,
+.ui.message .content {
+    white-space: pre-line;
+}
+
+.bug {
+    color: #333;
+    font-style: italic;
+}
+
+textarea.lexicon {
+    font-family: monospace;
+    width: 100%;
+    min-height: 20em;
+}
+
+.ui.button.add {
+    margin: 1em;
+}
+
+.right {
+    float: right
+}
+
+label.pad-right,
+.label.pad-right {
+    margin-right: 0.5em
+}
+
+.label {
+    float: left;
+}
+
+.form-wrapper {
+    margin-bottom: 2em
+}
+
+.error-message {
+    color: indianred;
+}
+
+.ui.table.settings .description {
+    font-weight: normal
+}
+
+.stages { margin-top: 1em}
+
+.stage .divider {
+    margin: 0 0.5em
+}
+
+.file-list {
+    max-height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #aaa;
+    padding: 1em;
+}
+
+.top-nav {
+    background: pink;
+    font-weight: 400;
+}
+
+.top-nav .ui.selection.dropdown {
+    min-width: 8em;
+}
+
+.keep-line-breaks {
+    white-space: pre-line;
+}
