@@ -7,6 +7,8 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
+ENV NUM_CPUS 1
+
 ENV TZ=UTC
 
 RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install -y --fix-missing \
@@ -75,13 +77,13 @@ WORKDIR /
 RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
-    make -j`nproc` && \
+    make -j$NUM_CPUS && \
     ./install_portaudio.sh && \
     cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend -j`nproc` && make -j`nproc` && \
-    cd /kaldi/src/online2 && make depend -j`nproc` && make -j`nproc` && \
-    cd /kaldi/src/online2bin && make depend -j`nproc` && make -j`nproc`
+    make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
+    cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
+    cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
@@ -134,9 +136,7 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
 # Add node 15, npm and xml-js
-RUN curl -sL https://deb.nodesource.com/setup_15.x | bash -
-RUN apt-get update && apt-get install -y nodejs build-essential && \
-    #ln -s /usr/bin/nodejs /usr/bin/node && \
+RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get update && apt-get install -y nodejs build-essential && \
     npm install -g npm \
     hash -d npm \
     npm install -g xml-js
@@ -167,12 +167,6 @@ ENV PATH="/venv/bin:$PATH"
 RUN pip install poetry && poetry config virtualenvs.create false --local && \
     poetry install
 
-# # Recent version of pip is needed to install llvmlite (needed by librosa) flawlessly.
-# RUN pip$PYTHON_VER install --upgrade pip
-# # Needed because numba (for librosa) needs numpy but it seems not installed automatically with pip…  Also, llvmlite version installed by librosa won’t satisfy requirements for numba, without flexibility, so it is better to install them before…
-# RUN pip$PYTHON_VER install numpy numba
-# RUN pip$PYTHON_VER install wheel pytest pylint && python$PYTHON_VER setup.py develop
-
 WORKDIR /
 
 # Elpis GUI
@@ -180,9 +174,6 @@ RUN ln -s /elpis/elpis/gui /elpis-gui
 WORKDIR /elpis-gui
 RUN npm install && \
     npm run build
-
-# For /elpis (elan conversion)
-RUN npm install xslt3
 
 WORKDIR /tmp
 
