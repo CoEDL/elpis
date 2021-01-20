@@ -7,10 +7,10 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS 1
+ENV NUM_CPUS=1
 
-ENV PYTHON_VERSION 3.8.6
-ENV PYTHON_VER 3.8
+ENV PYTHON_VERSION=3.8.6
+ENV PYTHON_VER=3.8
 
 ENV TZ=UTC
 
