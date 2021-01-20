@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS 1
+ENV NUM_CPUS=1
 
 ENV TZ=UTC
 
