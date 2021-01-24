@@ -1,6 +1,8 @@
 from pathlib import Path
 from elpis.engines.common.input.resample import resample
+from elpis.engines.common.input.vad import get_chunks
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
+from elpis.engines.common.output.raw_to_elan import convert_raw_to_elan
 import subprocess
 from typing import Callable, Iterable, Tuple
 import os
@@ -15,6 +17,10 @@ class EspnetTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.audio_file_path = self.path.joinpath('audio.wav')
+        self.text_path = self.path / "one-best-hypothesis.txt"
+        self.xml_path = self.path / "transcription.xml"
+        self.elan_path = self.path / "transcription.eaf"
+        self.segment_data = []
 
     @classmethod
     def load(cls, base_path: Path):
@@ -63,7 +69,7 @@ class EspnetTranscription(BaseTranscription):
     def _generate_inference_files(self, utt_duration=10.0):
         """ Prepare the files we need for inference, based on the audio we receive.
 
-            utt_duration says how long we want each utterance to be, in ms. Long audio
+            utt_duration says how long we want each utterance to be, in seconds. Long audio
             gets broken into utterances of that length.
         """
         # _process_audio_file above a file named audio.wav
@@ -73,18 +79,11 @@ class EspnetTranscription(BaseTranscription):
             'espnet-asr1/data/test/spk2utt')
         with model_spk2utt_path.open(mode='r') as fin:
             spk_id = fin.read().split()[0]
-        # Expecting to start at 0 time. Could benefit from VAD here?
-        start = 0.00
         # Duration of the audio
         abs_audio_file_path = Path(self.path).joinpath(audio_file_name)
-        with contextlib.closing(wave.open(str(abs_audio_file_path), 'r')) as fin:
-            frames = fin.getnframes()
-            rate = fin.getframerate()
-            stop = frames / float(rate)
-
-        num_utters = int(stop / utt_duration) + 1
-        utt_ids = [f"{spk_id}-utterance{i:05.0f}" for i in range(num_utters)]
-        segments = [(i*utt_duration, (i+1)*utt_duration - 0.001) for i in range(num_utters)]
+        segments = get_chunks(abs_audio_file_path, method="duration", parameter=utt_duration)
+        utt_ids = [f"{spk_id}-utterance{i:05.0f}" for i in range(len(segments))]
+        self.segment_data = zip(utt_ids, segments)
         # Arbitrary id for each utterance. assuming one utterance for now
         #utt_id = spk_id + '-utterance0'
 
@@ -97,6 +96,7 @@ class EspnetTranscription(BaseTranscription):
         self._build_utt2spk_file(utt_ids, spk_id)
         self._build_segments_file(utt_ids, rec_id, segments)
         self._build_wav_scp_file(rec_id, rel_audio_file_path)
+        self.rel_audio_file_path = rel_audio_file_path
 
     def transcribe(self, on_complete: Callable = None):
         self.status = "transcribing"
@@ -114,9 +114,9 @@ class EspnetTranscription(BaseTranscription):
         result_paths = list(exp_path.glob("train_nodev*/decode_infer*"))
         assert len(result_paths) == 1, f"Incorrect number of result files ({len(result_paths)})"
         result_path = result_paths[0] / "data.json"
-        file_util.copy_file(result_path, f'{self.path}/results.txt')
+        self.result_path = file_util.copy_file(result_path, f'{self.path}/results.txt')[0]
         self.convert_to_text()
-        # TODO Need to produce an output eaf.
+        self.convert_to_elan()
         self.status = "transcribed"
         if on_complete is not None:
             on_complete()
@@ -128,23 +128,44 @@ class EspnetTranscription(BaseTranscription):
             on_complete()
 
     def text(self):
-        with open(f'{self.path}/one-best-hypothesis.txt', 'r') as fin:
+        with open(self.text_path, 'r') as fin:
             text = fin.read()
-            print(text)
-            print(self.path)
             return text
 
     def elan(self):
-        # TODO once I know more about temporal data from ESPNet. For now, it targets the txt file.
-        with open(f'{self.path}/one-best-hypothesis.txt', 'r') as fin:
+        with open(self.elan_path, 'r') as fin:
             return fin.read()
 
     def convert_to_text(self):
-        with open(f'{self.path}/results.txt', 'r') as fin:
+        with open(self.result_path, 'r') as fin:
             data = json.load(fin)
         lines = [output["rec_text"].replace("<eos>", "\n") for utt_key, utt_data in data["utts"].items() for output in utt_data["output"]]
-        with open(f'{self.path}/one-best-hypothesis.txt', 'w') as fout:
+        with open(self.text_path, 'w') as fout:
             fout.writelines(lines)
 
     def convert_to_elan(self):
-        self.convert_to_text()  #TODO
+        self.retrieve_transcription_data()
+        convert_raw_to_elan(self.transcription_data, self.xml_path, self.elan_path)
+
+    def retrieve_transcription_data(self):
+        with open(self.result_path, "r") as result_file:
+            results = json.load(result_file)
+        segment_data = [
+            {"segment": {
+                "id": utterance,
+                "utterance id": utterance.split("-")[-1],
+                "speaker id": "-".join(utterance.split("-")[0:-1]),
+                "text": results["utts"][utterance]["output"][0]["rec_text"],  # Need to know if output contains only 1 dict…
+                "start": segment[0],
+                "end": segment[1],
+                "score": results["utts"][utterance]["output"][0]["score"]}  # See above.
+            } for utterance, segment in self.segment_data if utterance in results["utts"]]  # It seems it can have more segments than utterances…
+        self.transcription_data = {
+            "author": "elpis-espnet",
+            "participant": "unknown",
+            "audio path": self.audio_file_path,
+            "relative audio path": self.rel_audio_file_path,
+            "version": 2.8,
+            "tier id": "default",
+            "source language code": "",
+            "segments": segment_data}

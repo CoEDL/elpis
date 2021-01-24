@@ -7,6 +7,8 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
+ENV NUM_CPUS=1
+
 ENV TZ=UTC
 
 RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install -y --fix-missing \
@@ -75,13 +77,13 @@ WORKDIR /
 RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
-    make && \
+    make -j$NUM_CPUS && \
     ./install_portaudio.sh && \
     cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend && make && \
-    cd /kaldi/src/online2 && make depend && make && \
-    cd /kaldi/src/online2bin && make depend && make
+    make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
+    cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
+    cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
@@ -133,9 +135,8 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
-# Add node, npm and xml-js
-RUN apt-get update && apt-get install -y nodejs build-essential npm && \
-    #ln -s /usr/bin/nodejs /usr/bin/node && \
+# Add node 15, npm and xml-js
+RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get update && apt-get install -y nodejs build-essential && \
     npm install -g npm \
     hash -d npm \
     npm install -g xml-js
