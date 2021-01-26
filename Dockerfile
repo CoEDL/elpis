@@ -57,11 +57,11 @@ RUN echo "===> Install Python 2.7 for Kaldi" && \
     python-simplejson \
     python-gi
 
-RUN curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py && \
-    python2 get-pip.py
+RUN curl https://bootstrap.pypa.io/2.7/get-pip.py --output get-pip.py && \
+    python2.7 get-pip.py
 
-RUN pip install ws4py==0.3.2 && \
-    pip install tornado
+RUN pip2.7 install ws4py==0.3.2 && \
+    pip2.7 install tornado
 
 RUN ln -s /usr/bin/python2.7 /usr/bin/python ; ln -s -f bash /bin/sh
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "elpis"
-version = "0.96.2"
+version = "0.96.3"
 description = "Elpis is a tool which allows language workers with minimal computational experience to build their own speech recognition models to automatically transcribe audio."
 authors = ["CoEDL"]
 license = "Apache-2.0"

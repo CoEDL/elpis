@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.96.3] - 2021-01-26
+### Changed
+- Voice Activity Detection
+- Bring GUI Dockerfile into line with with CPU version
+
 ## [0.96.2] - 2021-01-07
 ### Changed
-- Modify Elpis to use Poetry for dependency management.
+- Modify Elpis to use Poetry for dependency management
 
 ## [0.96.1] - 2021-01-05
 ### Changed
