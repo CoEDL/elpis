@@ -1,26 +1,29 @@
 Welcome to the Elpis ASR documentation!
 =======================================
 
-Welcome! You've found your way to the documentation for Elpis. Elpis is a tool which allows language workers with minimal computational experience to build their own speech models for use in automatically transcribing audio. It relies on the Kaldi automatic speech recognition (ASR) library. Kaldi is notorious for being difficult to build, use and navigate - even for trained computer scientists. The goal of Elpis is to expose the power of Kaldi to linguists and language workers by abstracting away much of the needless technical complexity.
+Elpis is a tool which assists language workers with minimal computational experience to build their own speech recognition systems to automatically transcribe audio.
 
 .. toctree::
+   :caption: Workshops:
    :maxdepth: 2
-   :caption: Contents:
-
-   wiki/install-elpis-docker
-   wiki/install-elpis-on-gcp
    wiki/elpis-workshop
    wiki/preparing-files
+
+.. toctree::
+   :caption: Installing Elpis:
+   :maxdepth: 1
+   wiki/install-elpis-docker
+   wiki/install-elpis-on-gcp
+
+.. toctree::
+   :caption: For developers:
+   :maxdepth: 1
    wiki/viewing-elpis-training-log-file
    wiki/docker-commands
    wiki/elpis-cli
    wiki/elpis-dev-recipe
+
+.. toctree::
+   :caption: API:
+   :maxdepth: 2
    api
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
