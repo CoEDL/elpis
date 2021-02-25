@@ -1,7 +1,7 @@
 Welcome to the Elpis ASR documentation!
 =======================================
 
- Elpis is a tool which allows language workers with minimal computational experience to build their own speech models for use in automatically transcribing audio.
+ Elpis is a tool which language workers with minimal computational experience can use to build their own speech recognition system for automatically transcribing audio.
 
 .. toctree::
    :maxdepth: 2
