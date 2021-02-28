@@ -1,36 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { Component } from 'react';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { engineList, engineLoad } from 'redux/actions/engineActions';
 import { setCurrentStep } from 'redux/actions/sideNavActions'
 
-const SelectEngine = props => {
-    let { t, currentEngine, list, engineList, engineLoad } = props;
+class SelectEngine extends Component {
 
-    let handleChange = (_event, data) => {
-        let engine_name = data.value;
-        let postData = { engine_name };
-        engineLoad(postData);
-    };
+    render() {
 
-    let options = list.map((name, i) => ({key: name, text: name, value: name}));
+        let { t, currentEngine, list, doEngineList, doEngineLoad } = this.props;
 
-    // If the engines list has not been populated, fetch the list and display a wait message.
-    if (list.length === 0) {
-        engineList()
+        let handleChange = (_event, data) => {
+            let engine_name = data.value;
+            let postData = { engine_name };
+            doEngineLoad(postData);
+        };
+
+        let options = list.map((name, i) => ({key: name, text: name, value: name}));
+
         return (
-            <div>Updating engine list...</div>
-        )
-    } else {
-        // Otherwise if list is populated, allow engine selections.
-        return (
-            <Dropdown
-                placeholder={currentEngine?currentEngine: t('engine.select.shortcutPlaceholder')}
-                selection
-                options={options}
-                value={currentEngine}
-                onChange={handleChange} />
+            <>
+                {list.length === 0 &&
+                    <p>{t('engine.select.waitingForEngineList')}</p>
+                }
+                {list.length > 0 &&
+                    <Dropdown
+                        placeholder={currentEngine?currentEngine: t('engine.select.shortcutPlaceholder')}
+                        selection
+                        options={options}
+                        value={currentEngine}
+                        onChange={handleChange} />
+                }
+            </>
         )
     }
 }
@@ -38,15 +40,15 @@ const SelectEngine = props => {
 const mapStateToProps = state => {
     return {
         list: state.engine.engine_list,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    engineList: () => {
+    doEngineList: () => {
         dispatch(engineList())
     },
-    engineLoad: postData => {
+    doEngineLoad: postData => {
         dispatch(engineLoad(postData))
             .then(response => {
                 // Rebuild the sidenav via set current step

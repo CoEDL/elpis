@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import { connect } from 'react-redux';
+import { listAppConfig } from 'redux/actions/configActions';
+
 import './App.css'
 
 import Welcome from './Welcome'
@@ -19,12 +22,16 @@ import ModelTrain from './Model/Train'
 import ModelResults from './Model/Results'
 import NewTranscription from './Transcription/New'
 
-
 import PageContainer from './PageContainer';
 import urls from 'urls'
 
 
 class App extends Component {
+
+    componentDidMount() {
+        this.props.getConfig()
+    }
+
     render() {
         return (
             <div className="App">
@@ -58,6 +65,10 @@ class App extends Component {
     }
 }
 
+const mapDispatchToProps = dispatch => ({
+    getConfig: () => {
+        dispatch(listAppConfig())
+    }
+})
 
-
-export default App;
+export default connect(null, mapDispatchToProps)(App);

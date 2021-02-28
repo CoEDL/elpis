@@ -15,18 +15,28 @@ class StepBranding extends Component {
     }
 
     render() {
-        const { t } = this.props;
+        const { t, dev_mode } = this.props;
+
         return (
             <Segment clearing as='h1' className="top-nav">
                 <Link to="/">
                     <Image floated="left" src={elpisLogo} className="logo" alt="logo" />
                 </Link>
+                 { dev_mode &&
+                 <p>DEV MODE</p>
+                 }
                 <div className={"right"}>
                     <SelectEngine />
                     <Button basic onClick={this.reset}>{t('common.resetButton')}</Button>
                 </div>
             </Segment>
         )
+    }
+}
+
+const mapStateToProps = state => {
+    return {
+        dev_mode: state.config.app_config.dev_mode
     }
 }
 
@@ -38,4 +48,4 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(null, mapDispatchToProps)(translate('common')(StepBranding))
+export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepBranding))

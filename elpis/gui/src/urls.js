@@ -32,6 +32,7 @@ export default {
     },
     "api": {
         "config": {
+            "list": "/api/config/list",
             "reset": "/api/config/reset"
         },
         "dataset": {

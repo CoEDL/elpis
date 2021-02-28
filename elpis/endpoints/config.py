@@ -66,3 +66,23 @@ def object_names():
         "data": data
     })
 
+
+@bp.route("/list", methods=['GET'])
+def config_list():
+    # Note that .env vars are strings, so evaluate string value
+    # Add config settings explicitly, we don't need to share everything
+    if 'DEV_MODE' in app.config and app.config['DEV_MODE'] == "True":
+        dev_mode = True
+    else:
+        dev_mode = False
+    data = {
+        "config": {
+            "dev_mode": dev_mode
+        },
+        'engine_list': list(ENGINES.keys())
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+

@@ -31,6 +31,7 @@
     "engine": {
         "select": {
             "title": "Engine",
+            "waitingForEngineList": "Getting list of engines",
             "shortcutPlaceholder": "select engine"
         },
         "common": {

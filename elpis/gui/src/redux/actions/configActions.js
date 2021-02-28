@@ -66,3 +66,46 @@ const interfaceObjectNamesFailure = error => ({
     response: { error }
 })
 
+
+/* * * * * * * * * * * *  Get CONFIG * * * * * * * * * * *  */
+
+// This loads config values that were set when starting the Flask app
+// Also, get the engine list here
+
+export function listAppConfig() {
+    console.log("listAppConfig")
+    const url = baseUrl + urls.api.config.list
+    var responseData
+    return async dispatch => {
+        dispatch(listAppConfigStarted())
+        await axios.get(url)
+            .then(response => {
+                responseData = response.data
+                console.log("responseData", responseData)
+                dispatch(listAppConfigSuccess(response))
+                dispatch(engineListSuccess(response))
+            })
+            .catch(error => {
+                dispatch(listAppConfigFailure(error))
+                throw error
+        })
+        return responseData
+    }
+}
+
+const listAppConfigStarted = () => ({
+    type: actionTypes.LIST_APP_CONFIG_STARTED
+})
+const listAppConfigSuccess = response => ({
+    type: actionTypes.LIST_APP_CONFIG_SUCCESS,
+    response: { ...response }
+})
+const listAppConfigFailure = error => ({
+    type: actionTypes.LIST_APP_CONFIG_FAILURE,
+    response: { error }
+})
+
+const engineListSuccess = response => ({
+    type: actionTypes.ENGINE_LIST_SUCCESS,
+    response: { ...response }
+})
