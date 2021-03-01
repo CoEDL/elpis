@@ -6,7 +6,7 @@ authors = ["CoEDL"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "3.8"
 appdirs = "^1.4.4"
 Flask = "^1.1.2"
 Jinja2 = "^2.11.2"
