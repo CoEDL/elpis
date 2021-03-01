@@ -1,34 +1,35 @@
 import React, { Component } from 'react';
 import { translate } from 'react-i18next';
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link, useParams } from "react-router-dom";
 import { connect } from 'react-redux';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
 import CurrentEngineName from './CurrentEngineName'
-import SelectEngine from './SelectEngine'
+import SelectEngineList from './SelectEngineList'
 
 import urls from 'urls';
 
 const EngineDashboard = props => {
-    let { t, currentEngine } = props;
+    let { t, currentEngine, params } = props;
+
+    console.log(props.match.params)
+
     return (
     <div>
         <Branding />
         <Segment>
             <Grid centered>
-                <Grid.Column width={ 4 }>
-                    <SideNav />
-                </Grid.Column>
                 <Grid.Column width={ 12 }>
                     <Header as='h1'>
                         { t('engine.select.title') }
                     </Header>
-                    <CurrentEngineName />
 
-                    <Segment>
-                        <SelectEngine />
-                    </Segment>
+                    {/* <CurrentEngineName /> */}
+
+                    <SelectEngineList />
+
+                    <br /><br />
 
                     <Button
                         as={Link}

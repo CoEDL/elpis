@@ -30,8 +30,16 @@ class StepWelcome extends Component {
 
 						<Segment>
 							<p>
-								<Link to={urls.gui.engine.index}>{t('welcome.start')}</Link>
+                                <Link to={urls.gui.engine.index}>
+                                    {t('welcome.start_train')}
+                                </Link>
 							</p>
+						</Segment>
+
+						<Segment>
+                                <Link to={urls.gui.transcription.choose}>
+							        {t('welcome.start_transcribe')}
+                                </Link>
 						</Segment>
 
 					</Grid.Column>

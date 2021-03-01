@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { translate } from 'react-i18next';
-import SelectEngine from 'components/Engine/SelectEngine'
+import SelectEngineList from 'components/Engine/SelectEngineList'
 import urls from 'urls';
 
 const DevToolbar = props => {
     return props.dev_mode ? (
         <div className="dev-toolbar">
             <p>DEV MODE</p>
-            <SelectEngine />
+            <SelectEngineList />
         </div>
     ) : (
         <></>
