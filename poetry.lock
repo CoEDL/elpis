@@ -604,9 +604,9 @@ python-versions = "*"
 version = "1.12.1"
 
 [metadata]
-content-hash = "cc2c1d60e931a1d4304ecfacf6b52df45f90db3b9235b153cbd410299778d2c4"
+content-hash = "f987b95d79a1fad2c10b485bfcf8ce15a8a2d8c895f844403aea0ec776db67a0"
 lock-version = "1.0"
-python-versions = "3.8"
+python-versions = "3.8.2"
 
 [metadata.files]
 appdirs = [
