@@ -21,6 +21,7 @@ setuptools = "^51.1.1"
 werkzeug = "^1.0.1"
 dict2xml = "^1.7.0"
 librosa = "^0.8.0"
+python-dotenv = "^0.15.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"
