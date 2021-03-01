@@ -134,3 +134,14 @@ label.pad-right,
 .keep-line-breaks {
     white-space: pre-line;
 }
+
+.dev-toolbar {
+    border: 4px dotted pink;
+    padding: 2px;
+    min-width: 200px;
+    float: left;
+}
+.dev-toolbar p {
+    padding:0;
+    margin: 0;
+}

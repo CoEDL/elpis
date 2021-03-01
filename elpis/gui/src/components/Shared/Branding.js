@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 import elpisLogo from './elpis.png'
 import { connect } from 'react-redux';
 import { configReset } from 'redux/actions/configActions';
-import SelectEngine from 'components/Engine/SelectEngine'
+import DevToolbar from './DevToolbar'
 
 class StepBranding extends Component {
 
@@ -22,11 +22,8 @@ class StepBranding extends Component {
                 <Link to="/">
                     <Image floated="left" src={elpisLogo} className="logo" alt="logo" />
                 </Link>
-                 { dev_mode &&
-                 <p>DEV MODE</p>
-                 }
                 <div className={"right"}>
-                    <SelectEngine />
+                    <DevToolbar dev_mode={dev_mode} />
                     <Button basic onClick={this.reset}>{t('common.resetButton')}</Button>
                 </div>
             </Segment>
