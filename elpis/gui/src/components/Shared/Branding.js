@@ -10,7 +10,7 @@ import DevToolbar from './DevToolbar'
 class StepBranding extends Component {
 
     reset = () => {
-        this.props.configReset()
+        this.props._configReset()
         window.location.href = "/engine/"
     }
 
@@ -38,7 +38,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    configReset: postData => {
+    _configReset: postData => {
         dispatch(configReset(postData))
             .then(response => console.log("reset OK", response))
             .catch(error => console.log("reset failed", error))

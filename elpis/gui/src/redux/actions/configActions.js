@@ -80,7 +80,6 @@ export function configList() {
         await axios.get(url)
             .then(response => {
                 responseData = response.data
-                console.log("responseData", responseData)
                 dispatch(configListSuccess(response))
                 // Let the engine reducer handle the engine info
                 dispatch(engineListSuccess(response))
