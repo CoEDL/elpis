@@ -11,7 +11,7 @@ class StepBranding extends Component {
 
     reset = () => {
         this.props._configReset()
-        window.location.href = "/engine/"
+        window.location.href = "/"
     }
 
     render() {
