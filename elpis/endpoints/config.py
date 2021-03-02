@@ -67,6 +67,7 @@ def object_names():
     })
 
 
+# /api/config/list
 @bp.route("/list", methods=['GET'])
 def config_list():
     # Note that .env vars are strings, so evaluate string value
@@ -75,6 +76,7 @@ def config_list():
         dev_mode = True
     else:
         dev_mode = False
+    # Also pass back the engine list so that we can populate dev widgets without making another request
     data = {
         "config": {
             "dev_mode": dev_mode

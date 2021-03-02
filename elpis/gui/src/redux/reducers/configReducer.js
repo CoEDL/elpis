@@ -21,7 +21,7 @@ const config = (state = initState, action) => {
                 modelList:    object_names.models
             };
 
-        case actionTypes.LIST_APP_CONFIG_SUCCESS:
+        case actionTypes.CONFIG_LIST_SUCCESS:
             const { config } = action.response.data.data
             return {...state,
                 app_config: config

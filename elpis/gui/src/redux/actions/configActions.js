@@ -69,39 +69,39 @@ const interfaceObjectNamesFailure = error => ({
 
 /* * * * * * * * * * * *  Get CONFIG * * * * * * * * * * *  */
 
-// This loads config values that were set when starting the Flask app
-// Also, get the engine list here
+// This loads config values that were set when starting the Flask app.
+// This will also return info about the engines. That data should be handled by the engine reducer.
 
-export function listAppConfig() {
-    console.log("listAppConfig")
+export function configList() {
     const url = baseUrl + urls.api.config.list
     var responseData
     return async dispatch => {
-        dispatch(listAppConfigStarted())
+        dispatch(configListStarted())
         await axios.get(url)
             .then(response => {
                 responseData = response.data
                 console.log("responseData", responseData)
-                dispatch(listAppConfigSuccess(response))
+                dispatch(configListSuccess(response))
+                // Let the engine reducer handle the engine info
                 dispatch(engineListSuccess(response))
             })
             .catch(error => {
-                dispatch(listAppConfigFailure(error))
+                dispatch(configListFailure(error))
                 throw error
         })
         return responseData
     }
 }
 
-const listAppConfigStarted = () => ({
-    type: actionTypes.LIST_APP_CONFIG_STARTED
+const configListStarted = () => ({
+    type: actionTypes.CONFIG_LIST_STARTED
 })
-const listAppConfigSuccess = response => ({
-    type: actionTypes.LIST_APP_CONFIG_SUCCESS,
+const configListSuccess = response => ({
+    type: actionTypes.CONFIG_LIST_SUCCESS,
     response: { ...response }
 })
-const listAppConfigFailure = error => ({
-    type: actionTypes.LIST_APP_CONFIG_FAILURE,
+const configListFailure = error => ({
+    type: actionTypes.CONFIG_LIST_FAILURE,
     response: { error }
 })
 

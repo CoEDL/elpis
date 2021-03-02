@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { connect } from 'react-redux';
-import { listAppConfig } from 'redux/actions/configActions';
+import { configList } from 'redux/actions/configActions';
 
 import './App.css'
 
@@ -29,7 +29,7 @@ import urls from 'urls'
 class App extends Component {
 
     componentDidMount() {
-        this.props.getConfig()
+        this.props._configList()
     }
 
     render() {
@@ -66,8 +66,8 @@ class App extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-    getConfig: () => {
-        dispatch(listAppConfig())
+    _configList: () => {
+        dispatch(configList())
     }
 })
 
