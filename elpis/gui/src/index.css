@@ -136,10 +136,17 @@ label.pad-right,
 }
 
 .dev-toolbar {
-    border: 4px dotted pink;
-    padding: 2px;
+    background: repeating-linear-gradient(
+      45deg,
+      #FFF,
+      #FFF 10px,
+      #F7E4E0 10px,
+      #F7E4E0 20px
+    );
+    padding: 6px;
     min-width: 200px;
     float: left;
+    border-radius: 12px;
 }
 .dev-toolbar p {
     padding:0;

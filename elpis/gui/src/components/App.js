@@ -20,7 +20,7 @@ import ModelNew from './Model/New'
 import ModelSettings from './Model/Settings'
 import ModelTrain from './Model/Train'
 import ModelResults from './Model/Results'
-import ChooseTranscriptionModel from './Transcription/ChooseTranscriptionModel'
+import ChooseModel from './Transcription/ChooseModel'
 import NewTranscription from './Transcription/New'
 
 import PageContainer from './PageContainer';
@@ -58,7 +58,7 @@ class App extends Component {
                         <Route path={urls.gui.model.train} exact component={ ModelTrain } />
                         <Route path={urls.gui.model.results} exact component={ ModelResults } />
 
-                        <Route path={urls.gui.transcription.choose} component={ ChooseTranscriptionModel } />
+                        <Route path={urls.gui.transcription.choose} component={ ChooseModel } />
                         <Route path={urls.gui.transcription.new} component={ NewTranscription } />
                     </PageContainer>
                 </Router>

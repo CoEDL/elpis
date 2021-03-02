@@ -20,7 +20,9 @@ class Model(FSObject):  # TODO not thread safe
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.config['status'] = 'untrained'
         self.config['stage_status'] = {}
+        # TODO check if this is used
         self.status = 'untrained'
+        self.config['engine_name'] = None  # use this to set engine if loading a model later
 
     @classmethod
     def load(cls, base_path: Path):

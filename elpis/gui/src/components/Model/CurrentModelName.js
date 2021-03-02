@@ -16,6 +16,8 @@ class CurrentModelName extends Component {
             <>
                 {name &&
                 <Message color='olive'>
+                    { t('engine.common.currentEngineLabel') + currentEngine }
+                    <br />
                     { t('model.common.currentModelLabel') + name }
                     <br />
                     { t('pronDict.common.currentPronDictLabel') + pronDictName }

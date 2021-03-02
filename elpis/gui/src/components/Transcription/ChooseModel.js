@@ -1,32 +1,36 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Grid, Button, Header, Container, Segment } from 'semantic-ui-react';
 import { modelLoad, modelList } from 'redux/actions/modelActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
+import { engineLoad } from 'redux/actions/engineActions';
 import { pronDictLoad } from 'redux/actions/pronDictActions';
+import Branding from 'components/Shared/Branding';
 import urls from 'urls'
 
 
-class ChooseTranscriptionModel extends Component {
+class ChooseModel extends Component {
 
     componentDidMount() {
         this.props._modelList()
     }
 
     handleSelectModel = (model_name) => {
-        const { list, _modelLoad } = this.props
+        const { history, list, _modelLoad } = this.props
 
         console.log("load model_name", model_name)
 
-        // get the matching ds and pd values
         var selectedModel = list.filter(m => m.name==model_name)
-        // argh, this is weird, but reusing code from Model Dashboard
+        console.log("selectedModel", selectedModel)
         const modelData = { name: selectedModel[0].name }
         const datasetData = { name: selectedModel[0].dataset_name }
+        const engineName = { engine_name: selectedModel[0].engine_name }
         const pronDictData = { name: selectedModel[0].pron_dict_name }
-        _modelLoad(modelData, datasetData, pronDictData)
+
+        _modelLoad(modelData, datasetData, engineName, pronDictData)
+        history.push(urls.gui.transcription.new)
     }
 
 
@@ -43,19 +47,43 @@ class ChooseTranscriptionModel extends Component {
         })
 
         return (
-            <pre>
-                Choose a model:
+            <div>
+                <Branding />
+                <Segment>
+
+                    <Grid centered>
+
+                        <Grid.Column width={ 12 }>
+                            <Header as='h1' text="true">
+                                { t('transcription.choose_model.title') }
+                            </Header>
+
                     <Segment>
-                        import ( coming soon )
+                        { t('transcription.choose_model.import_model') }
                     </Segment>
+
+                    {list.length > 0 &&
                     <Segment>
-                        use existing
+                        { t('transcription.choose_model.use_existing') }
+                        <div>
                         {modelList}
+                        </div>
                     </Segment>
+                    }
+
                     <Segment>
-                        <Link to={urls.gui.engine.index}>train a new model</Link>
+                        {list.length == 0 &&
+                            t('transcription.choose_model.no_models_found')
+                        }
+
+                        <Link to={urls.gui.engine.index}>{ t('transcription.choose_model.train_new') }</Link>
                     </Segment>
-            </pre>
+
+
+                        </Grid.Column>
+                    </Grid>
+                </Segment>
+            </div>
        )
     }
 }
@@ -71,8 +99,9 @@ const mapDispatchToProps = dispatch => ({
     _modelList: () => {
         dispatch(modelList())
     },
-    _modelLoad: (modelData, datasetData, pronDictData) => {
-        dispatch(modelLoad(modelData))
+    _modelLoad: (modelData, datasetData, engineName, pronDictData) => {
+        dispatch(engineLoad(engineName))
+            .then(response=> dispatch(modelLoad(modelData)))
             .then(response => dispatch(datasetLoad(datasetData)))
             .then(response => dispatch(pronDictLoad(pronDictData)))
     }
@@ -80,9 +109,11 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default
+    withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps
     )(
-        translate('common')(ChooseTranscriptionModel)
+        translate('common')(ChooseModel)
     )
+)

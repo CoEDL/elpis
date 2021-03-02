@@ -23,6 +23,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.pron_dict: PronDict = None
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
         self.config['ngram'] = 1  # default to 1 to make playing quicker
+        self.config['engine_name'] = 'kaldi'
         stage_names = {
             "0_setup.sh": "setup",
             "1_prep_acoustic.sh": "acousticPreparation",

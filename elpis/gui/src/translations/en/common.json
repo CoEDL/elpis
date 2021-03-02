@@ -227,6 +227,13 @@
             "nextButton": "Go",
             "uploadButton": "Upload"
         },
+        "choose_model":{
+            "title": "Choose a model to use for transcribing",
+            "import_model": "Import a model (coming soon)",
+            "use_existing": "Use an existing model",
+            "no_models_found": "No models found. ",
+            "train_new": "Train a new model"
+        },
         "results": {
             "title": "Transcribed results",
             "usingAudio": "For {{filename}}",

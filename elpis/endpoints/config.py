@@ -60,7 +60,6 @@ def object_names():
             "models": interface.list_models()
         }
     }
-    print(data)
     return jsonify({
         "status": 200,
         "data": data

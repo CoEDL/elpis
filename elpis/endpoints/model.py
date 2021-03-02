@@ -57,7 +57,6 @@ def new():
 def load():
     interface = app.config['INTERFACE']
     model = interface.get_model(request.json["name"])
-    # set the dataset to match the model
     app.config['CURRENT_DATASET'] = model.dataset
     app.config['CURRENT_PRON_DICT'] = model.pron_dict
     app.config['CURRENT_MODEL'] = model
@@ -78,11 +77,14 @@ def list_existing():
         "list": [{
                 'name': model['name'],
                 'dataset_name': model['dataset_name'],
+                'engine_name': model['engine_name'],
                 'pron_dict_name': model['pron_dict_name'],
                 'status': model['status'],
                 'results': fake_results
                 } for model in interface.list_models_verbose()]
     }
+    # interface.list_models_verbose()
+    # data = {"list": []}
     return jsonify({
         "status": 200,
         "data": data

@@ -23,7 +23,7 @@ class EspnetModel(BaseModel):
         # ESPnet doesn't use an n-gram language model, so this will not change
         # from None.
         self.config['ngram'] = None
-        self.config['engine'] = 'espnet'
+        self.config['engine_name'] = 'espnet'
         self.venv_path = Path("/espnet/tools/venv/bin/python3")
         self.config['gpus'] = int(subprocess.check_output(f"{self.venv_path} -c 'import torch; print(torch.cuda.device_count())'", shell=True))
         print(f"Number of GPUs: {self.config['gpus']}")
