@@ -63,9 +63,9 @@ class ChooseModel extends Component {
 
                 {list.length > 0 &&
                 <Segment>
-                    { t('transcription.choose_model.use_existing') }
+                    <p>{ t('transcription.choose_model.use_existing') }</p>
                     <div>
-                    {modelList}
+                        {modelList}
                     </div>
                 </Segment>
                 }

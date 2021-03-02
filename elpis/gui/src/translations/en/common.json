@@ -41,10 +41,8 @@
         "common": {
             "currentEngineLabel": "Current engine: ",
             "noCurrentEngineLabel": "No engine selected yet.",
-            "kaldi_human_title": "Word-level trancription",
-            "espnet_description": "Phone-level trancription",
-            "kaldi_description": "Word-level trancription",
-            "espnet_description": "Phone-level trancription"
+            "kaldi_description": "Word",
+            "espnet_description": "Phoneme"
         }
     },
     "dataset": {
@@ -236,7 +234,7 @@
         "choose_model":{
             "title": "Choose a model to use for transcribing",
             "import_model": "Import a model (coming soon)",
-            "use_existing": "Use an existing model",
+            "use_existing": "Choose an existing model",
             "no_models_found": "No models found. ",
             "train_new": "Train a new model"
         },
