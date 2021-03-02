@@ -11,7 +11,6 @@ import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
 import NewForm from 'components/Model/NewForm';
 import CurrentModelName from "./CurrentModelName";
-import SelectEngine from 'components/Engine/SelectEngine'
 import urls from 'urls';
 
 class ModelDashboard extends Component {
@@ -115,10 +114,6 @@ class ModelDashboard extends Component {
                             </Header>
 
                             <CurrentModelName />
-
-                            {!currentEngine &&
-                               <SelectEngine />
-                            }
 
                             {currentEngine &&
                             <>

@@ -1,8 +1,10 @@
 {
     "welcome": {
         "title": "Elpis",
-        "description": "Elpis is a speech recognition tool, which you can use to transcribe audio. It works in four parts:\nStep 1) Add some language recordings and their transcriptions that you already have\nStep 2) Creating a pronunciation dictionary\nStep 3) Training the speech recognition \"models\"\nStep 4) Use it to tanscribe new audio\n",
-        "start": "Start here"
+        "description": "Elpis is a speech recognition tool, which you can use to transcribe audio.",
+        "start": "Start here",
+        "start_train": "Train a model",
+        "start_transcribe": "Transcribe audio"
     },
     "navigation": {
         "engine": {

@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 import { engineLoad } from 'redux/actions/engineActions';
 import { setCurrentStep } from 'redux/actions/sideNavActions'
 
-class SelectEngine extends Component {
+class SelectEngineDropdown extends Component {
 
     render() {
 
@@ -47,11 +47,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     _engineLoad: postData => {
         dispatch(engineLoad(postData))
-            .then(response => {
-                // Rebuild the sidenav via set current step
-                dispatch(setCurrentStep(null))
-            })
-            .catch(error => console.log("error", error))
     }
 })
 
@@ -60,5 +55,5 @@ export default
         mapStateToProps,
         mapDispatchToProps
     )(
-        translate('common')(SelectEngine)
+        translate('common')(SelectEngineDropdown)
     )

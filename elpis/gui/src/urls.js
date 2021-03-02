@@ -26,6 +26,7 @@ export default {
             "error": "/model/error"
         },
         "transcription": {
+            "choose": "/transcription/choose-model",
             "new": "/transcription/new",
             "results": "/transcription/results"
         }
