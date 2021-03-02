@@ -71,11 +71,11 @@ def object_names():
 @bp.route("/list", methods=['GET'])
 def config_list():
     # Note that .env vars are strings, so evaluate string value
-    # Add config settings explicitly, we don't need to share everything
     if 'DEV_MODE' in app.config and app.config['DEV_MODE'] == "True":
         dev_mode = True
     else:
         dev_mode = False
+    # Add config settings explicitly, we don't need to share everything
     # Also pass back the engine list so that we can populate dev widgets without making another request
     data = {
         "config": {
