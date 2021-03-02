@@ -24,7 +24,7 @@ def reset():
 @bp.route("/engine/list", methods=['GET', 'POST'])
 def engine_list():
     data = {
-        'engine_list': list(ENGINES.keys())
+        "engine_list": list(ENGINES.keys())
     }
     return jsonify({
         "status": 200,
@@ -68,10 +68,10 @@ def object_names():
 
 
 # /api/config/list
-@bp.route("/list", methods=['GET'])
+@bp.route("/list", methods=["GET"])
 def config_list():
     # Note that .env vars are strings, so evaluate string value
-    if 'DEV_MODE' in app.config and app.config['DEV_MODE'] == "True":
+    if "DEV_MODE" in app.config and app.config["DEV_MODE"] == "True":
         dev_mode = True
     else:
         dev_mode = False
@@ -81,7 +81,7 @@ def config_list():
         "config": {
             "dev_mode": dev_mode
         },
-        'engine_list': list(ENGINES.keys())
+        "engine_list": list(ENGINES.keys())
     }
     return jsonify({
         "status": 200,

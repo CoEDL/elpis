@@ -72,7 +72,7 @@ def create_app(test_config=None):
 
     # Developer-friendly mode has convenient interface widgets for setting engine etc
     load_dotenv()
-    app.config['DEV_MODE'] = os.environ.get("DEV_MODE")
+    app.config['DEV_MODE'] = os.environ.get('DEV_MODE')
 
     # add the endpoints routes
     app.register_blueprint(endpoints.bp)
