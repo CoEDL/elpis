@@ -49,40 +49,38 @@ class ChooseModel extends Component {
         return (
             <div>
                 <Branding />
+                <Grid centered>
+
+                    <Grid.Column width={ 12 }>
+                        <Header as='h1' text="true">
+                            { t('transcription.choose_model.title') }
+                        </Header>
+                {/*
                 <Segment>
+                    { t('transcription.choose_model.import_model') }
+                </Segment>
+                */}
 
-                    <Grid centered>
+                {list.length > 0 &&
+                <Segment>
+                    { t('transcription.choose_model.use_existing') }
+                    <div>
+                    {modelList}
+                    </div>
+                </Segment>
+                }
 
-                        <Grid.Column width={ 12 }>
-                            <Header as='h1' text="true">
-                                { t('transcription.choose_model.title') }
-                            </Header>
-
-                    <Segment>
-                        { t('transcription.choose_model.import_model') }
-                    </Segment>
-
-                    {list.length > 0 &&
-                    <Segment>
-                        { t('transcription.choose_model.use_existing') }
-                        <div>
-                        {modelList}
-                        </div>
-                    </Segment>
+                <Segment>
+                    {list.length == 0 &&
+                        t('transcription.choose_model.no_models_found')
                     }
 
-                    <Segment>
-                        {list.length == 0 &&
-                            t('transcription.choose_model.no_models_found')
-                        }
-
-                        <Link to={urls.gui.engine.index}>{ t('transcription.choose_model.train_new') }</Link>
-                    </Segment>
-
-
-                        </Grid.Column>
-                    </Grid>
+                    <Link to={urls.gui.engine.index}>{ t('transcription.choose_model.train_new') }</Link>
                 </Segment>
+
+
+                    </Grid.Column>
+                </Grid>
             </div>
        )
     }

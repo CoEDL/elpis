@@ -123,8 +123,9 @@ label.pad-right,
 }
 
 .top-nav {
-    background: pink;
     font-weight: 400;
+    border-width: 0px !important;
+    box-shadow: none !important;
 }
 
 .top-nav .ui.selection.dropdown {
@@ -147,8 +148,50 @@ label.pad-right,
     min-width: 200px;
     float: left;
     border-radius: 12px;
+    margin-right: 1em;
 }
 .dev-toolbar p {
     padding:0;
     margin: 0;
+}
+
+.welcome-description {
+    margin-bottom: 3em;
+}
+.train-description,
+.transcription-description {
+    margin-bottom: 1em;
+}
+
+.train-description {
+    padding-bottom: 2em !important;
+}
+
+.train-description .column,
+.transcription-description .column {
+    display: flex !important;
+    align-items: center;
+}
+
+.welcome .train-button a,
+.welcome .transcribe-button a,
+.engine-type-button {
+    font-weight: bold;
+    background-color: #F5F6CE;
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    display: flex;
+    flex-direction:column;
+    justify-content:space-around;
+    text-align: center;
+}
+
+.welcome .train-button a,
+.welcome .transcribe-button a {
+    padding: 1em;
+}
+
+.engine-type-button {
+    margin: 1em;
 }

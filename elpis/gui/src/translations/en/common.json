@@ -1,9 +1,11 @@
 {
     "welcome": {
         "title": "Elpis",
-        "description": "Elpis is a speech recognition tool, which you can use to transcribe audio.",
+        "description": "With Elpis you can train speech recognition models and use these models to transcribe audio. Elpis can do word-level (orthographic) and phone-level (phonemic) recognition.",
         "start": "Start here",
-        "start_train": "Train a model",
+        "train_description": "To train a model, you will need audio recordings and transcriptions of the speech.",
+        "start_train": "Start training a model",
+        "transcribe_description": "Once you have trained a model, you can get a transcription for un-transcribed speech.",
         "start_transcribe": "Transcribe audio"
     },
     "navigation": {
@@ -32,13 +34,17 @@
     },
     "engine": {
         "select": {
-            "title": "Engine",
-            "waitingForEngineList": "Getting list of engines",
-            "shortcutPlaceholder": "select engine"
+            "title": "Choose a transcription type",
+            "waitingForEngineList": "Getting list of types",
+            "shortcutPlaceholder": "Type"
         },
         "common": {
             "currentEngineLabel": "Current engine: ",
-            "noCurrentEngineLabel": "No engine selected yet."
+            "noCurrentEngineLabel": "No engine selected yet.",
+            "kaldi_human_title": "Word-level trancription",
+            "espnet_description": "Phone-level trancription",
+            "kaldi_description": "Word-level trancription",
+            "espnet_description": "Phone-level trancription"
         }
     },
     "dataset": {
