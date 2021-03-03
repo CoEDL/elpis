@@ -65,13 +65,15 @@ class ChooseModel extends Component {
 
                     {list.length > 0 &&
                         <>
+                            <Divider />
                             <p>{ t('transcription.choose_model.use_existing') }</p>
                             <div>
                                 {modelList}
                             </div>
-                            <Divider />
                         </>
                     }
+
+                    <Divider />
 
                     {list.length == 0 &&
                         t('transcription.choose_model.no_models_found')
