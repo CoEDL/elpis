@@ -17,11 +17,11 @@ git clone --depth=1 -b elpis https://github.com/persephone-tools/espnet
 
 ## Build the GUI
 
-The Docker container has a build of the React app GUI in it, but if you are cloning the GUI repository and replacing the directory in the container with the local repository, the app build directory won't exist in the container (it is excluded from version control so it isn't in what you cloned). Run these commands to install the NPM libraries required, and to build a production version of the GUI into the `gui/build` dir. If you are developing the GUI, replace `npm run build` with `npm run watch` and then when you make changes to the GUI code, you'll get an automatic rebuild of the app. You will need to manually reload the browser that has the interface.
+The Docker container has a build of the React app GUI in it. If you are cloning the elpis repository and working on the GUI, run these commands to enable changes to the GUI code to be reloaded in the browser.
 
 ```shell
 cd ~/sandbox/elpis/elpis/gui
-npm install && npm run build
+npm install && npm run watch
 ```
 
 ## Mount local dirs into existing image.
