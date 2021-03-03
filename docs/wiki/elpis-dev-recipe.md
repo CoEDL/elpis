@@ -35,8 +35,7 @@ docker run --rm -it -p 5000:5000/tcp \
 	--entrypoint zsh coedl/elpis:latest
 ```
 
-Run these inside the container (setup earlier) to install stuff.
-
+Run this command to start the Elpis interface.
 ```shell
 export FLASK_APP=elpis && flask run --host=0.0.0.0 --port=5000
 ```
