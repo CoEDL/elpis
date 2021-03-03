@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
-import { Grid, Button, Header, Container, Segment } from 'semantic-ui-react';
+import { Button, Container, Divider, Grid, Header, Segment } from 'semantic-ui-react';
 import { modelLoad, modelList } from 'redux/actions/modelActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
 import { engineLoad } from 'redux/actions/engineActions';
@@ -59,9 +59,8 @@ class ChooseModel extends Component {
                     </Header>
 
                     {/*
-                    <Segment>
                         { t('transcription.choose_model.import_model') }
-                    </Segment>
+                        <Divider />
                     */}
 
                     {list.length > 0 &&
@@ -70,6 +69,7 @@ class ChooseModel extends Component {
                             <div>
                                 {modelList}
                             </div>
+                            <Divider />
                         </>
                     }
 
