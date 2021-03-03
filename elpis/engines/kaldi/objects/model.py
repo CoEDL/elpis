@@ -41,14 +41,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.pron_dict = None
         return self
 
-    @property
-    def state(self):
-        # TODO: fix this
-        return {}
-
-    def has_been_trained(self):
-        return self.status == 'trained'
-
     def link_pron_dict(self, pron_dict: PronDict):
         self.pron_dict = pron_dict
         self.config['pron_dict_name'] = pron_dict.name
@@ -251,14 +243,17 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                         print('stderr', stage_process.stderr, file=file)
                         print('done', file=file)
                     print(f"Stage {stage} complete")
-                    self.stage_status = (stage, 'complete', '')
+                    stage_log = stage_process.stdout + "\n" + stage_process.stderr
+                    print(f"Stage {stage} log", stage_log)
+                    self.stage_status = (stage, 'complete', '', stage_log)
+                    # add to stage_log
                     stage_count = stage_count + 1
                 except CalledProcessError as error:
                     with open(stage_log_path, 'a+') as file:
                         print('stderr', error.stderr, file=file)
                         print('failed', file=file)
                     print(f"Stage {stage} failed")
-                    self.stage_status = (stage, 'failed', '')
+                    self.stage_status = (stage, 'failed', '', 'LOG-C')
                     break
 
             self.log = ''

@@ -24,6 +24,11 @@ class EspnetModel(BaseModel):
         # from None.
         self.config['ngram'] = None
         self.config['engine_name'] = 'espnet'
+        self.config['status'] = 'untrained'
+        stage_names = {
+            "train": "Train"
+        }
+        super().build_stage_status(stage_names)
         self.venv_path = Path("/espnet/tools/venv/bin/python3")
         self.config['gpus'] = int(subprocess.check_output(f"{self.venv_path} -c 'import torch; print(torch.cuda.device_count())'", shell=True))
         print(f"Number of GPUs: {self.config['gpus']}")
@@ -36,16 +41,24 @@ class EspnetModel(BaseModel):
 
     @property
     def status(self):
+        #  read the log here and pass it back to the api
+        run_log_path = Path(self.path).joinpath('train.log')
+        with open(run_log_path) as log_file:
+            log_text = log_file.read()
+            self.stage_status = ("train", 'in-progress', '', log_text)
+        # Stage 4 train log is not written to the main train log, so read it from the exp dir
+        is_stage_4 = re.search('stage 4: Network Training\n\Z', log_text, flags=re.MULTILINE)
+
+        if is_stage_4:
+            #  Train stage 4 log is in the exp dir... something like exp/train_nodev_pytorch_train_mtlalpha1.0
+            path_gen = Path(self.path).glob("espnet-asr1/exp/train*/train.log")
+            # Assumes just one decode_test* directory, which is true in the current
+            # implementation (transcription will use decode_infer*...)
+            stage_4_log_path= next(path_gen)
+            with open(stage_4_log_path) as stage_4_log_file:
+                stage_4_text = stage_4_log_file.read()
+                self.stage_status = ("train", "in-progress", "", f"{log_text}\n{stage_4_text}")
         return self.config['status']
-
-    @property
-    def state(self):
-        # In the KaldiModel that I'm basing this code of there is a "TODO: fix
-        # this" in this method. I'm not sure what that's about.
-        return {}
-
-    def has_been_trained(self):
-        return self.status == 'trained'
 
     @status.setter
     def status(self, value: str):
