@@ -48,7 +48,7 @@ run
 
 ## Command-line window
 
-`elpis` uses `poetry` for dependency management etc.
+`elpis` uses `poetry` for dependency management and packaging. Starting up the virtual environment might be useful if you want to develop in an IDE or text editor with autocompletion & other fancy stuff, or if you would like to run tests.
 
 ```shell
 cd ~/sandbox/elpis
