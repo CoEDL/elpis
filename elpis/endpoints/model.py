@@ -137,6 +137,7 @@ def status():
         "status": model.status,
         "stage_status": model.stage_status
     }
+    print(data)
     return jsonify({
         "status": 200,
         "data": data
@@ -151,6 +152,7 @@ def log():
     data = {
         "log": model.log
     }
+    print(log)
     return jsonify({
         "status": 200,
         "data": data

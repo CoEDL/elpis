@@ -34,7 +34,7 @@
     },
     "engine": {
         "select": {
-            "title": "Choose a transcription type",
+            "title": "Choose a type",
             "waitingForEngineList": "Getting list of types",
             "shortcutPlaceholder": "Type"
         },

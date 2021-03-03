@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
-import SelectEnginePanels from './SelectEnginePanels'
+import ChooseEngine from './ChooseEngine'
 
 import urls from 'urls';
 
@@ -26,7 +26,7 @@ const EngineDashboard = props => {
                 </Grid.Row>
             </Grid>
 
-            <SelectEnginePanels />
+            <ChooseEngine />
 
             </Segment>
         </div>

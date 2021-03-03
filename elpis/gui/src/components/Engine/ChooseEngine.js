@@ -8,7 +8,7 @@ import { setCurrentStep } from 'redux/actions/sideNavActions'
 import urls from 'urls';
 
 
-class SelectEnginePanels extends Component {
+class ChooseEngine extends Component {
 
     render() {
 
@@ -34,16 +34,14 @@ class SelectEnginePanels extends Component {
                     break
             }
             return (
-                <Grid.Row key={name}>
-                    <Grid.Column width={3} className="engine-name">
-                        <div className="choose-engine-button">
-                            <Button onClick={() => selectEngine(name)}>{engine_name}</Button>
-                        </div>
-                    </Grid.Column>
-                    <Grid.Column width={12} className="engine-description">
+                <div key={name} className="row">
+                    <div className="left-col choose-engine-button">
+                        <Button onClick={() => selectEngine(name)}>{engine_name}</Button>
+                    </div>
+                    <div className="right-col">
                         <p>{engine_description}</p>
-                    </Grid.Column>
-                </Grid.Row>
+                    </div>
+                </div>
             )
         });
 
@@ -54,9 +52,9 @@ class SelectEnginePanels extends Component {
                     <p>{t('engine.select.waitingForEngineList')}</p>
                 }
 
-			    <Grid columns={2} className="choose-engine">
-                            {cards}
-                </Grid>
+			    <div className="choose-engine">
+                    {cards}
+                </div>
 
             </>
         )
@@ -85,6 +83,6 @@ export default
         mapStateToProps,
         mapDispatchToProps
     )(
-        translate('common')(SelectEnginePanels)
+        translate('common')(ChooseEngine)
     )
 )

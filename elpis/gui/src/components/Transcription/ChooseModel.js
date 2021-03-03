@@ -49,38 +49,40 @@ class ChooseModel extends Component {
         return (
             <div>
                 <Branding />
+                <Segment>
                 <Grid centered>
 
-                    <Grid.Column width={ 12 }>
-                        <Header as='h1' text="true">
-                            { t('transcription.choose_model.title') }
-                        </Header>
-                {/*
-                <Segment>
-                    { t('transcription.choose_model.import_model') }
-                </Segment>
-                */}
+                <Grid.Row>
+                <Grid.Column>
+                    <Header as='h1' text="true">
+                        { t('transcription.choose_model.title') }
+                    </Header>
 
-                {list.length > 0 &&
-                <Segment>
-                    <p>{ t('transcription.choose_model.use_existing') }</p>
-                    <div>
-                        {modelList}
-                    </div>
-                </Segment>
-                }
+                    {/*
+                    <Segment>
+                        { t('transcription.choose_model.import_model') }
+                    </Segment>
+                    */}
 
-                <Segment>
+                    {list.length > 0 &&
+                        <>
+                            <p>{ t('transcription.choose_model.use_existing') }</p>
+                            <div>
+                                {modelList}
+                            </div>
+                        </>
+                    }
+
                     {list.length == 0 &&
                         t('transcription.choose_model.no_models_found')
                     }
 
                     <Link to={urls.gui.engine.index}>{ t('transcription.choose_model.train_new') }</Link>
-                </Segment>
 
-
-                    </Grid.Column>
+                </Grid.Column>
+                </Grid.Row>
                 </Grid>
+                </Segment>
             </div>
        )
     }

@@ -167,15 +167,23 @@ label.pad-right,
     padding-bottom: 2em !important;
 }
 
-.engine-description,
-.train-description .column,
-.transcription-description .column {
+
+.choose-engine .row,
+.welcome-options .row {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.choose-engine .left-col,
+.welcome-options .left-col {
     display: flex !important;
     align-items: center;
 }
 
-.welcome .train-button a,
-.welcome .transcribe-button a,
+.welcome-options .train-button a,
+.welcome-options .transcribe-button a,
 .engine-type-button {
     font-weight: bold;
     background-color: #F5F6CE;
@@ -188,11 +196,14 @@ label.pad-right,
     text-align: center;
 }
 
-.welcome .train-button a,
-.welcome .transcribe-button a {
+.welcome-options .train-button a,
+.welcome-options .transcribe-button a {
     padding: 1em;
+    margin-right: 2em;
 }
 
+.choose-engine { margin-top: 2em;}
+
 .choose-engine-button {
-    margin: 1em;
+    margin: 0 1em;
 }

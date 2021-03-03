@@ -11,46 +11,40 @@ class StepWelcome extends Component {
 	render() {
 		const { t, list } = this.props
 		return (
+            <>
+                <Grid>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Branding />
+                        </Grid.Column>
+                    </Grid.Row>
 
-			<Grid className="welcome">
-				<Grid.Row>
-					<Grid.Column>
-						<Branding />
-					</Grid.Column>
-				</Grid.Row>
+                    <Grid.Row className="welcome-description">
+                        <Grid.Column>
+                            <div className="keep-line-breaks">{ t('welcome.description') }</div>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
 
-				<Grid.Row className="welcome-description">
-					<Grid.Column>
-						<div className="keep-line-breaks">{ t('welcome.description') }</div>
-					</Grid.Column>
-				</Grid.Row>
-
-				<Grid.Row columns={2} className="train-description">
-					<Grid.Column width={4}>
-						<div className="train-button">
+                <div className="welcome-options">
+                    <div className="row">
+                        <div className="left-col train-button">
                             <Link to={urls.gui.engine.index}>
                                 {t('welcome.start_train')}
                             </Link>
                         </div>
-					</Grid.Column>
-					<Grid.Column>
-						<div className="keep-line-breaks text">{ t('welcome.train_description') }</div>
-					</Grid.Column>
-				</Grid.Row>
-
-				<Grid.Row columns={2} className="transcription-description">
-					<Grid.Column width={4}>
-						<div className="transcribe-button">
+                        <div className="right-col keep-line-breaks text">{ t('welcome.train_description') }</div>
+                    </div>
+                    <div className="row">
+                        <div className="left-col transcribe-button">
                             <Link to={urls.gui.transcription.choose}>
                                 {t('welcome.start_transcribe')}
                             </Link>
                         </div>
-					</Grid.Column>
-					<Grid.Column className="">
-						<div className="keep-line-breaks text">{ t('welcome.transcribe_description') }</div>
-					</Grid.Column>
-				</Grid.Row>
-			</Grid>
+                        <div className="right-col keep-line-breaks text">{ t('welcome.transcribe_description') }</div>
+                    </div>
+                </div>
+            </>
 		);
 	}
 }
