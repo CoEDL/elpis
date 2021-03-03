@@ -172,6 +172,7 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 WORKDIR /
 
 # Elpis
+RUN pwd
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
