@@ -14,38 +14,36 @@ class SelectEnginePanels extends Component {
 
         let { t, currentEngine, list, _engineLoad, history } = this.props;
 
-        let handleChange = (_event, data) => {
-            let engine_name = data.value;
-            let postData = { engine_name };
-            _engineLoad(postData);
-        };
-
         let selectEngine = engine_name => {
-            console.log("select engine", engine_name)
             let postData = { engine_name };
-            _engineLoad(postData);
-            history.push(urls.gui.dataset.index)
+            _engineLoad(postData, this.props.history);
         }
 
         let options = list.map((name, i) => ({key: name, text: name, value: name}));
 
         let cards = list.map((name, i) => {
-            console.log("name", name)
-            let engine_description
+            let engine_name, engine_description
             switch (name) {
                 case 'kaldi':
+                    engine_name = t('engine.common.kaldi_name')
                     engine_description = t('engine.common.kaldi_description')
                     break
                 case 'espnet':
+                    engine_name = t('engine.common.espnet_name')
                     engine_description = t('engine.common.espnet_description')
                     break
             }
-
             return (
-
-                <div className="engine-type-button" key={name} onClick={() => selectEngine(name)}>
-                    {engine_description}
-                </div>
+                <Grid.Row key={name}>
+                    <Grid.Column width={3} className="engine-name">
+                        <div className="choose-engine-button">
+                            <Button onClick={() => selectEngine(name)}>{engine_name}</Button>
+                        </div>
+                    </Grid.Column>
+                    <Grid.Column width={12} className="engine-description">
+                        <p>{engine_description}</p>
+                    </Grid.Column>
+                </Grid.Row>
             )
         });
 
@@ -55,9 +53,10 @@ class SelectEnginePanels extends Component {
                 {list.length === 0 &&
                     <p>{t('engine.select.waitingForEngineList')}</p>
                 }
-                {
-                cards
-                }
+
+			    <Grid columns={2} className="choose-engine">
+                            {cards}
+                </Grid>
 
             </>
         )
@@ -72,8 +71,11 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    _engineLoad: postData => {
+    _engineLoad: (postData, history) => {
         dispatch(engineLoad(postData))
+        .then(response => {
+            history.push(urls.gui.dataset.index)
+           })
     }
 })
 

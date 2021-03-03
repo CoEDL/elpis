@@ -167,6 +167,7 @@ label.pad-right,
     padding-bottom: 2em !important;
 }
 
+.engine-description,
 .train-description .column,
 .transcription-description .column {
     display: flex !important;
@@ -192,6 +193,6 @@ label.pad-right,
     padding: 1em;
 }
 
-.engine-type-button {
+.choose-engine-button {
     margin: 1em;
 }

@@ -14,17 +14,21 @@ const EngineDashboard = props => {
 
     return (
         <div>
-        <Branding />
-        <Grid centered>
-            <Grid.Column width={ 8 }>
-                <Header as='h1'>
-                    { t('engine.select.title') }
-                </Header>
-
-                <SelectEnginePanels />
-
-            </Grid.Column>
+            <Branding />
+            <Segment>
+            <Grid centered>
+                <Grid.Row>
+                    <Grid.Column>
+                        <Header as='h1'>
+                            { t('engine.select.title') }
+                        </Header>
+                    </Grid.Column>
+                </Grid.Row>
             </Grid>
+
+            <SelectEnginePanels />
+
+            </Segment>
         </div>
     )
 }

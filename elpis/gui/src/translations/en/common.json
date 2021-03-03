@@ -41,8 +41,10 @@
         "common": {
             "currentEngineLabel": "Current engine: ",
             "noCurrentEngineLabel": "No engine selected yet.",
-            "kaldi_description": "Word",
-            "espnet_description": "Phoneme"
+            "kaldi_name": "Word",
+            "kaldi_description": "This will require audio files, transcriptions and a 'letter to sound' file.",
+            "espnet_name": "Phoneme",
+            "espnet_description": "Requires audio and transcriptions."
         }
     },
     "dataset": {
