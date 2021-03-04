@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.96.4] - 2021-03-4
+### Changed
+- Changed to use pyenv for Python version management
+
 ## [0.96.3] - 2021-01-26
 ### Changed
 - Voice Activity Detection
