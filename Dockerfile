@@ -41,10 +41,22 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
 
 WORKDIR /tmp
 
-RUN echo "===> Install Python 3.8 packages" && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y python3.8-dev python3.8-venv
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    PATH="/opt/pyenv/shims:/opt/pyenv/bin:$PATH" \
+    PYENV_ROOT="/opt/pyenv" \
+    PYENV_SHELL="zsh"
+
+RUN echo "===> Install pyenv Python 3.8" && \
+    git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT && \
+    echo 'export PYENV_ROOT="/opt/pyenv"' >> ~/.zshrc && \
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc && \
+    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.zshrc && \
+    eval "$(pyenv init -)" && \
+    cat ~/.zshrc && \
+    /bin/bash -c "source ~/.zshrc" && \
+    pyenv install 3.8.2 && \
+    rm -rf /tmp/*
 
 
 ########################## KALDI INSTALLATION #########################
@@ -160,9 +172,10 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 WORKDIR /
 
 # Elpis
+RUN pwd
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
-RUN /usr/bin/python3.8 -m venv /venv
+RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
 RUN pip install poetry && poetry config virtualenvs.create false --local && \
     poetry install
