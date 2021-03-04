@@ -35,6 +35,10 @@ code {
     margin-bottom: 2rem;
 }
 
+.ui.styled.accordion .content.accordion_log {
+    padding: 0 2em 1em 2em !important;
+}
+
 .kaldi-log {
     height: 200px;
     width: 100%;
