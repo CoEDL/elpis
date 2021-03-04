@@ -21,7 +21,7 @@ requests = "^2.25.1"
 setuptools = "^51.1.1"
 werkzeug = "^1.0.1"
 dict2xml = "^1.7.0"
-llvmlite = "0.36.0rc1"
+llvmlite = "0.32.1"
 librosa = "0.7.2"
 python-dotenv = "^0.15.0"
 
