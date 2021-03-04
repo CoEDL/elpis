@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Divider, Grid, Header, Segment, Icon, Button, Table, Modal } from 'semantic-ui-react';
+import { Divider, Grid, Header, Segment, Icon, Button, Table, Message, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { modelResults } from 'redux/actions/modelActions';
@@ -22,25 +22,66 @@ class ModelResults extends Component {
 
 
         const resultsEl = results ? (
-            <Segment>
+            <>
 
-                <Table celled>
+                <Message attached content={ t('transcription.results.results-description') } />
+
+                <Table celled className="attached">
                     <Table.Body>
                         <Table.Row>
-                            <Table.Cell>{t('transcription.results.wer')} {results.wer}</Table.Cell>
-
-                            {currentEngine && currentEngine == "espnet" &&
-                                <Table.Cell>{t('transcription.results.per')} {results.per}</Table.Cell>
-                            }
-
-                            <Table.Cell>{t('transcription.results.count')} {results.count_val}</Table.Cell>
-                            <Table.Cell>{t('transcription.results.del')} {results.del_val}</Table.Cell>
-                            <Table.Cell>{t('transcription.results.ins')} {results.ins_val}</Table.Cell>
-                            <Table.Cell>{t('transcription.results.sub')} {results.sub_val}</Table.Cell>
+                            <Table.Cell className="results-title">
+                                {t('transcription.results.wer')}
+                            </Table.Cell>
+                            <Table.Cell className="results-title">
+                                {results.wer}
+                                {results.wer &&
+                                <>%</>
+                                }
+                            </Table.Cell>
+                        </Table.Row>
+                        {currentEngine && currentEngine == "espnet" &&
+                            <Table.Row>
+                                <Table.Cell>
+                                    {t('transcription.results.per')}
+                                    {results.per}
+                                </Table.Cell>
+                            </Table.Row>
+                        }
+                        <Table.Row>
+                            <Table.Cell>
+                                {t('transcription.results.count')}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {results.count_val}
+                            </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                            <Table.Cell>
+                                {t('transcription.results.del')}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {results.del_val}
+                            </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                            <Table.Cell>
+                                {t('transcription.results.ins')}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {results.ins_val}
+                            </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                            <Table.Cell>
+                                {t('transcription.results.sub')}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {results.sub_val}
+                            </Table.Cell>
                         </Table.Row>
                     </Table.Body>
                 </Table>
-            </Segment>
+            </>
         ) : (
             <p>{t('model.results.noResults')}</p>
         )

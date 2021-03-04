@@ -248,12 +248,13 @@
             "downloadLabel": "Download",
             "downloadTextButton": "Text file",
             "downloadElanButton": "Elan file",
+            "results-description": "Results are obtained by testing the model on a sample of audio from the recordings. The error rate is calculated by adding up all the words that are wrongly skipped, added, or swapped compared to what was spoken. The number of errors is then dividing by the total number of words that were spoken.",
             "wer": "Word error rate (WER)",
             "per": "Phoneme error rate (PER)",
-            "count": "Count",
-            "del": "Deletions",
-            "ins": "Insertions",
-            "sub": "Substitutions"
+            "count": "Number of incorrect words / total words",
+            "del": "Deletions: spoken words missed in the transcription (DEL).",
+            "ins": "Insertions: extra words added to the text that weren't spoken (INS).",
+            "sub": "Substitutions: correct words swapped for incorrectly recognised words (SUB)."
         },
         "engines": {
             "kaldi": {

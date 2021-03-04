@@ -211,3 +211,11 @@ label.pad-right,
 .choose-engine-button {
     margin: 0 1em;
 }
+
+.results-title {
+    font-weight: bold;
+}
+
+.section-description {
+    margin: 1em;
+}
