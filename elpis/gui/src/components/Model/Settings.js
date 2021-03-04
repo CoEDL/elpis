@@ -41,6 +41,13 @@ class ModelSettings extends Component {
                               <p>{ t('model.common.noCurrentModelLabel') }</p>
                             }
 
+                            {currentEngine && currentEngine == "espnet" && name &&
+                                <div>
+                                    <p>No settings for now...</p>
+                                    <Button as={Link} to={urls.gui.model.train}>{t('common.nextButton')}</Button>
+                                </div>
+                            }
+
                             {currentEngine && currentEngine == "kaldi" && name &&
                             <>
                                 <Message content={ t('model.settings.description') } />
