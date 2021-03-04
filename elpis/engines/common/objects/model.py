@@ -51,17 +51,23 @@ class Model(FSObject):  # TODO not thread safe
         self.config['log'] = value
 
     @stage_status.setter
-    def stage_status(self, status_info: Tuple[str, str, str]):
-        stage, status, message = status_info
+    def stage_status(self, status_info: Tuple[str, str, str, str]):
+        stage, status, message, log = status_info
         stage_status = self.config['stage_status']
         stage_status[stage]['status'] = status
         stage_status[stage]['message'] = message
+        stage_status[stage]['log'] = log
         self.config['stage_status'] = stage_status
 
     def build_stage_status(self, stage_names: Dict[str, str]):
         for stage_file, stage_name in stage_names.items():
             stage_status = self.config['stage_status']
-            stage_status.update({stage_file: {'name': stage_name, 'status': 'ready', 'message': ''}})
+            stage_status.update({stage_file: {
+                'name': stage_name,
+                'status': 'ready',
+                'message': '',
+                'log': ''
+            }})
             self.config['stage_status'] = stage_status
 
     def link_dataset(self, dataset: Dataset):
