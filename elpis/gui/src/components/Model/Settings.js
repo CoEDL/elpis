@@ -11,7 +11,10 @@ import CurrentModelName from "./CurrentModelName";
 import urls from 'urls'
 
 class ModelSettings extends Component {
+
+
     render() {
+        console.log("currentEngine", currentEngine)
         const { t, currentEngine, settings, modelSettings, name } = this.props;
         return (
             <div>
@@ -38,7 +41,7 @@ class ModelSettings extends Component {
                               <p>{ t('model.common.noCurrentModelLabel') }</p>
                             }
 
-                            {currentEngine && name &&
+                            {currentEngine && currentEngine == "kaldi" && name &&
                             <>
                                 <Message content={ t('model.settings.description') } />
                                 <Message attached content={ t('model.settings.ngramDescription') } />
@@ -83,9 +86,7 @@ class ModelSettings extends Component {
                                                     <option key="4" value="4">4</option>
                                                     <option key="5" value="5">5</option>
                                                 </Field>
-
                                                 <Divider />
-
                                                 <Button type="button" onClick={handleSubmit} disabled={!name}>
                                                     { t('common.nextButton') }
                                                 </Button>

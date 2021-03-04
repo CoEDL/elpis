@@ -17,6 +17,10 @@ class ModelResults extends Component {
     render() {
         const { t, currentEngine, name, results } = this.props;
 
+        console.log("currentEngine", currentEngine)
+        console.log("results", results)
+
+
         const resultsEl = results ? (
             <Segment>
 
@@ -24,8 +28,12 @@ class ModelResults extends Component {
                     <Table.Body>
                         <Table.Row>
                             <Table.Cell>{t('transcription.results.wer')} {results.wer}</Table.Cell>
-                            <Table.Cell>{t('transcription.results.per')} {results.per}</Table.Cell>
-                            <Table.Cell>{results.count_val}</Table.Cell>
+
+                            {currentEngine && currentEngine == "espnet" &&
+                                <Table.Cell>{t('transcription.results.per')} {results.per}</Table.Cell>
+                            }
+
+                            <Table.Cell>{t('transcription.results.count')} {results.count_val}</Table.Cell>
                             <Table.Cell>{t('transcription.results.del')} {results.del_val}</Table.Cell>
                             <Table.Cell>{t('transcription.results.ins')} {results.ins_val}</Table.Cell>
                             <Table.Cell>{t('transcription.results.sub')} {results.sub_val}</Table.Cell>

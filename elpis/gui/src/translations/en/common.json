@@ -248,11 +248,12 @@
             "downloadLabel": "Download",
             "downloadTextButton": "Text file",
             "downloadElanButton": "Elan file",
-            "wer": "WER",
-            "per": "PER",
-            "del": "DEL",
-            "ins": "INS",
-            "sub": "SUB"
+            "wer": "Word error rate (WER)",
+            "per": "Phoneme error rate (PER)",
+            "count": "Count",
+            "del": "Deletions",
+            "ins": "Insertions",
+            "sub": "Substitutions"
         },
         "engines": {
             "kaldi": {
