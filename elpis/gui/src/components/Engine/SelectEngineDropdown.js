@@ -26,6 +26,7 @@ class SelectEngineDropdown extends Component {
                 }
                 {list.length > 0 &&
                     <Dropdown
+                        className="engine-select"
                         placeholder={currentEngine?currentEngine: t('engine.select.shortcutPlaceholder')}
                         selection
                         options={options}

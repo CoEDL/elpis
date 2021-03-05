@@ -129,7 +129,8 @@
         "common": {
             "currentModelLabel": "Session d’entraînement actuelle : ",
             "noCurrentModelLabel": "Pas de session d’entraînement en cours",
-            "chooseOrNewLabel": "En choisir une."
+            "chooseOrNewLabel": "En choisir une.",
+            "pronDictNotRequired": ""
         },
         "dashboard": {
             "title": "Entraînement",

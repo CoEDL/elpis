@@ -13,6 +13,7 @@ class CurrentModelName extends Component {
 
         const onDashboard = (match.url === urls.gui.model.index) ? true : false
         const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : ''
+        const dictName = pronDictName ? pronDictName : t('model.common.pronDictNotRequired')
 
         return (
             <>
@@ -22,8 +23,12 @@ class CurrentModelName extends Component {
                     <br />
                     { t('model.common.currentModelLabel') + name }
                     <br />
-                    { t('pronDict.common.currentPronDictLabel') + pronDictName }
-                    <br />
+                    {currentEngine && currentEngine == 'kaldi' &&
+                        <>
+                            {t('pronDict.common.currentPronDictLabel') + dictName}
+                            <br />
+                        </>
+                    }
                     {t('dataset.common.currentDatasetLabel') + datasetName }
                 </Message>
                 }

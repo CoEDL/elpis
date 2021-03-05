@@ -69,7 +69,8 @@ class NewForm extends Component {
                         // Non-kaldi, use the specified dataset
                         modelData["dataset_name"] = values.dataset_name
                     }
-                    modelNew(modelData, this.props.history)
+                    const redirectAfterModel = engine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train
+                    modelNew(modelData, this.props.history, redirectAfterModel)
                 }}
             >
                 {({
@@ -143,7 +144,7 @@ const mapDispatchToProps = dispatch => ({
     interfaceObjectNames: () => {
         dispatch(interfaceObjectNames())
     },
-    modelNew: (postData, history) => {
+    modelNew: (postData, history, redirectAfterModel) => {
         dispatch(modelNew(postData))
             .then(response => {
                 if (response.status===500) {
@@ -152,7 +153,7 @@ const mapDispatchToProps = dispatch => ({
                 return response
             })
             .then(response => {
-                history.push(urls.gui.model.settings)
+                history.push(redirectAfterModel)
             })
             .catch(error => console.log("error", error))
     }

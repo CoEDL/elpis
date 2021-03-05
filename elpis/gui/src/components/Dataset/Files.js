@@ -177,15 +177,17 @@ class DatasetFiles extends Component {
                                         </div>
                                         </>
                                     }
-
                                 </Segment>
+                                <br />
+                                <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
+                                    { t('common.nextButton') }
+                                </Button>
                                 <Segment>
                                     <Header as='h3'>
                                         { t('dataset.files.importSettingsHeader') }
                                     </Header>
                                     <GeneratedUI props={this.props} settings={settings} ui={ui} changeSettingsCallback={datasetSettings} />
                                 </Segment>
-
                                 <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
                                     { t('common.nextButton') }
                                 </Button>

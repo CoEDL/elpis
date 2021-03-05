@@ -39,7 +39,7 @@
             "shortcutPlaceholder": "Type"
         },
         "common": {
-            "currentEngineLabel": "Current engine: ",
+            "currentEngineLabel": "Current type: ",
             "noCurrentEngineLabel": "No engine selected yet.",
             "kaldi_name": "Word",
             "kaldi_description": "This will require audio files, transcriptions and a 'letter to sound' file.",
@@ -138,7 +138,8 @@
         "common": {
             "currentModelLabel": "Current training session: ",
             "noCurrentModelLabel": "No current training session.",
-            "chooseOrNewLabel": "Choose one."
+            "chooseOrNewLabel": "Choose one.",
+            "pronDictNotRequired": "not required"
         },
         "dashboard": {
             "title": "Training",
