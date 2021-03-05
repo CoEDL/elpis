@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.96.5] - 2021-03-5
+### Changed
+- New flow for GUI welcome and engine select
+- Start implementing feedback from UX study
+- Show train logs in GUI. Kaldi is split into stages, ESPnet is single stage.
+- Add DEV_MODE setting for GUI
+- Pin ESPnet to CoEDL fork of persephone-tools/espnet
+
 ## [0.96.4] - 2021-03-4
 ### Changed
 - Changed to use pyenv for Python version management
