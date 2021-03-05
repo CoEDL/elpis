@@ -1,6 +1,6 @@
 # Installing Elpis on Google Cloud Platform
 
-Create an account at Google Cloud https://cloud.google.com/
+Create an account at [Google Cloud](https://cloud.google.com).
 
 When you have signed in, go to the [Getting Started](https://console.cloud.google.com/getting-started) page. Set your country and agree to the Terms of Service, then press "Agree and Continue".
 
@@ -33,16 +33,14 @@ Paste the following code into the "Startup Script" box
 sudo apt update
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-curl -O https://download.docker.com/linux/ubuntu/dists/bionic/pool/edge/amd64/containerd.io_1.2.2-3_amd64.deb
+curl -O https://download.docker.com/linux/debian/dists/buster/pool/stable/amd64/containerd.io_1.4.3-1_amd64.deb
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 sudo apt update
-sudo apt install ./containerd.io_1.2.2-3_amd64.deb
+sudo apt install ./containerd.io_1.4.3-1_amd64.deb
 sudo apt install -y docker-ce
 sudo docker run -d --rm -p 80:5000/tcp coedl/elpis:stable
-
 ```
 
 Then press "Create"
-
 
 It will take approximately 15 minutes for the machine to start up and install all the software. 
