@@ -239,6 +239,7 @@
             "dropFilesHintDragActive": "Here here..",
             "addAudioButton": "Add Audio",
             "chooseModelHeader": "Choose a training session",
+            "uploading": "Uploading",
             "usingAudio": "Uploaded {{filename}}",
             "transcribe": "Transcribe",
             "nextButton": "Go",

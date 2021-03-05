@@ -230,6 +230,7 @@
             "dropFilesHintDragActive": "Déposez le fichier ici…",
             "addAudioButton": "Ajouter un audio",
             "chooseModelHeader": "Choisissez une session d’entraînement",
+            "uploading": "",
             "usingAudio": "{{filename}} téléversé",
             "transcribe": "Transcrire",
             "nextButton": "Suivant",

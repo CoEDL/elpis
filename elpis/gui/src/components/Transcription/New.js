@@ -24,6 +24,9 @@ import CurrentModelName from "components/Model/CurrentModelName";
 import urls from 'urls'
 
 class NewTranscription extends Component {
+    state = {
+        uploading: false
+    }
 
     statusInterval = null
 
@@ -61,6 +64,7 @@ class NewTranscription extends Component {
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
         this.props.transcriptionNew(formData)
+        this.setState({uploading: true})
     }
 
     handleSelectModel = (e, { value }) => {
@@ -75,6 +79,7 @@ class NewTranscription extends Component {
 
     render = () => {
         const { t, currentEngine, filename, list, status, stage_status, text, modelName } = this.props;
+        const { uploading } = this.state
 
         // Only show trained models
         const listTrained = list.filter(model => model.status === 'trained')
@@ -145,6 +150,12 @@ class NewTranscription extends Component {
                                     );
                                 } }
                             </Dropzone>
+
+                            {uploading && !filename &&
+                                <div className="status">
+                                    <Icon name='circle notched' size="big" loading /> {t('transcription.new.uploading')}
+                                </div>
+                            }
 
                             {filename &&
                                 <Segment>{t('transcription.new.usingAudio', { filename })} </Segment>
