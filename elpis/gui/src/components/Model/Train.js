@@ -87,7 +87,7 @@ class ModelTrain extends Component {
 
                                 <Message icon>
                                     {/*{loadingIcon}*/}
-                                    <Message.Content>
+                                    <Message.Content className="train-log">
 
                                         {stage_status &&
                                         <div className="stages">

@@ -135,9 +135,6 @@ def status():
         "status": model.status,
         "stage_status": model.stage_status
     }
-
-    print(data)
-
     return jsonify({
         "status": 200,
         "data": data

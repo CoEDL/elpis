@@ -31,12 +31,18 @@ code {
     display: block;
 }
 
+.train-log {
+    width: 100%;
+}
 .accordion {
     margin-bottom: 2rem;
 }
 
 .ui.styled.accordion .content.accordion_log {
     padding: 0 2em 1em 2em !important;
+    overflow_wrap: anywhere;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .kaldi-log {
