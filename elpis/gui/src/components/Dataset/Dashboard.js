@@ -48,7 +48,7 @@ class DatasetDashboard extends Component {
         const { t, currentEngine, name, list } = this.props;
         const { column, direction } = this.state
         const listEl = list.length > 0 ? (
-            <Table sortable celled fixed unstackable>
+            <Table sortable celled fixed unstackable className="choose-dataset">
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell

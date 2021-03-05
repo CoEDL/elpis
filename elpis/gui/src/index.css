@@ -89,8 +89,11 @@ textarea.lexicon {
 }
 
 .right {
-    float: right
+    float: right;
+    display: flex;
+    align-items: center;
 }
+
 
 label.pad-right,
 .label.pad-right {
@@ -102,7 +105,7 @@ label.pad-right,
 }
 
 .form-wrapper {
-    margin-bottom: 2em
+    margin: 1em 0 2em 0;
 }
 
 .error-message {
@@ -159,7 +162,7 @@ label.pad-right,
     margin: 0;
 }
 
-.welcome-description {
+.xwelcome-description {
     margin-bottom: 3em;
 }
 .train-description,
@@ -177,7 +180,7 @@ label.pad-right,
     display: flex !important;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 1em;
+    margin: 2em 0;
 }
 
 .choose-engine .left-col,
@@ -186,19 +189,6 @@ label.pad-right,
     align-items: center;
 }
 
-.welcome-options .train-button a,
-.welcome-options .transcribe-button a,
-.engine-type-button {
-    font-weight: bold;
-    background-color: #fff0f2;
-    border-radius: 50%;
-    height: 200px;
-    width: 200px;
-    display: flex;
-    flex-direction:column;
-    justify-content:space-around;
-    text-align: center;
-}
 
 .welcome-options .train-button a,
 .welcome-options .transcribe-button a {
@@ -219,3 +209,34 @@ label.pad-right,
 .section-description {
     margin: 1em;
 }
+
+.engine-select {
+    margin-left: 1em;
+}
+
+.ui.segment.top-nav {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+.top-nav .item {
+    padding-top: 0;
+    height: 100px;
+}
+.top-nav .current-engine {
+    margin: 0 1em
+}
+
+.current-engine-dot {
+    width: 80px;
+    height: 80px;
+    background-color: #fbfdef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1em;
+    box-shadow: 0 0 0 1px #8abc1e inset, 0 0 0 0 transparent;
+    color: #8abc1e;
+}
+
+.choose-dataset button { max-width: 300px }

@@ -20,17 +20,24 @@ class ModelResults extends Component {
         console.log("currentEngine", currentEngine)
         console.log("results", results)
 
+        const wer_text = currentEngine == "kaldi" ? t('model.results.kaldi.wer') : t('model.results.espnet.wer')
+        const count_text = currentEngine == "kaldi" ? t('model.results.kaldi.count') : t('model.results.espnet.count')
+        const per_text = t('model.results.espnet.per')
+        const del_text = currentEngine == "kaldi" ? t('model.results.kaldi.del') : t('model.results.espnet.del')
+        const ins_text = currentEngine == "kaldi" ? t('model.results.kaldi.ins') : t('model.results.espnet.ins')
+        const sub_text = currentEngine == "kaldi" ? t('model.results.kaldi.sub') : t('model.results.espnet.sub')
 
         const resultsEl = results ? (
             <>
 
-                <Message attached content={ t('transcription.results.results-description') } />
+                <Message attached content={ t('model.results.description') } />
 
                 <Table celled className="attached">
                     <Table.Body>
+
                         <Table.Row>
                             <Table.Cell className="results-title">
-                                {t('transcription.results.wer')}
+                                {wer_text}
                             </Table.Cell>
                             <Table.Cell className="results-title">
                                 {results.wer}
@@ -39,41 +46,46 @@ class ModelResults extends Component {
                                 }
                             </Table.Cell>
                         </Table.Row>
-                        {currentEngine && currentEngine == "espnet" &&
-                            <Table.Row>
-                                <Table.Cell>
-                                    {t('transcription.results.per')}
-                                    {results.per}
-                                </Table.Cell>
-                            </Table.Row>
-                        }
+
                         <Table.Row>
                             <Table.Cell>
-                                {t('transcription.results.count')}
+                                {count_text}
                             </Table.Cell>
                             <Table.Cell>
                                 {results.count_val}
                             </Table.Cell>
                         </Table.Row>
+
+                        {currentEngine && currentEngine == "espnet" &&
+                            <Table.Row>
+                                <Table.Cell>
+                                    {per_text}
+                                    {results.per}
+                                </Table.Cell>
+                            </Table.Row>
+                        }
+
                         <Table.Row>
                             <Table.Cell>
-                                {t('transcription.results.del')}
+                                {del_text}
                             </Table.Cell>
                             <Table.Cell>
                                 {results.del_val}
                             </Table.Cell>
                         </Table.Row>
+
                         <Table.Row>
                             <Table.Cell>
-                                {t('transcription.results.ins')}
+                                {ins_text}
                             </Table.Cell>
                             <Table.Cell>
                                 {results.ins_val}
                             </Table.Cell>
                         </Table.Row>
+
                         <Table.Row>
                             <Table.Cell>
-                                {t('transcription.results.sub')}
+                                {sub_text}
                             </Table.Cell>
                             <Table.Cell>
                                 {results.sub_val}

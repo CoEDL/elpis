@@ -39,7 +39,7 @@
             "shortcutPlaceholder": "Type"
         },
         "common": {
-            "currentEngineLabel": "Current engine: ",
+            "currentEngineLabel": "Current type: ",
             "noCurrentEngineLabel": "No engine selected yet.",
             "kaldi_name": "Word",
             "kaldi_description": "This will require audio files, transcriptions and a 'letter to sound' file.",
@@ -138,7 +138,8 @@
         "common": {
             "currentModelLabel": "Current training session: ",
             "noCurrentModelLabel": "No current training session.",
-            "chooseOrNewLabel": "Choose one."
+            "chooseOrNewLabel": "Choose one.",
+            "pronDictNotRequired": "not required"
         },
         "dashboard": {
             "title": "Training",
@@ -174,13 +175,23 @@
         },
         "results": {
             "title": "Results",
-            "description": "List of training sessions that have been run here.",
-            "downloadButton": "Download a set of the training, settings and information about training information",
-            "downloadModalHeader": "Your files and settings are being compiled",
-            "downloadModalContent": "Click Save on your browser's download dialog",
-            "downloadOkButton": "OK",
-            "newTranscribeButton": "Transcribe new audio",
-            "noResults": "No results found"
+            "description": "Results are obtained by testing the model on a sample of audio from the recordings. The error rate is calculated by adding up all the words that are wrongly skipped, added, or swapped compared to what was spoken. The number of errors is then dividing by the total number of words that were spoken.",
+            "noResults": "No results found",
+            "kaldi": {
+                "wer": "Word error rate (WER)",
+                "count": "Number of incorrect words / total words",
+                "del": "Deletions: spoken words missed in the transcription (DEL).",
+                "ins": "Insertions: extra words added to the text that weren't spoken (INS).",
+                "sub": "Substitutions: correct words swapped for incorrectly recognised words (SUB)."
+            },
+            "espnet": {
+                "wer": "Word error rate (WER)",
+                "per": "Phoneme error rate (PER)",
+                "count": "Number incorrect / total",
+                "del": "Deletions: spoken tokens missed in the transcription (DEL).",
+                "ins": "Insertions: extra tokens added to the text that weren't spoken (INS).",
+                "sub": "Substitutions: correct tokens swapped for incorrectly recognised ones (SUB)."
+            }
         },
         "generated": {
             "elan": {
@@ -247,14 +258,7 @@
             "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
             "downloadLabel": "Download",
             "downloadTextButton": "Text file",
-            "downloadElanButton": "Elan file",
-            "results-description": "Results are obtained by testing the model on a sample of audio from the recordings. The error rate is calculated by adding up all the words that are wrongly skipped, added, or swapped compared to what was spoken. The number of errors is then dividing by the total number of words that were spoken.",
-            "wer": "Word error rate (WER)",
-            "per": "Phoneme error rate (PER)",
-            "count": "Number of incorrect words / total words",
-            "del": "Deletions: spoken words missed in the transcription (DEL).",
-            "ins": "Insertions: extra words added to the text that weren't spoken (INS).",
-            "sub": "Substitutions: correct words swapped for incorrectly recognised words (SUB)."
+            "downloadElanButton": "Elan file"
         },
         "engines": {
             "kaldi": {
