@@ -4,6 +4,8 @@ This guide can assist in setting up directory structures to load repositories in
 
 The recommended folder structure is to have a `~/sandbox` folder inside your user directory. This can contain the `elpis` Git repository, the `espnet` repository and the `state` folder to view the state that the program generates.
 
+This guide assumes the use of `zsh` rather than `bash`.
+
 ## Prepare your local dirs
 
 Get the repos for developing, `git pull` etc if you need.
@@ -60,7 +62,7 @@ poetry update
 Open a new Terminal and get another window into the running Elpis container using this (this works on Mac, untested on PC)
 
 ```shell
-docker exec -it $(docker ps -q) bash
+docker exec -it $(docker ps -q) zsh
 ```
 
 ### CUDA (beta, for ESPnet).
