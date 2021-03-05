@@ -35,6 +35,10 @@ code {
     margin-bottom: 2rem;
 }
 
+.ui.styled.accordion .content.accordion_log {
+    padding: 0 2em 1em 2em !important;
+}
+
 .kaldi-log {
     height: 200px;
     width: 100%;
@@ -123,8 +127,9 @@ label.pad-right,
 }
 
 .top-nav {
-    background: pink;
     font-weight: 400;
+    border-width: 0px !important;
+    box-shadow: none !important;
 }
 
 .top-nav .ui.selection.dropdown {
@@ -133,4 +138,84 @@ label.pad-right,
 
 .keep-line-breaks {
     white-space: pre-line;
+}
+
+.dev-toolbar {
+    background: repeating-linear-gradient(
+      45deg,
+      #F5F6CE,
+      #F5F6CE 10px,
+      #F8EFFB 10px,
+      #F8EFFB 20px
+    );
+    padding: 6px;
+    min-width: 200px;
+    float: left;
+    border-radius: 12px;
+    margin-right: 1em;
+}
+.dev-toolbar p {
+    padding:0;
+    margin: 0;
+}
+
+.welcome-description {
+    margin-bottom: 3em;
+}
+.train-description,
+.transcription-description {
+    margin-bottom: 1em;
+}
+
+.train-description {
+    padding-bottom: 2em !important;
+}
+
+
+.choose-engine .row,
+.welcome-options .row {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.choose-engine .left-col,
+.welcome-options .left-col {
+    display: flex !important;
+    align-items: center;
+}
+
+.welcome-options .train-button a,
+.welcome-options .transcribe-button a,
+.engine-type-button {
+    font-weight: bold;
+    background-color: #fff0f2;
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    display: flex;
+    flex-direction:column;
+    justify-content:space-around;
+    text-align: center;
+}
+
+.welcome-options .train-button a,
+.welcome-options .transcribe-button a {
+    padding: 1em;
+    margin-right: 2em;
+}
+
+.choose-engine { margin-top: 2em;}
+
+.choose-engine-button {
+    margin: 0 1em;
+}
+
+.results-title {
+    font-weight: bold;
+}
+
+.section-description {
+    margin: 1em;
 }

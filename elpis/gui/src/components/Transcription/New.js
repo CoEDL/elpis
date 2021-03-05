@@ -16,6 +16,7 @@ import {
     transcriptionGetElan } from 'redux/actions/transcriptionActions';
 import { modelLoad, modelList } from 'redux/actions/modelActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
+import { engineLoad } from 'redux/actions/engineActions';
 import { pronDictLoad } from 'redux/actions/pronDictActions';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
@@ -64,19 +65,18 @@ class NewTranscription extends Component {
 
     handleSelectModel = (e, { value }) => {
         const { list, modelLoad } = this.props
-        // get the matching ds and pd values
         var selectedModel = list.filter(m => m.name==value)
-        // argh, this is weird, but reusing code from Model Dashboard
         const modelData = { name: selectedModel[0].name }
         const datasetData = { name: selectedModel[0].dataset_name }
+        const engineName = { engine_name: selectedModel[0].engine_name }
         const pronDictData = { name: selectedModel[0].pron_dict_name }
-        modelLoad(modelData, datasetData, pronDictData)
+        modelLoad(modelData, datasetData, engineName, pronDictData)
     }
 
     render = () => {
         const { t, currentEngine, filename, list, status, stage_status, text, modelName } = this.props;
 
-        //Only show trained models
+        // Only show trained models
         const listTrained = list.filter(model => model.status === 'trained')
         const listOptions = listTrained.map(model => ({
             "key": model.name,
@@ -97,9 +97,6 @@ class NewTranscription extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
-                            <SideNav />
-                        </Grid.Column>
 
                         <Grid.Column width={ 12 }>
                             <Header as='h1' text="true">
@@ -110,6 +107,7 @@ class NewTranscription extends Component {
                             <CurrentModelName/>
                             }
 
+                            {!modelName &&
                             <Segment>
                                 {listOptions &&
                                     <Form.Field>
@@ -124,6 +122,7 @@ class NewTranscription extends Component {
                                     </Form.Field>
                                 }
                             </Segment>
+                            }
 
                             <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({ getRootProps, getInputProps, isDragActive }) => {
@@ -226,7 +225,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(transcriptionTranscribe())
             .then(response =>{
                 // This is returned when the transcribe process is done,
-                // because this API call is syncronous.
+                // because this API call is synchronous.
                 // So we can safely request the text and elan files here
                 dispatch(transcriptionGetText())
                 dispatch(transcriptionGetElan())
@@ -245,8 +244,9 @@ const mapDispatchToProps = dispatch => ({
     modelList: () => {
         dispatch(modelList())
     },
-    modelLoad: (modelData, datasetData, pronDictData) => {
-        dispatch(modelLoad(modelData))
+    modelLoad: (modelData, datasetData, engineName, pronDictData) => {
+        dispatch(engineLoad(engineName))
+            .then(response=> dispatch(modelLoad(modelData)))
             .then(response => dispatch(datasetLoad(datasetData)))
             .then(response => dispatch(pronDictLoad(pronDictData)))
     }

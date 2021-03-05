@@ -48,12 +48,6 @@ const initialStepModelState = {
 	engine: null,
 	lastURL: null,
 	steps: {
-		engine: {
-			substeps: [
-				{ done: false, doing: true, enabled: true, title: "navigation.engine.title", path: urls.gui.engine.index }
-			],
-			engine_specific: null
-		},
 		recordings: {
 			substeps: [
 				{ done: false, doing: false, enabled: false, title: "navigation.recordings.title", path: urls.gui.dataset.index },

@@ -23,6 +23,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.pron_dict: PronDict = None
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
         self.config['ngram'] = 1  # default to 1 to make playing quicker
+        self.config['engine_name'] = 'kaldi'
         stage_names = {
             "0_setup.sh": "setup",
             "1_prep_acoustic.sh": "acousticPreparation",
@@ -39,14 +40,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self = super().load(base_path)
         self.pron_dict = None
         return self
-
-    @property
-    def state(self):
-        # TODO: fix this
-        return {}
-
-    def has_been_trained(self):
-        return self.status == 'trained'
 
     def link_pron_dict(self, pron_dict: PronDict):
         self.pron_dict = pron_dict
@@ -78,7 +71,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         )
 
     def train(self, on_complete:Callable=None):
-
 
         def prepare_for_training():
             print("prepare_for_training")
@@ -226,7 +218,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
             for stage in sorted(stages):
                 print(f"Stage {stage} starting")
-                self.stage_status = (stage, 'in-progress', '')
+                self.stage_status = (stage, 'in-progress', '', 'starting')
 
                 # Create log file
                 stage_log_path = self.path.joinpath(os.path.join(train_log_dir, f'stage_{stage_count}.log'))
@@ -250,14 +242,17 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                         print('stderr', stage_process.stderr, file=file)
                         print('done', file=file)
                     print(f"Stage {stage} complete")
-                    self.stage_status = (stage, 'complete', '')
+                    stage_log = stage_process.stdout + "\n" + stage_process.stderr
+                    print(f"Stage {stage} log", stage_log)
+                    self.stage_status = (stage, 'complete', '', stage_log)
+                    # add to stage_log
                     stage_count = stage_count + 1
                 except CalledProcessError as error:
                     with open(stage_log_path, 'a+') as file:
                         print('stderr', error.stderr, file=file)
                         print('failed', file=file)
                     print(f"Stage {stage} failed")
-                    self.stage_status = (stage, 'failed', '')
+                    self.stage_status = (stage, 'failed', '', 'LOG-C')
                     break
 
             self.log = ''

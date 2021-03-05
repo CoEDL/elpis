@@ -6,7 +6,6 @@ import { translate } from 'react-i18next';
 import { datasetSettings, datasetPrepare, datasetDelete } from 'redux/actions/datasetActions';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
-import SelectEngine from 'components/Engine/SelectEngine'
 import FileUpload from './FileUpload';
 import CurrentDatasetName from "./CurrentDatasetName";
 import GeneratedUI from './GeneratedUI';

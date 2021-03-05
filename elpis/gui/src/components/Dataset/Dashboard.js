@@ -9,7 +9,6 @@ import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
 import NewForm from 'components/Dataset/NewForm';
 import CurrentDatasetName from "./CurrentDatasetName";
-import SelectEngine from 'components/Engine/SelectEngine'
 import urls from 'urls';
 
 class DatasetDashboard extends Component {
@@ -96,10 +95,6 @@ class DatasetDashboard extends Component {
                             </Header>
 
                             <CurrentDatasetName />
-
-                            {!currentEngine &&
-                               <SelectEngine />
-                            }
 
                             {currentEngine &&
                             <>

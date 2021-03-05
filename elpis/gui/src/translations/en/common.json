@@ -1,8 +1,12 @@
 {
     "welcome": {
         "title": "Elpis",
-        "description": "Elpis is a speech recognition tool, which you can use to transcribe audio. It works in four parts:\nStep 1) Add some language recordings and their transcriptions that you already have\nStep 2) Creating a pronunciation dictionary\nStep 3) Training the speech recognition \"models\"\nStep 4) Use it to tanscribe new audio\n",
-        "start": "Start here"
+        "description": "With Elpis you can train speech recognition models and use these models to transcribe audio. Elpis can do word-level (orthographic) and phone-level (phonemic) recognition.",
+        "start": "Start here",
+        "train_description": "To train a model, you will need audio recordings and transcriptions of the speech.",
+        "start_train": "Start training a model",
+        "transcribe_description": "Once you have trained a model, you can get a transcription for un-transcribed speech.",
+        "start_transcribe": "Transcribe audio"
     },
     "navigation": {
         "engine": {
@@ -30,12 +34,17 @@
     },
     "engine": {
         "select": {
-            "title": "Engine",
-            "shortcutPlaceholder": "select engine"
+            "title": "Choose a type",
+            "waitingForEngineList": "Getting list of types",
+            "shortcutPlaceholder": "Type"
         },
         "common": {
             "currentEngineLabel": "Current engine: ",
-            "noCurrentEngineLabel": "No engine selected yet."
+            "noCurrentEngineLabel": "No engine selected yet.",
+            "kaldi_name": "Word",
+            "kaldi_description": "This will require audio files, transcriptions and a 'letter to sound' file.",
+            "espnet_name": "Phoneme",
+            "espnet_description": "Requires audio and transcriptions."
         }
     },
     "dataset": {
@@ -224,6 +233,13 @@
             "nextButton": "Go",
             "uploadButton": "Upload"
         },
+        "choose_model":{
+            "title": "Choose a model to use for transcribing",
+            "import_model": "Import a model (coming soon)",
+            "use_existing": "Choose an existing model",
+            "no_models_found": "No models found. ",
+            "train_new": "Train a new model"
+        },
         "results": {
             "title": "Transcribed results",
             "usingAudio": "For {{filename}}",
@@ -232,11 +248,13 @@
             "downloadLabel": "Download",
             "downloadTextButton": "Text file",
             "downloadElanButton": "Elan file",
-            "wer": "WER",
-            "per": "PER",
-            "del": "DEL",
-            "ins": "INS",
-            "sub": "SUB"
+            "results-description": "Results are obtained by testing the model on a sample of audio from the recordings. The error rate is calculated by adding up all the words that are wrongly skipped, added, or swapped compared to what was spoken. The number of errors is then dividing by the total number of words that were spoken.",
+            "wer": "Word error rate (WER)",
+            "per": "Phoneme error rate (PER)",
+            "count": "Number of incorrect words / total words",
+            "del": "Deletions: spoken words missed in the transcription (DEL).",
+            "ins": "Insertions: extra words added to the text that weren't spoken (INS).",
+            "sub": "Substitutions: correct words swapped for incorrectly recognised words (SUB)."
         },
         "engines": {
             "kaldi": {

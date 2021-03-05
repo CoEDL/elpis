@@ -5,42 +5,31 @@ import { connect } from 'react-redux';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
 import Branding from 'components/Shared/Branding';
 import SideNav from 'components/Shared/SideNav';
-import CurrentEngineName from './CurrentEngineName'
-import SelectEngine from './SelectEngine'
+import ChooseEngine from './ChooseEngine'
 
 import urls from 'urls';
 
 const EngineDashboard = props => {
     let { t, currentEngine } = props;
+
     return (
-    <div>
-        <Branding />
-        <Segment>
+        <div>
+            <Branding />
+            <Segment>
             <Grid centered>
-                <Grid.Column width={ 4 }>
-                    <SideNav />
-                </Grid.Column>
-                <Grid.Column width={ 12 }>
-                    <Header as='h1'>
-                        { t('engine.select.title') }
-                    </Header>
-                    <CurrentEngineName />
-
-                    <Segment>
-                        <SelectEngine />
-                    </Segment>
-
-                    <Button
-                        as={Link}
-                        to={urls.gui.dataset.index}
-                        disabled={!currentEngine}>
-                    {t('common.nextButton')}
-                    </Button>
-
-                </Grid.Column>
+                <Grid.Row>
+                    <Grid.Column>
+                        <Header as='h1'>
+                            { t('engine.select.title') }
+                        </Header>
+                    </Grid.Column>
+                </Grid.Row>
             </Grid>
-        </Segment>
-    </div>
+
+            <ChooseEngine />
+
+            </Segment>
+        </div>
     )
 }
 

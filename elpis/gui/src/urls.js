@@ -26,12 +26,14 @@ export default {
             "error": "/model/error"
         },
         "transcription": {
+            "choose": "/transcription/choose-model",
             "new": "/transcription/new",
             "results": "/transcription/results"
         }
     },
     "api": {
         "config": {
+            "list": "/api/config/list",
             "reset": "/api/config/reset"
         },
         "dataset": {
