@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.96.6] - 2021-03-6
+### Changed
+- Minor gui tweaks
+
 ## [0.96.5] - 2021-03-5
 ### Changed
 - New flow for GUI welcome and engine select
