@@ -3,9 +3,9 @@ import urls from 'urls'
 
 const initialEngineState = {
     engine: null,
-    engine_list: []
+    engine_list: [],
+    engine_human_names: {"kaldi": "word", "espnet":"phoneme"}
 }
-
 const engine = (state = initialEngineState, action) => {
 	switch (action.type) {
 		case actionTypes.ENGINE_LOAD_STARTED:
@@ -16,6 +16,7 @@ const engine = (state = initialEngineState, action) => {
 
 		case actionTypes.ENGINE_LIST_SUCCESS:
 			let engine_list = action.response.data.data.engine_list;
+			console.log("engine_list", engine_list)
 			return { ...state, engine_list };
 
 		case actionTypes.ENGINE_LOAD_SUCCESS:

@@ -3,19 +3,23 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Message } from 'semantic-ui-react';
+import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown'
 import urls from 'urls'
 
 class CurrentPronDictName extends Component {
 
     render() {
-        const { t, currentEngine, pronDictList, datasetName, name, match } = this.props
+        const { t, currentEngine, engineHumanNames, pronDictList, datasetName, name, match } = this.props
 
         const onDashboard = (match.url === urls.gui.pronDict.index) ? true : false
+        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : ''
 
         return (
             <>
                 {name &&
                 <Message color='olive'>
+                    { t('engine.common.currentEngineLabel') + engineHumanName }
+                    <br />
                     { t('pronDict.common.currentPronDictLabel') + name }
                     <br />
                     {t('dataset.common.currentDatasetLabel') + datasetName }
@@ -25,6 +29,7 @@ class CurrentPronDictName extends Component {
                 {!currentEngine &&
                 <Message color='purple'>
                     { t('engine.common.noCurrentEngineLabel') }
+                    <SelectEngineDropdown />
                 </Message>
                 }
 
@@ -57,7 +62,8 @@ const mapStateToProps = state => {
         name: state.pronDict.name,
         datasetName: state.dataset.name,
         pronDictList: state.pronDict.pronDictList,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
+        engineHumanNames: state.engine.engine_human_names
     }
 }
 export default withRouter(

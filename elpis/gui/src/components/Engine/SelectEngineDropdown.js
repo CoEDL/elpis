@@ -9,7 +9,7 @@ class SelectEngineDropdown extends Component {
 
     render() {
 
-        let { t, currentEngine, list, _engineLoad } = this.props;
+        let { t, currentEngine, engineHumanNames, list, _engineLoad } = this.props;
 
         let handleChange = (_event, data) => {
             let engine_name = data.value;
@@ -17,7 +17,7 @@ class SelectEngineDropdown extends Component {
             _engineLoad(postData);
         };
 
-        let options = list.map((name, i) => ({key: name, text: name, value: name}));
+        let options = list.map((name, i) => ({key: name, text: engineHumanNames[name], value: name}));
 
         return (
             <>
@@ -41,6 +41,7 @@ const mapStateToProps = state => {
     return {
         list: state.engine.engine_list,
         currentEngine: state.engine.engine,
+        engineHumanNames: state.engine.engine_human_names
     }
 }
 

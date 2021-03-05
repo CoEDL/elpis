@@ -3,19 +3,23 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { Message } from 'semantic-ui-react';
+import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown'
 import urls from 'urls'
 
 class CurrentDatasetName extends Component {
 
     render() {
-        const { t, currentEngine, name, datasetList, match } = this.props
+        const { t, currentEngine, engineHumanNames, name, datasetList, match } = this.props
 
         const onDashboard = (match.url === urls.gui.dataset.index) ? true : false
+        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : ''
 
         return (
             <>
                 {name &&
                 <Message color='olive'>
+                    { t('engine.common.currentEngineLabel') + engineHumanName }
+                    <br />
                     { t('dataset.common.currentDatasetLabel') + name }
                 </Message>
                 }
@@ -23,6 +27,7 @@ class CurrentDatasetName extends Component {
                 {!currentEngine &&
                 <Message color='purple'>
                     { t('engine.common.noCurrentEngineLabel') }
+                    <SelectEngineDropdown />
                 </Message>
                 }
 
@@ -53,7 +58,8 @@ const mapStateToProps = state => {
     return {
         name: state.dataset.name,
         datasetList: state.dataset.datasetList,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
+        engineHumanNames: state.engine.engine_human_names
     }
 }
 export default withRouter(
