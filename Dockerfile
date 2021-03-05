@@ -124,7 +124,7 @@ RUN echo "===> Install ESPnet dependencies" && \
 WORKDIR /
 
 # Setting up ESPnet for Elpis from Persephone repository
-RUN git clone https://github.com/persephone-tools/espnet.git
+RUN git clone https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
 
