@@ -83,8 +83,6 @@ def list_existing():
                 'results': fake_results
                 } for model in interface.list_models_verbose()]
     }
-    # interface.list_models_verbose()
-    # data = {"list": []}
     return jsonify({
         "status": 200,
         "data": data

@@ -223,8 +223,6 @@ class Interface(FSObject):
         return m
 
     def list_models(self):
-        # if self.engine is None:
-        #     raise RuntimeError("Engine must be set to list models")
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             if not hash_dir.startswith('.'):
@@ -234,14 +232,10 @@ class Interface(FSObject):
         return models
 
     def list_models_verbose(self):
-        # if self.engine is None:
-        #     raise RuntimeError("Engine must be set to list models")
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
-
             if not hash_dir.startswith('.'):
                 config_file_path = self.models_path.joinpath(hash_dir, "model.json")
-
                 if os.path.isfile(config_file_path):
                     with config_file_path.open() as model_config_file:
                         model = json.load(model_config_file)

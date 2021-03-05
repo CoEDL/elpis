@@ -173,7 +173,7 @@ WORKDIR /
 
 # Elpis
 RUN pwd
-RUN git clone --single-branch --branch welcome_update --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
