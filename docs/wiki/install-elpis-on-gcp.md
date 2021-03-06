@@ -1,6 +1,6 @@
 # Installing Elpis on Google Cloud Platform
 
-Create an account at Google Cloud https://cloud.google.com/
+Create an account at [Google Cloud](https://cloud.google.com).
 
 When you have signed in, go to the [Getting Started](https://console.cloud.google.com/getting-started) page. Set your country and agree to the Terms of Service, then press "Agree and Continue".
 
@@ -33,16 +33,54 @@ Paste the following code into the "Startup Script" box
 sudo apt update
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-curl -O https://download.docker.com/linux/ubuntu/dists/bionic/pool/edge/amd64/containerd.io_1.2.2-3_amd64.deb
+curl -O https://download.docker.com/linux/debian/dists/buster/pool/stable/amd64/containerd.io_1.4.3-1_amd64.deb
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 sudo apt update
-sudo apt install ./containerd.io_1.2.2-3_amd64.deb
+sudo apt install ./containerd.io_1.4.3-1_amd64.deb
 sudo apt install -y docker-ce
 sudo docker run -d --rm -p 80:5000/tcp coedl/elpis:stable
-
 ```
 
 Then press "Create"
 
+It will take between 15 to 30 minutes for the machine to start up and install all the software. 
 
-It will take approximately 15 minutes for the machine to start up and install all the software. 
+
+## For multiple machines
+
+Make an instance template with the same settings.
+
+Install [gcloud](https://cloud.google.com/sdk/docs/install)
+
+Create multiple machines with this command. Replace the zone and template values. Size is the number of instances.
+```shell
+gcloud compute instance-groups managed create elpis-group \
+  --zone "us-central1-a" \
+  --template "elpis-medium-template" \
+  --size 2
+  ```
+
+
+## To inspect logs on GCP instances
+
+Get their details (name, IP address)
+```shell
+gcloud compute instances list
+```
+
+SSH to an instance
+```shell
+gcloud compute ssh --project "elpis-workshop" --zone "us-central1-a" "elpis-group-p9t1"
+```
+
+Check if the image has started yet
+```shell
+docker ps
+```
+
+Interact and view logs etc (may not need sudo)
+```shell
+sudo docker exec -it $(sudo docker ps -q) bash
+```
+
+[See notes for accessing logs.](viewing-elpis-training-log-file.md)

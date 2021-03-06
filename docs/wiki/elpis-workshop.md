@@ -16,6 +16,7 @@ Then, using the trained system we can get a new transcription on un-transcribed 
 - [Setup](#setup)
   * [Get some training files](#get-some-training-files)
   * [Start Elpis](#start-elpis)
+- [Transcription Types](#transcription-types)
 - [Recordings](#recordings)
   * [Add files](#add-files)
   * [Select tiers](#select-tiers)
@@ -39,7 +40,9 @@ Then, using the trained system we can get a new transcription on un-transcribed 
 
 ## Get some training files
 
-Start with downloading some files to use during the workshop. [Download the Abui files here.](https://elpis.net.au/abui.zip) After the zip file has downloaded, unzip it to create a folder somewhere handy (for example, the Desktop).
+Start with downloading some files to use during the workshop. [Download a zip of the files here.](http://bit.ly/elpis-toycorpora)   
+After the zip file has downloaded, unzip it to create a folder somewhere handy (for example, the Desktop). The recordings in this zip are Abui (abz) provided by František Kratochvíl, and Yongning Na (nru) provided by Alexis Michaud and Oliver Adams. 
+
 
 
 ## Start Elpis
@@ -52,11 +55,27 @@ Start with downloading some files to use during the workshop. [Download the Abui
 - Press Enter/Return to start Elpis.
 - When Elpis starts it looks like this.
 
-![Welcome](assets/2020-08-21/10-welcome.png)
+![Welcome](assets/latest/10-welcome.png)
 
+On the Welcome page we have two options: to *train* and to *transcribe*.
 
-On the Elpis welcome page, click on *making a new group of recordings* to go to the *New group of recordings* page.
+For Elpis to make transcriptinos for untranscribed recordings, first we need to train the speech recognition system. We are planning to include some pre-trained systems in Elpis to make things easier. For now, we will start by making one, so click `Train`.
 
+---
+
+# Transcription types
+
+![Welcome](assets/latest/15-types.png)
+
+Elpis has two transcription methods, recognising *words* or *phonemes*. 
+
+To train Elpis to recognise words in speech, we will need to provide some recordings with transcriptions, as well as information about the way the words are pronounced. Some ASR tools require a pronunciation dictionary to be provided. Elpis will try to create one from some rules which we give it, in a "letter-to-sound" file. We'll see an example of this soon. In other tools this is called grapheme-to-phoneme or G2P.
+
+For phoneme level recognition, we don't require the pronunciation rules, just some audio and transcription.
+
+Elpis currently uses ELAN format for the transcriptions. We are working on supporting other formats, please let us know what you need.
+
+For this workshop, we will choose the `word` method.
 
 ---
 
@@ -72,9 +91,10 @@ There are four main steps in Elpis, with sub-steps in each.
 
 **Recordings** is where we collect and prepare the audio and text to train Elpis.
 
-The **Pronunciation Dictionary** is where the system works out how the text words from the Recordings step are pronounced.
+The **Pronunciation Dictionary** is where the system works out how the text words from the Recordings step are pronounced.  
+This step is skipped when doing phoneme transcription.
 
-**Training** is where the "seech recognition models" are built.
+**Training** is where the speech recognition models are built.
 
 **New transcriptions** is the place we go to use an existing training session to obtain a first-pass transcription on new audio.
 
@@ -84,9 +104,9 @@ The **Pronunciation Dictionary** is where the system works out how the text word
 
 # Recordings
 
-We can do multiple sessions with Elpis. To keep track of which group of files we are using, give them a name here. For example, if you are using the Abui sample recordings, you could name this "Abui Recordings". Then click `Add New`
+We can do multiple sessions with Elpis. To keep track of which group of files we are using, give them a name here. For example, if you are using the Abui sample recordings, you could name this "Abui recordings 1". Then click `Add New`
 
-![New files](assets/2020-08-21/20-new-data.png)
+![New files](assets/latest/20-new-data.png)
 
 
 ## Add files
@@ -95,7 +115,7 @@ On the *Add files* page, click inside the dotted area and go to where you downlo
 
 You can add additional words by uploading a wordlist in a plain text file named `additional_word_list.txt`, or a text corpus (with sentences) named `corpus.txt`. These are optional files. Words in either of these uploaded files will extend the pronunciation lexicon. Content in corpus.txt will also be used by the language model.
 
-![Add files](assets/2020-08-21/30-add-files.png)
+![Add files](assets/latest/30-add-files.png)
 
 
 ## Select tiers
@@ -104,36 +124,27 @@ Elan files can have multiple tiers for transcription, glosses, translations, etc
 
 Elpis reads the Elan files you uploaded. The tier names and tier types from the files are shown here to choose from, or you can choose a tier by order - the top-most tier in all files would be selected by choosing `0`, the second tier would be selected by choosing `1`.   
 
-Just select one of the Tier options. 
+Select one of the Tier options. For the Abui files, choose `Tier Name` for the Selection, and `Phrase`as the Tier name.  Then click `Next`.
 
-![Add files](assets/2020-08-21/35-add-files-settings.png)
+![Add files](assets/latest/35-add-files-settings.png)
 
 
 ## Prepare
 
 On the *Prepare* page we can see how Elpis has read your transcription files. If you have lots of training text there will be a delay while the text is prepared.
 
-![Prepare files](assets/2020-08-21/40-prepare.png)
+![Prepare files](assets/latest/40-prepare.png)
 
 
 ---
 
-# Engine
-
-Elpis is currently in development to support orthographic and phonemic transcriptions. For now, orthographic is the only option, but stay tuned for news about this! 
-
-In this step, choose "Kaldi" as the speech recognition toolkit/engine that Elpis will used. Kaldi is an orthographic speech recognition toolkit. Soon there will be other options here.  
-
-![Prepare files](assets/2020-08-21/45-engine.png)
-
-
 # Pronunciation Dictionary
 
-The Pronunciation dictionary is made so the system knows how words are pronounced. Elpis will make a rough draft for the words in the wordlist, based on a "letter to sound" file which you provide.
+For a word recognition system, the Pronunciation dictionary is made so the system knows how words are pronounced. Elpis will make a rough draft for the words in the wordlist, based on a "letter to sound" file which you provide. This step is not required for phoneme recognition.
 
 Like the recordings step, give this step a name. For example "Abui PD"
 
-![Pronunciation Dictionary](assets/2020-08-21/50-new-pd.png)
+![Pronunciation Dictionary](assets/latest/50-new-pd.png)
 
 
 ## Letter to sound rules
@@ -157,7 +168,7 @@ r r
 
 Upload the letter to sound rules `letter_to_sound.txt` from the Abui folder. Elpis will use this to build a pronunciation dictionary for the transcriptions you provided earlier.
 
-![Letter to sound](assets/2020-08-21/60-l2s.png)
+![Letter to sound](assets/latest/60-l2s.png)
 
 
 ## Pronunciation
@@ -166,7 +177,7 @@ Elpis uses the letter to sound file we uploaded to make a breakdown of how each 
 
 If you notice characters in brackets e.g. `(h)`, this indicates that the word includes a letter that is not covered in the letter-to-sound file. To correct this, add a letter to sound line in your letter-to-sound  file for this letter, go back and make a new Pronunciation Dictionary, then upload the letter-to-sound file again. 
 
-![Lexicon](assets/2020-08-21/70-lexicon.png)
+![Lexicon](assets/latest/70-lexicon.png)
 
 > The `!SIL` and `<unk>` lines are used to handle silence and unknown words.
 >
@@ -189,25 +200,23 @@ If you notice characters in brackets e.g. `(h)`, this indicates that the word in
 
 Now our training files have been prepared, we can start a new training session. Give it a name then click Next.
 
-![New model](assets/2020-08-21/75-new-model.png)
+![New model](assets/latest/75-new-model.png)
 
 
 ## Settings
 
 Here you can adjust settings which affect the tool's performance. A unigram (1) value will train the model on each word. A trigram (3) value with train the model by words with their neighbours.
 
-![Settings](assets/2020-08-21/80-settings.png)
+![Settings](assets/latest/80-model-settings.png)
 
 
 ## Training
 
-Got to the **Training** page to kick off the training process. Press *Start training* to begin.
-
-![Ready](assets/2020-08-21/90-training.png)
+Got to the **Training** page to kick off the training process. Press `Start training` to begin.
 
 During training, we will see progress through the stages. You don't need to know what the terms here mean, they are speech recognition jargon words.
 
-![Trained](assets/2020-08-21/100-training-progress.png)
+![Trained](assets/latest/100-training-progress.png)
 
 
 
@@ -218,34 +227,36 @@ When training is complete, go to the Results page to see the results for this tr
 The results are:
 
 - WER - Word Error Rate
-- a word count
+- a word count of how many words were wrong compared with the total number of words in the sample
 - INS - words that have been inserted (added)
 - DEL - words that were deleted (missed)
 - SUB - words that have been substituted (mistaken)
 
-![Results](assets/2020-08-21/120-results.png)
+![Results](assets/latest/120-results.png)
 
 
 ----
 
 # Making a new transcription
 
-Now the training has been done, on the **New Transcriptions** step, we can **Choose a file**. Upload the `audio.wav` file in the Abui untranscribed folder and click Transcribe. 
+Now the training has completed, go to the **New Transcriptions** step.
 
-![New transcription](assets/2020-08-21/130-transcribe.png)
+Click `Upload`, navigate to the files you downloaded and select the `audio.wav` file from the Abui untranscribed folder. Then click `Transcribe`. 
+
+![New transcription](assets/latest/130-transcribe.png)
 
 
 Again, we see progress through the transcription stages, and more speech recognition jargon! 
 
 After the transcription is done, the transcription will show on the page, and the transcription can be downloaded in text or Elan format.
 
-![Download](assets/2020-08-21/140-transcribed.png)
+![Download](assets/latest/140-transcribed.png)
 
 
 Listen in Elan.
 > If you are using your own audio, rename the audio to `audio.wav`.
 
-![Elan](assets/2020-08-21/150-elan.png)
+![Elan](assets/latest/150-elan.png)
 
 
 ---
@@ -274,7 +285,7 @@ Clean your transcriptions by looking through them and checking the following:
 
 - Standardise variation in spelling
 * Replace non-lexical number forms, shorthand forms and abbreviations with full lexical forms. For example, replace ‘9’ with ‘nine’.
-- For more cleaning tips, see the [Data preparation](Preparing-Files) wiki page.
+- For more cleaning tips, see the [Data preparation](preparing-files.md) wiki page.
 
 
 You can also add text files that contain words in the language, that don't have matching audio. These will be used to improve the system's language model.
