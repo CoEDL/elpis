@@ -40,9 +40,9 @@ Then, using the trained system we can get a new transcription on un-transcribed 
 
 ## Get some training files
 
-Start with downloading some files to use during the workshop. [Download a zip of the files here.](http://bit.ly/elpis-toycorpora)   
-After the zip file has downloaded, unzip it to create a folder somewhere handy (for example, the Desktop). The recordings in this zip are Abui (abz) provided by František Kratochvíl, and Yongning Na (nru) provided by Alexis Michaud and Oliver Adams. 
+Start with downloading some files to use during the workshop. [Download a zip of the files here](http://bit.ly/elpis-toycorpora). The recordings in this zip are Abui language (abz) provided by František Kratochvíl, and Yongning Na language (nru) provided by Alexis Michaud and Oliver Adams.
 
+After the zip file has downloaded, unzip it to create a folder somewhere handy (for example, your Desktop).  
 
 
 ## Start Elpis
@@ -57,28 +57,42 @@ After the zip file has downloaded, unzip it to create a folder somewhere handy (
 
 ![Welcome](assets/latest/10-welcome.png)
 
-On the Welcome page we have two options: to *train* and to *transcribe*.
+This is the Welcome page. To come back here anytime, you can click `Home` in the top menu. 
 
-For Elpis to make transcriptinos for untranscribed recordings, first we need to train the speech recognition system. We are planning to include some pre-trained systems in Elpis to make things easier. For now, we will start by making one, so click `Train`.
+Also in the top menu is a link to this Elpis documentation.
+
+The `Reset` button will reset Elpis, removing all the recordings and models that you have started. It won't affect any of your original files.
+
+On the Welcome page we have two options: to *train a model* and to *transcribe audio*. First, we need to train the speech recognition system. We are planning to include some pre-trained systems in Elpis to make things easier. For now, we will start by training Elpis, so click `Start training a model`.
+
+Once we have trained a system we can use it to transcribe.
+
+
+*A model is the system that Elpis learns about the language, based on the recordings and transcriptions that you provide.* 
+
 
 ---
 
 # Transcription types
 
-![Welcome](assets/latest/15-types.png)
+Elpis has two transcription methods. It can be trained to recognise *words* or *phonemes*. 
 
-Elpis has two transcription methods, recognising *words* or *phonemes*. 
+To train Elpis to recognise words in speech, we will need to provide 
+  1) some recordings
+  2) transcriptions of the audio
+  3) and for word recognition it needs some information about the way the words are pronounced. 
+     
 
-To train Elpis to recognise words in speech, we will need to provide some recordings with transcriptions, as well as information about the way the words are pronounced. Some ASR tools require a pronunciation dictionary to be provided. Elpis will try to create one from some rules which we give it, in a "letter-to-sound" file. We'll see an example of this soon. In other tools this is called grapheme-to-phoneme or G2P.
-
-For phoneme level recognition, we don't require the pronunciation rules, just some audio and transcription.
+For word recognition, Elpis will try to create a pronunciation dictionary from some rules which we give it in a ["letter-to-sound"](https://raw.githubusercontent.com/CoEDL/toy-corpora/master/abui-recordings-elan/letter_to_sound.txt) file. We'll see an example of this soon. In other tools this is called grapheme-to-phoneme or G2P. For phoneme level recognition, we don't require the pronunciation rules, just some audio and transcription.
 
 Elpis currently uses ELAN format for the transcriptions. We are working on supporting other formats, please let us know what you need.
 
-For this workshop, we will choose the `word` method.
+For this workshop, we will choose the `Word` method.
+
+![Welcome](assets/latest/15-types.png)
+
 
 ---
-
 
 # About the steps
 
@@ -104,7 +118,7 @@ This step is skipped when doing phoneme transcription.
 
 # Recordings
 
-We can do multiple sessions with Elpis. To keep track of which group of files we are using, give them a name here. For example, if you are using the Abui sample recordings, you could name this "Abui recordings 1". Then click `Add New`
+We can do multiple sessions with Elpis. To keep track of which group of files we are using, give them a name here. For example, if you are using the Abui sample recordings, you could name this "Abui recordings". Then click `Add New`
 
 ![New files](assets/latest/20-new-data.png)
 
@@ -124,9 +138,13 @@ Elan files can have multiple tiers for transcription, glosses, translations, etc
 
 Elpis reads the Elan files you uploaded. The tier names and tier types from the files are shown here to choose from, or you can choose a tier by order - the top-most tier in all files would be selected by choosing `0`, the second tier would be selected by choosing `1`.   
 
-Select one of the Tier options. For the Abui files, choose `Tier Name` for the Selection, and `Phrase`as the Tier name.  Then click `Next`.
+Select one of the Tier options. For the Abui files, choose `Tier Name` for the Selection, and `Phrase`as the Tier name.  
 
-![Add files](assets/latest/35-add-files-settings.png)
+For this workshop there is no need to change the punctuation settings. For more info about what this setting does please get in touch.
+
+Then click `Next`.
+
+![Add files settings](assets/latest/35-add-files-settings.png)
 
 
 ## Prepare
@@ -140,18 +158,22 @@ On the *Prepare* page we can see how Elpis has read your transcription files. If
 
 # Pronunciation Dictionary
 
-For a word recognition system, the Pronunciation dictionary is made so the system knows how words are pronounced. Elpis will make a rough draft for the words in the wordlist, based on a "letter to sound" file which you provide. This step is not required for phoneme recognition.
+For a word recognition system, the pronunciation dictionary is made so the system knows how words are pronounced. Elpis will make a rough draft for the words in the wordlist, based on a letter-to-sound file which you provide. This step is not required for phoneme recognition.
 
-Like the recordings step, give this step a name. For example "Abui PD"
+Like the recordings step, give this step a name. For example "Abui pronunciation"
 
 ![Pronunciation Dictionary](assets/latest/50-new-pd.png)
 
 
 ## Letter to sound rules
 
-The **letter to sound** file is a text file of rules mapping your orthography into phonemic transcription. It will be used to build a pronunciation dictionary.
+The letter-to-sound file is a text file of rules mapping your orthography into phonemic transcription. Elpis will use it to build a pronunciation dictionary for the words in the transcriptions you uploaded.
 
-It is formatted in two columns, space separated. Left column is all the characters in your corpus. The right column is a symbol representing the sound. You can use IPA or SAMPA for the right column. Comments can be written in the file with a `#` starting the comment line. For example,
+It is formatted in two columns, space separated.The left column is all the characters in your corpus. The right column is a symbol representing the sound. You can use IPA or SAMPA for the right column. 
+
+Comments can be written in the file with a `#` starting the comment line. 
+
+Here's a section of the Abui one:
 
 ```
 # Abui
@@ -164,18 +186,22 @@ n n
 ng ŋ
 r r
 ```
-> On Windows, use the free utility Notepad++ to convert CrLf to Lf in one go (Edit > EOL Conversion > Unix Format).
+> Note that the file has to have particular text format. On Windows, use the free utility Notepad++ to convert CrLf to Lf in one go (Edit > EOL Conversion > Unix Format).
 
-Upload the letter to sound rules `letter_to_sound.txt` from the Abui folder. Elpis will use this to build a pronunciation dictionary for the transcriptions you provided earlier.
+Upload the letter to sound rules [`letter_to_sound.txt`](https://raw.githubusercontent.com/CoEDL/toy-corpora/master/abui-recordings-elan/letter_to_sound.txt) from the Abui folder.
 
 ![Letter to sound](assets/latest/60-l2s.png)
 
 
 ## Pronunciation
 
-Elpis uses the letter to sound file we uploaded to make a breakdown of how each word in our training files might be pronounced. You may need to correct some of them. After making corrections, press `save`. Press `reset` if you want to undo your changes and reset back to the rough draft.
+Elpis uses the letter to sound file we uploaded to make a breakdown of how each word in our training files might be pronounced. For some languages the simple technique that Elpis uses will be accurate, for other languages, the results will need to be corrected. 
 
-If you notice characters in brackets e.g. `(h)`, this indicates that the word includes a letter that is not covered in the letter-to-sound file. To correct this, add a letter to sound line in your letter-to-sound  file for this letter, go back and make a new Pronunciation Dictionary, then upload the letter-to-sound file again. 
+Scroll through the list and review the results. 
+
+If corrections are required, you can type your changes in this field. After making corrections, press `Save`. Press the `Reset` button that is below the pronunciation text if you want to undo your changes and reset back to the rough draft.
+
+If you notice characters in brackets e.g. `(h)`, this indicates that the word includes a letter that is not covered in the letter-to-sound file. To correct this, add a letter to sound line in your letter-to-sound file for this letter, go back and make a new Pronunciation Dictionary, then upload the letter-to-sound file again. 
 
 ![Lexicon](assets/latest/70-lexicon.png)
 
@@ -212,12 +238,11 @@ Here you can adjust settings which affect the tool's performance. A unigram (1) 
 
 ## Training
 
-Got to the **Training** page to kick off the training process. Press `Start training` to begin.
+Go to the **Training** page and press `Start training` to begin.
 
-During training, we will see progress through the stages. You don't need to know what the terms here mean, they are speech recognition jargon words.
+During training, we will see progress through the stages. The terms here are speech recognition jargon words. Understanding what they mean is not required to use Elpis. Depending on the duration of your training recordings, Elpis can take a long time to train.During these long training processes, seeing the terms here can at least indicate that the process is still going. As each stage completes, it will show a little tick. 
 
 ![Trained](assets/latest/100-training-progress.png)
-
 
 
 ## Results
@@ -227,9 +252,9 @@ When training is complete, go to the Results page to see the results for this tr
 The results are:
 
 - WER - Word Error Rate
-- a word count of how many words were wrong compared with the total number of words in the sample
-- INS - words that have been inserted (added)
+- Count - a word count of how many words were wrong compared with the total number of words in the sample
 - DEL - words that were deleted (missed)
+- INS - words that have been inserted (added)
 - SUB - words that have been substituted (mistaken)
 
 ![Results](assets/latest/120-results.png)
