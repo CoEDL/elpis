@@ -43,7 +43,7 @@ sudo docker run -d --rm -p 80:5000/tcp coedl/elpis:stable
 
 Then press "Create"
 
-It will take approximately 15 minutes for the machine to start up and install all the software. 
+It will take between 15 to 30 minutes for the machine to start up and install all the software. 
 
 
 ## For multiple machines
@@ -52,10 +52,35 @@ Make an instance template with the same settings.
 
 Install [gcloud](https://cloud.google.com/sdk/docs/install)
 
-Create multiple machines with this command. Replace the zone and template values.
+Create multiple machines with this command. Replace the zone and template values. Size is the number of instances.
 ```shell
 gcloud compute instance-groups managed create elpis-group \
   --zone "us-central1-a" \
   --template "elpis-medium-template" \
   --size 2
   ```
+
+
+## To inspect logs on GCP instances
+
+Get their details (name, IP address)
+```shell
+gcloud compute instances list
+```
+
+SSH to an instance
+```shell
+gcloud compute ssh --project "elpis-workshop" --zone "us-central1-a" "elpis-group-p9t1"
+```
+
+Check if the image has started yet
+```shell
+docker ps
+```
+
+Interact and view logs etc (may not need sudo)
+```shell
+sudo docker exec -it $(sudo docker ps -q) bash
+```
+
+[See notes for accessing logs.](viewing-elpis-training-log-file.md)
