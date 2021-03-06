@@ -83,9 +83,11 @@ To train Elpis to recognise words in speech, we will need to provide
   3) and for word recognition it needs some information about the way the words are pronounced. 
      
 
-For word recognition, Elpis will try to create a pronunciation dictionary from some rules which we give it in a ["letter-to-sound"](https://raw.githubusercontent.com/CoEDL/toy-corpora/master/abui-recordings-elan/letter_to_sound.txt) file. We'll see an example of this soon. In other tools this is called grapheme-to-phoneme or G2P. For phoneme level recognition, we don't require the pronunciation rules, just some audio and transcription.
+For word recognition, Elpis will try to create a pronunciation dictionary from some rules which we give it in a [letter-to-sound](https://raw.githubusercontent.com/CoEDL/toy-corpora/master/abui-recordings-elan/letter_to_sound.txt) file. We'll see an example of this soon. In other tools this is called grapheme-to-phoneme or G2P. 
 
-Elpis currently uses ELAN format for the transcriptions. We are working on supporting other formats, please let us know what you need.
+The Elpis phoneme level recognition method doesn't require the pronunciation rules, just audio and transcriptions.
+
+Elpis currently uses ELAN format for the transcriptions. We are working on supporting other formats, please let us know what you need. Transcriptions don't need to be at individual word or phoneme level, the best length is at "utterance" level of around ten second duration. For more information about preparing your own files, see the [Preparing files](preparing-files.md) page.
 
 For this workshop, we will choose the `Word` method.
 
