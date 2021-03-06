@@ -55,7 +55,7 @@ After the zip file has downloaded, unzip it to create a folder somewhere handy (
 - Press Enter/Return to start Elpis.
 - When Elpis starts it looks like this.
 
-![Welcome](assets/latest/10-welcome.png)
+![](assets/latest/10-welcome.png)
 
 This is the Welcome page. To come back here anytime, you can click `Home` in the top menu. 
 
@@ -91,7 +91,7 @@ Elpis currently uses ELAN format for the transcriptions. We are working on suppo
 
 For this workshop, we will choose the `Word` method.
 
-![Welcome](assets/latest/15-types.png)
+![](assets/latest/15-types.png)
 
 
 ---
@@ -122,7 +122,7 @@ This step is skipped when doing phoneme transcription.
 
 We can do multiple sessions with Elpis. To keep track of which group of files we are using, give them a name here. For example, if you are using the Abui sample recordings, you could name this "Abui recordings". Then click `Add New`
 
-![New files](assets/latest/20-new-data.png)
+![](assets/latest/20-new-data.png)
 
 
 ## Add files
@@ -131,7 +131,7 @@ On the *Add files* page, click inside the dotted area and go to where you downlo
 
 You can add additional words by uploading a wordlist in a plain text file named `additional_word_list.txt`, or a text corpus (with sentences) named `corpus.txt`. These are optional files. Words in either of these uploaded files will extend the pronunciation lexicon. Content in corpus.txt will also be used by the language model.
 
-![Add files](assets/latest/30-add-files.png)
+![](assets/latest/30-add-files.png)
 
 
 ## Select tiers
@@ -146,14 +146,14 @@ For this workshop there is no need to change the punctuation settings. For more 
 
 Then click `Next`.
 
-![Add files settings](assets/latest/35-add-files-settings.png)
+![](assets/latest/35-add-files-settings.png)
 
 
 ## Prepare
 
 On the *Prepare* page we can see how Elpis has read your transcription files. If you have lots of training text there will be a delay while the text is prepared.
 
-![Prepare files](assets/latest/40-prepare.png)
+![](assets/latest/40-prepare.png)
 
 
 ---
@@ -164,14 +164,14 @@ For a word recognition system, the pronunciation dictionary is made so the syste
 
 Like the recordings step, give this step a name. For example "Abui pronunciation"
 
-![Pronunciation Dictionary](assets/latest/50-new-pd.png)
+![](assets/latest/50-new-pd.png)
 
 
 ## Letter to sound rules
 
 The letter-to-sound file is a text file of rules mapping your orthography into phonemic transcription. Elpis will use it to build a pronunciation dictionary for the words in the transcriptions you uploaded.
 
-It is formatted in two columns, space separated.The left column is all the characters in your corpus. The right column is a symbol representing the sound. You can use IPA or SAMPA for the right column. 
+It is formatted in two columns, space separated. The left column is all the characters in your corpus. The right column is a single symbol representing the sound.
 
 Comments can be written in the file with a `#` starting the comment line. 
 
@@ -192,7 +192,7 @@ r r
 
 Upload the letter to sound rules [`letter_to_sound.txt`](https://raw.githubusercontent.com/CoEDL/toy-corpora/master/abui-recordings-elan/letter_to_sound.txt) from the Abui folder.
 
-![Letter to sound](assets/latest/60-l2s.png)
+![](assets/latest/60-l2s.png)
 
 
 ## Pronunciation
@@ -201,11 +201,13 @@ Elpis uses the letter to sound file we uploaded to make a breakdown of how each 
 
 Scroll through the list and review the results. 
 
-If corrections are required, you can type your changes in this field. After making corrections, press `Save`. Press the `Reset` button that is below the pronunciation text if you want to undo your changes and reset back to the rough draft.
+To make corrections, you can type your changes in this field. After making corrections, press `Save`. 
 
-If you notice characters in brackets e.g. `(h)`, this indicates that the word includes a letter that is not covered in the letter-to-sound file. To correct this, add a letter to sound line in your letter-to-sound file for this letter, go back and make a new Pronunciation Dictionary, then upload the letter-to-sound file again. 
+If you need to undo your changes, press the `Reset` button that is below the pronunciation text to reset back to the rough draft.
 
-![Lexicon](assets/latest/70-lexicon.png)
+If you notice characters in brackets e.g. `(h)`, this indicates that the word includes a letter that is not covered in the letter-to-sound file. To correct this, add a letter to sound line in your letter-to-sound file for this letter, go back and make a new Pronunciation Dictionary, then upload the corrected letter-to-sound file again. 
+
+![](assets/latest/70-lexicon.png)
 
 > The `!SIL` and `<unk>` lines are used to handle silence and unknown words.
 >
@@ -228,14 +230,14 @@ If you notice characters in brackets e.g. `(h)`, this indicates that the word in
 
 Now our training files have been prepared, we can start a new training session. Give it a name then click Next.
 
-![New model](assets/latest/75-new-model.png)
+![](assets/latest/75-new-model.png)
 
 
 ## Settings
 
 Here you can adjust settings which affect the tool's performance. A unigram (1) value will train the model on each word. A trigram (3) value with train the model by words with their neighbours.
 
-![Settings](assets/latest/80-model-settings.png)
+![](assets/latest/80-model-settings.png)
 
 
 ## Training
@@ -244,7 +246,7 @@ Go to the **Training** page and press `Start training` to begin.
 
 During training, we will see progress through the stages. The terms here are speech recognition jargon words. Understanding what they mean is not required to use Elpis. Depending on the duration of your training recordings, Elpis can take a long time to train.During these long training processes, seeing the terms here can at least indicate that the process is still going. As each stage completes, it will show a little tick. 
 
-![Trained](assets/latest/100-training-progress.png)
+![](assets/latest/100-training-progress.png)
 
 
 ## Results
@@ -259,7 +261,7 @@ The results are:
 - INS - words that have been inserted (added)
 - SUB - words that have been substituted (mistaken)
 
-![Results](assets/latest/120-results.png)
+![](assets/latest/120-results.png)
 
 
 ----
@@ -270,20 +272,20 @@ Now the training has completed, go to the **New Transcriptions** step.
 
 Click `Upload`, navigate to the files you downloaded and select the `audio.wav` file from the Abui untranscribed folder. Then click `Transcribe`. 
 
-![New transcription](assets/latest/130-transcribe.png)
+![](assets/latest/130-transcribe.png)
 
 
 Again, we see progress through the transcription stages, and more speech recognition jargon! 
 
 After the transcription is done, the transcription will show on the page, and the transcription can be downloaded in text or Elan format.
 
-![Download](assets/latest/140-transcribed.png)
+![](assets/latest/140-transcribed.png)
 
 
 Listen in Elan.
 > If you are using your own audio, rename the audio to `audio.wav`.
 
-![Elan](assets/latest/150-elan.png)
+![](assets/latest/150-elan.png)
 
 
 ---
