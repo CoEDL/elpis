@@ -13,8 +13,8 @@ Get the repos for developing, `git pull` etc if you need.
 ```shell
 mkdir ~/sandbox
 cd ~/sandbox
-git clone --depth=1 https://github.com/CoEDL/elpis.git
-git clone --depth=1 -b elpis https://github.com/persephone-tools/espnet
+git clone https://github.com/CoEDL/elpis.git
+git clone -b elpis https://github.com/persephone-tools/espnet
 ```
 
 ## Build the GUI
