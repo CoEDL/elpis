@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
-import { Button, Divider, Grid, Header, Icon, List, Message, Segment, Input, Form, Label } from 'semantic-ui-react';
+import { Button, Divider, Grid, Header, Icon, List, Message, Segment, Input, Form, Label, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import { datasetSettings, datasetPrepare, datasetDelete } from 'redux/actions/datasetActions';
@@ -48,38 +48,44 @@ class DatasetFiles extends Component {
 
         const audioFilesList = audioFiles.map(file => (
             <List.Item key={ file }>
-                <Button as='div' labelPosition='left'>
-                    <Label as='a' basic>
-                        { file }
-                    </Label>
-                    <Button icon onClick={() => this.handleDeleteButton(file)}>
-                        <Icon name='trash' />
+                <Popup content={ file } size='mini' trigger={
+                    <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
+                        <Label as='a' className='file-label' basic>
+                            { file }
+                        </Label>
+                        <Button icon onClick={() => this.handleDeleteButton(file)}>
+                            <Icon name='trash' />
+                        </Button>
                     </Button>
-                </Button>
+                } />
             </List.Item>
         ))
         const transcriptionFilesList = transcriptionFiles.map(file => (
             <List.Item key={ file }>
-                <Button as='div' labelPosition='left'>
-                    <Label as='a' basic>
-                        { file }
-                    </Label>
-                    <Button icon onClick={() => this.handleDeleteButton(file)}>
-                        <Icon name='trash' />
+                <Popup content={ file } size='mini' trigger={
+                    <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
+                        <Label as='a' className='file-label' basic>
+                            { file }
+                        </Label>
+                        <Button icon onClick={() => this.handleDeleteButton(file)}>
+                            <Icon name='trash' />
+                        </Button>
                     </Button>
-                </Button>
+                } />
             </List.Item>
         ))
         const additionalTextFilesList = additionalTextFiles.map(file => (
             <List.Item key={ file }>
-                <Button as='div' labelPosition='left'>
-                    <Label as='a' basic>
-                        { file }
-                    </Label>
-                    <Button icon onClick={() => this.handleDeleteButton(file)}>
-                        <Icon name='trash' />
+                <Popup content={ file } size='mini' trigger={
+                    <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
+                        <Label as='a' className='file-label' basic>
+                            { file }
+                        </Label>
+                        <Button icon onClick={() => this.handleDeleteButton(file)}>
+                            <Icon name='trash' />
+                        </Button>
                     </Button>
-                </Button>
+                } />
             </List.Item>
         ))
 
