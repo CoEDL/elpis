@@ -25,6 +25,21 @@ class DatasetFiles extends Component {
         this.props.datasetDelete(deleteData)
     }
 
+    createFilesList = (files) => files.map(file => (
+        <List.Item key={ file }>
+            <Popup content={ file } size='mini' trigger={
+                <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
+                    <Label as='a' className='file-label' basic>
+                        <div class='file-truncate'>{ file }</div>
+                    </Label>
+                    <Button icon onClick={() => this.handleDeleteButton(file)}>
+                        <Icon name='trash' />
+                    </Button>
+                </Button>
+            } />
+        </List.Item>
+    ));
+
     render() {
         const { t,
             currentEngine,
@@ -46,48 +61,9 @@ class DatasetFiles extends Component {
             </div>
         ) : null
 
-        const audioFilesList = audioFiles.map(file => (
-            <List.Item key={ file }>
-                <Popup content={ file } size='mini' trigger={
-                    <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
-                        <Label as='a' className='file-label' basic>
-                            <div class='file-truncate'>{ file }</div>
-                        </Label>
-                        <Button icon onClick={() => this.handleDeleteButton(file)}>
-                            <Icon name='trash' />
-                        </Button>
-                    </Button>
-                } />
-            </List.Item>
-        ))
-        const transcriptionFilesList = transcriptionFiles.map(file => (
-            <List.Item key={ file }>
-                <Popup content={ file } size='mini' trigger={
-                    <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
-                        <Label as='a' className='file-label' basic>
-                            <div class='file-truncate'>{ file }</div>
-                        </Label>
-                        <Button icon onClick={() => this.handleDeleteButton(file)}>
-                            <Icon name='trash' />
-                        </Button>
-                    </Button>
-                } />
-            </List.Item>
-        ))
-        const additionalTextFilesList = additionalTextFiles.map(file => (
-            <List.Item key={ file }>
-                <Popup content={ file } size='mini' trigger={
-                    <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
-                        <Label as='a' className='file-label' basic>
-                            <div class='file-truncate'>{ file }</div>
-                        </Label>
-                        <Button icon onClick={() => this.handleDeleteButton(file)}>
-                            <Icon name='trash' />
-                        </Button>
-                    </Button>
-                } />
-            </List.Item>
-        ))
+        const audioFilesList = this.createFilesList(audioFiles)
+        const transcriptionFilesList = this.createFilesList(transcriptionFiles)
+        const additionalTextFilesList = this.createFilesList(additionalTextFiles)
 
         const filesHeader = (
             audioFilesList.length > 0 ||
@@ -107,13 +83,6 @@ class DatasetFiles extends Component {
         const additionalTextFilesHeader = additionalTextFilesList.length > 0
             ? t('dataset.files.additionalTextFilesHeader')
             : null
-
-        // const writeCountOptions = []
-        // for (var i = 1; i <= settings.tier_max_count; i++) {
-        //     writeCountOptions.push(
-        //         <option key={i} value={i}>{i}</option>
-        //     )
-        // }
 
         return (
             <div>
