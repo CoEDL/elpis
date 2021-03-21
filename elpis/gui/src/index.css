@@ -248,10 +248,12 @@ label.pad-right,
 .choose-dataset button { max-width: 300px }
 
 .file-button {
-    max-width: 100%;
+    width: 100%;
 }
 
 .file-label {
+    /* width: 85%; results in strange behaviour and i don't know why */
+    min-width: 85%;
     max-width: 85%;
 }
 
