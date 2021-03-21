@@ -51,7 +51,7 @@ class DatasetFiles extends Component {
                 <Popup content={ file } size='mini' trigger={
                     <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
                         <Label as='a' className='file-label' basic>
-                            { file }
+                            <div class='file-truncate'>{ file }</div>
                         </Label>
                         <Button icon onClick={() => this.handleDeleteButton(file)}>
                             <Icon name='trash' />
@@ -65,7 +65,7 @@ class DatasetFiles extends Component {
                 <Popup content={ file } size='mini' trigger={
                     <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
                         <Label as='a' className='file-label' basic>
-                            { file }
+                            <div class='file-truncate'>{ file }</div>
                         </Label>
                         <Button icon onClick={() => this.handleDeleteButton(file)}>
                             <Icon name='trash' />
@@ -79,7 +79,7 @@ class DatasetFiles extends Component {
                 <Popup content={ file } size='mini' trigger={
                     <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
                         <Label as='a' className='file-label' basic>
-                            { file }
+                            <div class='file-truncate'>{ file }</div>
                         </Label>
                         <Button icon onClick={() => this.handleDeleteButton(file)}>
                             <Icon name='trash' />
