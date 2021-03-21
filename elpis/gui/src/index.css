@@ -252,9 +252,9 @@ label.pad-right,
 }
 
 .file-label {
-    /* width: 85%; results in strange behaviour and i don't know why */
-    min-width: 85%;
-    max-width: 85%;
+    /* width: 90%; results in strange behaviour and i don't know why */
+    min-width: 90%;
+    max-width: 90%;
 }
 
 .file-truncate {
