@@ -176,10 +176,11 @@ class EspnetModel(BaseModel):
         except AttributeError:
             per = sub = ins = del_ = None
 
-        results = {"per": per,
-                   "sub_val": sub,
-                   "ins_val": ins,
-                   "del_val": del_}
+        results = {"comparison_val": float(per),  # property common to all engines so the GUI can sort models by a result value
+                   "per": float(per),
+                   "ins_val": int(ins),
+                   "del_val": int(del_),
+                   "sub_val": int(sub)}
 
         print(results)
         return results

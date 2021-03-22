@@ -310,10 +310,11 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             ins_val = results_split[1].replace(' ins', '').strip()
             del_val = results_split[2].replace(' del', '').strip()
             sub_val = results_split[3].replace(' sub', '').strip()
-            results = {'wer': wer,
-                       'count_val': count_val,
-                       'ins_val': ins_val,
-                       'del_val': del_val,
-                       'sub_val': sub_val}
+            results = {"comparison_val": float(wer),  # property common to all engines so the GUI can sort models by a result value
+                       "wer": float(wer),
+                       "count_val": str(count_val),
+                       "ins_val": int(ins_val),
+                       "del_val": int(del_val),
+                       "sub_val": int(sub_val)}
             print(results)
         return results

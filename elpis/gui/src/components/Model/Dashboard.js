@@ -29,7 +29,7 @@ class ModelDashboard extends Component {
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
-                reverse: false,
+                reverse: false
             })
             arraySort(data, clickedColumn, { reverse: false })
         } else {
@@ -50,6 +50,7 @@ class ModelDashboard extends Component {
 
     render() {
         const { t, currentEngine, engineHumanNames, name, list } = this.props
+
         const { column, direction } = this.state
         const redirectAfterModel = (currentEngine === "kaldi") ? urls.gui.model.settings : urls.gui.model.train
 
@@ -59,31 +60,31 @@ class ModelDashboard extends Component {
                     <Table.Row>
                         <Table.HeaderCell
                             sorted={ column === 'name' ? direction : null }
-                            onClick={ this.handleSort('name', list) }
+                            onClick={this.handleSort('name', list)}
                         >
                             Name
                         </Table.HeaderCell>
                         <Table.HeaderCell
-                            sorted={ column === 'engine' ? direction : null }
-                            onClick={ this.handleSort('engine', list) }
+                            sorted={ column === 'engine_name' ? direction : null }
+                            onClick={ this.handleSort('engine_name', list) }
                         >
                             Type
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'dataset_name' ? direction : null }
-                            onClick={ this.handleSort('dataset_name', list) }
+                            onClick={this.handleSort('dataset_name', list)}
                         >
                             Recordings
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'pron_dict_name' ? direction : null }
-                            onClick={this.handleSort('pron_dict_name', list) }
+                            onClick={this.handleSort('pron_dict_name', list)}
                         >
                             Pronunciation Dictionaries
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'results' ? direction : null }
-                            onClick={this.handleSort('results', list) }
+                            onClick={this.handleSort("results.comparison_val", list)}
                         >
                             Results
                         </Table.HeaderCell>
@@ -93,11 +94,6 @@ class ModelDashboard extends Component {
                     {
                         list.map(model => {
                             const className = (name === model.name) ? 'current' : ''
-                            const engineHumanName = currentEngine ? engineHumanNames[model.engine_name] : ''
-                            const resultsText = (model.engine_name === "kaldi") ?
-                                <p>WER: {model.results.wer}</p>
-                                :
-                                <p>PER: {model.results.per}</p>
                             return (
                                 <Table.Row key={ model.name } className={ className }>
                                     <Table.Cell>
@@ -107,10 +103,21 @@ class ModelDashboard extends Component {
                                             onClick={ () => this.handleLoad(model) }
                                             >{ model.name }</Button>
                                     </Table.Cell>
-                                    <Table.Cell>{ engineHumanName }</Table.Cell>
+                                    <Table.Cell>{ engineHumanNames[model.engine_name] }</Table.Cell>
                                     <Table.Cell>{ model.dataset_name }</Table.Cell>
                                     <Table.Cell>{ model.pron_dict_name }</Table.Cell>
-                                    <Table.Cell>{ resultsText }</Table.Cell>
+                                    <Table.Cell>
+                                        {model.results.per &&
+                                            <>
+                                            {model.results.per} (PER)
+                                            </>
+                                        }
+                                        {model.results.wer &&
+                                            <>
+                                            {model.results.wer} (WER)
+                                            </>
+                                        }
+                                    </Table.Cell>
                                 </Table.Row>
                             )
                         })
