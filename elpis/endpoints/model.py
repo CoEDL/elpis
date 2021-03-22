@@ -113,7 +113,7 @@ def train():
     if model is None:
         return jsonify({"status": 404,
                         "data": "No current model exists (perhaps create one first)"})
-    model.train()
+    model.train(on_complete=lambda: print('Trained model!'))
     data = {
         "status": model.status,
         "stage_status": model.stage_status
