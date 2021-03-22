@@ -245,4 +245,23 @@ label.pad-right,
     color: #8abc1e;
 }
 
-.choose-dataset button { max-width: 300px }
+.choose-dataset button { 
+  max-width: 300px 
+}
+
+.file-button {
+    width: 100%;
+}
+
+.file-label {
+    /* width: 90%; results in strange behaviour and i don't know why */
+    min-width: 90%;
+    max-width: 90%;
+}
+
+.file-truncate {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
