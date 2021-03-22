@@ -49,9 +49,10 @@ class ModelDashboard extends Component {
     }
 
     render() {
-        const { t, currentEngine, name, list } = this.props
+        const { t, currentEngine, engineHumanNames, name, list } = this.props
         const { column, direction } = this.state
-        const redirectAfterModel = currentEngine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train
+        const redirectAfterModel = (currentEngine === "kaldi") ? urls.gui.model.settings : urls.gui.model.train
+
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
                 <Table.Header>
@@ -61,6 +62,12 @@ class ModelDashboard extends Component {
                             onClick={ this.handleSort('name', list) }
                         >
                             Name
+                        </Table.HeaderCell>
+                        <Table.HeaderCell
+                            sorted={ column === 'engine' ? direction : null }
+                            onClick={ this.handleSort('engine', list) }
+                        >
+                            Type
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={ column === 'dataset_name' ? direction : null }
@@ -74,12 +81,23 @@ class ModelDashboard extends Component {
                         >
                             Pronunciation Dictionaries
                         </Table.HeaderCell>
+                        <Table.HeaderCell
+                            sorted={ column === 'results' ? direction : null }
+                            onClick={this.handleSort('results', list) }
+                        >
+                            Results
+                        </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
                     {
                         list.map(model => {
                             const className = (name === model.name) ? 'current' : ''
+                            const engineHumanName = currentEngine ? engineHumanNames[model.engine_name] : ''
+                            const resultsText = (model.engine_name === "kaldi") ?
+                                <p>WER: {model.results.wer}</p>
+                                :
+                                <p>PER: {model.results.per}</p>
                             return (
                                 <Table.Row key={ model.name } className={ className }>
                                     <Table.Cell>
@@ -89,8 +107,10 @@ class ModelDashboard extends Component {
                                             onClick={ () => this.handleLoad(model) }
                                             >{ model.name }</Button>
                                     </Table.Cell>
+                                    <Table.Cell>{ engineHumanName }</Table.Cell>
                                     <Table.Cell>{ model.dataset_name }</Table.Cell>
                                     <Table.Cell>{ model.pron_dict_name }</Table.Cell>
+                                    <Table.Cell>{ resultsText }</Table.Cell>
                                 </Table.Row>
                             )
                         })
@@ -152,7 +172,8 @@ const mapStateToProps = state => {
     return {
         name: state.model.name,
         list: state.model.modelList,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
+        engineHumanNames: state.engine.engine_human_names
     }
 }
 

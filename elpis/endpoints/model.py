@@ -71,7 +71,6 @@ def load():
 @bp.route("/list", methods=['GET'])
 def list_existing():
     interface = app.config['INTERFACE']
-    fake_results = {}
     data = {
         "list": [{
                 'name': model['name'],
@@ -79,7 +78,7 @@ def list_existing():
                 'engine_name': model['engine_name'],
                 'pron_dict_name': model['pron_dict_name'],
                 'status': model['status'],
-                'results': fake_results
+                'results': model['results']
                 } for model in interface.list_models_verbose()]
     }
     return jsonify({

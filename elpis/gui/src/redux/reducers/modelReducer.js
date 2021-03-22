@@ -34,9 +34,9 @@ const model = (state = initState, action) => {
             }
 
         case actionTypes.MODEL_LOAD_SUCCESS:
-            var { name, dataset_name, engine_name, pron_dict_name, ngram } = action.response.data.data.config
+            var { name, dataset_name, engine_name, pron_dict_name, ngram, status, results } = action.response.data.data.config
             console.log(action)
-            // pron_dict_name could be null if not using pron dicts
+            // Note that pron_dict_name will be null if engine does not use pron dicts
             return {
                 ...state,
                 name: name,
@@ -44,8 +44,8 @@ const model = (state = initState, action) => {
                 engineName: engine_name,
                 pronDictName: pron_dict_name,
                 settings: {...state.settings, ngram: ngram},
-                results: {}, // TODO include results in model load api
-                status: 'ready'
+                results: results,
+                status: status
             }
 
         case actionTypes.MODEL_LIST_SUCCESS:

@@ -23,7 +23,7 @@ class EspnetModel(BaseModel):
         # ESPnet doesn't use an n-gram language model, so this will not change
         # from None.
         self.config['ngram'] = None
-        self.config['engine'] = 'espnet'
+        self.config['engine_name'] = 'espnet'
         self.config['status'] = 'untrained'
         stage_names = {
             "train": "Train"

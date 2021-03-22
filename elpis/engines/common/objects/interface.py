@@ -239,13 +239,13 @@ class Interface(FSObject):
                 if os.path.isfile(config_file_path):
                     with config_file_path.open() as model_config_file:
                         model = json.load(model_config_file)
-                        # TODO get results here and pass back for API endpoint
                         model_info = {
                             'name': model['name'],
                             'dataset_name': model['dataset_name'],
                             'engine_name': model['engine_name'],
                             'pron_dict_name': model['pron_dict_name'],
-                            'status': model['status']
+                            'status': model['status'],
+                            'results': model['results']
                         }
                         models.append(model_info)
         return models

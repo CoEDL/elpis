@@ -4,7 +4,7 @@ import urls from 'urls'
 const initialEngineState = {
     engine: null,
     engine_list: [],
-    engine_human_names: {"kaldi": "word", "espnet":"phoneme"}
+    engine_human_names: {"kaldi": "word", "espnet": "phoneme"}
 }
 const engine = (state = initialEngineState, action) => {
 	switch (action.type) {
