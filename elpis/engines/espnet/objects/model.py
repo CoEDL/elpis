@@ -136,6 +136,7 @@ class EspnetModel(BaseModel):
                 prepare_for_training()
                 train()
                 self.status = 'trained'
+                self.results = EspnetModel.get_train_results(self)
                 on_complete()
             self.status = 'training'
             t = threading.Thread(target=background_train_task)
@@ -147,6 +148,7 @@ class EspnetModel(BaseModel):
             prepare_for_training()
             train()
             self.status = 'trained'
+            self.results = EspnetModel.get_train_results(self)
         else:
             print("oncomplete is not none")
             run_training_in_background()

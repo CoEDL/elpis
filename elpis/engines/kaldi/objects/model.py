@@ -272,6 +272,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 prepare_for_training()
                 train()
                 self.status = 'trained'
+                self.results = KaldiModel.get_train_results(self)
                 on_complete()
             self.status = 'training'
             t = threading.Thread(target=background_train_task)
@@ -282,6 +283,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             prepare_for_training()
             train()
             self.status = 'trained'
+            self.results = KaldiModel.get_train_results(self)
         else:
             run_training_in_background()
         return
@@ -308,7 +310,10 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             ins_val = results_split[1].replace(' ins', '').strip()
             del_val = results_split[2].replace(' del', '').strip()
             sub_val = results_split[3].replace(' sub', '').strip()
-            results = {'wer': wer, 'count_val': count_val, 'ins_val': ins_val, 'del_val': del_val,
-                    'sub_val': sub_val}
+            results = {'wer': wer,
+                       'count_val': count_val,
+                       'ins_val': ins_val,
+                       'del_val': del_val,
+                       'sub_val': sub_val}
             print(results)
         return results

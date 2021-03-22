@@ -26,12 +26,12 @@ def new():
     interface = app.config['INTERFACE']
     try:
         model = interface.new_model(request.json["name"])
+        print(f"New model created {model.name} {model.hash}")
     except InterfaceError as e:
         return jsonify({
             "status": 500,
             "error": e.human_message
         })
-
     dataset = interface.get_dataset(request.json['dataset_name'])
     model.link_dataset(dataset)
     app.config['CURRENT_DATASET'] = dataset
@@ -42,7 +42,6 @@ def new():
     if 'engine' in request.json and request.json['engine'] == 'espnet':
         pass
     model.build_structure()
-
     app.config['CURRENT_MODEL'] = model
     data = {
         "config": model.config._load()
