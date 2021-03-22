@@ -23,7 +23,7 @@ Click "Create"
 + Select a Region and Zone
 + Choose a machine size. The size will determine how much it will cost to run. The smallest vCPU instance on GCP is more than enough for the toy data set. That's first series N1 with g1-small (shared-core machine type with 0.5 vCPU, 1.70 GB of memory, backed by a shared physical core). At training time CPU usage peaks at about 10% of the available compute on that instance type. For a bigger data set, or for faster training & transcription time, choose a faster machine.
 
-+ You may need to change the size of the boot disk if you expect to train with a large dataset.
++ Increase the boot disk size to 20GB plus the size of your training corpus. For example, to train with 5GB of audio and ELAN files, set the disk size to 25GB. 
 + Select HTTP and HTTPS traffic in the Firewall options
 + Click the "Management, security, disks, networking, sole tenancy" link. 
 
