@@ -131,6 +131,8 @@ On the *Add files* page, click inside the dotted area and go to where you downlo
 
 You can add additional words by uploading a wordlist in a plain text file named `additional_word_list.txt`, or a text corpus (with sentences) named `corpus.txt`. These are optional files. Words in either of these uploaded files will extend the pronunciation lexicon. Content in corpus.txt will also be used by the language model.
 
+For more information about preparing your own files for Elpis, see the [wiki page](preparing-files.md).
+
 ![](assets/latest/30-add-files.png)
 
 
