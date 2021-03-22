@@ -1,5 +1,7 @@
 # Developing in VSCode
 
+**Note: this guide is not up to date with the monorepo structure** 
+
 Developing Elpis can be difficult at times as the software is run in a Docker container. This Docker container simplifies the installation of Elpis and its dependencies, but it also adds a barrier to quality development experience as the Python runtime and the code base are all on the container and not easily accessible on the local OS.
 
 In the past, developers mounted volumes, exposed ports and ran commands in terminals connected to the Docker image. With Elpis changing frequently, all these commands change as well and it is easy to lose track.
