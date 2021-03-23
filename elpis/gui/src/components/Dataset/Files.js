@@ -36,7 +36,7 @@ class DatasetFiles extends Component {
                             <div className="file-truncate">{file}</div>
                         </Label>
                         <Button icon onClick={() => this.handleDeleteButton(file)}>
-                            <Icon name="trash"/>
+                            <Icon name="trash" />
                         </Button>
                     </Button>
                 }
@@ -60,7 +60,7 @@ class DatasetFiles extends Component {
 
         const loadingIcon = (status === "loading") ? (
             <div className="status">
-                <Icon name="circle notched" size="big" loading/> {t("dataset.fileUpload.uploading")}
+                <Icon name="circle notched" size="big" loading /> {t("dataset.fileUpload.uploading")}
             </div>
         ) : null;
 
@@ -89,11 +89,11 @@ class DatasetFiles extends Component {
 
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav/>
+                            <SideNav />
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -101,7 +101,7 @@ class DatasetFiles extends Component {
                                 {t("dataset.files.title")}
                             </Header>
 
-                            <CurrentDatasetName/>
+                            <CurrentDatasetName />
 
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
@@ -113,10 +113,10 @@ class DatasetFiles extends Component {
 
                             {currentEngine && name &&
                                 <>
-                                    <Message attached content={t("dataset.files.description")}/>
+                                    <Message attached content={t("dataset.files.description")} />
                                     <Segment className="attached">
 
-                                        <FileUpload name={name}/>
+                                        <FileUpload name={name} />
 
                                         <div>{loadingIcon}</div>
 
@@ -156,7 +156,7 @@ class DatasetFiles extends Component {
                                         </>
                                     }
                                     </Segment>
-                                    <br/>
+                                    <br />
                                     <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
                                         {t("common.nextButton")}
                                     </Button>

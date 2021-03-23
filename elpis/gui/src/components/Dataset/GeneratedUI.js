@@ -121,7 +121,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                             }
                             break;
                         case "int": {
-                            dataEntryElement = (<Input type="number"/>); /* TODO */
+                            dataEntryElement = (<Input type="number" />); /* TODO */
                             }
                             break;
                         case "select": {

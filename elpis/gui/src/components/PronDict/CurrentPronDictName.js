@@ -18,9 +18,9 @@ class CurrentPronDictName extends Component {
                 {name &&
                 <Message color="olive">
                     {t("engine.common.currentEngineLabel") + engineHumanName}
-                    <br/>
+                    <br />
                     {t("pronDict.common.currentPronDictLabel") + name}
-                    <br/>
+                    <br />
                     {t("dataset.common.currentDatasetLabel") + datasetName}
                 </Message>
                 }
@@ -28,7 +28,7 @@ class CurrentPronDictName extends Component {
                 {!currentEngine &&
                 <Message color="purple">
                     {t("engine.common.noCurrentEngineLabel")}
-                    <SelectEngineDropdown/>
+                    <SelectEngineDropdown />
                 </Message>
                 }
 

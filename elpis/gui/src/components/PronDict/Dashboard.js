@@ -89,11 +89,11 @@ class PronDictDashboard extends Component {
 
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav/>
+                            <SideNav />
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -101,12 +101,12 @@ class PronDictDashboard extends Component {
                                 {t("pronDict.dashboard.title")}
                             </Header>
 
-                            <CurrentPronDictName/>
+                            <CurrentPronDictName />
 
                             {currentEngine &&
                             <>
                                 {list.length === 0 &&
-                                    <NewForm/>
+                                    <NewForm />
                                 }
                                 {list.length > 0 &&
                                 <>

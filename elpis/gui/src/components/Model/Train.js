@@ -46,11 +46,11 @@ class ModelTrain extends Component {
 
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav/>
+                            <SideNav />
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -59,7 +59,7 @@ class ModelTrain extends Component {
                                 {t("model.train.title")}
                             </Header>
 
-                            <CurrentModelName/>
+                            <CurrentModelName />
 
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
@@ -99,10 +99,10 @@ class ModelTrain extends Component {
                                                 let status = stage_status[stage]["status"];
                                                 let log = stage_status[stage]["log"];
                                                 let icon = (status === "in-progress") ?
-                                                    (<Icon name="circle notched" loading/>) :
-                                                    (<Icon name="dropdown"/>);
+                                                    (<Icon name="circle notched" loading />) :
+                                                    (<Icon name="dropdown" />);
                                                 let stage_status_icon = (status === "complete") ?
-                                                    (<Icon name="check"/>) :
+                                                    (<Icon name="check" />) :
                                                     ("");
                                                 let active = this.state.activeIndex === i || status === "in-progress";
 

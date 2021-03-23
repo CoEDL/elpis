@@ -48,7 +48,7 @@ class ChooseModel extends Component {
 
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment>
                     <Grid centered>
                         <Grid.Row>
@@ -58,14 +58,14 @@ class ChooseModel extends Component {
                                 </Header>
                                 {list.length > 0 &&
                                     <>
-                                        <Divider/>
+                                        <Divider />
                                         <p>{t("transcription.choose_model.use_existing")}</p>
                                         <div>
                                             {modelList}
                                         </div>
                                     </>
                                 }
-                                <Divider/>
+                                <Divider />
                                 {list.length === 0 &&
                                     t("transcription.choose_model.no_models_found")
                                 }

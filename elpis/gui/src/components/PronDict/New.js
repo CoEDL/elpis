@@ -17,17 +17,17 @@ class PronDictNew extends Component {
 
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav/>
+                            <SideNav />
                         </Grid.Column>
                         <Grid.Column width={12}>
                             <Header as="h1" text="true">
                                 {t("pronDict.new.title")}
                             </Header>
-                            <NewForm/>
+                            <NewForm />
                         </Grid.Column>
                     </Grid>
                 </Segment>

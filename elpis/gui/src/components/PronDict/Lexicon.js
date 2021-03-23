@@ -40,11 +40,11 @@ class PronDictLexicon extends Component {
 
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav/>
+                            <SideNav />
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -53,7 +53,7 @@ class PronDictLexicon extends Component {
                                 {t("pronDict.lexicon.title")}
                             </Header>
 
-                            <CurrentPronDictName/>
+                            <CurrentPronDictName />
 
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
@@ -65,7 +65,7 @@ class PronDictLexicon extends Component {
 
                             {currentEngine && name &&
                             <>
-                                <Message content={t("pronDict.lexicon.description")}/>
+                                <Message content={t("pronDict.lexicon.description")} />
 
                                 <Button
                                     as={Link}

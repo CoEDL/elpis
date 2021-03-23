@@ -49,7 +49,7 @@ class NewForm extends Component {
                                 type="text"
                                 onChange={handleChange}
                             />
-                            <ErrorMessage component="div" className="error" name="name"/>
+                            <ErrorMessage component="div" className="error" name="name" />
                         </Form.Field>
                         {error &&
                         <p className={"error-message"}>{error}</p>

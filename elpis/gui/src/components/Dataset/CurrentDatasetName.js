@@ -19,7 +19,7 @@ class CurrentDatasetName extends Component {
                 {name &&
                 <Message color="olive">
                     {t("engine.common.currentEngineLabel") + engineHumanName}
-                    <br/>
+                    <br />
                     {t("dataset.common.currentDatasetLabel") + name}
                 </Message>
                 }
@@ -27,7 +27,7 @@ class CurrentDatasetName extends Component {
                 {!currentEngine &&
                 <Message color="purple">
                     {t("engine.common.noCurrentEngineLabel")}
-                    <SelectEngineDropdown/>
+                    <SelectEngineDropdown />
                 </Message>
                 }
 

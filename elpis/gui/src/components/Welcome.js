@@ -11,7 +11,7 @@ class StepWelcome extends Component {
         const {t} = this.props;
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment className="welcome-options">
                     <Grid centered>
                         <Grid.Row>
@@ -21,7 +21,7 @@ class StepWelcome extends Component {
                         </Grid.Row>
                     </Grid>
 
-                    <Divider/>
+                    <Divider />
 
                     <div className="row">
                         <div className="left-col train-button">

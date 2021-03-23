@@ -89,7 +89,7 @@ class NewForm extends Component {
                                 type="text"
                                 onChange={handleChange}
                             />
-                            <ErrorMessage component="div" className="error" name="name"/>
+                            <ErrorMessage component="div" className="error" name="name" />
                         </Form.Field>
 
                         {/* For Kaldi engines, base the model on the pron dict.

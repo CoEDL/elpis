@@ -26,7 +26,7 @@ class StepBranding extends Component {
                 <Menu secondary>
                     <Menu.Item>
                         <Link to="/">
-                            <Image floated="left" src={elpisLogo} className="logo" alt="logo"/>
+                            <Image floated="left" src={elpisLogo} className="logo" alt="logo" />
                         </Link>
                     </Menu.Item>
                     <Menu.Item>
@@ -40,10 +40,10 @@ class StepBranding extends Component {
                         </a>
                     </Menu.Item>
                     <Menu.Item>
-                        <DevToolbar dev_mode={dev_mode}/>
+                        <DevToolbar dev_mode={dev_mode} />
                     </Menu.Item>
                     <Menu.Item>
-                        <SelectLanguage/>
+                        <SelectLanguage />
                     </Menu.Item>
                     <Menu.Item position="right">
                         {currentEngine &&

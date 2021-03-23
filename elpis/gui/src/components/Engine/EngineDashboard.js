@@ -10,7 +10,7 @@ const EngineDashboard = () => {
     const {t} = useTranslation("common");
     return (
         <div>
-            <Branding/>
+            <Branding />
             <Segment>
                 <Grid centered>
                     <Grid.Row>
@@ -22,7 +22,7 @@ const EngineDashboard = () => {
                     </Grid.Row>
                 </Grid>
 
-                <ChooseEngine/>
+                <ChooseEngine />
 
             </Segment>
         </div>

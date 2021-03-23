@@ -41,7 +41,7 @@ class FileUpload extends Component {
                                     dropzone_active: isDragActive,
                                 })}
                             >
-                                <input {...getInputProps()}/>
+                                <input {...getInputProps()} />
                                 {isDragActive ?
                                         (<p>{t("dataset.fileUpload.dropFilesHintDragActive")}</p>) :
                                         (<p>{t("dataset.fileUpload.dropFilesHint")}</p>)

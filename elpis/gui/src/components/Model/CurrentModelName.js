@@ -20,13 +20,13 @@ class CurrentModelName extends Component {
                 {name &&
                 <Message color="olive">
                     {t("engine.common.currentEngineLabel") + engineHumanName}
-                    <br/>
+                    <br />
                     {t("model.common.currentModelLabel") + name}
-                    <br/>
+                    <br />
                     {currentEngine && currentEngine === "kaldi" &&
                         <>
                             {t("pronDict.common.currentPronDictLabel") + dictName}
-                            <br/>
+                            <br />
                         </>
                     }
                     {t("dataset.common.currentDatasetLabel") + datasetName}
@@ -36,7 +36,7 @@ class CurrentModelName extends Component {
                 {!currentEngine &&
                 <Message color="purple">
                     {t("engine.common.noCurrentEngineLabel")}
-                    <SelectEngineDropdown/>
+                    <SelectEngineDropdown />
                 </Message>
                 }
 

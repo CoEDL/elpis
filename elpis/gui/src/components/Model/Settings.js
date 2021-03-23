@@ -17,11 +17,11 @@ class ModelSettings extends Component {
         const {t, currentEngine, settings, modelSettings, name} = this.props;
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav/>
+                            <SideNav />
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -30,7 +30,7 @@ class ModelSettings extends Component {
                                 {t("model.settings.title")}
                             </Header>
 
-                            <CurrentModelName/>
+                            <CurrentModelName />
 
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
@@ -49,8 +49,8 @@ class ModelSettings extends Component {
 
                             {currentEngine && currentEngine === "kaldi" && name &&
                             <>
-                                <Message content={t("model.settings.description")}/>
-                                <Message attached content={t("model.settings.ngramDescription")}/>
+                                <Message content={t("model.settings.description")} />
+                                <Message attached content={t("model.settings.ngramDescription")} />
                                 <Formik
                                     className="attached"
                                     enableReinitialize
@@ -86,7 +86,7 @@ class ModelSettings extends Component {
                                                 <option key="4" value="4">4</option>
                                                 <option key="5" value="5">5</option>
                                             </Field>
-                                            <Divider/>
+                                            <Divider />
                                             <Button type="button" onClick={handleSubmit} disabled={!name}>
                                                 {t("common.nextButton")}
                                             </Button>

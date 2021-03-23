@@ -80,11 +80,11 @@ class DatasetDashboard extends Component {
 
         return (
             <div>
-                <Branding/>
+                <Branding />
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav/>
+                            <SideNav />
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -92,12 +92,12 @@ class DatasetDashboard extends Component {
                                 {t("dataset.dashboard.title")}
                             </Header>
 
-                            <CurrentDatasetName/>
+                            <CurrentDatasetName />
 
                             {currentEngine &&
                             <>
                                 {list.length === 0 &&
-                                    <NewForm/>
+                                    <NewForm />
                                 }
                                 {list.length > 0 &&
                                 <>
