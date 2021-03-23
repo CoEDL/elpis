@@ -9,7 +9,6 @@ import DevToolbar from "./DevToolbar";
 import SelectLanguage from "./SelectLanguage";
 
 class StepBranding extends Component {
-
     reset = () => {
         this.props._configReset();
         window.location.href = "/";

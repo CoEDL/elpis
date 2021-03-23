@@ -12,7 +12,6 @@ import GeneratedUI from "./GeneratedUI";
 import urls from "urls";
 
 class DatasetFiles extends Component {
-
     handleNextButton = () => {
         const {history, datasetPrepare} = this.props;
 

@@ -8,7 +8,6 @@ const initState = {
 };
 const config = (state = initState, action) => {
     switch (action.type) {
-
         case actionTypes.CONFIG_OBJECT_NAMES_STARTED:
         case actionTypes.CONFIG_OBJECT_NAMES_FAILURE:
             return {...state};

@@ -12,7 +12,6 @@ import CurrentDatasetName from "./CurrentDatasetName";
 import urls from "urls";
 
 class DatasetDashboard extends Component {
-
     state = {
         column: null,
         reverse: false,

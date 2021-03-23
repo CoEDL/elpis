@@ -13,7 +13,6 @@ import CurrentPronDictName from "./CurrentPronDictName";
 import urls from "urls";
 
 class PronDictDashboard extends Component {
-
     state = {
         column: null,
         reverse: false,

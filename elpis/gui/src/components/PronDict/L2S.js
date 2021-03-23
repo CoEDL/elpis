@@ -13,7 +13,6 @@ import CurrentPronDictName from "./CurrentPronDictName";
 import urls from "urls";
 
 class PronDictL2S extends Component {
-
     onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
 

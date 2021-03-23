@@ -14,7 +14,6 @@ import CurrentModelName from "./CurrentModelName";
 import urls from "urls";
 
 class ModelDashboard extends Component {
-
     state = {
         column: null,
         reverse: false,

@@ -10,7 +10,6 @@ import urls from "urls";
 
 
 class NewForm extends Component {
-
     // Get me a list of all the data sets and pron dicts we have
     componentDidMount() {
         const {interfaceObjectNames} = this.props;

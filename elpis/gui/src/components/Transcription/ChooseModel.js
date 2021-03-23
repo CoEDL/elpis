@@ -12,7 +12,6 @@ import urls from "urls";
 
 
 class ChooseModel extends Component {
-
     componentDidMount() {
         this.props._modelList();
     }

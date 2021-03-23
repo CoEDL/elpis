@@ -10,9 +10,7 @@ const initState = {
 };
 
 const transcription = (state = initState, action) => {
-
     switch (action.type) {
-
         case actionTypes.TRANSCRIPTION_NEW_SUCCESS:
             var {originalFilename} = action.response.data.data;
 

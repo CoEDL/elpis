@@ -7,7 +7,6 @@ import SelectEngineDropdown from "components/Engine/SelectEngineDropdown";
 import urls from "urls";
 
 class CurrentDatasetName extends Component {
-
     render() {
         const {t, currentEngine, engineHumanNames, name, datasetList, match} = this.props;
 

@@ -23,7 +23,6 @@ const dataset = (state = initState, action) => {
     let data, status;
 
     switch (action.type) {
-
         // Boilerplate for all...
         case actionTypes.DATASET_NEW_STARTED:
         case actionTypes.DATASET_NEW_FAILURE:
@@ -179,7 +178,6 @@ const dataset = (state = initState, action) => {
 
                 return {...state};
             }
-
 
 
         default:

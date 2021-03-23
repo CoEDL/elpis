@@ -5,7 +5,6 @@ import {withTranslation} from "react-i18next";
 import {Message} from "semantic-ui-react";
 
 class CurrentEngineName extends Component {
-
     render() {
         const {t, engine_name} = this.props;
 

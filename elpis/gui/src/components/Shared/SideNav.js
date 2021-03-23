@@ -10,7 +10,6 @@ import "./SideNav.css";
 
 
 class SideNav extends Component {
-
     handleStepSelect = (step) => {
         const {history} = this.props;
 

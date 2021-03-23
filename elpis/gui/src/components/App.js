@@ -27,7 +27,6 @@ import urls from "urls";
 
 
 class App extends Component {
-
     componentDidMount() {
         this.props._configList();
     }

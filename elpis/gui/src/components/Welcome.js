@@ -6,7 +6,6 @@ import Branding from "./Shared/Branding";
 import urls from "urls";
 
 class StepWelcome extends Component {
-
     render() {
         const {t} = this.props;
 

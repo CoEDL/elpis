@@ -7,7 +7,6 @@ import SelectEngineDropdown from "components/Engine/SelectEngineDropdown";
 import urls from "urls";
 
 class CurrentPronDictName extends Component {
-
     render() {
         const {t, currentEngine, engineHumanNames, pronDictList, datasetName, name, match} = this.props;
         const onDashboard = (match.url === urls.gui.pronDict.index) ? true : false;

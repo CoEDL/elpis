@@ -9,7 +9,6 @@ import NewForm from "../PronDict/NewForm";
 
 
 class PronDictNew extends Component {
-
     componentDidMount() {}
 
     render() {

@@ -5,9 +5,7 @@ import {withTranslation} from "react-i18next";
 import {engineLoad} from "redux/actions/engineActions";
 
 class SelectEngineDropdown extends Component {
-
     render() {
-
         let {t, currentEngine, engineHumanNames, list, _engineLoad} = this.props;
 
         let handleChange = (_event, data) => {

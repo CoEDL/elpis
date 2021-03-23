@@ -9,7 +9,6 @@ import urls from "urls";
 
 
 class NewForm extends Component {
-
      render() {
         const {t, error, datasetNew} = this.props;
 

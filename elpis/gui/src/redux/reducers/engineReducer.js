@@ -30,6 +30,5 @@ const engine = (state = initialEngineState, action) => {
 		default:
 			return {...state};
 	}
-
 };
 export default engine;

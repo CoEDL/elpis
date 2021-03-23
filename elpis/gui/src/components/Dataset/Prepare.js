@@ -10,7 +10,6 @@ import CurrentDatasetName from "./CurrentDatasetName";
 import urls from "urls";
 
 class DatasetPrepare extends Component {
-
     state = {
         column: null,
         reverse: false,

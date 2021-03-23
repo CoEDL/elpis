@@ -84,9 +84,7 @@ const initialStepModelState = {
 };
 
 const sideNav = (state = initialStepModelState, action) => {
-
 	switch (action.type) {
-
 		case actionTypes.ENGINE_LOAD_SUCCESS: {
 			let engine = action.response.data.data.engine;
 

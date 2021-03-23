@@ -35,7 +35,6 @@ const configResetSuccess = response => ({
 });
 
 
-
 /* * * * * * * * * * * *  INTERFACE * * * * * * * * * * *  */
 
 // this loads all the names of datasets, pron_dicts, models that have been made

@@ -10,13 +10,10 @@ import CurrentPronDictName from "./CurrentPronDictName";
 import urls from "urls";
 
 class PronDictLexicon extends Component {
-
-
     componentDidMount = () => {
         const {lexicon} = this.props;
 
         if (!lexicon) this.generateLexicon();
-
     }
 
     generateLexicon = () => {
@@ -35,7 +32,6 @@ class PronDictLexicon extends Component {
 
 
     render() {
-
         const {t, currentEngine, lexicon, name} = this.props;
 
         const interactionDisabled = name ? false : true;

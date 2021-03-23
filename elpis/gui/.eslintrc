@@ -24,7 +24,7 @@
     key-spacing: "error",
     space-infix-ops: "error",
     max-len: ["error", {"code": 120}],
-    "padding-line-between-statements": [
+    padding-line-between-statements: [
       "error",
       // Always require blank lines after directive (like 'use-strict'), except between directives
       {blankLine: 'always', prev: 'directive', next: '*'},
@@ -40,8 +40,11 @@
       {blankLine: 'always', prev: '*', next: ['if', 'class', 'for', 'do', 'while', 'switch', 'try']},
       {blankLine: 'always', prev: ['if', 'class', 'for', 'do', 'while', 'switch', 'try'], next: '*'},
       // Always require blank lines before return statements
-      {blankLine: 'always', prev: '*', next: 'return'},
+      {blankLine: 'always', prev: '*', next: 'return'}
     ],
+    padded-blocks: ["error", "never"],
+    lines-between-class-members: ["error", "always"],
+    "no-multiple-empty-lines": ["error", {"max": 2}],
     react/jsx-curly-spacing: ["error", {"when": "never"}],
     react/jsx-closing-tag-location: "error",
     react/jsx-closing-bracket-location: "error",

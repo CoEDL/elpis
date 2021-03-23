@@ -11,7 +11,6 @@ import CurrentModelName from "./CurrentModelName";
 import urls from "urls";
 
 class ModelTrain extends Component {
-
     state = {
         statusInterval: null,
         activeIndex: null,
@@ -88,7 +87,6 @@ class ModelTrain extends Component {
                                                 exclusive={false}
                                             >
                                                 {Object.keys(stage_status).map((stage, i) => {
-
                                                 let name = stage_status[stage]["name"];
                                                 let status = stage_status[stage]["status"];
                                                 let log = stage_status[stage]["log"];

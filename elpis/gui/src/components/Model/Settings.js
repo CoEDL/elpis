@@ -11,8 +11,6 @@ import CurrentModelName from "./CurrentModelName";
 import urls from "urls";
 
 class ModelSettings extends Component {
-
-
     render() {
         const {t, currentEngine, settings, modelSettings, name} = this.props;
 

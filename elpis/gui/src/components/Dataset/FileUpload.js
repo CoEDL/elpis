@@ -8,7 +8,6 @@ import {datasetFiles} from "redux/actions/datasetActions";
 import {connect} from "react-redux";
 
 class FileUpload extends Component {
-
     onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
 
@@ -21,7 +20,6 @@ class FileUpload extends Component {
     }
 
     render() {
-
         const {t, name} = this.props;
 
         const interactionDisabled = name ? false : true;

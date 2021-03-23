@@ -8,9 +8,7 @@ import urls from "urls";
 
 
 class ChooseEngine extends Component {
-
     render() {
-
         let {t, list, _engineLoad, history} = this.props;
 
         let selectEngine = engine_name => {
