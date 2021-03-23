@@ -71,7 +71,7 @@ class ModelSettings extends Component {
                                     >
                                         {({
                                           handleSubmit,
-                                          handleChange
+                                          handleChange,
                                         }) => (
                                             <Form onSubmit={handleChange}>
                                                 <Field component="select" name="ngram">
