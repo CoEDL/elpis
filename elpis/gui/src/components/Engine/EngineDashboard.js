@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
 import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
-import ChooseEngine from './ChooseEngine'
+import ChooseEngine from './ChooseEngine';
 
 import urls from 'urls';
 
@@ -30,19 +30,19 @@ const EngineDashboard = props => {
 
             </Segment>
         </div>
-    )
-}
+    );
+};
 
 const mapStateToProps = state => {
     return {
         list: state.engine.engine_list,
         currentEngine: state.engine.engine
-    }
-}
+    };
+};
 
 
 export default withRouter(
     connect(mapStateToProps)(
         EngineDashboard
     )
-)
+);

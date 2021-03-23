@@ -78,4 +78,4 @@ export default {
             "elan": "/api/transcription/elan"
         }
     }
-}
+};

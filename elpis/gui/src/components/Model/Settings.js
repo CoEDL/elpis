@@ -8,13 +8,13 @@ import { modelSettings } from 'redux/actions/modelActions';
 import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
 import CurrentModelName from "./CurrentModelName";
-import urls from 'urls'
+import urls from 'urls';
 
 class ModelSettings extends Component {
 
 
     render() {
-        console.log("currentEngine", currentEngine)
+        console.log("currentEngine", currentEngine);
         const { t, currentEngine, settings, modelSettings, name } = this.props;
         return (
             <div>
@@ -70,9 +70,9 @@ class ModelSettings extends Component {
                                         return errors;
                                     } }
                                     onSubmit={ (values, { setSubmitting }) => {
-                                        const postData = {ngram: values.ngram}
-                                        modelSettings(postData)
-                                        this.props.history.push(urls.gui.model.train)
+                                        const postData = {ngram: values.ngram};
+                                        modelSettings(postData);
+                                        this.props.history.push(urls.gui.model.train);
                                     } }
                                 >
                                     { ({
@@ -116,14 +116,14 @@ const mapStateToProps = state => {
         name: state.model.name,
         settings: state.model.settings,
         currentEngine: state.engine.engine
-    }
-}
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     modelSettings: postData => {
         dispatch(modelSettings(postData));
     }
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(ModelSettings)

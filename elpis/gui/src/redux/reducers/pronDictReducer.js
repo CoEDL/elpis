@@ -8,7 +8,7 @@ const initState = {
     l2s: '',
     lexicon: '',
     apiWaiting: {status: false, message: 'something'}
-}
+};
 
 // If we want to check status code, use action.response.data
 // so then we need to access the properties at data.xyz etc
@@ -21,55 +21,55 @@ const pronDict = (state = initState, action) => {
                 return { ...initState,
                     status: action.response.data.status,
                     error: action.response.data.error
-                }
+                };
             } else {
-                var {name} = action.response.data.data.config
+                var {name} = action.response.data.data.config;
                 return {
                     ...initState,
                     name
-                }
+                };
             }
 
         case actionTypes.PRON_DICT_LOAD_SUCCESS:
-            var { config, l2s, lexicon } = action.response.data.data
+            var { config, l2s, lexicon } = action.response.data.data;
             return {
                 ...state,
                 name: config.name,
                 datasetName: config.dataset_name,
                 l2s,
                 lexicon
-            }
+            };
 
         case actionTypes.PRON_DICT_LIST_SUCCESS:
-            var { list } = action.response.data.data
+            var { list } = action.response.data.data;
             return {
                 ...state,
                 pronDictList: list
-            }
+            };
 
         case actionTypes.PRON_DICT_L2S_SUCCESS:
-            var { data, status } = action.response.data
+            var { data, status } = action.response.data;
             if (status === 200) {
                 return {
                     ...state,
                     l2s: data.l2s
-                }
+                };
             } else {
-                console.log("some error with l2s")
-                return { ...state }
+                console.log("some error with l2s");
+                return { ...state };
             }
 
         case actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS:
         case actionTypes.PRON_DICT_SAVE_LEXICON_SUCCESS:
-            var { data, status } = action.response.data
+            var { data, status } = action.response.data;
             if (status === 200){
                 return {
                     ...state,
                     lexicon: data.lexicon
-                }
+                };
             } else {
-                console.log("some error building or saving lexicon")
-                return { ...state }
+                console.log("some error building or saving lexicon");
+                return { ...state };
             }
 
         // This doesn't use the API, just for the form
@@ -78,11 +78,11 @@ const pronDict = (state = initState, action) => {
             return {
                 ...state,
                 lexicon: action.data.lexicon
-            }
+            };
 
         default:
-            return { ...state }
+            return { ...state };
     }
-}
+};
 
 export default pronDict;

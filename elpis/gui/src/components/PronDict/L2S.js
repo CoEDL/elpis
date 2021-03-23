@@ -10,13 +10,13 @@ import { pronDictL2S } from 'redux/actions/pronDictActions';
 import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
 import CurrentPronDictName from "./CurrentPronDictName";
-import urls from 'urls'
+import urls from 'urls';
 
 class PronDictL2S extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
         console.log("files dropped:", acceptedFiles);
-        const { pronDictL2S } = this.props
+        const { pronDictL2S } = this.props;
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
         pronDictL2S(formData);
@@ -25,13 +25,13 @@ class PronDictL2S extends Component {
     render() {
         const { t, currentEngine, l2s, name } = this.props;
 
-        const interactionDisabled = name ? false : true
+        const interactionDisabled = name ? false : true;
 
         const pron = l2s ? (
             <pre>
                 { l2s }
             </pre>
-        ) : null
+        ) : null;
 
         return (
             <div>
@@ -116,14 +116,14 @@ const mapStateToProps = state => {
         l2s: state.pronDict.l2s,
         name: state.pronDict.name,
         currentEngine: state.engine.engine
-    }
-}
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     pronDictL2S: postData => {
         dispatch(pronDictL2S(postData));
     }
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(PronDictL2S)

@@ -137,7 +137,7 @@ label.pad-right,
 
 .top-nav {
     font-weight: 400;
-    border-width: 0px !important;
+    border-width: 0 !important;
     box-shadow: none !important;
 }
 
@@ -168,9 +168,7 @@ label.pad-right,
     margin: 0;
 }
 
-.xwelcome-description {
-    margin-bottom: 3em;
-}
+
 .train-description,
 .transcription-description {
     margin-bottom: 1em;

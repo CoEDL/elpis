@@ -6,23 +6,23 @@ import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { pronDictNew } from 'redux/actions/pronDictActions';
 import { datasetList } from 'redux/actions/datasetActions';
-import urls from 'urls'
+import urls from 'urls';
 
 
 class NewForm extends Component {
 
     componentDidMount() {
-        this.props.datasetList()
+        this.props.datasetList();
     }
 
     render() {
         const { t, currentEngine, error, currentDataset, datasets, pronDictNew } = this.props;
 
-        let defaultDatasetName = ''
+        let defaultDatasetName = '';
         if (currentDataset) {
-            defaultDatasetName = currentDataset
+            defaultDatasetName = currentDataset;
         } else if (datasets.length > 0) {
-            defaultDatasetName = datasets[0]
+            defaultDatasetName = datasets[0];
         }
 
         return (
@@ -45,8 +45,8 @@ class NewForm extends Component {
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    const postData = { name: values.name, dataset_name: values.dataset_name }
-                    pronDictNew(postData, this.props.history)
+                    const postData = { name: values.name, dataset_name: values.dataset_name };
+                    pronDictNew(postData, this.props.history);
                 }}
             >
                 {({
@@ -91,7 +91,7 @@ class NewForm extends Component {
                         </Form>
                     )}
             </Formik>
-        )
+        );
     }
 }
 
@@ -102,26 +102,26 @@ const mapStateToProps = state => {
         datasets: state.dataset.datasetList,
         error: state.pronDict.error,
         currentEngine: state.engine.engine
-    }
-}
+    };
+};
 const mapDispatchToProps = dispatch => ({
     datasetList: () => {
-        dispatch(datasetList())
+        dispatch(datasetList());
     },
     pronDictNew: (postData, history) => {
         dispatch(pronDictNew(postData))
             .then(response => {
                 if (response.status===500) {
-                    throw Error(response.error)
+                    throw Error(response.error);
                 }
-                return response
+                return response;
             })
             .then(response => {
-                history.push(urls.gui.pronDict.l2s)
+                history.push(urls.gui.pronDict.l2s);
             })
-            .catch(error => console.log("error", error))
+            .catch(error => console.log("error", error));
     }
-})
+});
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(NewForm)
 ));

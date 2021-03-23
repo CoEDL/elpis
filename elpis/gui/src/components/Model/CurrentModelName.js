@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { Message } from 'semantic-ui-react';
-import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown'
-import urls from 'urls'
+import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown';
+import urls from 'urls';
 
 class CurrentModelName extends Component {
 
     render() {
-        const { t, currentEngine, engineHumanNames, modelList, datasetName, pronDictName, name, match } = this.props
+        const { t, currentEngine, engineHumanNames, modelList, datasetName, pronDictName, name, match } = this.props;
 
-        const onDashboard = (match.url === urls.gui.model.index) ? true : false
-        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : ''
-        const dictName = pronDictName ? pronDictName : t('model.common.pronDictNotRequired')
+        const onDashboard = (match.url === urls.gui.model.index) ? true : false;
+        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : '';
+        const dictName = pronDictName ? pronDictName : t('model.common.pronDictNotRequired');
 
         return (
             <>
@@ -59,7 +59,7 @@ class CurrentModelName extends Component {
                 </Message>
                 }
             </>
-        )
+        );
     }
 }
 
@@ -71,10 +71,10 @@ const mapStateToProps = state => {
         pronDictName: state.model.pronDictName,
         currentEngine: state.engine.engine,
         engineHumanNames: state.engine.engine_human_names
-    }
-}
+    };
+};
 export default withRouter(
     connect(mapStateToProps)(
         withTranslation("common")(CurrentModelName)
     )
-)
+);

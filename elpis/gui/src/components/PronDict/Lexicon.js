@@ -7,36 +7,36 @@ import { pronDictBuildLexicon, pronDictSaveLexicon, pronDictUpdateLexicon } from
 import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
 import CurrentPronDictName from "./CurrentPronDictName";
-import urls from 'urls'
+import urls from 'urls';
 
 class PronDictLexicon extends Component {
 
 
     componentDidMount = () => {
-        const { lexicon } = this.props
-        if (!lexicon) this.generateLexicon()
+        const { lexicon } = this.props;
+        if (!lexicon) this.generateLexicon();
 
     }
 
     generateLexicon = () => {
-        this.props.pronDictBuildLexicon()
+        this.props.pronDictBuildLexicon();
     }
 
     saveLexicon = () => {
-        const data = { "lexicon": this.props.lexicon }
-        this.props.pronDictSaveLexicon(data)
+        const data = { "lexicon": this.props.lexicon };
+        this.props.pronDictSaveLexicon(data);
     }
 
     handleChange = (event) => {
-        this.props.pronDictUpdateLexicon( { "lexicon": event.target.value } )
+        this.props.pronDictUpdateLexicon( { "lexicon": event.target.value } );
     }
 
 
     render() {
 
-        const { t, currentEngine, lexicon, name } = this.props
+        const { t, currentEngine, lexicon, name } = this.props;
 
-        const interactionDisabled = name ? false : true
+        const interactionDisabled = name ? false : true;
 
         return (
             <div>
@@ -92,7 +92,7 @@ class PronDictLexicon extends Component {
                     </Grid>
                 </Segment>
             </div>
-        )
+        );
     }
 }
 
@@ -102,23 +102,23 @@ const mapStateToProps = (state) => {
         l2s: state.pronDict.l2s,
         lexicon: state.pronDict.lexicon,
         currentEngine: state.engine.engine
-    }
-}
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     pronDictBuildLexicon: () => {
         dispatch(pronDictBuildLexicon())
-            .then(response => console.log(response))
+            .then(response => console.log(response));
     },
     pronDictSaveLexicon: data => {
         dispatch(pronDictSaveLexicon(data))
-            .then(response => console.log(response))
+            .then(response => console.log(response));
     },
     pronDictUpdateLexicon: data => {
-        dispatch(pronDictUpdateLexicon(data))
+        dispatch(pronDictUpdateLexicon(data));
     }
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(PronDictLexicon)
-)
+);

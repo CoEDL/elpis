@@ -34,15 +34,15 @@ class PronDictNew extends Component {
                     </Grid>
                 </Segment>
             </div>
-        )
+        );
     }
 }
 
 const mapStateToProps = state => {
     return {
         name: state.pronDict.name
-    }
-}
+    };
+};
 
 export default withRouter(connect(mapStateToProps)(
     withTranslation("common")(PronDictNew)

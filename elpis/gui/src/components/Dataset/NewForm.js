@@ -5,7 +5,7 @@ import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { datasetNew } from 'redux/actions/datasetActions';
-import urls from 'urls'
+import urls from 'urls';
 
 
 class NewForm extends Component {
@@ -31,8 +31,8 @@ class NewForm extends Component {
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    const postData = { name: values.name }
-                    datasetNew(postData, this.props.history)
+                    const postData = { name: values.name };
+                    datasetNew(postData, this.props.history);
                 }}
             >
                 {({
@@ -65,7 +65,7 @@ class NewForm extends Component {
                         </Form>
                     )}
             </Formik>
-        )
+        );
     }
 }
 
@@ -73,23 +73,23 @@ const mapStateToProps = state => {
     return {
         name: state.dataset.name,
         error: state.dataset.error
-    }
-}
+    };
+};
 const mapDispatchToProps = dispatch => ({
     datasetNew: (name, history) => {
         dispatch(datasetNew(name, history))
             .then(response => {
                 if (response.status===500) {
-                    throw Error(response.error)
+                    throw Error(response.error);
                 }
-                return response
+                return response;
             })
             .then(response => {
-                history.push(urls.gui.dataset.files)
+                history.push(urls.gui.dataset.files);
             })
-            .catch(error => console.log("error", error))
+            .catch(error => console.log("error", error));
     }
-})
+});
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(NewForm)
 ));

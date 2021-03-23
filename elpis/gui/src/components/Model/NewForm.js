@@ -6,15 +6,15 @@ import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { interfaceObjectNames } from 'redux/actions/configActions';
 import { modelNew } from 'redux/actions/modelActions';
-import urls from 'urls'
+import urls from 'urls';
 
 
 class NewForm extends Component {
 
     // Get me a list of all the data sets and pron dicts we have
     componentDidMount() {
-        const { interfaceObjectNames } = this.props
-        interfaceObjectNames()
+        const { interfaceObjectNames } = this.props;
+        interfaceObjectNames();
     }
 
     // TODO handle error when attempting to make a new model with no dataset / pron dict selected
@@ -26,17 +26,17 @@ class NewForm extends Component {
          *  else preselect the first item in each list.
          *  This allows the values to be passed to onsubmit without having to explicitly select either
         */
-        let defaultDatasetName = ''
+        let defaultDatasetName = '';
         if (currentDataset) {
-            defaultDatasetName = currentDataset
+            defaultDatasetName = currentDataset;
         } else if (datasets.length > 0) {
-            defaultDatasetName = datasets[0]
+            defaultDatasetName = datasets[0];
         }
-        let defaultPronDictName = ''
+        let defaultPronDictName = '';
         if (currentPronDict) {
-            defaultPronDictName = currentPronDict
+            defaultPronDictName = currentPronDict;
         } else if (pronDicts.length > 0) {
-            defaultPronDictName = pronDicts[0].name
+            defaultPronDictName = pronDicts[0].name;
         }
 
         return (
@@ -59,18 +59,18 @@ class NewForm extends Component {
                     return errors;
                 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    const filtered_pd = pronDicts.filter(pd => (pd.name == values.pron_dict_name))
-                    const modelData = { name: values.name, engine }
+                    const filtered_pd = pronDicts.filter(pd => (pd.name == values.pron_dict_name));
+                    const modelData = { name: values.name, engine };
                     if (engine === 'kaldi'){
                         // Get the dataset name from the pron dicts setting if we are using Kaldi
-                        modelData["pron_dict_name"] = filtered_pd[0].name
-                        modelData["dataset_name"] = filtered_pd[0].dataset_name
+                        modelData["pron_dict_name"] = filtered_pd[0].name;
+                        modelData["dataset_name"] = filtered_pd[0].dataset_name;
                     } else {
                         // Non-kaldi, use the specified dataset
-                        modelData["dataset_name"] = values.dataset_name
+                        modelData["dataset_name"] = values.dataset_name;
                     }
-                    const redirectAfterModel = engine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train
-                    modelNew(modelData, this.props.history, redirectAfterModel)
+                    const redirectAfterModel = engine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train;
+                    modelNew(modelData, this.props.history, redirectAfterModel);
                 }}
             >
                 {({
@@ -125,7 +125,7 @@ class NewForm extends Component {
                         </Form>
                     )}
             </Formik>
-        )
+        );
     }
 }
 
@@ -138,26 +138,26 @@ const mapStateToProps = state => {
         currentDataset: state.dataset.name,
         currentPronDict: state.pronDict.name,
         error: state.model.error
-    }
-}
+    };
+};
 const mapDispatchToProps = dispatch => ({
     interfaceObjectNames: () => {
-        dispatch(interfaceObjectNames())
+        dispatch(interfaceObjectNames());
     },
     modelNew: (postData, history, redirectAfterModel) => {
         dispatch(modelNew(postData))
             .then(response => {
                 if (response.status===500) {
-                    throw Error(response.error)
+                    throw Error(response.error);
                 }
-                return response
+                return response;
             })
             .then(response => {
-                history.push(redirectAfterModel)
+                history.push(redirectAfterModel);
             })
-            .catch(error => console.log("error", error))
+            .catch(error => console.log("error", error));
     }
-})
+});
 export default withRouter(connect(
     mapStateToProps, mapDispatchToProps)(
         withTranslation("common")(NewForm)

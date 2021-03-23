@@ -32,8 +32,8 @@ class DatasetNew extends Component {
                     </Grid>
                 </Segment>
             </div>
-        )
+        );
     }
 }
 
-export default withTranslation("common")(DatasetNew)
+export default withTranslation("common")(DatasetNew);

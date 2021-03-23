@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { Message } from 'semantic-ui-react';
-import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown'
-import urls from 'urls'
+import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown';
+import urls from 'urls';
 
 class CurrentDatasetName extends Component {
 
     render() {
-        const { t, currentEngine, engineHumanNames, name, datasetList, match } = this.props
+        const { t, currentEngine, engineHumanNames, name, datasetList, match } = this.props;
 
-        const onDashboard = (match.url === urls.gui.dataset.index) ? true : false
-        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : ''
+        const onDashboard = (match.url === urls.gui.dataset.index);
+        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : '';
 
         return (
             <>
@@ -50,7 +50,7 @@ class CurrentDatasetName extends Component {
                 </Message>
                 }
             </>
-        )
+        );
     }
 }
 
@@ -60,10 +60,10 @@ const mapStateToProps = state => {
         datasetList: state.dataset.datasetList,
         currentEngine: state.engine.engine,
         engineHumanNames: state.engine.engine_human_names
-    }
-}
+    };
+};
 export default withRouter(
     connect(mapStateToProps)(
         withTranslation("common")(CurrentDatasetName)
     )
-)
+);

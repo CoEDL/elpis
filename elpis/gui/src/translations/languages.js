@@ -8,6 +8,6 @@ let languages = {
     fr: {
         common: common_fr               // 'common' is our custom namespace
     }
-}
+};
 
 export default languages;

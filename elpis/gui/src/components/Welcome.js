@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
-import {Grid, Button, Divider, Header, Container, Segment, Placeholder} from 'semantic-ui-react';
-import {connect} from 'react-redux';
+import {Grid, Button, Divider, Segment} from 'semantic-ui-react';
 import {withTranslation} from 'react-i18next';
 import Branding from './Shared/Branding';
-import urls from 'urls'
+import urls from 'urls';
 
 class StepWelcome extends Component {
 
 	render() {
-		const { t, list } = this.props
+		const { t } = this.props;
 		return (
             <div>
                 <Branding />
@@ -47,4 +46,4 @@ class StepWelcome extends Component {
 }
 
 
-export default withTranslation("common")(StepWelcome)
+export default withTranslation("common")(StepWelcome);

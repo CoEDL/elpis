@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { Button, Grid, Header, Icon, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-import arraySort from 'array-sort'
+import arraySort from 'array-sort';
 import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
 import CurrentDatasetName from "./CurrentDatasetName";
-import urls from 'urls'
+import urls from 'urls';
 
 class DatasetPrepare extends Component {
 
@@ -20,27 +20,27 @@ class DatasetPrepare extends Component {
     }
 
     handleSort = (clickedColumn, data) => () => {
-        const { column } = this.state
+        const { column } = this.state;
 
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
                 reverse: false,
-            })
-            arraySort(data, clickedColumn, { reverse: false })
+            });
+            arraySort(data, clickedColumn, { reverse: false });
         } else {
             this.setState({
                 reverse: ! this.state.reverse
-            })
-            arraySort(data, clickedColumn, { reverse: ! this.state.reverse })
+            });
+            arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
         }
     }
 
     render() {
-        const { t, additionalTextFiles, currentEngine, name, status, wordlist } = this.props
-        const { column, direction } = this.state
+        const { t, additionalTextFiles, currentEngine, name, status, wordlist } = this.props;
+        const { column, direction } = this.state;
 
-        const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true
+        const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true;
 
         const listEl = wordlist.length > 0 ? (
             <Table sortable celled fixed unstackable>
@@ -70,12 +70,12 @@ class DatasetPrepare extends Component {
                                     </Table.Cell>
                                     <Table.Cell>{ word.frequency }</Table.Cell>
                                 </Table.Row>
-                            )
+                            );
                         })
                     }
                 </Table.Body>
             </Table>
-        ) : null
+        ) : null;
 
         return (
             <div>
@@ -141,9 +141,9 @@ const mapStateToProps = state => {
         wordlist: state.dataset.wordlist,
         additionalTextFiles: state.dataset.additionalTextFiles,
         status: state.dataset.status
-    }
-}
+    };
+};
 
 export default connect(mapStateToProps)(
     withTranslation("common")(DatasetPrepare)
-)
+);

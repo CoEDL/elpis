@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { Accordion, Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-import ReactTimeout from 'react-timeout'
+import ReactTimeout from 'react-timeout';
 import { modelTrain, modelStatus } from 'redux/actions/modelActions';
 import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
 import CurrentModelName from "./CurrentModelName";
-import urls from 'urls'
+import urls from 'urls';
 
 class ModelTrain extends Component {
 
@@ -21,14 +21,14 @@ class ModelTrain extends Component {
     }
 
     handleModelTrain = () => {
-        this.props.modelTrain()
-        this.setState({...this.state, statusInterval: this.props.setInterval(this.handleModelStatus, 1000)})
+        this.props.modelTrain();
+        this.setState({...this.state, statusInterval: this.props.setInterval(this.handleModelStatus, 1000)});
     }
 
     handleModelStatus = () => {
         const { status, modelStatus } = this.props;
-        modelStatus()
-        if (status === 'trained') this.props.clearInterval(this.state.statusInterval)
+        modelStatus();
+        if (status === 'trained') this.props.clearInterval(this.state.statusInterval);
     }
 
 
@@ -38,8 +38,8 @@ class ModelTrain extends Component {
     }
 
     selectAccordion = i => {
-        this.setState({...this.state, activeIndex: i })
-        return
+        this.setState({...this.state, activeIndex: i });
+        return;
     }
 
     render() {
@@ -47,7 +47,7 @@ class ModelTrain extends Component {
 
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />
-        ) : null
+        ) : null;
 
         return (
             <div>
@@ -99,16 +99,16 @@ class ModelTrain extends Component {
                                             {Object.keys(stage_status).map((stage, i) => {
 
 
-                                                let name = stage_status[stage]["name"]
-                                                let status = stage_status[stage]["status"]
-                                                let message = stage_status[stage]["message"]
-                                                let log = stage_status[stage]["log"]
+                                                let name = stage_status[stage]["name"];
+                                                let status = stage_status[stage]["status"];
+                                                let message = stage_status[stage]["message"];
+                                                let log = stage_status[stage]["log"];
                                                 let icon = (status === "in-progress") ?
                                                     (<Icon name='circle notched' loading />) :
-                                                    (<Icon name='dropdown' />)
+                                                    (<Icon name='dropdown' />);
                                                 let stage_status_icon = (status === "complete") ?
                                                     (<Icon name='check' />) :
-                                                    ('')
+                                                    ('');
 
                                                     return (
                                                         <div key={name}>
@@ -127,7 +127,7 @@ class ModelTrain extends Component {
                                                                 {log}
                                                             </Accordion.Content>
                                                         </div>
-                                                    )
+                                                    );
                                                 }
                                             )}
 
@@ -171,16 +171,16 @@ const mapStateToProps = state => {
         status: state.model.status,
         stage_status: state.model.stage_status,
         currentEngine: state.engine.engine
-    }
-}
+    };
+};
 const mapDispatchToProps = dispatch => ({
     modelTrain: () => {
-        dispatch(modelTrain())
+        dispatch(modelTrain());
     },
     modelStatus: () => {
-        dispatch(modelStatus())
+        dispatch(modelStatus());
     },
-})
+});
 export default connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(
         ReactTimeout(ModelTrain)

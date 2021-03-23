@@ -6,7 +6,7 @@ import { withTranslation } from 'react-i18next';
 import { modelLoad, modelList } from 'redux/actions/modelActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
 import { pronDictLoad } from 'redux/actions/pronDictActions';
-import arraySort from 'array-sort'
+import arraySort from 'array-sort';
 import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
 import NewForm from '../Model/NewForm';
@@ -21,37 +21,37 @@ class ModelDashboard extends Component {
     }
 
     componentDidMount() {
-        this.props.modelList()
+        this.props.modelList();
     }
 
     handleSort = (clickedColumn, data) => () => {
-        const { column } = this.state
+        const { column } = this.state;
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
                 reverse: false,
-            })
-            arraySort(data, clickedColumn, { reverse: false })
+            });
+            arraySort(data, clickedColumn, { reverse: false });
         } else {
             this.setState({
                 reverse: ! this.state.reverse
-            })
-            arraySort(data, clickedColumn, { reverse: ! this.state.reverse })
+            });
+            arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
         }
     }
 
     handleLoad = values => {
-        const { modelLoad } = this.props
-        const modelData = { name: values.name }
-        const datasetData = { name: values.dataset_name }
-        const pronDictData = { name: values.pron_dict_name }
-        modelLoad(modelData, datasetData, pronDictData)
+        const { modelLoad } = this.props;
+        const modelData = { name: values.name };
+        const datasetData = { name: values.dataset_name };
+        const pronDictData = { name: values.pron_dict_name };
+        modelLoad(modelData, datasetData, pronDictData);
     }
 
     render() {
-        const { t, currentEngine, name, list } = this.props
-        const { column, direction } = this.state
-        const redirectAfterModel = currentEngine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train
+        const { t, currentEngine, name, list } = this.props;
+        const { column, direction } = this.state;
+        const redirectAfterModel = currentEngine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train;
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
                 <Table.Header>
@@ -79,7 +79,7 @@ class ModelDashboard extends Component {
                 <Table.Body>
                     {
                         list.map(model => {
-                            const className = (name === model.name) ? 'current' : ''
+                            const className = (name === model.name) ? 'current' : '';
                             return (
                                 <Table.Row key={ model.name } className={ className }>
                                     <Table.Cell>
@@ -92,12 +92,12 @@ class ModelDashboard extends Component {
                                     <Table.Cell>{ model.dataset_name }</Table.Cell>
                                     <Table.Cell>{ model.pron_dict_name }</Table.Cell>
                                 </Table.Row>
-                            )
+                            );
                         })
                     }
                 </Table.Body>
             </Table>
-        ) : <p>{ t('model.dashboard.noneMessage') }</p>
+        ) : <p>{ t('model.dashboard.noneMessage') }</p>;
 
         return (
             <div>
@@ -153,26 +153,26 @@ const mapStateToProps = state => {
         name: state.model.name,
         list: state.model.modelList,
         currentEngine: state.engine.engine
-    }
-}
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     modelList: () => {
-        dispatch(modelList())
+        dispatch(modelList());
     },
     modelLoad: (modelData, datasetData, pronDictData) => {
         dispatch(modelLoad(modelData))
             .then( response => dispatch(datasetLoad(datasetData)))
             .then( response => {
                 if (pronDictData.name) {
-                    return dispatch(pronDictLoad(pronDictData))
+                    return dispatch(pronDictLoad(pronDictData));
                 } else {
-                    console.log("No pron dict to load for this model")
+                    console.log("No pron dict to load for this model");
                 }
-            })
+            });
     }
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(ModelDashboard)
-)
+);

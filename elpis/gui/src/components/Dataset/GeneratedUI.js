@@ -22,21 +22,21 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
     // console.group("GeneratedUI");
     // console.log({settings});
     // console.log({ui});
-    const { t } = props
-    const forceUpdate = React.useState()[1].bind(null, {})  // see NOTE above
+    const { t } = props;
+    const forceUpdate = React.useState()[1].bind(null, {});  // see NOTE above
 
     // On initialisation of component, show the tier name and set it properly
     useEffect(() => {
         if (settings !== null) {
-            const selection_mechanism = settings['selection_mechanism']
+            const selection_mechanism = settings['selection_mechanism'];
             ui['data'][selection_mechanism]['shown'] = true;
             // If settings haven't been set, set to the first option
             if (settings[selection_mechanism] === "") {
-                settings[selection_mechanism] = ui['data'][selection_mechanism]['options'][0]
+                settings[selection_mechanism] = ui['data'][selection_mechanism]['options'][0];
             }
-            changeSettingsCallback(settings)
+            changeSettingsCallback(settings);
         }
-    }, [ui])
+    }, [ui]);
 
     if (ui === null || ui === undefined) {
         // console.groupEnd();
@@ -46,9 +46,9 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
     const handleStrChange = (ui_name, data) => {
         // console.log(ui_name, data)
         let newSettings = { ...settings };
-        newSettings[ui_name] = data.value
-        changeSettingsCallback(newSettings)
-    }
+        newSettings[ui_name] = data.value;
+        changeSettingsCallback(newSettings);
+    };
 
     const handleSelectChange = (ui_name, data) => {
         let newSettings = {...settings};
@@ -60,11 +60,11 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
             }
             ui['data'][data.value]['shown'] = true;
             // Update new settings with default value of selected mechanism
-            newSettings[data.value] = ui['data'][data.value]['options'][0]
+            newSettings[data.value] = ui['data'][data.value]['options'][0];
         }
-        newSettings[ui_name] = data.value
-        changeSettingsCallback(newSettings)
-    }
+        newSettings[ui_name] = data.value;
+        changeSettingsCallback(newSettings);
+    };
 
     // Sort names into groups by title followed by settings.
     let settingGroups = groupSettingsFromUI(ui);
@@ -81,7 +81,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
         group.forEach(ui_name => {
             // console.group("Row for " + ui_name);
             if (ui['type'][ui_name] === "title") {
-                currentBlock = ui['data'][ui_name]['title']
+                currentBlock = ui['data'][ui_name]['title'];
                 // console.log("Building title");
                 header = (
                     <>
@@ -106,7 +106,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                                     type='text'
                                     value={settings[ui_name]}
                                     onChange={(event, data) => {
-                                        handleStrChange(ui_name, data)
+                                        handleStrChange(ui_name, data);
                                     }} />);
                             }
                             break;
@@ -114,7 +114,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                             dataEntryElement = (<TextArea
                                     value={settings[ui_name]}
                                     onChange={(event, data) => {
-                                        handleStrChange(ui_name, data)
+                                        handleStrChange(ui_name, data);
                                     }} />);
                             }
                             break;
@@ -126,13 +126,13 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                             let options = [];
                             // Build options
                             data.options.forEach(v => {
-                                options.push({key: v, value: v, text: v})
+                                options.push({key: v, value: v, text: v});
                             });
                             dataEntryElement = (<Select
                                 defaultValue={settings[ui_name]}
                                 options={options}
                                 onChange={(event, data) => {
-                                    handleSelectChange(ui_name, data)
+                                    handleSelectChange(ui_name, data);
                                 }}
                                 selection
                             />);
@@ -177,6 +177,6 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
             {tables}
         </Form>
     </>);
-}
+};
 
 export default GeneratedUI;

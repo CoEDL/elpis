@@ -30,7 +30,7 @@ class ModelNew extends Component {
                     </Grid>
                 </Segment>
             </div>
-        )
+        );
     }
 }
 

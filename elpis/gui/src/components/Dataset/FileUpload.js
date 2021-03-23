@@ -10,19 +10,19 @@ import { connect } from 'react-redux';
 class FileUpload extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
-        console.log("files dropped:", acceptedFiles)
-        var formData = new FormData()
+        console.log("files dropped:", acceptedFiles);
+        var formData = new FormData();
         acceptedFiles.forEach(file => {
-            formData.append('file', file)
-        })
-        this.props.datasetFiles(formData)
+            formData.append('file', file);
+        });
+        this.props.datasetFiles(formData);
     }
 
     render() {
 
-        const { t, name } = this.props
+        const { t, name } = this.props;
 
-        const interactionDisabled = name ? false : true
+        const interactionDisabled = name ? false : true;
 
         return (
             <div className="FileUpload">
@@ -48,21 +48,21 @@ class FileUpload extends Component {
                                 }
                                 <Button>{t('dataset.files.uploadButton')}</Button>
                             </div>
-                        )
+                        );
                     } }
                 </Dropzone>
             </div>
-        )
+        );
     }
 }
 
 
 const mapDispatchToProps = dispatch => ({
     datasetFiles: postData => {
-        dispatch(datasetFiles(postData))
+        dispatch(datasetFiles(postData));
     }
-})
+});
 
 export default connect(null, mapDispatchToProps)(
     withTranslation("common")(FileUpload)
-)
+);

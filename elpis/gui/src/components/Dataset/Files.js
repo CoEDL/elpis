@@ -9,28 +9,28 @@ import SideNav from '../Shared/SideNav';
 import FileUpload from './FileUpload';
 import CurrentDatasetName from "./CurrentDatasetName";
 import GeneratedUI from './GeneratedUI';
-import urls from 'urls'
+import urls from 'urls';
 
 class DatasetFiles extends Component {
 
     handleNextButton = () => {
-        const { history, datasetPrepare } = this.props
-        datasetPrepare(history)
-        history.push(urls.gui.dataset.prepare)
+        const { history, datasetPrepare } = this.props;
+        datasetPrepare(history);
+        history.push(urls.gui.dataset.prepare);
     }
 
     handleDeleteButton = (file) => {
-        var deleteData = new FormData()
+        var deleteData = new FormData();
         deleteData.append('file', file);
-        this.props.datasetDelete(deleteData)
+        this.props.datasetDelete(deleteData);
     }
 
     createFilesList = (files) => files.map(file => (
         <List.Item key={ file }>
             <Popup content={ file } size='mini' trigger={
-                <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
+                <Button as='div' labelPosition='left' className='file-button'>
                     <Label as='a' className='file-label' basic>
-                        <div class='file-truncate'>{ file }</div>
+                        <div className='file-truncate'>{ file }</div>
                     </Label>
                     <Button icon onClick={() => this.handleDeleteButton(file)}>
                         <Icon name='trash' />
@@ -53,36 +53,36 @@ class DatasetFiles extends Component {
             ui,
             datasetSettings } = this.props;
 
-        const interactionDisabled = name ? false : true
+        const interactionDisabled = name ? false : true;
 
         const loadingIcon = (status === 'loading') ? (
             <div className="status">
                 <Icon name='circle notched' size="big" loading /> {t('dataset.fileUpload.uploading')}
             </div>
-        ) : null
+        ) : null;
 
-        const audioFilesList = this.createFilesList(audioFiles)
-        const transcriptionFilesList = this.createFilesList(transcriptionFiles)
-        const additionalTextFilesList = this.createFilesList(additionalTextFiles)
+        const audioFilesList = this.createFilesList(audioFiles);
+        const transcriptionFilesList = this.createFilesList(transcriptionFiles);
+        const additionalTextFilesList = this.createFilesList(additionalTextFiles);
 
         const filesHeader = (
             audioFilesList.length > 0 ||
             transcriptionFilesList.length > 0 ||
             additionalTextFilesList.length > 0) ? (
                  t('dataset.files.filesHeader')
-            ) : null
+            ) : null;
 
         const audioFilesHeader = audioFilesList.length > 0
             ? t('dataset.files.audioFilesHeader')
-            : null
+            : null;
 
         const transcriptionFilesHeader = transcriptionFilesList.length > 0
             ? t('dataset.files.transcriptionFilesHeader')
-            : null
+            : null;
 
         const additionalTextFilesHeader = additionalTextFilesList.length > 0
             ? t('dataset.files.additionalTextFilesHeader')
-            : null
+            : null;
 
         return (
             <div>
@@ -187,8 +187,8 @@ const mapStateToProps = state => {
         ui: state.dataset.ui,
         status: state.dataset.status,
         currentEngine: state.engine.engine
-    }
-}
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     datasetSettings: postData => {
@@ -197,13 +197,13 @@ const mapDispatchToProps = dispatch => ({
     datasetPrepare: (history) => {
         dispatch(datasetPrepare(history))
             .then((response) => {
-                history.push(urls.gui.dataset.prepare)
-            })
+                history.push(urls.gui.dataset.prepare);
+            });
     },
     datasetDelete: postData => {
         dispatch(datasetDelete(postData));
     },
-})
+});
 
 export default withRouter(
     connect(
@@ -212,4 +212,4 @@ export default withRouter(
     )(
         withTranslation("common")(DatasetFiles)
     )
-)
+);

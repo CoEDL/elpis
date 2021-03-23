@@ -1,9 +1,9 @@
 import * as actionTypes from '../actionTypes/appActionTypes';
-import urls from 'urls'
+import urls from 'urls';
 
 // For convenience while developing, set this true
 // false will make the menus collapse
-const enableAll = true
+const enableAll = true;
 
 // Define a total ordering on the steps.
 const stepOrderDefinition = [
@@ -80,7 +80,7 @@ const initialStepModelState = {
 			engine_specific: null
 		}
 	}
-}
+};
 
 const sideNav = (state = initialStepModelState, action) => {
 
@@ -89,7 +89,7 @@ const sideNav = (state = initialStepModelState, action) => {
 		case actionTypes.ENGINE_LOAD_SUCCESS:
 			let engine = action.response.data.data.engine;
 			// Fall through to setting the current step
-			return { ...state, engine}
+			return { ...state, engine};
 
 
 		case actionTypes.APP_SET_CURRENT_STEP: {
@@ -105,8 +105,8 @@ const sideNav = (state = initialStepModelState, action) => {
 			for (let [stepName, step] of Object.entries(originalStepsState.steps)) {
 				step.substeps.forEach((substep, i) => {
 					// model/new type pages aren't represented in the substeps, so match them to the first in each step
-					const searchReg = /\/new|\//ig
-					const path_match = (window.location.pathname.replace(searchReg,"") === substep.path.replace(searchReg,"")) ? 1 : 0
+					const searchReg = /\/new|\//ig;
+					const path_match = (window.location.pathname.replace(searchReg,"") === substep.path.replace(searchReg,"")) ? 1 : 0;
 					if (path_match){
 						// Found the current step!
 						currentStepName = stepName;
@@ -130,9 +130,9 @@ const sideNav = (state = initialStepModelState, action) => {
 
 				step.substeps.forEach((substep, i) => {
 					// reset all
-					substep.done = false
-					substep.doing = false
-					substep.enabled = false
+					substep.done = false;
+					substep.doing = false;
+					substep.enabled = false;
 
 					// Determine the substep situation
 					let isPastSubStep =    i  <  currentSubStepIndex;
@@ -142,36 +142,36 @@ const sideNav = (state = initialStepModelState, action) => {
 
 					// previous
 					if (isPastStep || (isCurrentStep && isPastSubStep)) {
-						step.done = true
-						substep.done = true
-						step.enabled = true
-						substep.enabled = true
+						step.done = true;
+						substep.done = true;
+						step.enabled = true;
+						substep.enabled = true;
 					}
 					// this one
 					if (isCurrentStep) {
-						step.doing = true
-						step.enabled = true
+						step.doing = true;
+						step.enabled = true;
 					}
 					// this one
 					if (isCurrentStep && isCurrentSubStep) {
-						substep.doing = true
-						substep.enabled = true
+						substep.doing = true;
+						substep.enabled = true;
 					}
 					// next one
 					if (isCurrentStep && isNextSubStep) {
-						substep.enabled = true
+						substep.enabled = true;
 					}
 					// also enable first substeps in next step if we are on the last substep in a step
 					if (isCurrentStep && isCurrentSubStep && isLastSubStep) {
-						rememberToEnableTheNextStep = true
+						rememberToEnableTheNextStep = true;
 					}
 					// future steps
 					if (isFutureStep) {
-						step.enabled = false
+						step.enabled = false;
 					}
 
 					// For developer convenience...
-					if (enableAll) substep.enabled = true
+					if (enableAll) substep.enabled = true;
 				});
 
 				// add step to the rebuilt steps
@@ -179,15 +179,15 @@ const sideNav = (state = initialStepModelState, action) => {
 			});
 
 
-			let nextStepName = getNextStepName(currentStepName, state.engine)
+			let nextStepName = getNextStepName(currentStepName, state.engine);
 
 			if (rememberToEnableTheNextStep && nextStepName ) {
-				rebuiltSteps[nextStepName].substeps[0].enabled = true
+				rebuiltSteps[nextStepName].substeps[0].enabled = true;
 			}
-			return { ...state, steps: rebuiltSteps, lastURL: action.url }
+			return { ...state, steps: rebuiltSteps, lastURL: action.url };
 		}
 		default:
-			return { ...state }
+			return { ...state };
 	}
-}
+};
 export default sideNav;

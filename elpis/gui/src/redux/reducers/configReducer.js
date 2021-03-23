@@ -5,7 +5,7 @@ const initState = {
     pronDictList: [],
     modelList: [],
     app_config: { dev_mode: false }
-}
+};
 const config = (state = initState, action) => {
     switch (action.type) {
 
@@ -14,7 +14,7 @@ const config = (state = initState, action) => {
             return {...state};
 
         case actionTypes.CONFIG_OBJECT_NAMES_SUCCESS:
-            const { object_names } = action.response.data.data
+            const { object_names } = action.response.data.data;
             return {...state,
                 datasetList:  object_names.datasets,
                 pronDictList: object_names.pron_dicts,
@@ -22,14 +22,14 @@ const config = (state = initState, action) => {
             };
 
         case actionTypes.CONFIG_LIST_SUCCESS:
-            const { config } = action.response.data.data
+            const { config } = action.response.data.data;
             return {...state,
                 app_config: config
-            }
+            };
 
         default:
-            return { ...state }
+            return { ...state };
     }
-}
+};
 
 export default config;

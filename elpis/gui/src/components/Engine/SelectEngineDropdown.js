@@ -3,7 +3,7 @@ import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-re
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { engineLoad } from 'redux/actions/engineActions';
-import { setCurrentStep } from 'redux/actions/sideNavActions'
+import { setCurrentStep } from 'redux/actions/sideNavActions';
 
 class SelectEngineDropdown extends Component {
 
@@ -34,7 +34,7 @@ class SelectEngineDropdown extends Component {
                         onChange={handleChange} />
                 }
             </>
-        )
+        );
     }
 }
 
@@ -43,14 +43,14 @@ const mapStateToProps = state => {
         list: state.engine.engine_list,
         currentEngine: state.engine.engine,
         engineHumanNames: state.engine.engine_human_names
-    }
-}
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     _engineLoad: postData => {
-        dispatch(engineLoad(postData))
+        dispatch(engineLoad(postData));
     }
-})
+});
 
 export default
     connect(
@@ -58,4 +58,4 @@ export default
         mapDispatchToProps
     )(
         withTranslation("common")(SelectEngineDropdown)
-    )
+    );

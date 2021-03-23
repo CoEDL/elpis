@@ -2,34 +2,34 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import { connect } from 'react-redux';
 import { configList } from 'redux/actions/configActions';
-import './App.css'
+import './App.css';
 
-import Welcome from './Welcome'
-import EngineDashboard from './Engine/EngineDashboard'
-import DatasetDashboard from './Dataset/Dashboard'
-import DatasetNew from './Dataset/New'
-import DatasetFiles from './Dataset/Files'
-import DatasetPrepare from './Dataset/Prepare'
-import PronDictDashboard from './PronDict/Dashboard'
-import PronDictNew from './PronDict/New'
-import PronDictL2S from './PronDict/L2S'
-import PronDictLexicon from './PronDict/Lexicon'
-import ModelDashboard from './Model/Dashboard'
-import ModelNew from './Model/New'
-import ModelSettings from './Model/Settings'
-import ModelTrain from './Model/Train'
-import ModelResults from './Model/Results'
-import ChooseModel from './Transcription/ChooseModel'
-import NewTranscription from './Transcription/New'
+import Welcome from './Welcome';
+import EngineDashboard from './Engine/EngineDashboard';
+import DatasetDashboard from './Dataset/Dashboard';
+import DatasetNew from './Dataset/New';
+import DatasetFiles from './Dataset/Files';
+import DatasetPrepare from './Dataset/Prepare';
+import PronDictDashboard from './PronDict/Dashboard';
+import PronDictNew from './PronDict/New';
+import PronDictL2S from './PronDict/L2S';
+import PronDictLexicon from './PronDict/Lexicon';
+import ModelDashboard from './Model/Dashboard';
+import ModelNew from './Model/New';
+import ModelSettings from './Model/Settings';
+import ModelTrain from './Model/Train';
+import ModelResults from './Model/Results';
+import ChooseModel from './Transcription/ChooseModel';
+import NewTranscription from './Transcription/New';
 
 import PageContainer from './PageContainer';
-import urls from 'urls'
+import urls from 'urls';
 
 
 class App extends Component {
 
     componentDidMount() {
-        this.props._configList()
+        this.props._configList();
     }
 
     render() {
@@ -68,8 +68,8 @@ class App extends Component {
 
 const mapDispatchToProps = dispatch => ({
     _configList: () => {
-        dispatch(configList())
+        dispatch(configList());
     }
-})
+});
 
 export default connect(null, mapDispatchToProps)(App);

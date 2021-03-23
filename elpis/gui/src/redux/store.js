@@ -22,10 +22,10 @@ const appReducer = combineReducers({
 // hard reset
 const rootReducer = (state, action) => {
     if (action.type == 'CONFIG_RESET') {
-        state = undefined
+        state = undefined;
     }
-    return appReducer(state, action)
-}
+    return appReducer(state, action);
+};
 
 
 const store = createStore(rootReducer,
