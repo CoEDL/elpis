@@ -24,6 +24,7 @@
     "URL": true,
     "setInterval": true,
     "clearInterval": true,
-    "FormData": true
+    "FormData": true,
+    "Set": true
   }
 }

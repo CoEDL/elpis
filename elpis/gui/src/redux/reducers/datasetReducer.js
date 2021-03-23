@@ -20,6 +20,7 @@ let additionalTextFiles = [];
 let transcriptionFiles = [];
 
 const dataset = (state = initState, action) => {
+    let data, status;
     switch (action.type) {
 
         // Boilerplate for all...
@@ -85,7 +86,7 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_FILES_SUCCESS:
             // TODO, API should send a JSON wrapper
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status === 200) {
                 // action.data is an array of filenames. parse this, split into separate lists
                 audioFiles = data.files.filter(file => getFileExtension(file) === 'wav').sort();
@@ -108,7 +109,7 @@ const dataset = (state = initState, action) => {
             }
 
         case actionTypes.DATASET_DELETE_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status == 200) {
                 // action.data is an array of filenames. parse this, split into separate lists
                 audioFiles = data.files.filter(file => getFileExtension(file) === 'wav').sort();
@@ -120,10 +121,12 @@ const dataset = (state = initState, action) => {
                     transcriptionFiles,
                     additionalTextFiles,
                 };
+            } else {
+                return {...state};
             }
 
         case actionTypes.DATASET_SETTINGS_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status === 200) {
                 return {
                     ...state,
@@ -135,13 +138,15 @@ const dataset = (state = initState, action) => {
             }
 
         case actionTypes.DATASET_UI_UPDATE_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status == 200) {
                 return {...state, ui: data.ui};
+            } else {
+                return {...state};
             }
 
         case actionTypes.DATASET_PREPARE_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status === 200) {
                 // First decode the text we receive from the API
                 const wordlistObj = JSON.parse(data.wordlist);

@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 class FileUpload extends Component {
 
-    onDrop = (acceptedFiles, rejectedFiles) => {
+    onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
         var formData = new FormData();
         acceptedFiles.forEach(file => {
