@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Button, Image, Menu, Segment } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import elpisLogo from './elpis.png'
 import { connect } from 'react-redux';
 import { configReset } from 'redux/actions/configActions';
 import DevToolbar from './DevToolbar'
+import SelectLanguage from "./SelectLanguage";
 
 class StepBranding extends Component {
 
@@ -41,6 +42,9 @@ class StepBranding extends Component {
                     <Menu.Item>
                         <DevToolbar dev_mode={dev_mode} />
                     </Menu.Item>
+                    <Menu.Item>
+                        <SelectLanguage />
+                    </Menu.Item>
                     <Menu.Item position='right'>
                         {currentEngine &&
                             <div className="current-engine-dot">
@@ -71,4 +75,6 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(StepBranding))
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation("common")(StepBranding)
+)

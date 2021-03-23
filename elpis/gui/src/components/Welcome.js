@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Link } from "react-router-dom";
-import { Grid, Button, Divider, Header, Container, Segment, Placeholder } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import Branding from 'components/Shared/Branding';
+import React, {Component} from 'react';
+import {Link} from "react-router-dom";
+import {Grid, Button, Divider, Header, Container, Segment, Placeholder} from 'semantic-ui-react';
+import {connect} from 'react-redux';
+import {withTranslation} from 'react-i18next';
+import Branding from './Shared/Branding';
 import urls from 'urls'
 
 class StepWelcome extends Component {
@@ -47,4 +47,4 @@ class StepWelcome extends Component {
 }
 
 
-export default translate('common')(StepWelcome)
+export default withTranslation("common")(StepWelcome)

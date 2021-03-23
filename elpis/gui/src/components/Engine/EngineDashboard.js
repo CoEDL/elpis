@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { translate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { withRouter, Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
 import ChooseEngine from './ChooseEngine'
 
 import urls from 'urls';
 
 const EngineDashboard = props => {
-    let { t, currentEngine } = props;
-
+    let { currentEngine } = props;
+    const { t, i18n } = useTranslation("common");
     return (
         <div>
             <Branding />
@@ -42,7 +42,7 @@ const mapStateToProps = state => {
 
 
 export default withRouter(
-    connect(
-        mapStateToProps
-    )(
-        translate('common')(EngineDashboard)))
+    connect(mapStateToProps)(
+        EngineDashboard
+    )
+)

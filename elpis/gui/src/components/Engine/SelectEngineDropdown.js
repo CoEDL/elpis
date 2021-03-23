@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { engineLoad } from 'redux/actions/engineActions';
 import { setCurrentStep } from 'redux/actions/sideNavActions'
 
@@ -57,5 +57,5 @@ export default
         mapStateToProps,
         mapDispatchToProps
     )(
-        translate('common')(SelectEngineDropdown)
+        withTranslation("common")(SelectEngineDropdown)
     )

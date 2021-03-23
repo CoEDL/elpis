@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Formik, ErrorMessage } from 'formik';
 import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { datasetNew } from 'redux/actions/datasetActions';
 import urls from 'urls'
 
@@ -90,4 +90,6 @@ const mapDispatchToProps = dispatch => ({
             .catch(error => console.log("error", error))
     }
 })
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(NewForm)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation("common")(NewForm)
+));

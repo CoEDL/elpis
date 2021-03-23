@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Button, Grid, Header, Icon, Segment, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import arraySort from 'array-sort'
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
 import CurrentDatasetName from "./CurrentDatasetName";
 import urls from 'urls'
 
@@ -144,4 +144,6 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(translate('common')(DatasetPrepare))
+export default connect(mapStateToProps)(
+    withTranslation("common")(DatasetPrepare)
+)

@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { pronDictList, pronDictLoad } from 'redux/actions/pronDictActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
 import arraySort from 'array-sort'
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
-import NewForm from 'components/PronDict/NewForm';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
+import NewForm from '../PronDict/NewForm';
 import CurrentPronDictName from "./CurrentPronDictName";
 import urls from 'urls';
 
@@ -157,4 +157,6 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate('common')(PronDictDashboard))
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation("common")(PronDictDashboard)
+)

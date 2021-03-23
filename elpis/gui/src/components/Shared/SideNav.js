@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { List, Accordion } from 'semantic-ui-react';
 import { connect } from 'react-redux'
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import classNames from 'classnames'
 import { setCurrentStep } from 'redux/actions/sideNavActions'
 import { stepToOrder } from '../../redux/reducers/sideNavReducer'
@@ -95,4 +95,8 @@ const mapDispatchToProps = dispatch => ({
 	}
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(translate('common')(SideNav)))
+export default withRouter(
+	connect(mapStateToProps, mapDispatchToProps)(
+		withTranslation("common")(SideNav)
+	)
+)

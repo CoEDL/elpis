@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
 import { Button, Divider, Grid, Header, Icon, List, Message, Segment, Input, Form, Label, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { datasetSettings, datasetPrepare, datasetDelete } from 'redux/actions/datasetActions';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
 import FileUpload from './FileUpload';
 import CurrentDatasetName from "./CurrentDatasetName";
 import GeneratedUI from './GeneratedUI';
@@ -210,6 +210,6 @@ export default withRouter(
         mapStateToProps,
         mapDispatchToProps
     )(
-        translate('common')(DatasetFiles)
+        withTranslation("common")(DatasetFiles)
     )
 )

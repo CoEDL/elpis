@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Accordion, Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import ReactTimeout from 'react-timeout'
 import { modelTrain, modelStatus } from 'redux/actions/modelActions';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
 import CurrentModelName from "./CurrentModelName";
 import urls from 'urls'
 
@@ -182,5 +182,7 @@ const mapDispatchToProps = dispatch => ({
     },
 })
 export default connect(mapStateToProps, mapDispatchToProps)(
-    translate('common')(
-    ReactTimeout(ModelTrain)))
+    withTranslation("common")(
+        ReactTimeout(ModelTrain)
+    )
+);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { Button, Container, Divider, Grid, Header, Segment } from 'semantic-ui-react';
 import { modelLoad, modelList } from 'redux/actions/modelActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
@@ -116,6 +116,6 @@ export default
         mapStateToProps,
         mapDispatchToProps
     )(
-        translate('common')(ChooseModel)
+        withTranslation("common")(ChooseModel)
     )
 )

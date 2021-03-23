@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { Button } from 'semantic-ui-react';
 import { fromEvent } from "file-selector";
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { datasetFiles } from 'redux/actions/datasetActions';
 import { connect } from 'react-redux';
 
@@ -63,4 +63,6 @@ const mapDispatchToProps = dispatch => ({
     }
 })
 
-export default connect(null, mapDispatchToProps)(translate('common')(FileUpload))
+export default connect(null, mapDispatchToProps)(
+    withTranslation("common")(FileUpload)
+)

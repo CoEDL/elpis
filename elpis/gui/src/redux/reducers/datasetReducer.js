@@ -1,4 +1,4 @@
-import {getFileExtension} from 'helpers'
+import {getFileExtension} from '../../helpers'
 import * as actionTypes from '../actionTypes/datasetActionTypes';
 
 const initState = {

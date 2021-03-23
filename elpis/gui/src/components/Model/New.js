@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Grid, Header, Segment } from 'semantic-ui-react';
-import { translate } from 'react-i18next';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
-import NewForm from 'components/Model/NewForm';
+import { withTranslation } from 'react-i18next';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
+import NewForm from '../Model/NewForm';
 
 
 class ModelNew extends Component {
@@ -35,4 +35,4 @@ class ModelNew extends Component {
 }
 
 
-export default translate('common')(ModelNew)
+export default withTranslation("common")(ModelNew);

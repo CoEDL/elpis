@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Grid, Header, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
-import NewForm from 'components/PronDict/NewForm';
+import { withTranslation } from 'react-i18next';
+import Branding from '../Shared/Branding';
+import SideNav from '../Shared/SideNav';
+import NewForm from '../PronDict/NewForm';
 
 
 class PronDictNew extends Component {
@@ -44,4 +44,6 @@ const mapStateToProps = state => {
     }
 }
 
-export default withRouter(connect(mapStateToProps)(translate('common')(PronDictNew)));
+export default withRouter(connect(mapStateToProps)(
+    withTranslation("common")(PronDictNew)
+));
