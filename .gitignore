@@ -37,6 +37,7 @@ elpis/engines/persephone/
 build/
 dist/
 docs/_build/
+docs/elpis/*.rst
 elpis-gui/
 venv/
 

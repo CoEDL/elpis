@@ -12,6 +12,7 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 export const engineLoad = (postData) => {
     const url = baseUrl + urls.api.engine.load;
     let responseData;
+    console.log("engine load", postData)
     return async dispatch => {
         dispatch(engineLoadStarted())
         await axios.post(url, postData)

@@ -180,7 +180,6 @@ class Interface(FSObject):
             raise InterfaceError(f'Tried to load a pron dict called "{pdname}" that does not exist')
         hash_dir = self.config['pron_dicts'][pdname]
         pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
-        print(dir(pd.config))
         pd.dataset = self.get_dataset(pd.config['dataset_name'])
         return pd
 
@@ -199,7 +198,6 @@ class Interface(FSObject):
     def new_model(self, mname):
         if self.engine is None:
             raise RuntimeError("Engine must be set before model creation")
-        print(self.engine)
         existing_names = self.list_models()
         if mname in self.config['models'].keys():
             raise InterfaceError(
@@ -225,34 +223,31 @@ class Interface(FSObject):
         return m
 
     def list_models(self):
-        if self.engine is None:
-            raise RuntimeError("Engine must be set to list models")
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             if not hash_dir.startswith('.'):
-                with self.models_path.joinpath(hash_dir,
-                                               self.engine.model._config_file).open() as fin:
+                with self.models_path.joinpath(hash_dir, "model.json").open() as fin:
                     name = json.load(fin)['name']
                     models.append(name)
         return models
 
     def list_models_verbose(self):
-        if self.engine is None:
-            raise RuntimeError("Engine must be set to list models")
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
             if not hash_dir.startswith('.'):
-                with self.models_path.joinpath(hash_dir,
-                                               self.engine.model._config_file).open() as fin:
-                    model = json.load(fin)
-                    #  TODO get results here and pass back for API endpoint
-                    model_info = {
-                        'name': model['name'],
-                        'dataset_name': model['dataset_name'],
-                        'pron_dict_name': model['pron_dict_name'],
-                        'status': model['status']
-                    }
-                    models.append(model_info)
+                config_file_path = self.models_path.joinpath(hash_dir, "model.json")
+                if os.path.isfile(config_file_path):
+                    with config_file_path.open() as model_config_file:
+                        model = json.load(model_config_file)
+                        # TODO get results here and pass back for API endpoint
+                        model_info = {
+                            'name': model['name'],
+                            'dataset_name': model['dataset_name'],
+                            'engine_name': model['engine_name'],
+                            'pron_dict_name': model['pron_dict_name'],
+                            'status': model['status']
+                        }
+                        models.append(model_info)
         return models
 
     def new_transcription(self, tname):

@@ -43,13 +43,6 @@ class DatasetPrepare extends Component {
         const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true
 
         const listEl = wordlist.length > 0 ? (
-            <>
-            <h2>{ t('dataset.prepare.header') }</h2>
-
-            { additionalTextFiles.length > 0 &&
-                <p>{ t('dataset.prepare.description') }</p>
-            }
-
             <Table sortable celled fixed unstackable>
                 <Table.Header>
                     <Table.Row>
@@ -82,7 +75,6 @@ class DatasetPrepare extends Component {
                     }
                 </Table.Body>
             </Table>
-            </>
         ) : null
 
         return (
@@ -118,14 +110,18 @@ class DatasetPrepare extends Component {
                             }
                             {status === 'wordlist-prepared' &&
                                 <>
-                                    {listEl}
+                                    <h3>{ t('dataset.prepare.header') }</h3>
 
+                                    { additionalTextFiles.length > 0 &&
+                                        <p>{ t('dataset.prepare.description') }</p>
+                                    }
                                     <Button as={Link}
                                             to={(currentEngine==="kaldi") ? urls.gui.pronDict.index :
                                                 urls.gui.model.index}
                                             disabled={interactionDisabled}>
                                         { t('common.nextButton') }
                                     </Button>
+                                    {listEl}
                                 </>
                             }
 

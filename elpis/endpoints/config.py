@@ -24,7 +24,7 @@ def reset():
 @bp.route("/engine/list", methods=['GET', 'POST'])
 def engine_list():
     data = {
-        'engine_list': list(ENGINES.keys())
+        "engine_list": list(ENGINES.keys())
     }
     return jsonify({
         "status": 200,
@@ -60,7 +60,28 @@ def object_names():
             "models": interface.list_models()
         }
     }
-    print(data)
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
+
+# /api/config/list
+@bp.route("/list", methods=["GET"])
+def config_list():
+    # Note that .env vars are strings, so evaluate string value
+    if "DEV_MODE" in app.config and app.config["DEV_MODE"] == "True":
+        dev_mode = True
+    else:
+        dev_mode = False
+    # Add config settings explicitly, we don't need to share everything
+    # Also pass back the engine list so that we can populate dev widgets without making another request
+    data = {
+        "config": {
+            "dev_mode": dev_mode
+        },
+        "engine_list": list(ENGINES.keys())
+    }
     return jsonify({
         "status": 200,
         "data": data

@@ -5,6 +5,7 @@ from .app import Flask
 from elpis.engines import Interface
 from pathlib import Path
 from requests import get
+from dotenv import load_dotenv
 
 
 def create_app(test_config=None):
@@ -68,6 +69,10 @@ def create_app(test_config=None):
     # app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user & need to remove later because it is Kaldi-specific.
     # app.config['CURRENT_MODEL'] = None # not okay for multi-user
     # app.config['CURRENT_TRANSCRIPTION'] = None  # not okay for multi-user
+
+    # Developer-friendly mode has convenient interface widgets for setting engine etc
+    load_dotenv()
+    app.config['DEV_MODE'] = os.environ.get('DEV_MODE')
 
     # add the endpoints routes
     app.register_blueprint(endpoints.bp)

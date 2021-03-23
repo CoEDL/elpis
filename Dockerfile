@@ -3,12 +3,15 @@
 # image - based on Ubuntu + SRILM                                     #
 #######################################################################
 
-FROM ubuntu:18.04
-
+FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-RUN apt-get update && apt-get install -y --fix-missing \
+ENV NUM_CPUS=1
+
+ENV TZ=UTC
+
+RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install -y --fix-missing \
     autoconf \
     automake \
     bzip2 \
@@ -22,10 +25,11 @@ RUN apt-get update && apt-get install -y --fix-missing \
     libatlas-base-dev \
     libglib2.0-dev \
     libjson-c-dev \
-    libjson-c3 \
     libtool-bin \
+    libssl-dev \
+    libsqlite3-dev \
+    libbz2-dev \
     make \
-    nproc \
     software-properties-common \
     subversion \
     tree \
@@ -37,24 +41,41 @@ RUN apt-get update && apt-get install -y --fix-missing \
 
 WORKDIR /tmp
 
-RUN echo "===> Install Python 3.7 packages" && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y python3.7-dev python3.7-venv
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    PATH="/opt/pyenv/shims:/opt/pyenv/bin:$PATH" \
+    PYENV_ROOT="/opt/pyenv" \
+    PYENV_SHELL="zsh"
+
+RUN echo "===> Install pyenv Python 3.8" && \
+    git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT && \
+    echo 'export PYENV_ROOT="/opt/pyenv"' >> ~/.zshrc && \
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc && \
+    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.zshrc && \
+    eval "$(pyenv init -)" && \
+    cat ~/.zshrc && \
+    /bin/bash -c "source ~/.zshrc" && \
+    pyenv install 3.8.2 && \
+    rm -rf /tmp/*
 
 
 ########################## KALDI INSTALLATION #########################
 
 RUN echo "===> Install Python 2.7 for Kaldi" && \
+    add-apt-repository universe && \
     apt-get update && apt-get install -y  \
     python2.7 \
-    python-pip \
     python-yaml \
     python-simplejson \
-    python-gi && \
-    pip install ws4py==0.3.2 && \
-    pip install tornado && \
-    ln -s /usr/bin/python2.7 /usr/bin/python ; ln -s -f bash /bin/sh
+    python-gi
+
+RUN curl https://bootstrap.pypa.io/2.7/get-pip.py --output get-pip.py && \
+    python2.7 get-pip.py
+
+RUN pip2.7 install ws4py==0.3.2 && \
+    pip2.7 install tornado
+
+RUN ln -s /usr/bin/python2.7 /usr/bin/python ; ln -s -f bash /bin/sh
 
 RUN echo "===> Install Kaldi dependencies" && \
     apt-get update && apt-get install -y \
@@ -68,13 +89,13 @@ WORKDIR /
 RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
-    make -j $(nproc) && \
+    make -j$NUM_CPUS && \
     ./install_portaudio.sh && \
     cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend -j $(nproc) && make -j $(nproc) && \
-    cd /kaldi/src/online2 && make depend -j $(nproc) && make -j $(nproc) && \
-    cd /kaldi/src/online2bin && make depend -j $(nproc) && make -j $(nproc)
+    make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
+    cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
+    cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
@@ -103,7 +124,7 @@ RUN echo "===> Install ESPnet dependencies" && \
 WORKDIR /
 
 # Setting up ESPnet for Elpis from Persephone repository
-RUN git clone https://github.com/persephone-tools/espnet.git
+RUN git clone https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
 
@@ -126,9 +147,8 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
-# Add node, npm and xml-js
-RUN apt-get update && apt-get install -y nodejs build-essential npm && \
-    #ln -s /usr/bin/nodejs /usr/bin/node && \
+# Add node 15, npm and xml-js
+RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get update && apt-get install -y nodejs build-essential && \
     npm install -g npm \
     hash -d npm \
     npm install -g xml-js
@@ -152,16 +172,18 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 WORKDIR /
 
 # Elpis
+RUN pwd
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
-RUN /usr/bin/python3.7 -m venv /venv
+RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
-RUN pip3.7 install wheel pytest pylint && python setup.py develop
+RUN pip install poetry && poetry config virtualenvs.create false --local && \
+    poetry install
 
 WORKDIR /
 
 # Elpis GUI
-RUN git clone --depth=1 https://github.com/CoEDL/elpis-gui.git
+RUN ln -s /elpis/elpis/gui /elpis-gui
 WORKDIR /elpis-gui
 RUN npm install && \
     npm run build
@@ -180,7 +202,7 @@ RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
-RUN echo "alias run=\"flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
+RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # ENV vars for non-interactive running
@@ -191,7 +213,7 @@ ENV LANG=C.UTF-8
 
 WORKDIR /elpis
 
-ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]
+ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
 
 EXPOSE 5000:5000
 EXPOSE 3000:3000

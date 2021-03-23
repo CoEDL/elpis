@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
+import { Accordion, Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import ReactTimeout from 'react-timeout'
@@ -12,20 +12,23 @@ import urls from 'urls'
 
 class ModelTrain extends Component {
 
-    statusInterval = null
+    state = {
+        statusInterval: null,
+        activeIndex: null
+    }
 
     componentDidMount = () => {
     }
 
     handleModelTrain = () => {
         this.props.modelTrain()
-        this.statusInterval = this.props.setInterval(this.handleModelStatus, 1000)
+        this.setState({...this.state, statusInterval: this.props.setInterval(this.handleModelStatus, 1000)})
     }
 
     handleModelStatus = () => {
         const { status, modelStatus } = this.props;
         modelStatus()
-        if (status === 'trained') this.props.clearInterval(this.statusInterval)
+        if (status === 'trained') this.props.clearInterval(this.state.statusInterval)
     }
 
 
@@ -34,13 +37,17 @@ class ModelTrain extends Component {
     follow = () => {
     }
 
+    selectAccordion = i => {
+        this.setState({...this.state, activeIndex: i })
+        return
+    }
+
     render() {
         const { t, currentEngine, name, settings, status, stage_status } = this.props;
 
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />
         ) : null
-
 
         return (
             <div>
@@ -70,32 +77,64 @@ class ModelTrain extends Component {
                             {currentEngine && name &&
                             <>
 
-                                <Card fluid>
-                                    <Card.Content header={t('model.train.settingsHeader')}/>
-                                    <Card.Content description={t('model.settings.ngramLabel') + ' ' + settings.ngram}/>
-                                </Card>
+                                {/* Only Kaldi has settings. Should make this dynamic */}
+                                {currentEngine && currentEngine == 'kaldi' &&
+                                    <Card fluid>
+                                        <Card.Content header={t('model.train.settingsHeader')}/>
+                                        <Card.Content description={t('model.settings.ngramLabel') + ' ' + settings.ngram}/>
+                                    </Card>
+                                }
 
                                 <Message icon>
-                                    {loadingIcon}
-                                    <Message.Content>
-                                        <Message.Header>{t('status.' + status)}</Message.Header>
+                                    {/*{loadingIcon}*/}
+                                    <Message.Content className="train-log">
+
                                         {stage_status &&
                                         <div className="stages">
+                                            <Accordion
+                                                fluid
+                                                styled
+                                                exclusive={false}
+                                            >
                                             {Object.keys(stage_status).map((stage, i) => {
-                                                    let name = stage_status[stage]["name"]
-                                                    let status = stage_status[stage]["status"]
-                                                    let message = stage_status[stage]["message"]
+
+
+                                                let name = stage_status[stage]["name"]
+                                                let status = stage_status[stage]["status"]
+                                                let message = stage_status[stage]["message"]
+                                                let log = stage_status[stage]["log"]
+                                                let icon = (status === "in-progress") ?
+                                                    (<Icon name='circle notched' loading />) :
+                                                    (<Icon name='dropdown' />)
+                                                let stage_status_icon = (status === "complete") ?
+                                                    (<Icon name='check' />) :
+                                                    ('')
+
                                                     return (
-                                                        <p key={stage} className="stage">
-                                                            <span className="name">{t('model.engines.' + currentEngine + '.stages.' + name)}</span>
-                                                            <span className="divider">{status && <>|</>}</span>
-                                                            <span className="status">{t('status.' + status)}</span>
-                                                            <span className="divider">{message && <>|</>}</span>
-                                                            <span className="message">{message}</span>
-                                                        </p>
+                                                        <div key={name}>
+                                                            <Accordion.Title
+                                                              index={i}
+                                                              active={this.state.activeIndex === i || status === "in-progress"}
+                                                              onClick={() => this.selectAccordion(i)}
+                                                            >
+                                                                {icon}
+                                                                {name} {stage_status_icon}
+                                                            </Accordion.Title>
+
+                                                            <Accordion.Content
+                                                                className="accordion_log"
+                                                                active={this.state.activeIndex === i}>
+                                                                {log}
+                                                            </Accordion.Content>
+                                                        </div>
                                                     )
                                                 }
                                             )}
+
+                                            </Accordion>
+
+                                            <p>{status}</p>
+
                                         </div>
                                         }
                                     </Message.Content>

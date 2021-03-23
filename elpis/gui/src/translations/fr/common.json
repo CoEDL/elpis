@@ -129,7 +129,8 @@
         "common": {
             "currentModelLabel": "Session d’entraînement actuelle : ",
             "noCurrentModelLabel": "Pas de session d’entraînement en cours",
-            "chooseOrNewLabel": "En choisir une."
+            "chooseOrNewLabel": "En choisir une.",
+            "pronDictNotRequired": ""
         },
         "dashboard": {
             "title": "Entraînement",
@@ -165,13 +166,23 @@
         },
         "results": {
             "title": "Résultats",
-            "description": "Liste des sessions d’entraînement qui ont été réalisées.",
-            "downloadButton": "Télécharger un assortiment incorponant l’entraînement, les paramètres et les informations d’entraînement",
-            "downloadModalHeader": "Vos fichiers et paramètres sont en cours de compilation",
-            "downloadModalContent": "Cliquez sur Sauvegarder dans la boîte de dialogue de votre navigateur",
-            "downloadOkButton": "Bon",
-            "newTranscribeButton": "Transcrire un nouvel audio",
-            "noResults": "Aucun résultat trouvé"
+            "description": "",
+            "noResults": "Aucun résultat trouvé",
+            "kaldi": {
+                "wer": "WER",
+                "count": "incorrect/total",
+                "del": "DEL",
+                "ins": "INS",
+                "sub": "SUB"
+            },
+            "espnet": {
+                "wer": "WER",
+                "per": "PER",
+                "count": "incorrect/total",
+                "del": "DEL",
+                "ins": "INS",
+                "sub": "SUB"
+            }
         },
         "generated": {
             "elan": {
@@ -219,6 +230,7 @@
             "dropFilesHintDragActive": "Déposez le fichier ici…",
             "addAudioButton": "Ajouter un audio",
             "chooseModelHeader": "Choisissez une session d’entraînement",
+            "uploading": "",
             "usingAudio": "{{filename}} téléversé",
             "transcribe": "Transcrire",
             "nextButton": "Suivant",
@@ -231,12 +243,7 @@
             "downloadButtonNotReadyYet": "Un bouton de téléchargement sera disponible lorsque les données auront été transcrites et que le fichier aura été généré",
             "downloadLabel": "Télécharger",
             "downloadTextButton": "Fichier texte",
-            "downloadElanButton": "Fichier Elan",
-            "wer": "WER",
-            "per": "PER",
-            "del": "DEL",
-            "ins": "INS",
-            "sub": "SUB"
+            "downloadElanButton": "Fichier Elan"
         },
         "engines": {
             "kaldi": {

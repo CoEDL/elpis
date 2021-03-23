@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
-import { Button, Divider, Grid, Header, Icon, List, Message, Segment, Input, Form, Label } from 'semantic-ui-react';
+import { Button, Divider, Grid, Header, Icon, List, Message, Segment, Input, Form, Label, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { datasetSettings, datasetPrepare, datasetDelete } from 'redux/actions/datasetActions';
 import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
-import SelectEngine from '../Engine/SelectEngine'
 import FileUpload from './FileUpload';
 import CurrentDatasetName from "./CurrentDatasetName";
 import GeneratedUI from './GeneratedUI';
@@ -25,6 +24,21 @@ class DatasetFiles extends Component {
         deleteData.append('file', file);
         this.props.datasetDelete(deleteData)
     }
+
+    createFilesList = (files) => files.map(file => (
+        <List.Item key={ file }>
+            <Popup content={ file } size='mini' trigger={
+                <Button as='div' labelPosition='left' className='file-button' data-content="Add users to your feed">
+                    <Label as='a' className='file-label' basic>
+                        <div class='file-truncate'>{ file }</div>
+                    </Label>
+                    <Button icon onClick={() => this.handleDeleteButton(file)}>
+                        <Icon name='trash' />
+                    </Button>
+                </Button>
+            } />
+        </List.Item>
+    ));
 
     render() {
         const { t,
@@ -47,42 +61,9 @@ class DatasetFiles extends Component {
             </div>
         ) : null
 
-        const audioFilesList = audioFiles.map(file => (
-            <List.Item key={ file }>
-                <Button as='div' labelPosition='left'>
-                    <Label as='a' basic>
-                        { file }
-                    </Label>
-                    <Button icon onClick={() => this.handleDeleteButton(file)}>
-                        <Icon name='trash' />
-                    </Button>
-                </Button>
-            </List.Item>
-        ))
-        const transcriptionFilesList = transcriptionFiles.map(file => (
-            <List.Item key={ file }>
-                <Button as='div' labelPosition='left'>
-                    <Label as='a' basic>
-                        { file }
-                    </Label>
-                    <Button icon onClick={() => this.handleDeleteButton(file)}>
-                        <Icon name='trash' />
-                    </Button>
-                </Button>
-            </List.Item>
-        ))
-        const additionalTextFilesList = additionalTextFiles.map(file => (
-            <List.Item key={ file }>
-                <Button as='div' labelPosition='left'>
-                    <Label as='a' basic>
-                        { file }
-                    </Label>
-                    <Button icon onClick={() => this.handleDeleteButton(file)}>
-                        <Icon name='trash' />
-                    </Button>
-                </Button>
-            </List.Item>
-        ))
+        const audioFilesList = this.createFilesList(audioFiles)
+        const transcriptionFilesList = this.createFilesList(transcriptionFiles)
+        const additionalTextFilesList = this.createFilesList(additionalTextFiles)
 
         const filesHeader = (
             audioFilesList.length > 0 ||
@@ -102,13 +83,6 @@ class DatasetFiles extends Component {
         const additionalTextFilesHeader = additionalTextFilesList.length > 0
             ? t('dataset.files.additionalTextFilesHeader')
             : null
-
-        // const writeCountOptions = []
-        // for (var i = 1; i <= settings.tier_max_count; i++) {
-        //     writeCountOptions.push(
-        //         <option key={i} value={i}>{i}</option>
-        //     )
-        // }
 
         return (
             <div>
@@ -178,15 +152,17 @@ class DatasetFiles extends Component {
                                         </div>
                                         </>
                                     }
-
                                 </Segment>
+                                <br />
+                                <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
+                                    { t('common.nextButton') }
+                                </Button>
                                 <Segment>
                                     <Header as='h3'>
                                         { t('dataset.files.importSettingsHeader') }
                                     </Header>
                                     <GeneratedUI props={this.props} settings={settings} ui={ui} changeSettingsCallback={datasetSettings} />
                                 </Segment>
-
                                 <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
                                     { t('common.nextButton') }
                                 </Button>

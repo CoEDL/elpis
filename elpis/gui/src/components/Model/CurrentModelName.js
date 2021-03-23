@@ -3,23 +3,32 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { Message } from 'semantic-ui-react';
+import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown'
 import urls from 'urls'
 
 class CurrentModelName extends Component {
 
     render() {
-        const { t, currentEngine, modelList, datasetName, pronDictName, name, match } = this.props
+        const { t, currentEngine, engineHumanNames, modelList, datasetName, pronDictName, name, match } = this.props
 
         const onDashboard = (match.url === urls.gui.model.index) ? true : false
+        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : ''
+        const dictName = pronDictName ? pronDictName : t('model.common.pronDictNotRequired')
 
         return (
             <>
                 {name &&
                 <Message color='olive'>
+                    { t('engine.common.currentEngineLabel') + engineHumanName }
+                    <br />
                     { t('model.common.currentModelLabel') + name }
                     <br />
-                    { t('pronDict.common.currentPronDictLabel') + pronDictName }
-                    <br />
+                    {currentEngine && currentEngine == 'kaldi' &&
+                        <>
+                            {t('pronDict.common.currentPronDictLabel') + dictName}
+                            <br />
+                        </>
+                    }
                     {t('dataset.common.currentDatasetLabel') + datasetName }
                 </Message>
                 }
@@ -27,6 +36,7 @@ class CurrentModelName extends Component {
                 {!currentEngine &&
                 <Message color='purple'>
                     { t('engine.common.noCurrentEngineLabel') }
+                    <SelectEngineDropdown />
                 </Message>
                 }
 
@@ -59,7 +69,8 @@ const mapStateToProps = state => {
         modelList: state.model.modelList,
         datasetName: state.model.datasetName,
         pronDictName: state.model.pronDictName,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
+        engineHumanNames: state.engine.engine_human_names
     }
 }
 export default withRouter(

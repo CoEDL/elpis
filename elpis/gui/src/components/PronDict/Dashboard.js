@@ -10,7 +10,6 @@ import Branding from '../Shared/Branding';
 import SideNav from '../Shared/SideNav';
 import NewForm from '../PronDict/NewForm';
 import CurrentPronDictName from "./CurrentPronDictName";
-import SelectEngine from '../Engine/SelectEngine'
 import urls from 'urls';
 
 class PronDictDashboard extends Component {
@@ -106,10 +105,6 @@ class PronDictDashboard extends Component {
                             </Header>
 
                             <CurrentPronDictName />
-
-                            {!currentEngine &&
-                               <SelectEngine />
-                            }
 
                             {currentEngine &&
                             <>

@@ -1,5 +1,7 @@
 # Using the CLI Elpis Python API
 
+**Note: this guide is not up to date with the monorepo structure** 
+
 Requires Docker.
 
 ## Prepare your data

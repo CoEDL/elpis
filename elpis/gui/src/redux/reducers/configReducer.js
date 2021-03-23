@@ -3,7 +3,8 @@ import * as actionTypes from '../actionTypes/appActionTypes';
 const initState = {
     datasetList: [],
     pronDictList: [],
-    modelList: []
+    modelList: [],
+    app_config: { dev_mode: false }
 }
 const config = (state = initState, action) => {
     switch (action.type) {
@@ -19,6 +20,12 @@ const config = (state = initState, action) => {
                 pronDictList: object_names.pron_dicts,
                 modelList:    object_names.models
             };
+
+        case actionTypes.CONFIG_LIST_SUCCESS:
+            const { config } = action.response.data.data
+            return {...state,
+                app_config: config
+            }
 
         default:
             return { ...state }

@@ -24,16 +24,23 @@ Identify which Elan tier the transcriptions are on that you want the system to l
 - Code-switching in a single tier will confuse the system. Although it is possible to train a multi-lingual system, in this workshop we will focus on one language. Separate multiple languages by creating one tier for the language you want to train.
 - Out-of-vocabulary words (words that are in the corpus but not in the lexicon) will reduce the accuracy. Ensure that everything in the speech signal is transcribed.
 - Remove inline conventions such as speaker or language codes.
-- Remove punctuation
+- Remove punctuation that is not lexically significant
 
-## Formats
 
-As well as cleaning the transcription, ensure the audio is in a WAVE format.
+## Audio
+
+Elpis trains using 16 bit, 44.1kHz, mono WAV format audio. It will convert WAV files to the required specification, however converting your audio to these specifications beforehand will reduce the training time.
+- 16 bit is the bit-depth, the number of values in each audio sample. 
+- 44.1kHz is the sample rate, also known as the sample frequency.
+- Mono refers to the audio having only a single channel, rather than stereo being two channels.
+
+Ensure the audio is in WAV format. MP3 is not suitable because the MP3 compression removes much of the information in the audio signal. Converting from MP3 to WAV doesn't work either, as the information lost in the compression is not recovered in conversion. 
 
 Audio filenames should match the transcript filenames, bearing in mind that any commas, spaces, pipes, etc. in the filenames will cause problems. Rename your filenames to only use alphanumeric with underscores or dashes.
 
 Use noise reduction techniques to clean the audio signal if needed.
 
-You should now have a collection of cleaned transcriptions and audio in the right format.
+
+## Examples
 
 For examples, refer to the [Abui toy corpus](https://elpis.net.au/abui.zip).

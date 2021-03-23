@@ -31,8 +31,18 @@ code {
     display: block;
 }
 
+.train-log {
+    width: 100%;
+}
 .accordion {
     margin-bottom: 2rem;
+}
+
+.ui.styled.accordion .content.accordion_log {
+    padding: 0 2em 1em 2em !important;
+    overflow_wrap: anywhere;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .kaldi-log {
@@ -85,8 +95,11 @@ textarea.lexicon {
 }
 
 .right {
-    float: right
+    float: right;
+    display: flex;
+    align-items: center;
 }
+
 
 label.pad-right,
 .label.pad-right {
@@ -98,7 +111,7 @@ label.pad-right,
 }
 
 .form-wrapper {
-    margin-bottom: 2em
+    margin: 1em 0 2em 0;
 }
 
 .error-message {
@@ -123,8 +136,9 @@ label.pad-right,
 }
 
 .top-nav {
-    background: pink;
     font-weight: 400;
+    border-width: 0px !important;
+    box-shadow: none !important;
 }
 
 .top-nav .ui.selection.dropdown {
@@ -133,4 +147,119 @@ label.pad-right,
 
 .keep-line-breaks {
     white-space: pre-line;
+}
+
+.dev-toolbar {
+    background: repeating-linear-gradient(
+      45deg,
+      #F5F6CE,
+      #F5F6CE 10px,
+      #F8EFFB 10px,
+      #F8EFFB 20px
+    );
+    padding: 6px;
+    min-width: 200px;
+    float: left;
+    border-radius: 12px;
+    margin-right: 1em;
+}
+.dev-toolbar p {
+    padding:0;
+    margin: 0;
+}
+
+.xwelcome-description {
+    margin-bottom: 3em;
+}
+.train-description,
+.transcription-description {
+    margin-bottom: 1em;
+}
+
+.train-description {
+    padding-bottom: 2em !important;
+}
+
+
+.choose-engine .row,
+.welcome-options .row {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    margin: 2em 0;
+}
+
+.choose-engine .left-col,
+.welcome-options .left-col {
+    display: flex !important;
+    align-items: center;
+}
+
+
+.welcome-options .train-button a,
+.welcome-options .transcribe-button a {
+    padding: 1em;
+    margin-right: 2em;
+}
+
+.choose-engine { margin-top: 2em;}
+
+.choose-engine-button {
+    margin: 0 1em;
+}
+
+.results-title {
+    font-weight: bold;
+}
+
+.section-description {
+    margin: 1em;
+}
+
+.engine-select {
+    margin-left: 1em;
+}
+
+.ui.segment.top-nav {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+.top-nav .item {
+    padding-top: 0;
+    height: 100px;
+}
+.top-nav .current-engine {
+    margin: 0 1em
+}
+
+.current-engine-dot {
+    width: 80px;
+    height: 80px;
+    background-color: #fbfdef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1em;
+    box-shadow: 0 0 0 1px #8abc1e inset, 0 0 0 0 transparent;
+    color: #8abc1e;
+}
+
+.choose-dataset button { max-width: 300px }
+
+.file-button {
+    width: 100%;
+}
+
+.file-label {
+    /* width: 90%; results in strange behaviour and i don't know why */
+    min-width: 90%;
+    max-width: 90%;
+}
+
+.file-truncate {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
