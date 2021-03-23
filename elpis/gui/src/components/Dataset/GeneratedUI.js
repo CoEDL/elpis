@@ -11,7 +11,7 @@ function groupSettingsFromUI(ui) {
         }
         group.push(ui_name);
     });
-    if (group.length !== 0) { // add the last group
+    if (group.length !== 0) {
         settingGroups.push(group);
     }
     return settingGroups;

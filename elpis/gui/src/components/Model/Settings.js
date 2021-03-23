@@ -20,24 +20,24 @@ class ModelSettings extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
 
                             <Header as="h1" text="true">
-                                { t("model.settings.title") }
+                                {t("model.settings.title")}
                             </Header>
 
                             <CurrentModelName />
 
                             {!currentEngine &&
-                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
+                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{ t("model.common.noCurrentModelLabel") }</p>
+                              <p>{t("model.common.noCurrentModelLabel")}</p>
                             }
 
                             {currentEngine && currentEngine === "espnet" && name &&
@@ -49,15 +49,15 @@ class ModelSettings extends Component {
 
                             {currentEngine && currentEngine === "kaldi" && name &&
                             <>
-                                <Message content={ t("model.settings.description") } />
-                                <Message attached content={ t("model.settings.ngramDescription") } />
+                                <Message content={t("model.settings.description")} />
+                                <Message attached content={t("model.settings.ngramDescription")} />
                                 <Formik
                                     className="attached"
                                     enableReinitialize
-                                    initialValues={ {
+                                    initialValues={{
                                         ngram: settings.ngram,
-                                    } }
-                                    validate={ values => {
+                                    }}
+                                    validate={values => {
                                         let errors = {};
                                         if (!values.ngram) {
                                             errors.ngram = "Required";
@@ -67,18 +67,18 @@ class ModelSettings extends Component {
                                             errors.ngram = "Invalid ngram";
                                         }
                                         return errors;
-                                    } }
-                                    onSubmit={ (values) => {
+                                    }}
+                                    onSubmit={(values) => {
                                         const postData = {ngram: values.ngram};
                                         modelSettings(postData);
                                         this.props.history.push(urls.gui.model.train);
-                                    } }
+                                    }}
                                 >
-                                    { ({
+                                    {({
                                         handleSubmit,
                                         handleChange,
                                     }) => (
-                                            <Form onSubmit={handleChange }>
+                                            <Form onSubmit={handleChange}>
                                                 <Field component="select" name="ngram">
                                                     <option key="1" value="1">1</option>
                                                     <option key="2" value="2">2</option>
@@ -88,7 +88,7 @@ class ModelSettings extends Component {
                                                 </Field>
                                                 <Divider />
                                                 <Button type="button" onClick={handleSubmit} disabled={!name}>
-                                                    { t("common.nextButton") }
+                                                    {t("common.nextButton")}
                                                 </Button>
                                             </Form>
                                         ) }

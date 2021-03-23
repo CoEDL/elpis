@@ -49,24 +49,24 @@ class ModelTrain extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
 
                             <Header as="h1" text="true">
-                                { t("model.train.title") }
+                                {t("model.train.title")}
                             </Header>
 
                             <CurrentModelName />
 
                             {!currentEngine &&
-                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
+                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{ t("model.common.noCurrentModelLabel") }</p>
+                              <p>{t("model.common.noCurrentModelLabel")}</p>
                             }
 
                             {currentEngine && name &&

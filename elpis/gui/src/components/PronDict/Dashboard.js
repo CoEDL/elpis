@@ -48,13 +48,13 @@ class PronDictDashboard extends Component {
         const {t, currentEngine, name, list} = this.props;
         const listArray = Array.from(list.keys());
         const {column, direction} = this.state;
-        const listEl = list.length > 0 ? (
-            <Table sortable celled fixed unstackable>
+        const listEl = list.length > 0 ?
+            (<Table sortable celled fixed unstackable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
-                            sorted={ column === "name" ? direction : null }
-                            onClick={ this.handleSort("name", listArray) }
+                            sorted={column === "name" ? direction : null}
+                            onClick={this.handleSort("name", listArray)}
                         >
                             Name
                         </Table.HeaderCell>
@@ -68,13 +68,13 @@ class PronDictDashboard extends Component {
                     list.map(pronDict => {
                         const className = (pronDict.name === name) ? "current" : "";
                         return (
-                            <Table.Row key={pronDict.name }>
+                            <Table.Row key={pronDict.name}>
                                 <Table.Cell>
 
                                     <Button
                                         className={className}
                                         fluid
-                                        onClick={() => this.handleLoad(pronDict) }
+                                        onClick={() => this.handleLoad(pronDict)}
                                         >{pronDict.name }</Button>
                                 </Table.Cell>
                                 <Table.Cell>
@@ -86,20 +86,21 @@ class PronDictDashboard extends Component {
                 }
                 </Table.Body>
             </Table>
-        ) : <p>{ t("pronDict.dashboard.noneMessage") }</p>;
+        ) :
+        <p>{t("pronDict.dashboard.noneMessage")}</p>;
 
         return (
             <div>
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
                             <Header as="h1">
-                                { t("pronDict.dashboard.title") }
+                                {t("pronDict.dashboard.title")}
                             </Header>
 
                             <CurrentPronDictName />

@@ -34,9 +34,9 @@ class SideNav extends Component {
 						// eslint-disable-next-line no-unused-vars
 						.map(([_stepName, step], i) => {
 							return (
-								<div key={ i }>
+								<div key={i}>
 									<Accordion styled fluid>
-										<Accordion.Content active={ step.enabled || step.doing }>
+										<Accordion.Content active={step.enabled || step.doing}>
 											<List relaxed className="stepList">
 												{
 													// for each substep (pass in the step index and the substep index)
@@ -52,9 +52,9 @@ class SideNav extends Component {
 														});
 
 														return (
-															<List.Item className={ substepClassNames }
-																onClick={ () => this.handleStepSelect(substep, i, j) }
-																key={ substep.title }>
+															<List.Item className={substepClassNames}
+																onClick={() => this.handleStepSelect(substep, i, j)}
+																key={substep.title}>
 
 																<div style={{paddingLeft: "1.4em"}}>
 																	{t(substep.title)}

@@ -55,34 +55,24 @@ class ChooseModel extends Component {
                 <Grid.Row>
                 <Grid.Column>
                     <Header as="h1" text="true">
-                        { t("transcription.choose_model.title") }
+                        {t("transcription.choose_model.title")}
                     </Header>
-
-                    {/*
-                        { t('transcription.choose_model.import_model') }
-                        <Divider />
-                    */}
-
                     {list.length > 0 &&
                         <>
                             <Divider />
-                            <p>{ t("transcription.choose_model.use_existing") }</p>
+                            <p>{t("transcription.choose_model.use_existing")}</p>
                             <div>
                                 {modelList}
                             </div>
                         </>
                     }
-
                     <Divider />
-
                     {list.length === 0 &&
                         t("transcription.choose_model.no_models_found")
                     }
-
                     <Link to={urls.gui.engine.index}>
-                        { t("transcription.choose_model.train_new") }
+                        {t("transcription.choose_model.train_new")}
                     </Link>
-
                 </Grid.Column>
                 </Grid.Row>
                 </Grid>

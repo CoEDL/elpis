@@ -16,7 +16,7 @@ const EngineDashboard = () => {
                 <Grid.Row>
                     <Grid.Column>
                         <Header as="h1">
-                            { t("engine.select.title") }
+                            {t("engine.select.title")}
                         </Header>
                     </Grid.Column>
                 </Grid.Row>

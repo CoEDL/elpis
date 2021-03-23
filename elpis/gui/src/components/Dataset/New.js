@@ -17,13 +17,13 @@ class DatasetNew extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
                             <Header as="h1" text="true">
-                                { t("dataset.new.title") }
+                                {t("dataset.new.title")}
                             </Header>
 
                             <NewForm />

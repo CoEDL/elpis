@@ -27,35 +27,35 @@ class PronDictL2S extends Component {
 
         const interactionDisabled = name ? false : true;
 
-        const pron = l2s ? (
-            <pre>
-                { l2s }
-            </pre>
-        ) : null;
+        const pron = l2s ?
+        (<pre>
+            {l2s}
+        </pre>) :
+        null;
 
         return (
             <div>
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
 
                             <Header as="h1">
-                                { t("pronDict.l2s.title") }
+                                {t("pronDict.l2s.title")}
                             </Header>
 
                             <CurrentPronDictName />
 
                             {!currentEngine &&
-                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
+                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{ t("pronDict.common.noCurrentPronDictLabel") }</p>
+                              <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
                             }
 
                             {currentEngine && name &&

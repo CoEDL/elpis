@@ -16,7 +16,7 @@ class StepWelcome extends Component {
                 <Grid centered>
                     <Grid.Row>
                         <Grid.Column className="keep-line-breaks">
-                            { t("welcome.description") }
+                            {t("welcome.description")}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
@@ -29,7 +29,7 @@ class StepWelcome extends Component {
                                 {t("welcome.start_train")}
                             </Button>
                         </div>
-                        <div className="right-col keep-line-breaks text">{ t("welcome.train_description") }</div>
+                        <div className="right-col keep-line-breaks text">{t("welcome.train_description")}</div>
                     </div>
                     <div className="row">
                         <div className="left-col transcribe-button">
@@ -37,7 +37,7 @@ class StepWelcome extends Component {
                                 {t("welcome.start_transcribe")}
                             </Button>
                         </div>
-                        <div className="right-col keep-line-breaks text">{ t("welcome.transcribe_description") }</div>
+                        <div className="right-col keep-line-breaks text">{t("welcome.transcribe_description")}</div>
                     </div>
                 </Segment>
             </div>

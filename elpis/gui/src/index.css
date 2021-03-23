@@ -6,7 +6,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
@@ -59,7 +58,6 @@ code {
     padding: 0.5rem;
     list-style-type: none;
 }
-
 
 .button.current {
     background-color: #D3A0F0 !important;
@@ -119,10 +117,12 @@ label.pad-right,
 }
 
 .ui.table.settings .description {
-    font-weight: normal
+    font-weight: normal;
 }
 
-.stages { margin-top: 1em}
+.stages {
+    margin-top: 1em;
+}
 
 .stage .divider {
     margin: 0 0.5em
@@ -168,7 +168,6 @@ label.pad-right,
     margin: 0;
 }
 
-
 .train-description,
 .transcription-description {
     margin-bottom: 1em;
@@ -177,7 +176,6 @@ label.pad-right,
 .train-description {
     padding-bottom: 2em !important;
 }
-
 
 .choose-engine .row,
 .welcome-options .row {
@@ -200,7 +198,9 @@ label.pad-right,
     margin-right: 2em;
 }
 
-.choose-engine { margin-top: 2em;}
+.choose-engine {
+    margin-top: 2em;
+}
 
 .choose-engine-button {
     margin: 0 1em;
@@ -243,7 +243,9 @@ label.pad-right,
     color: #8abc1e;
 }
 
-.choose-dataset button { max-width: 300px }
+.choose-dataset button {
+    max-width: 300px;
+}
 
 .file-button {
     width: 100%;

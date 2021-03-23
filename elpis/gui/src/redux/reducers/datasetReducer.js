@@ -156,7 +156,7 @@ const dataset = (state = initState, action) => {
                 if (wordlist.length > 0) return {...state, wordlist, status: "wordlist-prepared"};
                 else return {...state};
             } else {
-                // Errors are formatted as { status: code, data: message }
+                // Errors are formatted as {status: code, data: message}
                 console.log(data);
                 return {...state};
             }

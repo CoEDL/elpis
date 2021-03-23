@@ -100,7 +100,7 @@ class NewTranscription extends Component {
                 <Segment>
                     <Grid centered>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
                             <Header as="h1" text="true">
                                 {t("transcription.new.title")}
                             </Header>
@@ -129,15 +129,15 @@ class NewTranscription extends Component {
                             <Dropzone
                                 className="dropzone"
                                 onDrop={this.onDrop}
-                                getDataTransferItems={ evt => fromEvent(evt) }>
-                                { ({getRootProps, getInputProps, isDragActive}) => {
+                                getDataTransferItems={evt => fromEvent(evt)}>
+                                {({getRootProps, getInputProps, isDragActive}) => {
                                     return (
                                         <div
-                                            { ...getRootProps() }
-                                            className={ classNames("dropzone", {
+                                            {...getRootProps()}
+                                            className={classNames("dropzone", {
                                                 dropzone_active: isDragActive,
-                                            }) }>
-                                            <input { ...getInputProps() } />
+                                            })}>
+                                            <input {...getInputProps()} />
                                             {
                                                 isDragActive ? (
                                                     <p>{t("transcription.new.dropFilesHintDragActive")}</p>
@@ -167,7 +167,7 @@ class NewTranscription extends Component {
                             </Segment>
 
                             <Message icon>
-                                { loadingIcon }
+                                {loadingIcon}
                                 <Message.Content>
                                     <Message.Header>{t("status." + status)}</Message.Header>
                                     {stage_status &&

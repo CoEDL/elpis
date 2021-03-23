@@ -26,11 +26,11 @@ class DatasetFiles extends Component {
     }
 
     createFilesList = (files) => files.map(file => (
-        <List.Item key={ file }>
-            <Popup content={ file } size="mini" trigger={
+        <List.Item key={file}>
+            <Popup content={file} size="mini" trigger={
                 <Button as="div" labelPosition="left" className="file-button">
                     <Label as="a" className="file-label" basic>
-                        <div className="file-truncate">{ file }</div>
+                        <div className="file-truncate">{file}</div>
                     </Label>
                     <Button icon onClick={() => this.handleDeleteButton(file)}>
                         <Icon name="trash" />
@@ -88,28 +88,28 @@ class DatasetFiles extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
                             <Header as="h1">
-                                { t("dataset.files.title") }
+                                {t("dataset.files.title")}
                             </Header>
 
                             <CurrentDatasetName />
 
                             {!currentEngine &&
-                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
+                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{ t("dataset.common.noCurrentDatasetLabel") }</p>
+                              <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
                             }
 
                             {currentEngine && name &&
                                 <>
-                                <Message attached content={ t("dataset.files.description") } />
+                                <Message attached content={t("dataset.files.description")} />
                                 <Segment className="attached">
 
                                     <FileUpload name={name} />
@@ -119,32 +119,32 @@ class DatasetFiles extends Component {
                                     {filesHeader &&
                                         <>
                                         <Header as="h3">
-                                            { filesHeader }
+                                            {filesHeader}
                                         </Header>
                                         <div className="file-list">
                                             <Grid columns={3}>
                                                 <Grid.Column>
                                                     <Header as="h4">
-                                                        { audioFilesHeader }
+                                                        {audioFilesHeader}
                                                     </Header>
                                                     <List>
-                                                        { audioFilesList }
+                                                        {audioFilesList}
                                                     </List>
                                                 </Grid.Column>
                                                 <Grid.Column>
                                                     <Header as="h4">
-                                                        { transcriptionFilesHeader }
+                                                        {transcriptionFilesHeader}
                                                     </Header>
                                                     <List>
-                                                        { transcriptionFilesList }
+                                                        {transcriptionFilesList}
                                                     </List>
                                                 </Grid.Column>
                                                 <Grid.Column>
                                                     <Header as="h4">
-                                                        { additionalTextFilesHeader }
+                                                        {additionalTextFilesHeader}
                                                     </Header>
                                                     <List>
-                                                        { additionalTextFilesList }
+                                                        {additionalTextFilesList}
                                                     </List>
                                                 </Grid.Column>
                                             </Grid>
@@ -154,11 +154,11 @@ class DatasetFiles extends Component {
                                 </Segment>
                                 <br />
                                 <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
-                                    { t("common.nextButton") }
+                                    {t("common.nextButton")}
                                 </Button>
                                 <Segment>
                                     <Header as="h3">
-                                        { t("dataset.files.importSettingsHeader") }
+                                        {t("dataset.files.importSettingsHeader")}
                                     </Header>
                                     <GeneratedUI
                                         props={this.props}
@@ -167,7 +167,7 @@ class DatasetFiles extends Component {
                                         changeSettingsCallback={datasetSettings} />
                                 </Segment>
                                 <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
-                                    { t("common.nextButton") }
+                                    {t("common.nextButton")}
                                 </Button>
                                 </>
                             }

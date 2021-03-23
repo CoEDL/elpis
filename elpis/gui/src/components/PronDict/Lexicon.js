@@ -43,29 +43,29 @@ class PronDictLexicon extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
 
                             <Header as="h1">
-                                { t("pronDict.lexicon.title") }
+                                {t("pronDict.lexicon.title")}
                             </Header>
 
                             <CurrentPronDictName />
 
                             {!currentEngine &&
-                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
+                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{ t("pronDict.common.noCurrentPronDictLabel") }</p>
+                              <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
                             }
 
                             {currentEngine && name &&
                             <>
-                                <Message content={ t("pronDict.lexicon.description") } />
+                                <Message content={t("pronDict.lexicon.description")} />
 
                                 <Button
                                     as={Link}
@@ -79,7 +79,7 @@ class PronDictLexicon extends Component {
                                         <TextArea
                                             className="lexicon"
                                             onChange={this.handleChange}
-                                            value={lexicon} >
+                                            value={lexicon}>
                                         </TextArea>
                                     </Form>
                                     <Button
@@ -87,13 +87,13 @@ class PronDictLexicon extends Component {
                                         size="tiny"
                                         onClick={this.generateLexicon}
                                         disabled={interactionDisabled}>
-                                        { t("pronDict.lexicon.reset") }
+                                        {t("pronDict.lexicon.reset")}
                                     </Button>
                                     <Button
                                         size="tiny"
                                         onClick={this.saveLexicon}
                                         disabled={interactionDisabled}>
-                                        { t("pronDict.lexicon.save") }
+                                        {t("pronDict.lexicon.save")}
                                     </Button>
 
                                 </div>

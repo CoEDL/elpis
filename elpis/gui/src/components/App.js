@@ -57,7 +57,7 @@ class App extends Component {
                         <Route path={urls.gui.model.train} exact component={ModelTrain}/>
                         <Route path={urls.gui.model.results} exact component={ModelResults}/>
 
-                        <Route path={urls.gui.transcription.choose} component={ ChooseModel } />
+                        <Route path={urls.gui.transcription.choose} component={ChooseModel} />
                         <Route path={urls.gui.transcription.new} component={NewTranscription}/>
                     </PageContainer>
                 </Router>

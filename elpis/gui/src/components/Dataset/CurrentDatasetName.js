@@ -18,15 +18,15 @@ class CurrentDatasetName extends Component {
             <>
                 {name &&
                 <Message color="olive">
-                    { t("engine.common.currentEngineLabel") + engineHumanName }
+                    {t("engine.common.currentEngineLabel") + engineHumanName}
                     <br />
-                    { t("dataset.common.currentDatasetLabel") + name }
+                    {t("dataset.common.currentDatasetLabel") + name}
                 </Message>
                 }
 
                 {!currentEngine &&
                 <Message color="purple">
-                    { t("engine.common.noCurrentEngineLabel") }
+                    {t("engine.common.noCurrentEngineLabel")}
                     <SelectEngineDropdown />
                 </Message>
                 }
@@ -41,9 +41,9 @@ class CurrentDatasetName extends Component {
                     }
                     {!onDashboard &&
                         <>
-                            <p>{ t("dataset.common.noCurrentDatasetLabel") }</p>
+                            <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
                             <Link to={urls.gui.dataset.index}>
-                                { t("common.chooseOrNewLabel") }
+                                {t("common.chooseOrNewLabel")}
                             </Link>
                         </>
                     }

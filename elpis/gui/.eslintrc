@@ -17,12 +17,14 @@
     quotes: ["error", "double"],
     object-curly-spacing: ["error", "never"],
     array-bracket-spacing: ["error", "never"],
+    template-curly-spacing: ["error", "never"],
     space-in-parens: ["error", "never"],
     eqeqeq: ["error", "always"],
     no-multi-spaces: ["error"],
     key-spacing: ["error"],
     space-infix-ops: ["error"],
     max-len: ["error", {"code": 120}],
+    "react/jsx-curly-spacing": ["error", {"when": "never"}]
   },
   globals: {
     document: true,

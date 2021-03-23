@@ -19,9 +19,9 @@ class CurrentModelName extends Component {
             <>
                 {name &&
                 <Message color="olive">
-                    { t("engine.common.currentEngineLabel") + engineHumanName }
+                    {t("engine.common.currentEngineLabel") + engineHumanName}
                     <br />
-                    { t("model.common.currentModelLabel") + name }
+                    {t("model.common.currentModelLabel") + name}
                     <br />
                     {currentEngine && currentEngine === "kaldi" &&
                         <>
@@ -29,13 +29,13 @@ class CurrentModelName extends Component {
                             <br />
                         </>
                     }
-                    {t("dataset.common.currentDatasetLabel") + datasetName }
+                    {t("dataset.common.currentDatasetLabel") + datasetName}
                 </Message>
                 }
 
                 {!currentEngine &&
                 <Message color="purple">
-                    { t("engine.common.noCurrentEngineLabel") }
+                    {t("engine.common.noCurrentEngineLabel")}
                     <SelectEngineDropdown />
                 </Message>
                 }
@@ -50,9 +50,9 @@ class CurrentModelName extends Component {
                     }
                     {!onDashboard &&
                         <>
-                            <p>{ t("model.common.currentModelLabel") }</p>
+                            <p>{t("model.common.currentModelLabel")}</p>
                             <Link to={urls.gui.model.index}>
-                                { t("common.chooseOrNewLabel") }
+                                {t("common.chooseOrNewLabel")}
                             </Link>
                         </>
                     }

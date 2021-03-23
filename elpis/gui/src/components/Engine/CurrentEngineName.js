@@ -12,16 +12,16 @@ class CurrentEngineName extends Component {
         const current = engine_name ?
         (
             <Message color="olive">
-                { t("engine.common.currentEngineLabel") + engine_name }
+                {t("engine.common.currentEngineLabel") + engine_name}
             </Message>
         ) : (
             <Message color="purple">
-                { t("engine.common.noCurrentEngineLabel") }
+                {t("engine.common.noCurrentEngineLabel")}
             </Message>
         );
 
         return (
-            <>{ current }</>
+            <>{current}</>
         );
     }
 }

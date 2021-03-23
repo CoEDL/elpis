@@ -49,27 +49,26 @@ class ModelDashboard extends Component {
     render() {
         const {t, currentEngine, name, list} = this.props;
         const {column, direction} = this.state;
-        const redirectAfterModel = currentEngine === "kaldi" ? urls.gui.model.settings : urls.gui.model.train;
-        const listEl = list.length > 0 ? (
-            <Table sortable celled fixed unstackable>
+        const redirectAfterModel = currentEngine === "kaldi" ?
+            urls.gui.model.settings :
+            urls.gui.model.train;
+        const listEl = list.length > 0 ?
+            (<Table sortable celled fixed unstackable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
-                            sorted={ column === "name" ? direction : null }
-                            onClick={ this.handleSort("name", list) }
-                        >
+                            sorted={column === "name" ? direction : null}
+                            onClick={this.handleSort("name", list)}>
                             Name
                         </Table.HeaderCell>
                         <Table.HeaderCell
-                            sorted={ column === "dataset_name" ? direction : null }
-                            onClick={ this.handleSort("dataset_name", list) }
-                        >
+                            sorted={column === "dataset_name" ? direction : null}
+                            onClick={this.handleSort("dataset_name", list)}>
                             Recordings
                         </Table.HeaderCell>
                         <Table.HeaderCell
-                            sorted={ column === "pron_dict_name" ? direction : null }
-                            onClick={this.handleSort("pron_dict_name", list) }
-                        >
+                            sorted={column === "pron_dict_name" ? direction : null}
+                            onClick={this.handleSort("pron_dict_name", list)}>
                             Pronunciation Dictionaries
                         </Table.HeaderCell>
                     </Table.Row>
@@ -79,37 +78,42 @@ class ModelDashboard extends Component {
                         list.map(model => {
                             const className = (name === model.name) ? "current" : "";
                             return (
-                                <Table.Row key={ model.name } className={ className }>
+                                <Table.Row key={model.name} className={className}>
                                     <Table.Cell>
                                         <Button
                                             className={className}
                                             fluid
-                                            onClick={ () => this.handleLoad(model) }
-                                            >{ model.name }</Button>
+                                            onClick={() => this.handleLoad(model)}>
+                                            {model.name}
+                                        </Button>
                                     </Table.Cell>
-                                    <Table.Cell>{ model.dataset_name }</Table.Cell>
-                                    <Table.Cell>{ model.pron_dict_name }</Table.Cell>
+                                    <Table.Cell>
+                                        {model.dataset_name}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {model.pron_dict_name}
+                                    </Table.Cell>
                                 </Table.Row>
                             );
                         })
                     }
                 </Table.Body>
-            </Table>
-        ) : <p>{ t("model.dashboard.noneMessage") }</p>;
+            </Table>) :
+            <p>{t("model.dashboard.noneMessage")}</p>;
 
         return (
             <div>
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
 
                             <Header as="h1">
-                                { t("model.dashboard.title") }
+                                {t("model.dashboard.title")}
                             </Header>
 
                             <CurrentModelName />

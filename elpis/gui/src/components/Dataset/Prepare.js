@@ -47,16 +47,14 @@ class DatasetPrepare extends Component {
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
-                            sorted={ column === "name" ? direction : null }
-                                onClick={this.handleSort("name", wordlist) }
-                        >
-                            { t("dataset.prepare.wordlistHeader") }
+                            sorted={column === "name" ? direction : null}
+                                onClick={this.handleSort("name", wordlist)}>
+                            {t("dataset.prepare.wordlistHeader")}
                         </Table.HeaderCell>
                         <Table.HeaderCell
-                            sorted={ column === "frequency" ? direction : null }
-                                onClick={this.handleSort("frequency", wordlist) }
-                        >
-                            { t("dataset.prepare.frequencyHeader") }
+                            sorted={column === "frequency" ? direction : null}
+                                onClick={this.handleSort("frequency", wordlist)}>
+                            {t("dataset.prepare.frequencyHeader")}
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
@@ -64,11 +62,11 @@ class DatasetPrepare extends Component {
                     {
                         wordlist.map(word => {
                             return (
-                                <Table.Row key={ word.name }>
+                                <Table.Row key={word.name}>
                                     <Table.Cell>
-                                        { word.name }
+                                        {word.name}
                                     </Table.Cell>
-                                    <Table.Cell>{ word.frequency }</Table.Cell>
+                                    <Table.Cell>{word.frequency}</Table.Cell>
                                 </Table.Row>
                             );
                         })
@@ -82,44 +80,45 @@ class DatasetPrepare extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-                        <Grid.Column width={ 12 }>
-                            <Header as="h1">{ t("dataset.prepare.title") }</Header>
+                        <Grid.Column width={12}>
+                            <Header as="h1">{t("dataset.prepare.title")}</Header>
 
                             <CurrentDatasetName />
 
                             {!currentEngine &&
-                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
+                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {/* eslint-disable-next-line no-restricted-globals */}
                             {currentEngine && !name &&
-                              <p>{ t("dataset.common.noCurrentDatasetLabel") }</p>
+                              <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
                             }
 
                             {status === "ready" &&
-                                <p>{ t("dataset.prepare.ready") }</p>
+                                <p>{t("dataset.prepare.ready")}</p>
                             }
                             {status === "loaded" &&
                                 <p>
                                 <Icon name="circle notched" size="big" loading />
-                                { t("dataset.prepare.preparing") }
+                                {t("dataset.prepare.preparing")}
                                 </p>
                             }
                             {status === "wordlist-prepared" &&
                                 <>
-                                    <h3>{ t("dataset.prepare.header") }</h3>
-
-                                    { additionalTextFiles.length > 0 &&
-                                        <p>{ t("dataset.prepare.description") }</p>
+                                    <h3>{t("dataset.prepare.header")}</h3>
+                                    {additionalTextFiles.length > 0 &&
+                                        <p>{t("dataset.prepare.description")}</p>
                                     }
-                                    <Button as={Link}
-                                            to={(currentEngine === "kaldi") ? urls.gui.pronDict.index :
-                                                urls.gui.model.index}
-                                            disabled={interactionDisabled}>
-                                        { t("common.nextButton") }
+                                    <Button
+                                        as={Link}
+                                        to={(currentEngine === "kaldi") ?
+                                            urls.gui.pronDict.index :
+                                            urls.gui.model.index}
+                                        disabled={interactionDisabled}>
+                                        {t("common.nextButton")}
                                     </Button>
                                     {listEl}
                                 </>

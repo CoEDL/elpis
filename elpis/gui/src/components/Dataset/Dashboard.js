@@ -45,14 +45,13 @@ class DatasetDashboard extends Component {
     render() {
         const {t, currentEngine, name, list} = this.props;
         const {column, direction} = this.state;
-        const listEl = list.length > 0 ? (
-            <Table sortable celled fixed unstackable className="choose-dataset">
+        const listEl = list.length > 0 ?
+            (<Table sortable celled fixed unstackable className="choose-dataset">
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
-                            sorted={ column === "name" ? direction : null }
-                            onClick={ this.handleSort("name", list) }
-                        >
+                            sorted={column === "name" ? direction : null}
+                            onClick={this.handleSort("name", list)}>
                             Name
                         </Table.HeaderCell>
                     </Table.Row>
@@ -62,34 +61,35 @@ class DatasetDashboard extends Component {
                     list.map(datasetName => {
                         const className = (datasetName === name) ? "current" : "";
                         return (
-                            <Table.Row key={ datasetName }>
+                            <Table.Row key={datasetName}>
                                 <Table.Cell>
                                     <Button
                                         className={className}
                                         fluid
-                                        onClick={ () => this.handleLoad(datasetName) }
-                                        >{ datasetName }</Button>
+                                        onClick={() => this.handleLoad(datasetName)}>
+                                        {datasetName}
+                                    </Button>
                                 </Table.Cell>
                             </Table.Row>
                         );
                     })
                 }
                 </Table.Body>
-            </Table>
-        ) : <p>{ t("dataset.dashboard.noneMessage") }</p>;
+            </Table>) :
+            <p>{t("dataset.dashboard.noneMessage")}</p>;
 
         return (
             <div>
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
 
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
                             <Header as="h1">
-                                { t("dataset.dashboard.title") }
+                                {t("dataset.dashboard.title")}
                             </Header>
 
                             <CurrentDatasetName />

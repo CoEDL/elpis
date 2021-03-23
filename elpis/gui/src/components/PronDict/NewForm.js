@@ -68,12 +68,12 @@ class NewForm extends Component {
                             </Form.Field>
 
                             {currentEngine && datasets.length === 0 &&
-                                <p>{ t("pronDict.common.noDatasetsLabel") }</p>
+                                <p>{t("pronDict.common.noDatasetsLabel")}</p>
                             }
 
                             {currentEngine && datasets.length > 0 &&
                                 <Form.Field>
-                                    <label>{ t("pronDict.new.select")}</label>
+                                    <label>{t("pronDict.new.select")}</label>
                                     <Field component="select" name="dataset_name">
                                         {datasets.map(name =>
                                             (<option key={name} value={name}>{name}</option>))

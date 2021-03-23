@@ -7,7 +7,6 @@ import NewForm from "../Model/NewForm";
 
 
 class ModelNew extends Component {
-
     render() {
         const {t} = this.props;
         return (
@@ -15,17 +14,14 @@ class ModelNew extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-                        <Grid.Column width={ 4 }>
+                        <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
-                        <Grid.Column width={ 12 }>
+                        <Grid.Column width={12}>
                             <Header as="h1" text="true">
-                                { t("model.new.title") }
+                                {t("model.new.title")}
                             </Header>
-
                             <NewForm />
-
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -33,6 +29,5 @@ class ModelNew extends Component {
         );
     }
 }
-
 
 export default withTranslation("common")(ModelNew);
