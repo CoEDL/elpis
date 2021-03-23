@@ -11,6 +11,7 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 export function modelNew(postData) {
     const url = baseUrl + urls.api.model.new;
     var responseData;
+
     return async dispatch => {
         dispatch(modelNewStarted());
         await axios.post(url, postData)
@@ -22,6 +23,7 @@ export function modelNew(postData) {
                 dispatch(modelNewFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -44,6 +46,7 @@ const modelNewFailure = error => ({
 export function modelLoad(postData) {
     const url = baseUrl + urls.api.model.load;
     var responseData;
+
     return async dispatch => {
         dispatch(modelLoadStarted());
         await axios.post(url, postData)
@@ -55,6 +58,7 @@ export function modelLoad(postData) {
                 dispatch(modelLoadFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -77,6 +81,7 @@ const modelLoadFailure = error => ({
 export function modelList() {
     const url = baseUrl + urls.api.model.list;
     var responseData;
+
     return async dispatch => {
         dispatch(modelListStarted());
         await axios.get(url)
@@ -88,6 +93,7 @@ export function modelList() {
                 dispatch(modelListFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -110,6 +116,7 @@ const modelListFailure = error => ({
 export function modelSettings(postData) {
     const url = baseUrl + urls.api.model.settings;
     var responseData;
+
     return async dispatch => {
         dispatch(modelSettingsStarted());
         await axios.post(url, postData)
@@ -121,6 +128,7 @@ export function modelSettings(postData) {
                 dispatch(modelSettingsFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -143,6 +151,7 @@ const modelSettingsFailure = error => ({
 export function modelTrain() {
     const url = baseUrl + urls.api.model.train;
     var responseData;
+
     return async dispatch => {
         dispatch(modelTrainStarted());
         await axios.get(url)
@@ -154,6 +163,7 @@ export function modelTrain() {
                 dispatch(modelTrainFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -176,6 +186,7 @@ const modelTrainFailure = error => ({
 export function modelStatus() {
     const url = baseUrl + urls.api.model.status;
     var responseData;
+
     return async dispatch => {
         dispatch(modelStatusStarted());
         await axios.get(url)
@@ -187,6 +198,7 @@ export function modelStatus() {
                 dispatch(modelStatusFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -209,6 +221,7 @@ const modelStatusFailure = error => ({
 export function modelResults() {
     const url = baseUrl + urls.api.model.results;
     var responseData;
+
     return async dispatch => {
         dispatch(modelResultsStarted());
         await axios.get(url)
@@ -220,6 +233,7 @@ export function modelResults() {
                 dispatch(modelResultsFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }

@@ -15,11 +15,13 @@ class ChooseEngine extends Component {
 
         let selectEngine = engine_name => {
             let postData = {engine_name};
+
             _engineLoad(postData, history);
         };
 
         let cards = list.map(name => {
             let engine_name, engine_description;
+
             switch (name) {
                 case "kaldi":
                     engine_name = t("engine.common.kaldi_name");
@@ -30,6 +32,7 @@ class ChooseEngine extends Component {
                     engine_description = t("engine.common.espnet_description");
                     break;
             }
+
             return (
                 <div key={name} className="row">
                     <div className="left-col choose-engine-button">

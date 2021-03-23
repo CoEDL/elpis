@@ -4,16 +4,20 @@ import {Select, Form, Input, Table, TextArea} from "semantic-ui-react";
 function groupSettingsFromUI(ui) {
     let settingGroups = [];
     let group = [];
+
     ui["order"].forEach(ui_name => {
         if (ui["type"][ui_name] === "title" && group.length !== 0) {
             settingGroups.push(group);
             group = []; // clear for the next group
         }
+
         group.push(ui_name);
     });
+
     if (group.length !== 0) {
         settingGroups.push(group);
     }
+
     return settingGroups;
 }
 
@@ -25,11 +29,14 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
     useEffect(() => {
         if (settings !== null) {
             const selection_mechanism = settings["selection_mechanism"];
+
             ui["data"][selection_mechanism]["shown"] = true;
+
             // If settings haven't been set, set to the first option
             if (settings[selection_mechanism] === "") {
                 settings[selection_mechanism] = ui["data"][selection_mechanism]["options"][0];
             }
+
             changeSettingsCallback(settings);
         }
     }, [ui]);
@@ -42,22 +49,26 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
 
     const handleStrChange = (ui_name, data) => {
         let newSettings = {...settings};
+
         newSettings[ui_name] = data.value;
         changeSettingsCallback(newSettings);
     };
 
     const handleSelectChange = (ui_name, data) => {
         let newSettings = {...settings};
+
         if (ui_name === "selection_mechanism") {
             // Hide other selection mechanisms and show current one
             for (const option of data.options) {
                 newSettings[option.value] = null;
                 ui["data"][option.value]["shown"] = false;
             }
+
             ui["data"][data.value]["shown"] = true;
             // Update new settings with default value of selected mechanism
             newSettings[data.value] = ui["data"][data.value]["options"][0];
         }
+
         newSettings[ui_name] = data.value;
         changeSettingsCallback(newSettings);
     };
@@ -68,6 +79,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
     // Construct individual tables
     let tables = [];
     let groupIndex = 0;
+
     settingGroups.forEach(group => {
         let header = null;
         let settingRows = [];
@@ -96,10 +108,12 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
             } else {
                 // Building input
                 let data = ui["data"][ui_name];
+
                 if (data.shown) {
                     let label = (data.display_name !== null) ? data.display_name : ui_name;
                     // Switch input type based on ui specification
                     let dataEntryElement;
+
                     switch (data.ui_format) {
                         case "text": {
                             dataEntryElement = (<Input
@@ -126,6 +140,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                             break;
                         case "select": {
                             let options = [];
+
                             // Build options
                             data.options.forEach(v => {
                                 options.push({key: v, value: v, text: v});
@@ -152,6 +167,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                             <Table.Cell>{dataEntryElement}</Table.Cell>
                         </Table.Row>
                     );
+
                     settingRows.push(row);
                 }
             }
@@ -170,8 +186,10 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                 </Table.Body>
             </Table>
         );
+
         tables.push(table);
     });
+
     return (
         <Form>
             {tables}

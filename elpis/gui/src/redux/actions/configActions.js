@@ -13,6 +13,7 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ?
 export const configReset = () => {
     const url = baseUrl + urls.api.config.reset;
     var responseData;
+
     return async (dispatch) => {
         await axios.post(url)
             .then(response => {
@@ -22,6 +23,7 @@ export const configReset = () => {
             .catch(error => {
                 throw error;
             });
+
         return responseData;
     };
 };
@@ -41,6 +43,7 @@ const configResetSuccess = response => ({
 export function interfaceObjectNames() {
     const url = baseUrl + urls.api.interface.objectNames;
     var responseData;
+
     return async dispatch => {
         dispatch(interfaceObjectNamesStarted());
         await axios.get(url)
@@ -52,6 +55,7 @@ export function interfaceObjectNames() {
                 dispatch(interfaceObjectNamesFailure(error));
                 throw error;
         });
+
         return responseData;
     };
 }
@@ -78,6 +82,7 @@ const interfaceObjectNamesFailure = error => ({
 export function configList() {
     const url = baseUrl + urls.api.config.list;
     var responseData;
+
     return async dispatch => {
         dispatch(configListStarted());
         await axios.get(url)
@@ -91,6 +96,7 @@ export function configList() {
                 dispatch(configListFailure(error));
                 throw error;
         });
+
         return responseData;
     };
 }

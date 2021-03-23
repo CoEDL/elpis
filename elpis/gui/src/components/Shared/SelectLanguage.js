@@ -11,6 +11,7 @@ const SelectLanguage = () => {
 
     let handleChange = (_event, data) => {
         let newLang = data.value;
+
         i18n.changeLanguage(newLang)
             .then(() => console.log(`Changed language to ${newLang}.`))
             .catch(() => console.log("Failed to change language."));

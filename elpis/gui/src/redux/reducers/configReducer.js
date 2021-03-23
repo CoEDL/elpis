@@ -15,6 +15,7 @@ const config = (state = initState, action) => {
 
         case actionTypes.CONFIG_OBJECT_NAMES_SUCCESS: {
             let {object_names} = action.response.data.data;
+
             return {
                 ...state,
                 datasetList: object_names.datasets,
@@ -25,6 +26,7 @@ const config = (state = initState, action) => {
 
         case actionTypes.CONFIG_LIST_SUCCESS: {
             let {config} = action.response.data.data;
+
             return {...state, app_config: config};
         }
 

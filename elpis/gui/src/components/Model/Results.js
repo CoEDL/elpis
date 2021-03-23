@@ -10,6 +10,7 @@ import CurrentModelName from "./CurrentModelName";
 class ModelResults extends Component {
     componentDidMount() {
         const {name, modelResults} = this.props;
+
         if (name) modelResults();
     }
 

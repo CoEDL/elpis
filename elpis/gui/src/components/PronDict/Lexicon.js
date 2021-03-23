@@ -14,6 +14,7 @@ class PronDictLexicon extends Component {
 
     componentDidMount = () => {
         const {lexicon} = this.props;
+
         if (!lexicon) this.generateLexicon();
 
     }
@@ -24,6 +25,7 @@ class PronDictLexicon extends Component {
 
     saveLexicon = () => {
         const data = {lexicon: this.props.lexicon};
+
         this.props.pronDictSaveLexicon(data);
     }
 

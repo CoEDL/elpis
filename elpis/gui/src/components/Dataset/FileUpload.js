@@ -11,7 +11,9 @@ class FileUpload extends Component {
 
     onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
+
         var formData = new FormData();
+
         acceptedFiles.forEach(file => {
             formData.append("file", file);
         });

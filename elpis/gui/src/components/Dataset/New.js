@@ -12,6 +12,7 @@ class DatasetNew extends Component {
 
     render() {
         const {t} = this.props;
+
         return (
             <div>
                 <Branding />

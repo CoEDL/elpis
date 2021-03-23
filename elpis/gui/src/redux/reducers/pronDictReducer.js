@@ -15,6 +15,7 @@ const initState = {
 
 const pronDict = (state = initState, action) => {
     let data, status;
+
     switch (action.type) {
 
         case actionTypes.PRON_DICT_NEW_SUCCESS:
@@ -25,11 +26,13 @@ const pronDict = (state = initState, action) => {
                 };
             } else {
                 var {name} = action.response.data.data.config;
+
                 return {...initState, name};
             }
 
         case actionTypes.PRON_DICT_LOAD_SUCCESS:
             var {config, l2s, lexicon} = action.response.data.data;
+
             return {
                 ...state,
                 name: config.name,
@@ -40,24 +43,29 @@ const pronDict = (state = initState, action) => {
 
         case actionTypes.PRON_DICT_LIST_SUCCESS:
             var {list} = action.response.data.data;
+
             return {...state, pronDictList: list};
 
         case actionTypes.PRON_DICT_L2S_SUCCESS:
             ({data, status} = action.response.data);
+
             if (status === 200) {
                 return {...state, l2s: data.l2s};
             } else {
                 console.log("some error with l2s");
+
                 return {...state};
             }
 
         case actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS:
         case actionTypes.PRON_DICT_SAVE_LEXICON_SUCCESS:
             ({data, status} = action.response.data);
+
             if (status === 200){
                 return {...state, lexicon: data.lexicon};
             } else {
                 console.log("some error building or saving lexicon");
+
                 return {...state};
             }
 

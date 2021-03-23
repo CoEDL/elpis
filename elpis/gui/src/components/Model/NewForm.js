@@ -14,6 +14,7 @@ class NewForm extends Component {
     // Get me a list of all the data sets and pron dicts we have
     componentDidMount() {
         const {interfaceObjectNames} = this.props;
+
         interfaceObjectNames();
     }
 
@@ -27,12 +28,15 @@ class NewForm extends Component {
          *  This allows the values to be passed to onsubmit without having to explicitly select either
         */
         let defaultDatasetName = "";
+
         if (currentDataset) {
             defaultDatasetName = currentDataset;
         } else if (datasets.length > 0) {
             defaultDatasetName = datasets[0];
         }
+
         let defaultPronDictName = "";
+
         if (currentPronDict) {
             defaultPronDictName = currentPronDict;
         } else if (pronDicts.length > 0) {
@@ -49,6 +53,7 @@ class NewForm extends Component {
                 }}
                 validate={values => {
                     let errors = {};
+
                     if (!values.name) {
                         errors.name = "Required";
                     } else if (
@@ -56,11 +61,13 @@ class NewForm extends Component {
                     ) {
                         errors.name = t("common.invalidCharacterErrorMessage");
                     }
+
                     return errors;
                 }}
                 onSubmit={(values) => {
                     const filtered_pd = pronDicts.filter(pd => (pd.name === values.pron_dict_name));
                     const modelData = {name: values.name, engine};
+
                     if (engine === "kaldi"){
                         // Get the dataset name from the pron dicts setting if we are using Kaldi
                         modelData["pron_dict_name"] = filtered_pd[0].name;
@@ -69,7 +76,9 @@ class NewForm extends Component {
                         // Non-kaldi, use the specified dataset
                         modelData["dataset_name"] = values.dataset_name;
                     }
+
                     const redirectAfterModel = engine === "kaldi" ? urls.gui.model.settings : urls.gui.model.train;
+
                     modelNew(modelData, this.props.history, redirectAfterModel);
                 }}
             >
@@ -153,6 +162,7 @@ const mapDispatchToProps = dispatch => ({
                 if (response.status === 500) {
                     throw Error(response.error);
                 }
+
                 return response;
             })
             .then(() => {

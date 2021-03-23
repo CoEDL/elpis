@@ -12,6 +12,7 @@ class NewForm extends Component {
 
      render() {
         const {t, error, datasetNew} = this.props;
+
         return (
             <Formik
                 enableReinitialize
@@ -20,6 +21,7 @@ class NewForm extends Component {
                 }}
                 validate={values => {
                     let errors = {};
+
                     if (!values.name) {
                         errors.name = "Required";
                     } else if (
@@ -27,10 +29,12 @@ class NewForm extends Component {
                     ) {
                         errors.name = t("common.invalidCharacterErrorMessage");
                     }
+
                     return errors;
                 }}
                 onSubmit={(values) => {
                     const postData = {name: values.name};
+
                     datasetNew(postData, this.props.history);
                 }}
             >
@@ -77,6 +81,7 @@ const mapDispatchToProps = dispatch => ({
                 if (response.status === 500) {
                     throw Error(response.error);
                 }
+
                 return response;
             })
             .then(() => {

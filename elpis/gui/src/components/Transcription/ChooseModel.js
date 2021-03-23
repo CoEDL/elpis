@@ -32,6 +32,7 @@ class ChooseModel extends Component {
 
     render() {
         const {t, list} = this.props;
+
         console.log("list", list);
 
         const modelList = list.map((model, index) => {

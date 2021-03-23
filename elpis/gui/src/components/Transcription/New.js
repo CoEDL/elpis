@@ -37,7 +37,9 @@ class NewTranscription extends Component {
 
     doStatusCheck = () => {
         const {status} = this.props;
+
         this.props.transcriptionStatus();
+
         if (status === "transcribed") {
             clearInterval(this.statusInterval);
         }
@@ -59,6 +61,7 @@ class NewTranscription extends Component {
 
     onDrop = (acceptedFiles) => {
         var formData = new FormData();
+
         formData.append("file", acceptedFiles[0]);
         this.props.transcriptionNew(formData);
         this.setState({uploading: true});
@@ -71,6 +74,7 @@ class NewTranscription extends Component {
         const datasetData = {name: selectedModel[0].dataset_name};
         const engineName = {engine_name: selectedModel[0].engine_name};
         const pronDictData = {name: selectedModel[0].pron_dict_name};
+
         modelLoad(modelData, datasetData, engineName, pronDictData);
     }
 
@@ -171,6 +175,7 @@ class NewTranscription extends Component {
                                                     let name = stage_status[stage]["name"];
                                                     let status = stage_status[stage]["status"];
                                                     let message = stage_status[stage]["message"];
+
                                                     return (
                                                         <p key={stage} className="stage">
                                                             <span className="name">

@@ -24,6 +24,7 @@ const rootReducer = (state, action) => {
     if (action.type === "CONFIG_RESET") {
         state = undefined;
     }
+
     return appReducer(state, action);
 };
 

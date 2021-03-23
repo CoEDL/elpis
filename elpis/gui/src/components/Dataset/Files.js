@@ -15,12 +15,14 @@ class DatasetFiles extends Component {
 
     handleNextButton = () => {
         const {history, datasetPrepare} = this.props;
+
         datasetPrepare(history);
         history.push(urls.gui.dataset.prepare);
     }
 
     handleDeleteButton = (file) => {
         var deleteData = new FormData();
+
         deleteData.append("file", file);
         this.props.datasetDelete(deleteData);
     }

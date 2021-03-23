@@ -25,6 +25,7 @@ class PronDictDashboard extends Component {
 
     handleSort = (clickedColumn, data) => () => {
         const {column} = this.state;
+
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
@@ -41,6 +42,7 @@ class PronDictDashboard extends Component {
         const {pronDictLoad} = this.props;
         const postData = {name: values.name};
         const datasetData = {name: values.dataset_name};
+
         pronDictLoad(postData, datasetData);
     }
 
@@ -66,6 +68,7 @@ class PronDictDashboard extends Component {
                 <Table.Body>
                     {list.map(pronDict => {
                         const className = (pronDict.name === name) ? "current" : "";
+
                         return (
                             <Table.Row key={pronDict.name}>
                                 <Table.Cell>

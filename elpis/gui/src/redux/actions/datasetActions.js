@@ -11,6 +11,7 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 export function datasetNew(postData) {
     const url = baseUrl + urls.api.dataset.new;
     var responseData;
+
     return async dispatch => {
         dispatch(datasetNewStarted());
         await axios.post(url, postData)
@@ -22,6 +23,7 @@ export function datasetNew(postData) {
                 dispatch(datasetNewFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -44,6 +46,7 @@ const datasetNewFailure = error => ({
 export function datasetLoad(postData) {
     const url = baseUrl + urls.api.dataset.load;
     var responseData;
+
     return async dispatch => {
         dispatch(datasetLoadStarted());
         await axios.post(url, postData)
@@ -55,6 +58,7 @@ export function datasetLoad(postData) {
                 dispatch(datasetLoadFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -77,6 +81,7 @@ const datasetLoadFailure = error => ({
 export function datasetList() {
     const url = baseUrl + urls.api.dataset.list;
     var responseData;
+
     return async dispatch => {
         dispatch(datasetListStarted());
         await axios.get(url)
@@ -88,6 +93,7 @@ export function datasetList() {
                 dispatch(datasetListFailure(error));
                 throw error;
         });
+
         return responseData;
     };
 }
@@ -111,6 +117,7 @@ export function datasetFiles(postData) {
     const url = baseUrl + urls.api.dataset.files;
     const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
+
     return async dispatch => {
         dispatch(datasetFilesStarted());
         await axios.post(url, postData, config)
@@ -125,6 +132,7 @@ export function datasetFiles(postData) {
                 dispatch(datasetFilesFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -147,6 +155,7 @@ export function datasetDelete(postData) {
     const url = baseUrl + urls.api.dataset.delete;
     const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
+
     return async dispatch => {
         dispatch(datasetDeleteStarted());
         await axios.post(url, postData, config)
@@ -159,6 +168,7 @@ export function datasetDelete(postData) {
                 throw error;
             });
         console.log(responseData["data"]);
+
         return responseData;
     };
 }
@@ -180,6 +190,7 @@ const datasetDeleteFailure = error => ({
 export function datasetSettings(postData) {
     const url = baseUrl + urls.api.dataset.settings;
     var responseData;
+
     return async dispatch => {
         dispatch(datasetSettingsStarted());
         await axios.post(url, postData)
@@ -191,6 +202,7 @@ export function datasetSettings(postData) {
                 dispatch(datasetSettingsFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -213,6 +225,7 @@ const datasetSettingsFailure = error => ({
 export function datasetPrepare() {
     const url = baseUrl + urls.api.dataset.prepare;
     var responseData;
+
     return async dispatch => {
         dispatch(datasetPrepareStarted());
         await axios.post(url)
@@ -224,6 +237,7 @@ export function datasetPrepare() {
                 dispatch(datasetPrepareFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -245,6 +259,7 @@ const datasetPrepareFailure = error => ({
 export function datasetUIUpdate() {
     const url = baseUrl + urls.api.dataset.ui;
     var responseData;
+
     return async dispatch => {
         dispatch(datasetUIUpdateStarted());
         await axios.post(url)
@@ -256,6 +271,7 @@ export function datasetUIUpdate() {
                 dispatch(datasetUIUpdateFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }

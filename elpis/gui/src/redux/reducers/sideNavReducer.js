@@ -89,7 +89,10 @@ const sideNav = (state = initialStepModelState, action) => {
 
 		case actionTypes.ENGINE_LOAD_SUCCESS: {
 			let engine = action.response.data.data.engine;
-			// Fall through to setting the current step
+
+			// TODO dispatch the set current step action after engine load
+			// used to fall through the case but that's not allowed now
+
 			return {...state, engine};
 		}
 
@@ -108,6 +111,7 @@ const sideNav = (state = initialStepModelState, action) => {
 					// model/new type pages aren't represented in the substeps, so match them to the first in each step
 					const searchReg = /\/new|\//ig;
 					const path_match = (window.location.pathname.replace(searchReg,"") === substep.path.replace(searchReg,"")) ? 1 : 0;
+
 					if (path_match){
 						// Found the current step!
 						currentStepName = stepName;
@@ -117,6 +121,7 @@ const sideNav = (state = initialStepModelState, action) => {
 			}
 
 			let rebuiltSteps = {};
+
 			Object.entries(originalStepsState.steps).forEach(([stepName, step]) => {
 				// Determine this steps situation.
 				let isPastStep = stepToOrder(stepName) < stepToOrder(currentStepName);
@@ -148,24 +153,29 @@ const sideNav = (state = initialStepModelState, action) => {
 						step.enabled = true;
 						substep.enabled = true;
 					}
+
 					// this one
 					if (isCurrentStep) {
 						step.doing = true;
 						step.enabled = true;
 					}
+
 					// this one
 					if (isCurrentStep && isCurrentSubStep) {
 						substep.doing = true;
 						substep.enabled = true;
 					}
+
 					// next one
 					if (isCurrentStep && isNextSubStep) {
 						substep.enabled = true;
 					}
+
 					// also enable first substeps in next step if we are on the last substep in a step
 					if (isCurrentStep && isCurrentSubStep && isLastSubStep) {
 						rememberToEnableTheNextStep = true;
 					}
+
 					// future steps
 					if (isFutureStep) {
 						step.enabled = false;
@@ -185,6 +195,7 @@ const sideNav = (state = initialStepModelState, action) => {
 			if (rememberToEnableTheNextStep && nextStepName) {
 				rebuiltSteps[nextStepName].substeps[0].enabled = true;
 			}
+
 			return {...state, steps: rebuiltSteps, lastURL: action.url};
 		}
 		default:

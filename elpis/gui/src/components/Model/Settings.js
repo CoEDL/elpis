@@ -15,6 +15,7 @@ class ModelSettings extends Component {
 
     render() {
         const {t, currentEngine, settings, modelSettings, name} = this.props;
+
         return (
             <div>
                 <Branding />
@@ -52,6 +53,7 @@ class ModelSettings extends Component {
                                     }}
                                     validate={values => {
                                         let errors = {};
+
                                         if (!values.ngram) {
                                             errors.ngram = "Required";
                                         } else if (
@@ -59,10 +61,12 @@ class ModelSettings extends Component {
                                         ) {
                                             errors.ngram = "Invalid ngram";
                                         }
+
                                         return errors;
                                     }}
                                     onSubmit={(values) => {
                                         const postData = {ngram: values.ngram};
+
                                         modelSettings(postData);
                                         this.props.history.push(urls.gui.model.train);
                                     }}

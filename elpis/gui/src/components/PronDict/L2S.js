@@ -16,8 +16,10 @@ class PronDictL2S extends Component {
 
     onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
+
         const {pronDictL2S} = this.props;
         var formData = new FormData();
+
         formData.append("file", acceptedFiles[0]);
         pronDictL2S(formData);
     }

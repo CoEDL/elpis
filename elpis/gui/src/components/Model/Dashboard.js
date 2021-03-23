@@ -26,6 +26,7 @@ class ModelDashboard extends Component {
 
     handleSort = (clickedColumn, data) => () => {
         const {column} = this.state;
+
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
@@ -43,6 +44,7 @@ class ModelDashboard extends Component {
         const modelData = {name: values.name};
         const datasetData = {name: values.dataset_name};
         const pronDictData = {name: values.pron_dict_name};
+
         modelLoad(modelData, datasetData, pronDictData);
     }
 
@@ -79,6 +81,7 @@ class ModelDashboard extends Component {
                 <Table.Body>
                     {list.map(model => {
                         const className = (name === model.name) ? "current" : "";
+
                         return (
                             <Table.Row key={model.name} className={className}>
                                 <Table.Cell>

@@ -27,7 +27,9 @@ class ModelTrain extends Component {
 
     handleModelStatus = () => {
         const {status, modelStatus} = this.props;
+
         modelStatus();
+
         if (status === "trained") this.props.clearInterval(this.state.statusInterval);
     }
 

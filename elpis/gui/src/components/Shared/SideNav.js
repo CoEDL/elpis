@@ -13,11 +13,13 @@ class SideNav extends Component {
 
     handleStepSelect = (step) => {
         const {history} = this.props;
+
         history.push(step.path);
     };
 
     componentDidMount = () => {
         const {match, setCurrentStep} = this.props;
+
         setCurrentStep(match.url);
     };
 
@@ -49,6 +51,7 @@ class SideNav extends Component {
                                                                 substepDoing: substep.doing,
                                                                 disabled: !substep.enabled,
                                                             });
+
                                                             return (
                                                                 <List.Item
                                                                     className={substepClassNames}

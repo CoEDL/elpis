@@ -12,7 +12,7 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 export const engineLoad = (postData) => {
     const url = baseUrl + urls.api.engine.load;
     let responseData;
-    console.log("engine load", postData);
+
     return async dispatch => {
         dispatch(engineLoadStarted());
         await axios.post(url, postData)
@@ -24,6 +24,7 @@ export const engineLoad = (postData) => {
                 dispatch(engineLoadFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 };
@@ -46,6 +47,7 @@ const engineLoadFailure = error => ({
 export function engineList() {
     const url = baseUrl + urls.api.engine.list;
     var responseData;
+
     return async dispatch => {
         dispatch(engineListStarted());
         await axios.get(url)
@@ -57,6 +59,7 @@ export function engineList() {
                 dispatch(engineListFailure(error));
                 throw error;
         });
+
         return responseData;
     };
 }

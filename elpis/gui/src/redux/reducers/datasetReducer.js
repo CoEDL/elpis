@@ -21,6 +21,7 @@ let transcriptionFiles = [];
 
 const dataset = (state = initState, action) => {
     let data, status;
+
     switch (action.type) {
 
         // Boilerplate for all...
@@ -37,6 +38,7 @@ const dataset = (state = initState, action) => {
             } else {
                 let dataset_state = action.response.data.data.state;
                 let name = dataset_state.name;
+
                 return {...initState, name};
             }
         }
@@ -45,13 +47,17 @@ const dataset = (state = initState, action) => {
             // loading existing data set might have files and settings
             let {name, files, importer} = action.response.data.data.state;
             let wordlist = {};
+
             if (action.response.data.data.wordlist) {
                 const wordlistObj = JSON.parse(action.response.data.data.wordlist);
+
                 wordlist = Object.keys(wordlistObj).map(key => {
                     return {name: key, frequency: wordlistObj[key]};
                 });
             }
+
            const status = wordlist.length > 0 ? "wordlist-prepared" : "";
+
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = files.filter(file => getFileExtension(file) === "wav").sort();
             additionalTextFiles = files.filter(file => getFileExtension(file) === "txt").sort();
@@ -63,6 +69,7 @@ const dataset = (state = initState, action) => {
             // remove duplicates
             audioFiles = [...(new Set(audioFiles))];
             transcriptionFiles = [...(new Set(transcriptionFiles))];
+
             return {
                 ...state,
                 name,
@@ -89,6 +96,7 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_FILES_SUCCESS:
             // TODO, API should send a JSON wrapper
             ({data, status} = action.response.data);
+
             if (status === 200) {
                 // action.data is an array of filenames. parse this, split into separate lists
                 audioFiles = data.files.filter(file => getFileExtension(file) === "wav").sort();
@@ -96,6 +104,7 @@ const dataset = (state = initState, action) => {
                 additionalTextFiles = data.files.filter(file => getFileExtension(file) === "txt").sort();
                 // remove duplicates
                 audioFiles = [...(new Set(audioFiles))];
+
                 return {
                     ...state,
                     status: "loaded",
@@ -112,11 +121,13 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_DELETE_SUCCESS:
             ({data, status} = action.response.data);
+
             if (status === 200) {
                 // action.data is an array of filenames. parse this, split into separate lists
                 audioFiles = data.files.filter(file => getFileExtension(file) === "wav").sort();
                 transcriptionFiles = data.files.filter(file => getFileExtension(file) === "eaf").sort();
                 additionalTextFiles = data.files.filter(file => getFileExtension(file) === "txt").sort();
+
                 return {
                     ...state,
                     audioFiles,
@@ -129,6 +140,7 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_SETTINGS_SUCCESS:
             ({data, status} = action.response.data);
+
             if (status === 200) {
                 return {
                     ...state,
@@ -136,11 +148,13 @@ const dataset = (state = initState, action) => {
                 };
             } else {
                 console.log(data);
+
                 return {...state};
             }
 
         case actionTypes.DATASET_UI_UPDATE_SUCCESS:
             ({data, status} = action.response.data);
+
             if (status === 200) {
                 return {...state, ui: data.ui};
             } else {
@@ -149,17 +163,20 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_PREPARE_SUCCESS:
             ({data, status} = action.response.data);
+
             if (status === 200) {
                 // First decode the text we receive from the API
                 const wordlistObj = JSON.parse(data.wordlist);
                 const wordlist = Object.keys(wordlistObj).map(key => {
                     return {name: key, frequency: wordlistObj[key]};
                 });
+
                 if (wordlist.length > 0) return {...state, wordlist, status: "wordlist-prepared"};
                 else return {...state};
             } else {
                 // Errors are formatted as {status: code, data: message}
                 console.log(data);
+
                 return {...state};
             }
 

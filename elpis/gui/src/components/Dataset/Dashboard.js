@@ -24,6 +24,7 @@ class DatasetDashboard extends Component {
 
     handleSort = (clickedColumn, data) => () => {
         const {column} = this.state;
+
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
@@ -39,6 +40,7 @@ class DatasetDashboard extends Component {
     handleLoad = name => {
         const {datasetLoad} = this.props;
         const postData = {name: name};
+
         datasetLoad(postData);
     }
 
@@ -60,6 +62,7 @@ class DatasetDashboard extends Component {
                 <Table.Body>
                     {list.map(datasetName => {
                         const className = (datasetName === name) ? "current" : "";
+
                         return (
                             <Table.Row key={datasetName}>
                                 <Table.Cell>

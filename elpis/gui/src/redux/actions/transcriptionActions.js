@@ -12,6 +12,7 @@ export function transcriptionNew(postData) {
     const url = baseUrl + urls.api.transcription.new;
     const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
+
     return async dispatch => {
         dispatch(transcriptionNewStarted());
         await axios.post(url, postData, config)
@@ -23,6 +24,7 @@ export function transcriptionNew(postData) {
                 dispatch(transcriptionNewFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -45,6 +47,7 @@ const transcriptionNewFailure = error => ({
 export function transcriptionTranscribe() {
     const url = baseUrl + urls.api.transcription.transcribe;
     var responseData;
+
     return async dispatch => {
         dispatch(transcriptionTranscribeStarted());
         await axios.get(url)
@@ -57,6 +60,7 @@ export function transcriptionTranscribe() {
                 dispatch(transcriptionTranscribeFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -79,6 +83,7 @@ const transcriptionTranscribeFailure = error => ({
 export function transcriptionStatus() {
     const url = baseUrl + urls.api.transcription.status;
     var responseData;
+
     return async dispatch => {
         dispatch(transcriptionStatusStarted());
         await axios.get(url)
@@ -90,6 +95,7 @@ export function transcriptionStatus() {
                 dispatch(transcriptionStatusFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -112,6 +118,7 @@ const transcriptionStatusFailure = error => ({
 export function transcriptionGetText() {
     const url = baseUrl + urls.api.transcription.text;
     var responseData;
+
     return async dispatch => {
         dispatch(transcriptionGetTextStarted());
         await axios.get(url)
@@ -123,6 +130,7 @@ export function transcriptionGetText() {
                 dispatch(transcriptionGetTextFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }
@@ -145,6 +153,7 @@ const transcriptionGetTextFailure = error => ({
 export function transcriptionGetElan() {
     const url = baseUrl + urls.api.transcription.elan;
     var responseData;
+
     return async dispatch => {
         dispatch(transcriptionGetElanStarted());
         await axios.get(url)
@@ -156,6 +165,7 @@ export function transcriptionGetElan() {
                 dispatch(transcriptionGetElanFailure(error));
                 throw error;
             });
+
         return responseData;
     };
 }

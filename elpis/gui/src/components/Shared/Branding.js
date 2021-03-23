@@ -15,7 +15,6 @@ class StepBranding extends Component {
         window.location.href = "/";
     }
 
-
     render() {
         const {t, dev_mode, currentEngine, engineHumanNames} = this.props;
 

@@ -19,6 +19,7 @@ class NewForm extends Component {
         const {t, currentEngine, error, currentDataset, datasets, pronDictNew} = this.props;
 
         let defaultDatasetName = "";
+
         if (currentDataset) {
             defaultDatasetName = currentDataset;
         } else if (datasets.length > 0) {
@@ -34,6 +35,7 @@ class NewForm extends Component {
                 }}
                 validate={values => {
                     let errors = {};
+
                     if (!values.name) {
                         errors.name = "Required";
                     } else if (
@@ -41,10 +43,12 @@ class NewForm extends Component {
                     ) {
                         errors.name = t("common.invalidCharacterErrorMessage");
                     }
+
                     return errors;
                 }}
                 onSubmit={(values) => {
                     const postData = {name: values.name, dataset_name: values.dataset_name};
+
                     pronDictNew(postData, this.props.history);
                 }}
             >
@@ -111,6 +115,7 @@ const mapDispatchToProps = dispatch => ({
                 if (response.status === 500) {
                     throw Error(response.error);
                 }
+
                 return response;
             })
             .then(() => {
