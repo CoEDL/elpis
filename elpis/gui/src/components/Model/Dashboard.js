@@ -53,65 +53,63 @@ class ModelDashboard extends Component {
             urls.gui.model.settings :
             urls.gui.model.train;
         const listEl = list.length > 0 ? (
-                <Table sortable celled fixed unstackable>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell
+            <Table sortable celled fixed unstackable>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell
                                 sorted={column === "name" ? direction : null}
                                 onClick={this.handleSort("name", list)}
-                            >
-                                Name
-                            </Table.HeaderCell>
-                            <Table.HeaderCell
+                        >
+                            Name
+                        </Table.HeaderCell>
+                        <Table.HeaderCell
                                 sorted={column === "dataset_name" ? direction : null}
                                 onClick={this.handleSort("dataset_name", list)}
-                            >
-                                Recordings
-                            </Table.HeaderCell>
-                            <Table.HeaderCell
+                        >
+                            Recordings
+                        </Table.HeaderCell>
+                        <Table.HeaderCell
                                 sorted={column === "pron_dict_name" ? direction : null}
                                 onClick={this.handleSort("pron_dict_name", list)}
-                            >
-                                Pronunciation Dictionaries
-                            </Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {
-                            list.map(model => {
-                                const className = (name === model.name) ? "current" : "";
-                                return (
-                                    <Table.Row key={model.name} className={className}>
-                                        <Table.Cell>
-                                            <Button
-                                                className={className}
-                                                fluid
-                                                onClick={() => this.handleLoad(model)}
-                                            >
-                                                {model.name}
-                                            </Button>
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {model.dataset_name}
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {model.pron_dict_name}
-                                        </Table.Cell>
-                                    </Table.Row>
-                                );
-                            })
-                        }
-                    </Table.Body>
-                </Table>) :
+                        >
+                            Pronunciation Dictionaries
+                        </Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    {list.map(model => {
+                        const className = (name === model.name) ? "current" : "";
+                        return (
+                            <Table.Row key={model.name} className={className}>
+                                <Table.Cell>
+                                    <Button
+                                        className={className}
+                                        fluid
+                                        onClick={() => this.handleLoad(model)}
+                                    >
+                                        {model.name}
+                                    </Button>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {model.dataset_name}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {model.pron_dict_name}
+                                </Table.Cell>
+                            </Table.Row>
+                        );
+                    })}
+                </Table.Body>
+            </Table>) :
             <p>{t("model.dashboard.noneMessage")}</p>;
 
         return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav />
+                            <SideNav/>
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -120,7 +118,7 @@ class ModelDashboard extends Component {
                                 {t("model.dashboard.title")}
                             </Header>
 
-                            <CurrentModelName />
+                            <CurrentModelName/>
 
                             {currentEngine &&
                             <>

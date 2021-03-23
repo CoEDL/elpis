@@ -29,7 +29,7 @@ class ModelResults extends Component {
         const resultsEl = results ? (
             <>
 
-                <Message attached content={t("model.results.description")} />
+                <Message attached content={t("model.results.description")}/>
 
                 <Table celled className="attached">
                     <Table.Body>
@@ -99,11 +99,11 @@ class ModelResults extends Component {
 
         return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav />
+                            <SideNav/>
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -111,14 +111,14 @@ class ModelResults extends Component {
                                 {t("model.results.title")}
                             </Header>
 
-                            <CurrentModelName />
+                            <CurrentModelName/>
 
                             {!currentEngine &&
-                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{t("model.common.noCurrentModelLabel")}</p>
+                            <p>{t("model.common.noCurrentModelLabel")}</p>
                             }
 
                             {currentEngine && name &&

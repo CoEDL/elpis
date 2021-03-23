@@ -48,7 +48,7 @@ const dataset = (state = initState, action) => {
             if (action.response.data.data.wordlist) {
                 const wordlistObj = JSON.parse(action.response.data.data.wordlist);
                 wordlist = Object.keys(wordlistObj).map(key => {
-                    return ({name: key, frequency: wordlistObj[key]});
+                    return {name: key, frequency: wordlistObj[key]};
                 });
             }
            const status = wordlist.length > 0 ? "wordlist-prepared" : "";
@@ -56,7 +56,9 @@ const dataset = (state = initState, action) => {
             audioFiles = files.filter(file => getFileExtension(file) === "wav").sort();
             additionalTextFiles = files.filter(file => getFileExtension(file) === "txt").sort();
             transcriptionFiles = files.filter(file => {
-                return (getFileExtension(file) !== "wav" && getFileExtension(file) !== "txt");
+                return (
+                    getFileExtension(file) !== "wav" && getFileExtension(file) !== "txt"
+                );
             }).sort();
             // remove duplicates
             audioFiles = [...(new Set(audioFiles))];
@@ -151,7 +153,7 @@ const dataset = (state = initState, action) => {
                 // First decode the text we receive from the API
                 const wordlistObj = JSON.parse(data.wordlist);
                 const wordlist = Object.keys(wordlistObj).map(key => {
-                    return ({name: key, frequency: wordlistObj[key]});
+                    return {name: key, frequency: wordlistObj[key]};
                 });
                 if (wordlist.length > 0) return {...state, wordlist, status: "wordlist-prepared"};
                 else return {...state};

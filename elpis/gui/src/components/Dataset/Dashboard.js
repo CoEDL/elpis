@@ -58,8 +58,7 @@ class DatasetDashboard extends Component {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                {
-                    list.map(datasetName => {
+                    {list.map(datasetName => {
                         const className = (datasetName === name) ? "current" : "";
                         return (
                             <Table.Row key={datasetName}>
@@ -74,19 +73,18 @@ class DatasetDashboard extends Component {
                                 </Table.Cell>
                             </Table.Row>
                         );
-                    })
-                }
+                    })}
                 </Table.Body>
             </Table>) :
             <p>{t("dataset.dashboard.noneMessage")}</p>;
 
         return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav />
+                            <SideNav/>
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -94,7 +92,7 @@ class DatasetDashboard extends Component {
                                 {t("dataset.dashboard.title")}
                             </Header>
 
-                            <CurrentDatasetName />
+                            <CurrentDatasetName/>
 
                             {currentEngine &&
                             <>

@@ -10,19 +10,19 @@ const EngineDashboard = () => {
     const {t} = useTranslation("common");
     return (
         <div>
-            <Branding />
+            <Branding/>
             <Segment>
-            <Grid centered>
-                <Grid.Row>
-                    <Grid.Column>
-                        <Header as="h1">
-                            {t("engine.select.title")}
-                        </Header>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
+                <Grid centered>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Header as="h1">
+                                {t("engine.select.title")}
+                            </Header>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
 
-            <ChooseEngine />
+                <ChooseEngine/>
 
             </Segment>
         </div>

@@ -14,11 +14,11 @@ class DatasetNew extends Component {
         const {t} = this.props;
         return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav />
+                            <SideNav/>
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -26,7 +26,7 @@ class DatasetNew extends Component {
                                 {t("dataset.new.title")}
                             </Header>
 
-                            <NewForm />
+                            <NewForm/>
 
                         </Grid.Column>
                     </Grid>

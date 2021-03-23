@@ -10,7 +10,6 @@ class CurrentPronDictName extends Component {
 
     render() {
         const {t, currentEngine, engineHumanNames, pronDictList, datasetName, name, match} = this.props;
-
         const onDashboard = (match.url === urls.gui.pronDict.index) ? true : false;
         const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : "";
 
@@ -19,9 +18,9 @@ class CurrentPronDictName extends Component {
                 {name &&
                 <Message color="olive">
                     {t("engine.common.currentEngineLabel") + engineHumanName}
-                    <br />
+                    <br/>
                     {t("pronDict.common.currentPronDictLabel") + name}
-                    <br />
+                    <br/>
                     {t("dataset.common.currentDatasetLabel") + datasetName}
                 </Message>
                 }
@@ -29,7 +28,7 @@ class CurrentPronDictName extends Component {
                 {!currentEngine &&
                 <Message color="purple">
                     {t("engine.common.noCurrentEngineLabel")}
-                    <SelectEngineDropdown />
+                    <SelectEngineDropdown/>
                 </Message>
                 }
 

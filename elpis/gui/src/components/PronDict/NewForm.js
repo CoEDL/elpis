@@ -26,7 +26,6 @@ class NewForm extends Component {
         }
 
         return (
-
             <Formik
                 enableReinitialize
                 initialValues={{
@@ -55,40 +54,40 @@ class NewForm extends Component {
                     handleChange,
                     /* and other goodies */
                 }) => (
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Field>
-                                <Input
-                                    label={t("pronDict.new.nameLabel")}
-                                    value={values.name}
-                                    placeholder={t("pronDict.new.namePlaceholder")}
-                                    name="name"
-                                    type="text"
-                                    onChange={handleChange}
-                                />
-                                <ErrorMessage component="div" className="error" name="name" />
-                            </Form.Field>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Field>
+                            <Input
+                                label={t("pronDict.new.nameLabel")}
+                                value={values.name}
+                                placeholder={t("pronDict.new.namePlaceholder")}
+                                name="name"
+                                type="text"
+                                onChange={handleChange}
+                            />
+                            <ErrorMessage component="div" className="error" name="name"/>
+                        </Form.Field>
 
-                            {currentEngine && datasets.length === 0 &&
-                                <p>{t("pronDict.common.noDatasetsLabel")}</p>
-                            }
+                        {currentEngine && datasets.length === 0 &&
+                        <p>{t("pronDict.common.noDatasetsLabel")}</p>
+                        }
 
-                            {currentEngine && datasets.length > 0 &&
-                                <Form.Field>
-                                    <label>{t("pronDict.new.select")}</label>
-                                    <Field component="select" name="dataset_name">
-                                        {datasets.map(name =>
+                        {currentEngine && datasets.length > 0 &&
+                        <Form.Field>
+                            <label>{t("pronDict.new.select")}</label>
+                            <Field component="select" name="dataset_name">
+                                {datasets.map(name =>
                                             (<option key={name} value={name}>{name}</option>))
                                         }
-                                    </Field>
-                                </Form.Field>
-                            }
-                            {error &&
-                                <p className={"error-message"}>{error}</p>
-                            }
-                            <Button type="button" onClick={handleSubmit} disabled={datasets.length === 0}>
-                                {t("common.addNewButton")}
-                            </Button>
-                        </Form>
+                            </Field>
+                        </Form.Field>
+                        }
+                        {error &&
+                        <p className={"error-message"}>{error}</p>
+                        }
+                        <Button type="button" onClick={handleSubmit} disabled={datasets.length === 0}>
+                            {t("common.addNewButton")}
+                        </Button>
+                    </Form>
                     )}
             </Formik>
         );

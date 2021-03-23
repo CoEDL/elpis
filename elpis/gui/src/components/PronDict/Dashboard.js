@@ -64,8 +64,7 @@ class PronDictDashboard extends Component {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                {
-                    list.map(pronDict => {
+                    {list.map(pronDict => {
                         const className = (pronDict.name === name) ? "current" : "";
                         return (
                             <Table.Row key={pronDict.name}>
@@ -83,20 +82,18 @@ class PronDictDashboard extends Component {
                                 </Table.Cell>
                             </Table.Row>
                         );
-                    })
-                }
+                    })}
                 </Table.Body>
-            </Table>
-        ) :
-        <p>{t("pronDict.dashboard.noneMessage")}</p>;
+            </Table>) :
+            <p>{t("pronDict.dashboard.noneMessage")}</p>;
 
         return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav />
+                            <SideNav/>
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -104,7 +101,7 @@ class PronDictDashboard extends Component {
                                 {t("pronDict.dashboard.title")}
                             </Header>
 
-                            <CurrentPronDictName />
+                            <CurrentPronDictName/>
 
                             {currentEngine &&
                             <>

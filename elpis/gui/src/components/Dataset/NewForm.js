@@ -13,7 +13,6 @@ class NewForm extends Component {
      render() {
         const {t, error, datasetNew} = this.props;
         return (
-
             <Formik
                 enableReinitialize
                 initialValues={{
@@ -40,25 +39,25 @@ class NewForm extends Component {
                     handleSubmit,
                     handleChange,
                 }) => (
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Field>
-                                <Input
-                                    label={t("dataset.new.nameLabel")}
-                                    value={values.name}
-                                    placeholder={t("dataset.new.namePlaceholder")}
-                                    name="name"
-                                    type="text"
-                                    onChange={handleChange}
-                                />
-                                <ErrorMessage component="div" className="error" name="name" />
-                            </Form.Field>
-                            {error &&
-                                <p className={"error-message"}>{error}</p>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Field>
+                            <Input
+                                label={t("dataset.new.nameLabel")}
+                                value={values.name}
+                                placeholder={t("dataset.new.namePlaceholder")}
+                                name="name"
+                                type="text"
+                                onChange={handleChange}
+                            />
+                            <ErrorMessage component="div" className="error" name="name"/>
+                        </Form.Field>
+                        {error &&
+                        <p className={"error-message"}>{error}</p>
                             }
-                            <Button type="button" onClick={handleSubmit}>
-                                {t("common.addNewButton")}
-                            </Button>
-                        </Form>
+                        <Button type="button" onClick={handleSubmit}>
+                            {t("common.addNewButton")}
+                        </Button>
+                    </Form>
                     )}
             </Formik>
         );

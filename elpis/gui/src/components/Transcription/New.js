@@ -91,12 +91,12 @@ class NewTranscription extends Component {
             (status === "ready" || status === "transcribed")) ? true : false;
 
         const loadingIcon = (status === "transcribing") ? (
-            <Icon name="circle notched" size="big" loading />
+            <Icon name="circle notched" size="big" loading/>
         ) : null;
 
         return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment>
                     <Grid centered>
 
@@ -113,7 +113,7 @@ class NewTranscription extends Component {
                             <Segment>
                                 {listOptions &&
                                     <Form.Field>
-                                    <label className="pad-right">{t("transcription.new.selectModelLabel")}</label>
+                                        <label className="pad-right">{t("transcription.new.selectModelLabel")}</label>
                                         <Dropdown
                                             placeholder={t("common.choose")}
                                             selection
@@ -140,7 +140,7 @@ class NewTranscription extends Component {
                                                 dropzone_active: isDragActive,
                                             })}
                                         >
-                                            <input {...getInputProps()} />
+                                            <input {...getInputProps()}/>
                                             {
                                                 isDragActive ? (
                                                     <p>{t("transcription.new.dropFilesHintDragActive")}</p>
@@ -154,7 +154,7 @@ class NewTranscription extends Component {
 
                             {uploading && !filename &&
                                 <div className="status">
-                                    <Icon name="circle notched" size="big" loading />
+                                    <Icon name="circle notched" size="big" loading/>
                                     {t("transcription.new.uploading")}
                                 </div>
                             }

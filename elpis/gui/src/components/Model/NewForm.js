@@ -79,56 +79,56 @@ class NewForm extends Component {
                     handleChange,
                     /* and other goodies */
                 }) => (
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Field>
-                                <Input
-                                    label={t("model.new.nameLabel")}
-                                    value={values.name}
-                                    placeholder={t("model.new.namePlaceholder")}
-                                    name="name"
-                                    type="text"
-                                    onChange={handleChange}
-                                />
-                                <ErrorMessage component="div" className="error" name="name" />
-                            </Form.Field>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Field>
+                            <Input
+                                label={t("model.new.nameLabel")}
+                                value={values.name}
+                                placeholder={t("model.new.namePlaceholder")}
+                                name="name"
+                                type="text"
+                                onChange={handleChange}
+                            />
+                            <ErrorMessage component="div" className="error" name="name"/>
+                        </Form.Field>
 
-                            {/* For Kaldi engines, base the model on the pron dict.
+                        {/* For Kaldi engines, base the model on the pron dict.
                                 Pron dicts have single dataset dependency */}
-                            {engine && engine === "kaldi" &&
-                                <Form.Field>
-                                    <label>{t("model.new.selectPronDictLabel")}</label>
-                                    <Field component="select" name="pron_dict_name">
-                                        {pronDicts.map(pronDict => (
-                                            <option
+                        {engine && engine === "kaldi" &&
+                        <Form.Field>
+                            <label>{t("model.new.selectPronDictLabel")}</label>
+                            <Field component="select" name="pron_dict_name">
+                                {pronDicts.map(pronDict => (
+                                    <option
                                                 key={pronDict.name}
                                                 value={pronDict.name}
-                                            >
-                                                {pronDict.name} | {pronDict.dataset_name}
-                                            </option>
+                                    >
+                                        {pronDict.name} | {pronDict.dataset_name}
+                                    </option>
                                         ))}
-                                    </Field>
-                                </Form.Field>
+                            </Field>
+                        </Form.Field>
                             }
 
-                            {/* If the engine is not Kaldi, base the model on a dataset only */}
-                            {engine && engine !== "kaldi" &&
-                                <Form.Field>
-                                    <label>{t("model.new.selectDatasetLabel")}</label>
-                                    <Field component="select" name="dataset_name">
-                                        {datasets.map(dataset =>
+                        {/* If the engine is not Kaldi, base the model on a dataset only */}
+                        {engine && engine !== "kaldi" &&
+                        <Form.Field>
+                            <label>{t("model.new.selectDatasetLabel")}</label>
+                            <Field component="select" name="dataset_name">
+                                {datasets.map(dataset =>
                                             (<option key={dataset} value={dataset}>{dataset}</option>))
                                         }
-                                    </Field>
-                                </Form.Field>
+                            </Field>
+                        </Form.Field>
                             }
 
-                            {error &&
-                                <p className={"error-message"}>{error}</p>
+                        {error &&
+                        <p className={"error-message"}>{error}</p>
                             }
-                            <Button type="button" onClick={handleSubmit}>
-                                {t("common.addNewButton")}
-                            </Button>
-                        </Form>
+                        <Button type="button" onClick={handleSubmit}>
+                            {t("common.addNewButton")}
+                        </Button>
+                    </Form>
                     )}
             </Formik>
         );

@@ -79,24 +79,24 @@ class DatasetPrepare extends Component {
 
         return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav />
+                            <SideNav/>
                         </Grid.Column>
                         <Grid.Column width={12}>
                             <Header as="h1">{t("dataset.prepare.title")}</Header>
 
-                            <CurrentDatasetName />
+                            <CurrentDatasetName/>
 
                             {!currentEngine &&
-                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {/* eslint-disable-next-line no-restricted-globals */}
                             {currentEngine && !name &&
-                              <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
+                            <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
                             }
 
                             {status === "ready" &&
@@ -104,8 +104,8 @@ class DatasetPrepare extends Component {
                             }
                             {status === "loaded" &&
                                 <p>
-                                <Icon name="circle notched" size="big" loading />
-                                {t("dataset.prepare.preparing")}
+                                    <Icon name="circle notched" size="big" loading/>
+                                    {t("dataset.prepare.preparing")}
                                 </p>
                             }
                             {status === "wordlist-prepared" &&

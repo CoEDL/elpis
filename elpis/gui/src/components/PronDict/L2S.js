@@ -35,11 +35,11 @@ class PronDictL2S extends Component {
 
         return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment>
                     <Grid centered>
                         <Grid.Column width={4}>
-                            <SideNav />
+                            <SideNav/>
                         </Grid.Column>
 
                         <Grid.Column width={12}>
@@ -48,14 +48,14 @@ class PronDictL2S extends Component {
                                 {t("pronDict.l2s.title")}
                             </Header>
 
-                            <CurrentPronDictName />
+                            <CurrentPronDictName/>
 
                             {!currentEngine &&
-                              <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
+                            <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
                             }
 
                             {currentEngine && name &&
@@ -77,7 +77,7 @@ class PronDictL2S extends Component {
                                                         dropzone_active: isDragActive,
                                                     })}
                                                 >
-                                                    <input {...getInputProps()} />
+                                                    <input {...getInputProps()}/>
 
                                                     {
                                                         isDragActive ? (

@@ -35,7 +35,9 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
     }, [ui]);
 
     if (ui === null || ui === undefined) {
-        return (<>{t("dataset.files.noSettings")}</>);
+        return (
+            <>{t("dataset.files.noSettings")}</>
+        );
     }
 
     const handleStrChange = (ui_name, data) => {

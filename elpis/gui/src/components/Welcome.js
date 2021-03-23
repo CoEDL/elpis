@@ -7,21 +7,21 @@ import urls from "urls";
 
 class StepWelcome extends Component {
 
-	render() {
-		const {t} = this.props;
-		return (
+    render() {
+        const {t} = this.props;
+        return (
             <div>
-                <Branding />
+                <Branding/>
                 <Segment className="welcome-options">
-                <Grid centered>
-                    <Grid.Row>
-                        <Grid.Column className="keep-line-breaks">
-                            {t("welcome.description")}
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
+                    <Grid centered>
+                        <Grid.Row>
+                            <Grid.Column className="keep-line-breaks">
+                                {t("welcome.description")}
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
 
-                <Divider/>
+                    <Divider/>
 
                     <div className="row">
                         <div className="left-col train-button">
@@ -41,8 +41,8 @@ class StepWelcome extends Component {
                     </div>
                 </Segment>
             </div>
-		);
-	}
+        );
+    }
 }
 
 
