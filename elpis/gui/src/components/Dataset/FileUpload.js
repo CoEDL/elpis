@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
-import { Button } from "semantic-ui-react";
-import { fromEvent } from "file-selector";
-import { withTranslation } from "react-i18next";
-import { datasetFiles } from "redux/actions/datasetActions";
-import { connect } from "react-redux";
+import {Button} from "semantic-ui-react";
+import {fromEvent} from "file-selector";
+import {withTranslation} from "react-i18next";
+import {datasetFiles} from "redux/actions/datasetActions";
+import {connect} from "react-redux";
 
 class FileUpload extends Component {
 
@@ -20,7 +20,7 @@ class FileUpload extends Component {
 
     render() {
 
-        const { t, name } = this.props;
+        const {t, name} = this.props;
 
         const interactionDisabled = name ? false : true;
 
@@ -32,7 +32,7 @@ class FileUpload extends Component {
                     className="dropzone"
                     onDrop={ this.onDrop }
                     getDataTransferItems={ evt => fromEvent(evt) }>
-                    { ({ getRootProps, getInputProps, isDragActive }) => {
+                    { ({getRootProps, getInputProps, isDragActive}) => {
                         return (
                             <div
                                 { ...getRootProps() }

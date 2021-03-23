@@ -10,16 +10,16 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 
 export function transcriptionNew(postData) {
     const url = baseUrl + urls.api.transcription.new;
-    const config = { headers: { "content-type": "multipart/form-data" } };
+    const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
     return async dispatch => {
         dispatch(transcriptionNewStarted());
         await axios.post(url, postData, config)
-            .then( response => {
+            .then(response => {
                 responseData = response.data;
                 dispatch(transcriptionNewSuccess(response));
             })
-            .catch( error => {
+            .catch(error => {
                 dispatch(transcriptionNewFailure(error));
                 throw error;
             });
@@ -32,11 +32,11 @@ const transcriptionNewStarted = () => ({
 });
 const transcriptionNewSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_NEW_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const transcriptionNewFailure = error => ({
     type: actionTypes.TRANSCRIPTION_NEW_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -66,11 +66,11 @@ const transcriptionTranscribeStarted = () => ({
 });
 const transcriptionTranscribeSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_TRANSCRIBE_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const transcriptionTranscribeFailure = error => ({
     type: actionTypes.TRANSCRIPTION_TRANSCRIBE_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -99,11 +99,11 @@ const transcriptionStatusStarted = () => ({
 });
 const transcriptionStatusSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_STATUS_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const transcriptionStatusFailure = error => ({
     type: actionTypes.TRANSCRIPTION_STATUS_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -132,11 +132,11 @@ const transcriptionGetTextStarted = () => ({
 });
 const transcriptionGetTextSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_GET_TEXT_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const transcriptionGetTextFailure = error => ({
     type: actionTypes.TRANSCRIPTION_GET_TEXT_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -165,9 +165,9 @@ const transcriptionGetElanStarted = () => ({
 });
 const transcriptionGetElanSuccess = response => ({
     type: actionTypes.TRANSCRIPTION_GET_ELAN_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const transcriptionGetElanFailure = error => ({
     type: actionTypes.TRANSCRIPTION_GET_ELAN_FAILURE,
-    response: { error },
+    response: {error},
 });

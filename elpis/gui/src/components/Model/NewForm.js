@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { Formik, Field, ErrorMessage } from "formik";
-import { Button, Form, Input } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { interfaceObjectNames } from "redux/actions/configActions";
-import { modelNew } from "redux/actions/modelActions";
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+import {Formik, Field, ErrorMessage} from "formik";
+import {Button, Form, Input} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {interfaceObjectNames} from "redux/actions/configActions";
+import {modelNew} from "redux/actions/modelActions";
 import urls from "urls";
 
 
@@ -13,14 +13,14 @@ class NewForm extends Component {
 
     // Get me a list of all the data sets and pron dicts we have
     componentDidMount() {
-        const { interfaceObjectNames } = this.props;
+        const {interfaceObjectNames} = this.props;
         interfaceObjectNames();
     }
 
     // TODO handle error when attempting to make a new model with no dataset / pron dict selected
 
     render() {
-        const { t, engine, error, currentDataset, datasets, currentPronDict, pronDicts, modelNew } = this.props;
+        const {t, engine, error, currentDataset, datasets, currentPronDict, pronDicts, modelNew} = this.props;
         /**
          *  If we have a current dataset or pron-dict, pre-select them in the form,
          *  else preselect the first item in each list.
@@ -58,9 +58,9 @@ class NewForm extends Component {
                     }
                     return errors;
                 }}
-                onSubmit={(values ) => {
+                onSubmit={(values) => {
                     const filtered_pd = pronDicts.filter(pd => (pd.name == values.pron_dict_name));
-                    const modelData = { name: values.name, engine };
+                    const modelData = {name: values.name, engine};
                     if (engine === "kaldi"){
                         // Get the dataset name from the pron dicts setting if we are using Kaldi
                         modelData["pron_dict_name"] = filtered_pd[0].name;

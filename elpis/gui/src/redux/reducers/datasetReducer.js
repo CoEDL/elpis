@@ -30,14 +30,14 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_NEW_SUCCESS: {
             if (action.response.data.status==500){
-                return { ...initState,
+                return {...initState,
                     status: action.response.data.status,
                     error: action.response.data.error,
                 };
             } else {
                 let dataset_state = action.response.data.data.state;
                 let name = dataset_state.name;
-                return { ...initState, name };
+                return {...initState, name};
             }
         }
 
@@ -47,8 +47,8 @@ const dataset = (state = initState, action) => {
             let wordlist = {};
             if (action.response.data.data.wordlist) {
                 const wordlistObj = JSON.parse(action.response.data.data.wordlist);
-                wordlist = Object.keys(wordlistObj).map( key => {
-                    return ({ name: key, frequency: wordlistObj[key] });
+                wordlist = Object.keys(wordlistObj).map(key => {
+                    return ({name: key, frequency: wordlistObj[key]});
                 });
             }
            const status = wordlist.length > 0 ? "wordlist-prepared" : "";
@@ -82,7 +82,7 @@ const dataset = (state = initState, action) => {
             };
 
         case actionTypes.DATASET_FILES_STARTED:
-            return { ...state, status: "loading" };
+            return {...state, status: "loading"};
 
         case actionTypes.DATASET_FILES_SUCCESS:
             // TODO, API should send a JSON wrapper
@@ -105,7 +105,7 @@ const dataset = (state = initState, action) => {
                     importer_name: data.importer_name,
                 };
             } else {
-                return { ...state, status: "ready" };
+                return {...state, status: "ready"};
             }
 
         case actionTypes.DATASET_DELETE_SUCCESS:
@@ -130,11 +130,11 @@ const dataset = (state = initState, action) => {
             if (status === 200) {
                 return {
                     ...state,
-                    settings: { ...state.settings, ...data.settings },
+                    settings: {...state.settings, ...data.settings},
                 };
             } else {
                 console.log(data);
-                return { ...state };
+                return {...state};
             }
 
         case actionTypes.DATASET_UI_UPDATE_SUCCESS:
@@ -150,21 +150,21 @@ const dataset = (state = initState, action) => {
             if (status === 200) {
                 // First decode the text we receive from the API
                 const wordlistObj = JSON.parse(data.wordlist);
-                const wordlist = Object.keys(wordlistObj).map( key => {
-                    return ({ name: key, frequency: wordlistObj[key] });
+                const wordlist = Object.keys(wordlistObj).map(key => {
+                    return ({name: key, frequency: wordlistObj[key]});
                 });
-                if (wordlist.length > 0) return { ...state, wordlist, status: "wordlist-prepared"};
-                else return { ...state };
+                if (wordlist.length > 0) return {...state, wordlist, status: "wordlist-prepared"};
+                else return {...state};
             } else {
                 // Errors are formatted as { status: code, data: message }
-                console.log( data );
-                return { ...state };
+                console.log(data);
+                return {...state};
             }
 
 
 
         default:
-            return { ...state };
+            return {...state};
     }
 };
 

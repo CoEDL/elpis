@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { Button, Grid, Header, Segment, Table } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { modelLoad, modelList } from "redux/actions/modelActions";
-import { datasetLoad } from "redux/actions/datasetActions";
-import { pronDictLoad } from "redux/actions/pronDictActions";
+import React, {Component} from "react";
+import {Button, Grid, Header, Segment, Table} from "semantic-ui-react";
+import {Link} from "react-router-dom";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {modelLoad, modelList} from "redux/actions/modelActions";
+import {datasetLoad} from "redux/actions/datasetActions";
+import {pronDictLoad} from "redux/actions/pronDictActions";
 import arraySort from "array-sort";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
@@ -25,30 +25,30 @@ class ModelDashboard extends Component {
     }
 
     handleSort = (clickedColumn, data) => () => {
-        const { column } = this.state;
+        const {column} = this.state;
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
                 reverse: false,
             });
-            arraySort(data, clickedColumn, { reverse: false });
+            arraySort(data, clickedColumn, {reverse: false});
         } else {
             this.setState({reverse: ! this.state.reverse});
-            arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
+            arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
     }
 
     handleLoad = values => {
-        const { modelLoad } = this.props;
-        const modelData = { name: values.name };
-        const datasetData = { name: values.dataset_name };
-        const pronDictData = { name: values.pron_dict_name };
+        const {modelLoad} = this.props;
+        const modelData = {name: values.name};
+        const datasetData = {name: values.dataset_name};
+        const pronDictData = {name: values.pron_dict_name};
         modelLoad(modelData, datasetData, pronDictData);
     }
 
     render() {
-        const { t, currentEngine, name, list } = this.props;
-        const { column, direction } = this.state;
+        const {t, currentEngine, name, list} = this.props;
+        const {column, direction} = this.state;
         const redirectAfterModel = currentEngine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train;
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
@@ -160,8 +160,8 @@ const mapDispatchToProps = dispatch => ({
     },
     modelLoad: (modelData, datasetData, pronDictData) => {
         dispatch(modelLoad(modelData))
-            .then( () => dispatch(datasetLoad(datasetData)))
-            .then( () => {
+            .then(() => dispatch(datasetLoad(datasetData)))
+            .then(() => {
                 if (pronDictData.name) {
                     return dispatch(pronDictLoad(pronDictData));
                 } else {

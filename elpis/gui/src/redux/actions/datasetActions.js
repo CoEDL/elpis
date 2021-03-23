@@ -14,11 +14,11 @@ export function datasetNew(postData) {
     return async dispatch => {
         dispatch(datasetNewStarted());
         await axios.post(url, postData)
-            .then( response => {
+            .then(response => {
                 responseData = response.data;
                 dispatch(datasetNewSuccess(response));
             })
-            .catch( error => {
+            .catch(error => {
                 dispatch(datasetNewFailure(error));
                 throw error;
             });
@@ -31,11 +31,11 @@ const datasetNewStarted = () => ({
 });
 const datasetNewSuccess = response => ({
     type: actionTypes.DATASET_NEW_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const datasetNewFailure = error => ({
     type: actionTypes.DATASET_NEW_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -64,11 +64,11 @@ const datasetLoadStarted = () => ({
 });
 const datasetLoadSuccess = response => ({
     type: actionTypes.DATASET_LOAD_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const datasetLoadFailure = error => ({
     type: actionTypes.DATASET_LOAD_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -97,11 +97,11 @@ const datasetListStarted = () => ({
 });
 const datasetListSuccess = response => ({
     type: actionTypes.DATASET_LIST_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const datasetListFailure = error => ({
     type: actionTypes.DATASET_LIST_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -109,7 +109,7 @@ const datasetListFailure = error => ({
 
 export function datasetFiles(postData) {
     const url = baseUrl + urls.api.dataset.files;
-    const config = { headers: { "content-type": "multipart/form-data" } };
+    const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
     return async dispatch => {
         dispatch(datasetFilesStarted());
@@ -134,18 +134,18 @@ const datasetFilesStarted = () => ({
 });
 const datasetFilesSuccess = response => ({
     type: actionTypes.DATASET_FILES_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const datasetFilesFailure = error => ({
     type: actionTypes.DATASET_FILES_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 /* * * * * * * * * * * *  FILES DELETE * * * * * * * * * * *  */
 
 export function datasetDelete(postData) {
     const url = baseUrl + urls.api.dataset.delete;
-    const config = { headers: { "content-type": "multipart/form-data" } };
+    const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
     return async dispatch => {
         dispatch(datasetDeleteStarted());
@@ -168,11 +168,11 @@ const datasetDeleteStarted = () => ({
 });
 const datasetDeleteSuccess = response => ({
     type: actionTypes.DATASET_DELETE_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const datasetDeleteFailure = error => ({
     type: actionTypes.DATASET_DELETE_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 /* * * * * * * * * * * *  SETTINGS * * * * * * * * * * *  */
@@ -200,11 +200,11 @@ const datasetSettingsStarted = () => ({
 });
 const datasetSettingsSuccess = response => ({
     type: actionTypes.DATASET_SETTINGS_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const datasetSettingsFailure = error => ({
     type: actionTypes.DATASET_SETTINGS_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -233,11 +233,11 @@ const datasetPrepareStarted = () => ({
 });
 const datasetPrepareSuccess = response => ({
     type: actionTypes.DATASET_PREPARE_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const datasetPrepareFailure = error => ({
     type: actionTypes.DATASET_PREPARE_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -265,9 +265,9 @@ const datasetUIUpdateStarted = () => ({
 });
 const datasetUIUpdateSuccess = response => ({
     type: actionTypes.DATASET_UI_UPDATE_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const datasetUIUpdateFailure = error => ({
     type: actionTypes.DATASET_UI_UPDATE_FAILURE,
-    response: { error },
+    response: {error},
 });

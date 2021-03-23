@@ -17,7 +17,7 @@ const model = (state = initState, action) => {
 
         case actionTypes.MODEL_NEW_SUCCESS:
             if (action.response.data.status==500){
-                return { ...initState,
+                return {...initState,
                     status: action.response.data.status,
                     error: action.response.data.error,
                 };
@@ -33,7 +33,7 @@ const model = (state = initState, action) => {
             }
 
         case actionTypes.MODEL_LOAD_SUCCESS:
-            var { name, dataset_name, engine_name, pron_dict_name, ngram } = action.response.data.data.config;
+            var {name, dataset_name, engine_name, pron_dict_name, ngram} = action.response.data.data.config;
             console.log(action);
             // pron_dict_name could be null if not using pron dicts
             return {
@@ -48,50 +48,50 @@ const model = (state = initState, action) => {
             };
 
         case actionTypes.MODEL_LIST_SUCCESS:
-            var { list } = action.response.data.data;
-            return { ...state, modelList: list };
+            var {list} = action.response.data.data;
+            return {...state, modelList: list};
 
         case actionTypes.MODEL_SETTINGS_SUCCESS:
             ({data, status} = action.response.data);
             if (status == 200) {
-                return { ...state, settings:data.settings };
+                return {...state, settings:data.settings};
             } else {
                 console.log(data);
-                return { ...state };
+                return {...state};
             }
 
         // crazy, there will be three layers of objects with status properties here!
         case actionTypes.MODEL_TRAIN_SUCCESS:
             ({data, status} = action.response.data);
             if (status == 200) {
-                return { ...state, status: data.status };
+                return {...state, status: data.status};
             } else {
                 console.log(data);
-                return { ...state };
+                return {...state};
             }
 
         case actionTypes.MODEL_STATUS_SUCCESS:
             ({data, status} = action.response.data);
             if (status == 200) {
-                return { ...state, status: data.status, stage_status: data.stage_status };
+                return {...state, status: data.status, stage_status: data.stage_status};
             } else {
                 console.log(data);
-                return { ...state };
+                return {...state};
             }
 
         case actionTypes.MODEL_RESULTS_SUCCESS:
             ({data, status} = action.response.data);
             console.log(data, status);
             if (status == 200) {
-                return { ...state, results: data.results };
+                return {...state, results: data.results};
             } else {
                 console.log(data);
-                return { ...state };
+                return {...state};
             }
 
 
         default:
-            return { ...state };
+            return {...state};
     }
 };
 

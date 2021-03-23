@@ -16,11 +16,11 @@ export const engineLoad = (postData) => {
     return async dispatch => {
         dispatch(engineLoadStarted());
         await axios.post(url, postData)
-            .then( response => {
+            .then(response => {
                 responseData = response.data;
                 dispatch(engineLoadSuccess(response));
             })
-            .catch( error => {
+            .catch(error => {
                 dispatch(engineLoadFailure(error));
                 throw error;
             });
@@ -33,11 +33,11 @@ const engineLoadStarted = () => ({
 });
 const engineLoadSuccess = response => ({
     type: actionTypes.ENGINE_LOAD_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const engineLoadFailure = error => ({
     type: actionTypes.ENGINE_LOAD_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -66,9 +66,9 @@ const engineListStarted = () => ({
 });
 const engineListSuccess = response => ({
     type: actionTypes.ENGINE_LIST_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const engineListFailure = error => ({
     type: actionTypes.ENGINE_LIST_FAILURE,
-    response: { error },
+    response: {error},
 });

@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { Button, Grid, Header, Segment, Table } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { pronDictList, pronDictLoad } from "redux/actions/pronDictActions";
-import { datasetLoad } from "redux/actions/datasetActions";
+import React, {Component} from "react";
+import {Button, Grid, Header, Segment, Table} from "semantic-ui-react";
+import {Link} from "react-router-dom";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {pronDictList, pronDictLoad} from "redux/actions/pronDictActions";
+import {datasetLoad} from "redux/actions/datasetActions";
 import arraySort from "array-sort";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
@@ -24,30 +24,30 @@ class PronDictDashboard extends Component {
     }
 
     handleSort = (clickedColumn, data) => () => {
-        const { column } = this.state;
+        const {column} = this.state;
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
                 reverse: false,
             });
-            arraySort(data, clickedColumn, { reverse: false });
+            arraySort(data, clickedColumn, {reverse: false});
         } else {
             this.setState({reverse: ! this.state.reverse});
-            arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
+            arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
     }
 
     handleLoad = values => {
-        const { pronDictLoad } = this.props;
-        const postData = { name: values.name };
-        const datasetData = { name: values.dataset_name };
+        const {pronDictLoad} = this.props;
+        const postData = {name: values.name};
+        const datasetData = {name: values.dataset_name};
         pronDictLoad(postData, datasetData);
     }
 
     render() {
-        const { t, currentEngine, name, list } = this.props;
+        const {t, currentEngine, name, list} = this.props;
         const listArray = Array.from(list.keys());
-        const { column, direction } = this.state;
+        const {column, direction} = this.state;
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
                 <Table.Header>
@@ -65,7 +65,7 @@ class PronDictDashboard extends Component {
                 </Table.Header>
                 <Table.Body>
                 {
-                    list.map( pronDict => {
+                    list.map(pronDict => {
                         const className = (pronDict.name === name) ? "current" : "";
                         return (
                             <Table.Row key={pronDict.name }>
@@ -151,7 +151,7 @@ const mapDispatchToProps = dispatch => ({
     },
     pronDictLoad: (pronDictData, datasetData) => {
         dispatch(pronDictLoad(pronDictData))
-            .then( () => dispatch(datasetLoad(datasetData)));
+            .then(() => dispatch(datasetLoad(datasetData)));
     },
 });
 

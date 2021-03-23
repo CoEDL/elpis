@@ -8,7 +8,7 @@ import urls from "urls";
 class StepWelcome extends Component {
 
 	render() {
-		const { t } = this.props;
+		const {t} = this.props;
 		return (
             <div>
                 <Branding />

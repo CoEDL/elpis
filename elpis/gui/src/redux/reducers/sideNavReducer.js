@@ -50,32 +50,32 @@ const initialStepModelState = {
 	steps: {
 		recordings: {
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "navigation.recordings.title", path: urls.gui.dataset.index },
-				{ done: false, doing: false, enabled: false, title: "navigation.recordings.files", path: urls.gui.dataset.files },
-				{ done: false, doing: false, enabled: false, title: "navigation.recordings.wordlist", path: urls.gui.dataset.prepare },
+				{done: false, doing: false, enabled: false, title: "navigation.recordings.title", path: urls.gui.dataset.index},
+				{done: false, doing: false, enabled: false, title: "navigation.recordings.files", path: urls.gui.dataset.files},
+				{done: false, doing: false, enabled: false, title: "navigation.recordings.wordlist", path: urls.gui.dataset.prepare},
 			],
 			engine_specific: null,
 		},
 		pronunciation: {
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "navigation.pronunciation.title", path: urls.gui.pronDict.index },
-				{ done: false, doing: false, enabled: false, title: "navigation.pronunciation.letterToSound", path: urls.gui.pronDict.l2s },
-				{ done: false, doing: false, enabled: false, title: "navigation.pronunciation.dictionary", path: urls.gui.pronDict.lexicon },
+				{done: false, doing: false, enabled: false, title: "navigation.pronunciation.title", path: urls.gui.pronDict.index},
+				{done: false, doing: false, enabled: false, title: "navigation.pronunciation.letterToSound", path: urls.gui.pronDict.l2s},
+				{done: false, doing: false, enabled: false, title: "navigation.pronunciation.dictionary", path: urls.gui.pronDict.lexicon},
 			],
 			engine_specific: "kaldi",
 		},
 		train: {
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "navigation.training.title", path: urls.gui.model.index },
-				{ done: false, doing: false, enabled: false, title: "navigation.training.settings", path: urls.gui.model.settings },
-				{ done: false, doing: false, enabled: false, title: "navigation.training.train", path: urls.gui.model.train },
-				{ done: false, doing: false, enabled: false, title: "navigation.training.results", path: urls.gui.model.results },
+				{done: false, doing: false, enabled: false, title: "navigation.training.title", path: urls.gui.model.index},
+				{done: false, doing: false, enabled: false, title: "navigation.training.settings", path: urls.gui.model.settings},
+				{done: false, doing: false, enabled: false, title: "navigation.training.train", path: urls.gui.model.train},
+				{done: false, doing: false, enabled: false, title: "navigation.training.results", path: urls.gui.model.results},
 			],
 			engine_specific: null,
 		},
 		transcribe: {
 			substeps: [
-				{ done: false, doing: false, enabled: false, title: "navigation.transcriptions.title", path: urls.gui.transcription.new },
+				{done: false, doing: false, enabled: false, title: "navigation.transcriptions.title", path: urls.gui.transcription.new},
 			],
 			engine_specific: null,
 		},
@@ -181,13 +181,13 @@ const sideNav = (state = initialStepModelState, action) => {
 
 			let nextStepName = getNextStepName(currentStepName, state.engine);
 
-			if (rememberToEnableTheNextStep && nextStepName ) {
+			if (rememberToEnableTheNextStep && nextStepName) {
 				rebuiltSteps[nextStepName].substeps[0].enabled = true;
 			}
-			return { ...state, steps: rebuiltSteps, lastURL: action.url };
+			return {...state, steps: rebuiltSteps, lastURL: action.url};
 		}
 		default:
-			return { ...state };
+			return {...state};
 	}
 };
 export default sideNav;

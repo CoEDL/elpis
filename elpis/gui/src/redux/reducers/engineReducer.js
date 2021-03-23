@@ -25,7 +25,7 @@ const engine = (state = initialEngineState, action) => {
 		}
 
 		default:
-			return { ...state };
+			return {...state};
 	}
 
 };

@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { Button, Divider, Grid, Header, Segment } from "semantic-ui-react";
-import { modelLoad, modelList } from "redux/actions/modelActions";
-import { datasetLoad } from "redux/actions/datasetActions";
-import { engineLoad } from "redux/actions/engineActions";
-import { pronDictLoad } from "redux/actions/pronDictActions";
+import React, {Component} from "react";
+import {Link, withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {Button, Divider, Grid, Header, Segment} from "semantic-ui-react";
+import {modelLoad, modelList} from "redux/actions/modelActions";
+import {datasetLoad} from "redux/actions/datasetActions";
+import {engineLoad} from "redux/actions/engineActions";
+import {pronDictLoad} from "redux/actions/pronDictActions";
 import Branding from "components/Shared/Branding";
 import urls from "urls";
 
@@ -18,16 +18,16 @@ class ChooseModel extends Component {
     }
 
     handleSelectModel = (model_name) => {
-        const { history, list, _modelLoad } = this.props;
+        const {history, list, _modelLoad} = this.props;
 
         console.log("load model_name", model_name);
 
         var selectedModel = list.filter(m => m.name==model_name);
         console.log("selectedModel", selectedModel);
-        const modelData = { name: selectedModel[0].name };
-        const datasetData = { name: selectedModel[0].dataset_name };
-        const engineName = { engine_name: selectedModel[0].engine_name };
-        const pronDictData = { name: selectedModel[0].pron_dict_name };
+        const modelData = {name: selectedModel[0].name};
+        const datasetData = {name: selectedModel[0].dataset_name};
+        const engineName = {engine_name: selectedModel[0].engine_name};
+        const pronDictData = {name: selectedModel[0].pron_dict_name};
 
         _modelLoad(modelData, datasetData, engineName, pronDictData);
         history.push(urls.gui.transcription.new);
@@ -35,7 +35,7 @@ class ChooseModel extends Component {
 
 
     render() {
-        const { t, list } = this.props;
+        const {t, list} = this.props;
         console.log("list", list);
 
         const modelList = list.map((model, index) => {

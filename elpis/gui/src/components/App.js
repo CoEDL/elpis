@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route} from "react-router-dom";
-import { connect } from "react-redux";
-import { configList } from "redux/actions/configActions";
+import {connect} from "react-redux";
+import {configList} from "redux/actions/configActions";
 import "./App.css";
 
 import Welcome from "./Welcome";

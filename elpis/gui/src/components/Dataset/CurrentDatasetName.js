@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { Message } from "semantic-ui-react";
+import React, {Component} from "react";
+import {Link, withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {Message} from "semantic-ui-react";
 import SelectEngineDropdown from "components/Engine/SelectEngineDropdown";
 import urls from "urls";
 
 class CurrentDatasetName extends Component {
 
     render() {
-        const { t, currentEngine, engineHumanNames, name, datasetList, match } = this.props;
+        const {t, currentEngine, engineHumanNames, name, datasetList, match} = this.props;
 
         const onDashboard = (match.url === urls.gui.dataset.index);
         const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : "";

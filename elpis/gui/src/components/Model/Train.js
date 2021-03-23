@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Accordion, Grid, Header, Segment, Icon, Card, Button, Message } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
+import {Accordion, Grid, Header, Segment, Icon, Card, Button, Message} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
 import ReactTimeout from "react-timeout";
-import { modelTrain, modelStatus } from "redux/actions/modelActions";
+import {modelTrain, modelStatus} from "redux/actions/modelActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
@@ -26,7 +26,7 @@ class ModelTrain extends Component {
     }
 
     handleModelStatus = () => {
-        const { status, modelStatus } = this.props;
+        const {status, modelStatus} = this.props;
         modelStatus();
         if (status === "trained") this.props.clearInterval(this.state.statusInterval);
     }
@@ -38,11 +38,11 @@ class ModelTrain extends Component {
     }
 
     selectAccordion = i => {
-        this.setState({...this.state, activeIndex: i });
+        this.setState({...this.state, activeIndex: i});
     }
 
     render() {
-        const { t, currentEngine, name, settings, status, stage_status } = this.props;
+        const {t, currentEngine, name, settings, status, stage_status} = this.props;
 
         return (
             <div>

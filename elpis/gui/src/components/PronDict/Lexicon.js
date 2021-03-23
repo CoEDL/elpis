@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Button, Form, Grid, Header, Message, Segment, TextArea } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { pronDictBuildLexicon, pronDictSaveLexicon, pronDictUpdateLexicon } from "redux/actions/pronDictActions";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
+import {Button, Form, Grid, Header, Message, Segment, TextArea} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {pronDictBuildLexicon, pronDictSaveLexicon, pronDictUpdateLexicon} from "redux/actions/pronDictActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentPronDictName from "./CurrentPronDictName";
@@ -13,7 +13,7 @@ class PronDictLexicon extends Component {
 
 
     componentDidMount = () => {
-        const { lexicon } = this.props;
+        const {lexicon} = this.props;
         if (!lexicon) this.generateLexicon();
 
     }
@@ -23,18 +23,18 @@ class PronDictLexicon extends Component {
     }
 
     saveLexicon = () => {
-        const data = { lexicon: this.props.lexicon };
+        const data = {lexicon: this.props.lexicon};
         this.props.pronDictSaveLexicon(data);
     }
 
     handleChange = (event) => {
-        this.props.pronDictUpdateLexicon( { lexicon: event.target.value } );
+        this.props.pronDictUpdateLexicon({lexicon: event.target.value});
     }
 
 
     render() {
 
-        const { t, currentEngine, lexicon, name } = this.props;
+        const {t, currentEngine, lexicon, name} = this.props;
 
         const interactionDisabled = name ? false : true;
 

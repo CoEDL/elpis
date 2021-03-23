@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Select, Form, Input, Table, TextArea } from "semantic-ui-react";
+import React, {useEffect} from "react";
+import {Select, Form, Input, Table, TextArea} from "semantic-ui-react";
 
 function groupSettingsFromUI(ui) {
     let settingGroups = [];
@@ -19,7 +19,7 @@ function groupSettingsFromUI(ui) {
 
 
 const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
-    const { t } = props;
+    const {t} = props;
 
     // On initialisation of component, show the tier name and set it properly
     useEffect(() => {
@@ -39,7 +39,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
     }
 
     const handleStrChange = (ui_name, data) => {
-        let newSettings = { ...settings };
+        let newSettings = {...settings};
         newSettings[ui_name] = data.value;
         changeSettingsCallback(newSettings);
     };

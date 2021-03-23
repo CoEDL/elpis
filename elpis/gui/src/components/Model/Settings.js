@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Button, Divider, Form, Grid, Header, Message, Segment } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { Formik, Field } from "formik";
-import { modelSettings } from "redux/actions/modelActions";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
+import {Button, Divider, Form, Grid, Header, Message, Segment} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {Formik, Field} from "formik";
+import {modelSettings} from "redux/actions/modelActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
@@ -14,7 +14,7 @@ class ModelSettings extends Component {
 
 
     render() {
-        const { t, currentEngine, settings, modelSettings, name } = this.props;
+        const {t, currentEngine, settings, modelSettings, name} = this.props;
         return (
             <div>
                 <Branding />

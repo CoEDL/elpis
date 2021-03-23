@@ -14,11 +14,11 @@ export function modelNew(postData) {
     return async dispatch => {
         dispatch(modelNewStarted());
         await axios.post(url, postData)
-            .then( response => {
+            .then(response => {
                 responseData = response.data;
                 dispatch(modelNewSuccess(response));
             })
-            .catch( error => {
+            .catch(error => {
                 dispatch(modelNewFailure(error));
                 throw error;
             });
@@ -31,11 +31,11 @@ const modelNewStarted = () => ({
 });
 const modelNewSuccess = response => ({
     type: actionTypes.MODEL_NEW_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const modelNewFailure = error => ({
     type: actionTypes.MODEL_NEW_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -64,11 +64,11 @@ const modelLoadStarted = () => ({
 });
 const modelLoadSuccess = response => ({
     type: actionTypes.MODEL_LOAD_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const modelLoadFailure = error => ({
     type: actionTypes.MODEL_LOAD_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -97,11 +97,11 @@ const modelListStarted = () => ({
 });
 const modelListSuccess = response => ({
     type: actionTypes.MODEL_LIST_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const modelListFailure = error => ({
     type: actionTypes.MODEL_LIST_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -130,11 +130,11 @@ const modelSettingsStarted = () => ({
 });
 const modelSettingsSuccess = response => ({
     type: actionTypes.MODEL_SETTINGS_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const modelSettingsFailure = error => ({
     type: actionTypes.MODEL_SETTINGS_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -163,11 +163,11 @@ const modelTrainStarted = () => ({
 });
 const modelTrainSuccess = response => ({
     type: actionTypes.MODEL_TRAIN_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const modelTrainFailure = error => ({
     type: actionTypes.MODEL_TRAIN_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -196,11 +196,11 @@ const modelStatusStarted = () => ({
 });
 const modelStatusSuccess = response => ({
     type: actionTypes.MODEL_STATUS_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const modelStatusFailure = error => ({
     type: actionTypes.MODEL_STATUS_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -229,9 +229,9 @@ const modelResultsStarted = () => ({
 });
 const modelResultsSuccess = response => ({
     type: actionTypes.MODEL_RESULTS_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const modelResultsFailure = error => ({
     type: actionTypes.MODEL_RESULTS_FAILURE,
-    response: { error },
+    response: {error},
 });

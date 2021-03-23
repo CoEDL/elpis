@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { Button, Grid, Header, Icon, List, Message, Segment, Label, Popup } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { datasetSettings, datasetPrepare, datasetDelete } from "redux/actions/datasetActions";
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+import {Button, Grid, Header, Icon, List, Message, Segment, Label, Popup} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {datasetSettings, datasetPrepare, datasetDelete} from "redux/actions/datasetActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import FileUpload from "./FileUpload";
@@ -14,7 +14,7 @@ import urls from "urls";
 class DatasetFiles extends Component {
 
     handleNextButton = () => {
-        const { history, datasetPrepare } = this.props;
+        const {history, datasetPrepare} = this.props;
         datasetPrepare(history);
         history.push(urls.gui.dataset.prepare);
     }
@@ -41,7 +41,7 @@ class DatasetFiles extends Component {
     ));
 
     render() {
-        const { t,
+        const {t,
             currentEngine,
             name,
             status,
@@ -50,7 +50,7 @@ class DatasetFiles extends Component {
             additionalTextFiles,
             settings,
             ui,
-            datasetSettings } = this.props;
+            datasetSettings} = this.props;
 
         const interactionDisabled = name ? false : true;
 

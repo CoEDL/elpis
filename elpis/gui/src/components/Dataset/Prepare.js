@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Button, Grid, Header, Icon, Segment, Table } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
+import {Button, Grid, Header, Icon, Segment, Table} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
 import arraySort from "array-sort";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
@@ -20,25 +20,25 @@ class DatasetPrepare extends Component {
     }
 
     handleSort = (clickedColumn, data) => () => {
-        const { column } = this.state;
+        const {column} = this.state;
 
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
                 reverse: false,
             });
-            arraySort(data, clickedColumn, { reverse: false });
+            arraySort(data, clickedColumn, {reverse: false});
         } else {
             this.setState({
                 reverse: ! this.state.reverse,
             });
-            arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
+            arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
     }
 
     render() {
-        const { t, additionalTextFiles, currentEngine, name, status, wordlist } = this.props;
-        const { column, direction } = this.state;
+        const {t, additionalTextFiles, currentEngine, name, status, wordlist} = this.props;
+        const {column, direction} = this.state;
 
         const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true;
 

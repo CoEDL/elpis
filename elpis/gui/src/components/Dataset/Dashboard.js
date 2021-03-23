@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Button, Grid, Header, Segment, Table } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { datasetList, datasetLoad } from "redux/actions/datasetActions";
+import React, {Component} from "react";
+import {Button, Grid, Header, Segment, Table} from "semantic-ui-react";
+import {Link} from "react-router-dom";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {datasetList, datasetLoad} from "redux/actions/datasetActions";
 import arraySort from "array-sort";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
@@ -23,28 +23,28 @@ class DatasetDashboard extends Component {
     }
 
     handleSort = (clickedColumn, data) => () => {
-        const { column } = this.state;
+        const {column} = this.state;
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
                 reverse: false,
             });
-            arraySort(data, clickedColumn, { reverse: false });
+            arraySort(data, clickedColumn, {reverse: false});
         } else {
             this.setState({reverse: ! this.state.reverse});
-            arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
+            arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
     }
 
     handleLoad = name => {
-        const { datasetLoad } = this.props;
-        const postData = { name: name };
+        const {datasetLoad} = this.props;
+        const postData = {name: name};
         datasetLoad(postData);
     }
 
     render() {
-        const { t, currentEngine, name, list } = this.props;
-        const { column, direction } = this.state;
+        const {t, currentEngine, name, list} = this.props;
+        const {column, direction} = this.state;
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable className="choose-dataset">
                 <Table.Header>
@@ -59,7 +59,7 @@ class DatasetDashboard extends Component {
                 </Table.Header>
                 <Table.Body>
                 {
-                    list.map( datasetName => {
+                    list.map(datasetName => {
                         const className = (datasetName === name) ? "current" : "";
                         return (
                             <Table.Row key={ datasetName }>

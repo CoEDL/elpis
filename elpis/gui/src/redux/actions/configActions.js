@@ -11,7 +11,7 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL 
 export const configReset = () => {
     const url = baseUrl + urls.api.config.reset;
     var responseData;
-    return async (dispatch ) => {
+    return async (dispatch) => {
         await axios.post(url)
             .then(response => {
                 responseData = response.data;
@@ -27,7 +27,7 @@ export const configReset = () => {
 // reducer for this is in store.js
 const configResetSuccess = response => ({
     type: actionTypes.APP_CONFIG_RESET,
-    response: { ...response },
+    response: {...response},
 });
 
 
@@ -59,11 +59,11 @@ const interfaceObjectNamesStarted = () => ({
 });
 const interfaceObjectNamesSuccess = response => ({
     type: actionTypes.CONFIG_OBJECT_NAMES_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const interfaceObjectNamesFailure = error => ({
     type: actionTypes.CONFIG_OBJECT_NAMES_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -97,14 +97,14 @@ const configListStarted = () => ({
 });
 const configListSuccess = response => ({
     type: actionTypes.CONFIG_LIST_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const configListFailure = error => ({
     type: actionTypes.CONFIG_LIST_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 const engineListSuccess = response => ({
     type: actionTypes.ENGINE_LIST_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });

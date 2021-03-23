@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { Grid, Header, Segment } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+import {Grid, Header, Segment} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import NewForm from "../PronDict/NewForm";
@@ -13,7 +13,7 @@ class PronDictNew extends Component {
     componentDidMount() {}
 
     render() {
-        const { t } = this.props;
+        const {t} = this.props;
         return (
             <div>
                 <Branding />

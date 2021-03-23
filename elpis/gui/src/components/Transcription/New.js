@@ -1,21 +1,21 @@
-import React, { Component } from "react";
-import { Button, Dropdown, Form, Grid, Header, Icon, Message, Segment } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
+import React, {Component} from "react";
+import {Button, Dropdown, Form, Grid, Header, Icon, Message, Segment} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
-import { fromEvent } from "file-selector";
+import {fromEvent} from "file-selector";
 import downloadjs from "downloadjs";
 import {
     transcriptionNew,
     transcriptionStatus,
     transcriptionTranscribe,
     transcriptionGetText,
-    transcriptionGetElan } from "redux/actions/transcriptionActions";
-import { modelLoad, modelList } from "redux/actions/modelActions";
-import { datasetLoad } from "redux/actions/datasetActions";
-import { engineLoad } from "redux/actions/engineActions";
-import { pronDictLoad } from "redux/actions/pronDictActions";
+    transcriptionGetElan} from "redux/actions/transcriptionActions";
+import {modelLoad, modelList} from "redux/actions/modelActions";
+import {datasetLoad} from "redux/actions/datasetActions";
+import {engineLoad} from "redux/actions/engineActions";
+import {pronDictLoad} from "redux/actions/pronDictActions";
 import Branding from "../Shared/Branding";
 import CurrentModelName from "../Model/CurrentModelName";
 
@@ -36,7 +36,7 @@ class NewTranscription extends Component {
     }
 
     doStatusCheck = () => {
-        const { status } = this.props;
+        const {status} = this.props;
         this.props.transcriptionStatus();
         if (status == "transcribed") {
             clearInterval(this.statusInterval);
@@ -64,19 +64,19 @@ class NewTranscription extends Component {
         this.setState({uploading: true});
     }
 
-    handleSelectModel = (e, { value }) => {
-        const { list, modelLoad } = this.props;
+    handleSelectModel = (e, {value}) => {
+        const {list, modelLoad} = this.props;
         var selectedModel = list.filter(m => m.name==value);
-        const modelData = { name: selectedModel[0].name };
-        const datasetData = { name: selectedModel[0].dataset_name };
-        const engineName = { engine_name: selectedModel[0].engine_name };
-        const pronDictData = { name: selectedModel[0].pron_dict_name };
+        const modelData = {name: selectedModel[0].name};
+        const datasetData = {name: selectedModel[0].dataset_name};
+        const engineName = {engine_name: selectedModel[0].engine_name};
+        const pronDictData = {name: selectedModel[0].pron_dict_name};
         modelLoad(modelData, datasetData, engineName, pronDictData);
     }
 
     render = () => {
-        const { t, currentEngine, filename, list, status, stage_status, text, modelName } = this.props;
-        const { uploading } = this.state;
+        const {t, currentEngine, filename, list, status, stage_status, text, modelName} = this.props;
+        const {uploading} = this.state;
 
         // Only show trained models
         const listTrained = list.filter(model => model.status === "trained");
@@ -88,7 +88,7 @@ class NewTranscription extends Component {
 
         // prevent the buttons from being clicked if we haven't got an active model, or file to transcribe
         let enableTranscription = (modelName && filename &&
-            (status == "ready" || status == "transcribed" )) ? true : false;
+            (status == "ready" || status == "transcribed")) ? true : false;
 
         const loadingIcon = (status == "transcribing") ? (
             <Icon name="circle notched" size="big" loading />
@@ -127,7 +127,7 @@ class NewTranscription extends Component {
                             }
 
                             <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
-                                { ({ getRootProps, getInputProps, isDragActive }) => {
+                                { ({getRootProps, getInputProps, isDragActive}) => {
                                     return (
                                         <div
                                             { ...getRootProps() }
@@ -155,7 +155,7 @@ class NewTranscription extends Component {
                             }
 
                             {filename &&
-                                <Segment>{t("transcription.new.usingAudio", { filename })} </Segment>
+                                <Segment>{t("transcription.new.usingAudio", {filename})} </Segment>
                             }
 
                             <Segment>

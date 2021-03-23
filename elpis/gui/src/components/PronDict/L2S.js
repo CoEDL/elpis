@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Button,  Grid, Header, Message, Segment } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
+import {Button,  Grid, Header, Message, Segment} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
-import { fromEvent } from "file-selector";
-import { pronDictL2S } from "redux/actions/pronDictActions";
+import {fromEvent} from "file-selector";
+import {pronDictL2S} from "redux/actions/pronDictActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentPronDictName from "./CurrentPronDictName";
@@ -16,14 +16,14 @@ class PronDictL2S extends Component {
 
     onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
-        const { pronDictL2S } = this.props;
+        const {pronDictL2S} = this.props;
         var formData = new FormData();
         formData.append("file", acceptedFiles[0]);
         pronDictL2S(formData);
     }
 
     render() {
-        const { t, currentEngine, l2s, name } = this.props;
+        const {t, currentEngine, l2s, name} = this.props;
 
         const interactionDisabled = name ? false : true;
 

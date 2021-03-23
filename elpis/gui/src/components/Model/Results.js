@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import { Grid, Header, Segment, Table, Message } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { modelResults } from "redux/actions/modelActions";
+import React, {Component} from "react";
+import {Grid, Header, Segment, Table, Message} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {modelResults} from "redux/actions/modelActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
 
 class ModelResults extends Component {
     componentDidMount() {
-        const { name, modelResults } = this.props;
+        const {name, modelResults} = this.props;
         if (name) modelResults();
     }
 
     render() {
-        const { t, currentEngine, name, results } = this.props;
+        const {t, currentEngine, name, results} = this.props;
 
         console.log("currentEngine", currentEngine);
         console.log("results", results);

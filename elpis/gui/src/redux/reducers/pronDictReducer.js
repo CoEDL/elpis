@@ -19,7 +19,7 @@ const pronDict = (state = initState, action) => {
 
         case actionTypes.PRON_DICT_NEW_SUCCESS:
             if (action.response.data.status==500){
-                return { ...initState,
+                return {...initState,
                     status: action.response.data.status,
                     error: action.response.data.error,
                 };
@@ -29,7 +29,7 @@ const pronDict = (state = initState, action) => {
             }
 
         case actionTypes.PRON_DICT_LOAD_SUCCESS:
-            var { config, l2s, lexicon } = action.response.data.data;
+            var {config, l2s, lexicon} = action.response.data.data;
             return {
                 ...state,
                 name: config.name,
@@ -39,7 +39,7 @@ const pronDict = (state = initState, action) => {
             };
 
         case actionTypes.PRON_DICT_LIST_SUCCESS:
-            var { list } = action.response.data.data;
+            var {list} = action.response.data.data;
             return {...state, pronDictList: list};
 
         case actionTypes.PRON_DICT_L2S_SUCCESS:
@@ -48,7 +48,7 @@ const pronDict = (state = initState, action) => {
                 return {...state, l2s: data.l2s};
             } else {
                 console.log("some error with l2s");
-                return { ...state };
+                return {...state};
             }
 
         case actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS:
@@ -58,7 +58,7 @@ const pronDict = (state = initState, action) => {
                 return {...state, lexicon: data.lexicon};
             } else {
                 console.log("some error building or saving lexicon");
-                return { ...state };
+                return {...state};
             }
 
         // This doesn't use the API, just for the form
@@ -67,7 +67,7 @@ const pronDict = (state = initState, action) => {
             return {...state, lexicon: action.data.lexicon};
 
         default:
-            return { ...state };
+            return {...state};
     }
 };
 

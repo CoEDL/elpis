@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { Message } from "semantic-ui-react";
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {Message} from "semantic-ui-react";
 
 class CurrentEngineName extends Component {
 
     render() {
-        const { t, engine_name } = this.props;
+        const {t, engine_name} = this.props;
 
         const current = engine_name ?
         (

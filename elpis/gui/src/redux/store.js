@@ -1,5 +1,5 @@
-import { applyMiddleware, createStore, combineReducers } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+import {applyMiddleware, createStore, combineReducers} from "redux";
+import {composeWithDevTools} from "redux-devtools-extension";
 import config from "./reducers/configReducer";
 import dataset from "./reducers/datasetReducer";
 import engine from "./reducers/engineReducer";

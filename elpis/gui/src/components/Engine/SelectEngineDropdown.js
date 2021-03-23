@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { Dropdown } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { engineLoad } from "redux/actions/engineActions";
+import React, {Component} from "react";
+import {Dropdown} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {engineLoad} from "redux/actions/engineActions";
 
 class SelectEngineDropdown extends Component {
 
     render() {
 
-        let { t, currentEngine, engineHumanNames, list, _engineLoad } = this.props;
+        let {t, currentEngine, engineHumanNames, list, _engineLoad} = this.props;
 
         let handleChange = (_event, data) => {
             let engine_name = data.value;
-            let postData = { engine_name };
+            let postData = {engine_name};
             _engineLoad(postData);
         };
 

@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { Button, Image, Menu, Segment } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import { withTranslation } from "react-i18next";
+import React, {Component} from "react";
+import {Button, Image, Menu, Segment} from "semantic-ui-react";
+import {Link} from "react-router-dom";
+import {withTranslation} from "react-i18next";
 import elpisLogo from "./elpis.png";
-import { connect } from "react-redux";
-import { configReset } from "redux/actions/configActions";
+import {connect} from "react-redux";
+import {configReset} from "redux/actions/configActions";
 import DevToolbar from "./DevToolbar";
 import SelectLanguage from "./SelectLanguage";
 
@@ -17,7 +17,7 @@ class StepBranding extends Component {
 
 
     render() {
-        const { t, dev_mode, currentEngine, engineHumanNames } = this.props;
+        const {t, dev_mode, currentEngine, engineHumanNames} = this.props;
 
         const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : "";
 

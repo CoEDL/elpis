@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { Formik, ErrorMessage } from "formik";
-import { Form, Input, Button } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { datasetNew } from "redux/actions/datasetActions";
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+import {Formik, ErrorMessage} from "formik";
+import {Form, Input, Button} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {datasetNew} from "redux/actions/datasetActions";
 import urls from "urls";
 
 
 class NewForm extends Component {
 
      render() {
-        const { t, error, datasetNew } = this.props;
+        const {t, error, datasetNew} = this.props;
         return (
 
             <Formik
@@ -30,8 +30,8 @@ class NewForm extends Component {
                     }
                     return errors;
                 }}
-                onSubmit={(values ) => {
-                    const postData = { name: values.name };
+                onSubmit={(values) => {
+                    const postData = {name: values.name};
                     datasetNew(postData, this.props.history);
                 }}
             >

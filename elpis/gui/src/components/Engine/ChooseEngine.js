@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { Button } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { engineLoad } from "redux/actions/engineActions";
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+import {Button} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {engineLoad} from "redux/actions/engineActions";
 import urls from "urls";
 
 
@@ -11,10 +11,10 @@ class ChooseEngine extends Component {
 
     render() {
 
-        let { t, list, _engineLoad, history } = this.props;
+        let {t, list, _engineLoad, history} = this.props;
 
         let selectEngine = engine_name => {
-            let postData = { engine_name };
+            let postData = {engine_name};
             _engineLoad(postData, history);
         };
 

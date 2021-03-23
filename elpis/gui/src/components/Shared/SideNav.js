@@ -1,28 +1,28 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { List, Accordion } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+import {List, Accordion} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
 import classNames from "classnames";
-import { setCurrentStep } from "redux/actions/sideNavActions";
-import { stepToOrder } from "../../redux/reducers/sideNavReducer";
+import {setCurrentStep} from "redux/actions/sideNavActions";
+import {stepToOrder} from "../../redux/reducers/sideNavReducer";
 import "./SideNav.css";
 
 
 class SideNav extends Component {
 
 	handleStepSelect = (step) => {
-		const { history } = this.props;
+		const {history} = this.props;
 		history.push(step.path);
 	}
 
 	componentDidMount = () => {
-		const { match, setCurrentStep } = this.props;
+		const {match, setCurrentStep} = this.props;
 		setCurrentStep(match.url);
 	}
 
 	render() {
-		const { t, steps } = this.props;
+		const {t, steps} = this.props;
 
 		return (
 			<Accordion styled>
@@ -56,7 +56,7 @@ class SideNav extends Component {
 																onClick={ () => this.handleStepSelect(substep, i, j) }
 																key={ substep.title }>
 
-																<div style={{ paddingLeft: "1.4em" }}>{t(substep.title)} </div>
+																<div style={{paddingLeft: "1.4em"}}>{t(substep.title)} </div>
 
 															</List.Item>
 														);

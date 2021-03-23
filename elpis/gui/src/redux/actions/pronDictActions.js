@@ -14,11 +14,11 @@ export function pronDictNew(postData) {
     return async dispatch => {
         dispatch(pronDictNewStarted());
         await axios.post(url, postData)
-            .then( response => {
+            .then(response => {
                 responseData = response.data;
                 dispatch(pronDictNewSuccess(response));
             })
-            .catch( error => {
+            .catch(error => {
                 dispatch(pronDictNewFailure(error));
                 throw error;
             });
@@ -31,11 +31,11 @@ const pronDictNewStarted = () => ({
 });
 const pronDictNewSuccess = response => ({
     type: actionTypes.PRON_DICT_NEW_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const pronDictNewFailure = error => ({
     type: actionTypes.PRON_DICT_NEW_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -64,11 +64,11 @@ const pronDictLoadStarted = () => ({
 });
 const pronDictLoadSuccess = response => ({
     type: actionTypes.PRON_DICT_LOAD_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const pronDictLoadFailure = error => ({
     type: actionTypes.PRON_DICT_LOAD_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -97,11 +97,11 @@ const pronDictListStarted = () => ({
 });
 const pronDictListSuccess = response => ({
     type: actionTypes.PRON_DICT_LIST_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const pronDictListFailure = error => ({
     type: actionTypes.PRON_DICT_LIST_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -109,7 +109,7 @@ const pronDictListFailure = error => ({
 
 export function pronDictL2S(postData) {
     const url = baseUrl + urls.api.pronDict.l2s;
-    const config = { headers: { "content-type": "multipart/form-data" } };
+    const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
     return async dispatch => {
         dispatch(pronDictL2SStarted());
@@ -131,11 +131,11 @@ const pronDictL2SStarted = () => ({
 });
 const pronDictL2SSuccess = response => ({
     type: actionTypes.PRON_DICT_L2S_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const pronDictL2SFailure = error => ({
     type: actionTypes.PRON_DICT_L2S_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -164,11 +164,11 @@ const pronDictBuildLexiconStarted = () => ({
 });
 const pronDictBuildLexiconSuccess = response => ({
     type: actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const pronDictBuildLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_BUILD_LEXICON_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 
@@ -197,11 +197,11 @@ const pronDictSaveLexiconStarted = () => ({
 });
 const pronDictSaveLexiconSuccess = response => ({
     type: actionTypes.PRON_DICT_SAVE_LEXICON_SUCCESS,
-    response: { ...response },
+    response: {...response},
 });
 const pronDictSaveLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_SAVE_LEXICON_FAILURE,
-    response: { error },
+    response: {error},
 });
 
 

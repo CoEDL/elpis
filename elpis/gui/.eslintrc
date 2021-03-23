@@ -14,7 +14,10 @@
     comma-dangle: ["error", "always-multiline"],
     quote-props: ["warn", "as-needed"],
     jsx-quotes: ["error", "prefer-double"],
-    quotes: ["error", "double"]
+    quotes: ["error", "double"],
+    object-curly-spacing: ["error", "never"],
+    array-bracket-spacing: ["error", "never"],
+    space-in-parens: ["error", "never"],
   },
   globals: {
     document: true,

@@ -4,7 +4,7 @@ const initState = {
     datasetList: [],
     pronDictList: [],
     modelList: [],
-    app_config: { dev_mode: false },
+    app_config: {dev_mode: false},
 };
 const config = (state = initState, action) => {
     switch (action.type) {
@@ -29,7 +29,7 @@ const config = (state = initState, action) => {
         }
 
         default:
-            return { ...state };
+            return {...state};
     }
 };
 

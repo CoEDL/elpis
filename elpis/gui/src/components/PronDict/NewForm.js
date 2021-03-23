@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { Formik, Field, ErrorMessage } from "formik";
-import { Button, Form, Input } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
-import { pronDictNew } from "redux/actions/pronDictActions";
-import { datasetList } from "redux/actions/datasetActions";
+import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
+import {Formik, Field, ErrorMessage} from "formik";
+import {Button, Form, Input} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
+import {pronDictNew} from "redux/actions/pronDictActions";
+import {datasetList} from "redux/actions/datasetActions";
 import urls from "urls";
 
 
@@ -16,7 +16,7 @@ class NewForm extends Component {
     }
 
     render() {
-        const { t, currentEngine, error, currentDataset, datasets, pronDictNew } = this.props;
+        const {t, currentEngine, error, currentDataset, datasets, pronDictNew} = this.props;
 
         let defaultDatasetName = "";
         if (currentDataset) {
@@ -44,8 +44,8 @@ class NewForm extends Component {
                     }
                     return errors;
                 }}
-                onSubmit={(values ) => {
-                    const postData = { name: values.name, dataset_name: values.dataset_name };
+                onSubmit={(values) => {
+                    const postData = {name: values.name, dataset_name: values.dataset_name};
                     pronDictNew(postData, this.props.history);
                 }}
             >
