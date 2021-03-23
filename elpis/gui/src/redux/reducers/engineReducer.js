@@ -13,14 +13,16 @@ const engine = (state = initialEngineState, action) => {
 		case actionTypes.ENGINE_LIST_FAILURE:
 			return {...state};
 
-		case actionTypes.ENGINE_LIST_SUCCESS:
+		case actionTypes.ENGINE_LIST_SUCCESS: {
 			let engine_list = action.response.data.data.engine_list;
 			console.log("engine_list", engine_list);
-			return { ...state, engine_list };
+			return {...state, engine_list};
+		}
 
-		case actionTypes.ENGINE_LOAD_SUCCESS:
+		case actionTypes.ENGINE_LOAD_SUCCESS: {
 			let engine = action.response.data.data.engine;
-			return { ...state, engine };
+			return {...state, engine};
+		}
 
 		default:
 			return { ...state };

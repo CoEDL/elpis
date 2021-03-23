@@ -133,7 +133,6 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                             // TODO: add a onChange that dispatches the setting (do this for int and string as well)
                             }
                             break;
-                        default: {}
                     }
 
                     // Construct row for individual setting

@@ -86,11 +86,11 @@ const sideNav = (state = initialStepModelState, action) => {
 
 	switch (action.type) {
 
-		case actionTypes.ENGINE_LOAD_SUCCESS:
+		case actionTypes.ENGINE_LOAD_SUCCESS: {
 			let engine = action.response.data.data.engine;
 			// Fall through to setting the current step
-			return { ...state, engine};
-
+			return {...state, engine};
+		}
 
 		case actionTypes.APP_SET_CURRENT_STEP: {
 			let currentSubStepIndex = 0;
