@@ -23,6 +23,7 @@
     "navigator": true,
     "URL": true,
     "setInterval": true,
-    "clearInterval": true
+    "clearInterval": true,
+    "FormData": true
   }
 }
