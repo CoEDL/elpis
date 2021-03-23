@@ -7,6 +7,11 @@
     "eslint:recommended",
     "plugin:react/recommended"
   ],
+  settings: {
+    react: {
+      version: 'latest',
+    },
+  },
   rules: {
     react/prop-types: "off",
     semi: ["error","always"],
