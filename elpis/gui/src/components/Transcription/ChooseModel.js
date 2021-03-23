@@ -19,11 +19,7 @@ class ChooseModel extends Component {
 
     handleSelectModel = (model_name) => {
         const {history, list, _modelLoad} = this.props;
-
-        console.log("load model_name", model_name);
-
         var selectedModel = list.filter(m => m.name === model_name);
-        console.log("selectedModel", selectedModel);
         const modelData = {name: selectedModel[0].name};
         const datasetData = {name: selectedModel[0].dataset_name};
         const engineName = {engine_name: selectedModel[0].engine_name};

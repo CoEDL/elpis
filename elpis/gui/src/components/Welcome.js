@@ -20,9 +20,7 @@ class StepWelcome extends Component {
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
-
                     <Divider />
-
                     <div className="row">
                         <div className="left-col train-button">
                             <Button as={Link} to={urls.gui.engine.index}>
@@ -44,6 +42,5 @@ class StepWelcome extends Component {
         );
     }
 }
-
 
 export default withTranslation("common")(StepWelcome);

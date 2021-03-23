@@ -95,31 +95,23 @@ class DatasetFiles extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
                             <Header as="h1">
                                 {t("dataset.files.title")}
                             </Header>
-
                             <CurrentDatasetName />
-
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
-
                             {currentEngine && !name &&
                             <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
                             }
-
                             {currentEngine && name &&
                                 <>
                                     <Message attached content={t("dataset.files.description")} />
                                     <Segment className="attached">
-
                                         <FileUpload name={name} />
-
                                         <div>{loadingIcon}</div>
-
                                         {filesHeader &&
                                         <>
                                             <Header as="h3">

@@ -24,14 +24,12 @@ class CurrentPronDictName extends Component {
                     {t("dataset.common.currentDatasetLabel") + datasetName}
                 </Message>
                 }
-
                 {!currentEngine &&
                 <Message color="purple">
                     {t("engine.common.noCurrentEngineLabel")}
                     <SelectEngineDropdown />
                 </Message>
                 }
-
                 {currentEngine && !name &&
                 <Message color="purple">
                     {onDashboard && pronDictList.length === 0 &&

@@ -23,14 +23,12 @@ class CurrentDatasetName extends Component {
                     {t("dataset.common.currentDatasetLabel") + name}
                 </Message>
                 }
-
                 {!currentEngine &&
                 <Message color="purple">
                     {t("engine.common.noCurrentEngineLabel")}
                     <SelectEngineDropdown />
                 </Message>
                 }
-
                 {currentEngine && !name &&
                 <Message color="purple">
                     {onDashboard && datasetList.length === 0 &&

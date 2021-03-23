@@ -23,30 +23,23 @@ class ModelSettings extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
-
                             <Header as="h1" text="true">
                                 {t("model.settings.title")}
                             </Header>
-
                             <CurrentModelName />
-
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
-
                             {currentEngine && !name &&
                             <p>{t("model.common.noCurrentModelLabel")}</p>
                             }
-
                             {currentEngine && currentEngine === "espnet" && name &&
                                 <div>
                                     <p>No settings for now...</p>
                                     <Button as={Link} to={urls.gui.model.train}>{t("common.nextButton")}</Button>
                                 </div>
                             }
-
                             {currentEngine && currentEngine === "kaldi" && name &&
                             <>
                                 <Message content={t("model.settings.description")} />
@@ -95,7 +88,6 @@ class ModelSettings extends Component {
                                 </Formik>
                             </>
                             }
-
                         </Grid.Column>
                     </Grid>
                 </Segment>

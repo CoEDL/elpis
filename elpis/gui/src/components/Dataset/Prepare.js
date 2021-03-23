@@ -87,18 +87,14 @@ class DatasetPrepare extends Component {
                         </Grid.Column>
                         <Grid.Column width={12}>
                             <Header as="h1">{t("dataset.prepare.title")}</Header>
-
                             <CurrentDatasetName />
-
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
-
                             {/* eslint-disable-next-line no-restricted-globals */}
                             {currentEngine && !name &&
                             <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
                             }
-
                             {status === "ready" &&
                                 <p>{t("dataset.prepare.ready")}</p>
                             }
@@ -126,8 +122,6 @@ class DatasetPrepare extends Component {
                                     {listEl}
                                 </>
                             }
-
-
                         </Grid.Column>
                     </Grid>
                 </Segment>

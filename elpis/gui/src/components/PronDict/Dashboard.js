@@ -95,14 +95,11 @@ class PronDictDashboard extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
                             <Header as="h1">
                                 {t("pronDict.dashboard.title")}
                             </Header>
-
                             <CurrentPronDictName />
-
                             {currentEngine &&
                             <>
                                 {list.length === 0 &&

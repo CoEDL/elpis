@@ -111,15 +111,11 @@ class ModelDashboard extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
-
                             <Header as="h1">
                                 {t("model.dashboard.title")}
                             </Header>
-
                             <CurrentModelName />
-
                             {currentEngine &&
                             <>
                                 {list.length === 0 &&

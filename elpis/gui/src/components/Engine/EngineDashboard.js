@@ -21,9 +21,7 @@ const EngineDashboard = () => {
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-
                 <ChooseEngine />
-
             </Segment>
         </div>
     );

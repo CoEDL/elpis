@@ -66,11 +66,9 @@ class NewForm extends Component {
                             />
                             <ErrorMessage component="div" className="error" name="name" />
                         </Form.Field>
-
                         {currentEngine && datasets.length === 0 &&
                         <p>{t("pronDict.common.noDatasetsLabel")}</p>
                         }
-
                         {currentEngine && datasets.length > 0 &&
                         <Form.Field>
                             <label>{t("pronDict.new.select")}</label>

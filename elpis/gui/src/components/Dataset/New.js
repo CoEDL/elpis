@@ -20,14 +20,11 @@ class DatasetNew extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
                             <Header as="h1" text="true">
                                 {t("dataset.new.title")}
                             </Header>
-
                             <NewForm />
-
                         </Grid.Column>
                     </Grid>
                 </Segment>

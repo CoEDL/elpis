@@ -5,10 +5,8 @@ const DevToolbar = props => {
     return props.dev_mode ? (
         <div className="dev-toolbar">
             <SelectEngineDropdown />
-        </div>
-    ) : (
-        <></>
-    );
+        </div>) :
+        <></>;
 };
 
 export default (DevToolbar);

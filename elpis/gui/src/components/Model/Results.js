@@ -30,7 +30,6 @@ class ModelResults extends Component {
             <>
 
                 <Message attached content={t("model.results.description")} />
-
                 <Table celled className="attached">
                     <Table.Body>
 
@@ -45,7 +44,6 @@ class ModelResults extends Component {
                                 }
                             </Table.Cell>
                         </Table.Row>
-
                         <Table.Row>
                             <Table.Cell>
                                 {count_text}
@@ -54,7 +52,6 @@ class ModelResults extends Component {
                                 {results.count_val}
                             </Table.Cell>
                         </Table.Row>
-
                         {currentEngine && currentEngine === "espnet" &&
                             <Table.Row>
                                 <Table.Cell>
@@ -63,7 +60,6 @@ class ModelResults extends Component {
                                 </Table.Cell>
                             </Table.Row>
                         }
-
                         <Table.Row>
                             <Table.Cell>
                                 {del_text}
@@ -72,7 +68,6 @@ class ModelResults extends Component {
                                 {results.del_val}
                             </Table.Cell>
                         </Table.Row>
-
                         <Table.Row>
                             <Table.Cell>
                                 {ins_text}
@@ -81,7 +76,6 @@ class ModelResults extends Component {
                                 {results.ins_val}
                             </Table.Cell>
                         </Table.Row>
-
                         <Table.Row>
                             <Table.Cell>
                                 {sub_text}
@@ -105,26 +99,20 @@ class ModelResults extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
                             <Header as="h1" text="true">
                                 {t("model.results.title")}
                             </Header>
-
                             <CurrentModelName />
-
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
-
                             {currentEngine && !name &&
                             <p>{t("model.common.noCurrentModelLabel")}</p>
                             }
-
                             {currentEngine && name &&
                                 resultsEl
                             }
-
                         </Grid.Column>
 
                     </Grid>

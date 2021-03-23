@@ -46,27 +46,20 @@ class PronDictLexicon extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
-
                             <Header as="h1">
                                 {t("pronDict.lexicon.title")}
                             </Header>
-
                             <CurrentPronDictName />
-
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
-
                             {currentEngine && !name &&
                             <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
                             }
-
                             {currentEngine && name &&
                             <>
                                 <Message content={t("pronDict.lexicon.description")} />
-
                                 <Button
                                     as={Link}
                                     to={urls.gui.model.index}
@@ -74,7 +67,6 @@ class PronDictLexicon extends Component {
                                 >
                                     {t("common.nextButton")}
                                 </Button>
-
                                 <div className="form-wrapper">
                                     <Form>
                                         <TextArea
@@ -99,12 +91,9 @@ class PronDictLexicon extends Component {
                                     >
                                         {t("pronDict.lexicon.save")}
                                     </Button>
-
                                 </div>
-
                             </>
                             }
-
                         </Grid.Column>
                     </Grid>
                 </Segment>

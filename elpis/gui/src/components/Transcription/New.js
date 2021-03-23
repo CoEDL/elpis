@@ -99,16 +99,13 @@ class NewTranscription extends Component {
                 <Branding />
                 <Segment>
                     <Grid centered>
-
                         <Grid.Column width={12}>
                             <Header as="h1" text="true">
                                 {t("transcription.new.title")}
                             </Header>
-
                             {modelName &&
                             <CurrentModelName />
                             }
-
                             {!modelName &&
                             <Segment>
                                 {listOptions &&
@@ -126,7 +123,6 @@ class NewTranscription extends Component {
                                 }
                             </Segment>
                             }
-
                             <Dropzone
                                 className="dropzone"
                                 onDrop={this.onDrop}
@@ -151,24 +147,20 @@ class NewTranscription extends Component {
                                     );
                                 }}
                             </Dropzone>
-
                             {uploading && !filename &&
                                 <div className="status">
                                     <Icon name="circle notched" size="big" loading />
                                     {t("transcription.new.uploading")}
                                 </div>
                             }
-
                             {filename &&
                                 <Segment>{t("transcription.new.usingAudio", {filename})}</Segment>
                             }
-
                             <Segment>
                                 <Button onClick={this.handleTranscribe} disabled={!enableTranscription} >
                                     {t("transcription.new.transcribe")}
                                 </Button>
                             </Segment>
-
                             <Message icon>
                                 {loadingIcon}
                                 <Message.Content>
@@ -197,11 +189,9 @@ class NewTranscription extends Component {
                                     }
                                 </Message.Content>
                             </Message>
-
                             {status === "transcribed" &&
                                 <Segment>
                                     <p>{text}</p>
-
                                     <p className="label pad-right">{t("transcription.results.downloadLabel")}</p>
                                     <Button onClick={this.handleDownloadText}>
                                         {t("transcription.results.downloadTextButton")}
@@ -211,7 +201,6 @@ class NewTranscription extends Component {
                                     </Button>
                                 </Segment>
                             }
-
                         </Grid.Column>
                     </Grid>
                 </Segment>

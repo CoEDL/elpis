@@ -41,23 +41,17 @@ class PronDictL2S extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
-
                             <Header as="h1">
                                 {t("pronDict.l2s.title")}
                             </Header>
-
                             <CurrentPronDictName />
-
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
-
                             {currentEngine && !name &&
                             <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
                             }
-
                             {currentEngine && name &&
                             <>
                                 <Message content={t("pronDict.l2s.description")} />
@@ -78,7 +72,6 @@ class PronDictL2S extends Component {
                                                     })}
                                                 >
                                                     <input {...getInputProps()} />
-
                                                     {
                                                         isDragActive ? (
                                                             <p>{t("pronDict.l2s.dropFilesHintDragActive")} </p>
@@ -91,11 +84,9 @@ class PronDictL2S extends Component {
                                     </Dropzone>
                                 </Segment>
                                 }
-
                                 <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
                                     {t("common.nextButton")}
                                 </Button>
-
                                 {pron &&
                                 <Segment>
                                     {pron}
@@ -103,7 +94,6 @@ class PronDictL2S extends Component {
                                 }
                             </>
                             }
-
                         </Grid.Column>
                     </Grid>
                 </Segment>

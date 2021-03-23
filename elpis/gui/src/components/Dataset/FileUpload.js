@@ -26,7 +26,6 @@ class FileUpload extends Component {
 
         return (
             <div className="FileUpload">
-
                 <Dropzone
                     disabled={interactionDisabled}
                     className="dropzone"

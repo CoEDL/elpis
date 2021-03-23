@@ -24,7 +24,6 @@ const SelectLanguage = () => {
             value={i18n.language}
             onChange={handleChange}
         />
-
     );
 };
 

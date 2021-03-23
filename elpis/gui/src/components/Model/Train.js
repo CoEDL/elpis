@@ -52,23 +52,17 @@ class ModelTrain extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
-
                             <Header as="h1" text="true">
                                 {t("model.train.title")}
                             </Header>
-
                             <CurrentModelName />
-
                             {!currentEngine &&
                             <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
-
                             {currentEngine && !name &&
                             <p>{t("model.common.noCurrentModelLabel")}</p>
                             }
-
                             {currentEngine && name &&
                             <>
                                 {/* Only Kaldi has settings. Should make this dynamic */}
@@ -82,10 +76,8 @@ class ModelTrain extends Component {
                                         />
                                     </Card>
                                 }
-
                                 <Message icon>
                                     <Message.Content className="train-log">
-
                                         {stage_status &&
                                         <div className="stages">
                                             <Accordion
@@ -126,22 +118,16 @@ class ModelTrain extends Component {
                                                     );
                                                 }
                                             )}
-
                                             </Accordion>
-
                                             <p>{status}</p>
-
                                         </div>
                                         }
                                     </Message.Content>
                                 </Message>
-
                                 <Segment>
-
                                     <Button onClick={this.handleModelTrain} disabled={!name || status !== "ready"}>
                                         {t("model.train.trainButton")}
                                     </Button>
-
                                     <Button
                                         as={Link}
                                         to={urls.gui.model.results}
@@ -149,7 +135,6 @@ class ModelTrain extends Component {
                                     >
                                         {t("common.nextButton")}
                                     </Button>
-
                                 </Segment>
                             </>
                             }

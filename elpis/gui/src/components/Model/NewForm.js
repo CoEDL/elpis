@@ -91,7 +91,6 @@ class NewForm extends Component {
                             />
                             <ErrorMessage component="div" className="error" name="name" />
                         </Form.Field>
-
                         {/* For Kaldi engines, base the model on the pron dict.
                                 Pron dicts have single dataset dependency */}
                         {engine && engine === "kaldi" &&
@@ -109,7 +108,6 @@ class NewForm extends Component {
                             </Field>
                         </Form.Field>
                             }
-
                         {/* If the engine is not Kaldi, base the model on a dataset only */}
                         {engine && engine !== "kaldi" &&
                         <Form.Field>
@@ -121,7 +119,6 @@ class NewForm extends Component {
                             </Field>
                         </Form.Field>
                             }
-
                         {error &&
                         <p className={"error-message"}>{error}</p>
                             }

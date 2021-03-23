@@ -86,14 +86,11 @@ class DatasetDashboard extends Component {
                         <Grid.Column width={4}>
                             <SideNav />
                         </Grid.Column>
-
                         <Grid.Column width={12}>
                             <Header as="h1">
                                 {t("dataset.dashboard.title")}
                             </Header>
-
                             <CurrentDatasetName />
-
                             {currentEngine &&
                             <>
                                 {list.length === 0 &&

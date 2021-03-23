@@ -42,7 +42,6 @@ class SideNav extends Component {
                                                     // for each substep (pass in the step index and the substep index)
                                                     // we'll use these to target the selected substep in redux
                                                     step.substeps.map((substep, j) => {
-
                                                             // substep classes
                                                             const substepClassNames = classNames({
                                                                 firstSubstep: j === 0,
@@ -50,7 +49,6 @@ class SideNav extends Component {
                                                                 substepDoing: substep.doing,
                                                                 disabled: !substep.enabled,
                                                             });
-
                                                             return (
                                                                 <List.Item
                                                                     className={substepClassNames}
