@@ -16,7 +16,7 @@ const appReducer = combineReducers({
     model,
     pronDict,
     sideNav,
-    transcription
+    transcription,
 });
 
 // hard reset
