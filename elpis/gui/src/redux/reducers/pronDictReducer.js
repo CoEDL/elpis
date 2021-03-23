@@ -18,7 +18,7 @@ const pronDict = (state = initState, action) => {
     switch (action.type) {
 
         case actionTypes.PRON_DICT_NEW_SUCCESS:
-            if (action.response.data.status==500){
+            if (action.response.data.status === 500){
                 return {...initState,
                     status: action.response.data.status,
                     error: action.response.data.error,

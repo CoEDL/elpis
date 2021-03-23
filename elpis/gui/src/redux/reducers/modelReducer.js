@@ -16,7 +16,7 @@ const model = (state = initState, action) => {
     switch (action.type) {
 
         case actionTypes.MODEL_NEW_SUCCESS:
-            if (action.response.data.status==500){
+            if (action.response.data.status === 500){
                 return {...initState,
                     status: action.response.data.status,
                     error: action.response.data.error,
@@ -53,7 +53,7 @@ const model = (state = initState, action) => {
 
         case actionTypes.MODEL_SETTINGS_SUCCESS:
             ({data, status} = action.response.data);
-            if (status == 200) {
+            if (status === 200) {
                 return {...state, settings:data.settings};
             } else {
                 console.log(data);
@@ -63,7 +63,7 @@ const model = (state = initState, action) => {
         // crazy, there will be three layers of objects with status properties here!
         case actionTypes.MODEL_TRAIN_SUCCESS:
             ({data, status} = action.response.data);
-            if (status == 200) {
+            if (status === 200) {
                 return {...state, status: data.status};
             } else {
                 console.log(data);
@@ -72,7 +72,7 @@ const model = (state = initState, action) => {
 
         case actionTypes.MODEL_STATUS_SUCCESS:
             ({data, status} = action.response.data);
-            if (status == 200) {
+            if (status === 200) {
                 return {...state, status: data.status, stage_status: data.stage_status};
             } else {
                 console.log(data);
@@ -82,7 +82,7 @@ const model = (state = initState, action) => {
         case actionTypes.MODEL_RESULTS_SUCCESS:
             ({data, status} = action.response.data);
             console.log(data, status);
-            if (status == 200) {
+            if (status === 200) {
                 return {...state, results: data.results};
             } else {
                 console.log(data);

@@ -29,7 +29,7 @@ const dataset = (state = initState, action) => {
             return {...state};
 
         case actionTypes.DATASET_NEW_SUCCESS: {
-            if (action.response.data.status==500){
+            if (action.response.data.status === 500){
                 return {...initState,
                     status: action.response.data.status,
                     error: action.response.data.error,
@@ -110,7 +110,7 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_DELETE_SUCCESS:
             ({data, status} = action.response.data);
-            if (status == 200) {
+            if (status === 200) {
                 // action.data is an array of filenames. parse this, split into separate lists
                 audioFiles = data.files.filter(file => getFileExtension(file) === "wav").sort();
                 transcriptionFiles = data.files.filter(file => getFileExtension(file) === "eaf").sort();
@@ -139,7 +139,7 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_UI_UPDATE_SUCCESS:
             ({data, status} = action.response.data);
-            if (status == 200) {
+            if (status === 200) {
                 return {...state, ui: data.ui};
             } else {
                 return {...state};

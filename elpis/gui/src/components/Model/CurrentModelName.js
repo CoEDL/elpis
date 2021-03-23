@@ -23,7 +23,7 @@ class CurrentModelName extends Component {
                     <br />
                     { t("model.common.currentModelLabel") + name }
                     <br />
-                    {currentEngine && currentEngine == "kaldi" &&
+                    {currentEngine && currentEngine === "kaldi" &&
                         <>
                             {t("pronDict.common.currentPronDictLabel") + dictName}
                             <br />

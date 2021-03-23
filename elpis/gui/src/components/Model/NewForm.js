@@ -59,7 +59,7 @@ class NewForm extends Component {
                     return errors;
                 }}
                 onSubmit={(values) => {
-                    const filtered_pd = pronDicts.filter(pd => (pd.name == values.pron_dict_name));
+                    const filtered_pd = pronDicts.filter(pd => (pd.name === values.pron_dict_name));
                     const modelData = {name: values.name, engine};
                     if (engine === "kaldi"){
                         // Get the dataset name from the pron dicts setting if we are using Kaldi
@@ -69,7 +69,7 @@ class NewForm extends Component {
                         // Non-kaldi, use the specified dataset
                         modelData["dataset_name"] = values.dataset_name;
                     }
-                    const redirectAfterModel = engine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train;
+                    const redirectAfterModel = engine === "kaldi" ? urls.gui.model.settings : urls.gui.model.train;
                     modelNew(modelData, this.props.history, redirectAfterModel);
                 }}
             >
@@ -92,7 +92,7 @@ class NewForm extends Component {
                             </Form.Field>
 
                             {/* For Kaldi engines, base the model on the pron dict. Pron dicts have single dataset dependency */}
-                            {engine && engine == "kaldi" &&
+                            {engine && engine === "kaldi" &&
                             <Form.Field>
                                 <label>{t("model.new.selectPronDictLabel")}</label>
                                 <Field component="select" name="pron_dict_name">

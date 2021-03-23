@@ -22,7 +22,7 @@ class ChooseModel extends Component {
 
         console.log("load model_name", model_name);
 
-        var selectedModel = list.filter(m => m.name==model_name);
+        var selectedModel = list.filter(m => m.name === model_name);
         console.log("selectedModel", selectedModel);
         const modelData = {name: selectedModel[0].name};
         const datasetData = {name: selectedModel[0].dataset_name};
@@ -75,7 +75,7 @@ class ChooseModel extends Component {
 
                     <Divider />
 
-                    {list.length == 0 &&
+                    {list.length === 0 &&
                         t("transcription.choose_model.no_models_found")
                     }
 

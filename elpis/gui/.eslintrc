@@ -18,6 +18,7 @@
     object-curly-spacing: ["error", "never"],
     array-bracket-spacing: ["error", "never"],
     space-in-parens: ["error", "never"],
+    "eqeqeq": ["error", "always"],
   },
   globals: {
     document: true,

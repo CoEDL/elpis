@@ -73,7 +73,7 @@ class ModelTrain extends Component {
                             <>
 
                                 {/* Only Kaldi has settings. Should make this dynamic */}
-                                {currentEngine && currentEngine == "kaldi" &&
+                                {currentEngine && currentEngine === "kaldi" &&
                                     <Card fluid>
                                         <Card.Content header={t("model.train.settingsHeader")}/>
                                         <Card.Content description={t("model.settings.ngramLabel") + " " + settings.ngram}/>

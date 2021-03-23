@@ -49,7 +49,7 @@ class ModelDashboard extends Component {
     render() {
         const {t, currentEngine, name, list} = this.props;
         const {column, direction} = this.state;
-        const redirectAfterModel = currentEngine=="kaldi" ? urls.gui.model.settings : urls.gui.model.train;
+        const redirectAfterModel = currentEngine === "kaldi" ? urls.gui.model.settings : urls.gui.model.train;
         const listEl = list.length > 0 ? (
             <Table sortable celled fixed unstackable>
                 <Table.Header>

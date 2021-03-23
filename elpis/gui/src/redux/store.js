@@ -21,7 +21,7 @@ const appReducer = combineReducers({
 
 // hard reset
 const rootReducer = (state, action) => {
-    if (action.type == "CONFIG_RESET") {
+    if (action.type === "CONFIG_RESET") {
         state = undefined;
     }
     return appReducer(state, action);

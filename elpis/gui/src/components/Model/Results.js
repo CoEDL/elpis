@@ -19,12 +19,12 @@ class ModelResults extends Component {
         console.log("currentEngine", currentEngine);
         console.log("results", results);
 
-        const wer_text = currentEngine == "kaldi" ? t("model.results.kaldi.wer") : t("model.results.espnet.wer");
-        const count_text = currentEngine == "kaldi" ? t("model.results.kaldi.count") : t("model.results.espnet.count");
+        const wer_text = currentEngine === "kaldi" ? t("model.results.kaldi.wer") : t("model.results.espnet.wer");
+        const count_text = currentEngine === "kaldi" ? t("model.results.kaldi.count") : t("model.results.espnet.count");
         const per_text = t("model.results.espnet.per");
-        const del_text = currentEngine == "kaldi" ? t("model.results.kaldi.del") : t("model.results.espnet.del");
-        const ins_text = currentEngine == "kaldi" ? t("model.results.kaldi.ins") : t("model.results.espnet.ins");
-        const sub_text = currentEngine == "kaldi" ? t("model.results.kaldi.sub") : t("model.results.espnet.sub");
+        const del_text = currentEngine === "kaldi" ? t("model.results.kaldi.del") : t("model.results.espnet.del");
+        const ins_text = currentEngine === "kaldi" ? t("model.results.kaldi.ins") : t("model.results.espnet.ins");
+        const sub_text = currentEngine === "kaldi" ? t("model.results.kaldi.sub") : t("model.results.espnet.sub");
 
         const resultsEl = results ? (
             <>
@@ -55,7 +55,7 @@ class ModelResults extends Component {
                             </Table.Cell>
                         </Table.Row>
 
-                        {currentEngine && currentEngine == "espnet" &&
+                        {currentEngine && currentEngine === "espnet" &&
                             <Table.Row>
                                 <Table.Cell>
                                     {per_text}

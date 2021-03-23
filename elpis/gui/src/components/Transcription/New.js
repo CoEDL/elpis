@@ -38,7 +38,7 @@ class NewTranscription extends Component {
     doStatusCheck = () => {
         const {status} = this.props;
         this.props.transcriptionStatus();
-        if (status == "transcribed") {
+        if (status === "transcribed") {
             clearInterval(this.statusInterval);
         }
     }
@@ -66,7 +66,7 @@ class NewTranscription extends Component {
 
     handleSelectModel = (e, {value}) => {
         const {list, modelLoad} = this.props;
-        var selectedModel = list.filter(m => m.name==value);
+        var selectedModel = list.filter(m => m.name === value);
         const modelData = {name: selectedModel[0].name};
         const datasetData = {name: selectedModel[0].dataset_name};
         const engineName = {engine_name: selectedModel[0].engine_name};
@@ -88,9 +88,9 @@ class NewTranscription extends Component {
 
         // prevent the buttons from being clicked if we haven't got an active model, or file to transcribe
         let enableTranscription = (modelName && filename &&
-            (status == "ready" || status == "transcribed")) ? true : false;
+            (status === "ready" || status === "transcribed")) ? true : false;
 
-        const loadingIcon = (status == "transcribing") ? (
+        const loadingIcon = (status === "transcribing") ? (
             <Icon name="circle notched" size="big" loading />
         ) : null;
 
@@ -190,7 +190,7 @@ class NewTranscription extends Component {
                                 </Message.Content>
                             </Message>
 
-                            {status=="transcribed" &&
+                            {status === "transcribed" &&
                                 <Segment>
                                     <p>{text}</p>
 
