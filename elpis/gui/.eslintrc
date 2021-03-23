@@ -30,7 +30,8 @@
     react/jsx-first-prop-new-line: ["error", "multiline"],
     react/jsx-wrap-multilines: ["error", {return: "parens-new-line"}],
     react/jsx-indent: ["error"],
-    react/jsx-tag-spacing: ["error", {"beforeSelfClosing": "always"}]
+    react/jsx-tag-spacing: ["error", {"beforeSelfClosing": "always"}],
+    react/jsx-newline: ["error", {"prevent": true}],
   },
   globals: {
     document: true,
