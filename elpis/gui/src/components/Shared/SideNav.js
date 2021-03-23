@@ -62,7 +62,7 @@ class SideNav extends Component {
                                                                     </div>
                                                                 </List.Item>
                                                             );
-                                                        },
+                                                        }
                                                     )
                                                 }
                                             </List>
@@ -92,6 +92,6 @@ const mapDispatchToProps = dispatch => ({
 
 export default withRouter(
     connect(mapStateToProps, mapDispatchToProps)(
-        withTranslation("common")(SideNav),
-    ),
+        withTranslation("common")(SideNav)
+    )
 );
