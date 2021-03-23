@@ -101,19 +101,21 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                     switch (data.ui_format) {
                         case "text": {
                             dataEntryElement = (<Input
-                                    type="text"
-                                    value={settings[ui_name]}
-                                    onChange={(event, data) => {
-                                        handleStrChange(ui_name, data);
-                                    }} />);
+                                                    type="text"
+                                                    value={settings[ui_name]}
+                                                    onChange={(event, data) => {
+                                                        handleStrChange(ui_name, data);
+                                                    }}
+                                                />);
                             }
                             break;
                         case "textarea": {
                             dataEntryElement = (<TextArea
-                                    value={settings[ui_name]}
-                                    onChange={(event, data) => {
-                                        handleStrChange(ui_name, data);
-                                    }} />);
+                                                    value={settings[ui_name]}
+                                                    onChange={(event, data) => {
+                                                        handleStrChange(ui_name, data);
+                                                    }}
+                                                />);
                             }
                             break;
                         case "int": {
@@ -127,13 +129,13 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                                 options.push({key: v, value: v, text: v});
                             });
                             dataEntryElement = (<Select
-                                defaultValue={settings[ui_name]}
-                                options={options}
-                                onChange={(event, data) => {
-                                    handleSelectChange(ui_name, data);
-                                }}
-                                selection
-                            />);
+                                                    defaultValue={settings[ui_name]}
+                                                    options={options}
+                                                    onChange={(event, data) => {
+                                                        handleSelectChange(ui_name, data);
+                                                    }}
+                                                    selection
+                                                />);
                             // TODO: add a onChange that dispatches the setting (do this for int and string as well)
                             }
                             break;
@@ -168,11 +170,11 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
         );
         tables.push(table);
     });
-    return (<>
+    return (
         <Form>
             {tables}
         </Form>
-    </>);
+    );
 };
 
 export default GeneratedUI;

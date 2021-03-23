@@ -87,7 +87,8 @@ class NewForm extends Component {
                                     placeholder={t("model.new.namePlaceholder")}
                                     name="name"
                                     type="text"
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                />
                                 <ErrorMessage component="div" className="error" name="name" />
                             </Form.Field>
 
@@ -97,13 +98,14 @@ class NewForm extends Component {
                                 <Form.Field>
                                     <label>{t("model.new.selectPronDictLabel")}</label>
                                     <Field component="select" name="pron_dict_name">
-                                        {pronDicts.map(pronDict =>
-                                            (<option
+                                        {pronDicts.map(pronDict => (
+                                            <option
                                                 key={pronDict.name}
-                                                value={pronDict.name}>
+                                                value={pronDict.name}
+                                            >
                                                 {pronDict.name} | {pronDict.dataset_name}
-                                            </option>))
-                                        }
+                                            </option>
+                                        ))}
                                     </Field>
                                 </Form.Field>
                             }

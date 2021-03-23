@@ -120,7 +120,8 @@ class NewTranscription extends Component {
                                             name="model_name"
                                             options={listOptions}
                                             defaultValue={modelName ? modelName : ""}
-                                            onChange={this.handleSelectModel} />
+                                            onChange={this.handleSelectModel}
+                                        />
                                     </Form.Field>
                                 }
                             </Segment>
@@ -129,14 +130,16 @@ class NewTranscription extends Component {
                             <Dropzone
                                 className="dropzone"
                                 onDrop={this.onDrop}
-                                getDataTransferItems={evt => fromEvent(evt)}>
+                                getDataTransferItems={evt => fromEvent(evt)}
+                            >
                                 {({getRootProps, getInputProps, isDragActive}) => {
                                     return (
                                         <div
                                             {...getRootProps()}
                                             className={classNames("dropzone", {
                                                 dropzone_active: isDragActive,
-                                            })}>
+                                            })}
+                                        >
                                             <input {...getInputProps()} />
                                             {
                                                 isDragActive ? (

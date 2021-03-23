@@ -30,7 +30,8 @@ class SelectEngineDropdown extends Component {
                         selection
                         options={options}
                         value={currentEngine}
-                        onChange={handleChange} />
+                        onChange={handleChange}
+                    />
                 }
             </>
         );

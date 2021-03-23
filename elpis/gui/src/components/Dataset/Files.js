@@ -36,7 +36,8 @@ class DatasetFiles extends Component {
                         <Icon name="trash" />
                     </Button>
                 </Button>
-            } />
+            }
+            />
         </List.Item>
     ));
 
@@ -164,7 +165,8 @@ class DatasetFiles extends Component {
                                         props={this.props}
                                         settings={settings}
                                         ui={ui}
-                                        changeSettingsCallback={datasetSettings} />
+                                        changeSettingsCallback={datasetSettings}
+                                    />
                                 </Segment>
                                 <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
                                     {t("common.nextButton")}

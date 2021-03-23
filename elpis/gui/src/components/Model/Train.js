@@ -75,9 +75,11 @@ class ModelTrain extends Component {
                                 {currentEngine && currentEngine === "kaldi" &&
                                     <Card fluid>
                                         <Card.Content
-                                            header={t("model.train.settingsHeader")}/>
+                                            header={t("model.train.settingsHeader")}
+                                        />
                                         <Card.Content
-                                            description={t("model.settings.ngramLabel") + " " + settings.ngram}/>
+                                            description={t("model.settings.ngramLabel") + " " + settings.ngram}
+                                        />
                                     </Card>
                                 }
 
@@ -89,7 +91,8 @@ class ModelTrain extends Component {
                                             <Accordion
                                                 fluid
                                                 styled
-                                                exclusive={false}>
+                                                exclusive={false}
+                                            >
                                             {Object.keys(stage_status).map((stage, i) => {
 
                                                 let name = stage_status[stage]["name"];
@@ -108,13 +111,15 @@ class ModelTrain extends Component {
                                                             <Accordion.Title
                                                               index={i}
                                                               active={active}
-                                                              onClick={() => this.selectAccordion(i)}>
+                                                              onClick={() => this.selectAccordion(i)}
+                                                            >
                                                                 {icon}
                                                                 {name} {stage_status_icon}
                                                             </Accordion.Title>
                                                             <Accordion.Content
                                                                 className="accordion_log"
-                                                                active={this.state.activeIndex === i}>
+                                                                active={this.state.activeIndex === i}
+                                                            >
                                                                 {log}
                                                             </Accordion.Content>
                                                         </div>
@@ -138,7 +143,8 @@ class ModelTrain extends Component {
                                     </Button>
 
                                     <Button as={Link} to={urls.gui.model.results}
-                                            disabled={status === "ready" || status === "training"}>
+                                            disabled={status === "ready" || status === "training"}
+                                    >
                                         {t("common.nextButton")}
                                     </Button>
 

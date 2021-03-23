@@ -27,11 +27,11 @@ class PronDictL2S extends Component {
 
         const interactionDisabled = name ? false : true;
 
-        const pron = l2s ?
-        (<pre>
-            {l2s}
-        </pre>) :
-        null;
+        const pron = l2s ? (
+            <pre>
+                {l2s}
+            </pre>) :
+            null;
 
         return (
             <div>
@@ -67,7 +67,8 @@ class PronDictL2S extends Component {
                                         disabled={interactionDisabled}
                                         className="dropzone"
                                         onDrop={this.onDrop}
-                                        getDataTransferItems={evt => fromEvent(evt)}>
+                                        getDataTransferItems={evt => fromEvent(evt)}
+                                    >
                                         {({getRootProps, getInputProps, isDragActive}) => {
                                             return (
                                                 <div

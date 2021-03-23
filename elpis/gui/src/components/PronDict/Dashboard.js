@@ -48,8 +48,8 @@ class PronDictDashboard extends Component {
         const {t, currentEngine, name, list} = this.props;
         const listArray = Array.from(list.keys());
         const {column, direction} = this.state;
-        const listEl = list.length > 0 ?
-            (<Table sortable celled fixed unstackable>
+        const listEl = list.length > 0 ? (
+            <Table sortable celled fixed unstackable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
@@ -70,12 +70,13 @@ class PronDictDashboard extends Component {
                         return (
                             <Table.Row key={pronDict.name}>
                                 <Table.Cell>
-
                                     <Button
                                         className={className}
                                         fluid
                                         onClick={() => this.handleLoad(pronDict)}
-                                        >{pronDict.name }</Button>
+                                    >
+                                        {pronDict.name}
+                                    </Button>
                                 </Table.Cell>
                                 <Table.Cell>
                                     {pronDict.dataset_name}
@@ -119,7 +120,8 @@ class PronDictDashboard extends Component {
                                             labelPosition="left"
                                             icon="add"
                                             as={Link}
-                                            to={urls.gui.pronDict.new}/>
+                                            to={urls.gui.pronDict.new}
+                                        />
                                     </Segment>
                                     {listEl}
                                     <Button as={Link} to={urls.gui.pronDict.l2s} disabled={!name}>

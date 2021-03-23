@@ -48,7 +48,8 @@ class NewForm extends Component {
                                     placeholder={t("dataset.new.namePlaceholder")}
                                     name="name"
                                     type="text"
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                />
                                 <ErrorMessage component="div" className="error" name="name" />
                             </Form.Field>
                             {error &&

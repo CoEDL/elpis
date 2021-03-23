@@ -48,12 +48,14 @@ class DatasetPrepare extends Component {
                     <Table.Row>
                         <Table.HeaderCell
                             sorted={column === "name" ? direction : null}
-                                onClick={this.handleSort("name", wordlist)}>
+                                onClick={this.handleSort("name", wordlist)}
+                        >
                             {t("dataset.prepare.wordlistHeader")}
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={column === "frequency" ? direction : null}
-                                onClick={this.handleSort("frequency", wordlist)}>
+                                onClick={this.handleSort("frequency", wordlist)}
+                        >
                             {t("dataset.prepare.frequencyHeader")}
                         </Table.HeaderCell>
                     </Table.Row>
@@ -117,7 +119,8 @@ class DatasetPrepare extends Component {
                                         to={(currentEngine === "kaldi") ?
                                             urls.gui.pronDict.index :
                                             urls.gui.model.index}
-                                        disabled={interactionDisabled}>
+                                        disabled={interactionDisabled}
+                                    >
                                         {t("common.nextButton")}
                                     </Button>
                                     {listEl}

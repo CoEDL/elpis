@@ -24,7 +24,9 @@
     key-spacing: ["error"],
     space-infix-ops: ["error"],
     max-len: ["error", {"code": 120}],
-    "react/jsx-curly-spacing": ["error", {"when": "never"}]
+    react/jsx-curly-spacing: ["error", {"when": "never"}],
+    react/jsx-closing-tag-location: ["error"],
+    react/jsx-closing-bracket-location: ["error"]
   },
   globals: {
     document: true,

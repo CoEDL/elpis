@@ -54,7 +54,8 @@ class SideNav extends Component {
 														return (
 															<List.Item className={substepClassNames}
 																onClick={() => this.handleStepSelect(substep, i, j)}
-																key={substep.title}>
+																key={substep.title}
+															>
 
 																<div style={{paddingLeft: "1.4em"}}>
 																	{t(substep.title)}

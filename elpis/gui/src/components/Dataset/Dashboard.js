@@ -45,13 +45,14 @@ class DatasetDashboard extends Component {
     render() {
         const {t, currentEngine, name, list} = this.props;
         const {column, direction} = this.state;
-        const listEl = list.length > 0 ?
-            (<Table sortable celled fixed unstackable className="choose-dataset">
+        const listEl = list.length > 0 ? (
+            <Table sortable celled fixed unstackable className="choose-dataset">
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
                             sorted={column === "name" ? direction : null}
-                            onClick={this.handleSort("name", list)}>
+                            onClick={this.handleSort("name", list)}
+                        >
                             Name
                         </Table.HeaderCell>
                     </Table.Row>
@@ -66,7 +67,8 @@ class DatasetDashboard extends Component {
                                     <Button
                                         className={className}
                                         fluid
-                                        onClick={() => this.handleLoad(datasetName)}>
+                                        onClick={() => this.handleLoad(datasetName)}
+                                    >
                                         {datasetName}
                                     </Button>
                                 </Table.Cell>
@@ -108,7 +110,8 @@ class DatasetDashboard extends Component {
                                             labelPosition="left"
                                             icon="add"
                                             as={Link}
-                                            to={urls.gui.dataset.new} />
+                                            to={urls.gui.dataset.new}
+                                        />
                                     </Segment>
                                     {listEl}
                                     <Button as={Link} to={urls.gui.dataset.files} disabled={!name}>

@@ -31,14 +31,16 @@ class FileUpload extends Component {
                     disabled={interactionDisabled}
                     className="dropzone"
                     onDrop={this.onDrop}
-                    getDataTransferItems={evt => fromEvent(evt)}>
+                    getDataTransferItems={evt => fromEvent(evt)}
+                >
                     {({getRootProps, getInputProps, isDragActive}) => {
                         return (
                             <div
                                 {...getRootProps()}
                                 className={classNames("dropzone", {
                                     dropzone_active: isDragActive,
-                                })}>
+                                })}
+                            >
                                 <input {...getInputProps()} />
                                 {isDragActive ?
                                         (<p>{t("dataset.fileUpload.dropFilesHintDragActive")}</p>) :
