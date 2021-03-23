@@ -18,6 +18,11 @@
     "document": true,
     "console": true,
     "window": true,
-    "process": true
+    "process": true,
+    "fetch": true,
+    "navigator": true,
+    "URL": true,
+    "setInterval": true,
+    "clearInterval": true
   }
 }
