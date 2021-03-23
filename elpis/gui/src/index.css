@@ -152,11 +152,11 @@ label.pad-right,
 
 .dev-toolbar {
     background: repeating-linear-gradient(
-            45deg,
-            #F5F6CE,
-            #F5F6CE 10px,
-            #F8EFFB 10px,
-            #F8EFFB 20px
+        45deg,
+        #F5F6CE,
+        #F5F6CE 10px,
+        #F8EFFB 10px,
+        #F8EFFB 20px
     );
     padding: 6px;
     min-width: 200px;

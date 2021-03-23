@@ -22,70 +22,71 @@ class ModelResults extends Component {
         const del_text = currentEngine === "kaldi" ? t("model.results.kaldi.del") : t("model.results.espnet.del");
         const ins_text = currentEngine === "kaldi" ? t("model.results.kaldi.ins") : t("model.results.espnet.ins");
         const sub_text = currentEngine === "kaldi" ? t("model.results.kaldi.sub") : t("model.results.espnet.sub");
-        const resultsEl = results ? (
-            <>
+        let resultsEl = <p>{t("model.results.noResults")}</p>;
 
-                <Message attached content={t("model.results.description")} />
-                <Table celled className="attached">
-                    <Table.Body>
+        if (results) {
+            resultsEl = (
+                <>
+                    <Message attached content={t("model.results.description")} />
+                    <Table celled className="attached">
+                        <Table.Body>
 
-                        <Table.Row>
-                            <Table.Cell className="results-title">
-                                {wer_text}
-                            </Table.Cell>
-                            <Table.Cell className="results-title">
-                                {results.wer}
-                                {results.wer &&
-                                <>%</>
-                                }
-                            </Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell>
-                                {count_text}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {results.count_val}
-                            </Table.Cell>
-                        </Table.Row>
-                        {currentEngine && currentEngine === "espnet" &&
                             <Table.Row>
-                                <Table.Cell>
-                                    {per_text}
-                                    {results.per}
+                                <Table.Cell className="results-title">
+                                    {wer_text}
+                                </Table.Cell>
+                                <Table.Cell className="results-title">
+                                    {results.wer}
+                                    {results.wer &&
+                                        <>%</>
+                                            }
                                 </Table.Cell>
                             </Table.Row>
-                        }
-                        <Table.Row>
-                            <Table.Cell>
-                                {del_text}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {results.del_val}
-                            </Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell>
-                                {ins_text}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {results.ins_val}
-                            </Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell>
-                                {sub_text}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {results.sub_val}
-                            </Table.Cell>
-                        </Table.Row>
-                    </Table.Body>
-                </Table>
-            </>
-        ) : (
-            <p>{t("model.results.noResults")}</p>
-        );
+                            <Table.Row>
+                                <Table.Cell>
+                                    {count_text}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {results.count_val}
+                                </Table.Cell>
+                            </Table.Row>
+                            {currentEngine && currentEngine === "espnet" &&
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {per_text}
+                                        {results.per}
+                                    </Table.Cell>
+                                </Table.Row>
+                                    }
+                            <Table.Row>
+                                <Table.Cell>
+                                    {del_text}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {results.del_val}
+                                </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell>
+                                    {ins_text}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {results.ins_val}
+                                </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell>
+                                    {sub_text}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {results.sub_val}
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table>
+                </>
+            );
+        }
 
         return (
             <div>
@@ -101,10 +102,10 @@ class ModelResults extends Component {
                             </Header>
                             <CurrentModelName />
                             {!currentEngine &&
-                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                                <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
                             {currentEngine && !name &&
-                            <p>{t("model.common.noCurrentModelLabel")}</p>
+                                <p>{t("model.common.noCurrentModelLabel")}</p>
                             }
                             {currentEngine && name &&
                                 resultsEl

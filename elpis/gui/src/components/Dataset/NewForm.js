@@ -55,7 +55,7 @@ class NewForm extends Component {
                             <ErrorMessage component="div" className="error" name="name" />
                         </Form.Field>
                         {error &&
-                        <p className={"error-message"}>{error}</p>
+                            <p className={"error-message"}>{error}</p>
                             }
                         <Button type="button" onClick={handleSubmit}>
                             {t("common.addNewButton")}

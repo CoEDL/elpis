@@ -9,42 +9,41 @@ import urls from "urls";
 class CurrentDatasetName extends Component {
     render() {
         const {t, currentEngine, engineHumanNames, name, datasetList, match} = this.props;
-
         const onDashboard = (match.url === urls.gui.dataset.index);
         const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : "";
 
         return (
             <>
                 {name &&
-                <Message color="olive">
-                    {t("engine.common.currentEngineLabel") + engineHumanName}
-                    <br />
-                    {t("dataset.common.currentDatasetLabel") + name}
-                </Message>
+                    <Message color="olive">
+                        {t("engine.common.currentEngineLabel") + engineHumanName}
+                        <br />
+                        {t("dataset.common.currentDatasetLabel") + name}
+                    </Message>
                 }
                 {!currentEngine &&
-                <Message color="purple">
-                    {t("engine.common.noCurrentEngineLabel")}
-                    <SelectEngineDropdown />
-                </Message>
+                    <Message color="purple">
+                        {t("engine.common.noCurrentEngineLabel")}
+                        <SelectEngineDropdown />
+                    </Message>
                 }
                 {currentEngine && !name &&
-                <Message color="purple">
-                    {onDashboard && datasetList.length === 0 &&
-                        t("common.makeNewOne")
-                    }
-                    {onDashboard && datasetList.length > 0 &&
-                        t("common.selectOneBelow")
-                    }
-                    {!onDashboard &&
-                        <>
-                            <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
-                            <Link to={urls.gui.dataset.index}>
-                                {t("common.chooseOrNewLabel")}
-                            </Link>
-                        </>
-                    }
-                </Message>
+                    <Message color="purple">
+                        {onDashboard && datasetList.length === 0 &&
+                            t("common.makeNewOne")
+                        }
+                        {onDashboard && datasetList.length > 0 &&
+                            t("common.selectOneBelow")
+                        }
+                        {!onDashboard &&
+                            <>
+                                <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
+                                <Link to={urls.gui.dataset.index}>
+                                    {t("common.chooseOrNewLabel")}
+                                </Link>
+                            </>
+                        }
+                    </Message>
                 }
             </>
         );

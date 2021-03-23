@@ -49,45 +49,50 @@ class PronDictDashboard extends Component {
         const {t, currentEngine, name, list} = this.props;
         const listArray = Array.from(list.keys());
         const {column, direction} = this.state;
-        const listEl = list.length > 0 ? (
-            <Table sortable celled fixed unstackable>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell
-                            sorted={column === "name" ? direction : null}
-                            onClick={this.handleSort("name", listArray)}
-                        >
-                            Name
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>
-                            Recordings
-                        </Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {list.map(pronDict => {
-                        const className = (pronDict.name === name) ? "current" : "";
+        let listEl = <p>{t("pronDict.dashboard.noneMessage")}</p>;
 
-                        return (
-                            <Table.Row key={pronDict.name}>
-                                <Table.Cell>
-                                    <Button
-                                        className={className}
-                                        fluid
-                                        onClick={() => this.handleLoad(pronDict)}
-                                    >
-                                        {pronDict.name}
-                                    </Button>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {pronDict.dataset_name}
-                                </Table.Cell>
-                            </Table.Row>
-                        );
-                    })}
-                </Table.Body>
-            </Table>) :
-            <p>{t("pronDict.dashboard.noneMessage")}</p>;
+        if (list.length > 0) {
+            listEl = (
+                <Table sortable celled fixed unstackable>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell
+                                sorted={column === "name" ? direction : null}
+                                onClick={this.handleSort("name", listArray)}
+                            >
+                                Name
+                            </Table.HeaderCell>
+                            <Table.HeaderCell>
+                                Recordings
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {list.map(pronDict => {
+                            const className = (pronDict.name === name) ? "current" : "";
+
+                            return (
+                                <Table.Row key={pronDict.name}>
+                                    <Table.Cell>
+                                        <Button
+                                            className={className}
+                                            fluid
+                                            onClick={() => this.handleLoad(pronDict)}
+                                        >
+                                            {pronDict.name}
+                                        </Button>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {pronDict.dataset_name}
+                                    </Table.Cell>
+                                </Table.Row>
+                            );
+                        })}
+                    </Table.Body>
+                </Table>
+            );
+        }
+
 
         return (
             <div>
@@ -103,29 +108,29 @@ class PronDictDashboard extends Component {
                             </Header>
                             <CurrentPronDictName />
                             {currentEngine &&
-                            <>
-                                {list.length === 0 &&
-                                    <NewForm />
-                                }
-                                {list.length > 0 &&
                                 <>
-                                    <Segment>
-                                        <Button
-                                            className="add"
-                                            content={t("common.newButton")}
-                                            labelPosition="left"
-                                            icon="add"
-                                            as={Link}
-                                            to={urls.gui.pronDict.new}
-                                        />
-                                    </Segment>
-                                    {listEl}
-                                    <Button as={Link} to={urls.gui.pronDict.l2s} disabled={!name}>
-                                        {t("common.nextButton")}
-                                    </Button>
+                                    {list.length === 0 &&
+                                        <NewForm />
+                                    }
+                                    {list.length > 0 &&
+                                        <>
+                                            <Segment>
+                                                <Button
+                                                    className="add"
+                                                    content={t("common.newButton")}
+                                                    labelPosition="left"
+                                                    icon="add"
+                                                    as={Link}
+                                                    to={urls.gui.pronDict.new}
+                                                />
+                                            </Segment>
+                                            {listEl}
+                                            <Button as={Link} to={urls.gui.pronDict.l2s} disabled={!name}>
+                                                {t("common.nextButton")}
+                                            </Button>
+                                        </>
+                                    }
                                 </>
-                                }
-                            </>
                             }
                         </Grid.Column>
                     </Grid>

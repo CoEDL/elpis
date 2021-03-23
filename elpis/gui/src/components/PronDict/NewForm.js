@@ -69,20 +69,20 @@ class NewForm extends Component {
                             <ErrorMessage component="div" className="error" name="name" />
                         </Form.Field>
                         {currentEngine && datasets.length === 0 &&
-                        <p>{t("pronDict.common.noDatasetsLabel")}</p>
+                            <p>{t("pronDict.common.noDatasetsLabel")}</p>
                         }
                         {currentEngine && datasets.length > 0 &&
-                        <Form.Field>
-                            <label>{t("pronDict.new.select")}</label>
-                            <Field component="select" name="dataset_name">
-                                {datasets.map(name =>
+                            <Form.Field>
+                                <label>{t("pronDict.new.select")}</label>
+                                <Field component="select" name="dataset_name">
+                                    {datasets.map(name =>
                                             (<option key={name} value={name}>{name}</option>))
                                         }
-                            </Field>
-                        </Form.Field>
+                                </Field>
+                            </Form.Field>
                         }
                         {error &&
-                        <p className={"error-message"}>{error}</p>
+                            <p className={"error-message"}>{error}</p>
                         }
                         <Button type="button" onClick={handleSubmit} disabled={datasets.length === 0}>
                             {t("common.addNewButton")}

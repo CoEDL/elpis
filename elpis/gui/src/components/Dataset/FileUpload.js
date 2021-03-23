@@ -41,8 +41,8 @@ class FileUpload extends Component {
                             >
                                 <input {...getInputProps()} />
                                 {isDragActive ?
-                                        (<p>{t("dataset.fileUpload.dropFilesHintDragActive")}</p>) :
-                                        (<p>{t("dataset.fileUpload.dropFilesHint")}</p>)
+                                    <p>{t("dataset.fileUpload.dropFilesHintDragActive")}</p> :
+                                    <p>{t("dataset.fileUpload.dropFilesHint")}</p>
                                 }
                                 <Button>{t("dataset.files.uploadButton")}</Button>
                             </div>

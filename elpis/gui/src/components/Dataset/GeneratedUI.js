@@ -113,28 +113,36 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
 
                     switch (data.ui_format) {
                         case "text": {
-                            dataEntryElement = (<Input
-                                                    type="text"
-                                                    value={settings[ui_name]}
-                                                    onChange={(event, data) => {
-                                                        handleStrChange(ui_name, data);
-                                                    }}
-                                                />);
-                            }
+                            dataEntryElement = (
+                                <Input
+                                    type="text"
+                                    value={settings[ui_name]}
+                                    onChange={(event, data) => {
+                                        handleStrChange(ui_name, data);
+                                    }}
+                                />
+                            );
+                        }
                             break;
+
                         case "textarea": {
-                            dataEntryElement = (<TextArea
-                                                    value={settings[ui_name]}
-                                                    onChange={(event, data) => {
-                                                        handleStrChange(ui_name, data);
-                                                    }}
-                                                />);
-                            }
+                            dataEntryElement = (
+                                <TextArea
+                                    value={settings[ui_name]}
+                                    onChange={(event, data) => {
+                                        handleStrChange(ui_name, data);
+                                    }}
+                                />
+                            );
+                        }
                             break;
+
                         case "int": {
-                            dataEntryElement = (<Input type="number" />); /* TODO */
-                            }
+                            // TODO
+                            dataEntryElement = <Input type="number" />;
+                        }
                             break;
+
                         case "select": {
                             let options = [];
 
@@ -142,16 +150,18 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                             data.options.forEach(v => {
                                 options.push({key: v, value: v, text: v});
                             });
-                            dataEntryElement = (<Select
-                                                    defaultValue={settings[ui_name]}
-                                                    options={options}
-                                                    onChange={(event, data) => {
-                                                        handleSelectChange(ui_name, data);
-                                                    }}
-                                                    selection
-                                                />);
                             // TODO: add a onChange that dispatches the setting (do this for int and string as well)
-                            }
+                            dataEntryElement = (
+                                <Select
+                                    defaultValue={settings[ui_name]}
+                                    options={options}
+                                    onChange={(event, data) => {
+                                        handleSelectChange(ui_name, data);
+                                    }}
+                                    selection
+                                />
+                            );
+                        }
                             break;
                     }
 
@@ -173,10 +183,12 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
         // Construct table
         let table = (
             <Table celled striped key={groupIndex++} className="settings">
-                {header === null ? null : (
-                    <Table.Header>
-                        {header}
-                    </Table.Header>
+                {header === null
+? null
+: (
+    <Table.Header>
+        {header}
+    </Table.Header>
                 )}
                 <Table.Body>
                     {settingRows}

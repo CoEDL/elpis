@@ -2,8 +2,6 @@ import React, {Component} from "react";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import {connect} from "react-redux";
 import {configList} from "redux/actions/configActions";
-import "./App.css";
-
 import Welcome from "./Welcome";
 import EngineDashboard from "./Engine/EngineDashboard";
 import DatasetDashboard from "./Dataset/Dashboard";
@@ -21,10 +19,8 @@ import ModelTrain from "./Model/Train";
 import ModelResults from "./Model/Results";
 import ChooseModel from "./Transcription/ChooseModel";
 import NewTranscription from "./Transcription/New";
-
 import PageContainer from "./PageContainer";
 import urls from "urls";
-
 
 class App extends Component {
     componentDidMount() {

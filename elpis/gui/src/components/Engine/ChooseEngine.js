@@ -23,6 +23,7 @@ class ChooseEngine extends Component {
                     engine_name = t("engine.common.kaldi_name");
                     engine_description = t("engine.common.kaldi_description");
                     break;
+
                 case "espnet":
                     engine_name = t("engine.common.espnet_name");
                     engine_description = t("engine.common.espnet_description");

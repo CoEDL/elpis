@@ -59,34 +59,34 @@ class ModelTrain extends Component {
                             </Header>
                             <CurrentModelName />
                             {!currentEngine &&
-                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                                <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
                             {currentEngine && !name &&
-                            <p>{t("model.common.noCurrentModelLabel")}</p>
+                                <p>{t("model.common.noCurrentModelLabel")}</p>
                             }
                             {currentEngine && name &&
-                            <>
-                                {/* Only Kaldi has settings. Should make this dynamic */}
-                                {currentEngine && currentEngine === "kaldi" &&
-                                    <Card fluid>
-                                        <Card.Content
-                                            header={t("model.train.settingsHeader")}
-                                        />
-                                        <Card.Content
-                                            description={t("model.settings.ngramLabel") + " " + settings.ngram}
-                                        />
-                                    </Card>
+                                <>
+                                    {/* Only Kaldi has settings. Should make this dynamic */}
+                                    {currentEngine && currentEngine === "kaldi" &&
+                                        <Card fluid>
+                                            <Card.Content
+                                                header={t("model.train.settingsHeader")}
+                                            />
+                                            <Card.Content
+                                                description={t("model.settings.ngramLabel") + " " + settings.ngram}
+                                            />
+                                        </Card>
                                 }
-                                <Message icon>
-                                    <Message.Content className="train-log">
-                                        {stage_status &&
-                                        <div className="stages">
-                                            <Accordion
-                                                fluid
-                                                styled
-                                                exclusive={false}
-                                            >
-                                                {Object.keys(stage_status).map((stage, i) => {
+                                    <Message icon>
+                                        <Message.Content className="train-log">
+                                            {stage_status &&
+                                                <div className="stages">
+                                                    <Accordion
+                                                        fluid
+                                                        styled
+                                                        exclusive={false}
+                                                    >
+                                                        {Object.keys(stage_status).map((stage, i) => {
                                                 let name = stage_status[stage]["name"];
                                                 let status = stage_status[stage]["status"];
                                                 let log = stage_status[stage]["log"];
@@ -101,9 +101,9 @@ class ModelTrain extends Component {
                                                     return (
                                                         <div key={name}>
                                                             <Accordion.Title
-                                                              index={i}
-                                                              active={active}
-                                                              onClick={() => this.selectAccordion(i)}
+                                                                index={i}
+                                                                active={active}
+                                                                onClick={() => this.selectAccordion(i)}
                                                             >
                                                                 {icon}
                                                                 {name} {stage_status_icon}
@@ -118,25 +118,25 @@ class ModelTrain extends Component {
                                                     );
                                                 }
                                             )}
-                                            </Accordion>
-                                            <p>{status}</p>
-                                        </div>
+                                                    </Accordion>
+                                                    <p>{status}</p>
+                                                </div>
                                         }
-                                    </Message.Content>
-                                </Message>
-                                <Segment>
-                                    <Button onClick={this.handleModelTrain} disabled={!name || status !== "ready"}>
-                                        {t("model.train.trainButton")}
-                                    </Button>
-                                    <Button
-                                        as={Link}
-                                        to={urls.gui.model.results}
-                                        disabled={status === "ready" || status === "training"}
-                                    >
-                                        {t("common.nextButton")}
-                                    </Button>
-                                </Segment>
-                            </>
+                                        </Message.Content>
+                                    </Message>
+                                    <Segment>
+                                        <Button onClick={this.handleModelTrain} disabled={!name || status !== "ready"}>
+                                            {t("model.train.trainButton")}
+                                        </Button>
+                                        <Button
+                                            as={Link}
+                                            to={urls.gui.model.results}
+                                            disabled={status === "ready" || status === "training"}
+                                        >
+                                            {t("common.nextButton")}
+                                        </Button>
+                                    </Segment>
+                                </>
                             }
                         </Grid.Column>
                     </Grid>

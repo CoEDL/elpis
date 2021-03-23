@@ -1,9 +1,10 @@
 import axios from "axios";
 import urls from "urls";
-
 import * as actionTypes from "../actionTypes/transcriptionActionTypes";
 
-const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : "http://" + window.location.host;
+const baseUrl = (process.env.REACT_APP_BASEURL) ?
+    process.env.REACT_APP_BASEURL :
+    "http://" + window.location.host;
 
 
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */

@@ -30,7 +30,6 @@ class PronDictLexicon extends Component {
         this.props.pronDictUpdateLexicon({lexicon: event.target.value});
     }
 
-
     render() {
         const {t, currentEngine, lexicon, name} = this.props;
         const interactionDisabled = name ? false : true;
@@ -49,47 +48,47 @@ class PronDictLexicon extends Component {
                             </Header>
                             <CurrentPronDictName />
                             {!currentEngine &&
-                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                                <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
                             {currentEngine && !name &&
-                            <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
+                                <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
                             }
                             {currentEngine && name &&
-                            <>
-                                <Message content={t("pronDict.lexicon.description")} />
-                                <Button
-                                    as={Link}
-                                    to={urls.gui.model.index}
-                                    disabled={interactionDisabled}
-                                >
-                                    {t("common.nextButton")}
-                                </Button>
-                                <div className="form-wrapper">
-                                    <Form>
-                                        <TextArea
-                                            className="lexicon"
-                                            onChange={this.handleChange}
-                                            value={lexicon}
+                                <>
+                                    <Message content={t("pronDict.lexicon.description")} />
+                                    <Button
+                                        as={Link}
+                                        to={urls.gui.model.index}
+                                        disabled={interactionDisabled}
+                                    >
+                                        {t("common.nextButton")}
+                                    </Button>
+                                    <div className="form-wrapper">
+                                        <Form>
+                                            <TextArea
+                                                className="lexicon"
+                                                onChange={this.handleChange}
+                                                value={lexicon}
+                                            >
+                                            </TextArea>
+                                        </Form>
+                                        <Button
+                                            basic
+                                            size="tiny"
+                                            onClick={this.generateLexicon}
+                                            disabled={interactionDisabled}
                                         >
-                                        </TextArea>
-                                    </Form>
-                                    <Button
-                                        basic
-                                        size="tiny"
-                                        onClick={this.generateLexicon}
-                                        disabled={interactionDisabled}
-                                    >
-                                        {t("pronDict.lexicon.reset")}
-                                    </Button>
-                                    <Button
-                                        size="tiny"
-                                        onClick={this.saveLexicon}
-                                        disabled={interactionDisabled}
-                                    >
-                                        {t("pronDict.lexicon.save")}
-                                    </Button>
-                                </div>
-                            </>
+                                            {t("pronDict.lexicon.reset")}
+                                        </Button>
+                                        <Button
+                                            size="tiny"
+                                            onClick={this.saveLexicon}
+                                            disabled={interactionDisabled}
+                                        >
+                                            {t("pronDict.lexicon.save")}
+                                        </Button>
+                                    </div>
+                                </>
                             }
                         </Grid.Column>
                     </Grid>

@@ -15,37 +15,37 @@ class CurrentPronDictName extends Component {
         return (
             <>
                 {name &&
-                <Message color="olive">
-                    {t("engine.common.currentEngineLabel") + engineHumanName}
-                    <br />
-                    {t("pronDict.common.currentPronDictLabel") + name}
-                    <br />
-                    {t("dataset.common.currentDatasetLabel") + datasetName}
-                </Message>
+                    <Message color="olive">
+                        {t("engine.common.currentEngineLabel") + engineHumanName}
+                        <br />
+                        {t("pronDict.common.currentPronDictLabel") + name}
+                        <br />
+                        {t("dataset.common.currentDatasetLabel") + datasetName}
+                    </Message>
                 }
                 {!currentEngine &&
-                <Message color="purple">
-                    {t("engine.common.noCurrentEngineLabel")}
-                    <SelectEngineDropdown />
-                </Message>
+                    <Message color="purple">
+                        {t("engine.common.noCurrentEngineLabel")}
+                        <SelectEngineDropdown />
+                    </Message>
                 }
                 {currentEngine && !name &&
-                <Message color="purple">
-                    {onDashboard && pronDictList.length === 0 &&
+                    <Message color="purple">
+                        {onDashboard && pronDictList.length === 0 &&
                         t("common.makeNewOne")
                     }
-                    {onDashboard && pronDictList.length > 0 &&
+                        {onDashboard && pronDictList.length > 0 &&
                         t("common.selectOneBelow")
                     }
-                    {!onDashboard &&
-                        <>
-                            <p>{t("pronDict.common.currentPronDictLabel")}</p>
-                            <Link to={urls.gui.pronDict.index}>
-                                {t("common.chooseOrNewLabel")}
-                            </Link>
-                        </>
+                        {!onDashboard &&
+                            <>
+                                <p>{t("pronDict.common.currentPronDictLabel")}</p>
+                                <Link to={urls.gui.pronDict.index}>
+                                    {t("common.chooseOrNewLabel")}
+                                </Link>
+                            </>
                     }
-                </Message>
+                    </Message>
                 }
             </>
         );

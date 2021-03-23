@@ -102,33 +102,32 @@ class NewForm extends Component {
                         {/* For Kaldi engines, base the model on the pron dict.
                                 Pron dicts have single dataset dependency */}
                         {engine && engine === "kaldi" &&
-                        <Form.Field>
-                            <label>{t("model.new.selectPronDictLabel")}</label>
-                            <Field component="select" name="pron_dict_name">
-                                {pronDicts.map(pronDict => (
-                                    <option
-                                                key={pronDict.name}
-                                                value={pronDict.name}
-                                    >
-                                        {pronDict.name} | {pronDict.dataset_name}
-                                    </option>
-                                        ))}
-                            </Field>
-                        </Form.Field>
+                            <Form.Field>
+                                <label>{t("model.new.selectPronDictLabel")}</label>
+                                <Field component="select" name="pron_dict_name">
+                                    {pronDicts.map(pronDict => (
+                                        <option key={pronDict.name} value={pronDict.name}>
+                                            {pronDict.name} | {pronDict.dataset_name}
+                                        </option>
+                                    ))}
+                                </Field>
+                            </Form.Field>
                             }
                         {/* If the engine is not Kaldi, base the model on a dataset only */}
                         {engine && engine !== "kaldi" &&
-                        <Form.Field>
-                            <label>{t("model.new.selectDatasetLabel")}</label>
-                            <Field component="select" name="dataset_name">
-                                {datasets.map(dataset =>
-                                            (<option key={dataset} value={dataset}>{dataset}</option>))
-                                        }
-                            </Field>
-                        </Form.Field>
+                            <Form.Field>
+                                <label>{t("model.new.selectDatasetLabel")}</label>
+                                <Field component="select" name="dataset_name">
+                                    {datasets.map(dataset => (
+                                        <option key={dataset} value={dataset}>
+                                            {dataset}
+                                        </option>
+                                    ))}
+                                </Field>
+                            </Form.Field>
                             }
                         {error &&
-                        <p className={"error-message"}>{error}</p>
+                            <p className={"error-message"}>{error}</p>
                             }
                         <Button type="button" onClick={handleSubmit}>
                             {t("common.addNewButton")}

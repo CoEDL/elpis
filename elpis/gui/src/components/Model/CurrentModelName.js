@@ -16,43 +16,43 @@ class CurrentModelName extends Component {
         return (
             <>
                 {name &&
-                <Message color="olive">
-                    {t("engine.common.currentEngineLabel") + engineHumanName}
-                    <br />
-                    {t("model.common.currentModelLabel") + name}
-                    <br />
-                    {currentEngine && currentEngine === "kaldi" &&
-                        <>
-                            {t("pronDict.common.currentPronDictLabel") + dictName}
-                            <br />
-                        </>
+                    <Message color="olive">
+                        {t("engine.common.currentEngineLabel") + engineHumanName}
+                        <br />
+                        {t("model.common.currentModelLabel") + name}
+                        <br />
+                        {currentEngine && currentEngine === "kaldi" &&
+                            <>
+                                {t("pronDict.common.currentPronDictLabel") + dictName}
+                                <br />
+                            </>
                     }
-                    {t("dataset.common.currentDatasetLabel") + datasetName}
-                </Message>
+                        {t("dataset.common.currentDatasetLabel") + datasetName}
+                    </Message>
                 }
                 {!currentEngine &&
-                <Message color="purple">
-                    {t("engine.common.noCurrentEngineLabel")}
-                    <SelectEngineDropdown />
-                </Message>
+                    <Message color="purple">
+                        {t("engine.common.noCurrentEngineLabel")}
+                        <SelectEngineDropdown />
+                    </Message>
                 }
                 {currentEngine && !name &&
-                <Message color="purple">
-                    {onDashboard && modelList.length === 0 &&
-                        t("common.makeNewOne")
-                    }
-                    {onDashboard && modelList.length > 0 &&
-                        t("common.selectOneBelow")
-                    }
-                    {!onDashboard &&
-                        <>
-                            <p>{t("model.common.currentModelLabel")}</p>
-                            <Link to={urls.gui.model.index}>
-                                {t("common.chooseOrNewLabel")}
-                            </Link>
-                        </>
-                    }
-                </Message>
+                    <Message color="purple">
+                        {onDashboard && modelList.length === 0 &&
+                            t("common.makeNewOne")
+                        }
+                        {onDashboard && modelList.length > 0 &&
+                            t("common.selectOneBelow")
+                        }
+                        {!onDashboard &&
+                            <>
+                                <p>{t("model.common.currentModelLabel")}</p>
+                                <Link to={urls.gui.model.index}>
+                                    {t("common.chooseOrNewLabel")}
+                                </Link>
+                            </>
+                        }
+                    </Message>
                 }
             </>
         );

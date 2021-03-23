@@ -57,28 +57,31 @@ class DatasetFiles extends Component {
             ui,
             datasetSettings} = this.props;
         const interactionDisabled = name ? false : true;
-        const loadingIcon = (status === "loading") ? (
-            <div className="status">
-                <Icon name="circle notched" size="big" loading /> {t("dataset.fileUpload.uploading")}
-            </div>
-        ) : null;
+        const loadingIcon = (status === "loading") ?
+            (
+                <div className="status">
+                    <Icon name="circle notched" size="big" loading />
+                    {t("dataset.fileUpload.uploading")}
+                </div>
+            )
+            : null;
         const audioFilesList = this.createFilesList(audioFiles);
         const transcriptionFilesList = this.createFilesList(transcriptionFiles);
         const additionalTextFilesList = this.createFilesList(additionalTextFiles);
         const filesHeader = (
             audioFilesList.length > 0 ||
             transcriptionFilesList.length > 0 ||
-            additionalTextFilesList.length > 0) ? (
-                 t("dataset.files.filesHeader")
-            ) : null;
-        const audioFilesHeader = audioFilesList.length > 0
-            ? t("dataset.files.audioFilesHeader")
+            additionalTextFilesList.length > 0) ?
+            t("dataset.files.filesHeader")
             : null;
-        const transcriptionFilesHeader = transcriptionFilesList.length > 0
-            ? t("dataset.files.transcriptionFilesHeader")
+        const audioFilesHeader = audioFilesList.length > 0 ?
+            t("dataset.files.audioFilesHeader")
             : null;
-        const additionalTextFilesHeader = additionalTextFilesList.length > 0
-            ? t("dataset.files.additionalTextFilesHeader")
+        const transcriptionFilesHeader = transcriptionFilesList.length > 0 ?
+            t("dataset.files.transcriptionFilesHeader")
+            : null;
+        const additionalTextFilesHeader = additionalTextFilesList.length > 0 ?
+            t("dataset.files.additionalTextFilesHeader")
             : null;
 
         return (
@@ -95,10 +98,10 @@ class DatasetFiles extends Component {
                             </Header>
                             <CurrentDatasetName />
                             {!currentEngine &&
-                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                                <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
                             {currentEngine && !name &&
-                            <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
+                                <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
                             }
                             {currentEngine && name &&
                                 <>
@@ -107,40 +110,40 @@ class DatasetFiles extends Component {
                                         <FileUpload name={name} />
                                         <div>{loadingIcon}</div>
                                         {filesHeader &&
-                                        <>
-                                            <Header as="h3">
-                                                {filesHeader}
-                                            </Header>
-                                            <div className="file-list">
-                                                <Grid columns={3}>
-                                                    <Grid.Column>
-                                                        <Header as="h4">
-                                                            {audioFilesHeader}
-                                                        </Header>
-                                                        <List>
-                                                            {audioFilesList}
-                                                        </List>
-                                                    </Grid.Column>
-                                                    <Grid.Column>
-                                                        <Header as="h4">
-                                                            {transcriptionFilesHeader}
-                                                        </Header>
-                                                        <List>
-                                                            {transcriptionFilesList}
-                                                        </List>
-                                                    </Grid.Column>
-                                                    <Grid.Column>
-                                                        <Header as="h4">
-                                                            {additionalTextFilesHeader}
-                                                        </Header>
-                                                        <List>
-                                                            {additionalTextFilesList}
-                                                        </List>
-                                                    </Grid.Column>
-                                                </Grid>
-                                            </div>
-                                        </>
-                                    }
+                                            <>
+                                                <Header as="h3">
+                                                    {filesHeader}
+                                                </Header>
+                                                <div className="file-list">
+                                                    <Grid columns={3}>
+                                                        <Grid.Column>
+                                                            <Header as="h4">
+                                                                {audioFilesHeader}
+                                                            </Header>
+                                                            <List>
+                                                                {audioFilesList}
+                                                            </List>
+                                                        </Grid.Column>
+                                                        <Grid.Column>
+                                                            <Header as="h4">
+                                                                {transcriptionFilesHeader}
+                                                            </Header>
+                                                            <List>
+                                                                {transcriptionFilesList}
+                                                            </List>
+                                                        </Grid.Column>
+                                                        <Grid.Column>
+                                                            <Header as="h4">
+                                                                {additionalTextFilesHeader}
+                                                            </Header>
+                                                            <List>
+                                                                {additionalTextFilesList}
+                                                            </List>
+                                                        </Grid.Column>
+                                                    </Grid>
+                                                </div>
+                                            </>
+                                        }
                                     </Segment>
                                     <br />
                                     <Button onClick={this.handleNextButton} disabled={interactionDisabled}>
@@ -151,10 +154,10 @@ class DatasetFiles extends Component {
                                             {t("dataset.files.importSettingsHeader")}
                                         </Header>
                                         <GeneratedUI
-                                        props={this.props}
-                                        settings={settings}
-                                        ui={ui}
-                                        changeSettingsCallback={datasetSettings}
+                                            props={this.props}
+                                            settings={settings}
+                                            ui={ui}
+                                            changeSettingsCallback={datasetSettings}
                                         />
                                     </Segment>
                                     <Button onClick={this.handleNextButton} disabled={interactionDisabled}>

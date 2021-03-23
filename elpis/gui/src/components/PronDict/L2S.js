@@ -26,11 +26,7 @@ class PronDictL2S extends Component {
     render() {
         const {t, currentEngine, l2s, name} = this.props;
         const interactionDisabled = name ? false : true;
-        const pron = l2s ? (
-            <pre>
-                {l2s}
-            </pre>) :
-            null;
+        const pron = l2s ? <pre>{l2s}</pre> : null;
 
         return (
             <div>
@@ -46,52 +42,51 @@ class PronDictL2S extends Component {
                             </Header>
                             <CurrentPronDictName />
                             {!currentEngine &&
-                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                                <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
                             {currentEngine && !name &&
-                            <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
+                                <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
                             }
                             {currentEngine && name &&
-                            <>
-                                <Message content={t("pronDict.l2s.description")} />
-                                {!pron &&
-                                <Segment>
-                                    <Dropzone
-                                        disabled={interactionDisabled}
-                                        className="dropzone"
-                                        onDrop={this.onDrop}
-                                        getDataTransferItems={evt => fromEvent(evt)}
-                                    >
-                                        {({getRootProps, getInputProps, isDragActive}) => {
-                                            return (
-                                                <div
-                                                    {...getRootProps()}
-                                                    className={classNames("dropzone", {
-                                                        dropzone_active: isDragActive,
-                                                    })}
-                                                >
-                                                    <input {...getInputProps()} />
-                                                    {
-                                                        isDragActive ? (
-                                                            <p>{t("pronDict.l2s.dropFilesHintDragActive")} </p>
-                                                        ) : (<p>{t("pronDict.l2s.dropFilesHint")}</p>)
-                                                    }
-                                                    <Button>{t("pronDict.l2s.uploadButton")}</Button>
-                                                </div>
-                                            );
-                                        }}
-                                    </Dropzone>
-                                </Segment>
-                                }
-                                <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
-                                    {t("common.nextButton")}
-                                </Button>
-                                {pron &&
-                                <Segment>
-                                    {pron}
-                                </Segment>
-                                }
-                            </>
+                                <>
+                                    <Message content={t("pronDict.l2s.description")} />
+                                    {!pron &&
+                                        <Segment>
+                                            <Dropzone
+                                                disabled={interactionDisabled}
+                                                className="dropzone"
+                                                onDrop={this.onDrop}
+                                                getDataTransferItems={evt => fromEvent(evt)}
+                                            >
+                                                {({getRootProps, getInputProps, isDragActive}) => {
+                                                    return (
+                                                        <div
+                                                            {...getRootProps()}
+                                                            className={classNames("dropzone", {
+                                                                dropzone_active: isDragActive,
+                                                            })}
+                                                        >
+                                                            <input {...getInputProps()} />
+                                                            {isDragActive ?
+                                                                <p>{t("pronDict.l2s.dropFilesHintDragActive")}</p> :
+                                                                <p>{t("pronDict.l2s.dropFilesHint")}</p>
+                                                            }
+                                                            <Button>{t("pronDict.l2s.uploadButton")}</Button>
+                                                        </div>
+                                                    );
+                                                }}
+                                            </Dropzone>
+                                        </Segment>
+                                    }
+                                    <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
+                                        {t("common.nextButton")}
+                                    </Button>
+                                    {pron &&
+                                        <Segment>
+                                            {pron}
+                                        </Segment>
+                                    }
+                                </>
                             }
                         </Grid.Column>
                     </Grid>

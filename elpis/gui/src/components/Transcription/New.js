@@ -81,19 +81,18 @@ class NewTranscription extends Component {
     render = () => {
         const {t, currentEngine, filename, list, status, stage_status, text, modelName} = this.props;
         const {uploading} = this.state;
-        // Only show trained models
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
             key: model.name,
             value: model.name,
             text: model.name,
         }));
-        // prevent the buttons from being clicked if we haven't got an active model, or file to transcribe
-        let enableTranscription = (modelName && filename &&
-            (status === "ready" || status === "transcribed")) ? true : false;
-        const loadingIcon = (status === "transcribing") ? (
-            <Icon name="circle notched" size="big" loading />
-        ) : null;
+        const loadingIcon = (status === "transcribing") ?
+            <Icon name="circle notched" size="big" loading /> :
+            null;
+        let enableTranscription = false;
+
+        if (modelName && filename && (status === "ready" || status === "transcribed")) enableTranscription = true;
 
         return (
             <div>
@@ -105,24 +104,26 @@ class NewTranscription extends Component {
                                 {t("transcription.new.title")}
                             </Header>
                             {modelName &&
-                            <CurrentModelName />
+                                <CurrentModelName />
                             }
                             {!modelName &&
-                            <Segment>
-                                {listOptions &&
-                                    <Form.Field>
-                                        <label className="pad-right">{t("transcription.new.selectModelLabel")}</label>
-                                        <Dropdown
-                                            placeholder={t("common.choose")}
-                                            selection
-                                            name="model_name"
-                                            options={listOptions}
-                                            defaultValue={modelName ? modelName : ""}
-                                            onChange={this.handleSelectModel}
-                                        />
-                                    </Form.Field>
+                                <Segment>
+                                    {listOptions &&
+                                        <Form.Field>
+                                            <label className="pad-right">
+                                                {t("transcription.new.selectModelLabel")}
+                                            </label>
+                                            <Dropdown
+                                                placeholder={t("common.choose")}
+                                                selection
+                                                name="model_name"
+                                                options={listOptions}
+                                                defaultValue={modelName ? modelName : ""}
+                                                onChange={this.handleSelectModel}
+                                            />
+                                        </Form.Field>
                                 }
-                            </Segment>
+                                </Segment>
                             }
                             <Dropzone
                                 className="dropzone"
@@ -138,10 +139,9 @@ class NewTranscription extends Component {
                                             })}
                                         >
                                             <input {...getInputProps()} />
-                                            {
-                                                isDragActive ? (
-                                                    <p>{t("transcription.new.dropFilesHintDragActive")}</p>
-                                                ) : (<p>{t("transcription.new.dropFilesHint")}</p>)
+                                            {isDragActive ?
+                                                <p>{t("transcription.new.dropFilesHintDragActive")}</p> :
+                                                <p>{t("transcription.new.dropFilesHint")}</p>
                                             }
                                             <Button>{t("transcription.new.uploadButton")}</Button>
                                         </div>

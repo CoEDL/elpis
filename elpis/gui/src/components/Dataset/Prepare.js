@@ -39,40 +39,46 @@ class DatasetPrepare extends Component {
         const {t, additionalTextFiles, currentEngine, name, status, wordlist} = this.props;
         const {column, direction} = this.state;
         const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true;
-        const listEl = wordlist.length > 0 ? (
-            <Table sortable celled fixed unstackable>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell
-                            sorted={column === "name" ? direction : null}
+        let listEl = null;
+
+        if (wordlist.length > 0) {
+            listEl = (
+                <Table sortable celled fixed unstackable>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell
+                                sorted={column === "name" ? direction : null}
                                 onClick={this.handleSort("name", wordlist)}
-                        >
-                            {t("dataset.prepare.wordlistHeader")}
-                        </Table.HeaderCell>
-                        <Table.HeaderCell
-                            sorted={column === "frequency" ? direction : null}
+                            >
+                                {t("dataset.prepare.wordlistHeader")}
+                            </Table.HeaderCell>
+                            <Table.HeaderCell
+                                sorted={column === "frequency" ? direction : null}
                                 onClick={this.handleSort("frequency", wordlist)}
-                        >
-                            {t("dataset.prepare.frequencyHeader")}
-                        </Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {
-                        wordlist.map(word => {
-                            return (
-                                <Table.Row key={word.name}>
-                                    <Table.Cell>
-                                        {word.name}
-                                    </Table.Cell>
-                                    <Table.Cell>{word.frequency}</Table.Cell>
-                                </Table.Row>
-                            );
-                        })
-                    }
-                </Table.Body>
-            </Table>
-        ) : null;
+                            >
+                                {t("dataset.prepare.frequencyHeader")}
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {
+                            wordlist.map(word => {
+                                return (
+                                    <Table.Row key={word.name}>
+                                        <Table.Cell>
+                                            {word.name}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {word.frequency}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                );
+                            })
+                        }
+                    </Table.Body>
+                </Table>
+            );
+        }
 
         return (
             <div>
@@ -86,11 +92,10 @@ class DatasetPrepare extends Component {
                             <Header as="h1">{t("dataset.prepare.title")}</Header>
                             <CurrentDatasetName />
                             {!currentEngine &&
-                            <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                                <p>{t("engine.common.noCurrentEngineLabel")}</p>
                             }
-                            {/* eslint-disable-next-line no-restricted-globals */}
                             {currentEngine && !name &&
-                            <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
+                                <p>{t("dataset.common.noCurrentDatasetLabel")}</p>
                             }
                             {status === "ready" &&
                                 <p>{t("dataset.prepare.ready")}</p>
@@ -109,10 +114,10 @@ class DatasetPrepare extends Component {
                                     }
                                     <Button
                                         as={Link}
+                                        disabled={interactionDisabled}
                                         to={(currentEngine === "kaldi") ?
                                             urls.gui.pronDict.index :
                                             urls.gui.model.index}
-                                        disabled={interactionDisabled}
                                     >
                                         {t("common.nextButton")}
                                     </Button>
