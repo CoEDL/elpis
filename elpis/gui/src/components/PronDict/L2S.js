@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import {Button,  Grid, Header, Message, Segment} from "semantic-ui-react";
+import {Button, Grid, Header, Message, Segment} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import classNames from "classnames";

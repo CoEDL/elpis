@@ -146,7 +146,7 @@ const mapDispatchToProps = dispatch => ({
     modelNew: (postData, history, redirectAfterModel) => {
         dispatch(modelNew(postData))
             .then(response => {
-                if (response.status===500) {
+                if (response.status === 500) {
                     throw Error(response.error);
                 }
                 return response;

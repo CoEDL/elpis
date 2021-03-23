@@ -54,7 +54,7 @@ const model = (state = initState, action) => {
         case actionTypes.MODEL_SETTINGS_SUCCESS:
             ({data, status} = action.response.data);
             if (status === 200) {
-                return {...state, settings:data.settings};
+                return {...state, settings: data.settings};
             } else {
                 console.log(data);
                 return {...state};

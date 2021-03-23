@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import {useTranslation} from "react-i18next";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";

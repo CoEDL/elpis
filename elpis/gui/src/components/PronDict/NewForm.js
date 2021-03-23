@@ -84,7 +84,7 @@ class NewForm extends Component {
                             {error &&
                                 <p className={"error-message"}>{error}</p>
                             }
-                            <Button type="button" onClick={handleSubmit} disabled={datasets.length===0}>
+                            <Button type="button" onClick={handleSubmit} disabled={datasets.length === 0}>
                                 {t("common.addNewButton")}
                             </Button>
                         </Form>
@@ -110,7 +110,7 @@ const mapDispatchToProps = dispatch => ({
     pronDictNew: (postData, history) => {
         dispatch(pronDictNew(postData))
             .then(response => {
-                if (response.status===500) {
+                if (response.status === 500) {
                     throw Error(response.error);
                 }
                 return response;

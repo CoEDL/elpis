@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import {Dropdown} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import i18next from "i18next";

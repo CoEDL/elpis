@@ -15,7 +15,7 @@ const stepOrderDefinition = [
 ];
 
 export function stepToOrder(stepName) {
-	return stepOrderDefinition.findIndex(v => v===stepName);
+	return stepOrderDefinition.findIndex(v => v === stepName);
 }
 
 // Get the name of the next step according to the stepOrderDefinition variable.
@@ -118,9 +118,9 @@ const sideNav = (state = initialStepModelState, action) => {
 			let rebuiltSteps = {};
 			Object.entries(originalStepsState.steps).forEach(([stepName, step]) => {
 				// Determine this steps situation.
-				let isPastStep =    stepToOrder(stepName)  <  stepToOrder(currentStepName);
+				let isPastStep = stepToOrder(stepName) < stepToOrder(currentStepName);
 				let isCurrentStep = stepToOrder(stepName) === stepToOrder(currentStepName);
-				let isFutureStep =  stepToOrder(stepName)  >  stepToOrder(currentStepName);
+				let isFutureStep = stepToOrder(stepName) > stepToOrder(currentStepName);
 
 				// Determine whether step is to be kept based on selected engine.
 				if (step.engine_specific !== null && step.engine_specific !== state.engine) {
@@ -135,10 +135,10 @@ const sideNav = (state = initialStepModelState, action) => {
 					substep.enabled = false;
 
 					// Determine the substep situation
-					let isPastSubStep =    i  <  currentSubStepIndex;
+					let isPastSubStep = i < currentSubStepIndex;
 					let isCurrentSubStep = i === currentSubStepIndex;
-					let isNextSubStep =    i === currentSubStepIndex + 1;
-					let isLastSubStep =    i === currentSubStepIndex - 1;
+					let isNextSubStep = i === currentSubStepIndex + 1;
+					let isLastSubStep = i === currentSubStepIndex - 1;
 
 					// previous
 					if (isPastStep || (isCurrentStep && isPastSubStep)) {

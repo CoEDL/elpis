@@ -116,7 +116,7 @@ class DatasetPrepare extends Component {
                                         <p>{ t("dataset.prepare.description") }</p>
                                     }
                                     <Button as={Link}
-                                            to={(currentEngine==="kaldi") ? urls.gui.pronDict.index :
+                                            to={(currentEngine === "kaldi") ? urls.gui.pronDict.index :
                                                 urls.gui.model.index}
                                             disabled={interactionDisabled}>
                                         { t("common.nextButton") }
