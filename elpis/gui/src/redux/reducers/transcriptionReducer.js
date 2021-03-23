@@ -29,12 +29,10 @@ const transcription = (state = initState, action) => {
             return { ...state, status, stage_status, type };
 
         case actionTypes.TRANSCRIPTION_GET_TEXT_SUCCESS:
-            var { data } = action.response;
-            return { ...state, text: data };
+            return { ...state, text: action.response.data };
 
         case actionTypes.TRANSCRIPTION_GET_ELAN_SUCCESS:
-            var { data } = action.response;
-            return { ...state, elan: data };
+            return { ...state, elan: action.response.data };
 
         default:
             return { ...state };

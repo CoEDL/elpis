@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Button, Divider, Form, Grid, Header, Input, Message, Segment } from 'semantic-ui-react';
+import { Button, Divider, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { Formik, Field } from 'formik';
@@ -14,7 +14,6 @@ class ModelSettings extends Component {
 
 
     render() {
-        console.log("currentEngine", currentEngine);
         const { t, currentEngine, settings, modelSettings, name } = this.props;
         return (
             <div>
@@ -69,21 +68,15 @@ class ModelSettings extends Component {
                                         }
                                         return errors;
                                     } }
-                                    onSubmit={ (values, { setSubmitting }) => {
+                                    onSubmit={ (values) => {
                                         const postData = {ngram: values.ngram};
                                         modelSettings(postData);
                                         this.props.history.push(urls.gui.model.train);
                                     } }
                                 >
                                     { ({
-                                        values,
-                                        errors,
-                                        dirty,
-                                        touched,
                                         handleSubmit,
                                         handleChange,
-                                        isSubmitting,
-                                        /* and other goodies */
                                     }) => (
                                             <Form onSubmit={handleChange }>
                                                 <Field component="select" name="ngram">

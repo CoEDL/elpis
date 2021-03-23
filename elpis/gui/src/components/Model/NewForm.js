@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Formik, Field, ErrorMessage } from 'formik';
-import { Button, Form, Input, Divider } from 'semantic-ui-react';
+import { Button, Form, Input } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { interfaceObjectNames } from 'redux/actions/configActions';
@@ -58,7 +58,7 @@ class NewForm extends Component {
                     }
                     return errors;
                 }}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values ) => {
                     const filtered_pd = pronDicts.filter(pd => (pd.name == values.pron_dict_name));
                     const modelData = { name: values.name, engine };
                     if (engine === 'kaldi'){
@@ -75,7 +75,6 @@ class NewForm extends Component {
             >
                 {({
                     values,
-                    errors,
                     handleSubmit,
                     handleChange,
                     /* and other goodies */
@@ -152,7 +151,7 @@ const mapDispatchToProps = dispatch => ({
                 }
                 return response;
             })
-            .then(response => {
+            .then(() => {
                 history.push(redirectAfterModel);
             })
             .catch(error => console.log("error", error));

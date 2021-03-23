@@ -160,8 +160,8 @@ const mapDispatchToProps = dispatch => ({
     },
     modelLoad: (modelData, datasetData, pronDictData) => {
         dispatch(modelLoad(modelData))
-            .then( response => dispatch(datasetLoad(datasetData)))
-            .then( response => {
+            .then( () => dispatch(datasetLoad(datasetData)))
+            .then( () => {
                 if (pronDictData.name) {
                     return dispatch(pronDictLoad(pronDictData));
                 } else {

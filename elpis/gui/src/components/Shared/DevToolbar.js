@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React  from 'react';
 import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown';
 
 const DevToolbar = props => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from "react-router-dom";
-import { Button, Divider, Grid, Header, Icon, List, Message, Segment, Input, Form, Label, Popup } from 'semantic-ui-react';
+import { withRouter } from "react-router-dom";
+import { Button, Grid, Header, Icon, List, Message, Segment, Label, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { datasetSettings, datasetPrepare, datasetDelete } from 'redux/actions/datasetActions';
@@ -48,7 +48,6 @@ class DatasetFiles extends Component {
             audioFiles,
             transcriptionFiles,
             additionalTextFiles,
-            importer_name,
             settings,
             ui,
             datasetSettings } = this.props;
@@ -196,7 +195,7 @@ const mapDispatchToProps = dispatch => ({
     },
     datasetPrepare: (history) => {
         dispatch(datasetPrepare(history))
-            .then((response) => {
+            .then(() => {
                 history.push(urls.gui.dataset.prepare);
             });
     },

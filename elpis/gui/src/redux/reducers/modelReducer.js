@@ -12,6 +12,7 @@ const initState = {
 };
 
 const model = (state = initState, action) => {
+    let data, status;
     switch (action.type) {
 
         case actionTypes.MODEL_NEW_SUCCESS:
@@ -51,7 +52,7 @@ const model = (state = initState, action) => {
             return { ...state, modelList: list };
 
         case actionTypes.MODEL_SETTINGS_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status == 200) {
                 return { ...state, settings:data.settings };
             } else {
@@ -61,7 +62,7 @@ const model = (state = initState, action) => {
 
         // crazy, there will be three layers of objects with status properties here!
         case actionTypes.MODEL_TRAIN_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status == 200) {
                 return { ...state, status: data.status };
             } else {
@@ -70,7 +71,7 @@ const model = (state = initState, action) => {
             }
 
         case actionTypes.MODEL_STATUS_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status == 200) {
                 return { ...state, status: data.status, stage_status: data.stage_status };
             } else {
@@ -79,7 +80,7 @@ const model = (state = initState, action) => {
             }
 
         case actionTypes.MODEL_RESULTS_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             console.log(data, status);
             if (status == 200) {
                 return { ...state, results: data.results };

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
-import { Divider, Grid, Header, Segment, Icon, Button, Table, Message, Modal } from 'semantic-ui-react';
+import { Grid, Header, Segment, Table, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { modelResults } from 'redux/actions/modelActions';

@@ -19,11 +19,7 @@ function groupSettingsFromUI(ui) {
 
 
 const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
-    // console.group("GeneratedUI");
-    // console.log({settings});
-    // console.log({ui});
     const { t } = props;
-    const forceUpdate = React.useState()[1].bind(null, {});  // see NOTE above
 
     // On initialisation of component, show the tier name and set it properly
     useEffect(() => {
@@ -39,12 +35,10 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
     }, [ui]);
 
     if (ui === null || ui === undefined) {
-        // console.groupEnd();
         return (<>{t('dataset.files.noSettings')}</>);
     }
 
     const handleStrChange = (ui_name, data) => {
-        // console.log(ui_name, data)
         let newSettings = { ...settings };
         newSettings[ui_name] = data.value;
         changeSettingsCallback(newSettings);
@@ -79,10 +73,10 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
 
         // Construct table rows for group
         group.forEach(ui_name => {
-            // console.group("Row for " + ui_name);
+            // Row
             if (ui['type'][ui_name] === "title") {
                 currentBlock = ui['data'][ui_name]['title'];
-                // console.log("Building title");
+                // Building title
                 header = (
                     <>
                         <Table.Row>
@@ -93,8 +87,8 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                         </Table.Row>
                     </>
                 );
-            } else { // ui['type'][ui_name] == "settings"
-                // console.log("Building input");
+            } else {
+                // Building input
                 let data = ui['data'][ui_name];
                 if (data.shown) {
                     let label = (data.display_name !== null) ? data.display_name : ui_name;
@@ -139,8 +133,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                             // TODO: add a onChange that dispatches the setting (do this for int and string as well)
                             }
                             break;
-                        default: {
-                        }
+                        default: {}
                     }
 
                     // Construct row for individual setting
@@ -153,7 +146,6 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                     settingRows.push(row);
                 }
             }
-            // console.groupEnd();
         });
 
         // Construct table
@@ -171,7 +163,6 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
         );
         tables.push(table);
     });
-    // console.groupEnd();
     return (<>
         <Form>
             {tables}

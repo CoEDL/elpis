@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { engineLoad } from 'redux/actions/engineActions';
-import { setCurrentStep } from 'redux/actions/sideNavActions';
 
 class SelectEngineDropdown extends Component {
 
@@ -17,7 +16,7 @@ class SelectEngineDropdown extends Component {
             _engineLoad(postData);
         };
 
-        let options = list.map((name, i) => ({key: name, text: engineHumanNames[name], value: name}));
+        let options = list.map((name) => ({key: name, text: engineHumanNames[name], value: name}));
 
         return (
             <>

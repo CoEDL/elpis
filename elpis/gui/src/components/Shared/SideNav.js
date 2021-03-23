@@ -11,7 +11,7 @@ import './SideNav.css';
 
 class SideNav extends Component {
 
-	handleStepSelect = (step, i, j) => {
+	handleStepSelect = (step) => {
 		const { history } = this.props;
 		history.push(step.path);
 	}
@@ -31,50 +31,43 @@ class SideNav extends Component {
 					// we'll use that when we call the action to update redux state)
 					Object.entries(steps)
 						.sort((left, right) => (stepToOrder(left[0]) - stepToOrder(right[0])))
+						// eslint-disable-next-line no-unused-vars
 						.map(([_stepName, step], i) => {
+							return (
+								<div key={ i }>
+									<Accordion styled fluid>
+										<Accordion.Content active={ step.enabled || step.doing }>
+											<List relaxed className="stepList">
+												{
+													// for each substep (pass in the step index and the substep index)
+													// we'll use these to target the selected substep in redux
+													step.substeps.map((substep, j) => {
 
-						// step classes - use 'disabled' rather than 'enabled' cause it might have magic power
-						const stepClassNames = classNames({
-							stepDone: step.done,
-							stepDoing: step.doing,
-							disabled: !step.enabled,
-						});
+														// substep classes
+														const substepClassNames = classNames({
+															firstSubstep: j === 0,
+															substepDone: substep.done,
+															substepDoing: substep.doing,
+															disabled: !substep.enabled,
+														});
 
-						return (
-							<div key={ i }>
-								<Accordion styled fluid>
-									<Accordion.Content active={ step.enabled || step.doing }>
-										<List relaxed className="stepList">
-											{
-												// for each substep (pass in the step index and the substep index)
-												// we'll use these to target the selected substep in redux
-												step.substeps.map((substep, j) => {
+														return (
+															<List.Item className={ substepClassNames }
+																onClick={ () => this.handleStepSelect(substep, i, j) }
+																key={ substep.title }>
 
-													// substep classes
-													const substepClassNames = classNames({
-														firstSubstep: j === 0,
-														substepDone: substep.done,
-														substepDoing: substep.doing,
-														disabled: !substep.enabled,
-													});
+																<div style={{ paddingLeft: "1.4em" }}>{t(substep.title)} </div>
 
-													return (
-														<List.Item className={ substepClassNames }
-															onClick={ () => this.handleStepSelect(substep, i, j) }
-															key={ substep.title }>
-
-															<div style={{ paddingLeft: "1.4em" }}>{t(substep.title)} </div>
-
-														</List.Item>
-													);
+															</List.Item>
+														);
+													}
+													)
 												}
-												)
-											}
-										</List>
-									</Accordion.Content>
-								</Accordion>
-							</div>
-						);
+											</List>
+										</Accordion.Content>
+									</Accordion>
+								</div>
+							);
 					})
 				}
 			</Accordion>

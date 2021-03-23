@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
-import { Button, Divider, Dropdown, Form, Grid, Header, Icon, List, Message, Segment } from 'semantic-ui-react';
+import { Button, Dropdown, Form, Grid, Header, Icon, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import classNames from "classnames";
@@ -11,7 +10,6 @@ import {
     transcriptionNew,
     transcriptionStatus,
     transcriptionTranscribe,
-    transcriptionTranscribeAlign,
     transcriptionGetText,
     transcriptionGetElan } from 'redux/actions/transcriptionActions';
 import { modelLoad, modelList } from 'redux/actions/modelActions';
@@ -19,9 +17,8 @@ import { datasetLoad } from 'redux/actions/datasetActions';
 import { engineLoad } from 'redux/actions/engineActions';
 import { pronDictLoad } from 'redux/actions/pronDictActions';
 import Branding from '../Shared/Branding';
-import SideNav from '../Shared/SideNav';
 import CurrentModelName from "../Model/CurrentModelName";
-import urls from 'urls';
+
 
 class NewTranscription extends Component {
     state = {
@@ -60,7 +57,7 @@ class NewTranscription extends Component {
         downloadjs(this.props.elan, 'elan.eaf', 'text/xml');
     }
 
-    onDrop = (acceptedFiles, rejectedFiles) => {
+    onDrop = (acceptedFiles) => {
         var formData = new FormData();
         formData.append('file', acceptedFiles[0]);
         this.props.transcriptionNew(formData);
@@ -173,7 +170,7 @@ class NewTranscription extends Component {
                                     <Message.Header>{t('status.' + status)}</Message.Header>
                                     {stage_status &&
                                     <div className="stages">
-                                        {Object.keys(stage_status).map((stage, i) => {
+                                        {Object.keys(stage_status).map((stage) => {
                                                 let name = stage_status[stage]["name"];
                                                 let status = stage_status[stage]["status"];
                                                 let message = stage_status[stage]["message"];
@@ -234,7 +231,7 @@ const mapDispatchToProps = dispatch => ({
     transcriptionTranscribe: triggerStatusCheck => {
         triggerStatusCheck();
         dispatch(transcriptionTranscribe())
-            .then(response =>{
+            .then(() =>{
                 // This is returned when the transcribe process is done,
                 // because this API call is synchronous.
                 // So we can safely request the text and elan files here
@@ -257,9 +254,9 @@ const mapDispatchToProps = dispatch => ({
     },
     modelLoad: (modelData, datasetData, engineName, pronDictData) => {
         dispatch(engineLoad(engineName))
-            .then(response=> dispatch(modelLoad(modelData)))
-            .then(response => dispatch(datasetLoad(datasetData)))
-            .then(response => dispatch(pronDictLoad(pronDictData)));
+            .then(()=> dispatch(modelLoad(modelData)))
+            .then(() => dispatch(datasetLoad(datasetData)))
+            .then(() => dispatch(pronDictLoad(pronDictData)));
     },
 });
 

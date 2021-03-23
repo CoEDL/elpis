@@ -116,7 +116,7 @@ const sideNav = (state = initialStepModelState, action) => {
 			}
 
 			let rebuiltSteps = {};
-			Object.entries(originalStepsState.steps).forEach(([stepName, step], i) => {
+			Object.entries(originalStepsState.steps).forEach(([stepName, step]) => {
 				// Determine this steps situation.
 				let isPastStep =    stepToOrder(stepName)  <  stepToOrder(currentStepName);
 				let isCurrentStep = stepToOrder(stepName) === stepToOrder(currentStepName);

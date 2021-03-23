@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-import { Button, Container, Divider, Grid, Header, Segment } from 'semantic-ui-react';
+import { Button, Divider, Grid, Header, Segment } from 'semantic-ui-react';
 import { modelLoad, modelList } from 'redux/actions/modelActions';
 import { datasetLoad } from 'redux/actions/datasetActions';
 import { engineLoad } from 'redux/actions/engineActions';
@@ -35,7 +35,7 @@ class ChooseModel extends Component {
 
 
     render() {
-        const { t, currentEngine, list } = this.props;
+        const { t, list } = this.props;
         console.log("list", list);
 
         const modelList = list.map((model, index) => {
@@ -103,9 +103,9 @@ const mapDispatchToProps = dispatch => ({
     },
     _modelLoad: (modelData, datasetData, engineName, pronDictData) => {
         dispatch(engineLoad(engineName))
-            .then(response=> dispatch(modelLoad(modelData)))
-            .then(response => dispatch(datasetLoad(datasetData)))
-            .then(response => dispatch(pronDictLoad(pronDictData)));
+            .then(() => dispatch(modelLoad(modelData)))
+            .then(() => dispatch(datasetLoad(datasetData)))
+            .then(() => dispatch(pronDictLoad(pronDictData)));
     },
 });
 

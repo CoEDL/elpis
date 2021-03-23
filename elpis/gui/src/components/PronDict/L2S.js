@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Button, Divider, Grid, Header, Message, Segment } from 'semantic-ui-react';
+import { Button,  Grid, Header, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import classNames from "classnames";
@@ -14,7 +14,7 @@ import urls from 'urls';
 
 class PronDictL2S extends Component {
 
-    onDrop = (acceptedFiles, rejectedFiles) => {
+    onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
         const { pronDictL2S } = this.props;
         var formData = new FormData();

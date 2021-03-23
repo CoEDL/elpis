@@ -9,7 +9,7 @@ import NewForm from '../Model/NewForm';
 class ModelNew extends Component {
 
     render() {
-        const { t, name, modelNew } = this.props;
+        const { t } = this.props;
         return (
             <div>
                 <Branding />

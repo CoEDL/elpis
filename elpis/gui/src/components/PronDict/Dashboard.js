@@ -45,7 +45,7 @@ class PronDictDashboard extends Component {
     }
 
     render() {
-        const { t, currentEngine, datasetList, name, list } = this.props;
+        const { t, currentEngine, name, list } = this.props;
         const listArray = Array.from(list.keys());
         const { column, direction } = this.state;
         const listEl = list.length > 0 ? (
@@ -151,7 +151,7 @@ const mapDispatchToProps = dispatch => ({
     },
     pronDictLoad: (pronDictData, datasetData) => {
         dispatch(pronDictLoad(pronDictData))
-            .then( response => dispatch(datasetLoad(datasetData)));
+            .then( () => dispatch(datasetLoad(datasetData)));
     },
 });
 

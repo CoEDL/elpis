@@ -14,6 +14,7 @@ const initState = {
 // so then we need to access the properties at data.xyz etc
 
 const pronDict = (state = initState, action) => {
+    let data, status;
     switch (action.type) {
 
         case actionTypes.PRON_DICT_NEW_SUCCESS:
@@ -42,7 +43,7 @@ const pronDict = (state = initState, action) => {
             return {...state, pronDictList: list};
 
         case actionTypes.PRON_DICT_L2S_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status === 200) {
                 return {...state, l2s: data.l2s};
             } else {
@@ -52,7 +53,7 @@ const pronDict = (state = initState, action) => {
 
         case actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS:
         case actionTypes.PRON_DICT_SAVE_LEXICON_SUCCESS:
-            var { data, status } = action.response.data;
+            ({data, status} = action.response.data);
             if (status === 200){
                 return {...state, lexicon: data.lexicon};
             } else {

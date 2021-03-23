@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { Accordion, Dimmer, Loader, Divider, Grid, Header, Segment, Icon, Card, Button, Message, Step } from 'semantic-ui-react';
+import { Accordion, Grid, Header, Segment, Icon, Card, Button, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import ReactTimeout from 'react-timeout';
@@ -39,15 +39,10 @@ class ModelTrain extends Component {
 
     selectAccordion = i => {
         this.setState({...this.state, activeIndex: i });
-        return;
     }
 
     render() {
         const { t, currentEngine, name, settings, status, stage_status } = this.props;
-
-        const loadingIcon = (status === 'training') ? (
-            <Icon name='circle notched' loading  />
-        ) : null;
 
         return (
             <div>
@@ -86,7 +81,6 @@ class ModelTrain extends Component {
                                 }
 
                                 <Message icon>
-                                    {/*{loadingIcon}*/}
                                     <Message.Content className="train-log">
 
                                         {stage_status &&
@@ -98,10 +92,8 @@ class ModelTrain extends Component {
                                             >
                                             {Object.keys(stage_status).map((stage, i) => {
 
-
                                                 let name = stage_status[stage]["name"];
                                                 let status = stage_status[stage]["status"];
-                                                let message = stage_status[stage]["message"];
                                                 let log = stage_status[stage]["log"];
                                                 let icon = (status === "in-progress") ?
                                                     (<Icon name='circle notched' loading />) :

@@ -1,5 +1,4 @@
 import * as actionTypes from '../actionTypes/appActionTypes';
-import urls from 'urls';
 
 const initialEngineState = {
     engine: null,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Formik, ErrorMessage } from 'formik';
-import { Grid, Header, Segment, Form, Input, Button } from 'semantic-ui-react';
+import { Form, Input, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { datasetNew } from 'redux/actions/datasetActions';
@@ -30,20 +30,15 @@ class NewForm extends Component {
                     }
                     return errors;
                 }}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values ) => {
                     const postData = { name: values.name };
                     datasetNew(postData, this.props.history);
                 }}
             >
                 {({
                     values,
-                    errors,
-                    dirty,
-                    touched,
                     handleSubmit,
                     handleChange,
-                    isSubmitting,
-                    /* and other goodies */
                 }) => (
                         <Form onSubmit={handleSubmit}>
                             <Form.Field>
@@ -84,7 +79,7 @@ const mapDispatchToProps = dispatch => ({
                 }
                 return response;
             })
-            .then(response => {
+            .then(() => {
                 history.push(urls.gui.dataset.files);
             })
             .catch(error => console.log("error", error));
