@@ -79,7 +79,9 @@ class ChooseModel extends Component {
                         t("transcription.choose_model.no_models_found")
                     }
 
-                    <Link to={urls.gui.engine.index}>{ t("transcription.choose_model.train_new") }</Link>
+                    <Link to={urls.gui.engine.index}>
+                        { t("transcription.choose_model.train_new") }
+                    </Link>
 
                 </Grid.Column>
                 </Grid.Row>

@@ -43,7 +43,7 @@ const model = (state = initState, action) => {
                 engineName: engine_name,
                 pronDictName: pron_dict_name,
                 settings: {...state.settings, ngram: ngram},
-                results: {}, // TODO include results in model load api
+                results: {},
                 status: "ready",
             };
 

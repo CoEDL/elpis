@@ -67,7 +67,10 @@ class PronDictLexicon extends Component {
                             <>
                                 <Message content={ t("pronDict.lexicon.description") } />
 
-                                <Button as={Link} to={urls.gui.model.index} disabled={interactionDisabled}>
+                                <Button
+                                    as={Link}
+                                    to={urls.gui.model.index}
+                                    disabled={interactionDisabled}>
                                     {t("common.nextButton")}
                                 </Button>
 
@@ -79,9 +82,19 @@ class PronDictLexicon extends Component {
                                             value={lexicon} >
                                         </TextArea>
                                     </Form>
-
-                                    <Button size="tiny" basic onClick={this.generateLexicon} disabled={interactionDisabled}>{ t("pronDict.lexicon.reset") }</Button>
-                                    <Button size="tiny" onClick={this.saveLexicon} disabled={interactionDisabled}>{ t("pronDict.lexicon.save") }</Button>
+                                    <Button
+                                        basic
+                                        size="tiny"
+                                        onClick={this.generateLexicon}
+                                        disabled={interactionDisabled}>
+                                        { t("pronDict.lexicon.reset") }
+                                    </Button>
+                                    <Button
+                                        size="tiny"
+                                        onClick={this.saveLexicon}
+                                        disabled={interactionDisabled}>
+                                        { t("pronDict.lexicon.save") }
+                                    </Button>
 
                                 </div>
 

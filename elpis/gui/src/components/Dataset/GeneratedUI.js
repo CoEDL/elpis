@@ -80,10 +80,14 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                 header = (
                     <>
                         <Table.Row>
-                            <Table.HeaderCell colSpan="2">{t("model.generated.elan." + ui["data"][ui_name]["title"] + ".title")}</Table.HeaderCell>
+                            <Table.HeaderCell colSpan="2">
+                                {t("model.generated.elan." + ui["data"][ui_name]["title"] + ".title")}
+                            </Table.HeaderCell>
                         </Table.Row>
                         <Table.Row>
-                            <Table.HeaderCell colSpan="2" className="description">{t("model.generated.elan." + ui["data"][ui_name]["title"] + ".description")}</Table.HeaderCell>
+                            <Table.HeaderCell colSpan="2" className="description">
+                                {t("model.generated.elan." + ui["data"][ui_name]["title"] + ".description")}
+                            </Table.HeaderCell>
                         </Table.Row>
                     </>
                 );
@@ -138,7 +142,9 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                     // Construct row for individual setting
                     let row = (
                         <Table.Row key={ui_name}>
-                            <Table.Cell collapsing>{t("model.generated.elan." + currentBlock + "." + label)}</Table.Cell>
+                            <Table.Cell collapsing>
+                                {t("model.generated.elan." + currentBlock + "." + label)}
+                            </Table.Cell>
                             <Table.Cell>{dataEntryElement}</Table.Cell>
                         </Table.Row>
                     );

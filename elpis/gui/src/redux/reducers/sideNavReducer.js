@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import * as actionTypes from "../actionTypes/appActionTypes";
 import urls from "urls";
 

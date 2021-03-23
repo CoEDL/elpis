@@ -102,7 +102,7 @@ class NewTranscription extends Component {
 
                         <Grid.Column width={ 12 }>
                             <Header as="h1" text="true">
-                                { t("transcription.new.title") }
+                                {t("transcription.new.title")}
                             </Header>
 
                             {modelName &&
@@ -126,36 +126,38 @@ class NewTranscription extends Component {
                             </Segment>
                             }
 
-                            <Dropzone className="dropzone" onDrop={ this.onDrop } getDataTransferItems={ evt => fromEvent(evt) }>
+                            <Dropzone
+                                className="dropzone"
+                                onDrop={this.onDrop}
+                                getDataTransferItems={ evt => fromEvent(evt) }>
                                 { ({getRootProps, getInputProps, isDragActive}) => {
                                     return (
                                         <div
                                             { ...getRootProps() }
                                             className={ classNames("dropzone", {
                                                 dropzone_active: isDragActive,
-                                            }) }
-                                        >
+                                            }) }>
                                             <input { ...getInputProps() } />
-
                                             {
                                                 isDragActive ? (
-                                                    <p>{ t("transcription.new.dropFilesHintDragActive") } </p>
-                                                ) : (<p>{ t("transcription.new.dropFilesHint") }</p>)
+                                                    <p>{t("transcription.new.dropFilesHintDragActive")}</p>
+                                                ) : (<p>{t("transcription.new.dropFilesHint")}</p>)
                                             }
                                             <Button>{t("transcription.new.uploadButton")}</Button>
                                         </div>
                                     );
-                                } }
+                                }}
                             </Dropzone>
 
                             {uploading && !filename &&
                                 <div className="status">
-                                    <Icon name="circle notched" size="big" loading /> {t("transcription.new.uploading")}
+                                    <Icon name="circle notched" size="big" loading />
+                                    {t("transcription.new.uploading")}
                                 </div>
                             }
 
                             {filename &&
-                                <Segment>{t("transcription.new.usingAudio", {filename})} </Segment>
+                                <Segment>{t("transcription.new.usingAudio", {filename})}</Segment>
                             }
 
                             <Segment>
@@ -169,23 +171,26 @@ class NewTranscription extends Component {
                                 <Message.Content>
                                     <Message.Header>{t("status." + status)}</Message.Header>
                                     {stage_status &&
-                                    <div className="stages">
-                                        {Object.keys(stage_status).map((stage) => {
-                                                let name = stage_status[stage]["name"];
-                                                let status = stage_status[stage]["status"];
-                                                let message = stage_status[stage]["message"];
-                                                return (
-                                                    <p key={stage} className="stage">
-                                                        <span className="name">{t("transcription.engines." + currentEngine + ".stages." + name)}</span>
-                                                        <span className="divider">{status && <>|</>}</span>
-                                                        <span className="status">{t("status." + status)}</span>
-                                                        <span className="divider">{message && <>|</>}</span>
-                                                        <span className="message">{message}</span>
-                                                    </p>
-                                                );
-                                            }
-                                        )}
-                                    </div>
+                                        <div className="stages">
+                                            {Object.keys(stage_status).map((stage) => {
+                                                    let name = stage_status[stage]["name"];
+                                                    let status = stage_status[stage]["status"];
+                                                    let message = stage_status[stage]["message"];
+                                                    return (
+                                                        <p key={stage} className="stage">
+                                                            <span className="name">
+                                                                {t("transcription.engines." +
+                                                                    currentEngine + ".stages." + name)}
+                                                            </span>
+                                                            <span className="divider">{status && <>|</>}</span>
+                                                            <span className="status">{t("status." + status)}</span>
+                                                            <span className="divider">{message && <>|</>}</span>
+                                                            <span className="message">{message}</span>
+                                                        </p>
+                                                    );
+                                                }
+                                            )}
+                                        </div>
                                     }
                                 </Message.Content>
                             </Message>

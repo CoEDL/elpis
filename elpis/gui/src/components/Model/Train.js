@@ -31,9 +31,9 @@ class ModelTrain extends Component {
         if (status === "trained") this.props.clearInterval(this.state.statusInterval);
     }
 
-
     onScroll = () => {
     }
+
     follow = () => {
     }
 
@@ -71,12 +71,13 @@ class ModelTrain extends Component {
 
                             {currentEngine && name &&
                             <>
-
                                 {/* Only Kaldi has settings. Should make this dynamic */}
                                 {currentEngine && currentEngine === "kaldi" &&
                                     <Card fluid>
-                                        <Card.Content header={t("model.train.settingsHeader")}/>
-                                        <Card.Content description={t("model.settings.ngramLabel") + " " + settings.ngram}/>
+                                        <Card.Content
+                                            header={t("model.train.settingsHeader")}/>
+                                        <Card.Content
+                                            description={t("model.settings.ngramLabel") + " " + settings.ngram}/>
                                     </Card>
                                 }
 
@@ -88,8 +89,7 @@ class ModelTrain extends Component {
                                             <Accordion
                                                 fluid
                                                 styled
-                                                exclusive={false}
-                                            >
+                                                exclusive={false}>
                                             {Object.keys(stage_status).map((stage, i) => {
 
                                                 let name = stage_status[stage]["name"];
@@ -101,18 +101,17 @@ class ModelTrain extends Component {
                                                 let stage_status_icon = (status === "complete") ?
                                                     (<Icon name="check" />) :
                                                     ("");
+                                                let active = this.state.activeIndex === i || status === "in-progress";
 
                                                     return (
                                                         <div key={name}>
                                                             <Accordion.Title
                                                               index={i}
-                                                              active={this.state.activeIndex === i || status === "in-progress"}
-                                                              onClick={() => this.selectAccordion(i)}
-                                                            >
+                                                              active={active}
+                                                              onClick={() => this.selectAccordion(i)}>
                                                                 {icon}
                                                                 {name} {stage_status_icon}
                                                             </Accordion.Title>
-
                                                             <Accordion.Content
                                                                 className="accordion_log"
                                                                 active={this.state.activeIndex === i}>
@@ -150,7 +149,6 @@ class ModelTrain extends Component {
                         </Grid.Column>
                     </Grid>
                 </Segment>
-
             </div>
         );
     }

@@ -91,13 +91,18 @@ class NewForm extends Component {
                                 <ErrorMessage component="div" className="error" name="name" />
                             </Form.Field>
 
-                            {/* For Kaldi engines, base the model on the pron dict. Pron dicts have single dataset dependency */}
+                            {/* For Kaldi engines, base the model on the pron dict.
+                                Pron dicts have single dataset dependency */}
                             {engine && engine === "kaldi" &&
                             <Form.Field>
                                 <label>{t("model.new.selectPronDictLabel")}</label>
                                 <Field component="select" name="pron_dict_name">
                                     {pronDicts.map(pronDict =>
-                                        (<option key={pronDict.name} value={pronDict.name}>{pronDict.name} | {pronDict.dataset_name}</option>))
+                                        (<option
+                                            key={pronDict.name}
+                                            value={pronDict.name}>
+                                            {pronDict.name} | {pronDict.dataset_name}
+                                        </option>))
                                     }
                                 </Field>
                             </Form.Field>

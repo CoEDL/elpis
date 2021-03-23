@@ -3,7 +3,9 @@ import urls from "urls";
 
 import * as actionTypes from "../actionTypes/appActionTypes";
 
-const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : "http://" + window.location.host;
+const baseUrl = (process.env.REACT_APP_BASEURL) ?
+    process.env.REACT_APP_BASEURL :
+    "http://" + window.location.host;
 
 
 /* * * * * * * * * * * *  RESET * * * * * * * * * * *  */
@@ -70,7 +72,8 @@ const interfaceObjectNamesFailure = error => ({
 /* * * * * * * * * * * *  Get CONFIG * * * * * * * * * * *  */
 
 // This loads config values that were set when starting the Flask app.
-// This will also return info about the engines. That data should be handled by the engine reducer.
+// This will also return info about the engines.
+// That data should be handled by the engine reducer.
 
 export function configList() {
     const url = baseUrl + urls.api.config.list;
