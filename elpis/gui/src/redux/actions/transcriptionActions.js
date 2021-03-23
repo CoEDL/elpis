@@ -171,4 +171,3 @@ const transcriptionGetElanFailure = error => ({
     type: actionTypes.TRANSCRIPTION_GET_ELAN_FAILURE,
     response: { error }
 });
-
