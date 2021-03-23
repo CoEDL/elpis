@@ -23,12 +23,12 @@ class PronDictLexicon extends Component {
     }
 
     saveLexicon = () => {
-        const data = { "lexicon": this.props.lexicon };
+        const data = { lexicon: this.props.lexicon };
         this.props.pronDictSaveLexicon(data);
     }
 
     handleChange = (event) => {
-        this.props.pronDictUpdateLexicon( { "lexicon": event.target.value } );
+        this.props.pronDictUpdateLexicon( { lexicon: event.target.value } );
     }
 
 
@@ -101,7 +101,7 @@ const mapStateToProps = (state) => {
         name: state.pronDict.name,
         l2s: state.pronDict.l2s,
         lexicon: state.pronDict.lexicon,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 
@@ -116,7 +116,7 @@ const mapDispatchToProps = dispatch => ({
     },
     pronDictUpdateLexicon: data => {
         dispatch(pronDictUpdateLexicon(data));
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

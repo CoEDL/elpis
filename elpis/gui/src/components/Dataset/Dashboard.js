@@ -15,7 +15,7 @@ class DatasetDashboard extends Component {
 
     state = {
         column: null,
-        reverse: false
+        reverse: false,
     }
 
     componentDidMount() {
@@ -31,9 +31,7 @@ class DatasetDashboard extends Component {
             });
             arraySort(data, clickedColumn, { reverse: false });
         } else {
-            this.setState({
-                reverse: ! this.state.reverse
-            });
+            this.setState({reverse: ! this.state.reverse});
             arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
         }
     }
@@ -132,7 +130,7 @@ const mapStateToProps = state => {
     return {
         list: state.dataset.datasetList,
         name: state.dataset.name,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 
@@ -146,7 +144,7 @@ const mapDispatchToProps = dispatch => ({
                 // console.log("Dashboard got datasetLoad", response)
             })
             .catch(error => console.log("error", error));
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

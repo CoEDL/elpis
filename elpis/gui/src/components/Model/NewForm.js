@@ -45,7 +45,7 @@ class NewForm extends Component {
                 initialValues={{
                     name: 'm',
                     dataset_name: defaultDatasetName,
-                    pron_dict_name: defaultPronDictName
+                    pron_dict_name: defaultPronDictName,
                 }}
                 validate={values => {
                     let errors = {};
@@ -77,7 +77,7 @@ class NewForm extends Component {
                     values,
                     errors,
                     handleSubmit,
-                    handleChange
+                    handleChange,
                     /* and other goodies */
                 }) => (
                         <Form onSubmit={handleSubmit}>
@@ -137,7 +137,7 @@ const mapStateToProps = state => {
         pronDicts: state.config.pronDictList,
         currentDataset: state.dataset.name,
         currentPronDict: state.pronDict.name,
-        error: state.model.error
+        error: state.model.error,
     };
 };
 const mapDispatchToProps = dispatch => ({
@@ -156,7 +156,7 @@ const mapDispatchToProps = dispatch => ({
                 history.push(redirectAfterModel);
             })
             .catch(error => console.log("error", error));
-    }
+    },
 });
 export default withRouter(connect(
     mapStateToProps, mapDispatchToProps)(

@@ -73,7 +73,7 @@ class PronDictL2S extends Component {
                                                 <div
                                                     {...getRootProps()}
                                                     className={classNames("dropzone", {
-                                                        "dropzone_active": isDragActive
+                                                        dropzone_active: isDragActive,
                                                     })}
                                                 >
                                                     <input {...getInputProps()} />
@@ -115,14 +115,14 @@ const mapStateToProps = state => {
     return {
         l2s: state.pronDict.l2s,
         name: state.pronDict.name,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     pronDictL2S: postData => {
         dispatch(pronDictL2S(postData));
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

@@ -40,7 +40,7 @@ class PronDictNew extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.pronDict.name
+        name: state.pronDict.name,
     };
 };
 

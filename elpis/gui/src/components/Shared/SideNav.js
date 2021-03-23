@@ -37,7 +37,7 @@ class SideNav extends Component {
 						const stepClassNames = classNames({
 							stepDone: step.done,
 							stepDoing: step.doing,
-							disabled: !step.enabled
+							disabled: !step.enabled,
 						});
 
 						return (
@@ -55,7 +55,7 @@ class SideNav extends Component {
 														firstSubstep: j === 0,
 														substepDone: substep.done,
 														substepDoing: substep.doing,
-														disabled: !substep.enabled
+														disabled: !substep.enabled,
 													});
 
 													return (
@@ -85,14 +85,14 @@ class SideNav extends Component {
 const mapStateToProps = (state, ownProps) => {
 	return {
 		steps: state.sideNav.steps,
-		ownProps: ownProps
+		ownProps: ownProps,
 	};
 };
 
 const mapDispatchToProps = dispatch => ({
 	setCurrentStep: (urlParams) => {
 		dispatch(setCurrentStep(urlParams));
-	}
+	},
 });
 
 export default withRouter(

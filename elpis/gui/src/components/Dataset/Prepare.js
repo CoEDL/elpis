@@ -13,7 +13,7 @@ class DatasetPrepare extends Component {
 
     state = {
         column: null,
-        reverse: false
+        reverse: false,
     }
 
     componentDidMount() {
@@ -30,7 +30,7 @@ class DatasetPrepare extends Component {
             arraySort(data, clickedColumn, { reverse: false });
         } else {
             this.setState({
-                reverse: ! this.state.reverse
+                reverse: ! this.state.reverse,
             });
             arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
         }
@@ -140,7 +140,7 @@ const mapStateToProps = state => {
         currentEngine: state.engine.engine,
         wordlist: state.dataset.wordlist,
         additionalTextFiles: state.dataset.additionalTextFiles,
-        status: state.dataset.status
+        status: state.dataset.status,
     };
 };
 

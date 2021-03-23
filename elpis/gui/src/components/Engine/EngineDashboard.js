@@ -36,7 +36,7 @@ const EngineDashboard = props => {
 const mapStateToProps = state => {
     return {
         list: state.engine.engine_list,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 

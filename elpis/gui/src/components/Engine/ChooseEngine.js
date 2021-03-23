@@ -74,7 +74,7 @@ const mapDispatchToProps = dispatch => ({
         .then(response => {
             history.push(urls.gui.dataset.index);
            });
-    }
+    },
 });
 
 export default

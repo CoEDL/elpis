@@ -6,11 +6,9 @@ const initState = {
     datasetName: '',
     pronDictName: '',
     results: null,
-    settings: {
-        ngram: 1
-    },
+    settings: {ngram: 1},
     status: 'ready',
-    stage_status: null
+    stage_status: null,
 };
 
 const model = (state = initState, action) => {
@@ -20,7 +18,7 @@ const model = (state = initState, action) => {
             if (action.response.data.status==500){
                 return { ...initState,
                     status: action.response.data.status,
-                    error: action.response.data.error
+                    error: action.response.data.error,
                 };
             } else {
                 const {name, dataset_name, pron_dict_name} = action.response.data.data.config;
@@ -29,7 +27,7 @@ const model = (state = initState, action) => {
                     ...initState,
                     name,
                     datasetName: dataset_name,
-                    pronDictName: pron_dict_name
+                    pronDictName: pron_dict_name,
                 };
             }
 
@@ -45,7 +43,7 @@ const model = (state = initState, action) => {
                 pronDictName: pron_dict_name,
                 settings: {...state.settings, ngram: ngram},
                 results: {}, // TODO include results in model load api
-                status: 'ready'
+                status: 'ready',
             };
 
         case actionTypes.MODEL_LIST_SUCCESS:

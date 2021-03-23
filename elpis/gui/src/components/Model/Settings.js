@@ -56,7 +56,7 @@ class ModelSettings extends Component {
                                     className="attached"
                                     enableReinitialize
                                     initialValues={ {
-                                        ngram: settings.ngram
+                                        ngram: settings.ngram,
                                     } }
                                     validate={ values => {
                                         let errors = {};
@@ -115,14 +115,14 @@ const mapStateToProps = state => {
     return {
         name: state.model.name,
         settings: state.model.settings,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     modelSettings: postData => {
         dispatch(modelSettings(postData));
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

@@ -93,7 +93,7 @@ class ChooseModel extends Component {
 const mapStateToProps = state => {
     return {
         list: state.model.modelList,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 
@@ -106,8 +106,7 @@ const mapDispatchToProps = dispatch => ({
             .then(response=> dispatch(modelLoad(modelData)))
             .then(response => dispatch(datasetLoad(datasetData)))
             .then(response => dispatch(pronDictLoad(pronDictData)));
-    }
-
+    },
 });
 
 export default

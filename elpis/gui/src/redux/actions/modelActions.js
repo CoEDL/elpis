@@ -27,15 +27,15 @@ export function modelNew(postData) {
 }
 
 const modelNewStarted = () => ({
-    type: actionTypes.MODEL_NEW_STARTED
+    type: actionTypes.MODEL_NEW_STARTED,
 });
 const modelNewSuccess = response => ({
     type: actionTypes.MODEL_NEW_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const modelNewFailure = error => ({
     type: actionTypes.MODEL_NEW_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -60,15 +60,15 @@ export function modelLoad(postData) {
 }
 
 const modelLoadStarted = () => ({
-    type: actionTypes.MODEL_LOAD_STARTED
+    type: actionTypes.MODEL_LOAD_STARTED,
 });
 const modelLoadSuccess = response => ({
     type: actionTypes.MODEL_LOAD_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const modelLoadFailure = error => ({
     type: actionTypes.MODEL_LOAD_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -93,15 +93,15 @@ export function modelList() {
 }
 
 const modelListStarted = () => ({
-    type: actionTypes.MODEL_LIST_STARTED
+    type: actionTypes.MODEL_LIST_STARTED,
 });
 const modelListSuccess = response => ({
     type: actionTypes.MODEL_LIST_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const modelListFailure = error => ({
     type: actionTypes.MODEL_LIST_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -126,15 +126,15 @@ export function modelSettings(postData) {
 }
 
 const modelSettingsStarted = () => ({
-    type: actionTypes.MODEL_SETTINGS_STARTED
+    type: actionTypes.MODEL_SETTINGS_STARTED,
 });
 const modelSettingsSuccess = response => ({
     type: actionTypes.MODEL_SETTINGS_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const modelSettingsFailure = error => ({
     type: actionTypes.MODEL_SETTINGS_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -159,15 +159,15 @@ export function modelTrain() {
 }
 
 const modelTrainStarted = () => ({
-    type: actionTypes.MODEL_TRAIN_STARTED
+    type: actionTypes.MODEL_TRAIN_STARTED,
 });
 const modelTrainSuccess = response => ({
     type: actionTypes.MODEL_TRAIN_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const modelTrainFailure = error => ({
     type: actionTypes.MODEL_TRAIN_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -192,15 +192,15 @@ export function modelStatus() {
 }
 
 const modelStatusStarted = () => ({
-    type: actionTypes.MODEL_STATUS_STARTED
+    type: actionTypes.MODEL_STATUS_STARTED,
 });
 const modelStatusSuccess = response => ({
     type: actionTypes.MODEL_STATUS_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const modelStatusFailure = error => ({
     type: actionTypes.MODEL_STATUS_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -225,13 +225,13 @@ export function modelResults() {
 }
 
 const modelResultsStarted = () => ({
-    type: actionTypes.MODEL_RESULTS_STARTED
+    type: actionTypes.MODEL_RESULTS_STARTED,
 });
 const modelResultsSuccess = response => ({
     type: actionTypes.MODEL_RESULTS_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const modelResultsFailure = error => ({
     type: actionTypes.MODEL_RESULTS_FAILURE,
-    response: { error }
+    response: { error },
 });

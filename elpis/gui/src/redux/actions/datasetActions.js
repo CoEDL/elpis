@@ -27,15 +27,15 @@ export function datasetNew(postData) {
 }
 
 const datasetNewStarted = () => ({
-    type: actionTypes.DATASET_NEW_STARTED
+    type: actionTypes.DATASET_NEW_STARTED,
 });
 const datasetNewSuccess = response => ({
     type: actionTypes.DATASET_NEW_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const datasetNewFailure = error => ({
     type: actionTypes.DATASET_NEW_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -60,15 +60,15 @@ export function datasetLoad(postData) {
 }
 
 const datasetLoadStarted = () => ({
-    type: actionTypes.DATASET_LOAD_STARTED
+    type: actionTypes.DATASET_LOAD_STARTED,
 });
 const datasetLoadSuccess = response => ({
     type: actionTypes.DATASET_LOAD_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const datasetLoadFailure = error => ({
     type: actionTypes.DATASET_LOAD_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -93,15 +93,15 @@ export function datasetList() {
 }
 
 const datasetListStarted = () => ({
-    type: actionTypes.DATASET_LIST_STARTED
+    type: actionTypes.DATASET_LIST_STARTED,
 });
 const datasetListSuccess = response => ({
     type: actionTypes.DATASET_LIST_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const datasetListFailure = error => ({
     type: actionTypes.DATASET_LIST_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -130,15 +130,15 @@ export function datasetFiles(postData) {
 }
 
 const datasetFilesStarted = () => ({
-    type: actionTypes.DATASET_FILES_STARTED
+    type: actionTypes.DATASET_FILES_STARTED,
 });
 const datasetFilesSuccess = response => ({
     type: actionTypes.DATASET_FILES_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const datasetFilesFailure = error => ({
     type: actionTypes.DATASET_FILES_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 /* * * * * * * * * * * *  FILES DELETE * * * * * * * * * * *  */
@@ -164,15 +164,15 @@ export function datasetDelete(postData) {
 }
 
 const datasetDeleteStarted = () => ({
-    type: actionTypes.DATASET_DELETE_STARTED
+    type: actionTypes.DATASET_DELETE_STARTED,
 });
 const datasetDeleteSuccess = response => ({
     type: actionTypes.DATASET_DELETE_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const datasetDeleteFailure = error => ({
     type: actionTypes.DATASET_DELETE_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 /* * * * * * * * * * * *  SETTINGS * * * * * * * * * * *  */
@@ -196,15 +196,15 @@ export function datasetSettings(postData) {
 }
 
 const datasetSettingsStarted = () => ({
-    type: actionTypes.DATASET_SETTINGS_STARTED
+    type: actionTypes.DATASET_SETTINGS_STARTED,
 });
 const datasetSettingsSuccess = response => ({
     type: actionTypes.DATASET_SETTINGS_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const datasetSettingsFailure = error => ({
     type: actionTypes.DATASET_SETTINGS_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -229,15 +229,15 @@ export function datasetPrepare() {
 }
 
 const datasetPrepareStarted = () => ({
-    type: actionTypes.DATASET_PREPARE_STARTED
+    type: actionTypes.DATASET_PREPARE_STARTED,
 });
 const datasetPrepareSuccess = response => ({
     type: actionTypes.DATASET_PREPARE_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const datasetPrepareFailure = error => ({
     type: actionTypes.DATASET_PREPARE_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -261,13 +261,13 @@ export function datasetUIUpdate() {
 }
 
 const datasetUIUpdateStarted = () => ({
-    type: actionTypes.DATASET_UI_UPDATE_STARTED
+    type: actionTypes.DATASET_UI_UPDATE_STARTED,
 });
 const datasetUIUpdateSuccess = response => ({
     type: actionTypes.DATASET_UI_UPDATE_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const datasetUIUpdateFailure = error => ({
     type: actionTypes.DATASET_UI_UPDATE_FAILURE,
-    response: { error }
+    response: { error },
 });

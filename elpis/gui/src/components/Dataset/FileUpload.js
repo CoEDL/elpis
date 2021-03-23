@@ -37,7 +37,7 @@ class FileUpload extends Component {
                             <div
                                 { ...getRootProps() }
                                 className={ classNames("dropzone", {
-                                    "dropzone_active": isDragActive
+                                    dropzone_active: isDragActive,
                                 }) }
                             >
                                 <input { ...getInputProps() } />
@@ -60,7 +60,7 @@ class FileUpload extends Component {
 const mapDispatchToProps = dispatch => ({
     datasetFiles: postData => {
         dispatch(datasetFiles(postData));
-    }
+    },
 });
 
 export default connect(null, mapDispatchToProps)(

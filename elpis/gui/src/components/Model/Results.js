@@ -139,14 +139,14 @@ const mapStateToProps = state => {
     return {
         name: state.model.name,
         results: state.model.results,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     modelResults: () => {
         dispatch(modelResults());
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

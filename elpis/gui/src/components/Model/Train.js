@@ -14,7 +14,7 @@ class ModelTrain extends Component {
 
     state = {
         statusInterval: null,
-        activeIndex: null
+        activeIndex: null,
     }
 
     componentDidMount = () => {
@@ -170,7 +170,7 @@ const mapStateToProps = state => {
         settings: state.model.settings,
         status: state.model.status,
         stage_status: state.model.stage_status,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 const mapDispatchToProps = dispatch => ({

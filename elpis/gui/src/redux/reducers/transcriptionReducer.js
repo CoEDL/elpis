@@ -6,7 +6,7 @@ const initState = {
     stage_status: null,
     type: null,
     text: null,
-    elan: null
+    elan: null,
 };
 
 const transcription = (state = initState, action) => {
@@ -21,7 +21,7 @@ const transcription = (state = initState, action) => {
             return {
                 ...state,
                 type: 'text',
-                status: 'transcribing'
+                status: 'transcribing',
             };
 
         case actionTypes.TRANSCRIPTION_STATUS_SUCCESS:

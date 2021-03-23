@@ -25,7 +25,7 @@ import urls from 'urls';
 
 class NewTranscription extends Component {
     state = {
-        uploading: false
+        uploading: false,
     }
 
     statusInterval = null
@@ -84,9 +84,9 @@ class NewTranscription extends Component {
         // Only show trained models
         const listTrained = list.filter(model => model.status === 'trained');
         const listOptions = listTrained.map(model => ({
-            "key": model.name,
-            "value": model.name,
-            "text": model.name
+            key: model.name,
+            value: model.name,
+            text: model.name,
         }));
 
         // prevent the buttons from being clicked if we haven't got an active model, or file to transcribe
@@ -135,7 +135,7 @@ class NewTranscription extends Component {
                                         <div
                                             { ...getRootProps() }
                                             className={ classNames("dropzone", {
-                                                "dropzone_active": isDragActive
+                                                dropzone_active: isDragActive,
                                             }) }
                                         >
                                             <input { ...getInputProps() } />
@@ -224,7 +224,7 @@ const mapStateToProps = state => {
         stage_status: state.transcription.stage_status,
         text: state.transcription.text,
         elan: state.transcription.elan,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 const mapDispatchToProps = dispatch => ({
@@ -260,7 +260,7 @@ const mapDispatchToProps = dispatch => ({
             .then(response=> dispatch(modelLoad(modelData)))
             .then(response => dispatch(datasetLoad(datasetData)))
             .then(response => dispatch(pronDictLoad(pronDictData)));
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

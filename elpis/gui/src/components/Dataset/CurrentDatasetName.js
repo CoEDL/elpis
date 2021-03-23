@@ -59,7 +59,7 @@ const mapStateToProps = state => {
         name: state.dataset.name,
         datasetList: state.dataset.datasetList,
         currentEngine: state.engine.engine,
-        engineHumanNames: state.engine.engine_human_names
+        engineHumanNames: state.engine.engine_human_names,
     };
 };
 export default withRouter(

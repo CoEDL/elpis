@@ -63,7 +63,7 @@ const mapStateToProps = state => {
         datasetName: state.dataset.name,
         pronDictList: state.pronDict.pronDictList,
         currentEngine: state.engine.engine,
-        engineHumanNames: state.engine.engine_human_names
+        engineHumanNames: state.engine.engine_human_names,
     };
 };
 export default withRouter(

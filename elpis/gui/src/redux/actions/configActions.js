@@ -27,7 +27,7 @@ export const configReset = () => {
 // reducer for this is in store.js
 const configResetSuccess = response => ({
     type: actionTypes.APP_CONFIG_RESET,
-    response: { ...response }
+    response: { ...response },
 });
 
 
@@ -55,15 +55,15 @@ export function interfaceObjectNames() {
 }
 
 const interfaceObjectNamesStarted = () => ({
-    type: actionTypes.CONFIG_OBJECT_NAMES_STARTED
+    type: actionTypes.CONFIG_OBJECT_NAMES_STARTED,
 });
 const interfaceObjectNamesSuccess = response => ({
     type: actionTypes.CONFIG_OBJECT_NAMES_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const interfaceObjectNamesFailure = error => ({
     type: actionTypes.CONFIG_OBJECT_NAMES_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -93,18 +93,18 @@ export function configList() {
 }
 
 const configListStarted = () => ({
-    type: actionTypes.CONFIG_LIST_STARTED
+    type: actionTypes.CONFIG_LIST_STARTED,
 });
 const configListSuccess = response => ({
     type: actionTypes.CONFIG_LIST_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const configListFailure = error => ({
     type: actionTypes.CONFIG_LIST_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 const engineListSuccess = response => ({
     type: actionTypes.ENGINE_LIST_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });

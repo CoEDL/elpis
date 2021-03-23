@@ -16,7 +16,7 @@ class PronDictDashboard extends Component {
 
     state = {
         column: null,
-        reverse: false
+        reverse: false,
     }
 
     componentDidMount() {
@@ -32,9 +32,7 @@ class PronDictDashboard extends Component {
             });
             arraySort(data, clickedColumn, { reverse: false });
         } else {
-            this.setState({
-                reverse: ! this.state.reverse
-            });
+            this.setState({reverse: ! this.state.reverse});
             arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
         }
     }
@@ -142,7 +140,7 @@ const mapStateToProps = state => {
     return {
         list: state.pronDict.pronDictList,
         name: state.pronDict.name,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 
@@ -154,7 +152,7 @@ const mapDispatchToProps = dispatch => ({
     pronDictLoad: (pronDictData, datasetData) => {
         dispatch(pronDictLoad(pronDictData))
             .then( response => dispatch(datasetLoad(datasetData)));
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

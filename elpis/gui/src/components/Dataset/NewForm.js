@@ -17,7 +17,7 @@ class NewForm extends Component {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    name: 'ds'
+                    name: 'ds',
                 }}
                 validate={values => {
                     let errors = {};
@@ -72,7 +72,7 @@ class NewForm extends Component {
 const mapStateToProps = state => {
     return {
         name: state.dataset.name,
-        error: state.dataset.error
+        error: state.dataset.error,
     };
 };
 const mapDispatchToProps = dispatch => ({
@@ -88,7 +88,7 @@ const mapDispatchToProps = dispatch => ({
                 history.push(urls.gui.dataset.files);
             })
             .catch(error => console.log("error", error));
-    }
+    },
 });
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(NewForm)

@@ -29,15 +29,15 @@ export const engineLoad = (postData) => {
 };
 
 const engineLoadStarted = () => ({
-    type: actionTypes.ENGINE_LOAD_STARTED
+    type: actionTypes.ENGINE_LOAD_STARTED,
 });
 const engineLoadSuccess = response => ({
     type: actionTypes.ENGINE_LOAD_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const engineLoadFailure = error => ({
     type: actionTypes.ENGINE_LOAD_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -62,13 +62,13 @@ export function engineList() {
 }
 
 const engineListStarted = () => ({
-    type: actionTypes.ENGINE_LIST_STARTED
+    type: actionTypes.ENGINE_LIST_STARTED,
 });
 const engineListSuccess = response => ({
     type: actionTypes.ENGINE_LIST_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const engineListFailure = error => ({
     type: actionTypes.ENGINE_LIST_FAILURE,
-    response: { error }
+    response: { error },
 });

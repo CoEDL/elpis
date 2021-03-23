@@ -17,7 +17,7 @@ class ModelDashboard extends Component {
 
     state = {
         column: null,
-        reverse: false
+        reverse: false,
     }
 
     componentDidMount() {
@@ -33,9 +33,7 @@ class ModelDashboard extends Component {
             });
             arraySort(data, clickedColumn, { reverse: false });
         } else {
-            this.setState({
-                reverse: ! this.state.reverse
-            });
+            this.setState({reverse: ! this.state.reverse});
             arraySort(data, clickedColumn, { reverse: ! this.state.reverse });
         }
     }
@@ -152,7 +150,7 @@ const mapStateToProps = state => {
     return {
         name: state.model.name,
         list: state.model.modelList,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 
@@ -170,7 +168,7 @@ const mapDispatchToProps = dispatch => ({
                     console.log("No pron dict to load for this model");
                 }
             });
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

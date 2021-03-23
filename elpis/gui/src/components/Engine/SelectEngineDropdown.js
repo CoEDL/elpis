@@ -42,14 +42,14 @@ const mapStateToProps = state => {
     return {
         list: state.engine.engine_list,
         currentEngine: state.engine.engine,
-        engineHumanNames: state.engine.engine_human_names
+        engineHumanNames: state.engine.engine_human_names,
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     _engineLoad: postData => {
         dispatch(engineLoad(postData));
-    }
+    },
 });
 
 export default

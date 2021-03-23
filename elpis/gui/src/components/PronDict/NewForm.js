@@ -31,7 +31,7 @@ class NewForm extends Component {
                 enableReinitialize
                 initialValues={{
                     name: 'pd',
-                    dataset_name: defaultDatasetName
+                    dataset_name: defaultDatasetName,
                 }}
                 validate={values => {
                     let errors = {};
@@ -101,7 +101,7 @@ const mapStateToProps = state => {
         currentDataset: state.dataset.name,
         datasets: state.dataset.datasetList,
         error: state.pronDict.error,
-        currentEngine: state.engine.engine
+        currentEngine: state.engine.engine,
     };
 };
 const mapDispatchToProps = dispatch => ({
@@ -120,7 +120,7 @@ const mapDispatchToProps = dispatch => ({
                 history.push(urls.gui.pronDict.l2s);
             })
             .catch(error => console.log("error", error));
-    }
+    },
 });
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(NewForm)

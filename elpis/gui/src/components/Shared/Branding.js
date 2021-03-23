@@ -63,7 +63,7 @@ const mapStateToProps = state => {
     return {
         currentEngine: state.engine.engine,
         engineHumanNames: state.engine.engine_human_names,
-        dev_mode: state.config.app_config.dev_mode
+        dev_mode: state.config.app_config.dev_mode,
     };
 };
 
@@ -72,7 +72,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(configReset(postData))
             .then(response => console.log("reset OK", response))
             .catch(error => console.log("reset failed", error));
-    }
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

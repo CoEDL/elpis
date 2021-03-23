@@ -27,15 +27,15 @@ export function pronDictNew(postData) {
 }
 
 const pronDictNewStarted = () => ({
-    type: actionTypes.PRON_DICT_NEW_STARTED
+    type: actionTypes.PRON_DICT_NEW_STARTED,
 });
 const pronDictNewSuccess = response => ({
     type: actionTypes.PRON_DICT_NEW_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const pronDictNewFailure = error => ({
     type: actionTypes.PRON_DICT_NEW_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -60,15 +60,15 @@ export function pronDictLoad(postData) {
 }
 
 const pronDictLoadStarted = () => ({
-    type: actionTypes.PRON_DICT_LOAD_STARTED
+    type: actionTypes.PRON_DICT_LOAD_STARTED,
 });
 const pronDictLoadSuccess = response => ({
     type: actionTypes.PRON_DICT_LOAD_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const pronDictLoadFailure = error => ({
     type: actionTypes.PRON_DICT_LOAD_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -93,15 +93,15 @@ export function pronDictList() {
 }
 
 const pronDictListStarted = () => ({
-    type: actionTypes.PRON_DICT_LIST_STARTED
+    type: actionTypes.PRON_DICT_LIST_STARTED,
 });
 const pronDictListSuccess = response => ({
     type: actionTypes.PRON_DICT_LIST_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const pronDictListFailure = error => ({
     type: actionTypes.PRON_DICT_LIST_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -127,15 +127,15 @@ export function pronDictL2S(postData) {
 }
 
 const pronDictL2SStarted = () => ({
-    type: actionTypes.PRON_DICT_L2S_STARTED
+    type: actionTypes.PRON_DICT_L2S_STARTED,
 });
 const pronDictL2SSuccess = response => ({
     type: actionTypes.PRON_DICT_L2S_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const pronDictL2SFailure = error => ({
     type: actionTypes.PRON_DICT_L2S_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -160,15 +160,15 @@ export function pronDictBuildLexicon() {
 }
 
 const pronDictBuildLexiconStarted = () => ({
-    type: actionTypes.PRON_DICT_BUILD_LEXICON_STARTED
+    type: actionTypes.PRON_DICT_BUILD_LEXICON_STARTED,
 });
 const pronDictBuildLexiconSuccess = response => ({
     type: actionTypes.PRON_DICT_BUILD_LEXICON_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const pronDictBuildLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_BUILD_LEXICON_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -193,15 +193,15 @@ export function pronDictSaveLexicon(postData) {
 }
 
 const pronDictSaveLexiconStarted = () => ({
-    type: actionTypes.PRON_DICT_SAVE_LEXICON_STARTED
+    type: actionTypes.PRON_DICT_SAVE_LEXICON_STARTED,
 });
 const pronDictSaveLexiconSuccess = response => ({
     type: actionTypes.PRON_DICT_SAVE_LEXICON_SUCCESS,
-    response: { ...response }
+    response: { ...response },
 });
 const pronDictSaveLexiconFailure = error => ({
     type: actionTypes.PRON_DICT_SAVE_LEXICON_FAILURE,
-    response: { error }
+    response: { error },
 });
 
 
@@ -209,5 +209,5 @@ const pronDictSaveLexiconFailure = error => ({
 
 export const pronDictUpdateLexicon = data => ({
     type: actionTypes.PRON_DICT_UPDATE_LEXICON,
-    data
+    data,
 });

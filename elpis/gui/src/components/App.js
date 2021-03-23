@@ -69,7 +69,7 @@ class App extends Component {
 const mapDispatchToProps = dispatch => ({
     _configList: () => {
         dispatch(configList());
-    }
+    },
 });
 
 export default connect(null, mapDispatchToProps)(App);

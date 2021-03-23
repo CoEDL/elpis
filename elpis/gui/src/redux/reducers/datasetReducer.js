@@ -12,7 +12,7 @@ const initState = {
     settings: null,
     ui: null,
     wordlist: {},
-    error: ''
+    error: '',
 };
 
 let audioFiles = [];
@@ -31,14 +31,12 @@ const dataset = (state = initState, action) => {
             if (action.response.data.status==500){
                 return { ...initState,
                     status: action.response.data.status,
-                    error: action.response.data.error
+                    error: action.response.data.error,
                 };
             } else {
                 let dataset_state = action.response.data.data.state;
                 let name = dataset_state.name;
-                return { ...initState,
-                    name
-                };
+                return { ...initState, name };
             }
         }
 
@@ -79,7 +77,7 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_LIST_SUCCESS:
             return {
                 ...state,
-                datasetList: action.response.data.data.list
+                datasetList: action.response.data.data.list,
             };
 
         case actionTypes.DATASET_FILES_STARTED:
@@ -103,7 +101,7 @@ const dataset = (state = initState, action) => {
                     additionalTextFiles,
                     settings: data.settings,
                     ui: data.ui,
-                    importer_name: data.importer_name
+                    importer_name: data.importer_name,
                 };
             } else {
                 return { ...state, status: 'ready' };
@@ -129,7 +127,7 @@ const dataset = (state = initState, action) => {
             if (status === 200) {
                 return {
                     ...state,
-                    settings: { ...state.settings, ...data.settings }
+                    settings: { ...state.settings, ...data.settings },
                 };
             } else {
                 console.log(data);
@@ -139,10 +137,7 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_UI_UPDATE_SUCCESS:
             var { data, status } = action.response.data;
             if (status == 200) {
-                return {
-                    ...state,
-                    ui: data.ui
-                };
+                return {...state, ui: data.ui};
             }
 
         case actionTypes.DATASET_PREPARE_SUCCESS:
@@ -153,7 +148,7 @@ const dataset = (state = initState, action) => {
                 const wordlist = Object.keys(wordlistObj).map( key => {
                     return ({ name: key, frequency: wordlistObj[key] });
                 });
-                if (wordlist.length > 0) return { ...state, wordlist, "status": "wordlist-prepared"};
+                if (wordlist.length > 0) return { ...state, wordlist, status: "wordlist-prepared"};
                 else return { ...state };
             } else {
                 // Errors are formatted as { status: code, data: message }
