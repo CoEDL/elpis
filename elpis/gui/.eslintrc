@@ -10,6 +10,14 @@
   "rules": {
     "react/prop-types": "off",
     "semi": ["error","always"],
-    "eol-last": ["error", "always"]
+    "eol-last": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
+    "quote-props": ["warn", "as-needed"]
+  },
+  "globals": {
+    "document": true,
+    "console": true,
+    "window": true,
+    "process": true
   }
 }
