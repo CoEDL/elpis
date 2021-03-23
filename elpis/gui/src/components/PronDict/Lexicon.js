@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, Form, Grid, Header, Message, Segment, TextArea } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { pronDictBuildLexicon, pronDictSaveLexicon, pronDictUpdateLexicon } from 'redux/actions/pronDictActions';
-import Branding from '../Shared/Branding';
-import SideNav from '../Shared/SideNav';
+import { Button, Form, Grid, Header, Message, Segment, TextArea } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { pronDictBuildLexicon, pronDictSaveLexicon, pronDictUpdateLexicon } from "redux/actions/pronDictActions";
+import Branding from "../Shared/Branding";
+import SideNav from "../Shared/SideNav";
 import CurrentPronDictName from "./CurrentPronDictName";
-import urls from 'urls';
+import urls from "urls";
 
 class PronDictLexicon extends Component {
 
@@ -49,26 +49,26 @@ class PronDictLexicon extends Component {
 
                         <Grid.Column width={ 12 }>
 
-                            <Header as='h1'>
-                                { t('pronDict.lexicon.title') }
+                            <Header as="h1">
+                                { t("pronDict.lexicon.title") }
                             </Header>
 
                             <CurrentPronDictName />
 
                             {!currentEngine &&
-                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{ t('pronDict.common.noCurrentPronDictLabel') }</p>
+                              <p>{ t("pronDict.common.noCurrentPronDictLabel") }</p>
                             }
 
                             {currentEngine && name &&
                             <>
-                                <Message content={ t('pronDict.lexicon.description') } />
+                                <Message content={ t("pronDict.lexicon.description") } />
 
                                 <Button as={Link} to={urls.gui.model.index} disabled={interactionDisabled}>
-                                    {t('common.nextButton')}
+                                    {t("common.nextButton")}
                                 </Button>
 
                                 <div className="form-wrapper">
@@ -80,8 +80,8 @@ class PronDictLexicon extends Component {
                                         </TextArea>
                                     </Form>
 
-                                    <Button size="tiny" basic onClick={this.generateLexicon} disabled={interactionDisabled}>{ t('pronDict.lexicon.reset') }</Button>
-                                    <Button size="tiny" onClick={this.saveLexicon} disabled={interactionDisabled}>{ t('pronDict.lexicon.save') }</Button>
+                                    <Button size="tiny" basic onClick={this.generateLexicon} disabled={interactionDisabled}>{ t("pronDict.lexicon.reset") }</Button>
+                                    <Button size="tiny" onClick={this.saveLexicon} disabled={interactionDisabled}>{ t("pronDict.lexicon.save") }</Button>
 
                                 </div>
 

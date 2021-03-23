@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Accordion, Grid, Header, Segment, Icon, Card, Button, Message } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import ReactTimeout from 'react-timeout';
-import { modelTrain, modelStatus } from 'redux/actions/modelActions';
-import Branding from '../Shared/Branding';
-import SideNav from '../Shared/SideNav';
+import { Accordion, Grid, Header, Segment, Icon, Card, Button, Message } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import ReactTimeout from "react-timeout";
+import { modelTrain, modelStatus } from "redux/actions/modelActions";
+import Branding from "../Shared/Branding";
+import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
-import urls from 'urls';
+import urls from "urls";
 
 class ModelTrain extends Component {
 
@@ -28,7 +28,7 @@ class ModelTrain extends Component {
     handleModelStatus = () => {
         const { status, modelStatus } = this.props;
         modelStatus();
-        if (status === 'trained') this.props.clearInterval(this.state.statusInterval);
+        if (status === "trained") this.props.clearInterval(this.state.statusInterval);
     }
 
 
@@ -55,28 +55,28 @@ class ModelTrain extends Component {
 
                         <Grid.Column width={ 12 }>
 
-                            <Header as='h1' text='true'>
-                                { t('model.train.title') }
+                            <Header as="h1" text="true">
+                                { t("model.train.title") }
                             </Header>
 
                             <CurrentModelName />
 
                             {!currentEngine &&
-                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{ t('model.common.noCurrentModelLabel') }</p>
+                              <p>{ t("model.common.noCurrentModelLabel") }</p>
                             }
 
                             {currentEngine && name &&
                             <>
 
                                 {/* Only Kaldi has settings. Should make this dynamic */}
-                                {currentEngine && currentEngine == 'kaldi' &&
+                                {currentEngine && currentEngine == "kaldi" &&
                                     <Card fluid>
-                                        <Card.Content header={t('model.train.settingsHeader')}/>
-                                        <Card.Content description={t('model.settings.ngramLabel') + ' ' + settings.ngram}/>
+                                        <Card.Content header={t("model.train.settingsHeader")}/>
+                                        <Card.Content description={t("model.settings.ngramLabel") + " " + settings.ngram}/>
                                     </Card>
                                 }
 
@@ -96,11 +96,11 @@ class ModelTrain extends Component {
                                                 let status = stage_status[stage]["status"];
                                                 let log = stage_status[stage]["log"];
                                                 let icon = (status === "in-progress") ?
-                                                    (<Icon name='circle notched' loading />) :
-                                                    (<Icon name='dropdown' />);
+                                                    (<Icon name="circle notched" loading />) :
+                                                    (<Icon name="dropdown" />);
                                                 let stage_status_icon = (status === "complete") ?
-                                                    (<Icon name='check' />) :
-                                                    ('');
+                                                    (<Icon name="check" />) :
+                                                    ("");
 
                                                     return (
                                                         <div key={name}>
@@ -134,13 +134,13 @@ class ModelTrain extends Component {
 
                                 <Segment>
 
-                                    <Button onClick={this.handleModelTrain} disabled={!name || status !== 'ready'}>
-                                        {t('model.train.trainButton')}
+                                    <Button onClick={this.handleModelTrain} disabled={!name || status !== "ready"}>
+                                        {t("model.train.trainButton")}
                                     </Button>
 
                                     <Button as={Link} to={urls.gui.model.results}
-                                            disabled={status === 'ready' || status === "training"}>
-                                        {t('common.nextButton')}
+                                            disabled={status === "ready" || status === "training"}>
+                                        {t("common.nextButton")}
                                     </Button>
 
                                 </Segment>

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { Message } from 'semantic-ui-react';
-import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown';
-import urls from 'urls';
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { Message } from "semantic-ui-react";
+import SelectEngineDropdown from "components/Engine/SelectEngineDropdown";
+import urls from "urls";
 
 class CurrentModelName extends Component {
 
@@ -12,47 +12,47 @@ class CurrentModelName extends Component {
         const { t, currentEngine, engineHumanNames, modelList, datasetName, pronDictName, name, match } = this.props;
 
         const onDashboard = (match.url === urls.gui.model.index) ? true : false;
-        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : '';
-        const dictName = pronDictName ? pronDictName : t('model.common.pronDictNotRequired');
+        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : "";
+        const dictName = pronDictName ? pronDictName : t("model.common.pronDictNotRequired");
 
         return (
             <>
                 {name &&
-                <Message color='olive'>
-                    { t('engine.common.currentEngineLabel') + engineHumanName }
+                <Message color="olive">
+                    { t("engine.common.currentEngineLabel") + engineHumanName }
                     <br />
-                    { t('model.common.currentModelLabel') + name }
+                    { t("model.common.currentModelLabel") + name }
                     <br />
-                    {currentEngine && currentEngine == 'kaldi' &&
+                    {currentEngine && currentEngine == "kaldi" &&
                         <>
-                            {t('pronDict.common.currentPronDictLabel') + dictName}
+                            {t("pronDict.common.currentPronDictLabel") + dictName}
                             <br />
                         </>
                     }
-                    {t('dataset.common.currentDatasetLabel') + datasetName }
+                    {t("dataset.common.currentDatasetLabel") + datasetName }
                 </Message>
                 }
 
                 {!currentEngine &&
-                <Message color='purple'>
-                    { t('engine.common.noCurrentEngineLabel') }
+                <Message color="purple">
+                    { t("engine.common.noCurrentEngineLabel") }
                     <SelectEngineDropdown />
                 </Message>
                 }
 
                 {currentEngine && !name &&
-                <Message color='purple'>
+                <Message color="purple">
                     {onDashboard && modelList.length === 0 &&
-                        t('common.makeNewOne')
+                        t("common.makeNewOne")
                     }
                     {onDashboard && modelList.length > 0 &&
-                        t('common.selectOneBelow')
+                        t("common.selectOneBelow")
                     }
                     {!onDashboard &&
                         <>
-                            <p>{ t('model.common.currentModelLabel') }</p>
+                            <p>{ t("model.common.currentModelLabel") }</p>
                             <Link to={urls.gui.model.index}>
-                                { t('common.chooseOrNewLabel') }
+                                { t("common.chooseOrNewLabel") }
                             </Link>
                         </>
                     }

@@ -1,5 +1,5 @@
-import {getFileExtension} from '../../helpers';
-import * as actionTypes from '../actionTypes/datasetActionTypes';
+import {getFileExtension} from "../../helpers";
+import * as actionTypes from "../actionTypes/datasetActionTypes";
 
 const initState = {
     name: "",
@@ -12,7 +12,7 @@ const initState = {
     settings: null,
     ui: null,
     wordlist: {},
-    error: '',
+    error: "",
 };
 
 let audioFiles = [];
@@ -51,12 +51,12 @@ const dataset = (state = initState, action) => {
                     return ({ name: key, frequency: wordlistObj[key] });
                 });
             }
-           const status = wordlist.length > 0 ? 'wordlist-prepared' : '';
+           const status = wordlist.length > 0 ? "wordlist-prepared" : "";
             // action.data is an array of filenames. parse this, split into separate lists
-            audioFiles = files.filter(file => getFileExtension(file) === 'wav').sort();
-            additionalTextFiles = files.filter(file => getFileExtension(file) === 'txt').sort();
+            audioFiles = files.filter(file => getFileExtension(file) === "wav").sort();
+            additionalTextFiles = files.filter(file => getFileExtension(file) === "txt").sort();
             transcriptionFiles = files.filter(file => {
-                return (getFileExtension(file) !== 'wav' && getFileExtension(file) !== 'txt');
+                return (getFileExtension(file) !== "wav" && getFileExtension(file) !== "txt");
             }).sort();
             // remove duplicates
             audioFiles = [...(new Set(audioFiles))];
@@ -89,9 +89,9 @@ const dataset = (state = initState, action) => {
             ({data, status} = action.response.data);
             if (status === 200) {
                 // action.data is an array of filenames. parse this, split into separate lists
-                audioFiles = data.files.filter(file => getFileExtension(file) === 'wav').sort();
-                transcriptionFiles = data.files.filter(file => getFileExtension(file) === 'eaf').sort();
-                additionalTextFiles = data.files.filter(file => getFileExtension(file) === 'txt').sort();
+                audioFiles = data.files.filter(file => getFileExtension(file) === "wav").sort();
+                transcriptionFiles = data.files.filter(file => getFileExtension(file) === "eaf").sort();
+                additionalTextFiles = data.files.filter(file => getFileExtension(file) === "txt").sort();
                 // remove duplicates
                 audioFiles = [...(new Set(audioFiles))];
                 return {
@@ -105,16 +105,16 @@ const dataset = (state = initState, action) => {
                     importer_name: data.importer_name,
                 };
             } else {
-                return { ...state, status: 'ready' };
+                return { ...state, status: "ready" };
             }
 
         case actionTypes.DATASET_DELETE_SUCCESS:
             ({data, status} = action.response.data);
             if (status == 200) {
                 // action.data is an array of filenames. parse this, split into separate lists
-                audioFiles = data.files.filter(file => getFileExtension(file) === 'wav').sort();
-                transcriptionFiles = data.files.filter(file => getFileExtension(file) === 'eaf').sort();
-                additionalTextFiles = data.files.filter(file => getFileExtension(file) === 'txt').sort();
+                audioFiles = data.files.filter(file => getFileExtension(file) === "wav").sort();
+                transcriptionFiles = data.files.filter(file => getFileExtension(file) === "eaf").sort();
+                additionalTextFiles = data.files.filter(file => getFileExtension(file) === "txt").sort();
                 return {
                     ...state,
                     audioFiles,

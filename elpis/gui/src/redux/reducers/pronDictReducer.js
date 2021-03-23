@@ -1,13 +1,13 @@
-import * as actionTypes from '../actionTypes/pronDictActionTypes';
+import * as actionTypes from "../actionTypes/pronDictActionTypes";
 
 const initState = {
     pronDictList: [],
-    name: '',
-    datasetName: '',
+    name: "",
+    datasetName: "",
     date: null,
-    l2s: '',
-    lexicon: '',
-    apiWaiting: {status: false, message: 'something'},
+    l2s: "",
+    lexicon: "",
+    apiWaiting: {status: false, message: "something"},
 };
 
 // If we want to check status code, use action.response.data

@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, Divider, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { Formik, Field } from 'formik';
-import { modelSettings } from 'redux/actions/modelActions';
-import Branding from '../Shared/Branding';
-import SideNav from '../Shared/SideNav';
+import { Button, Divider, Form, Grid, Header, Message, Segment } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { Formik, Field } from "formik";
+import { modelSettings } from "redux/actions/modelActions";
+import Branding from "../Shared/Branding";
+import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
-import urls from 'urls';
+import urls from "urls";
 
 class ModelSettings extends Component {
 
@@ -26,31 +26,31 @@ class ModelSettings extends Component {
 
                         <Grid.Column width={ 12 }>
 
-                            <Header as='h1' text='true'>
-                                { t('model.settings.title') }
+                            <Header as="h1" text="true">
+                                { t("model.settings.title") }
                             </Header>
 
                             <CurrentModelName />
 
                             {!currentEngine &&
-                              <p>{ t('engine.common.noCurrentEngineLabel') }</p>
+                              <p>{ t("engine.common.noCurrentEngineLabel") }</p>
                             }
 
                             {currentEngine && !name &&
-                              <p>{ t('model.common.noCurrentModelLabel') }</p>
+                              <p>{ t("model.common.noCurrentModelLabel") }</p>
                             }
 
                             {currentEngine && currentEngine == "espnet" && name &&
                                 <div>
                                     <p>No settings for now...</p>
-                                    <Button as={Link} to={urls.gui.model.train}>{t('common.nextButton')}</Button>
+                                    <Button as={Link} to={urls.gui.model.train}>{t("common.nextButton")}</Button>
                                 </div>
                             }
 
                             {currentEngine && currentEngine == "kaldi" && name &&
                             <>
-                                <Message content={ t('model.settings.description') } />
-                                <Message attached content={ t('model.settings.ngramDescription') } />
+                                <Message content={ t("model.settings.description") } />
+                                <Message attached content={ t("model.settings.ngramDescription") } />
                                 <Formik
                                     className="attached"
                                     enableReinitialize
@@ -60,11 +60,11 @@ class ModelSettings extends Component {
                                     validate={ values => {
                                         let errors = {};
                                         if (!values.ngram) {
-                                            errors.ngram = 'Required';
+                                            errors.ngram = "Required";
                                         } else if (
                                             !/^[0-9]+$/i.test(values.ngram)
                                         ) {
-                                            errors.ngram = 'Invalid ngram';
+                                            errors.ngram = "Invalid ngram";
                                         }
                                         return errors;
                                     } }
@@ -88,7 +88,7 @@ class ModelSettings extends Component {
                                                 </Field>
                                                 <Divider />
                                                 <Button type="button" onClick={handleSubmit} disabled={!name}>
-                                                    { t('common.nextButton') }
+                                                    { t("common.nextButton") }
                                                 </Button>
                                             </Form>
                                         ) }

@@ -1,9 +1,9 @@
-import axios from 'axios';
-import urls from 'urls';
+import axios from "axios";
+import urls from "urls";
 
-import * as actionTypes from '../actionTypes/datasetActionTypes';
+import * as actionTypes from "../actionTypes/datasetActionTypes";
 
-const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://'+window.location.host;
+const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : "http://"+window.location.host;
 
 
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */
@@ -109,7 +109,7 @@ const datasetListFailure = error => ({
 
 export function datasetFiles(postData) {
     const url = baseUrl + urls.api.dataset.files;
-    const config = { headers: { 'content-type': 'multipart/form-data' } };
+    const config = { headers: { "content-type": "multipart/form-data" } };
     var responseData;
     return async dispatch => {
         dispatch(datasetFilesStarted());
@@ -145,7 +145,7 @@ const datasetFilesFailure = error => ({
 
 export function datasetDelete(postData) {
     const url = baseUrl + urls.api.dataset.delete;
-    const config = { headers: { 'content-type': 'multipart/form-data' } };
+    const config = { headers: { "content-type": "multipart/form-data" } };
     var responseData;
     return async dispatch => {
         dispatch(datasetDeleteStarted());

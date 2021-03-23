@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { Message } from 'semantic-ui-react';
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { Message } from "semantic-ui-react";
 
 class CurrentEngineName extends Component {
 
@@ -11,12 +11,12 @@ class CurrentEngineName extends Component {
 
         const current = engine_name ?
         (
-            <Message color='olive'>
-                { t('engine.common.currentEngineLabel') + engine_name }
+            <Message color="olive">
+                { t("engine.common.currentEngineLabel") + engine_name }
             </Message>
         ) : (
-            <Message color='purple'>
-                { t('engine.common.noCurrentEngineLabel') }
+            <Message color="purple">
+                { t("engine.common.noCurrentEngineLabel") }
             </Message>
         );
 

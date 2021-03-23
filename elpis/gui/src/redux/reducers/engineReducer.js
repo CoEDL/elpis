@@ -1,4 +1,4 @@
-import * as actionTypes from '../actionTypes/appActionTypes';
+import * as actionTypes from "../actionTypes/appActionTypes";
 
 const initialEngineState = {
     engine: null,

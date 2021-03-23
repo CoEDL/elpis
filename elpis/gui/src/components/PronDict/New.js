@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Grid, Header, Segment } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import Branding from '../Shared/Branding';
-import SideNav from '../Shared/SideNav';
-import NewForm from '../PronDict/NewForm';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { Grid, Header, Segment } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import Branding from "../Shared/Branding";
+import SideNav from "../Shared/SideNav";
+import NewForm from "../PronDict/NewForm";
 
 
 class PronDictNew extends Component {
@@ -24,8 +24,8 @@ class PronDictNew extends Component {
                         </Grid.Column>
 
                         <Grid.Column width={ 12 }>
-                            <Header as='h1' text="true">
-                                { t('pronDict.new.title') }
+                            <Header as="h1" text="true">
+                                { t("pronDict.new.title") }
                             </Header>
 
                             <NewForm />

@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
+import React, { Component } from "react";
+import { Button, Grid, Header, Segment, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { datasetList, datasetLoad } from 'redux/actions/datasetActions';
-import arraySort from 'array-sort';
-import Branding from '../Shared/Branding';
-import SideNav from '../Shared/SideNav';
-import NewForm from './NewForm';
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { datasetList, datasetLoad } from "redux/actions/datasetActions";
+import arraySort from "array-sort";
+import Branding from "../Shared/Branding";
+import SideNav from "../Shared/SideNav";
+import NewForm from "./NewForm";
 import CurrentDatasetName from "./CurrentDatasetName";
-import urls from 'urls';
+import urls from "urls";
 
 class DatasetDashboard extends Component {
 
@@ -50,8 +50,8 @@ class DatasetDashboard extends Component {
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
-                            sorted={ column === 'name' ? direction : null }
-                            onClick={ this.handleSort('name', list) }
+                            sorted={ column === "name" ? direction : null }
+                            onClick={ this.handleSort("name", list) }
                         >
                             Name
                         </Table.HeaderCell>
@@ -60,7 +60,7 @@ class DatasetDashboard extends Component {
                 <Table.Body>
                 {
                     list.map( datasetName => {
-                        const className = (datasetName === name) ? 'current' : '';
+                        const className = (datasetName === name) ? "current" : "";
                         return (
                             <Table.Row key={ datasetName }>
                                 <Table.Cell>
@@ -76,7 +76,7 @@ class DatasetDashboard extends Component {
                 }
                 </Table.Body>
             </Table>
-        ) : <p>{ t('dataset.dashboard.noneMessage') }</p>;
+        ) : <p>{ t("dataset.dashboard.noneMessage") }</p>;
 
         return (
             <div>
@@ -88,8 +88,8 @@ class DatasetDashboard extends Component {
                         </Grid.Column>
 
                         <Grid.Column width={ 12 }>
-                            <Header as='h1'>
-                                { t('dataset.dashboard.title') }
+                            <Header as="h1">
+                                { t("dataset.dashboard.title") }
                             </Header>
 
                             <CurrentDatasetName />
@@ -103,16 +103,16 @@ class DatasetDashboard extends Component {
                                 <>
                                     <Segment>
                                         <Button
-                                            className='add'
-                                            content={t('common.newButton')}
-                                            labelPosition='left'
-                                            icon='add'
+                                            className="add"
+                                            content={t("common.newButton")}
+                                            labelPosition="left"
+                                            icon="add"
                                             as={Link}
                                             to={urls.gui.dataset.new} />
                                     </Segment>
                                     {listEl}
                                     <Button as={Link} to={urls.gui.dataset.files} disabled={!name}>
-                                        {t('common.nextButton')}
+                                        {t("common.nextButton")}
                                     </Button>
                                 </>
                                 }

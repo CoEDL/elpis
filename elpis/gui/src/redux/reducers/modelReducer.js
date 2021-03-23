@@ -1,13 +1,13 @@
-import * as actionTypes from '../actionTypes/modelActionTypes';
+import * as actionTypes from "../actionTypes/modelActionTypes";
 
 const initState = {
     modelList: [],
-    name: '',
-    datasetName: '',
-    pronDictName: '',
+    name: "",
+    datasetName: "",
+    pronDictName: "",
     results: null,
     settings: {ngram: 1},
-    status: 'ready',
+    status: "ready",
     stage_status: null,
 };
 
@@ -44,7 +44,7 @@ const model = (state = initState, action) => {
                 pronDictName: pron_dict_name,
                 settings: {...state.settings, ngram: ngram},
                 results: {}, // TODO include results in model load api
-                status: 'ready',
+                status: "ready",
             };
 
         case actionTypes.MODEL_LIST_SUCCESS:

@@ -1,30 +1,32 @@
 {
-  "parser": "babel-eslint",
-  "plugins": [
+  parser: "babel-eslint",
+  plugins: [
     "react"
   ],
-  "extends": [
+  extends: [
     "eslint:recommended",
     "plugin:react/recommended"
   ],
-  "rules": {
-    "react/prop-types": "off",
-    "semi": ["error","always"],
-    "eol-last": ["error", "always"],
-    "comma-dangle": ["error", "always-multiline"],
-    "quote-props": ["warn", "as-needed"]
+  rules: {
+    react/prop-types: "off",
+    semi: ["error","always"],
+    eol-last: ["error", "always"],
+    comma-dangle: ["error", "always-multiline"],
+    quote-props: ["warn", "as-needed"],
+    jsx-quotes: ["error", "prefer-double"],
+    quotes: ["error", "double"]
   },
-  "globals": {
-    "document": true,
-    "console": true,
-    "window": true,
-    "process": true,
-    "fetch": true,
-    "navigator": true,
-    "URL": true,
-    "setInterval": true,
-    "clearInterval": true,
-    "FormData": true,
-    "Set": true
+  globals: {
+    document: true,
+    console: true,
+    window: true,
+    process: true,
+    fetch: true,
+    navigator: true,
+    URL: true,
+    setInterval: true,
+    clearInterval: true,
+    FormData: true,
+    Set: true
   }
 }

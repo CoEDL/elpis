@@ -1,10 +1,10 @@
-import React  from 'react';
-import { useTranslation } from 'react-i18next';
+import React  from "react";
+import { useTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
-import { Grid, Segment, Header } from 'semantic-ui-react';
-import Branding from '../Shared/Branding';
-import ChooseEngine from './ChooseEngine';
+import { connect } from "react-redux";
+import { Grid, Segment, Header } from "semantic-ui-react";
+import Branding from "../Shared/Branding";
+import ChooseEngine from "./ChooseEngine";
 
 const EngineDashboard = () => {
     const { t } = useTranslation("common");
@@ -15,8 +15,8 @@ const EngineDashboard = () => {
             <Grid centered>
                 <Grid.Row>
                     <Grid.Column>
-                        <Header as='h1'>
-                            { t('engine.select.title') }
+                        <Header as="h1">
+                            { t("engine.select.title") }
                         </Header>
                     </Grid.Column>
                 </Grid.Row>

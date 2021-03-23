@@ -1,11 +1,11 @@
-import React  from 'react';
-import {Dropdown} from 'semantic-ui-react';
+import React  from "react";
+import {Dropdown} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import i18next from "i18next";
 
 
 const SelectLanguage = () => {
-    const { t, i18n } = useTranslation('common');
+    const { t, i18n } = useTranslation("common");
     const languages = Object.keys(i18next.services.resourceStore.data);
     const options = languages.map((name) => ({key: name, text: name, value: name}));
 
@@ -18,7 +18,7 @@ const SelectLanguage = () => {
 
     return (
         <Dropdown
-            placeholder={t('Language')}
+            placeholder={t("Language")}
             selection
             options={options}
             value={i18n.language}

@@ -1,8 +1,8 @@
-import * as actionTypes from '../actionTypes/transcriptionActionTypes';
+import * as actionTypes from "../actionTypes/transcriptionActionTypes";
 
 const initState = {
     filename: null,
-    status: 'ready',
+    status: "ready",
     stage_status: null,
     type: null,
     text: null,
@@ -20,8 +20,8 @@ const transcription = (state = initState, action) => {
         case actionTypes.TRANSCRIPTION_TRANSCRIBE_STARTED:
             return {
                 ...state,
-                type: 'text',
-                status: 'transcribing',
+                type: "text",
+                status: "transcribing",
             };
 
         case actionTypes.TRANSCRIPTION_STATUS_SUCCESS:

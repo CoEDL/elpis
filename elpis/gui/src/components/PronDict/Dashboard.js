@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
+import React, { Component } from "react";
+import { Button, Grid, Header, Segment, Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { pronDictList, pronDictLoad } from 'redux/actions/pronDictActions';
-import { datasetLoad } from 'redux/actions/datasetActions';
-import arraySort from 'array-sort';
-import Branding from '../Shared/Branding';
-import SideNav from '../Shared/SideNav';
-import NewForm from '../PronDict/NewForm';
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { pronDictList, pronDictLoad } from "redux/actions/pronDictActions";
+import { datasetLoad } from "redux/actions/datasetActions";
+import arraySort from "array-sort";
+import Branding from "../Shared/Branding";
+import SideNav from "../Shared/SideNav";
+import NewForm from "../PronDict/NewForm";
 import CurrentPronDictName from "./CurrentPronDictName";
-import urls from 'urls';
+import urls from "urls";
 
 class PronDictDashboard extends Component {
 
@@ -53,8 +53,8 @@ class PronDictDashboard extends Component {
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell
-                            sorted={ column === 'name' ? direction : null }
-                            onClick={ this.handleSort('name', listArray) }
+                            sorted={ column === "name" ? direction : null }
+                            onClick={ this.handleSort("name", listArray) }
                         >
                             Name
                         </Table.HeaderCell>
@@ -66,7 +66,7 @@ class PronDictDashboard extends Component {
                 <Table.Body>
                 {
                     list.map( pronDict => {
-                        const className = (pronDict.name === name) ? 'current' : '';
+                        const className = (pronDict.name === name) ? "current" : "";
                         return (
                             <Table.Row key={pronDict.name }>
                                 <Table.Cell>
@@ -86,7 +86,7 @@ class PronDictDashboard extends Component {
                 }
                 </Table.Body>
             </Table>
-        ) : <p>{ t('pronDict.dashboard.noneMessage') }</p>;
+        ) : <p>{ t("pronDict.dashboard.noneMessage") }</p>;
 
         return (
             <div>
@@ -98,8 +98,8 @@ class PronDictDashboard extends Component {
                         </Grid.Column>
 
                         <Grid.Column width={ 12 }>
-                            <Header as='h1'>
-                                { t('pronDict.dashboard.title') }
+                            <Header as="h1">
+                                { t("pronDict.dashboard.title") }
                             </Header>
 
                             <CurrentPronDictName />
@@ -113,16 +113,16 @@ class PronDictDashboard extends Component {
                                 <>
                                     <Segment>
                                         <Button
-                                            className='add'
-                                            content={t('common.newButton')}
-                                            labelPosition='left'
-                                            icon='add'
+                                            className="add"
+                                            content={t("common.newButton")}
+                                            labelPosition="left"
+                                            icon="add"
                                             as={Link}
                                             to={urls.gui.pronDict.new}/>
                                     </Segment>
                                     {listEl}
                                     <Button as={Link} to={urls.gui.pronDict.l2s} disabled={!name}>
-                                        {t('common.nextButton')}
+                                        {t("common.nextButton")}
                                     </Button>
                                 </>
                                 }

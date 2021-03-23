@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Formik, ErrorMessage } from 'formik';
-import { Form, Input, Button } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { datasetNew } from 'redux/actions/datasetActions';
-import urls from 'urls';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { Formik, ErrorMessage } from "formik";
+import { Form, Input, Button } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { datasetNew } from "redux/actions/datasetActions";
+import urls from "urls";
 
 
 class NewForm extends Component {
@@ -17,16 +17,16 @@ class NewForm extends Component {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    name: 'ds',
+                    name: "ds",
                 }}
                 validate={values => {
                     let errors = {};
                     if (!values.name) {
-                        errors.name = 'Required';
+                        errors.name = "Required";
                     } else if (
                         !/^[ 0-9a-zA-Z\-_@]+$/i.test(values.name)
                     ) {
-                        errors.name = t('common.invalidCharacterErrorMessage');
+                        errors.name = t("common.invalidCharacterErrorMessage");
                     }
                     return errors;
                 }}
@@ -43,9 +43,9 @@ class NewForm extends Component {
                         <Form onSubmit={handleSubmit}>
                             <Form.Field>
                                 <Input
-                                    label={t('dataset.new.nameLabel')}
+                                    label={t("dataset.new.nameLabel")}
                                     value={values.name}
-                                    placeholder={t('dataset.new.namePlaceholder')}
+                                    placeholder={t("dataset.new.namePlaceholder")}
                                     name="name"
                                     type="text"
                                     onChange={handleChange} />
@@ -55,7 +55,7 @@ class NewForm extends Component {
                                 <p className={"error-message"}>{error}</p>
                             }
                             <Button type="button" onClick={handleSubmit}>
-                                {t('common.addNewButton')}
+                                {t("common.addNewButton")}
                             </Button>
                         </Form>
                     )}

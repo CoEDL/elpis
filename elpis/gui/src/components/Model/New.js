@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Grid, Header, Segment } from 'semantic-ui-react';
-import { withTranslation } from 'react-i18next';
-import Branding from '../Shared/Branding';
-import SideNav from '../Shared/SideNav';
-import NewForm from '../Model/NewForm';
+import React, { Component } from "react";
+import { Grid, Header, Segment } from "semantic-ui-react";
+import { withTranslation } from "react-i18next";
+import Branding from "../Shared/Branding";
+import SideNav from "../Shared/SideNav";
+import NewForm from "../Model/NewForm";
 
 
 class ModelNew extends Component {
@@ -20,8 +20,8 @@ class ModelNew extends Component {
                         </Grid.Column>
 
                         <Grid.Column width={ 12 }>
-                            <Header as='h1' text="true">
-                                { t('model.new.title') }
+                            <Header as="h1" text="true">
+                                { t("model.new.title") }
                             </Header>
 
                             <NewForm />

@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { Button, Divider, Grid, Header, Segment } from 'semantic-ui-react';
-import { modelLoad, modelList } from 'redux/actions/modelActions';
-import { datasetLoad } from 'redux/actions/datasetActions';
-import { engineLoad } from 'redux/actions/engineActions';
-import { pronDictLoad } from 'redux/actions/pronDictActions';
-import Branding from 'components/Shared/Branding';
-import urls from 'urls';
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { Button, Divider, Grid, Header, Segment } from "semantic-ui-react";
+import { modelLoad, modelList } from "redux/actions/modelActions";
+import { datasetLoad } from "redux/actions/datasetActions";
+import { engineLoad } from "redux/actions/engineActions";
+import { pronDictLoad } from "redux/actions/pronDictActions";
+import Branding from "components/Shared/Branding";
+import urls from "urls";
 
 
 class ChooseModel extends Component {
@@ -54,8 +54,8 @@ class ChooseModel extends Component {
 
                 <Grid.Row>
                 <Grid.Column>
-                    <Header as='h1' text="true">
-                        { t('transcription.choose_model.title') }
+                    <Header as="h1" text="true">
+                        { t("transcription.choose_model.title") }
                     </Header>
 
                     {/*
@@ -66,7 +66,7 @@ class ChooseModel extends Component {
                     {list.length > 0 &&
                         <>
                             <Divider />
-                            <p>{ t('transcription.choose_model.use_existing') }</p>
+                            <p>{ t("transcription.choose_model.use_existing") }</p>
                             <div>
                                 {modelList}
                             </div>
@@ -76,10 +76,10 @@ class ChooseModel extends Component {
                     <Divider />
 
                     {list.length == 0 &&
-                        t('transcription.choose_model.no_models_found')
+                        t("transcription.choose_model.no_models_found")
                     }
 
-                    <Link to={urls.gui.engine.index}>{ t('transcription.choose_model.train_new') }</Link>
+                    <Link to={urls.gui.engine.index}>{ t("transcription.choose_model.train_new") }</Link>
 
                 </Grid.Column>
                 </Grid.Row>

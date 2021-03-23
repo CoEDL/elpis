@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
-import { Button } from 'semantic-ui-react';
+import { Button } from "semantic-ui-react";
 import { fromEvent } from "file-selector";
-import { withTranslation } from 'react-i18next';
-import { datasetFiles } from 'redux/actions/datasetActions';
-import { connect } from 'react-redux';
+import { withTranslation } from "react-i18next";
+import { datasetFiles } from "redux/actions/datasetActions";
+import { connect } from "react-redux";
 
 class FileUpload extends Component {
 
@@ -13,7 +13,7 @@ class FileUpload extends Component {
         console.log("files dropped:", acceptedFiles);
         var formData = new FormData();
         acceptedFiles.forEach(file => {
-            formData.append('file', file);
+            formData.append("file", file);
         });
         this.props.datasetFiles(formData);
     }
@@ -43,10 +43,10 @@ class FileUpload extends Component {
                                 <input { ...getInputProps() } />
                                 {
                                     isDragActive ? (
-                                        <p>{ t('dataset.fileUpload.dropFilesHintDragActive') } </p>
-                                    ) : (<p>{ t('dataset.fileUpload.dropFilesHint') }</p>)
+                                        <p>{ t("dataset.fileUpload.dropFilesHintDragActive") } </p>
+                                    ) : (<p>{ t("dataset.fileUpload.dropFilesHint") }</p>)
                                 }
-                                <Button>{t('dataset.files.uploadButton')}</Button>
+                                <Button>{t("dataset.files.uploadButton")}</Button>
                             </div>
                         );
                     } }

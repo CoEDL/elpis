@@ -1,9 +1,9 @@
-import axios from 'axios';
-import urls from 'urls';
+import axios from "axios";
+import urls from "urls";
 
-import * as actionTypes from '../actionTypes/pronDictActionTypes';
+import * as actionTypes from "../actionTypes/pronDictActionTypes";
 
-const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://'+window.location.host;
+const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : "http://"+window.location.host;
 
 
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */
@@ -109,7 +109,7 @@ const pronDictListFailure = error => ({
 
 export function pronDictL2S(postData) {
     const url = baseUrl + urls.api.pronDict.l2s;
-    const config = { headers: { 'content-type': 'multipart/form-data' } };
+    const config = { headers: { "content-type": "multipart/form-data" } };
     var responseData;
     return async dispatch => {
         dispatch(pronDictL2SStarted());

@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import { Button, Dropdown, Form, Grid, Header, Icon, Message, Segment } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
+import React, { Component } from "react";
+import { Button, Dropdown, Form, Grid, Header, Icon, Message, Segment } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import { fromEvent } from "file-selector";
-import downloadjs from 'downloadjs';
+import downloadjs from "downloadjs";
 import {
     transcriptionNew,
     transcriptionStatus,
     transcriptionTranscribe,
     transcriptionGetText,
-    transcriptionGetElan } from 'redux/actions/transcriptionActions';
-import { modelLoad, modelList } from 'redux/actions/modelActions';
-import { datasetLoad } from 'redux/actions/datasetActions';
-import { engineLoad } from 'redux/actions/engineActions';
-import { pronDictLoad } from 'redux/actions/pronDictActions';
-import Branding from '../Shared/Branding';
+    transcriptionGetElan } from "redux/actions/transcriptionActions";
+import { modelLoad, modelList } from "redux/actions/modelActions";
+import { datasetLoad } from "redux/actions/datasetActions";
+import { engineLoad } from "redux/actions/engineActions";
+import { pronDictLoad } from "redux/actions/pronDictActions";
+import Branding from "../Shared/Branding";
 import CurrentModelName from "../Model/CurrentModelName";
 
 
@@ -38,7 +38,7 @@ class NewTranscription extends Component {
     doStatusCheck = () => {
         const { status } = this.props;
         this.props.transcriptionStatus();
-        if (status == 'transcribed') {
+        if (status == "transcribed") {
             clearInterval(this.statusInterval);
         }
     }
@@ -50,16 +50,16 @@ class NewTranscription extends Component {
     }
 
     handleDownloadText = () => {
-        downloadjs(this.props.text, 'text.txt', 'text/txt');
+        downloadjs(this.props.text, "text.txt", "text/txt");
     }
 
     handleDownloadElan = () => {
-        downloadjs(this.props.elan, 'elan.eaf', 'text/xml');
+        downloadjs(this.props.elan, "elan.eaf", "text/xml");
     }
 
     onDrop = (acceptedFiles) => {
         var formData = new FormData();
-        formData.append('file', acceptedFiles[0]);
+        formData.append("file", acceptedFiles[0]);
         this.props.transcriptionNew(formData);
         this.setState({uploading: true});
     }
@@ -79,7 +79,7 @@ class NewTranscription extends Component {
         const { uploading } = this.state;
 
         // Only show trained models
-        const listTrained = list.filter(model => model.status === 'trained');
+        const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
             key: model.name,
             value: model.name,
@@ -88,10 +88,10 @@ class NewTranscription extends Component {
 
         // prevent the buttons from being clicked if we haven't got an active model, or file to transcribe
         let enableTranscription = (modelName && filename &&
-            (status == 'ready' || status == 'transcribed' )) ? true : false;
+            (status == "ready" || status == "transcribed" )) ? true : false;
 
-        const loadingIcon = (status == 'transcribing') ? (
-            <Icon name='circle notched' size="big" loading />
+        const loadingIcon = (status == "transcribing") ? (
+            <Icon name="circle notched" size="big" loading />
         ) : null;
 
         return (
@@ -101,8 +101,8 @@ class NewTranscription extends Component {
                     <Grid centered>
 
                         <Grid.Column width={ 12 }>
-                            <Header as='h1' text="true">
-                                { t('transcription.new.title') }
+                            <Header as="h1" text="true">
+                                { t("transcription.new.title") }
                             </Header>
 
                             {modelName &&
@@ -113,13 +113,13 @@ class NewTranscription extends Component {
                             <Segment>
                                 {listOptions &&
                                     <Form.Field>
-                                    <label className="pad-right">{t('transcription.new.selectModelLabel')}</label>
+                                    <label className="pad-right">{t("transcription.new.selectModelLabel")}</label>
                                         <Dropdown
-                                            placeholder={t('common.choose')}
+                                            placeholder={t("common.choose")}
                                             selection
                                             name="model_name"
                                             options={listOptions}
-                                            defaultValue={modelName ? modelName : ''}
+                                            defaultValue={modelName ? modelName : ""}
                                             onChange={this.handleSelectModel} />
                                     </Form.Field>
                                 }
@@ -139,10 +139,10 @@ class NewTranscription extends Component {
 
                                             {
                                                 isDragActive ? (
-                                                    <p>{ t('transcription.new.dropFilesHintDragActive') } </p>
-                                                ) : (<p>{ t('transcription.new.dropFilesHint') }</p>)
+                                                    <p>{ t("transcription.new.dropFilesHintDragActive") } </p>
+                                                ) : (<p>{ t("transcription.new.dropFilesHint") }</p>)
                                             }
-                                            <Button>{t('transcription.new.uploadButton')}</Button>
+                                            <Button>{t("transcription.new.uploadButton")}</Button>
                                         </div>
                                     );
                                 } }
@@ -150,24 +150,24 @@ class NewTranscription extends Component {
 
                             {uploading && !filename &&
                                 <div className="status">
-                                    <Icon name='circle notched' size="big" loading /> {t('transcription.new.uploading')}
+                                    <Icon name="circle notched" size="big" loading /> {t("transcription.new.uploading")}
                                 </div>
                             }
 
                             {filename &&
-                                <Segment>{t('transcription.new.usingAudio', { filename })} </Segment>
+                                <Segment>{t("transcription.new.usingAudio", { filename })} </Segment>
                             }
 
                             <Segment>
                                 <Button onClick={this.handleTranscribe} disabled={!enableTranscription} >
-                                    {t('transcription.new.transcribe')}
+                                    {t("transcription.new.transcribe")}
                                 </Button>
                             </Segment>
 
                             <Message icon>
                                 { loadingIcon }
                                 <Message.Content>
-                                    <Message.Header>{t('status.' + status)}</Message.Header>
+                                    <Message.Header>{t("status." + status)}</Message.Header>
                                     {stage_status &&
                                     <div className="stages">
                                         {Object.keys(stage_status).map((stage) => {
@@ -176,9 +176,9 @@ class NewTranscription extends Component {
                                                 let message = stage_status[stage]["message"];
                                                 return (
                                                     <p key={stage} className="stage">
-                                                        <span className="name">{t('transcription.engines.' + currentEngine + '.stages.' + name)}</span>
+                                                        <span className="name">{t("transcription.engines." + currentEngine + ".stages." + name)}</span>
                                                         <span className="divider">{status && <>|</>}</span>
-                                                        <span className="status">{t('status.' + status)}</span>
+                                                        <span className="status">{t("status." + status)}</span>
                                                         <span className="divider">{message && <>|</>}</span>
                                                         <span className="message">{message}</span>
                                                     </p>
@@ -190,16 +190,16 @@ class NewTranscription extends Component {
                                 </Message.Content>
                             </Message>
 
-                            {status=='transcribed' &&
+                            {status=="transcribed" &&
                                 <Segment>
                                     <p>{text}</p>
 
-                                    <p className="label pad-right">{t('transcription.results.downloadLabel')}</p>
+                                    <p className="label pad-right">{t("transcription.results.downloadLabel")}</p>
                                     <Button onClick={this.handleDownloadText}>
-                                        {t('transcription.results.downloadTextButton')}
+                                        {t("transcription.results.downloadTextButton")}
                                     </Button>
                                     <Button onClick={this.handleDownloadElan}>
-                                        {t('transcription.results.downloadElanButton')}
+                                        {t("transcription.results.downloadElanButton")}
                                     </Button>
                                 </Segment>
                             }

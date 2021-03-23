@@ -1,16 +1,16 @@
-import axios from 'axios';
-import urls from 'urls';
+import axios from "axios";
+import urls from "urls";
 
-import * as actionTypes from '../actionTypes/transcriptionActionTypes';
+import * as actionTypes from "../actionTypes/transcriptionActionTypes";
 
-const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : 'http://'+window.location.host;
+const baseUrl = (process.env.REACT_APP_BASEURL) ? process.env.REACT_APP_BASEURL : "http://"+window.location.host;
 
 
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */
 
 export function transcriptionNew(postData) {
     const url = baseUrl + urls.api.transcription.new;
-    const config = { headers: { 'content-type': 'multipart/form-data' } };
+    const config = { headers: { "content-type": "multipart/form-data" } };
     var responseData;
     return async dispatch => {
         dispatch(transcriptionNewStarted());

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Dropdown } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { engineLoad } from 'redux/actions/engineActions';
+import React, { Component } from "react";
+import { Dropdown } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { engineLoad } from "redux/actions/engineActions";
 
 class SelectEngineDropdown extends Component {
 
@@ -21,12 +21,12 @@ class SelectEngineDropdown extends Component {
         return (
             <>
                 {list.length === 0 &&
-                    <p>{t('engine.select.waitingForEngineList')}</p>
+                    <p>{t("engine.select.waitingForEngineList")}</p>
                 }
                 {list.length > 0 &&
                     <Dropdown
                         className="engine-select"
-                        placeholder={currentEngine?currentEngine: t('engine.select.shortcutPlaceholder')}
+                        placeholder={currentEngine?currentEngine: t("engine.select.shortcutPlaceholder")}
                         selection
                         options={options}
                         value={currentEngine}

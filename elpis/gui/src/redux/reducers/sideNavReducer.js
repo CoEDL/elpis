@@ -1,5 +1,5 @@
-import * as actionTypes from '../actionTypes/appActionTypes';
-import urls from 'urls';
+import * as actionTypes from "../actionTypes/appActionTypes";
+import urls from "urls";
 
 // For convenience while developing, set this true
 // false will make the menus collapse
@@ -7,11 +7,11 @@ const enableAll = true;
 
 // Define a total ordering on the steps.
 const stepOrderDefinition = [
-	'engine',
-	'recordings',
-	'pronunciation',
-	'train',
-	'transcribe',
+	"engine",
+	"recordings",
+	"pronunciation",
+	"train",
+	"transcribe",
 ];
 
 export function stepToOrder(stepName) {
@@ -37,7 +37,7 @@ function getNextStepName(stepName, engine) {
 	let nextStepName = stepOrderDefinition[stepIndex + 1];
 
 	// if non-kaldi engine, then skip 'pronunciation'
-	if (engine !== "kaldi" && nextStepName === 'pronunciation') {
+	if (engine !== "kaldi" && nextStepName === "pronunciation") {
 		nextStepName = getNextStepName(nextStepName);
 	}
 
@@ -62,7 +62,7 @@ const initialStepModelState = {
 				{ done: false, doing: false, enabled: false, title: "navigation.pronunciation.letterToSound", path: urls.gui.pronDict.l2s },
 				{ done: false, doing: false, enabled: false, title: "navigation.pronunciation.dictionary", path: urls.gui.pronDict.lexicon },
 			],
-			engine_specific: 'kaldi',
+			engine_specific: "kaldi",
 		},
 		train: {
 			substeps: [

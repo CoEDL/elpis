@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Button } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { engineLoad } from 'redux/actions/engineActions';
-import urls from 'urls';
+import { Button } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { engineLoad } from "redux/actions/engineActions";
+import urls from "urls";
 
 
 class ChooseEngine extends Component {
@@ -21,13 +21,13 @@ class ChooseEngine extends Component {
         let cards = list.map(name => {
             let engine_name, engine_description;
             switch (name) {
-                case 'kaldi':
-                    engine_name = t('engine.common.kaldi_name');
-                    engine_description = t('engine.common.kaldi_description');
+                case "kaldi":
+                    engine_name = t("engine.common.kaldi_name");
+                    engine_description = t("engine.common.kaldi_description");
                     break;
-                case 'espnet':
-                    engine_name = t('engine.common.espnet_name');
-                    engine_description = t('engine.common.espnet_description');
+                case "espnet":
+                    engine_name = t("engine.common.espnet_name");
+                    engine_description = t("engine.common.espnet_description");
                     break;
             }
             return (
@@ -46,7 +46,7 @@ class ChooseEngine extends Component {
         return (
             <>
                 {list.length === 0 &&
-                    <p>{t('engine.select.waitingForEngineList')}</p>
+                    <p>{t("engine.select.waitingForEngineList")}</p>
                 }
                 <div className="choose-engine">
                     {cards}

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { List, Accordion } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import classNames from 'classnames';
-import { setCurrentStep } from 'redux/actions/sideNavActions';
-import { stepToOrder } from '../../redux/reducers/sideNavReducer';
-import './SideNav.css';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { List, Accordion } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import classNames from "classnames";
+import { setCurrentStep } from "redux/actions/sideNavActions";
+import { stepToOrder } from "../../redux/reducers/sideNavReducer";
+import "./SideNav.css";
 
 
 class SideNav extends Component {

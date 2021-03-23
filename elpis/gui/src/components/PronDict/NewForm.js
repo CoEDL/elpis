@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Formik, Field, ErrorMessage } from 'formik';
-import { Button, Form, Input } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { pronDictNew } from 'redux/actions/pronDictActions';
-import { datasetList } from 'redux/actions/datasetActions';
-import urls from 'urls';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { Formik, Field, ErrorMessage } from "formik";
+import { Button, Form, Input } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
+import { pronDictNew } from "redux/actions/pronDictActions";
+import { datasetList } from "redux/actions/datasetActions";
+import urls from "urls";
 
 
 class NewForm extends Component {
@@ -18,7 +18,7 @@ class NewForm extends Component {
     render() {
         const { t, currentEngine, error, currentDataset, datasets, pronDictNew } = this.props;
 
-        let defaultDatasetName = '';
+        let defaultDatasetName = "";
         if (currentDataset) {
             defaultDatasetName = currentDataset;
         } else if (datasets.length > 0) {
@@ -30,17 +30,17 @@ class NewForm extends Component {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    name: 'pd',
+                    name: "pd",
                     dataset_name: defaultDatasetName,
                 }}
                 validate={values => {
                     let errors = {};
                     if (!values.name) {
-                        errors.name = 'Required';
+                        errors.name = "Required";
                     } else if (
                         !/^[ 0-9a-zA-Z\-_@]+$/i.test(values.name)
                     ) {
-                        errors.name = t('common.invalidCharacterErrorMessage');
+                        errors.name = t("common.invalidCharacterErrorMessage");
                     }
                     return errors;
                 }}
@@ -58,9 +58,9 @@ class NewForm extends Component {
                         <Form onSubmit={handleSubmit}>
                             <Form.Field>
                                 <Input
-                                    label={t('pronDict.new.nameLabel')}
+                                    label={t("pronDict.new.nameLabel")}
                                     value={values.name}
-                                    placeholder={t('pronDict.new.namePlaceholder')}
+                                    placeholder={t("pronDict.new.namePlaceholder")}
                                     name="name"
                                     type="text"
                                     onChange={handleChange} />
@@ -68,12 +68,12 @@ class NewForm extends Component {
                             </Form.Field>
 
                             {currentEngine && datasets.length === 0 &&
-                                <p>{ t('pronDict.common.noDatasetsLabel') }</p>
+                                <p>{ t("pronDict.common.noDatasetsLabel") }</p>
                             }
 
                             {currentEngine && datasets.length > 0 &&
                                 <Form.Field>
-                                    <label>{ t('pronDict.new.select')}</label>
+                                    <label>{ t("pronDict.new.select")}</label>
                                     <Field component="select" name="dataset_name">
                                         {datasets.map(name =>
                                             (<option key={name} value={name}>{name}</option>))
@@ -85,7 +85,7 @@ class NewForm extends Component {
                                 <p className={"error-message"}>{error}</p>
                             }
                             <Button type="button" onClick={handleSubmit} disabled={datasets.length===0}>
-                                {t('common.addNewButton')}
+                                {t("common.addNewButton")}
                             </Button>
                         </Form>
                     )}
