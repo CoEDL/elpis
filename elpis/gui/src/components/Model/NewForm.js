@@ -170,8 +170,9 @@ const mapDispatchToProps = dispatch => ({
             .catch(error => console.log("error", error));
     },
 });
-export default withRouter(connect(
-    mapStateToProps, mapDispatchToProps)(
+
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(
         withTranslation("common")(NewForm)
     )
 );

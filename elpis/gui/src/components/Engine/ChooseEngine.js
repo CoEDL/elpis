@@ -62,7 +62,6 @@ const mapStateToProps = state => {
         currentEngine: state.engine.engine,
     };
 };
-
 const mapDispatchToProps = dispatch => ({
     _engineLoad: (postData, history) => {
         dispatch(engineLoad(postData))
@@ -72,12 +71,8 @@ const mapDispatchToProps = dispatch => ({
     },
 });
 
-export default
-    withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(
         withTranslation("common")(ChooseEngine)
     )
 );

@@ -36,7 +36,5 @@ const mapStateToProps = state => {
 };
 
 export default withRouter(
-    connect(mapStateToProps)(
-        EngineDashboard
-    )
+    connect(mapStateToProps)(EngineDashboard)
 );

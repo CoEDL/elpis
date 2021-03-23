@@ -1,6 +1,5 @@
 import axios from "axios";
 import urls from "urls";
-
 import * as actionTypes from "../actionTypes/appActionTypes";
 
 const baseUrl = (process.env.REACT_APP_BASEURL) ?

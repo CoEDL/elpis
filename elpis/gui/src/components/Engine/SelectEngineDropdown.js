@@ -44,17 +44,12 @@ const mapStateToProps = state => {
         engineHumanNames: state.engine.engine_human_names,
     };
 };
-
 const mapDispatchToProps = dispatch => ({
     _engineLoad: postData => {
         dispatch(engineLoad(postData));
     },
 });
 
-export default
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(
-        withTranslation("common")(SelectEngineDropdown)
-    );
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withTranslation("common")(SelectEngineDropdown)
+);

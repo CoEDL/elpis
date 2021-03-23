@@ -110,7 +110,6 @@ const mapStateToProps = state => {
         currentEngine: state.engine.engine,
     };
 };
-
 const mapDispatchToProps = dispatch => ({
     pronDictL2S: postData => {
         dispatch(pronDictL2S(postData));

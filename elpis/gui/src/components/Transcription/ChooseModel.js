@@ -83,7 +83,6 @@ const mapStateToProps = state => {
         currentEngine: state.engine.engine,
     };
 };
-
 const mapDispatchToProps = dispatch => ({
     _modelList: () => {
         dispatch(modelList());
@@ -96,12 +95,8 @@ const mapDispatchToProps = dispatch => ({
     },
 });
 
-export default
-    withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(
         withTranslation("common")(ChooseModel)
     )
 );

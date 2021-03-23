@@ -28,8 +28,8 @@ const rootReducer = (state, action) => {
     return appReducer(state, action);
 };
 
-
 const store = createStore(rootReducer,
     composeWithDevTools(applyMiddleware(thunk))
 );
+
 export default store;

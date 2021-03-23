@@ -41,6 +41,8 @@ const mapStateToProps = state => {
     };
 };
 
-export default withRouter(connect(mapStateToProps)(
-    withTranslation("common")(PronDictNew)
-));
+export default withRouter(
+    connect(mapStateToProps)(
+        withTranslation("common")(PronDictNew)
+    )
+);

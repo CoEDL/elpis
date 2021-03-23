@@ -142,8 +142,6 @@ const mapStateToProps = state => {
         currentEngine: state.engine.engine,
     };
 };
-
-
 const mapDispatchToProps = dispatch => ({
     pronDictList: () => {
         dispatch(pronDictList());

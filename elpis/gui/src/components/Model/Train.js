@@ -163,6 +163,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(modelStatus());
     },
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(
         ReactTimeout(ModelTrain)

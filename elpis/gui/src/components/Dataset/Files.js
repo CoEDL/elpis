@@ -190,7 +190,6 @@ const mapStateToProps = state => {
         currentEngine: state.engine.engine,
     };
 };
-
 const mapDispatchToProps = dispatch => ({
     datasetSettings: postData => {
         dispatch(datasetSettings(postData));
@@ -207,10 +206,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(
+    connect(mapStateToProps, mapDispatchToProps)(
         withTranslation("common")(DatasetFiles)
     )
 );

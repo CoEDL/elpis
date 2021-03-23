@@ -21,5 +21,4 @@ i18n
         resources: languages,
     });
 
-
 export default i18n;

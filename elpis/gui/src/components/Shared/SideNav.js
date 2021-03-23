@@ -83,7 +83,6 @@ const mapStateToProps = (state, ownProps) => {
         ownProps: ownProps,
     };
 };
-
 const mapDispatchToProps = dispatch => ({
     setCurrentStep: (urlParams) => {
         dispatch(setCurrentStep(urlParams));

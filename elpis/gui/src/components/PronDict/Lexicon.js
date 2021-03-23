@@ -108,7 +108,6 @@ const mapStateToProps = (state) => {
         currentEngine: state.engine.engine,
     };
 };
-
 const mapDispatchToProps = dispatch => ({
     pronDictBuildLexicon: () => {
         dispatch(pronDictBuildLexicon())

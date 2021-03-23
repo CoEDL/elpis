@@ -200,4 +200,5 @@ const sideNav = (state = initialStepModelState, action) => {
 			return {...state};
 	}
 };
+
 export default sideNav;

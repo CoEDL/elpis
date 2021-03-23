@@ -9,4 +9,4 @@ const DevToolbar = props => {
         <></>;
 };
 
-export default (DevToolbar);
+export default DevToolbar;

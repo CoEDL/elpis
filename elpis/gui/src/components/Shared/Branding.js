@@ -64,7 +64,6 @@ const mapStateToProps = state => {
         dev_mode: state.config.app_config.dev_mode,
     };
 };
-
 const mapDispatchToProps = dispatch => ({
     _configReset: postData => {
         dispatch(configReset(postData))

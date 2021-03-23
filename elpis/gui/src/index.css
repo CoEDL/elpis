@@ -21,7 +21,7 @@ code {
 }
 
 .status {
-    margin-top:1em;
+    margin-top: 1em;
 }
 
 .logo {
@@ -33,6 +33,7 @@ code {
 .train-log {
     width: 100%;
 }
+
 .accordion {
     margin-bottom: 2rem;
 }
@@ -151,11 +152,11 @@ label.pad-right,
 
 .dev-toolbar {
     background: repeating-linear-gradient(
-      45deg,
-      #F5F6CE,
-      #F5F6CE 10px,
-      #F8EFFB 10px,
-      #F8EFFB 20px
+            45deg,
+            #F5F6CE,
+            #F5F6CE 10px,
+            #F8EFFB 10px,
+            #F8EFFB 20px
     );
     padding: 6px;
     min-width: 200px;
@@ -163,8 +164,9 @@ label.pad-right,
     border-radius: 12px;
     margin-right: 1em;
 }
+
 .dev-toolbar p {
-    padding:0;
+    padding: 0;
     margin: 0;
 }
 
@@ -222,10 +224,12 @@ label.pad-right,
     margin-top: 0 !important;
     padding-top: 0 !important;
 }
+
 .top-nav .item {
     padding-top: 0;
     height: 100px;
 }
+
 .top-nav .current-engine {
     margin: 0 1em
 }
