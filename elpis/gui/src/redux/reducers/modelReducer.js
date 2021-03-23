@@ -10,7 +10,6 @@ const initState = {
     status: "ready",
     stage_status: null,
 };
-
 const model = (state = initState, action) => {
     let data, status;
 

@@ -7,14 +7,12 @@ import {engineLoad} from "redux/actions/engineActions";
 class SelectEngineDropdown extends Component {
     render() {
         let {t, currentEngine, engineHumanNames, list, _engineLoad} = this.props;
-
         let handleChange = (_event, data) => {
             let engine_name = data.value;
             let postData = {engine_name};
 
             _engineLoad(postData);
         };
-
         let options = list.map((name) => ({key: name, text: engineHumanNames[name], value: name}));
 
         return (

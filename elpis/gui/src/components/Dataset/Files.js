@@ -56,34 +56,27 @@ class DatasetFiles extends Component {
             settings,
             ui,
             datasetSettings} = this.props;
-
         const interactionDisabled = name ? false : true;
-
         const loadingIcon = (status === "loading") ? (
             <div className="status">
                 <Icon name="circle notched" size="big" loading /> {t("dataset.fileUpload.uploading")}
             </div>
         ) : null;
-
         const audioFilesList = this.createFilesList(audioFiles);
         const transcriptionFilesList = this.createFilesList(transcriptionFiles);
         const additionalTextFilesList = this.createFilesList(additionalTextFiles);
-
         const filesHeader = (
             audioFilesList.length > 0 ||
             transcriptionFilesList.length > 0 ||
             additionalTextFilesList.length > 0) ? (
                  t("dataset.files.filesHeader")
             ) : null;
-
         const audioFilesHeader = audioFilesList.length > 0
             ? t("dataset.files.audioFilesHeader")
             : null;
-
         const transcriptionFilesHeader = transcriptionFilesList.length > 0
             ? t("dataset.files.transcriptionFilesHeader")
             : null;
-
         const additionalTextFilesHeader = additionalTextFilesList.length > 0
             ? t("dataset.files.additionalTextFilesHeader")
             : null;

@@ -38,9 +38,7 @@ class DatasetPrepare extends Component {
     render() {
         const {t, additionalTextFiles, currentEngine, name, status, wordlist} = this.props;
         const {column, direction} = this.state;
-
         const interactionDisabled = (this.props.name && wordlist.length > 0) ? false : true;
-
         const listEl = wordlist.length > 0 ? (
             <Table sortable celled fixed unstackable>
                 <Table.Header>

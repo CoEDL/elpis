@@ -18,7 +18,6 @@ const appReducer = combineReducers({
     sideNav,
     transcription,
 });
-
 // hard reset
 const rootReducer = (state, action) => {
     if (action.type === "CONFIG_RESET") {
@@ -27,7 +26,6 @@ const rootReducer = (state, action) => {
 
     return appReducer(state, action);
 };
-
 const store = createStore(rootReducer,
     composeWithDevTools(applyMiddleware(thunk))
 );

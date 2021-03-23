@@ -14,11 +14,9 @@ const initState = {
     wordlist: {},
     error: "",
 };
-
 let audioFiles = [];
 let additionalTextFiles = [];
 let transcriptionFiles = [];
-
 const dataset = (state = initState, action) => {
     let data, status;
 

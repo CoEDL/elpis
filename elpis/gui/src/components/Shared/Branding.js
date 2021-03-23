@@ -16,7 +16,6 @@ class StepBranding extends Component {
 
     render() {
         const {t, dev_mode, currentEngine, engineHumanNames} = this.props;
-
         const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : "";
 
         return (

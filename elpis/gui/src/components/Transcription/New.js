@@ -81,7 +81,6 @@ class NewTranscription extends Component {
     render = () => {
         const {t, currentEngine, filename, list, status, stage_status, text, modelName} = this.props;
         const {uploading} = this.state;
-
         // Only show trained models
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
@@ -89,11 +88,9 @@ class NewTranscription extends Component {
             value: model.name,
             text: model.name,
         }));
-
         // prevent the buttons from being clicked if we haven't got an active model, or file to transcribe
         let enableTranscription = (modelName && filename &&
             (status === "ready" || status === "transcribed")) ? true : false;
-
         const loadingIcon = (status === "transcribing") ? (
             <Icon name="circle notched" size="big" loading />
         ) : null;

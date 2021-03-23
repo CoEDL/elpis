@@ -38,16 +38,17 @@
       // Always require blank lines after import, except between imports
       {blankLine: "always", prev: "import", next: "*"},
       {blankLine: "any",    prev: "import", next: "import"},
-      // Always require blank lines before and after every sequence of variable declarations and export
-      {blankLine: "always", prev: "*", next: ["const", "let", "var", "export"]},
-      {blankLine: "always", prev: ["const", "let", "var", "export"], next: "*"},
-      {blankLine: "any",    prev: ["const", "let", "var", "export"], next: ["const", "let", "var", "export"]},
+      // Always require blank lines before and after every sequence of variable declarations, but not between
+      {blankLine: "always", prev: "*", next: ["const", "let", "var"]},
+      {blankLine: "always", prev: ["const", "let", "var"], next: "*"},
+      {blankLine: "never",    prev: ["const", "let", "var"], next: ["const", "let", "var"]},
       // Always require blank lines before and after class declaration, if, do/while, switch, try
       {blankLine: "always", prev: "*", next: ["if", "class", "for", "do", "while", "switch", "try"]},
       {blankLine: "always", prev: ["if", "class", "for", "do", "while", "switch", "try"], next: "*"},
       // Always require blank lines before return statements
       {blankLine: "always", prev: "*", next: ["export", "return"]},
-      {blankLine: "never", prev: "export", next: "export"}
+      {blankLine: "always", prev: "export", next: "*"},
+      {blankLine: "never", prev: "export", next: "export"},
     ],
     padded-blocks: ["error", "never"],
     lines-between-class-members: ["error", "always"],

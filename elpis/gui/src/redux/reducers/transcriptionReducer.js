@@ -8,7 +8,6 @@ const initState = {
     text: null,
     elan: null,
 };
-
 const transcription = (state = initState, action) => {
     switch (action.type) {
         case actionTypes.TRANSCRIPTION_NEW_SUCCESS:

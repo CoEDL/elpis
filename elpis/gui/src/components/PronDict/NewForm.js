@@ -16,7 +16,6 @@ class NewForm extends Component {
 
     render() {
         const {t, currentEngine, error, currentDataset, datasets, pronDictNew} = this.props;
-
         let defaultDatasetName = "";
 
         if (currentDataset) {

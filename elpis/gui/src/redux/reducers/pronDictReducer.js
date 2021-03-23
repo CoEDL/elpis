@@ -9,11 +9,9 @@ const initState = {
     lexicon: "",
     apiWaiting: {status: false, message: "something"},
 };
-
-// If we want to check status code, use action.response.data
-// so then we need to access the properties at data.xyz etc
-
 const pronDict = (state = initState, action) => {
+    // If we want to check status code, use action.response.data
+    // so then we need to access the properties at data.xyz etc
     let data, status;
 
     switch (action.type) {

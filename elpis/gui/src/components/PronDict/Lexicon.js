@@ -33,7 +33,6 @@ class PronDictLexicon extends Component {
 
     render() {
         const {t, currentEngine, lexicon, name} = this.props;
-
         const interactionDisabled = name ? false : true;
 
         return (

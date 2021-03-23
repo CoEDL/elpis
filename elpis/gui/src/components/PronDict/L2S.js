@@ -25,9 +25,7 @@ class PronDictL2S extends Component {
 
     render() {
         const {t, currentEngine, l2s, name} = this.props;
-
         const interactionDisabled = name ? false : true;
-
         const pron = l2s ? (
             <pre>
                 {l2s}

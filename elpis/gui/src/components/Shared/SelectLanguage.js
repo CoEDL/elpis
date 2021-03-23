@@ -8,7 +8,6 @@ const SelectLanguage = () => {
     const {t, i18n} = useTranslation("common");
     const languages = Object.keys(i18next.services.resourceStore.data);
     const options = languages.map((name) => ({key: name, text: name, value: name}));
-
     let handleChange = (_event, data) => {
         let newLang = data.value;
 

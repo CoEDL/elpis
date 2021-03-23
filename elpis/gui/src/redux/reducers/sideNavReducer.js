@@ -5,7 +5,6 @@ import urls from "urls";
 // For convenience while developing, set this true
 // false will make the menus collapse
 const enableAll = true;
-
 // Define a total ordering on the steps.
 const stepOrderDefinition = [
 	"engine",
@@ -82,7 +81,6 @@ const initialStepModelState = {
 		},
 	},
 };
-
 const sideNav = (state = initialStepModelState, action) => {
 	switch (action.type) {
 		case actionTypes.ENGINE_LOAD_SUCCESS: {
@@ -99,7 +97,6 @@ const sideNav = (state = initialStepModelState, action) => {
 			let currentStepName = null;
 			// Make a copy of the original steps as to not override the initial steps.
 			let originalStepsState = Object.assign({}, initialStepModelState);
-
 			// Used to enable next groups of steps if user is on last substep
 			let rememberToEnableTheNextStep = false;
 

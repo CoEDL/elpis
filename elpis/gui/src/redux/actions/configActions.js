@@ -110,7 +110,6 @@ const configListFailure = error => ({
     type: actionTypes.CONFIG_LIST_FAILURE,
     response: {error},
 });
-
 const engineListSuccess = response => ({
     type: actionTypes.ENGINE_LIST_SUCCESS,
     response: {...response},

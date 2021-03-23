@@ -27,7 +27,6 @@ const EngineDashboard = () => {
         </div>
     );
 };
-
 const mapStateToProps = state => {
     return {
         list: state.engine.engine_list,

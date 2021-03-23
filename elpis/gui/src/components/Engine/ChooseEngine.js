@@ -10,13 +10,11 @@ import urls from "urls";
 class ChooseEngine extends Component {
     render() {
         let {t, list, _engineLoad, history} = this.props;
-
         let selectEngine = engine_name => {
             let postData = {engine_name};
 
             _engineLoad(postData, history);
         };
-
         let cards = list.map(name => {
             let engine_name, engine_description;
 

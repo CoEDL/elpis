@@ -53,7 +53,6 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
         newSettings[ui_name] = data.value;
         changeSettingsCallback(newSettings);
     };
-
     const handleSelectChange = (ui_name, data) => {
         let newSettings = {...settings};
 
@@ -72,10 +71,8 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
         newSettings[ui_name] = data.value;
         changeSettingsCallback(newSettings);
     };
-
     // Sort names into groups by title followed by settings.
     let settingGroups = groupSettingsFromUI(ui);
-
     // Construct individual tables
     let tables = [];
     let groupIndex = 0;

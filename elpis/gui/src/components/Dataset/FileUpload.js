@@ -21,7 +21,6 @@ class FileUpload extends Component {
 
     render() {
         const {t, name} = this.props;
-
         const interactionDisabled = name ? false : true;
 
         return (

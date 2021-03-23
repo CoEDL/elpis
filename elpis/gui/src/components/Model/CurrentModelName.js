@@ -9,7 +9,6 @@ import urls from "urls";
 class CurrentModelName extends Component {
     render() {
         const {t, currentEngine, engineHumanNames, modelList, datasetName, pronDictName, name, match} = this.props;
-
         const onDashboard = (match.url === urls.gui.model.index) ? true : false;
         const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : "";
         const dictName = pronDictName ? pronDictName : t("model.common.pronDictNotRequired");
