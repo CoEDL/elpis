@@ -45,9 +45,6 @@ class ModelTrain extends Component {
     render() {
         const { t, currentEngine, name, settings, status, stage_status } = this.props;
 
-        console.log("status", status)
-        console.log("stage_status", stage_status)
-
         const loadingIcon = (status === 'training') ? (
             <Icon name='circle notched' loading  />
         ) : null
