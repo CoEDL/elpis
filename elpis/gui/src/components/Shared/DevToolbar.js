@@ -1,18 +1,16 @@
-import React, { Component } from 'react';
-import { translate } from 'react-i18next';
-import SelectEngineDropdown from 'components/Engine/SelectEngineDropdown'
-import urls from 'urls';
+import React from "react";
+import SelectEngineDropdown from "components/Engine/SelectEngineDropdown";
 
 const DevToolbar = props => {
-    return props.dev_mode ? (
-        <div className="dev-toolbar">
-            <p>DEV MODE</p>
-            <SelectEngineDropdown />
-        </div>
-    ) : (
-        <></>
-    )
-}
+    return (
+        props.dev_mode ?
+            (
+                <div className="dev-toolbar">
+                    <SelectEngineDropdown />
+                </div>
+            ) :
+            null
+    );
+};
 
-
-export default translate('common')(DevToolbar)
+export default DevToolbar;

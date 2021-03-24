@@ -1,48 +1,39 @@
-import React, { Component } from 'react';
-import { translate } from 'react-i18next';
-import { withRouter, Link } from "react-router-dom";
-import { connect } from 'react-redux';
-import { Grid, Segment, Header, Button, Dropdown, Divider } from 'semantic-ui-react';
-import Branding from 'components/Shared/Branding';
-import SideNav from 'components/Shared/SideNav';
-import ChooseEngine from './ChooseEngine'
+import React from "react";
+import {useTranslation} from "react-i18next";
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+import {Grid, Segment, Header} from "semantic-ui-react";
+import Branding from "../Shared/Branding";
+import ChooseEngine from "./ChooseEngine";
 
-import urls from 'urls';
-
-const EngineDashboard = props => {
-    let { t, currentEngine } = props;
+const EngineDashboard = () => {
+    const {t} = useTranslation("common");
 
     return (
         <div>
             <Branding />
             <Segment>
-            <Grid centered>
-                <Grid.Row>
-                    <Grid.Column>
-                        <Header as='h1'>
-                            { t('engine.select.title') }
-                        </Header>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
-
-            <ChooseEngine />
-
+                <Grid centered>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Header as="h1">
+                                {t("engine.select.title")}
+                            </Header>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+                <ChooseEngine />
             </Segment>
         </div>
-    )
-}
-
+    );
+};
 const mapStateToProps = state => {
     return {
         list: state.engine.engine_list,
-        currentEngine: state.engine.engine
-    }
-}
-
+        currentEngine: state.engine.engine,
+    };
+};
 
 export default withRouter(
-    connect(
-        mapStateToProps
-    )(
-        translate('common')(EngineDashboard)))
+    connect(mapStateToProps)(EngineDashboard)
+);
