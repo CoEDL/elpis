@@ -20,9 +20,10 @@ class Model(FSObject):  # TODO not thread safe
         self.config['dataset_name'] = None  # dataset hash has not been linked
         self.config['status'] = 'untrained'
         self.config['stage_status'] = {}
-        # TODO check if this is used
+        # TODO check if this is used, all the other things here are config settings
         self.status = 'untrained'
         self.config['engine_name'] = None  # use this to set engine if loading a model later
+        self.config['results'] = None
 
     @classmethod
     def load(cls, base_path: Path):
@@ -42,6 +43,10 @@ class Model(FSObject):  # TODO not thread safe
     def stage_status(self):
         return self.config['stage_status']
 
+    @property
+    def results(self):
+        return self.config['results']
+
     @status.setter
     def status(self, value: str):
         self.config['status'] = value
@@ -58,6 +63,10 @@ class Model(FSObject):  # TODO not thread safe
         stage_status[stage]['message'] = message
         stage_status[stage]['log'] = log
         self.config['stage_status'] = stage_status
+
+    @results.setter
+    def results(self, value: str):
+        self.config['results'] = value
 
     def build_stage_status(self, stage_names: Dict[str, str]):
         for stage_file, stage_name in stage_names.items():

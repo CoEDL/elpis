@@ -23,7 +23,7 @@ class EspnetModel(BaseModel):
         # ESPnet doesn't use an n-gram language model, so this will not change
         # from None.
         self.config['ngram'] = None
-        self.config['engine'] = 'espnet'
+        self.config['engine_name'] = 'espnet'
         self.config['status'] = 'untrained'
         stage_names = {
             "train": "Train"
@@ -136,6 +136,7 @@ class EspnetModel(BaseModel):
                 prepare_for_training()
                 train()
                 self.status = 'trained'
+                self.results = EspnetModel.get_train_results(self)
                 on_complete()
             self.status = 'training'
             t = threading.Thread(target=background_train_task)
@@ -147,6 +148,7 @@ class EspnetModel(BaseModel):
             prepare_for_training()
             train()
             self.status = 'trained'
+            self.results = EspnetModel.get_train_results(self)
         else:
             print("oncomplete is not none")
             run_training_in_background()
@@ -174,10 +176,11 @@ class EspnetModel(BaseModel):
         except AttributeError:
             per = sub = ins = del_ = None
 
-        results = {"per": per,
-                   "sub_val": sub,
-                   "ins_val": ins,
-                   "del_val": del_}
+        results = {"comparison_val": float(per),  # property common to all engines so the GUI can sort models by a result value
+                   "per": float(per),
+                   "ins_val": int(ins),
+                   "del_val": int(del_),
+                   "sub_val": int(sub)}
 
         print(results)
         return results

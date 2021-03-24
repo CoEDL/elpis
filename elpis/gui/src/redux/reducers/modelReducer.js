@@ -32,23 +32,22 @@ const model = (state = initState, action) => {
                 };
             }
 
-        case actionTypes.MODEL_LOAD_SUCCESS:
-            var {name, dataset_name, engine_name, pron_dict_name, ngram} = action.response.data.data.config;
-
-            console.log(action);
+        case actionTypes.MODEL_LOAD_SUCCESS: {
+            var {name, dataset_name, engine_name, pron_dict_name, ngram, results} = action.response.data.data.config;
+            let model_status = action.response.data.data.config;
 
             // pron_dict_name could be null if not using pron dicts
             return {
                 ...state,
-                name: name,
+                name,
+                results,
+                status: model_status,
                 datasetName: dataset_name,
                 engineName: engine_name,
                 pronDictName: pron_dict_name,
                 settings: {...state.settings, ngram: ngram},
-                results: {},
-                status: "ready",
             };
-
+        }
         case actionTypes.MODEL_LIST_SUCCESS:
             var {list} = action.response.data.data;
 
