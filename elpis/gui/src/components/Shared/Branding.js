@@ -1,25 +1,22 @@
-import React, { Component } from 'react';
-import { Button, Image, Menu, Segment } from 'semantic-ui-react';
-import { Link } from "react-router-dom";
-import { withTranslation } from 'react-i18next';
-import elpisLogo from './elpis.png'
-import { connect } from 'react-redux';
-import { configReset } from 'redux/actions/configActions';
-import DevToolbar from './DevToolbar'
+import React, {Component} from "react";
+import {Button, Image, Menu, Segment} from "semantic-ui-react";
+import {Link} from "react-router-dom";
+import {withTranslation} from "react-i18next";
+import elpisLogo from "./elpis.png";
+import {connect} from "react-redux";
+import {configReset} from "redux/actions/configActions";
+import DevToolbar from "./DevToolbar";
 import SelectLanguage from "./SelectLanguage";
 
 class StepBranding extends Component {
-
     reset = () => {
-        this.props._configReset()
-        window.location.href = "/"
+        this.props._configReset();
+        window.location.href = "/";
     }
 
-
     render() {
-        const { t, dev_mode, currentEngine, engineHumanNames } = this.props;
-
-        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : ''
+        const {t, dev_mode, currentEngine, engineHumanNames} = this.props;
+        const engineHumanName = currentEngine ? engineHumanNames[currentEngine] : "";
 
         return (
             <Segment clearing className="top-nav">
@@ -45,17 +42,17 @@ class StepBranding extends Component {
                     <Menu.Item>
                         <SelectLanguage />
                     </Menu.Item>
-                    <Menu.Item position='right'>
+                    <Menu.Item position="right">
                         {currentEngine &&
                             <div className="current-engine-dot">
                                 <span>{engineHumanName}</span>
                             </div>
                         }
-                        <Button basic onClick={this.reset}>{t('common.resetButton')}</Button>
+                        <Button basic onClick={this.reset}>{t("common.resetButton")}</Button>
                     </Menu.Item>
                 </Menu>
             </Segment>
-        )
+        );
     }
 }
 
@@ -63,18 +60,17 @@ const mapStateToProps = state => {
     return {
         currentEngine: state.engine.engine,
         engineHumanNames: state.engine.engine_human_names,
-        dev_mode: state.config.app_config.dev_mode
-    }
-}
-
+        dev_mode: state.config.app_config.dev_mode,
+    };
+};
 const mapDispatchToProps = dispatch => ({
     _configReset: postData => {
         dispatch(configReset(postData))
             .then(response => console.log("reset OK", response))
-            .catch(error => console.log("reset failed", error))
-    }
-})
+            .catch(error => console.log("reset failed", error));
+    },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
     withTranslation("common")(StepBranding)
-)
+);
