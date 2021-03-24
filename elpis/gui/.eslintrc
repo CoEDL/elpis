@@ -7,7 +7,7 @@
   ],
   settings: {
     react: {
-      version: "latest",
+      version: "detect",
     },
   },
   rules: {
@@ -40,7 +40,7 @@
       {blankLine: "any", prev: "directive", next: "directive"},
       // Always require blank lines after import, except between imports
       {blankLine: "always", prev: "import", next: "*"},
-      {blankLine: "any", prev: "import", next: "import"},
+      {blankLine: "never", prev: "import", next: "import"},
       // Always require blank lines before and after every sequence of variable declarations, but not between
       {blankLine: "always", prev: "*", next: ["const", "let", "var"]},
       {blankLine: "always", prev: ["const", "let", "var"], next: "*"},
