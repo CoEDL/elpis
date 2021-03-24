@@ -5,36 +5,34 @@
   "license": "Apache-2.0",
   "dependencies": {
     "array-sort": "^1.0.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "downloadjs": "^1.4.7",
-    "file-selector": "^0.1.6",
-    "formik": "^1.5.1",
-    "i18next": "^19.8.4",
-    "i18next-browser-languagedetector": "^6.0.1",
-    "i18next-http-backend": "^1.0.21",
-    "react": "^16.14.0",
-    "react-dom": "^16.13.1",
-    "react-dropzone": "^10.1.4",
-    "react-i18next": "^11.8.3",
-    "react-lazylog": "^3.2.0",
-    "react-redux": "^6.0.0",
-    "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1",
+    "file-selector": "^0.2.4",
+    "formik": "^2.2.6",
+    "i18next": "^20.0.0",
+    "i18next-browser-languagedetector": "^6.1.0",
+    "i18next-http-backend": "^1.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-dropzone": "^11.3.1",
+    "react-i18next": "^11.8.11",
+    "react-redux": "^7.2.3",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "react-timeout": "^1.2.0",
+    "react-timeout": "^2.0.1",
     "redux": "^4.0.5",
-    "redux-devtools-extension": "^2.13.7",
-    "redux-persist": "^5.10.0",
+    "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "^0.84.0",
-    "xslt3": "^2.0.3"
+    "semantic-ui-react": "^2.0.3",
+    "web-vitals": "^1.0.1",
+    "xslt3": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "watch": "cra-build-watch"
   },
   "eslintConfig": {
@@ -47,7 +45,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "cra-build-watch": "^3.2.0",
+    "cra-build-watch": "^3.4.0",
     "eslint": "^7.22.0",
     "eslint-plugin-react": "^7.23.0"
   }
