@@ -18,7 +18,7 @@ const SelectLanguage = () => {
 
     return (
         <Dropdown
-            placeholder={t("Language")}
+            placeholder={t("common.selectLanguagePlaceholder")}
             selection
             options={options}
             value={i18n.language}
