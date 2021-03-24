@@ -263,6 +263,7 @@
         }
     },
     "common": {
+        "selectLanguagePlaceholder": "Langue",
         "addNewButton": "Ajouter",
         "nextButton": "Suivant",
         "newButton": "Nouveau",
