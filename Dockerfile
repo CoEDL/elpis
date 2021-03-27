@@ -69,7 +69,7 @@ RUN echo "===> Install Python 2.7 for Kaldi" && \
     python-simplejson \
     python-gi
 
-RUN curl https://bootstrap.pypa.io/2.7/get-pip.py --output get-pip.py && \
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && \
     python2.7 get-pip.py
 
 RUN pip2.7 install ws4py==0.3.2 && \
