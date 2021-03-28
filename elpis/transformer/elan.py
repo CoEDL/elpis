@@ -216,11 +216,14 @@ def import_eaf_file(eaf_paths: List[str],
             end = annotation[1]
             annotation = annotation[2]
 
+            time_origin = input_eaf.get_linked_files()[0].get("TIME_ORIGIN")
+            origin_offset = int(time_origin) if time_origin is not None else 0
+
             utterance = {
                 "audio_file_name": f"{file_name}.wav",
                 "transcript": annotation,
-                "start_ms": start,
-                "stop_ms": end,
+                "start_ms": start + origin_offset,
+                "stop_ms": end + origin_offset,
                 "speaker_id": speaker_id
             }
 
