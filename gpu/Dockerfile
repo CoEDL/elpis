@@ -110,11 +110,11 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
-# Add node 15, npm and xml-js
+# Add node 15, yarn and xml-js
 RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get update && apt-get install -y nodejs build-essential && \
     npm install -g npm \
     hash -d npm \
-    npm install -g xml-js
+    npm install -g xml-js yarn
 
 # Clean up package manager
 RUN apt-get clean autoclean
@@ -230,8 +230,8 @@ WORKDIR /
 # Elpis GUI
 RUN ln -s /elpis/elpis/gui /elpis-gui
 WORKDIR /elpis-gui
-RUN npm install && \
-    npm run build
+RUN yarn install && \
+    yarn run build
 
 WORKDIR /tmp
 
