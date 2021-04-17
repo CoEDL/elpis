@@ -8,8 +8,43 @@ import {datasetFiles} from "redux/actions/datasetActions";
 import {connect} from "react-redux";
 
 class FileUpload extends Component {
+    parseElan = (files) => {
+        const wavFileNames = [];
+
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = () => {
+                const parser = new DOMParser();
+                const eafDoc = parser.parseFromString(reader.result, "application/xml")
+                const wavUrl = eafDoc
+                    .getElementsByTagName("ANNOTATION_DOCUMENT")[0]
+                    .getElementsByTagName("HEADER")[0]
+                    .getElementsByTagName("MEDIA_DESCRIPTOR")[0]
+                    .getAttribute("RELATIVE_MEDIA_URL").split("./")[1];
+                wavFileNames.push(wavUrl);
+            }
+            reader.onerror = () => {
+                console.log(reader.error);
+            }
+        });
+
+        return wavFileNames;
+    }
+
     onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
+        const eafFiles = acceptedFiles.filter(file => file.name.split('.').pop() === "eaf");
+        const wavFiles = acceptedFiles.filter(file => file.name.split('.').pop() === "wav");
+
+        // Add wav file names from eaf file contents
+        const wavFileNames = this.parseElan(eafFiles);
+        // Add media file names from eaf file names
+        eafFiles.forEach(file => {
+            wavFileNames.push(file.name.split('.')[0].concat(".wav"));
+        })
+
+        console.log(wavFileNames);
 
         var formData = new FormData();
 
