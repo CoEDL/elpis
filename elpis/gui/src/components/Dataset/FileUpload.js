@@ -8,10 +8,8 @@ import {datasetFiles} from "redux/actions/datasetActions";
 import {connect} from "react-redux";
 
 class FileUpload extends Component {
-    parseElan = (files) => {
-        const wavFileNames = [];
-
-        files.forEach(file => {
+    parseElan = async (file) => {
+        return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsText(file);
             reader.onload = () => {
@@ -22,30 +20,26 @@ class FileUpload extends Component {
                     .getElementsByTagName("HEADER")[0]
                     .getElementsByTagName("MEDIA_DESCRIPTOR")[0]
                     .getAttribute("RELATIVE_MEDIA_URL").split("./")[1];
-                wavFileNames.push(wavUrl);
+                resolve(wavUrl);
             }
             reader.onerror = () => {
-                console.log(reader.error);
+                reject(reader.error);
             }
-        });
-
-        return wavFileNames;
+        })
     }
 
-    onDrop = (acceptedFiles) => {
+    onDrop = async (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
         const eafFiles = acceptedFiles.filter(file => file.name.split('.').pop() === "eaf");
-        const wavFiles = acceptedFiles.filter(file => file.name.split('.').pop() === "wav");
+        const wavFileNames = acceptedFiles.filter(file => file.name.split('.').pop() === "wav").map(file => file.name);
 
-        // Add wav file names from eaf file contents
-        const wavFileNames = this.parseElan(eafFiles);
-        // Add media file names from eaf file names
-        eafFiles.forEach(file => {
-            wavFileNames.push(file.name.split('.')[0].concat(".wav"));
-        })
-
-        console.log(wavFileNames);
-
+        for (let i = 0; i < eafFiles.length; i++) {
+            const parsedWavFile = await this.parseElan(eafFiles[i]);
+            const identicalWavFile = eafFiles[i].name.split('.')[0].concat(".wav");
+            if (!wavFileNames.includes(parsedWavFile) && !wavFileNames.includes(identicalWavFile)) {
+                console.log("Missing wav file, provide either", identicalWavFile, "or", parsedWavFile);
+            }
+        }
         var formData = new FormData();
 
         acceptedFiles.forEach(file => {
