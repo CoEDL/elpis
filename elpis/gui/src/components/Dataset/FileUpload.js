@@ -30,8 +30,11 @@ class FileUpload extends Component {
 
     onDrop = async (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
-        const eafFiles = acceptedFiles.filter(file => file.name.split('.').pop() === "eaf");
-        const wavFileNames = acceptedFiles.filter(file => file.name.split('.').pop() === "wav").map(file => file.name);
+        const eafFiles = acceptedFiles
+            .filter(file => file.name.split('.').pop() === "eaf");
+        const wavFileNames = acceptedFiles
+            .filter(file => file.name.split('.').pop() === "wav")
+            .map(file => file.name);
 
         // for each is not supported with await for some reason...
         for (let i = 0; i < eafFiles.length; i++) {
