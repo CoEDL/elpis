@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, useState} from "react";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import {Button} from "semantic-ui-react";
@@ -33,6 +33,7 @@ class FileUpload extends Component {
         const eafFiles = acceptedFiles.filter(file => file.name.split('.').pop() === "eaf");
         const wavFileNames = acceptedFiles.filter(file => file.name.split('.').pop() === "wav").map(file => file.name);
 
+        // for each is not supported with await for some reason...
         for (let i = 0; i < eafFiles.length; i++) {
             const parsedWavFile = await this.parseElan(eafFiles[i]);
             const identicalWavFile = eafFiles[i].name.split('.')[0].concat(".wav");
@@ -40,6 +41,7 @@ class FileUpload extends Component {
                 console.log("Missing wav file, provide either", identicalWavFile, "or", parsedWavFile);
             }
         }
+
         var formData = new FormData();
 
         acceptedFiles.forEach(file => {
