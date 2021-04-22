@@ -87,7 +87,7 @@ class FileUpload extends Component {
                             <li key={wavFile[0]}>
                                 {wavFile[0]} / {wavFile[1]}
                             </li>
-);
+                        );
                     })}
                         </ul>
                     </Message>}
