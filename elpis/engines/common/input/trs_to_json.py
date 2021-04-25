@@ -9,15 +9,15 @@ Contributors:
               Nicholas Lambourne (University of Queensland, 2019)
 """
 
-
-import os
-import sys
 import argparse
-import platform
-import uuid
 import glob
+import os
+import platform
+import sys
+import uuid
 import xml.etree.ElementTree as ElementTree
 from typing import Dict, List, Set, Tuple, Union
+
 from ..utilities import find_files_by_extensions, write_data_to_json_file
 
 
@@ -39,7 +39,6 @@ def conditional_log(condition: bool, text: str) -> None:
 
 
 def process_trs(file_name: str, verbose_output: bool) -> List[Dict[str, Union[str, float]]]:
-
     """
     Method to process the trs files and return a list of utterances.
 
@@ -70,20 +69,19 @@ def process_trs(file_name: str, verbose_output: bool) -> List[Dict[str, Union[st
     return utterances
 
 
-def process_turn(wave_name: str, turn_node: ElementTree.Element,
+def process_turn(wav_name: str, turn_node: ElementTree.Element,
                  tree: ElementTree.ElementTree) -> List[Dict[str, Union[str, float]]]:
     """
     Helper method to process each turn_node in the .trs file.
 
-    :param file_name: name of the file
     :param turn_node: the ElementTree node to be processed
-    :param wave_name: name of .wav audio file to be processed
+    :param wav_name: name of .wav audio file to be processed
     :param tree: XML data represented as a tree data structure
     :return: list of key information on utterances
     """
 
     turn_end: float = float(turn_node.attrib["endTime"])
-    speaker_id: str = turn_node.get("speaker", "")
+    speaker_id: str = turn_node.get("speaker", None)
 
     speaker_name_node: ElementTree.Element = tree.find(".//Speaker[@id='%s']" % speaker_id)
     if speaker_name_node is not None:
@@ -93,7 +91,7 @@ def process_turn(wave_name: str, turn_node: ElementTree.Element,
 
     items: List[Tuple[str, str]] = [(element.attrib["time"], element.tail.strip())
                                     for element in turn_node.findall("./Sync")]
-    wave_file_name = os.path.join(".", wave_name)
+    wave_file_name = os.path.join(".", wav_name)
 
     result: List[Dict[str, Union[str, float]]] = []
 

@@ -1,12 +1,13 @@
 import subprocess
+from typing import Optional
 
 
-def run(cmdline: str, cwd: str = None) -> subprocess.CompletedProcess:
+def run(cmdline: str, cwd: Optional[str] = None) -> subprocess.CompletedProcess:
     """
     Run a command in the bash shell.
     
     :cmdline: command string to run in bash.
-    :cwd: optionallly, set the current working dir for the command.
+    :cwd: optionally, set the current working dir for the command.
     :return: the subprocess created from the string.
     """
     args = ['bash', '-c', cmdline]

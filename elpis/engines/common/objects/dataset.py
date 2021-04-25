@@ -1,7 +1,6 @@
 import json
 import glob
 import os
-import string
 
 from pathlib import Path
 from typing import Dict, List, Union, BinaryIO, Optional
@@ -39,7 +38,6 @@ class DSPaths(object):
         self.corpus_txt = self.cleaned.joinpath('corpus.txt')
 
 
-
 class Dataset(FSObject):
     """
     Dataset (or commonly referred to as Recordings on the front end) stores
@@ -66,7 +64,7 @@ class Dataset(FSObject):
     def load(cls, base_path: Path):
         self = super().load(base_path)
         self.pathto = DSPaths(self.path)
-        self.__files = [ self.pathto.original.joinpath(path) for path in self.config['files']]
+        self.__files = [self.pathto.original.joinpath(path) for path in self.config['files']]
         # at this point config has the previous state
         self._importer = self.config['importer']
         temp_state = self._importer
@@ -80,16 +78,16 @@ class Dataset(FSObject):
 
     def select_importer(self, name: str):
         """
-        Selects data transformer to use as importer corrosponding to the name.
+        Selects data transformer to use as importer corresponding to the name.
         If no name exists, ValueError is raised. After this function is called,
         the .importer property is no longer None. If this function is called
-        again, then the importer will be overriden.
+        again, then the importer will be overridden.
 
         TODO context change callback
 
         :param name: name of the data transformer to use.
         :raises:
-            ValueError: if name does not corrospond to any existing data transformers.
+            ValueError: if name does not correspond to any existing data transformers.
         """
 
         def settings_change_callback(ctx):
@@ -108,7 +106,8 @@ class Dataset(FSObject):
             self.config['importer'] = importer_config
 
         temporary_directory_path = f'/tmp/{self.hash}/working'
-        Path(temporary_directory_path).mkdir(parents=True, exist_ok=True) # TODO: what if two importers are used on this directory?
+        # TODO: what if two importers are used on this directory?
+        Path(temporary_directory_path).mkdir(parents=True, exist_ok=True)
         transcription_json_file_path = f'{self.pathto.annotation_json}'
         self._importer = make_importer(
             name,
@@ -124,19 +123,18 @@ class Dataset(FSObject):
     
     def auto_select_importer(self):
         if self.importer is not None:
-            return # Already have importer selected
+            return  # Already have importer selected
         if len(self.files) == 0:
-            return # cannot determine importer with no files.
+            return  # Cannot determine importer with no files.
         extensions = set([f'{p}'.split('.')[-1] for p in self.files])
-        dtaf_exts = set(DataTransformerAbstractFactory._ext_to_factory.keys())
-        intersect = extensions.intersection(dtaf_exts)
+        dtaf_extensions = set(DataTransformerAbstractFactory._ext_to_factory.keys())
+        intersect = extensions.intersection(dtaf_extensions)
         if len(intersect) == 0:
-            return # No common file extentions
+            return  # No common file extensions
         # Just use the first one
         ext = list(intersect)[0]
         name = DataTransformerAbstractFactory._ext_to_factory[ext]
         self.select_importer(name)
-
 
     @property
     def files(self) -> List[str]:
@@ -186,7 +184,8 @@ class Dataset(FSObject):
 
         As a property, this attribute is read-only, however, can be operated on.
 
-        :return: A DataTransformer if one has been assigned using the select_importer(...) method, otherwise None.
+        :return: A DataTransformer if one has been assigned using the select_importer(...) method,
+        otherwise None.
         """
         return self._importer
     
@@ -202,11 +201,10 @@ class Dataset(FSObject):
         :raises:
             RuntimeError: if there is an attempt to get the annotation object before process().
         """
-        if self.config['has_been_processed'] == False:
+        if self.config['has_been_processed'] is False:
             raise RuntimeError('cannot get annotations wihtout runnint .process()')
         with self.pathto.annotation_json.open(mode='r') as fin:
             return json.loads(fin.read())
-    
 
     def add_fp(self, fp: Union[BufferedIOBase, BinaryIO], fname: str,
                destination: str = 'original'):

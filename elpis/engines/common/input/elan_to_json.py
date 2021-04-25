@@ -18,6 +18,7 @@ import sys
 from typing import List, Dict, Tuple, Optional
 
 from pympi.Elan import Eaf
+
 from ..utilities import load_json_file, write_data_to_json_file
 
 
@@ -126,6 +127,8 @@ def process_eaf(input_elan_file: str = '',
         parameters: Dict[str, str] = input_eaf.get_parameters_for_tier(tier_name)
         print(f"parameters {parameters}")
         speaker_id: str = parameters.get("PARTICIPANT", "")
+    else:
+        return annotations_data
 
     for annotation in annotations:
         start: str = annotation[0]
@@ -148,8 +151,8 @@ def process_eaf(input_elan_file: str = '',
 
 def main():
     """
-    Run the entire elan_to_json.py as a command line utility. It extracts information on speaker, audio file,
-    transcription etc. from the given tier of the specified .eaf file.
+    Run the entire elan_to_json.py as a command line utility. It extracts information on speaker,
+    audio file, transcription etc. from the given tier of the specified .eaf file.
 
     Usage: python3 elan_to_json.py [-h] [-i INPUT_DIR] [-o OUTPUT_DIR] [-t TIER] [-j OUTPUT_JSON]
     """

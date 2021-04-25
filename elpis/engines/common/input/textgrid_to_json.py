@@ -11,7 +11,9 @@ Contributors:
 """
 
 import argparse
+
 from praatio import tgio
+
 from ..utilities import *
 
 
@@ -58,7 +60,6 @@ def seconds_to_milliseconds(seconds: float) -> int:
 
 
 def main() -> None:
-
     """
     Run the entire textgrid_to_json.py as a command line utility.
 
@@ -67,8 +68,10 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(
         description="Search input folder for .TextGrid files and convert to JSON on stdout")
-    parser.add_argument("-i", "--input_dir", help="The input data dir", type=str, default="input/data/")
-    parser.add_argument("-o", "--output_dir", help="Output directory", type=str, default="input/output/tmp")
+    parser.add_argument("-i", "--input_dir", help="The input data dir", type=str,
+                        default="input/data/")
+    parser.add_argument("-o", "--output_dir", help="Output directory", type=str,
+                        default="input/output/tmp")
     arguments = parser.parse_args()
 
     if not os.path.exists(arguments.output_dir):

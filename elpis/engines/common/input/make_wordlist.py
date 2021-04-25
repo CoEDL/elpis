@@ -15,6 +15,7 @@ import argparse
 import os
 import sys
 from typing import List, Dict
+
 from ..utilities import load_json_file
 
 
@@ -26,7 +27,7 @@ def save_word_list(word_list: List[str], file_name: str) -> None:
     """
     with open(file_name, "w", encoding='utf-8') as f:
         for word in word_list:
-            f.write(word + "\n",)
+            f.write(word + "\n", )
         print(f"Wrote word list to {file_name}")
 
 

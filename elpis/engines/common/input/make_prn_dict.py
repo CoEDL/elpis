@@ -71,8 +71,7 @@ def generate_sound_mapping(word: str,
                 current_index += len(maps[0])
                 break
 
-        if not found:
-            # unknown sound
+        if not found:  # unknown sound
             res.append('(' + token_lower[current_index] + ')')
             missing_characters.add(token_lower[current_index])
             current_index += 1

@@ -18,28 +18,30 @@ Contributors:
 import os
 import re
 import sys
-import nltk
 from argparse import ArgumentParser
+from typing import Dict, List, Set, Optional
+
+import nltk
 from langid.langid import LanguageIdentifier, model
 from nltk.corpus import words
-from typing import Dict, List, Set
+
 from ..utilities import load_json_file, write_data_to_json_file
 
 
 def clean_utterance(utterance: Dict[str, str],
                     punctuation_to_collapse_by: str = '',
                     punctuation_to_explode_by: str = '',
-                    special_cases: set = {None},
-                    translation_tags: set = {None},
+                    special_cases: Optional[Set[str]] = None,
+                    translation_tags: Optional[Set[str]] = None,
                     remove_english: bool = False,
-                    english_words: set = None) -> (List[str], int):
+                    english_words: Optional[Set[str]] = None) -> (List[str], int):
     """
     Takes an utterance and cleans it based on the rules established by the provided parameters.
     :param utterance: a dictionary with a "transcript" key-value pair.
     :param punctuation_to_collapse_by: punctuation marks to strip.
     :param punctuation_to_explode_by: punctuation marks to replace with spaces.
-    :param special_cases: a list of words to always remove from the output.
-    :param translation_tags: a list of tags to always remove from the output.
+    :param special_cases: a set of words to always remove from the output.
+    :param translation_tags: a set of tags to always remove from the output.
     :param remove_english: whether or not to remove English words.
     :param english_words: a list of english words to remove from the transcript (we suggest the nltk corpus).
     :return: a tuple with a list of 'cleaned' words and the number of English to remove.
@@ -47,6 +49,10 @@ def clean_utterance(utterance: Dict[str, str],
     # TODO add interface setting to include user specific tags
     # translation_tags = {"@eng@", "<ind:", "<eng:"}
     # TODO add interface setting to skip this as caps are significant in some languages
+    if translation_tags is None:
+        translation_tags = {None}
+    if special_cases is None:
+        special_cases = {None}
     utterance_string = utterance.get("transcript").lower()
     dirty_words = utterance_string.split()
     clean_words = []
@@ -111,8 +117,8 @@ def are_words_valid(clean_words: List[str],
 def clean_json_utterance(utterance: Dict[str, str],
                          punctuation_to_collapse_by: str = '',
                          punctuation_to_explode_by: str = '',
-                         special_cases: set = {None},
-                         translation_tags: set = {None},
+                         special_cases: Optional[Set[str]] = None,
+                         translation_tags: Optional[Set[str]] = None,
                          remove_english: bool = False,
                          use_langid: bool = False) -> Dict[str, str]:
     """
@@ -120,8 +126,8 @@ def clean_json_utterance(utterance: Dict[str, str],
     :param utterance: Python dictionary, must have a 'transcript' key-value.
     :param punctuation_to_collapse_by: punctuation marks to strip.
     :param punctuation_to_explode_by: punctuation marks to replace with spaces.
-    :param special_cases: a list of words to always remove from the output.
-    :param translation_tags: a list of tags to always remove from the output.
+    :param special_cases: a set of words to always remove from the output.
+    :param translation_tags: a set of tags to always remove from the output.
     :param remove_english: whether or not to remove English from the utterances.
     :param use_langid: whether or not to use the langid library to identify English to remove.
     :return: cleaned utterance (dictionary).
@@ -130,6 +136,10 @@ def clean_json_utterance(utterance: Dict[str, str],
     # TODO make this an interface setting
     # special_cases = ["<silence>"]  # Any words you want to ignore
 
+    if translation_tags is None:
+        translation_tags = {None}
+    if special_cases is None:
+        special_cases = {None}
     if remove_english:
         english_words = get_english_words()  # pre-load English corpus
     else:
@@ -163,8 +173,8 @@ def clean_json_utterance(utterance: Dict[str, str],
 def clean_json_data(json_data: List[Dict[str, str]],
                     punctuation_to_collapse_by: str = '',
                     punctuation_to_explode_by: str = '',
-                    special_cases: set = {None},
-                    translation_tags: set = {None},
+                    special_cases: Optional[Set[str]] = None,
+                    translation_tags: Optional[Set[str]] = None,
                     remove_english: bool = False,
                     use_langid: bool = False,
                     ) -> List[Dict[str, str]]:
@@ -181,13 +191,15 @@ def clean_json_data(json_data: List[Dict[str, str]],
     """
     json_data_cleaned = []
     for utterance in json_data:
-        utterance_cleaned = clean_json_utterance(utterance,
-                                                 punctuation_to_collapse_by=punctuation_to_collapse_by,
-                                                 punctuation_to_explode_by=punctuation_to_explode_by,
-                                                 special_cases=special_cases,
-                                                 translation_tags=translation_tags,
-                                                 remove_english=remove_english,
-                                                 use_langid=use_langid)
+        utterance_cleaned = clean_json_utterance(
+            utterance,
+            punctuation_to_collapse_by=punctuation_to_collapse_by,
+            punctuation_to_explode_by=punctuation_to_explode_by,
+            special_cases=special_cases,
+            translation_tags=translation_tags,
+            remove_english=remove_english,
+            use_langid=use_langid
+        )
         json_data_cleaned.append(utterance_cleaned)
     return json_data_cleaned
 

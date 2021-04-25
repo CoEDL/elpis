@@ -10,8 +10,10 @@ Contributors:
 
 from argparse import ArgumentParser
 from pathlib import Path
+
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
+
 from ..utilities import find_all_files_in_dir_by_extensions
 
 

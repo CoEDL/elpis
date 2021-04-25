@@ -1,12 +1,13 @@
 from flask import request, current_app as app, jsonify
-from ..blueprint import Blueprint
+
 from elpis.engines import Interface
 from elpis.engines.common.objects.model import Model
 from elpis.engines.common.objects.transcription import Transcription
 from elpis.engines.common.utilities import hasher
-
+from ..blueprint import Blueprint
 
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
+
 
 # TODO transcriptions have no name
 @bp.route("/new", methods=['POST'])
