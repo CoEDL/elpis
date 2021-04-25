@@ -10,6 +10,7 @@ class ModelFiles(object):
     def __init__(self, basepath: Path):
         self.kaldi = PathStructure(basepath)
 
+
 class Model(FSObject):  # TODO not thread safe
     _config_file = 'model.json'
     _links = {**FSObject._links, **{"dataset": Dataset}}

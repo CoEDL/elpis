@@ -1,10 +1,9 @@
-from ..blueprint import Blueprint
 from . import config
 from . import dataset
 from . import model
 from . import pron_dict
 from . import transcription
-
+from ..blueprint import Blueprint
 
 bp = Blueprint("endpoints", __name__, url_prefix="/api")
 

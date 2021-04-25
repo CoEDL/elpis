@@ -1,9 +1,7 @@
-from ..blueprint import Blueprint
 from flask import current_app as app, jsonify, request
+
 from elpis.engines import Interface, ENGINES
-import shutil
-import os
-import glob
+from ..blueprint import Blueprint
 
 bp = Blueprint("config", __name__, url_prefix="/config")
 
@@ -75,7 +73,8 @@ def config_list():
     else:
         dev_mode = False
     # Add config settings explicitly, we don't need to share everything
-    # Also pass back the engine list so that we can populate dev widgets without making another request
+    # Also pass back the engine list so that we can populate dev widgets
+    # without making another request
     data = {
         "config": {
             "dev_mode": dev_mode
@@ -86,4 +85,3 @@ def config_list():
         "status": 200,
         "data": data
     })
-

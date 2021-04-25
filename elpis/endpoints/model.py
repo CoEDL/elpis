@@ -1,8 +1,10 @@
-from flask import request, current_app as app, jsonify
-from ..blueprint import Blueprint
 import subprocess
-from elpis.engines.common.objects.model import Model
+
+from flask import request, current_app as app, jsonify
+
 from elpis.engines.common.errors import InterfaceError
+from elpis.engines.common.objects.model import Model
+from ..blueprint import Blueprint
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -18,12 +20,13 @@ def run(cmd: str) -> str:
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT
     )
-    return process.stdout
+    return str(process.stdout)
 
 
 @bp.route("/new", methods=['POST'])
 def new():
     interface = app.config['INTERFACE']
+
     try:
         model = interface.new_model(request.json["name"])
         print(f"New model created {model.name} {model.hash}")
@@ -32,20 +35,25 @@ def new():
             "status": 500,
             "error": e.human_message
         })
+
     dataset = interface.get_dataset(request.json['dataset_name'])
     model.link_dataset(dataset)
     app.config['CURRENT_DATASET'] = dataset
+
     if 'engine' in request.json and request.json['engine'] == 'kaldi':
         pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
         model.link_pron_dict(pron_dict)
         app.config['CURRENT_PRON_DICT'] = pron_dict
+
     if 'engine' in request.json and request.json['engine'] == 'espnet':
         pass
+
     model.build_structure()
     app.config['CURRENT_MODEL'] = model
     data = {
         "config": model.config._load()
     }
+
     return jsonify({
         "status": 200,
         "data": data
@@ -62,6 +70,7 @@ def load():
     data = {
         "config": model.config._load()
     }
+
     return jsonify({
         "status": 200,
         "data": data
@@ -73,14 +82,15 @@ def list_existing():
     interface = app.config['INTERFACE']
     data = {
         "list": [{
-                'name': model['name'],
-                'dataset_name': model['dataset_name'],
-                'engine_name': model['engine_name'],
-                'pron_dict_name': model['pron_dict_name'],
-                'status': model['status'],
-                'results': model['results']
-                } for model in interface.list_models_verbose()]
+            'name': model['name'],
+            'dataset_name': model['dataset_name'],
+            'engine_name': model['engine_name'],
+            'pron_dict_name': model['pron_dict_name'],
+            'status': model['status'],
+            'results': model['results']
+        } for model in interface.list_models_verbose()]
     }
+
     return jsonify({
         "status": 200,
         "data": data
@@ -138,6 +148,7 @@ def status():
         "data": data
     })
 
+
 @bp.route("/log", methods=['GET'])
 def log():
     model: Model = app.config['CURRENT_MODEL']
@@ -153,11 +164,13 @@ def log():
         "data": data
     })
 
+
 @bp.route("/results", methods=['GET'])
 def results():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status": 404, "data": "No current model exists (perhaps create one first)"})
+        return jsonify(
+            {"status": 404, "data": "No current model exists (perhaps create one first)"})
     try:
         results = model.get_train_results()
     except FileNotFoundError:

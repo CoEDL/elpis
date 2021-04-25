@@ -17,6 +17,7 @@ import threading
 from multiprocessing.dummy import Pool
 from shutil import move
 from typing import Set, Tuple
+
 from ..utilities.globals import SOX_PATH
 
 
@@ -66,7 +67,7 @@ def main() -> None:
     parent_temporary_directory = "tmp"
 
     all_files_in_dir = glob.glob(os.path.join(base_directory, "**"), recursive=True)
-    input_audio = [ file_ for file_ in all_files_in_dir if file_.endswith(".wav")]
+    input_audio = [file_ for file_ in all_files_in_dir if file_.endswith(".wav")]
     process_lock = threading.Lock()
     temporary_directories = set()
 

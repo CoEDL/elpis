@@ -1,10 +1,12 @@
-from flask import request
-from ..blueprint import Blueprint
-from flask import current_app as app, jsonify
-from elpis.engines import Interface
-from elpis.engines.common.objects.dataset import Dataset
-from elpis.engines.common.errors import InterfaceError
 import os
+
+from flask import current_app as app, jsonify
+from flask import request
+
+from elpis.engines import Interface
+from elpis.engines.common.errors import InterfaceError
+from elpis.engines.common.objects.dataset import Dataset
+from ..blueprint import Blueprint
 
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
@@ -68,8 +70,10 @@ def require_dataset(f):
             return jsonify({"status": 404,
                             "data": "No current dataset exists (perhaps create one first)"})
         return f(dataset, *args, **kwargs)
+
     wrapper.__name__ = f.__name__
     return wrapper
+
 
 # Handle file uploads. For now, default to the "original" dir.
 # Dataset.add_fp() will check file names, moving corpora files to own dir
@@ -85,7 +89,6 @@ def files(dataset: Dataset):
         data = {"files": dataset.files}
         dataset.auto_select_importer()
         if dataset.importer is not None:
-            # maybe a comment here will force this file update?
             dataset.validate()
             dataset.refresh_ui()
             data.update({
@@ -97,6 +100,7 @@ def files(dataset: Dataset):
         "status": 200,
         "data": data
     })
+
 
 @bp.route("/files/delete", methods=['POST'])
 @require_dataset
@@ -121,8 +125,8 @@ def settings(dataset: Dataset):
             if key in settings.keys():
                 dataset.importer.set_setting(key, request.json[key])
             else:
-                pass # TODO throw an invalid key error here?
-        
+                pass  # TODO throw an invalid key error here?
+
     # Return imports current/updated settings.
     data = {
         'settings': dataset.importer.get_settings()
@@ -143,7 +147,6 @@ def settings_ui(dataset: Dataset):
         "status": 200,
         "data": data
     })
-
 
 
 # TODO prepare endpoint returns file contents as text.
