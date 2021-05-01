@@ -79,7 +79,9 @@
             "tierNameDescription": "or use a tier name.",
             "puncDescription": "Punctuation will be removed from the transcriptions. Add punctuation marks here that you want to be replaced by spaces when removed.",
             "uploadButton": "Upload",
-            "saveButton": "Save Settings"
+            "saveButton": "Save Settings",
+            "missingAudioFiles": "Missing audio files",
+            "missingAudioFilesDescription": "The following audio files are missing:"
         },
         "fileUpload": {
             "audioLabel": "Audio files:",

@@ -70,7 +70,9 @@
             "tierNameDescription": "ou utilisez un nom d’échelon.",
             "puncDescription": "La ponctuation sera supprimée des transcriptions. Ajoutez ici les signes de ponctuation que vous désirez remplacer par des espaces.",
             "uploadButton": "Téléverser",
-            "saveButton": "Enregistrer les paramètres"
+            "saveButton": "Enregistrer les paramètres",
+            "missingAudioFiles": "Fichiers audio manquants",
+            "missingAudioFilesDescription": "Les fichiers audio suivants sont manquants:"
         },
         "fileUpload": {
             "audioLabel": "Fichiers audio :",
