@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 class FileUpload extends Component {
     constructor(props) {
         super(props);
-        this.state = {missingFiles: [], formData: new FormData()};
+        this.state = {missingFiles: []};
     }
 
     parseElan = async (file) => {
@@ -54,20 +54,17 @@ class FileUpload extends Component {
 
             if (!wavFileNames.includes(parsedWavFile) && !wavFileNames.includes(identicalWavFile)) {
                 this.setState(prevState => ({
-                    ...prevState,
                     missingFiles: [...prevState.missingFiles, [identicalWavFile, parsedWavFile]],
                 }));
             }
         }
 
-        acceptedFiles.forEach(file => {
-            this.setState(prevState => ({
-                ...prevState,
-                formData: {...prevState.formData, ["file"]: file}
-            }));
-        });
+        var formData = new FormData();
 
-        this.props.datasetFiles(this.state.formData);
+        acceptedFiles.forEach(file => {
+            formData.append("file", file);
+        });
+        this.props.datasetFiles(formData);
     }
 
     render() {
