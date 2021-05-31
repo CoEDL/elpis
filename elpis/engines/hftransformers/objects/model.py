@@ -89,7 +89,23 @@ class HFTransformersModel(BaseModel):
     def build_structure(self):
         print("BUILD STRUCTURE")
 
+    def get_arguments(self):
+        self.build_arguments()
+        # See all possible arguments in src/transformers/training_args.py
+        # or by passing the --help flag to this script.
+        # We now keep distinct sets of args, for a cleaner separation of concerns.
+        parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
+        if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
+            # If we pass only one argument to the script and it's the path to a json file,
+            # let's parse it to get our arguments.
+            return parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
+        else:
+            return parser.parse_args_into_dataclasses()
+
     def build_arguments(self):
+        """
+        Build arguments from various sources (GUI, files, default, etc.).
+        """
         positional_arguments = [__file__]
         keyword_arguments = {
             "elpis_data_dir": "../../na-elpis/e919e6c711e2c6abee5a17f82bebe850",
@@ -128,24 +144,10 @@ class HFTransformersModel(BaseModel):
         sys.argv = positional_arguments + keyword_arguments
         print("Emulated arguments (as a file call):\n", sys.argv)
 
-    def train(self, on_complete:Callable=None):
-        self.build_arguments()
-        self.main()
-
-    def main(self):
-        # See all possible arguments in src/transformers/training_args.py
-        # or by passing the --help flag to this script.
-        # We now keep distinct sets of args, for a cleaner separation of concerns.
-
-        parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
-        if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
-            # If we pass only one argument to the script and it's the path to a json file,
-            # let's parse it to get our arguments.
-            model_args, data_args, training_args = parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
-        else:
-            model_args, data_args, training_args = parser.parse_args_into_dataclasses()
-
-        # Detecting last checkpoint.
+    def get_last_checkpoint(self, training_args):
+        """
+        Detect last checkpoint.
+        """
         last_checkpoint = None
         if os.path.isdir(training_args.output_dir) and training_args.do_train and not training_args.overwrite_output_dir:
             last_checkpoint = get_last_checkpoint(training_args.output_dir)
@@ -159,7 +161,9 @@ class HFTransformersModel(BaseModel):
                     f"Checkpoint detected, resuming training at {last_checkpoint}. To avoid this behavior, change "
                     "the `--output_dir` or add `--overwrite_output_dir` to train from scratch."
                 )
+        return last_checkpoint
 
+    def setup_logging(self, training_args):
         # Setup logging
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
@@ -177,6 +181,13 @@ class HFTransformersModel(BaseModel):
         if is_main_process(training_args.local_rank):
             transformers.utils.logging.set_verbosity_info()
         logger.info("Training/evaluation parameters %s", training_args)
+
+    def train(self, on_complete:Callable=None):
+        model_args, data_args, training_args = self.get_arguments()
+        last_checkpoint = self.get_last_checkpoint(training_args)
+        print(last_checkpoint)
+        raise
+        self.setup_logging(training_args)
 
         # Set seed before initializing model.
         set_seed(training_args.seed)
