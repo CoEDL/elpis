@@ -113,7 +113,7 @@ RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 ########################## ESPNET INSTALLATION #########################
 
-# Some ESPnet dependencies may be covered above but listing all for the sake of completeness
+# Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
 RUN echo "===> Install ESPnet dependencies" && \
     apt-get update && apt-get install -y cmake \
     sox \
@@ -123,7 +123,7 @@ RUN echo "===> Install ESPnet dependencies" && \
 
 WORKDIR /
 
-# Setting up ESPnet for Elpis from Persephone repository
+# Setting up ESPnet for Elpis from Persephone repository.
 RUN git clone https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
@@ -192,6 +192,16 @@ WORKDIR /tmp
 
 # Example data
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
+
+
+
+########################## HF Transformers INSTALLATION #########################
+
+WORKDIR /
+
+# Setting up HF Transformers for Elpis from Persephone repository.
+RUN git clone --branch elpis_wav2vec2_integration https://github.com/persephone-tools/transformers
+RUN poetry add ../transformers torchaudio datasets
 
 
 ########################## RUN THE APP ##########################
