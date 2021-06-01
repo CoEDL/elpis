@@ -154,53 +154,144 @@ class HFTransformersModel(BaseModel):
             if last_checkpoint is None and len(os.listdir(training_args.output_dir)) > 0:
                 raise ValueError(
                     f"Output directory ({training_args.output_dir}) already exists and is not empty. "
-                    "Use --overwrite_output_dir to overcome."
-                )
+                    "Use --overwrite_output_dir to overcome.")
             elif last_checkpoint is not None:
                 logger.info(
                     f"Checkpoint detected, resuming training at {last_checkpoint}. To avoid this behavior, change "
-                    "the `--output_dir` or add `--overwrite_output_dir` to train from scratch."
-                )
+                    "the `--output_dir` or add `--overwrite_output_dir` to train from scratch.")
         return last_checkpoint
 
     def setup_logging(self, training_args):
-        # Setup logging
+        """
+        Setup logging.
+        """
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
             datefmt="%m/%d/%Y %H:%M:%S",
-            handlers=[logging.StreamHandler(sys.stdout)],
-        )
+            handlers=[logging.StreamHandler(sys.stdout)],)
         logger.setLevel(logging.INFO if is_main_process(training_args.local_rank) else logging.WARN)
 
         # Log on each process the small summary:
         logger.warning(
             f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
-            + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}"
-        )
+            + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}")
         # Set the verbosity to info of the Transformers logger (on main process only):
         if is_main_process(training_args.local_rank):
             transformers.utils.logging.set_verbosity_info()
         logger.info("Training/evaluation parameters %s", training_args)
 
-    def train(self, on_complete:Callable=None):
-        model_args, data_args, training_args = self.get_arguments()
-        last_checkpoint = self.get_last_checkpoint(training_args)
-        print(last_checkpoint)
-        raise
-        self.setup_logging(training_args)
-
-        # Set seed before initializing model.
-        set_seed(training_args.seed)
-
-        # Get the datasets:
-        train_dataset = datasets.load_dataset(
-            "common_voice", data_args.dataset_config_name, split=data_args.train_split_name
-        )
+    def get_datasets(self, data_args):
+        """
+        Get the datasets
+        """
+        train_dataset = datasets.load_dataset("common_voice", data_args.dataset_config_name, split=data_args.train_split_name)
         eval_dataset = datasets.load_dataset("common_voice", data_args.dataset_config_name, split="test")
+        return train_dataset, eval_dataset
 
+
+    def get_language_data(self, data_dir, language_file="language_data.json"):
+        ## Language-specific data. It should be available from Elpis in a way or another.
+        ## For the moment, it is a simple json file with 2 flat lists (graphemes and removables).
+        language_data_path = data_dir / language_file
+        if language_data_path.exists():
+            with open(language_data_path) as fd:
+                language_data = json.load(fd)
+            logger.info(f"Language data: {language_data}")
+        else:
+            language_data = None
+        return language_data
+
+    def create_split(self, data_args, data_dir):
+        """ Create annotations files for the train/dev/test splits. """
+
+        elpis_annotations_fn=(data_dir / 'annotations.json')
+        with open(elpis_annotations_fn) as f:
+            anno_json = json.load(f)
+
+        train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
+        dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
+
+        split_dir = data_dir / 'splits'
+        split_dir.mkdir(exist_ok=True)
+
+        with open(split_dir / 'train.json', 'w') as f:
+            json.dump({'data': train_annos}, f)
+        with open(split_dir / 'dev.json', 'w') as f:
+            json.dump({'data': dev_annos}, f)
+        with open(split_dir / 'test.json', 'w') as f:
+            json.dump({'data': test_annos}, f)
+
+    def get_dataset(self, data_dir):
+        split_dir = data_dir / 'splits'
+        ds = datasets.load_dataset('json',
+                                data_files={'train': str(split_dir / 'train.json'),
+                                            'dev': str(split_dir /'dev.json'),
+                                            'test': str(split_dir / 'test.json')},
+                                field='data')
+
+        def make_text_col(batch):
+            batch["text"] = batch['transcript']
+            batch["path"] = str(data_dir / 'resampled' / batch['audio_file_name'])
+            return batch
+        ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
+        return ds
+
+    def get_tokenizer(self, data_dir, dataset):
+        file_name = self.create_vocabulary(data_dir, dataset)
+
+        tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token='|',)
+
+        # Test.
+        tokenizer.tokenize("ʈʂʰæ˧~ʈʂʰæ˧")
+
+        return tokenizer
+
+    def create_vocabulary(self, data_dir, dataset, file_name="vocab.json"):
+        language_data = self.get_language_data(data_dir)
+
+        def extract_all_chars(batch):
+            all_text = " ".join(batch["text"])
+            vocab = list(set(all_text))
+            return {"vocab": [vocab], "all_text": [all_text]}
+
+        vocab = dataset['train'].map(
+            extract_all_chars,
+            batched=True,
+            batch_size=-1,
+            keep_in_memory=True,
+            remove_columns=dataset['train'].column_names,
+        )
+        vocab_list = list(set(vocab["vocab"][0]))
+        naive_vocab_dict = {v: k for k, v in enumerate(vocab_list)}
+        naive_vocab_dict["|"] = naive_vocab_dict[" "]
+        del naive_vocab_dict[" "]
+        if language_data:
+            if language_data.get("graphemes"):
+                intelligent_vocab_dict = {token: token_id for token_id, token in enumerate(sorted(language_data["graphemes"], key=len))}
+                naive_vocab_set = set(naive_vocab_dict)
+                intelligent_vocab_set = set("".join(intelligent_vocab_dict))
+                naive_specific_chars = naive_vocab_set - intelligent_vocab_set
+                intelligent_specific_chars = intelligent_vocab_set - naive_vocab_set
+                if naive_specific_chars:
+                    logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {" ".join(sorted(naive_specific_chars))}""")
+                if intelligent_specific_chars:
+                    logger.warning(f"""Characters present ({len(intelligent_specific_chars)}) in language data but absent in data: {" ".join(sorted(intelligent_specific_chars))}""")
+                vocab_dict = intelligent_vocab_dict
+        else:
+            vocab_dict = naive_vocab_dict
+        vocab_dict["[UNK]"] = len(vocab_dict)
+        vocab_dict["[PAD]"] = len(vocab_dict)
+
+        with open(file_name, "w") as vocab_file:
+            json.dump(vocab_dict, vocab_file)
+
+        return file_name
+
+    def tokenize(self, data_args, train_dataset, eval_dataset):
         # Create and save tokenizer
         chars_to_ignore_regex = f'[{"".join(data_args.chars_to_ignore)}]'
 
+        # Is there a better way than doing a nested function here?
         def remove_special_characters(batch):
             batch["text"] = re.sub(chars_to_ignore_regex, "", batch["sentence"]).lower() + " "
             return batch
@@ -208,112 +299,39 @@ class HFTransformersModel(BaseModel):
         train_dataset = train_dataset.map(remove_special_characters, remove_columns=["sentence"])
         eval_dataset = eval_dataset.map(remove_special_characters, remove_columns=["sentence"])
 
+    def get_feature_extractor(self):
+        return Wav2Vec2FeatureExtractor(feature_size=1, sampling_rate=16_000, padding_value=0.0, do_normalize=True, return_attention_mask=True)
+
+    def get_processor(self, feature_extractor, tokenizer):
+        return Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
+
+    def train(self, on_complete:Callable=None):
+        model_args, data_args, training_args = self.get_arguments()
+        last_checkpoint = self.get_last_checkpoint(training_args)
+        self.setup_logging(training_args)
+
+        # Set seed before initializing model.
+        set_seed(training_args.seed)
+
+        train_dataset, eval_dataset = self.get_datasets(data_args)
+
+        self.tokenize(data_args, train_dataset, eval_dataset)
+
         data_dir = Path(data_args.elpis_data_dir)
 
-        ## Language-specific data. It should be available from Elpis in a way or another.
-        ## For the moment, it is a simple json file with 2 flat lists (graphemes and removables).
-        language_data_path = data_dir / "language_data.json"
-        if language_data_path.exists():
-            with open(language_data_path) as fd:
-                language_data = json.load(fd)
-            logger.info(f"Language data: {language_data}")
-        else:
-            language_data = None
+        self.create_split(data_args, data_dir)
 
-        def create_split(data_dir):
-            """ Create annotations files for the train/dev/test splits. """
-
-            elpis_annotations_fn=(data_dir / 'annotations.json')
-            with open(elpis_annotations_fn) as f:
-                anno_json = json.load(f)
-
-            train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
-            dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
-
-            split_dir = data_dir / 'splits'
-            split_dir.mkdir(exist_ok=True)
-
-            with open(split_dir / 'train.json', 'w') as f:
-                json.dump({'data': train_annos}, f)
-            with open(split_dir / 'dev.json', 'w') as f:
-                json.dump({'data': dev_annos}, f)
-            with open(split_dir / 'test.json', 'w') as f:
-                json.dump({'data': test_annos}, f)
-
-        create_split(data_dir)
-
-        def get_dataset(data_dir):
-            split_dir = data_dir / 'splits'
-            ds = datasets.load_dataset('json',
-                                    data_files={'train': str(split_dir / 'train.json'),
-                                                'dev': str(split_dir /'dev.json'),
-                                                'test': str(split_dir / 'test.json')},
-                                    field='data')
-
-            def make_text_col(batch):
-                batch["text"] = batch['transcript']
-                batch["path"] = str(data_dir / 'resampled' / batch['audio_file_name'])
-                return batch
-            ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
-            return ds
-
-        dataset = get_dataset(data_dir)
-
-        def extract_all_chars(batch):
-            all_text = " ".join(batch["text"])
-            vocab = list(set(all_text))
-            return {"vocab": [vocab], "all_text": [all_text]}
-
-        def create_vocabulary(dataset, language_data):
-            vocab = dataset['train'].map(
-                extract_all_chars,
-                batched=True,
-                batch_size=-1,
-                keep_in_memory=True,
-                remove_columns=dataset['train'].column_names,
-            )
-            vocab_list = list(set(vocab["vocab"][0]))
-            naive_vocab_dict = {v: k for k, v in enumerate(vocab_list)}
-            naive_vocab_dict["|"] = naive_vocab_dict[" "]
-            del naive_vocab_dict[" "]
-            if language_data:
-                if language_data.get("graphemes"):
-                    intelligent_vocab_dict = {token: token_id for token_id, token in enumerate(sorted(language_data["graphemes"], key=len))}
-                    naive_vocab_set = set(naive_vocab_dict)
-                    intelligent_vocab_set = set("".join(intelligent_vocab_dict))
-                    naive_specific_chars = naive_vocab_set - intelligent_vocab_set
-                    intelligent_specific_chars = intelligent_vocab_set - naive_vocab_set
-                    if naive_specific_chars:
-                        logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {" ".join(sorted(naive_specific_chars))}""")
-                    if intelligent_specific_chars:
-                        logger.warning(f"""Characters present ({len(intelligent_specific_chars)}) in language data but absent in data: {" ".join(sorted(intelligent_specific_chars))}""")
-                    vocab_dict = intelligent_vocab_dict
-            else:
-                vocab_dict = naive_vocab_dict
-            vocab_dict["[UNK]"] = len(vocab_dict)
-            vocab_dict["[PAD]"] = len(vocab_dict)
-            return vocab_dict
-
-        vocab_dict = create_vocabulary(dataset, language_data)
-
-        with open("vocab.json", "w") as vocab_file:
-            json.dump(vocab_dict, vocab_file)
+        dataset = self.get_dataset(data_dir)
 
         # Load pretrained model and tokenizer
         #
         # Distributed training:
         # The .from_pretrained methods guarantee that only one local process can concurrently
         # download model & vocab.
-        tokenizer = ElpisTokenizer(
-            'vocab.json', unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token='|',)
 
-        # Test.
-        tokenizer.tokenize("ʈʂʰæ˧~ʈʂʰæ˧")
-
-        feature_extractor = Wav2Vec2FeatureExtractor(
-            feature_size=1, sampling_rate=16_000, padding_value=0.0, do_normalize=True, return_attention_mask=True
-        )
-        processor = Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
+        tokenizer = self.get_tokenizer(data_dir, dataset)
+        feature_extractor = self.get_feature_extractor()
+        processor = self.get_processor(feature_extractor, tokenizer)
 
         model = Wav2Vec2ForCTC.from_pretrained(
             model_args.model_name_or_path,
