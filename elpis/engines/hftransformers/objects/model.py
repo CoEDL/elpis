@@ -305,6 +305,113 @@ class HFTransformersModel(BaseModel):
     def get_processor(self, feature_extractor, tokenizer):
         return Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
 
+    def get_model(self, model_args, processor):
+        return Wav2Vec2ForCTC.from_pretrained(
+            model_args.model_name_or_path,
+            cache_dir=model_args.cache_dir,
+            activation_dropout=model_args.activation_dropout,
+            attention_dropout=model_args.attention_dropout,
+            hidden_dropout=model_args.hidden_dropout,
+            feat_proj_dropout=model_args.feat_proj_dropout,
+            mask_time_prob=model_args.mask_time_prob,
+            gradient_checkpointing=model_args.gradient_checkpointing,
+            layerdrop=model_args.layerdrop,
+            ctc_loss_reduction="mean",
+            pad_token_id=processor.tokenizer.pad_token_id,
+            vocab_size=len(processor.tokenizer),)
+
+    def preprocess_dataset(self, dataset, data_args):
+        speech = self.prepare_speech(dataset)
+
+        def speech_file_to_array_fn(batch):
+            #speech_array, sampling_rate = torchaudio.load(batch["path"])
+            #process = psutil.Process(os.getpid())
+            #print(process.memory_info().rss)
+            batch["sampling_rate"] = 16_000
+            batch["speech"] = speech[batch['path']][int((batch['start_ms']/1000)*batch['sampling_rate']):int((batch['stop_ms']/1000)*batch['sampling_rate'])]
+            batch["target_text"] = batch["text"]
+            batch['duration'] = (batch['stop_ms'] - batch['start_ms'])/1000
+            batch['duration'] = len(batch['speech'])/batch['sampling_rate']
+            return batch
+
+        dataset = dataset.map(
+            speech_file_to_array_fn,
+            remove_columns=dataset['train'].column_names,
+            num_proc=data_args.preprocessing_num_workers,
+        )
+        return dataset
+
+    def prepare_dataset(self, dataset, data_args, training_args, processor):
+        def prepare_dataset(batch):
+            # check that all files have the correct sampling rate
+            assert (
+                len(set(batch["sampling_rate"])) == 1
+            ), f"Make sure all inputs have the same sampling rate of {processor.feature_extractor.sampling_rate}."
+            batch["input_values"] = processor(batch["speech"], sampling_rate=batch["sampling_rate"][0]).input_values
+            # Setup the processor for targets
+            with processor.as_target_processor():
+                batch["labels"] = processor(batch["target_text"]).input_ids
+            return batch
+
+        dataset = dataset.map(
+            prepare_dataset,
+            remove_columns=dataset['train'].column_names,
+            batch_size=training_args.per_device_train_batch_size,
+            batched=True,
+            num_proc=data_args.preprocessing_num_workers,
+        )
+        return dataset
+
+    def prepare_speech(self, dataset):
+        speech = {}
+        audio_paths = set()
+        for utt in dataset['train']:
+            audio_paths.add(utt['path'])
+        for utt in dataset['dev']:
+            audio_paths.add(utt['path'])
+        for utt in dataset['test']:
+            audio_paths.add(utt['path'])
+        for path in audio_paths:
+            speech_array, sampling_rate = torchaudio.load(path)
+            resampler = torchaudio.transforms.Resample(sampling_rate, 16_000)
+            speech[path] = resampler(speech_array).squeeze().numpy()
+        return speech
+
+    def get_trainer(self, dataset, processor, training_args, model, metric_name="wer"):
+        # Metric
+        metric = datasets.load_metric(metric_name)
+
+        def compute_metrics(pred):
+            pred_logits = pred.predictions
+            pred_ids = np.argmax(pred_logits, axis=-1)
+            pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
+            pred_str = processor.batch_decode(pred_ids)
+            # we do not want to group tokens when computing the metrics
+            label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
+            time_str = time.strftime('%Y-%m-%d_%H:%M', time.localtime())
+            with open(training_args.output_dir + f'/dev_preds{time_str}.txt', 'w') as f:
+                for pred, ref in zip(pred_str, label_str):
+                    print('----------------------------------------', file=f)
+                    print('HYP:', file=f)
+                    print(pred, file=f)
+                    print('REF:', file=f)
+                    print(ref, file=f)
+            metric_result = metric.compute(predictions=pred_str, references=label_str)
+            return {metric_name: metric_result}
+
+        # Data collator
+        data_collator = DataCollatorCTCWithPadding(processor=processor, padding=True)
+        # Initialize our Trainer
+        trainer = CTCTrainer(
+            model=model,
+            data_collator=data_collator,
+            args=training_args,
+            compute_metrics=compute_metrics,
+            train_dataset=dataset['train'] if training_args.do_train else None,
+            eval_dataset=dataset['dev'] if training_args.do_eval else None,
+            tokenizer=processor.feature_extractor,)
+        return trainer
+
     def train(self, on_complete:Callable=None):
         model_args, data_args, training_args = self.get_arguments()
         last_checkpoint = self.get_last_checkpoint(training_args)
@@ -332,21 +439,7 @@ class HFTransformersModel(BaseModel):
         tokenizer = self.get_tokenizer(data_dir, dataset)
         feature_extractor = self.get_feature_extractor()
         processor = self.get_processor(feature_extractor, tokenizer)
-
-        model = Wav2Vec2ForCTC.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=model_args.cache_dir,
-            activation_dropout=model_args.activation_dropout,
-            attention_dropout=model_args.attention_dropout,
-            hidden_dropout=model_args.hidden_dropout,
-            feat_proj_dropout=model_args.feat_proj_dropout,
-            mask_time_prob=model_args.mask_time_prob,
-            gradient_checkpointing=model_args.gradient_checkpointing,
-            layerdrop=model_args.layerdrop,
-            ctc_loss_reduction="mean",
-            pad_token_id=processor.tokenizer.pad_token_id,
-            vocab_size=len(processor.tokenizer),
-        )
+        model = self.get_model(model_args, processor)
 
         if data_args.max_train_samples is not None:
             train_dataset = train_dataset.select(range(data_args.max_train_samples))
@@ -354,101 +447,19 @@ class HFTransformersModel(BaseModel):
         if data_args.max_val_samples is not None:
             eval_dataset = eval_dataset.select(range(data_args.max_val_samples))
 
-        speech = {}
-        audio_paths = set()
-        for utt in dataset['train']:
-            audio_paths.add(utt['path'])
-        for utt in dataset['dev']:
-            audio_paths.add(utt['path'])
-        for utt in dataset['test']:
-            audio_paths.add(utt['path'])
-
-        for path in audio_paths:
-            speech_array, sampling_rate = torchaudio.load(path)
-            resampler = torchaudio.transforms.Resample(sampling_rate, 16_000)
-            speech[path] = resampler(speech_array).squeeze().numpy()
-
         # Preprocessing the datasets.
-        # We need to read the aduio files as arrays and tokenize the targets.
-        def speech_file_to_array_fn(batch):
-            #speech_array, sampling_rate = torchaudio.load(batch["path"])
-            #process = psutil.Process(os.getpid())
-            #print(process.memory_info().rss)
-            batch["sampling_rate"] = 16_000
-            batch["speech"] = speech[batch['path']][int((batch['start_ms']/1000)*batch['sampling_rate']):int((batch['stop_ms']/1000)*batch['sampling_rate'])]
-            batch["target_text"] = batch["text"]
-            batch['duration'] = (batch['stop_ms'] - batch['start_ms'])/1000
-            batch['duration'] = len(batch['speech'])/batch['sampling_rate']
-            return batch
+        # We need to read the audio files as arrays and tokenize the targets.
 
-        dataset = dataset.map(
-            speech_file_to_array_fn,
-            remove_columns=dataset['train'].column_names,
-            num_proc=data_args.preprocessing_num_workers,
-        )
+        dataset = self.preprocess_dataset(dataset, data_args)
 
-        durs = sorted(utt['duration'] for utt in dataset['train'])
+        # durs = sorted(utt['duration'] for utt in dataset['train'])
 
-        def prepare_dataset(batch):
-            # check that all files have the correct sampling rate
-            assert (
-                len(set(batch["sampling_rate"])) == 1
-            ), f"Make sure all inputs have the same sampling rate of {processor.feature_extractor.sampling_rate}."
-            batch["input_values"] = processor(batch["speech"], sampling_rate=batch["sampling_rate"][0]).input_values
-            # Setup the processor for targets
-            with processor.as_target_processor():
-                batch["labels"] = processor(batch["target_text"]).input_ids
-            return batch
-
-        dataset = dataset.map(
-            prepare_dataset,
-            remove_columns=dataset['train'].column_names,
-            batch_size=training_args.per_device_train_batch_size,
-            batched=True,
-            num_proc=data_args.preprocessing_num_workers,
-        )
-
-        # Metric
-        wer_metric = datasets.load_metric("wer")
-
-        def compute_metrics(pred):
-            pred_logits = pred.predictions
-            pred_ids = np.argmax(pred_logits, axis=-1)
-
-            pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
-
-            pred_str = processor.batch_decode(pred_ids)
-            # we do not want to group tokens when computing the metrics
-            label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
-
-            time_str = time.strftime('%Y-%m-%d_%H:%M', time.localtime())
-            with open(training_args.output_dir + f'/dev_preds{time_str}.txt', 'w') as f:
-                for pred, ref in zip(pred_str, label_str):
-                    print('----------------------------------------', file=f)
-                    print('HYP:', file=f)
-                    print(pred, file=f)
-                    print('REF:', file=f)
-                    print(ref, file=f)
-            wer = wer_metric.compute(predictions=pred_str, references=label_str)
-
-            return {"wer": wer}
+        dataset = self.prepare_dataset(dataset, data_args, training_args, processor)
 
         if model_args.freeze_feature_extractor:
             model.freeze_feature_extractor()
 
-        # Data collator
-        data_collator = DataCollatorCTCWithPadding(processor=processor, padding=True)
-
-        # Initialize our Trainer
-        trainer = CTCTrainer(
-            model=model,
-            data_collator=data_collator,
-            args=training_args,
-            compute_metrics=compute_metrics,
-            train_dataset=dataset['train'] if training_args.do_train else None,
-            eval_dataset=dataset['dev'] if training_args.do_eval else None,
-            tokenizer=processor.feature_extractor,
-        )
+        trainer = self.get_trainer(dataset, processor, training_args, model)
 
         # Training
         if training_args.do_train:
@@ -526,11 +537,11 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
     def get_pattern(self) -> re.Pattern:
         exclusion_pattern = "|".join([self.unk_token, self.bos_token, self.eos_token, self.pad_token])
         exclusion_pattern = re.sub(r"(\[|/)", r"\\\g<1>", exclusion_pattern)
-        logger.info(f"tokenizer – exclusion pattern: {exclusion_pattern}")
+        # logger.info(f"tokenizer – exclusion pattern: {exclusion_pattern}")
         graphemes = [key for key in self.encoder.keys() if not re.match(exclusion_pattern, key, re.I)]
-        logger.info(f"tokenizer – graphemes: {graphemes}")
+        # logger.info(f"tokenizer – graphemes: {graphemes}")
         pattern = re.compile("|".join(sorted(graphemes, key=lambda grapheme: len(grapheme), reverse=True)))
-        logger.info(f"tokenizer – tokenization pattern: {pattern}")
+        # logger.info(f"tokenizer – tokenization pattern: {pattern}")
         return pattern
 
     def _tokenize(self, text: str) -> List[str]:
@@ -540,7 +551,7 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
         if self.do_lower_case:
             text = text.upper()
         tokens = re.findall(self.pattern, text)
-        logger.info(f"tokenizer – tokens: {text} → {tokens}")
+        # logger.info(f"tokenizer – tokens: {text} → {tokens}")
         return tokens
 
     #############################################
