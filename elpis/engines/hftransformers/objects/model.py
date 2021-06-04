@@ -236,17 +236,13 @@ class HFTransformersModel(BaseModel):
         ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
         return ds
 
-    def get_tokenizer(self, data_dir, dataset):
-        file_name = self.create_vocabulary(data_dir, dataset)
+    def get_tokenizer(self, data_dir, dataset, word_delimiter_token="|"):
+        file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
 
-        tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token='|',)
-
-        # Test.
-        tokenizer.tokenize("ʈʂʰæ˧~ʈʂʰæ˧")
-
+        tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
         return tokenizer
 
-    def create_vocabulary(self, data_dir, dataset, file_name="vocab.json"):
+    def create_vocabulary(self, data_dir, dataset, word_delimiter_token, file_name="vocab.json"):
         language_data = self.get_language_data(data_dir)
 
         def extract_all_chars(batch):
@@ -259,21 +255,28 @@ class HFTransformersModel(BaseModel):
             batched=True,
             batch_size=-1,
             keep_in_memory=True,
-            remove_columns=dataset['train'].column_names,
-        )
+            remove_columns=dataset['train'].column_names,)
         vocab_list = list(set(vocab["vocab"][0]))
         naive_vocab_dict = {v: k for k, v in enumerate(vocab_list)}
-        naive_vocab_dict["|"] = naive_vocab_dict[" "]
-        del naive_vocab_dict[" "]
         if language_data:
             if language_data.get("graphemes"):
-                intelligent_vocab_dict = {token: token_id for token_id, token in enumerate(sorted(language_data["graphemes"], key=len))}
+                intelligent_vocab_dict = {}
+                data_grapheme_duplications = set()
+                for token in sorted(language_data["graphemes"], key=len):
+                    if token not in intelligent_vocab_dict:
+                        intelligent_vocab_dict[token] = len(intelligent_vocab_dict)
+                    else:
+                        data_grapheme_duplications.add(token)
+                if data_grapheme_duplications:
+                    logger.warning(f"""Characters duplicated ({len(data_grapheme_duplications)}) in language data: {" ".join(sorted(data_grapheme_duplications))}; duplications were ignored (please clean the data file)…""")
                 naive_vocab_set = set(naive_vocab_dict)
                 intelligent_vocab_set = set("".join(intelligent_vocab_dict))
                 naive_specific_chars = naive_vocab_set - intelligent_vocab_set
                 intelligent_specific_chars = intelligent_vocab_set - naive_vocab_set
                 if naive_specific_chars:
-                    logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {" ".join(sorted(naive_specific_chars))}""")
+                    for character in naive_specific_chars:
+                        intelligent_vocab_dict[character] = len(intelligent_vocab_dict)
+                        logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {" ".join(sorted(naive_specific_chars))}; they were added automatically (please update the data file)…""")
                 if intelligent_specific_chars:
                     logger.warning(f"""Characters present ({len(intelligent_specific_chars)}) in language data but absent in data: {" ".join(sorted(intelligent_specific_chars))}""")
                 vocab_dict = intelligent_vocab_dict
@@ -281,10 +284,13 @@ class HFTransformersModel(BaseModel):
             vocab_dict = naive_vocab_dict
         vocab_dict["[UNK]"] = len(vocab_dict)
         vocab_dict["[PAD]"] = len(vocab_dict)
-
+        if word_delimiter_token in vocab_dict:
+            logging.error(f"The word delimiter token ({word_delimiter_token}) seems to be already present in the raw text, please choose another one.")
+        if word_delimiter_token != " " and " " in vocab_dict:
+            vocab_dict[word_delimiter_token] = vocab_dict.get(" ", len(vocab_dict))
+            del vocab_dict[" "]
         with open(file_name, "w") as vocab_file:
-            json.dump(vocab_dict, vocab_file)
-
+            json.dump(vocab_dict, vocab_file, ensure_ascii=False)
         return file_name
 
     def tokenize(self, data_args, train_dataset, eval_dataset):
