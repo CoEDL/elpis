@@ -133,14 +133,15 @@ class EspnetModel(BaseModel):
                 p = run(f"cd {local_espnet_path}; ./run.sh --ngpu {self.config['gpus']} --nj 1 &> {run_log_path}")
                 print(p.stdout)
                 print('train double done.')
+                self.status = 'trained'
             except subprocess.CalledProcessError as e:
                 print(e.returncode, e.output)
+                self.status = f'failed with code {e.returncode}'
 
         def run_training_in_background():
             def background_train_task():
                 prepare_for_training()
-                train()
-                self.status = 'trained'
+                train()                
                 self.results = EspnetModel.get_train_results(self)
                 on_complete()
             self.status = 'training'
