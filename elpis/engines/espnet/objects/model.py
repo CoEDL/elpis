@@ -43,7 +43,7 @@ class EspnetModel(BaseModel):
     def status(self):
         #  read the log here and pass it back to the api
         run_log_path = Path(self.path).joinpath('train.log')
-        if not os.path.isfile(run_log_path):
+        if not Path(run_log_path).is_file():
             run(f"touch {run_log_path};")
         with open(run_log_path) as log_file:
             log_text = log_file.read()
