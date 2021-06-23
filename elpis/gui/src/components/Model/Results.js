@@ -31,17 +31,30 @@ class ModelResults extends Component {
                     <Table celled className="attached">
                         <Table.Body>
 
-                            <Table.Row>
-                                <Table.Cell className="results-title">
-                                    {wer_text}
-                                </Table.Cell>
-                                <Table.Cell className="results-title">
-                                    {results.wer}
-                                    {results.wer &&
-                                        <>%</>
-                                            }
-                                </Table.Cell>
-                            </Table.Row>
+                            {currentEngine && currentEngine === "espnet" ?
+                                <Table.Row>
+                                    <Table.Cell className="results-title">
+                                        {per_text}
+                                    </Table.Cell>
+                                    <Table.Cell className="results-title">
+                                        {results.per}
+                                        {results.per &&
+                                            <>%</>
+                                                }
+                                    </Table.Cell>
+                                </Table.Row> :
+                                <Table.Row>
+                                    <Table.Cell className="results-title">
+                                        {wer_text}
+                                    </Table.Cell>
+                                    <Table.Cell className="results-title">
+                                        {results.wer}
+                                        {results.wer &&
+                                            <>%</>
+                                                }
+                                    </Table.Cell>
+                                </Table.Row>
+                                }
                             <Table.Row>
                                 <Table.Cell>
                                     {count_text}
@@ -50,14 +63,6 @@ class ModelResults extends Component {
                                     {results.count_val}
                                 </Table.Cell>
                             </Table.Row>
-                            {currentEngine && currentEngine === "espnet" &&
-                                <Table.Row>
-                                    <Table.Cell>
-                                        {per_text}
-                                        {results.per}
-                                    </Table.Cell>
-                                </Table.Row>
-                                    }
                             <Table.Row>
                                 <Table.Cell>
                                     {del_text}
