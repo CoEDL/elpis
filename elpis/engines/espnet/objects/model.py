@@ -56,7 +56,7 @@ class EspnetModel(BaseModel):
             path_gen = Path(self.path).glob("espnet-asr1/exp/train*/train.log")
             # Assumes just one decode_test* directory, which is true in the current
             # implementation (transcription will use decode_infer*...)
-            stage_4_log_path= next(path_gen)
+            stage_4_log_path = next(path_gen, None)
             with open(stage_4_log_path) as stage_4_log_file:
                 stage_4_text = stage_4_log_file.read()
                 self.stage_status = ("train", "in-progress", "", f"{log_text}\n{stage_4_text}")
