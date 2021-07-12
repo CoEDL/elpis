@@ -117,12 +117,12 @@ class ModelDashboard extends Component {
                                         {model.pron_dict_name}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {model.results.per &&
+                                        {model.results && model.results.per &&
                                             <>
                                                 {model.results.per} (PER)
                                             </>
                                         }
-                                        {model.results.wer &&
+                                        {model.results && model.results.wer &&
                                             <>
                                                 {model.results.wer} (WER)
                                             </>

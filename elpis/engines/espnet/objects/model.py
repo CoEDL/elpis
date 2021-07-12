@@ -41,6 +41,8 @@ class EspnetModel(BaseModel):
     def status(self):
         #  read the log here and pass it back to the api
         run_log_path = Path(self.path).joinpath('train.log')
+        if not os.path.isfile(run_log_path):
+            run(f"touch {run_log_path};")
         with open(run_log_path) as log_file:
             log_text = log_file.read()
             self.stage_status = ("train", 'in-progress', '', log_text)
@@ -52,7 +54,7 @@ class EspnetModel(BaseModel):
             path_gen = Path(self.path).glob("espnet-asr1/exp/train*/train.log")
             # Assumes just one decode_test* directory, which is true in the current
             # implementation (transcription will use decode_infer*...)
-            stage_4_log_path= next(path_gen)
+            stage_4_log_path = next(path_gen, None)
             with open(stage_4_log_path) as stage_4_log_file:
                 stage_4_text = stage_4_log_file.read()
                 self.stage_status = ("train", "in-progress", "", f"{log_text}\n{stage_4_text}")
@@ -125,9 +127,12 @@ class EspnetModel(BaseModel):
             print(f"SELF PATH {self.path}")
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
-            p = run(f"cd {local_espnet_path}; ./run.sh --ngpu {self.config['gpus']} --nj 1 &> {run_log_path}")
-            print(p.stdout)
-            print('train double done.')
+            try:
+                p = run(f"cd {local_espnet_path}; ./run.sh --ngpu {self.config['gpus']} --nj 1 &> {run_log_path}")
+                print(p.stdout)
+                print('train double done.')
+            except subprocess.CalledProcessError as e:
+                print(e.returncode, e.output)
 
         def run_training_in_background():
             def background_train_task():
@@ -154,7 +159,6 @@ class EspnetModel(BaseModel):
 
     def get_train_results(self):
         path_gen = Path(self.path).glob("espnet-asr1/exp/train*/decode_test*/result.txt")
-
         # Assumes just one decode_test* directory, which is true in the current
         # implementation (transcription will use decode_infer*...)
         log_file = next(path_gen)
@@ -176,9 +180,9 @@ class EspnetModel(BaseModel):
 
         results = {"comparison_val": float(per),  # property common to all engines so the GUI can sort models by a result value
                    "per": float(per),
-                   "ins_val": int(ins),
-                   "del_val": int(del_),
-                   "sub_val": int(sub)}
+                   "ins_val": int(float(ins)),
+                   "del_val": int(float(del_)),
+                   "sub_val": int(float(sub))}
 
         print(results)
         return results
