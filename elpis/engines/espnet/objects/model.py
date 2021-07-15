@@ -134,8 +134,10 @@ class EspnetModel(BaseModel):
                 print('done')
                 self.status = 'trained'
             except subprocess.CalledProcessError as e:
-                print('stderr', e.stderr)
-                print(e.returncode, e.output)
+                with open(run_log_path, 'a+') as file:
+                    print('stderr', e.stderr, file=file)
+                    print('failed', file=file)
+                print('failed')
                 self.status = f'failed with code {e.returncode}'
 
         def run_training_in_background():
