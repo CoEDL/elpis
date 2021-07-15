@@ -131,10 +131,10 @@ class EspnetModel(BaseModel):
                 os.remove(run_log_path)
             try:
                 p = run(f"cd {local_espnet_path}; ./run.sh --ngpu {self.config['gpus']} --nj 1 &> {run_log_path}")
-                print(p.stdout)
-                print('train double done.')
+                print('done')
                 self.status = 'trained'
             except subprocess.CalledProcessError as e:
+                print('stderr', e.stderr)
                 print(e.returncode, e.output)
                 self.status = f'failed with code {e.returncode}'
 
