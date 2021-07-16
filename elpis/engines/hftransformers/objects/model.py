@@ -59,6 +59,7 @@ class HFTransformersModel(BaseModel):
         self.config['status'] = "untrained"
         stage_names = {
             'tokenization': "Tokenization",
+            'dataset_preprocessing': "Dataset preprocessing",
             'train': "Train",
             'evaluation': "Evaluation"
         }
@@ -88,6 +89,7 @@ class HFTransformersModel(BaseModel):
 
     def build_structure(self):
         print("BUILD STRUCTURE")
+        # TODO: Not sure to know what to do here, because I can’t really finish a train on my computer so I don’t really know how is the output…
 
     def get_arguments(self):
         self.build_arguments()
@@ -428,6 +430,8 @@ class HFTransformersModel(BaseModel):
 
         train_dataset, eval_dataset = self.get_datasets(data_args)
 
+        self.stage_status = ("tokenization", "in-progress", "", "")
+
         self.tokenize(data_args, train_dataset, eval_dataset)
 
         data_dir = Path(data_args.elpis_data_dir)
@@ -455,7 +459,7 @@ class HFTransformersModel(BaseModel):
 
         # Preprocessing the datasets.
         # We need to read the audio files as arrays and tokenize the targets.
-
+        self.stage_status = ("dataset_preprocessing", "in-progress", "", "")
         dataset = self.preprocess_dataset(dataset, data_args)
 
         # durs = sorted(utt['duration'] for utt in dataset['train'])
@@ -465,9 +469,9 @@ class HFTransformersModel(BaseModel):
         if model_args.freeze_feature_extractor:
             model.freeze_feature_extractor()
 
-        trainer = self.get_trainer(dataset, processor, training_args, model)
-
         # Training
+        self.stage_status = ("train", "in-progress", "", "")
+        trainer = self.get_trainer(dataset, processor, training_args, model)
         if training_args.do_train:
             if last_checkpoint is not None:
                 checkpoint = last_checkpoint
@@ -493,6 +497,7 @@ class HFTransformersModel(BaseModel):
             trainer.save_state()
 
         # Evaluation
+        self.stage_status = ("evaluation", "in-progress", "", "")
         results = {}
         if training_args.do_eval:
             logger.info("*** Evaluate ***")
