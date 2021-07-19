@@ -41,7 +41,7 @@ class EspnetModel(BaseModel):
 
     @property
     def status(self):
-        #  read the log here and pass it back to the api
+        #  Update stage status
         run_log_path = Path(self.path).joinpath('train.log')
         if not Path(run_log_path).is_file():
             run(f"touch {run_log_path};")
@@ -50,7 +50,6 @@ class EspnetModel(BaseModel):
             self.stage_status = ("train", 'in-progress', '', log_text)
         # Stage 4 train log is not written to the main train log, so read it from the exp dir
         is_stage_4 = re.search('stage 4: Network Training\n\Z', log_text, flags=re.MULTILINE)
-
         if is_stage_4:
             #  Train stage 4 log is in the exp dir... something like exp/train_nodev_pytorch_train_mtlalpha1.0
             path_gen = Path(self.path).glob("espnet-asr1/exp/train*/train.log")

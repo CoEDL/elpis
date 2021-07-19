@@ -34,6 +34,8 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             "6_tri1.sh": "triphoneTraining"
         }
         super().build_stage_status(stage_names)
+        self.config['stage_count'] = 0
+        self.config['current_stage'] = None
 
     @classmethod
     def load(cls, base_path: Path):
@@ -52,6 +54,19 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     @ngram.setter
     def ngram(self, value: int) -> None:
         self.config['ngram'] = value
+
+    @BaseModel.stage_status.getter
+    def stage_status(self):
+        # read latest data from stage logs
+        train_log_dir = self.path.joinpath('train-logs')
+        stage_log_path = self.path.joinpath(os.path.join(train_log_dir, f"stage_{self.config['stage_count']}.log"))
+        if Path(stage_log_path).is_file():
+            with open(stage_log_path, 'r') as file:
+                stage_log = file.read()
+            # update value
+            self.stage_status = (self.config['current_stage'], 'in-progress', '', stage_log)
+        # return value
+        return self.config['stage_status']
 
     def build_structure(self):
         # task json-to-kaldi
@@ -213,15 +228,16 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 shutil.rmtree(train_log_dir)
             os.mkdir(train_log_dir )
 
-            stage_count = 0
+            self.config['stage_count'] = 0
             stages = os.listdir(local_kaldi_path.joinpath('stages'))
 
             for stage in sorted(stages):
                 print(f"Stage {stage} starting")
                 self.stage_status = (stage, 'in-progress', '', 'starting')
+                self.config['current_stage'] = stage
 
                 # Create log file
-                stage_log_path = self.path.joinpath(os.path.join(train_log_dir, f'stage_{stage_count}.log'))
+                stage_log_path = self.path.joinpath(os.path.join(train_log_dir, f"stage_{self.config['stage_count']}.log"))
                 with open(stage_log_path, 'w+'):
                     pass
 
@@ -243,8 +259,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                         stage_log = file.read()
                     print(f"Stage {stage} log", stage_log)
                     self.stage_status = (stage, 'complete', '', stage_log)
-                    # add to stage_log
-                    stage_count = stage_count + 1
+                    self.config['stage_count'] = self.config['stage_count'] + 1
                 except CalledProcessError as error:
                     with open(stage_log_path, 'a+') as file:
                         print('stderr', error.stderr, file=file)
