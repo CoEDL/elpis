@@ -173,12 +173,11 @@ WORKDIR /
 
 # Elpis
 RUN pwd
-RUN git clone --single-branch --branch HFT_integration --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
-RUN pip install poetry && poetry cache clear . --all
-RUN poetry config virtualenvs.create false --local && \
+RUN pip install poetry && poetry config virtualenvs.create false --local && \
     poetry install
 
 WORKDIR /
