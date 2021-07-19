@@ -173,7 +173,7 @@ WORKDIR /
 
 # Elpis
 RUN pwd
-RUN git clone --single-branch --branch --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --branch HFT_integration --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
@@ -200,7 +200,7 @@ RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 WORKDIR /
 
 # Setting up HF Transformers for Elpis from Persephone repository.
-RUN git clone --branch elpis_wav2vec2_integration https://github.com/persephone-tools/transformers
+RUN git clone --single-branch --branch elpis_wav2vec2_integration https://github.com/persephone-tools/transformers
 RUN poetry add ../transformers torchaudio datasets
 
 
