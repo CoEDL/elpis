@@ -200,8 +200,8 @@ RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 WORKDIR /
 
 # Setting up HF Transformers for Elpis from Persephone repository.
-RUN git clone --single-branch --branch elpis_wav2vec2_integration https://github.com/persephone-tools/transformers
-RUN poetry add ../transformers torchaudio datasets
+RUN git clone --single-branch --branch elpis_wav2vec2_integration https://github.com/persephone-tools/transformers /transformers
+RUN poetry add transformers torchaudio datasets
 
 
 ########################## RUN THE APP ##########################
