@@ -16,12 +16,10 @@ from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
 class EspnetModel(BaseModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # ESPnet does not use a pronunciation dictionary so this will not
-        # change from None.
+        # ESPnet does not use a pronunciation dictionary so this will not change from None.
         self.pron_dict = None
         self.config['pron_dict_name'] = None
-        # ESPnet doesn't use an n-gram language model, so this will not change
-        # from None.
+        # ESPnet doesn't use an n-gram language model, so this will not change from None.
         self.config['ngram'] = None
         self.config['engine_name'] = 'espnet'
         self.config['status'] = 'untrained'

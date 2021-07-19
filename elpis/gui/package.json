@@ -46,8 +46,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "cra-build-watch": "^3.4.0",
-    "eslint": "^7.22.0",
-    "eslint-plugin-react": "^7.23.0"
+    "cra-build-watch": "^3.4.0"
   }
 }

@@ -28,6 +28,11 @@ class ChooseEngine extends Component {
                     engine_name = t("engine.common.espnet_name");
                     engine_description = t("engine.common.espnet_description");
                     break;
+
+                case "hftransformers":
+                    engine_name = t("engine.common.hftransformers_name");
+                    engine_description = t("engine.common.hftransformers_description");
+                    break;
             }
 
             return (

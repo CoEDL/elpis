@@ -4,11 +4,12 @@ from typing import Type
 from elpis.engines.common.objects.interface import Interface
 from elpis.engines.common.objects.model import Model
 from elpis.engines.common.objects.transcription import Transcription
-from elpis.engines.espnet.objects.model import EspnetModel
 from elpis.engines.kaldi.objects.model import KaldiModel
 from elpis.engines.kaldi.objects.transcription import KaldiTranscription
+from elpis.engines.espnet.objects.model import EspnetModel
 from elpis.engines.espnet.objects.transcription import EspnetTranscription
-
+from elpis.engines.hftransformers.objects.model import HFTransformersModel
+from elpis.engines.hftransformers.objects.transcription import HFTransformersTranscription
 
 class Engine(ABC):
     def __init__(self, model: Type[Model], transcription: Type[Transcription]):
@@ -35,8 +36,13 @@ class EspnetEngine(Engine):
     def __init__(self):
         super().__init__(EspnetModel, EspnetTranscription)
 
+class HFTransformersEngine(Engine):
+    def __init__(self):
+        super().__init__(HFTransformersModel, HFTransformersTranscription)
+
 
 ENGINES = {
     "kaldi": KaldiEngine(),
     "espnet": EspnetEngine(),
+    "hftransformers": HFTransformersEngine(),
 }

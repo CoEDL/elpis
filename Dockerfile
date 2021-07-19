@@ -113,7 +113,7 @@ RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 ########################## ESPNET INSTALLATION #########################
 
-# Some ESPnet dependencies may be covered above but listing all for the sake of completeness
+# Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
 RUN echo "===> Install ESPnet dependencies" && \
     apt-get update && apt-get install -y cmake \
     sox \
@@ -123,7 +123,7 @@ RUN echo "===> Install ESPnet dependencies" && \
 
 WORKDIR /
 
-# Setting up ESPnet for Elpis from Persephone repository
+# Setting up ESPnet for Elpis from Persephone repository.
 RUN git clone https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
@@ -173,11 +173,12 @@ WORKDIR /
 
 # Elpis
 RUN pwd
-RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --branch HFT_integration --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
-RUN pip install poetry && poetry config virtualenvs.create false --local && \
+RUN pip install poetry && poetry cache clear . --all
+RUN poetry config virtualenvs.create false --local && \
     poetry install
 
 WORKDIR /
@@ -192,6 +193,7 @@ WORKDIR /tmp
 
 # Example data
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
+
 
 
 ########################## RUN THE APP ##########################

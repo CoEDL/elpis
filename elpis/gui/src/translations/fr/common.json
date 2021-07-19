@@ -182,6 +182,14 @@
                 "del": "DEL",
                 "ins": "INS",
                 "sub": "SUB"
+            },
+            "hftransformers": {
+                "wer": "WER",
+                "per": "PER",
+                "count": "incorrect/total",
+                "del": "DEL",
+                "ins": "INS",
+                "sub": "SUB"
             }
         },
         "generated": {
