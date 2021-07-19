@@ -177,6 +177,7 @@ RUN git clone --single-branch --branch HFT_integration --depth=1 https://github.
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
+RUN poetry cache clear . --all
 RUN pip install poetry && poetry config virtualenvs.create false --local && \
     poetry install
 
