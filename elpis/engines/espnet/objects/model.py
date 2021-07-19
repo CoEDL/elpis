@@ -41,7 +41,7 @@ class EspnetModel(BaseModel):
     def status(self):
         #  read the log here and pass it back to the api
         run_log_path = Path(self.path).joinpath('train.log')
-        if not os.path.isfile(run_log_path):
+        if not Path(run_log_path).is_file():
             run(f"touch {run_log_path};")
         with open(run_log_path) as log_file:
             log_text = log_file.read()
@@ -129,16 +129,19 @@ class EspnetModel(BaseModel):
                 os.remove(run_log_path)
             try:
                 p = run(f"cd {local_espnet_path}; ./run.sh --ngpu {self.config['gpus']} --nj 1 &> {run_log_path}")
-                print(p.stdout)
-                print('train double done.')
+                print('done')
+                self.status = 'trained'
             except subprocess.CalledProcessError as e:
-                print(e.returncode, e.output)
+                with open(run_log_path, 'a+') as file:
+                    print('stderr', e.stderr, file=file)
+                    print('failed', file=file)
+                print('failed')
+                self.status = f'failed with code {e.returncode}'
 
         def run_training_in_background():
             def background_train_task():
                 prepare_for_training()
-                train()
-                self.status = 'trained'
+                train()                
                 self.results = EspnetModel.get_train_results(self)
                 on_complete()
             self.status = 'training'
