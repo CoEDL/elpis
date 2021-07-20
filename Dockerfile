@@ -176,6 +176,7 @@ WORKDIR /
 
 # Elpis
 RUN pwd
+# Temporarily use ben-hft branch while sorting out GUI lint packages (they have been disabled in that branch)
 RUN git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
@@ -197,19 +198,15 @@ WORKDIR /tmp
 # Example data
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
-### HFT
-
-WORKDIR /
 
 ########################## HF Transformers INSTALLATION #########################
 
-WORKDIR /
 # Setting up HF Transformers for Elpis from Persephone repository.
+# TODO see if this works using poetry instead
+WORKDIR /
 RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
-
 WORKDIR /transformers
 RUN pip install .
-
 # Install dependencies for the example
 WORKDIR /transformers/examples/research_projects/wav2vec2
 RUN pip install -r requirements.txt
