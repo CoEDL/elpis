@@ -39,7 +39,13 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     zlib1g-dev \
     zsh
 
+# for transformers
+# alternatively, try adding PYTHON_CONFIGURE_OPTS="--enable-framework" to pyenv install 3.8.2 below
+# or, importing torchvision instead in model.py
+#RUN apt-get update && apt-get install -y liblzma-dev lzma
+
 WORKDIR /tmp
+
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
@@ -55,7 +61,7 @@ RUN echo "===> Install pyenv Python 3.8" && \
     eval "$(pyenv init -)" && \
     cat ~/.zshrc && \
     /bin/bash -c "source ~/.zshrc" && \
-    pyenv install 3.8.2 && \
+    PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.8.2 && \
     rm -rf /tmp/*
 
 
@@ -123,12 +129,10 @@ RUN echo "===> Install ESPnet dependencies" && \
 
 WORKDIR /
 
-# Setting up ESPnet for Elpis from Persephone repository.
-RUN git clone https://github.com/CoEDL/espnet.git
+# Setting up ESPnet for Elpis forked from the Persephone repository.
+RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
-
-RUN git checkout elpis
 
 # Explicitly installing only the CPU version. We should update this to be an
 # nvidia-docker image and install GPU-supported version of ESPnet.
@@ -163,11 +167,12 @@ RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
-# Add random number generator to skip Docker building cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 
 ########################## ELPIS INSTALLATION ########################
+
+# Add random number generator to skip Docker building cache
+ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 WORKDIR /
 
@@ -194,6 +199,22 @@ WORKDIR /tmp
 # Example data
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
+### HFT
+
+WORKDIR /
+
+########################## HF Transformers INSTALLATION #########################
+
+WORKDIR /
+# Setting up HF Transformers for Elpis from Persephone repository.
+RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+
+WORKDIR /transformers
+RUN pip install .
+
+# Install dependencies for the example
+WORKDIR /transformers/examples/research_projects/wav2vec2
+RUN pip install -r requirements.txt
 
 
 ########################## RUN THE APP ##########################
