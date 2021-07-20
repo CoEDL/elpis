@@ -39,10 +39,8 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     zlib1g-dev \
     zsh
 
-# for transformers
-# alternatively, try adding PYTHON_CONFIGURE_OPTS="--enable-framework" to pyenv install 3.8.2 below
-# or, importing torchvision instead in model.py
-#RUN apt-get update && apt-get install -y liblzma-dev lzma
+# For Huggingface Transformers engine
+RUN apt-get update && apt-get install -y liblzma-dev lzma
 
 WORKDIR /tmp
 
@@ -61,7 +59,7 @@ RUN echo "===> Install pyenv Python 3.8" && \
     eval "$(pyenv init -)" && \
     cat ~/.zshrc && \
     /bin/bash -c "source ~/.zshrc" && \
-    PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.8.2 && \
+    pyenv install 3.8.2 && \
     rm -rf /tmp/*
 
 

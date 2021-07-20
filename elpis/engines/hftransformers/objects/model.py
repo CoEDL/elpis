@@ -18,7 +18,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import torch
 import torchaudio
-import torchvision  # required to load lzma
 from packaging import version
 from torch import nn
 
