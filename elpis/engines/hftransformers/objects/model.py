@@ -132,7 +132,7 @@ class HFTransformersModel(BaseModel):
             "feat_proj_dropout": "0.0",
             "layerdrop": "0.1",
             "gradient_checkpointing": True,
-            "fp16": True,
+            "fp16": False,
             "group_by_length": True,
             "do_train": True,
             "do_eval": True}
