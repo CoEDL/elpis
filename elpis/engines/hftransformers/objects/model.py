@@ -58,10 +58,10 @@ class HFTransformersModel(BaseModel):
         self.config['engine_name'] = "hftransformers"
         self.config['status'] = "untrained"
         stage_names = {
-            'tokenization': "Tokenization",
-            'dataset_preprocessing': "Dataset preprocessing",
-            'train': "Train",
-            'evaluation': "Evaluation"
+            '1_tokenization': "Tokenization",
+            '2_dataset_preprocessing': "Dataset preprocessing",
+            '3_train': "Train",
+            '4_evaluation': "Evaluation"
         }
         super().build_stage_status(stage_names)
 
@@ -430,7 +430,7 @@ class HFTransformersModel(BaseModel):
 
         train_dataset, eval_dataset = self.get_datasets(data_args)
 
-        self.stage_status = ("tokenization", "in-progress", "", "")
+        self.stage_status = ("1_tokenization", "in-progress", "", "")
 
         self.tokenize(data_args, train_dataset, eval_dataset)
 
@@ -459,7 +459,7 @@ class HFTransformersModel(BaseModel):
 
         # Preprocessing the datasets.
         # We need to read the audio files as arrays and tokenize the targets.
-        self.stage_status = ("dataset_preprocessing", "in-progress", "", "")
+        self.stage_status = ("2_dataset_preprocessing", "in-progress", "", "")
         dataset = self.preprocess_dataset(dataset, data_args)
 
         # durs = sorted(utt['duration'] for utt in dataset['train'])
@@ -470,7 +470,7 @@ class HFTransformersModel(BaseModel):
             model.freeze_feature_extractor()
 
         # Training
-        self.stage_status = ("train", "in-progress", "", "")
+        self.stage_status = ("3_train", "in-progress", "", "")
         trainer = self.get_trainer(dataset, processor, training_args, model)
         if training_args.do_train:
             if last_checkpoint is not None:
@@ -497,7 +497,7 @@ class HFTransformersModel(BaseModel):
             trainer.save_state()
 
         # Evaluation
-        self.stage_status = ("evaluation", "in-progress", "", "")
+        self.stage_status = ("4_evaluation", "in-progress", "", "")
         results = {}
         if training_args.do_eval:
             logger.info("*** Evaluate ***")
