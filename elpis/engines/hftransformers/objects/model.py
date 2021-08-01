@@ -89,7 +89,8 @@ class HFTransformersModel(BaseModel):
 
     def build_structure(self):
         print("BUILD STRUCTURE")
-        # TODO: Not sure to know what to do here, because I can’t really finish a train on my computer so I don’t really know how is the output…
+        # All the file building is done in the initial steps of train().
+        # Could move that here, but for now let's leave it as is.
 
     def get_arguments(self):
         self.build_arguments()
