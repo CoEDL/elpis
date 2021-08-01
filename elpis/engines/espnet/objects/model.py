@@ -40,7 +40,7 @@ class EspnetModel(BaseModel):
     @property
     def status(self):
         #  read the log here and pass it back to the api
-        run_log_path = Path(self.path).joinpath('train.log')
+        run_log_path = self.path.joinpath('train.log')
         if not Path(run_log_path).is_file():
             run(f"touch {run_log_path};")
         with open(run_log_path) as log_file:
@@ -51,7 +51,7 @@ class EspnetModel(BaseModel):
 
         if is_stage_4:
             #  Train stage 4 log is in the exp dir... something like exp/train_nodev_pytorch_train_mtlalpha1.0
-            path_gen = Path(self.path).glob("espnet-asr1/exp/train*/train.log")
+            path_gen = self.path.glob("espnet-asr1/exp/train*/train.log")
             # Assumes just one decode_test* directory, which is true in the current
             # implementation (transcription will use decode_infer*...)
             stage_4_log_path = next(path_gen, None)
@@ -103,7 +103,7 @@ class EspnetModel(BaseModel):
             # stuff into the appropriate subdirectory.
 
             # First make a copy of the ESPNET Elpis recipe
-            model_path = Path(self.path)
+            model_path = self.path
             local_espnet_path = model_path.joinpath("espnet-asr1")
             shutil.copytree("/espnet/egs/elpis/asr1", f"{local_espnet_path}")
 
@@ -122,8 +122,8 @@ class EspnetModel(BaseModel):
                 shutil.copy(wav, local_espnet_path)
 
         def train():
-            local_espnet_path = Path(self.path).joinpath("espnet-asr1")
-            run_log_path = Path(self.path).joinpath('train.log')
+            local_espnet_path = self.path.joinpath("espnet-asr1")
+            run_log_path = self.path.joinpath('train.log')
             print(f"SELF PATH {self.path}")
             if os.path.isfile(run_log_path):
                 os.remove(run_log_path)
@@ -161,7 +161,7 @@ class EspnetModel(BaseModel):
         return
 
     def get_train_results(self):
-        path_gen = Path(self.path).glob("espnet-asr1/exp/train*/decode_test*/result.txt")
+        path_gen = self.path.glob("espnet-asr1/exp/train*/decode_test*/result.txt")
         # Assumes just one decode_test* directory, which is true in the current
         # implementation (transcription will use decode_infer*...)
         log_file = next(path_gen)

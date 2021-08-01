@@ -63,6 +63,12 @@ class HFTransformersModel(BaseModel):
             '3_train': "Train",
             '4_evaluation': "Evaluation"
         }
+        self.stage = '1_tokenization'
+
+        run_log_path = self.path.joinpath('train.log')
+        sys.stdout = open(run_log_path, 'w')
+        sys.stderr = sys.stdout
+
         super().build_stage_status(stage_names)
 
     @classmethod
@@ -73,6 +79,12 @@ class HFTransformersModel(BaseModel):
 
     @property
     def status(self):
+        run_log_path = self.path.joinpath('train.log')
+        if not Path(run_log_path).is_file():
+            run(f"touch {run_log_path};")
+        with open(run_log_path) as log_file:
+            log_text = log_file.read()
+            self.stage_status = (self.stage, "in-progress", "", log_text)
         return self.config['status']
 
     @status.setter
@@ -429,9 +441,9 @@ class HFTransformersModel(BaseModel):
         # Set seed before initializing model.
         set_seed(training_args.seed)
 
-        train_dataset, eval_dataset = self.get_datasets(data_args)
-
-        self.stage_status = ("1_tokenization", "in-progress", "", "")
+        train_dataset, eval_dataset = self.get_datasets(data_args)  
+        self.stage = "1_tokenization"
+        self.status = "training"
 
         self.tokenize(data_args, train_dataset, eval_dataset)
 
@@ -460,7 +472,8 @@ class HFTransformersModel(BaseModel):
 
         # Preprocessing the datasets.
         # We need to read the audio files as arrays and tokenize the targets.
-        self.stage_status = ("2_dataset_preprocessing", "in-progress", "", "")
+        self.stage = "2_dataset_preprocessing"
+        self.status = "training"
         dataset = self.preprocess_dataset(dataset, data_args)
 
         # durs = sorted(utt['duration'] for utt in dataset['train'])
@@ -471,7 +484,8 @@ class HFTransformersModel(BaseModel):
             model.freeze_feature_extractor()
 
         # Training
-        self.stage_status = ("3_train", "in-progress", "", "")
+        self.stage = "3_train"
+        self.status = "training"
         trainer = self.get_trainer(dataset, processor, training_args, model)
         if training_args.do_train:
             if last_checkpoint is not None:
@@ -498,7 +512,8 @@ class HFTransformersModel(BaseModel):
             trainer.save_state()
 
         # Evaluation
-        self.stage_status = ("4_evaluation", "in-progress", "", "")
+        self.stage = "4_evaluation"
+        self.status = "training"
         results = {}
         if training_args.do_eval:
             logger.info("*** Evaluate ***")
