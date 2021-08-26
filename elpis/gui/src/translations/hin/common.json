@@ -1,0 +1,305 @@
+{
+    "welcome": {
+        "title": "एलपिस ",
+        "description": "एल्पिस के साथ आप वाक् पहचान मॉडल को प्रशिक्षित कर सकते हैं और ऑडियो को ट्रांसक्रिप्ट करने के लिए इन मॉडलों का उपयोग कर सकते हैं। एल्पिस शब्द-स्तर (ऑर्थोग्राफिक) और फोन-स्तर (ध्वन्यात्मक) पहचान कर सकता है|",
+        "start": "यहाँ से शुरू करें ",
+        "train_description": "मॉडल को प्रशिक्षित करने के लिए, आपको ऑडियो रिकॉर्डिंग और भाषण के ट्रांसक्रिप्शन की आवश्यकता होगी।",
+        "start_train": "मॉडल को प्रशिक्षित करना शुरू करे",
+        "transcribe_description": "एक बार जब आप एक मॉडल को प्रशिक्षित कर लेते हैं, तो आप बिना ट्रांसक्रिप्शन वाले भाषण के लिए ट्रांसक्रिप्शन प्राप्त कर सकते है| ",
+        "start_transcribe": "ऑडियो को ट्रैन्स्क्राइब करें|"
+    },
+    "navigation": {
+        "engine": {
+            "title": "इंजन"
+        },
+        "recordings": {
+            "title": "रिकॉर्डिंग",
+            "files": "फ़ाइलें",
+            "wordlist": "शब्द सूची"
+        },
+        "pronunciation": {
+            "title": "उच्चारण",
+            "letterToSound": "अक्षर से ध्वनि",
+            "dictionary": "शब्दकोश"
+        },
+        "training": {
+            "title": "प्रशिक्षण",
+            "settings": "सेटिंग्स",
+            "train": "तैयार करना",
+            "results": "परिणाम "
+        },
+        "transcriptions": {
+            "title": "नया प्रतिलेखन"
+        }
+    },
+    "engine": {
+        "select": {
+            "title": "एक प्रकार चुने ",
+            "waitingForEngineList": "अलग अलग प्रकारों की सूची प्राप्त की जा रही है ",
+            "shortcutPlaceholder": "किस प्रकार का"
+        },
+        "common": {
+            "currentEngineLabel": "वर्तमान प्रकार: ",
+            "noCurrentEngineLabel": "अभी तक कोई इंजन नहीं चुना गया है|",
+            "kaldi_name": "शब्द",
+            "kaldi_description": "इस कार्य के लिए ऑडीओ फ़ीलो, प्रतिलेखन और एक 'अक्षर से ध्वनि'वाली फ़ाइल की ज़रूरत हैं|",
+            "espnet_name": "स्वनिम",
+            "espnet_description": "ऑडियो और ट्रांसक्रिप्शन की आवश्यकता है|"
+        }
+    },
+    "dataset": {
+        "common": {
+            "currentDatasetLabel": "वर्तमान रिकॉर्डिंग: ",
+            "noCurrentDatasetLabel": "अभी तक रिकॉर्डिंग का कोई समूह नहीं है।"
+        },
+        "dashboard": {
+            "title": "रिकॉर्डिंग",
+            "noneMessage": "अभी तक रिकॉर्डिंग का कोई समूह नहीं है।"
+        },
+        "new": {
+            "title": "रिकॉर्डिंग का नया समूह",
+            "nameLabel": "नाम",
+            "namePlaceholder": "नाम"
+        },
+        "files": {
+            "title": "फाइलें जोड़ें",
+            "description": "अपनी भाषा की रिकॉर्डिंग और प्रतिलेखन की फ़ाइलें यहां अपलोड करें। \n कृपया 44.1kHz WAV प्रारूप ऑडियो, और .eaf Elan प्रतिलेखन फ़ाइलों का उपयोग करें। \n ऑडियो फाइलों और प्रतिलेखन फाइलों के मेल खाने वाले नाम होने चाहिए। \n आप लिखित फ़ाइलें जैसे शब्द सूची या ऐसी कहानियां भी अपलोड कर सकते हैं जिनमें ऑडियो नहीं हो।",
+            "filesHeader": "अपलोड की गई फ़ाइलें",
+            "audioFilesHeader": "ऑडियो फ़ाइलें",
+            "transcriptionFilesHeader": "प्रतिलेखन फ़ाइलें",
+            "additionalTextFilesHeader": "अतिरिक्त लिखित फ़ाइलें",
+            "importSettingsHeader": "सेटिंग आयात करे",
+            "noSettings": "कोई सेटिंग नहीं हैं। ",
+            "generalSettingsHeader": "सामान्य सेटिंग्स",
+            "settingsTierHeader": "स्तरों",
+            "settingsPunctuationHeader": "विराम चिह्न",
+            "puncLabel": "शब्दों का विस्तार करें",
+            "tierOrderDescription": "वह स्तर चुनें जिस पर आपके प्रतिलेखन चालू हैं",
+            "tierTypeDescription": "या स्तरीय प्रकार से चुनें",
+            "tierNameDescription": "या एक स्तरीय नाम का उपयोग करें।",
+            "puncDescription": "प्रतिलेखन से विराम चिह्न हटा दिए जाएंगे| यहां विराम चिह्न जोड़ें जिन्हें आप हटाए जाने पर रिक्त स्थान से बदलना चाहते हैं।",
+            "uploadButton": "अपलोड",
+            "saveButton": "सेटिंग सहेजें करे"
+        },
+        "fileUpload": {
+            "audioLabel": "ऑडीओ फ़ाइलें:",
+            "transcriptionLabel": "प्रतिलेखन फ़ाइलें:",
+            "additionalLabel": "अतिरिक्त लिखित फ़ाइलें:",
+            "dropFilesHint": "अपनी फ़ाइलें यहां अपलोड करें या यहाँ छोड़",
+            "dropFilesHintDragActive": "अपनी फ़ाइलें यहाँ छोड़े…",
+            "uploading": "फ़ाइलें अपलोड हो रही हैं"
+        },
+        "prepare": {
+            "title": "शब्दसूचि",
+            "header": "प्रशिक्षण फ़ाइलों की शब्द आवृत्ति",
+            "description": "यह केवल प्रतिलेखन फ़ाइलों का लेखन दिखा रहा है, अपलोड किए गए अतिरिक्त लेखन के शब्द नहीं.",
+            "bannerMessage": "मूलपाठ ठीक से साफ़ कर दिया गया है और उससे नियमित भी बना दिया गया है|",
+            "bannerMessageDetailed": "विराम चिन्ह हटा दिए गए है|",
+            "wordlistHeader": "शब्द",
+            "frequencyHeader": "आवृत्ति",
+            "ready": "संसाधित करने के लिए तैयार।",
+            "preparing": "फ़ाइलें संसाधित हो रही हैं|",
+            "noWords": "कोई शब्द नहीं मिले, कृपया कुछ फ़ाइलें अपलोड करें या अपनी आयात सेटिंग जांचें."
+        }
+    },
+    "pronDict": {
+        "common": {
+            "currentPronDictLabel": "वर्तमान उच्चारण शब्दकोश: ",
+            "noDatasetsLabel": "उच्चारण शब्दकोश बनाने से पहले रिकॉर्डिंग की आवश्यकता होती है।",
+            "noCurrentPronDictLabel": "कोई वर्तमान उच्चारण शब्दकोश नहीं।",
+            "chooseOrNewLabel": "एक चुने|"
+        },
+        "dashboard": {
+            "title": "उच्चारण शब्दकोश",
+            "noneMessage": "अभी तक कोई उच्चारण शब्दकोश नहीं है"
+        },
+        "new": {
+            "title": "नया उच्चारण शब्दकोश",
+            "nameLabel": "नाम ",
+            "namePlaceholder": "नाम",
+            "select": "रिकॉर्डिंग का एक समूह चुनें"
+        },
+        "l2s": {
+            "title": "अक्षर से ध्वनि बनाने के नियम अपलोड करें",
+            "header": "अक्षर से ध्वनि की फ़ाइलें",
+            "description": "वर्ण से ध्वनि फ़ाइल का उपयोग कॉर्पस के लिए एक उच्चारण शब्दकोश बनाने के लिए किया जाता है|Make one by listing one column of all the characters in your corpus. Make a second column (separated by a space) of a symbol representing how that characted is pronounced. You can use IPA, or SAMPA for the pronunciation symbols. You can include comments in this file by beginning the comment line with #. For example: \n\n # This is a comment \n n n \n ng ŋ \n r r \n y j",
+            "dropFilesHint": "अपनी l2s फ़ाइल अपलोड करें, या एक को यहाँ छोड़ें",
+            "dropFilesHintDragActive": "यहां यहां..",
+            "uploadButton": "अपलोड"
+        },
+        "lexicon": {
+            "title": "उच्चारण शब्दकोश की समीक्षा करें",
+            "description": "उच्चारण शब्दकोश आपके द्वारा अपलोड की गई शब्द सूची और अक्षर-से-ध्वनि नियमों से उत्पन्न होता है। \n\n आपके अक्षर-से-ध्वनि मानचित्र में कोष्ठक से घिरे वर्ण नहीं पाए गए। कृपया उन्हें जोड़ें, l2s फ़ाइल को फिर से अपलोड करें और शब्दकोष को फिर से जांचें।",
+            "reset": "रीसेट",
+            "save": "सहेजें"
+        }
+    },
+    "model": {
+        "common": {
+            "currentModelLabel": "वर्तमान प्रशिक्षण सत्र: ",
+            "noCurrentModelLabel": "कोई वर्तमान प्रशिक्षण सत्र नहीं|",
+            "chooseOrNewLabel": "एक चुने|",
+            "pronDictNotRequired": "आवश्यक नहीं है "
+        },
+        "dashboard": {
+            "title": "प्रशिक्षण",
+            "noneMessage": "अभी तक कोई प्रशिक्षण सत्र नहीं"
+        },
+        "new": {
+            "title": "नया प्रशिक्षण सत्र",
+            "nameLabel": "नाम",
+            "namePlaceholder": "नाम",
+            "selectDatasetLabel": "इस सत्र के लिए रिकॉर्डिंग चुनें",
+            "selectPronDictLabel": "इस सत्र के लिए एक उच्चारण शब्दकोश चुनें"
+        },
+        "settings": {
+            "title": "सेटिंग",
+            "description": "इन सेटिंग्स का उपयोग प्रशिक्षण को समायोजित करने के लिए किया जाता है।",
+            "advancedHeader": "उन्नत",
+            "audioLabel": "ऑडियो आवृत्ति",
+            "mfccLabel": "एमएफसीसी सामान",
+            "ngramDescription": "एन-ग्राम समायोजित करता है कि क्या सिस्टम एकल शब्दों या शब्दों और उनके पड़ोसियों को सीखता है। एक का मान सिस्टम को एकल शब्द सीखने के लिए सेट करेगा। सिस्टम को शब्दों और उनके आस-पास के शब्दों से सीखने के लिए, n-gram को दो या तीन पर सेट करें।",
+            "ngramLabel": "एन-ग्राम",
+            "beamLabel": "बीम का आकार"
+        },
+        "train": {
+            "title": "प्रशिक्षण",
+            "settingsHeader": "सेटिंग्स",
+            "preparingAcousticHeader": "ध्वनिक जानकारी तैयार करना",
+            "featuresExtractionHeader": "सुविधाएँ निष्कर्षण",
+            "preparingLanguageDataHeader": "भाषा की जानकारी तैयार करना",
+            "logsHeader": "लॉग्स",
+            "logsDescription": "कलदी से घमासान विवरण (जल्द ही आ रहा है)",
+            "trainButton": "प्रशिक्षण शुरू करें",
+            "statusButton": "प्रगति की जाँच करें"
+        },
+        "results": {
+            "title": "परिणाम",
+            "description": "रिकॉर्डिंग से ऑडियो के नमूने पर मॉडल का परीक्षण करके परिणाम प्राप्त किए जाते हैं। त्रुटि दर की गणना उन सभी शब्दों को जोड़कर की जाती है जो बोले गए शब्दों की तुलना में गलत तरीके से छोड़े गए, जोड़े गए या स्वैप किए गए हैं। फिर त्रुटियों की संख्या को बोले गए शब्दों की कुल संख्या से विभाजित किया जाता है।",
+            "noResults": "कोई परिणाम नहीं मिला",
+            "kaldi": {
+                "wer": "शब्द त्रुटि दर",
+                "count": "गलत शब्दों की संख्या / कुल शब्द",
+                "del": "विलोपन: बोले गए शब्द प्रतिलेखन में छूट गए।",
+                "ins": "सम्मिलन: पाठ में जोड़े गए अतिरिक्त शब्द जो बोले नहीं गए।",
+                "sub": "प्रतिस्थापन: गलत तरीके से पहचाने गए शब्दों के लिए सही शब्दों की अदला-बदली।"
+            },
+            "espnet": {
+                "wer": "शब्द त्रुटि दर",
+                "per": "फोनमे त्रुटि दर",
+                "count": "गलत शब्दों की संख्या / कुल शब्द",
+                "del": "विलोपन: बोले गए शब्द प्रतिलेखन में छूट गए।",
+                "ins": "सम्मिलन: पाठ में जोड़े गए अतिरिक्त शब्द जो बोले नहीं गए।",
+                "sub": " प्रतिस्थापन: गलत तरीके से पहचाने गए शब्दों के लिए सही शब्दों की अदला-बदली।"
+            }
+        },
+        "generated": {
+            "elan": {
+                "tiers": {
+                    "title": "स्तरों",
+                    "description": "वह स्तर चुनें जिस पर आपके प्रतिलेखन चल रहे हैं, बस इनमें से कोई एक चुनें।",
+                    "selectionMechanism": "चयन तंत्र",
+                    "name": "स्तरों का नाम",
+                    "type": "स्तरों का प्रकार",
+                    "order": "स्तरों का क्रम"
+                },
+                "punctuation": {
+                    "title": "विराम चिह्न",
+                    "description": "विराम चिह्न का क्या करें।",
+                    "explosion": "इन्हें रिक्त स्थान से बदलें",
+                    "collapsing": "इन्हें हटा दें"
+                },
+                "cleaning": {
+                    "title": "सफाई",
+                    "description": "एनोटेशन से टेक्स्ट हटाएं, प्रति पंक्ति एक जोड़ें।",
+                    "words": "हटाने के लिए शब्द",
+                    "tags": "हटाने के लिए टैग"
+                }
+            }
+        },
+        "engines": {
+            "kaldi": {
+                "stages": {
+                    "setup": "सेट अप",
+                    "acousticPreparation": "ध्वनिक डेटा तैयार करें",
+                    "featureExtraction": "विशेषताएं निकालें",
+                    "dataPreparation": "भाषा की आधार-सामग्री तैयार करें",
+                    "modelCreation": "भाषा मॉडल बनाएं",
+                    "monophoneTraining": "मोनोफोन प्रशिक्षण",
+                    "triphoneTraining": "ट्राइफ़ोन प्रशिक्षण"
+                }
+            }
+        }
+    },
+    "transcription": {
+        "new": {
+            "title": "कुछ ऑडियो का प्रतिलेखन करें",
+            "selectModelLabel": "उपयोग करने के लिए एक प्रशिक्षण सत्र चुनें",
+            "dropFilesHint": "एक ऑडियो फ़ाइल यहाँ अपलोड करें या छोड़",
+            "dropFilesHintDragActive": "यहाँ यहाँ..",
+            "addAudioButton": "ऑडियो जोड़ें",
+            "chooseModelHeader": "एक प्रशिक्षण सत्र चुनें",
+            "uploading": "अपलोडिंग",
+            "usingAudio": "अपलोड किया गया {{फ़ाइल का नाम}}",
+            "transcribe": "प्रतिलेखन",
+            "nextButton": "अगला",
+            "uploadButton": "अपलोड"
+        },
+        "choose_model":{
+            "title": "प्रतिलेखन के लिए एक मॉडल चुनें",
+            "import_model": "एक मॉडल आयात करें (जल्द ही आ रहा है)",
+            "use_existing": "एक मौजूदा मॉडल चुनें",
+            "no_models_found": "कोई मॉडल नहीं मिला।",
+            "train_new": "एक नए मॉडल को प्रशिक्षित करें"
+        },
+        "results": {
+            "title": "प्रतिलेखन परिणाम",
+            "usingAudio": "{{फ़ाइल नाम}} के लिए",
+            "resultsHeader": "पाठ के रूप में प्रतिलेखन",
+            "downloadButtonNotReadyYet": "आधार-सामग्री के प्रतिलेखन होने और फ़ाइल उत्पन्न होने के बाद एक डाउनलोड बटन उपलब्ध होगा।",
+            "downloadLabel": "डाउनलोड",
+            "downloadTextButton": "पाठ फ़ाइल",
+            "downloadElanButton": "Elan फ़ाईल "
+        },
+        "engines": {
+            "kaldi": {
+                "stages": {
+                    "featureExtraction": "फीचर वैक्टर निकले जा रहे हैं|",
+                    "modelCreation": "मॉडल बनाना",
+                    "transcriptionDecoding": "डिकोडिंग(प्रतिलेखन)",
+                    "transcriptionBestPath": "सबसे अच्छा पथ ढूँढना(प्रतिलेखन) ",
+                    "wordBoundaries": "FST में शब्द सीमा जोड़ना",
+                    "latticeConversion": "जाली को CTM में परिवर्तित करना",
+                    "wordIndexTranslation": "शब्द अनुक्रमणिका का शब्दों में अनुवाद करना",
+                    "ctmConversion": "सीटीएम को टेक्स्टग्रिड में परिवर्तित करना",
+                    "textgridConversion": "टेक्स्टग्रिड को ELAN में परिवर्तित करना",
+                    "ctmOutput": "सीटीएम आउटपुट"
+                }
+            }
+        }
+    },
+    "common": {
+        "selectLanguagePlaceholder": "भाषा ",
+        "addNewButton": "नया जोड़ो",
+        "nextButton": "अगला ",
+        "newButton": "नया",
+        "resetButton": "रीसेट",
+        "firstSelectAnEngine": "सबसे फ़ेले एक एंजिन चुने",
+        "makeNewOne": "नीचे दिए गए फॉर्म का उपयोग करके एक नया बनाएं।",
+        "selectExisting": "या सूची से किसी मौजूदा विकल्प का चयन करें।",
+        "selectOneBelow": "एक नया बनाएं, या नीचे दी गई सूची में से किसी एक को चुनें।",
+        "choose": "चयन करें ",
+        "chooseOrNewLabel": "एक का चयन करें",
+        "invalidCharacterErrorMessage": "कृपया इन वर्णों का प्रयोग करें: \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
+    },
+    "status": {
+        "ready": "तैयार",
+        "training": "प्रशिक्षण",
+        "trained": "प्रशिक्षित",
+        "transcribing": "अनुलेखन किया जा रहा हैं",
+        "transcribed": "अनुलेखन हो चुका हैं",
+        "in-progress": "कार्य जारी हैं",
+        "complete": "पूर्ण रूप से पूरा",
+        "failed": "असफल"
+    }
+}
