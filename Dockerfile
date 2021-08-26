@@ -171,6 +171,12 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 WORKDIR /
 
+# Requirements (TODO: move these back up top )
+RUN apt-get install liblzma-dev
+RUN pyenv local 3.8.2 && pip install --upgrade pip
+RUN pyenv install -f 3.8.2 && \
+    rm -rf /tmp/*
+
 # Elpis
 RUN pwd
 

@@ -352,14 +352,11 @@ requests = "*"
 
 [[package]]
 name = "praatio"
-version = "5.0.0"
+version = "4.4.0"
 description = "A library for working with praat, textgrids, time aligned audio transcripts, and audio files."
 category = "main"
 optional = false
-python-versions = ">3.6.0"
-
-[package.dependencies]
-typing-extensions = "*"
+python-versions = "*"
 
 [[package]]
 name = "py"
@@ -582,14 +579,6 @@ notebook = ["ipywidgets (>=6)"]
 telegram = ["requests"]
 
 [[package]]
-name = "typing-extensions"
-version = "3.10.0.0"
-description = "Backported and Experimental Type Hints for Python 3.5+"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "urllib3"
 version = "1.26.6"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -625,7 +614,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.*"
-content-hash = "641e748c1efa0541084ab282eb021f5c7bc358fe3e2e3ededb42a125513f5fe3"
+content-hash = "0422a7d779264dba03574ecdd824c399b1cecaa3d12fe1d2699d8e8999869dca"
 
 [metadata.files]
 appdirs = [
@@ -905,8 +894,8 @@ pooch = [
     {file = "pooch-1.5.1.tar.gz", hash = "sha256:57ab0c43e9c5bd81227b08b9931435d71c118cd53339cc5925123a740f40b312"},
 ]
 praatio = [
-    {file = "praatio-5.0.0-py3-none-any.whl", hash = "sha256:23f6e35bb298b7ada6f1075d9df51c5431e4cbe060301f8c02fc5291ea43af39"},
-    {file = "praatio-5.0.0.tar.gz", hash = "sha256:ee43c135f24ecaf346a3a0222d09969741ecff128e19eee1c1cdfddcb293868f"},
+    {file = "praatio-4.4.0-py2.py3-none-any.whl", hash = "sha256:41deb314feaa896563b0123bebca62e9c961c09642810f7db84a29d4794f089b"},
+    {file = "praatio-4.4.0.tar.gz", hash = "sha256:cdb093bbcf54e290f9e6ecc6c26dd0d1cb4b5f23bd471684e32e022f317410a1"},
 ]
 py = [
     {file = "py-1.10.0-py2.py3-none-any.whl", hash = "sha256:3b80836aa6d1feeaa108e046da6423ab8f6ceda6468545ae8d02d9d58d18818a"},
@@ -1048,11 +1037,6 @@ toml = [
 tqdm = [
     {file = "tqdm-4.62.2-py2.py3-none-any.whl", hash = "sha256:80aead664e6c1672c4ae20dc50e1cdc5e20eeff9b14aa23ecd426375b28be588"},
     {file = "tqdm-4.62.2.tar.gz", hash = "sha256:a4d6d112e507ef98513ac119ead1159d286deab17dffedd96921412c2d236ff5"},
-]
-typing-extensions = [
-    {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},
-    {file = "typing_extensions-3.10.0.0-py3-none-any.whl", hash = "sha256:779383f6086d90c99ae41cf0ff39aac8a7937a9283ce0a414e5dd782f4c94a84"},
-    {file = "typing_extensions-3.10.0.0.tar.gz", hash = "sha256:50b6f157849174217d0656f99dc82fe932884fb250826c18350e159ec6cdf342"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.6-py2.py3-none-any.whl", hash = "sha256:39fb8672126159acb139a7718dd10806104dec1e2f0f6c88aab05d17df10c8d4"},
