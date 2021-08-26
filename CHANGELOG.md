@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.96.9] - 2021-08-27
+### Changed
+- Updated pympi, praatio, llvm versions
+
 ## [0.96.7] - 2021-03-23
 ### Added
 - Front end and dynamic i18n support
