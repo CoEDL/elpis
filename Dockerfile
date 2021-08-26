@@ -173,7 +173,11 @@ WORKDIR /
 
 # Elpis
 RUN pwd
+
+# To test Docker with a specific branch use --single-branch --branch BRANCHNAME
+#RUN git clone --single-branch --branch ben-eslint --depth=1 https://github.com/CoEDL/elpis.git
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
+
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
