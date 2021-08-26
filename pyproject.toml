@@ -22,8 +22,8 @@ setuptools = "^51.1.1"
 werkzeug = "^1.0.1"
 dict2xml = "^1.7.0"
 llvmlite = "0.37.0"
-librosa = "0.7.2"
-numba = "0.47.0"
+librosa = "0.8.1"
+numba = "0.54.0"
 python-dotenv = "^0.15.0"
 
 [tool.poetry.dev-dependencies]

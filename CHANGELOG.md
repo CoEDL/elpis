@@ -6,7 +6,7 @@ Date is year-month-day format.
 
 ## [0.96.9] - 2021-08-27
 ### Changed
-- Updated pympi, praatio, llvm versions
+- Updated pympi, praatio, llvm, librosa, numba versions
 
 ## [0.96.7] - 2021-03-23
 ### Added
