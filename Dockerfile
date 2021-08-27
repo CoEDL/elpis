@@ -29,6 +29,7 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libssl-dev \
     libsqlite3-dev \
     libbz2-dev \
+    liblzma-dev \
     make \
     software-properties-common \
     subversion \
@@ -163,19 +164,13 @@ RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
-# Add random number generator to skip Docker building cache
+# Add random number generator to skip Docker building from cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 
 ########################## ELPIS INSTALLATION ########################
 
 WORKDIR /
-
-# Requirements (TODO: move these back up top )
-RUN apt-get install liblzma-dev
-RUN pyenv local 3.8.2 && pip install --upgrade pip
-RUN pyenv install -f 3.8.2 && \
-    rm -rf /tmp/*
 
 # Elpis
 RUN pwd

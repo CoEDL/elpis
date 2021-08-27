@@ -352,7 +352,7 @@ requests = "*"
 
 [[package]]
 name = "praatio"
-version = "4.4.0"
+version = "4.2.1"
 description = "A library for working with praat, textgrids, time aligned audio transcripts, and audio files."
 category = "main"
 optional = false
@@ -614,7 +614,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.*"
-content-hash = "0422a7d779264dba03574ecdd824c399b1cecaa3d12fe1d2699d8e8999869dca"
+content-hash = "75998c375b1c8437b3c1bccbc6f0364bbd9db736d2349c796f4a2684962b0bf9"
 
 [metadata.files]
 appdirs = [
@@ -894,8 +894,8 @@ pooch = [
     {file = "pooch-1.5.1.tar.gz", hash = "sha256:57ab0c43e9c5bd81227b08b9931435d71c118cd53339cc5925123a740f40b312"},
 ]
 praatio = [
-    {file = "praatio-4.4.0-py2.py3-none-any.whl", hash = "sha256:41deb314feaa896563b0123bebca62e9c961c09642810f7db84a29d4794f089b"},
-    {file = "praatio-4.4.0.tar.gz", hash = "sha256:cdb093bbcf54e290f9e6ecc6c26dd0d1cb4b5f23bd471684e32e022f317410a1"},
+    {file = "praatio-4.2.1-py2.py3-none-any.whl", hash = "sha256:f0e3df507edc27cb053485580a77ebad73e8eb9b492c38dc421eb17c7d56dfdb"},
+    {file = "praatio-4.2.1.tar.gz", hash = "sha256:aff32934c8931f7d4e56576a5776410c9db1525c747622988f7cf72c88fceeaa"},
 ]
 py = [
     {file = "py-1.10.0-py2.py3-none-any.whl", hash = "sha256:3b80836aa6d1feeaa108e046da6423ab8f6ceda6468545ae8d02d9d58d18818a"},
