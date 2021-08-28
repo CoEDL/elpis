@@ -180,10 +180,8 @@ RUN pwd
 RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
-RUN python -m venv /venv
-ENV PATH="/venv/bin:$PATH"
 RUN pip install poetry \
-    && poetry env use /venv/bin/python \
+    && poetry env use /venv/bin/python3 \
     && poetry run pip install --upgrade pip \
     && poetry config virtualenvs.create false --local \
     && poetry install
@@ -210,6 +208,8 @@ RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
+WORKDIR /elpis
+RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
 RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 

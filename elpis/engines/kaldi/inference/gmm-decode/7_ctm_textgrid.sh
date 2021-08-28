@@ -7,7 +7,7 @@
 
 export PATH=$PATH:/kaldi/src/online2bin
 
-# Activate Python 3.6.3 virtual environment
+# Activate Python 3.8.2 virtual environment
 source /venv/bin/activate
 
 # Manipulate the wav.scp file in the first (and only) split
@@ -24,7 +24,7 @@ echo "${recid} ${audio}" > ./data/infer/split1/1/wav.scp
 
 echo "==== Converting CTM to Textgrid ===="
 # python /kaldi-helpers/kaldi_helpers/output_scripts/ctm_to_textgrid.py \
-python /elpis/elpis/engines/common/output/ctm_to_textgrid.py \
+"{POETRY_PATH}/bin/python" /elpis/elpis/engines/common/output/ctm_to_textgrid.py \
     --ctm data/infer/align-words-best-wordkeys.ctm \
     --wav data/infer/split1/1/wav.scp \
     --seg data/infer/split1/1/segments \
