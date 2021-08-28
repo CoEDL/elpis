@@ -7,9 +7,6 @@
 
 export PATH=$PATH:/kaldi/src/online2bin
 
-# Activate Python 3.8.2 virtual environment
-source /venv/bin/activate
-
 # Manipulate the wav.scp file in the first (and only) split
 line=$(head -n 1 ./data/infer/spk2utt)
 utt=` echo ${line} | cut -d ' ' -f 2`
