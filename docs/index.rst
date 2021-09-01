@@ -23,7 +23,6 @@ Elpis is a tool which language workers with minimal computational experience can
 
    wiki/viewing-elpis-training-log-file
    wiki/docker-build
-   wiki/docker-commands
    wiki/elpis-cli
    wiki/elpis-dev-recipe
    wiki/elpis-dev-recipe
