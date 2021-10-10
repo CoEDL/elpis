@@ -29,6 +29,7 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libssl-dev \
     libsqlite3-dev \
     libbz2-dev \
+    liblzma-dev \
     make \
     software-properties-common \
     subversion \
@@ -165,6 +166,8 @@ RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
+# Add random number generator to skip Docker building from cache
+ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 
 ########################## ELPIS INSTALLATION ########################
@@ -176,14 +179,16 @@ WORKDIR /
 
 # Elpis
 RUN pwd
-# Temporarily use ben-hft branch while sorting out GUI lint packages (they have been disabled in that branch)
+# To test Docker with a specific branch use --single-branch --branch BRANCHNAME
 RUN git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
+#RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
+
+
 WORKDIR /elpis
-RUN python -m venv /venv
-ENV PATH="/venv/bin:$PATH"
-RUN pip install --upgrade pip
-RUN pip install poetry && poetry config virtualenvs.create false --local && \
-    poetry install
+RUN pip install poetry \
+    && poetry run pip install --upgrade pip \
+    && poetry config virtualenvs.create true --local \
+    && poetry install
 
 WORKDIR /
 
@@ -219,7 +224,9 @@ RUN echo "export FLASK_ENV=development" >> ~/.zshrc
 RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
-RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
+WORKDIR /elpis
+RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
+RUN echo "export PATH=$PATH:${POETRY_PATH}/bin:/kaldi/src/bin/" >> ~/.zshrc
 RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 

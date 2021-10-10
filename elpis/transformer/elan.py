@@ -19,7 +19,6 @@ from csv import reader
 from pympi.Elan import Eaf
 from langid.langid import LanguageIdentifier, model
 from nltk.corpus import words
-from praatio import tgio
 from typing import Callable, Dict, List, Set, Tuple
 from pathlib import Path
 

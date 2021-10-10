@@ -34,8 +34,8 @@ def process_textgrid(input_directory: str) -> List[Dict[str, Union[str, int]]]:
         for filename in files:
             basename, extension = os.path.splitext(filename)
             if filename.endswith(".TextGrid"):
-                text_grid: tgio.Textgrid = tgio.openTextgrid(os.path.join(root, filename))
-                speech_tier: tgio.IntervalTier = text_grid.tierDict["Speech"]
+                textgrid: tgio.Textgrid = tgio.openTextgrid(os.path.join(root, filename))
+                speech_tier: tgio.TextgridTier = textgrid.tierDict["Speech"]
                 for start, stop, label in speech_tier.entryList:
                     label_word: str = label.replace('"', '')
                     intervals.append({

@@ -39,16 +39,15 @@ class EspnetModel(BaseModel):
 
     @property
     def status(self):
-        #  read the log here and pass it back to the api
+        #  Update stage status
         run_log_path = self.path.joinpath('train.log')
-        if not Path(run_log_path).is_file():
+        if not run_log_path.is_file():
             run(f"touch {run_log_path};")
         with open(run_log_path) as log_file:
             log_text = log_file.read()
             self.stage_status = ("train", 'in-progress', '', log_text)
         # Stage 4 train log is not written to the main train log, so read it from the exp dir
         is_stage_4 = re.search('stage 4: Network Training\n\Z', log_text, flags=re.MULTILINE)
-
         if is_stage_4:
             #  Train stage 4 log is in the exp dir... something like exp/train_nodev_pytorch_train_mtlalpha1.0
             path_gen = self.path.glob("espnet-asr1/exp/train*/train.log")
@@ -86,7 +85,7 @@ class EspnetModel(BaseModel):
         # Copy cleaned corpus from dataset to the model
         dataset_corpus_txt = self.dataset.path.joinpath('cleaned', 'corpus.txt')
         model_corpus_txt = self.path.joinpath('corpus.txt')
-        if os.path.exists(dataset_corpus_txt):
+        if dataset_corpus_txt.exists():
             shutil.copy(f'{dataset_corpus_txt}', f'{model_corpus_txt}')
         create_kaldi_structure(
             input_json=f'{self.dataset.pathto.annotation_json}',
@@ -103,21 +102,20 @@ class EspnetModel(BaseModel):
             # stuff into the appropriate subdirectory.
 
             # First make a copy of the ESPNET Elpis recipe
-            model_path = self.path
-            local_espnet_path = model_path.joinpath("espnet-asr1")
+            local_espnet_path = self.path.joinpath("espnet-asr1")
             shutil.copytree("/espnet/egs/elpis/asr1", f"{local_espnet_path}")
 
             # Then move the train/test data across.
-            src_train_dir = model_path.joinpath("output/training")
+            src_train_dir = self.path.joinpath("output/training")
             tgt_train_dir = local_espnet_path.joinpath("data/train")
             shutil.copytree(src_train_dir, tgt_train_dir)
 
-            src_test_dir = model_path.joinpath("output/testing")
+            src_test_dir = self.path.joinpath("output/testing")
             tgt_test_dir = local_espnet_path.joinpath("data/test")
             shutil.copytree(src_test_dir, tgt_test_dir)
 
             # Then move the WAVs across
-            src_wav_dir = Path(self.dataset.path).joinpath("resampled")
+            src_wav_dir = self.dataset.path.joinpath("resampled")
             for wav in src_wav_dir.glob("*.wav"):
                 shutil.copy(wav, local_espnet_path)
 
@@ -125,7 +123,7 @@ class EspnetModel(BaseModel):
             local_espnet_path = self.path.joinpath("espnet-asr1")
             run_log_path = self.path.joinpath('train.log')
             print(f"SELF PATH {self.path}")
-            if os.path.isfile(run_log_path):
+            if run_log_path.is_file():
                 os.remove(run_log_path)
             try:
                 p = run(f"cd {local_espnet_path}; ./run.sh --ngpu {self.config['gpus']} --nj 1 &> {run_log_path}")
