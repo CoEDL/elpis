@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS=1
+ENV NUM_CPUS=12
 
 ENV TZ=UTC
 
@@ -91,7 +91,7 @@ RUN echo "===> Install Kaldi dependencies" && \
 
 WORKDIR /
 
-RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
+RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
     make -j$NUM_CPUS && \
@@ -116,6 +116,7 @@ RUN apt-get install gawk && \
 RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 
+
 ########################## ESPNET INSTALLATION #########################
 
 # Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
@@ -129,7 +130,8 @@ RUN echo "===> Install ESPnet dependencies" && \
 WORKDIR /
 
 # Setting up ESPnet for Elpis forked from the Persephone repository.
-RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
+RUN echo "===> Install CPU verison of ESPnet from Elpis fork" && \
+    git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
 
@@ -137,13 +139,33 @@ WORKDIR /espnet
 # nvidia-docker image and install GPU-supported version of ESPnet.
 WORKDIR /espnet/tools
 
-RUN echo "===> install ESPnet" && \
-    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
+RUN make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
+
+
+
+########################## HF Transformers INSTALLATION #########################
+
+RUN pyenv global 3.8.2
+
+# Setting up HF Transformers for Elpis from Persephone repository.
+# TODO see if this works using poetry instead
+WORKDIR /
+RUN echo "===> Install HFT wav2vec2 from persephone fork" && \
+    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+#WORKDIR /transformers
+#RUN pip install .
+# Install dependencies for the example
+WORKDIR /transformers/examples/research_projects/wav2vec2
+#RUN pip install -r requirements.txt
+RUN pip install transformers datasets torch>=1.5.0 torchaudio jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0 numba==0.53.1
+
 
 
 ########################## DEV HELPERS INSTALLATION ####################
 
 WORKDIR /tmp
+
+RUN echo "===> Install dev helpers"
 
 # Add jq
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
@@ -166,21 +188,17 @@ RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
-# Add random number generator to skip Docker building from cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
-
 
 ########################## ELPIS INSTALLATION ########################
 
-# Add random number generator to skip Docker building cache
+# Add random number generator to skip Docker building from cache
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 WORKDIR /
 
-# Elpis
-RUN pwd
 # To test Docker with a specific branch use --single-branch --branch BRANCHNAME
-RUN git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
+RUN echo "===> Install Elpis" && \
+    git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
 #RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
 
 
@@ -189,8 +207,6 @@ RUN pip install poetry \
     && poetry run pip install --upgrade pip \
     && poetry config virtualenvs.create true --local \
     && poetry install
-
-WORKDIR /
 
 # Elpis GUI
 RUN ln -s /elpis/elpis/gui /elpis-gui
@@ -202,19 +218,6 @@ WORKDIR /tmp
 
 # Example data
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
-
-
-########################## HF Transformers INSTALLATION #########################
-
-# Setting up HF Transformers for Elpis from Persephone repository.
-# TODO see if this works using poetry instead
-WORKDIR /
-RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
-WORKDIR /transformers
-RUN pip install .
-# Install dependencies for the example
-WORKDIR /transformers/examples/research_projects/wav2vec2
-RUN pip install -r requirements.txt
 
 
 ########################## RUN THE APP ##########################
