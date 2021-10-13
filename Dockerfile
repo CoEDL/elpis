@@ -143,24 +143,6 @@ RUN make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
 
 
 
-########################## HF Transformers INSTALLATION #########################
-
-RUN pyenv global 3.8.2
-
-# Setting up HF Transformers for Elpis from Persephone repository.
-# TODO see if this works using poetry instead
-WORKDIR /
-RUN echo "===> Install HFT wav2vec2 from persephone fork" && \
-    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
-#WORKDIR /transformers
-#RUN pip install .
-# Install dependencies for the example
-WORKDIR /transformers/examples/research_projects/wav2vec2
-#RUN pip install -r requirements.txt
-RUN pip install transformers datasets torch>=1.5.0 torchaudio jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0 numba==0.53.1
-
-
-
 ########################## DEV HELPERS INSTALLATION ####################
 
 WORKDIR /tmp
@@ -191,8 +173,8 @@ RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/mas
 
 ########################## ELPIS INSTALLATION ########################
 
-# Add random number generator to skip Docker building from cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+## Add random number generator to skip Docker building from cache
+#ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 WORKDIR /
 
@@ -218,6 +200,28 @@ WORKDIR /tmp
 
 # Example data
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
+
+
+
+
+########################## HF Transformers INSTALLATION #########################
+
+RUN pyenv global 3.8.2
+RUN pip install --upgrade pip
+
+# Setting up HF Transformers for Elpis from Persephone repository.
+# TODO see if this works using poetry instead
+WORKDIR /
+RUN python --version
+RUN echo "===> Install HFT wav2vec2 from persephone fork" && \
+    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+WORKDIR /transformers
+RUN python -m pip install .
+# Install dependencies for the example
+WORKDIR /transformers/examples/research_projects/wav2vec2
+#RUN pip install -r requirements.txt
+RUN python -m pip install transformers datasets torch>=1.5.0 torchaudio jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0 numba==0.53.1
+
 
 
 ########################## RUN THE APP ##########################
