@@ -171,10 +171,28 @@ RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
 
+########################## HF Transformers INSTALLATION #########################
+
+RUN pyenv global 3.8.2
+RUN pip install --upgrade pip
+
+# Setting up HF Transformers for Elpis from Persephone repository.
+WORKDIR /
+RUN python --version
+RUN echo "===> Install HFT wav2vec2 from persephone fork" && \
+    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+WORKDIR /transformers
+RUN python -m pip install .
+# Don't install dependencies for the example, add them to the elpis poetry install instead
+#WORKDIR /transformers/examples/research_projects/wav2vec2
+#RUN pip install -r requirements.txt
+#RUN python -m pip install transformers datasets torch>=1.5.0 torchaudio jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0 numba==0.53.1
+
+
 ########################## ELPIS INSTALLATION ########################
 
 ## Add random number generator to skip Docker building from cache
-#ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 WORKDIR /
 
@@ -182,7 +200,6 @@ WORKDIR /
 RUN echo "===> Install Elpis" && \
     git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
 #RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
-
 
 WORKDIR /elpis
 RUN pip install poetry \
@@ -200,28 +217,6 @@ WORKDIR /tmp
 
 # Example data
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
-
-
-
-
-########################## HF Transformers INSTALLATION #########################
-
-RUN pyenv global 3.8.2
-RUN pip install --upgrade pip
-
-# Setting up HF Transformers for Elpis from Persephone repository.
-# TODO see if this works using poetry instead
-WORKDIR /
-RUN python --version
-RUN echo "===> Install HFT wav2vec2 from persephone fork" && \
-    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
-WORKDIR /transformers
-RUN python -m pip install .
-# Install dependencies for the example
-WORKDIR /transformers/examples/research_projects/wav2vec2
-#RUN pip install -r requirements.txt
-RUN python -m pip install transformers datasets torch>=1.5.0 torchaudio jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0 numba==0.53.1
-
 
 
 ########################## RUN THE APP ##########################
