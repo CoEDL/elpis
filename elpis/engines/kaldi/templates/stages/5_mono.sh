@@ -10,6 +10,9 @@ echo
 echo "===== MONO TRAINING ====="
 echo
 
+# Clean up malformed data
+utils/fix_data_dir.sh data/train
+
 steps/train_mono.sh --nj $nj --cmd "$train_cmd" data/train data/lang exp/mono  || exit 1
 
 echo
@@ -17,6 +20,9 @@ echo "===== MONO DECODING ====="
 echo
 
 utils/mkgraph.sh --mono data/lang exp/mono exp/mono/graph || exit 1
+
+# Clean up malformed data
+utils/fix_data_dir.sh data/test
 steps/decode.sh --config conf/decode.config --nj $nj --cmd "$decode_cmd" exp/mono/graph data/test exp/mono/decode
 
 echo
