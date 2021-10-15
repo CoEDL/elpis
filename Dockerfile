@@ -88,7 +88,7 @@ RUN echo "===> Install Kaldi dependencies" && \
 
 WORKDIR /
 
-RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
+RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
     make -j$NUM_CPUS && \
@@ -134,13 +134,18 @@ WORKDIR /espnet
 # nvidia-docker image and install GPU-supported version of ESPnet.
 WORKDIR /espnet/tools
 
-RUN echo "===> install ESPnet" && \
+RUN echo "===> Install ESPnet CPU version" && \
     make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
 
 
 ########################## DEV HELPERS INSTALLATION ####################
 
 WORKDIR /tmp
+
+RUN echo "===> Install dev helpers"
+
+# Example data
+RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
 # Add jq
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
@@ -172,10 +177,9 @@ RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/mas
 
 WORKDIR /
 
-# Elpis
-RUN pwd
-# Temporarily use ben-hft branch while sorting out GUI lint packages (they have been disabled in that branch)
-RUN git clone --single-branch --branch ben-hft-reset --depth=1 https://github.com/CoEDL/elpis.git
+# Temporarily use ben-hft branch
+RUN echo "===> Install Elpis" && \
+    git clone --single-branch --branch ben-hft-reset --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
@@ -191,20 +195,15 @@ WORKDIR /elpis-gui
 RUN yarn install && \
     yarn run build
 
-WORKDIR /tmp
-
-# Example data
-RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
-
 
 ########################## HF Transformers INSTALLATION #########################
 
 # Setting up HF Transformers for Elpis from Persephone repository.
 WORKDIR /
-RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+RUN echo "===> Install HFT transformers & wav2vec2" && \
+    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
 WORKDIR /transformers
 RUN pip install .
-# Install dependencies for the example
 WORKDIR /transformers/examples/research_projects/wav2vec2
 RUN pip install -r requirements.txt
 
