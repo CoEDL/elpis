@@ -21,7 +21,7 @@ import torchaudio
 from packaging import version
 from torch import nn
 
-import transformers
+# import transformers
 from transformers import (
     HfArgumentParser,
     Trainer,
@@ -145,7 +145,7 @@ class HFTransformersModel(BaseModel):
             "feat_proj_dropout": "0.0",
             "layerdrop": "0.1",
             "gradient_checkpointing": True,
-            "fp16": True,
+            "fp16": False,
             "group_by_length": True,
             "do_train": True,
             "do_eval": True}
@@ -191,8 +191,8 @@ class HFTransformersModel(BaseModel):
             f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
             + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}")
         # Set the verbosity to info of the Transformers logger (on main process only):
-        if is_main_process(training_args.local_rank):
-            transformers.utils.logging.set_verbosity_info()
+        # if is_main_process(training_args.local_rank):
+        #     transformers.utils.logging.set_verbosity_info()
         logger.info("Training/evaluation parameters %s", training_args)
 
     def get_datasets(self, data_args):

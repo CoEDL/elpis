@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS=1
+ENV NUM_CPUS=12
 
 ENV TZ=UTC
 
@@ -30,7 +30,6 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libsqlite3-dev \
     libbz2-dev \
     liblzma-dev \
-    liblzma-dev \
     lzma \
     make \
     software-properties-common \
@@ -43,7 +42,6 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     zsh
 
 WORKDIR /tmp
-
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
@@ -90,7 +88,7 @@ RUN echo "===> Install Kaldi dependencies" && \
 
 WORKDIR /
 
-RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
+RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
     make -j$NUM_CPUS && \
@@ -136,13 +134,18 @@ WORKDIR /espnet
 # nvidia-docker image and install GPU-supported version of ESPnet.
 WORKDIR /espnet/tools
 
-RUN echo "===> install ESPnet" && \
+RUN echo "===> Install ESPnet CPU version" && \
     make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
 
 
 ########################## DEV HELPERS INSTALLATION ####################
 
 WORKDIR /tmp
+
+RUN echo "===> Install dev helpers"
+
+# Example data
+RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
 # Add jq
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
@@ -165,30 +168,24 @@ RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
-# Add random number generator to skip Docker building from cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 
 ########################## ELPIS INSTALLATION ########################
 
-# Add random number generator to skip Docker building cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+# Add random number generator to skip Docker building from cache
+#ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 WORKDIR /
 
-# To test Docker with a specific branch use --single-branch --branch BRANCHNAME
-RUN git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
-#RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
-
-
+# Temporarily use ben-hft branch
+RUN echo "===> Install Elpis" && \
+    git clone --single-branch --branch ben-hft-reset --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
 RUN pip install --upgrade pip
-RUN pip install poetry \
-    && poetry env use /venv/bin/python3 \
-    && poetry config virtualenvs.create false --local \
-    && poetry install
+RUN pip install poetry && poetry config virtualenvs.create false --local && \
+    poetry install
 
 WORKDIR /
 
@@ -198,21 +195,15 @@ WORKDIR /elpis-gui
 RUN yarn install && \
     yarn run build
 
-WORKDIR /tmp
-
-# Example data
-RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
-
 
 ########################## HF Transformers INSTALLATION #########################
 
 # Setting up HF Transformers for Elpis from Persephone repository.
-# TODO see if this works using poetry instead
 WORKDIR /
-RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+RUN echo "===> Install HFT transformers & wav2vec2" && \
+    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
 WORKDIR /transformers
 RUN pip install .
-# Install dependencies for the example
 WORKDIR /transformers/examples/research_projects/wav2vec2
 RUN pip install -r requirements.txt
 
@@ -224,9 +215,7 @@ RUN echo "export FLASK_ENV=development" >> ~/.zshrc
 RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
-WORKDIR /elpis
-RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
-RUN echo "export PATH=$PATH:${POETRY_PATH}/bin:/kaldi/src/bin/" >> ~/.zshrc
+RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
 RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 

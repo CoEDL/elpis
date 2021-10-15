@@ -25,9 +25,7 @@ llvmlite = "0.37.0"
 librosa = "0.8.1"
 numba = "0.54.0"
 python-dotenv = "^0.15.0"
-torchaudio = "^0.8.1"
-datasets = "^1.6.2"
-jiwer = "^2.2.0"
+
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"
