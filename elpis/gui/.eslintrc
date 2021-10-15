@@ -1,6 +1,12 @@
 {
-  parser: "react-scripts/node_modules/babel-eslint",
-  plugins: ["react"],
+  parser: "@babel/eslint-parser",
+  parserOptions: {
+    requireConfigFile: false,
+    babelOptions: {
+      presets: ["@babel/preset-react"]
+    }
+  },
+  plugins: ["@babel"],
   extends: [
     "eslint:recommended",
 //    "plugin:react/recommended"
