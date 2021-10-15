@@ -113,6 +113,7 @@ RUN apt-get install gawk && \
 RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 
+
 ########################## ESPNET INSTALLATION #########################
 
 # Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
@@ -126,7 +127,8 @@ RUN echo "===> Install ESPnet dependencies" && \
 WORKDIR /
 
 # Setting up ESPnet for Elpis forked from the Persephone repository.
-RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
+RUN echo "===> Install CPU verison of ESPnet from Elpis fork" && \
+    git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
 

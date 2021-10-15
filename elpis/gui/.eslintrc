@@ -3,12 +3,12 @@
   plugins: ["react"],
   extends: [
     "eslint:recommended",
-    "plugin:react/recommended",
+//    "plugin:react/recommended"
   ],
   settings: {
     react: {
-      version: "detect",
-    },
+      version: "detect"
+    }
   },
   rules: {
     "react/prop-types": "off",
@@ -19,7 +19,7 @@
         arrays: "always-multiline",
         objects: "always-multiline",
         imports: "always-multiline",
-        exports: "never",
+        exports: "never"
       }],
     "quote-props": ["warn", "as-needed"],
     "jsx-quotes": ["error", "prefer-double"],
@@ -51,7 +51,7 @@
       // Always require blank lines before return statements
       {blankLine: "always", prev: "*", next: ["export", "return"]},
       {blankLine: "always", prev: "export", next: "*"},
-      {blankLine: "never", prev: "export", next: "export"},
+      {blankLine: "never", prev: "export", next: "export"}
     ],
     "padded-blocks": ["error", "never"],
     "lines-between-class-members": ["error", "always"],
@@ -65,7 +65,7 @@
     "react/jsx-indent": ["error", 4, {checkAttributes: true, indentLogicalExpressions: true}],
     "react/jsx-indent-props": ["error", {indentMode: 4, ignoreTernaryOperator: true}],
     "react/jsx-tag-spacing": ["error", {beforeSelfClosing: "always"}],
-    "react/jsx-newline": ["error", {prevent: true}],
+    "react/jsx-newline": ["error", {prevent: true}]
   },
   globals: {
     document: true,
@@ -78,6 +78,6 @@
     setInterval: true,
     clearInterval: true,
     FormData: true,
-    Set: true,
-  },
+    Set: true
+  }
 }
