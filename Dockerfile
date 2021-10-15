@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS=1
+ENV NUM_CPUS=12
 
 ENV TZ=UTC
 
@@ -29,6 +29,8 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libssl-dev \
     libsqlite3-dev \
     libbz2-dev \
+    liblzma-dev \
+    lzma \
     make \
     software-properties-common \
     subversion \
@@ -39,11 +41,7 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     zlib1g-dev \
     zsh
 
-# For Huggingface Transformers engine
-RUN apt-get update && apt-get install -y liblzma-dev lzma
-
 WORKDIR /tmp
-
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
@@ -169,8 +167,8 @@ RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/mas
 
 ########################## ELPIS INSTALLATION ########################
 
-# Add random number generator to skip Docker building cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+# Add random number generator to skip Docker building from cache
+#ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 WORKDIR /
 
@@ -202,7 +200,6 @@ RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 ########################## HF Transformers INSTALLATION #########################
 
 # Setting up HF Transformers for Elpis from Persephone repository.
-# TODO see if this works using poetry instead
 WORKDIR /
 RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
 WORKDIR /transformers
