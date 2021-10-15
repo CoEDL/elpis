@@ -113,6 +113,7 @@ RUN apt-get install gawk && \
 RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 
+
 ########################## ESPNET INSTALLATION #########################
 
 # Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
@@ -126,7 +127,8 @@ RUN echo "===> Install ESPnet dependencies" && \
 WORKDIR /
 
 # Setting up ESPnet for Elpis forked from the Persephone repository.
-RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
+RUN echo "===> Install CPU verison of ESPnet from Elpis fork" && \
+    git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
 
@@ -169,6 +171,23 @@ RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
 
+########################## HF Transformers INSTALLATION #########################
+
+RUN pyenv global 3.8.2
+RUN pip install --upgrade pip
+
+# Setting up HF Transformers for Elpis from Persephone repository.
+WORKDIR /
+RUN python --version
+RUN echo "===> Install HFT wav2vec2 from persephone fork" && \
+    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+WORKDIR /transformers
+RUN python -m pip install .
+# Don't install dependencies for the example, add them to the elpis poetry install instead
+#WORKDIR /transformers/examples/research_projects/wav2vec2
+#RUN pip install -r requirements.txt
+#RUN python -m pip install transformers datasets torch>=1.5.0 torchaudio jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0 numba==0.53.1
+
 
 ########################## ELPIS INSTALLATION ########################
 
@@ -179,7 +198,7 @@ WORKDIR /
 
 # Temporarily use ben-hft branch
 RUN echo "===> Install Elpis" && \
-    git clone --single-branch --branch ben-hft-reset --depth=1 https://github.com/CoEDL/elpis.git
+    git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
@@ -187,7 +206,11 @@ RUN pip install --upgrade pip
 RUN pip install poetry && poetry config virtualenvs.create false --local && \
     poetry install
 
-WORKDIR /
+WORKDIR /elpis
+RUN pip install poetry \
+    && poetry run pip install --upgrade pip \
+    && poetry config virtualenvs.create true --local \
+    && poetry install
 
 # Elpis GUI
 RUN ln -s /elpis/elpis/gui /elpis-gui
@@ -215,7 +238,9 @@ RUN echo "export FLASK_ENV=development" >> ~/.zshrc
 RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
-RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
+WORKDIR /elpis
+RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
+RUN echo "export PATH=$PATH:${POETRY_PATH}/bin:/kaldi/src/bin/" >> ~/.zshrc
 RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 

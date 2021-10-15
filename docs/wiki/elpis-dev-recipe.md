@@ -8,13 +8,17 @@ This guide assumes the use of `zsh` rather than `bash`.
 
 ## Prepare your local dirs
 
-Get the repos for developing, `git pull` etc if you need.
+Set up a `sandbox` folder in your home directory. Create a `state` folder in there. This will be shared into the Docker container when we run it soon.  
 
 ```shell
 mkdir ~/sandbox
 cd ~/sandbox
+mkdir state
+```
+
+Clone the Elpis repo into the sandbox
+```shell
 git clone https://github.com/CoEDL/elpis.git
-git clone -b elpis https://github.com/persephone-tools/espnet
 ```
 
 ## Build the GUI
