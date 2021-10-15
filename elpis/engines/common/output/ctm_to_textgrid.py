@@ -12,7 +12,7 @@ from argparse import ArgumentParser
 from csv import reader
 from pathlib import Path
 from typing import Dict, Tuple
-from praatio import tgio
+from praatio import textgrid
 import codecs
 
 
@@ -63,8 +63,8 @@ def create_textgrid(wav_dictionary: Dict[str, str],
                     ctm_dictionary: dict,
                     output_directory: str) -> None:
     for index, utterance_id in enumerate(wav_dictionary.keys()):
-        textgrid = tgio.Textgrid()
-        tier = tgio.IntervalTier(name='default',
+        textgrid = textgrid.Textgrid()
+        tier = textgrid.IntervalTier(name='default',
                                  entryList=ctm_dictionary[utterance_id],
                                  minT=0,
                                  pairedWav=str(Path(wav_dictionary[utterance_id])))
