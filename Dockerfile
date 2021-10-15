@@ -179,7 +179,7 @@ WORKDIR /
 
 # Temporarily use ben-hft branch
 RUN echo "===> Install Elpis" && \
-    git clone --single-branch --branch ben-hft-reset --depth=1 https://github.com/CoEDL/elpis.git
+    git clone --single-branch --branch ben-hft --depth=1 https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
