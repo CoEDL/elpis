@@ -194,7 +194,7 @@ RUN pip install -r requirements.txt
 ########################## ELPIS INSTALLATION ########################
 
 # Add random number generator to skip Docker building from cache
-#ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 WORKDIR /
 
