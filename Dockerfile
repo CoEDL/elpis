@@ -203,7 +203,7 @@ RUN echo "===> Install Elpis"
 #    git clone --single-branch --branch ben-hft-update --depth=1 https://github.com/CoEDL/elpis.git
 RUN git clone --single-branch --branch ben-hft-update https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
-RUN git checkout cb7ca65608333dfb6e18f2ddd9182f90142ff7eb
+#RUN git checkout b9da520f6e4ced65d18783ab5c1bd1b5195fc774
 
 RUN pip install --upgrade pip
 RUN pip install poetry && \
