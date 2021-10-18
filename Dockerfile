@@ -169,6 +169,27 @@ RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
 
+########################## VENV ########################
+
+WORKDIR /
+RUN pyenv global 3.8.2
+RUN python -m venv venv
+RUN source venv/bin/activate
+#ENV PATH="/venv/bin:$PATH"
+RUN pip install --upgrade pip
+
+
+########################## HF Transformers INSTALLATION #########################
+
+# Setting up HF Transformers for Elpis from Persephone repository.
+WORKDIR /
+RUN echo "===> Install HFT transformers & wav2vec2"
+RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+WORKDIR /transformers
+RUN pip install .
+WORKDIR /transformers/examples/research_projects/wav2vec2
+RUN pip install -r requirements.txt
+
 
 ########################## ELPIS INSTALLATION ########################
 
@@ -178,13 +199,15 @@ RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/mas
 WORKDIR /
 
 # Temporarily use ben-hft branch
-RUN echo "===> Install Elpis" && \
-    git clone --single-branch --branch ben-hft-update --depth=1 https://github.com/CoEDL/elpis.git
+RUN echo "===> Install Elpis"
+#    git clone --single-branch --branch ben-hft-update --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --branch ben-hft-update https://github.com/CoEDL/elpis.git
 WORKDIR /elpis
-RUN python -m venv /venv
-ENV PATH="/venv/bin:$PATH"
+RUN git checkout cb7ca65608333dfb6e18f2ddd9182f90142ff7eb
+
 RUN pip install --upgrade pip
-RUN pip install poetry && poetry config virtualenvs.create false --local && \
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
     poetry install
 
 WORKDIR /
@@ -194,18 +217,6 @@ RUN ln -s /elpis/elpis/gui /elpis-gui
 WORKDIR /elpis-gui
 RUN yarn install && \
     yarn run build
-
-
-########################## HF Transformers INSTALLATION #########################
-
-# Setting up HF Transformers for Elpis from Persephone repository.
-WORKDIR /
-RUN echo "===> Install HFT transformers & wav2vec2" && \
-    git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
-WORKDIR /transformers
-RUN pip install .
-WORKDIR /transformers/examples/research_projects/wav2vec2
-RUN pip install -r requirements.txt
 
 
 ########################## RUN THE APP ##########################
