@@ -7,7 +7,7 @@
 
 export PATH=$PATH:/kaldi/src/online2bin
 
-source /venv/bin/activate
+# source /venv/bin/activate
 
 echo "${recid} ${audio}" > ./data/infer/split1/1/wav.scp
 
