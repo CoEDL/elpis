@@ -191,7 +191,7 @@ WORKDIR /transformers/examples/research_projects/wav2vec2
 # Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
 # Override the dep info from requirements.txt so that we can specifiy CUDA version
 #RUN pip install -r requirements.txt
-RUN pip transformers datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
+RUN pip install transformers datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
 # Set torch version for CUDA 11
 RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 
