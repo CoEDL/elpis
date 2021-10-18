@@ -69,7 +69,6 @@ def create_textgrid(wav_dictionary: Dict[str, str],
         tier = textgrid.IntervalTier(name='default',
                                      entryList=ctm_dictionary[utterance_id],
                                      minT=0
-                                     # pairedWav=str(Path(wav_dictionary[utterance_id])))
                                      )
         text_grid.addTier(tier)
         name = str(Path(output_directory, f"utterance-{index}.TextGrid"))
