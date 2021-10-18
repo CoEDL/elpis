@@ -200,19 +200,16 @@ WORKDIR /
 
 # Temporarily use ben-hft branch
 RUN echo "===> Install Elpis"
-#    git clone --single-branch --branch ben-hft-update --depth=1 https://github.com/CoEDL/elpis.git
-RUN git clone --single-branch --branch ben-hft-update https://github.com/CoEDL/elpis.git
-WORKDIR /elpis
-#RUN git checkout b9da520f6e4ced65d18783ab5c1bd1b5195fc774
+RUN git clone --single-branch --branch ben-hft-update --depth=1 https://github.com/CoEDL/elpis.git
 
+WORKDIR /elpis
 RUN pip install --upgrade pip
 RUN pip install poetry && \
     poetry config virtualenvs.create false && \
     poetry install
 
-WORKDIR /
-
 # Elpis GUI
+WORKDIR /
 RUN ln -s /elpis/elpis/gui /elpis-gui
 WORKDIR /elpis-gui
 RUN yarn install && \
