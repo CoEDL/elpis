@@ -188,8 +188,10 @@ RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 http
 WORKDIR /transformers
 RUN pip install .
 WORKDIR /transformers/examples/research_projects/wav2vec2
-RUN pip install -r requirements.txt
-
+#RUN pip install -r requirements.txt
+# librosa also in poetry -- work out which one to install
+RUN pip install transformers datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
+RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 
 ########################## ELPIS INSTALLATION ########################
 
@@ -200,7 +202,7 @@ WORKDIR /
 
 # Temporarily use ben-hft branch
 RUN echo "===> Install Elpis"
-RUN git clone --single-branch --branch ben-hft-update --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --branch ben-hft-gpu --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip
