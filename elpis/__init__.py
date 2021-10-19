@@ -46,7 +46,7 @@ def create_app(test_config=None):
 
     import logging
     log = logging.getLogger('werkzeug')
-    log.setLevel(logging.ERROR)
+    log.setLevel(logging.DEBUG)
 
     # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(
