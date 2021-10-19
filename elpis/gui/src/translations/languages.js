@@ -1,5 +1,6 @@
 import common_en from "./en-GB/common.json";
 import common_fr from "./fr/common.json";
+import common_hin from "./hin/common.json";
 
 let languages = {
     "en-GB": {
@@ -7,6 +8,9 @@ let languages = {
     },
     fr: {
         common: common_fr, // 'common' is our custom namespace
+    },
+    hin: {
+        common: common_hin, // 'common' is our custom namespace
     },
 };
 
