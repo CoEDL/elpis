@@ -128,7 +128,7 @@ class HFTransformersModel(BaseModel):
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
             "dataset_config_name": "tr",
-            "output_dir": "./wav2vec2-large-xlsr-na-4",
+            "output_dir": self.path.joinpath("/wav2vec2-large-xlsr"),
             "overwrite_output_dir": True,
             "num_train_epochs": "2",
             "per_device_train_batch_size": "1",
