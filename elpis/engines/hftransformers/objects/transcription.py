@@ -3,7 +3,7 @@ import sys
 from typing import List, Tuple
 from elpis.engines.common.input.resample import resample
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
-from elpis.engines.hftransformers.objects.model import HFTransformersModel
+from elpis.engines.hftransformers.objects.model import FINISHED, UNFINISHED, HFTransformersModel
 
 import soundfile as sf
 import torch
@@ -12,6 +12,21 @@ from transformers import (
     Wav2Vec2ForCTC,
     Wav2Vec2Processor,
 )
+
+LOAD_AUDIO = 'load_audio'
+PROCESS_INPUT = 'process_input'
+TRANSCRIPTION = 'transcription'
+SAVING = 'saving'
+
+STAGES = [
+    LOAD_AUDIO,
+    PROCESS_INPUT,
+    TRANSCRIPTION,
+    SAVING
+]
+
+FINISHED = 'transcribed'
+UNFINISHED = 'transcribing'
 
 class HFTransformersTranscription(BaseTranscription):
     
@@ -30,13 +45,15 @@ class HFTransformersTranscription(BaseTranscription):
         sys.stderr = sys.stdout
 
     def transcribe(self, on_complete: callable=None) -> None:
-        self.status = "transcribing"
+        self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
 
         # Load audio
+        self._set_stage_status(LOAD_AUDIO)
         audio_input, sample_rate = self._load_audio(self.audio_file_path)
 
         # pad input values and return pt tensor
+        self._set_stage_status(PROCESS_INPUT)
         input_values = processor(audio_input, sampling_rate=sample_rate, return_tensors="pt").input_values
 
         # retrieve logits & take argmax
@@ -44,10 +61,13 @@ class HFTransformersTranscription(BaseTranscription):
         predicted_ids = torch.argmax(logits, dim=-1)
 
         # transcribe
+        self._set_stage_status(TRANSCRIPTION)
         transcription = processor.decode(predicted_ids[0])
+
+        self._set_stage_status(SAVING)
         self._save_transcription(transcription)
 
-        self.status = "transcribed"
+        self._set_finished_transcription(True)
         if on_complete is not None:
             on_complete()
     
@@ -107,3 +127,13 @@ class HFTransformersTranscription(BaseTranscription):
 
         # Resample and overwrite
         sf.write(dest, data, HFTransformersModel.SAMPLING_RATE)
+
+    def _set_finished_transcription(self, has_finished: bool) -> None:
+        self.status = FINISHED if has_finished else UNFINISHED
+
+    def _set_stage_status(self, stage: str) -> None:
+        """Updates the stage to one of the constants specified within
+        STAGES
+        """
+        if stage in STAGES:
+            self.stage_status = stage
