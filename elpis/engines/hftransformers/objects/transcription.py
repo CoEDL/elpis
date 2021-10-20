@@ -75,7 +75,7 @@ class HFTransformersTranscription(BaseTranscription):
     def _load_audio(self, file) -> Tuple:
         return sf.read(file)
 
-    def prepare_audio(self, audio, on_complete: Callable = None):
+    def prepare_audio(self, audio, on_complete: callable=None):
         self._process_audio_file(audio)
         if on_complete is not None:
             on_complete()
