@@ -54,18 +54,22 @@ class HFTransformersTranscription(BaseTranscription):
         # Load audio
         self._set_stage(LOAD_AUDIO)
         audio_input, sample_rate = self._load_audio(self.audio_file_path)
+        self._set_stage(LOAD_AUDIO, complete=True)
 
         # pad input values and return pt tensor
         self._set_stage(PROCESS_INPUT)
         input_values = processor(audio_input, sampling_rate=sample_rate, return_tensors="pt").input_values
+        self._set_stage(PROCESS_INPUT, msg='Processed input values')
 
         # retrieve logits & take argmax
         logits = model(input_values).logits
         predicted_ids = torch.argmax(logits, dim=-1)
+        self._set_stage(PROCESS_INPUT, complete=True, msg='Generated predictions')
 
         # transcribe
         self._set_stage(TRANSCRIPTION)
         transcription = processor.decode(predicted_ids[0])
+        self._set_stage(TRANSCRIPTION, complete=True)
 
         self._set_stage(SAVING)
         self._save_transcription(transcription)
@@ -134,9 +138,10 @@ class HFTransformersTranscription(BaseTranscription):
     def _set_finished_transcription(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
 
-    def _set_stage(self, stage: str) -> None:
+    def _set_stage(self, stage: str, complete: bool=False, msg: str='') -> None:
         """Updates the stage to one of the constants specified within
         STAGES
         """
+        status = 'completed' if complete else 'in-progress'
         if stage in STAGES:
-            self.stage_status = stage, 'starting', ''
+            self.stage_status = stage, status, msg
