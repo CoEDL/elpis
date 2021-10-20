@@ -44,6 +44,9 @@ class HFTransformersTranscription(BaseTranscription):
         sys.stdout = open(run_log_path, 'w')
         sys.stderr = sys.stdout
 
+        stages = { stage: stage for stage in STAGES }
+        self.build_stage_status(stages)
+
     def transcribe(self, on_complete: callable=None) -> None:
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
