@@ -76,7 +76,7 @@ class HFTransformersTranscription(BaseTranscription):
         return sf.read(file)
 
     def prepare_audio(self, audio: Path, on_complete: callable=None):
-        self._process_audio_file(audio, self.audio_file_path)
+        self._resample_audio_file(audio, self.audio_file_path)
         if on_complete is not None:
             on_complete()
 
