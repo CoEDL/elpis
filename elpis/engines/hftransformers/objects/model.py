@@ -6,6 +6,7 @@ import os
 import re
 import sys
 import time
+import string
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Set, Optional, Union, Callable
 
@@ -47,12 +48,28 @@ logger = logging.getLogger(__name__)
 def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
+# Used to reduce training time when debugging
 DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "0.02",
 }
 
+# Training Stages
+TOKENIZATION = "tokenization"
+PREPROCESSING = "dataset_preprocessing"
+TRAIN = "train"
+EVALUATION = "evaluation"
+
+TRAINING_STAGES = [
+    TOKENIZATION,
+    PREPROCESSING,
+    TRAIN,
+    EVALUATION
+]
+
+UNFINISHED = "untrained"
+FINISHED = "trained"
 
 class HFTransformersModel(BaseModel):
 
@@ -67,19 +84,21 @@ class HFTransformersModel(BaseModel):
         self.config['ngram'] = None
         self.config['engine_name'] = "hftransformers"
         self.config['status'] = "untrained"
-        stage_names = {
-            '1_tokenization': "Tokenization",
-            '2_dataset_preprocessing': "Dataset preprocessing",
-            '3_train': "Train",
-            '4_evaluation': "Evaluation"
-        }
-        self.stage = '1_tokenization'
 
+        # Setup logging
         run_log_path = self.path.joinpath('train.log')
         sys.stdout = open(run_log_path, 'w')
         sys.stderr = sys.stdout
 
+        # Setup stage names
+        self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
+        stage_labels = [string.capwords(stage).replace('_', ' ') for stage in TRAINING_STAGES]
+
+        stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
         super().build_stage_status(stage_names)
+
+        self._set_stage(TOKENIZATION)
+
 
     @classmethod
     def load(cls, base_path: Path):
@@ -449,22 +468,20 @@ class HFTransformersModel(BaseModel):
 
     def train(self, on_complete:Callable=None):
         model_args, data_args, training_args = self.get_arguments()
-        last_checkpoint = self.get_last_checkpoint(training_args)
         self.setup_logging(training_args)
 
         # Set seed before initializing model.
         set_seed(training_args.seed)
 
-        train_dataset, eval_dataset = self.get_datasets(data_args)  
-        self.stage = "1_tokenization"
-        self.status = "training"
+        # 1. Tokenization
+        self._set_stage(TOKENIZATION)
+        self._set_finished_training(False)
 
+        train_dataset, eval_dataset = self.get_datasets(data_args) 
         self.tokenize(data_args, train_dataset, eval_dataset)
 
         data_dir = Path(data_args.elpis_data_dir)
-
         self.create_split(data_args, data_dir)
-
         dataset = self.get_dataset(data_dir)
 
         # Load pretrained model and tokenizer
@@ -484,30 +501,28 @@ class HFTransformersModel(BaseModel):
         if data_args.max_val_samples is not None:
             eval_dataset = eval_dataset.select(range(data_args.max_val_samples))
 
-        # Preprocessing the datasets.
+        # 2. Preprocessing the datasets.
         # We need to read the audio files as arrays and tokenize the targets.
-        self.stage = "2_dataset_preprocessing"
-        self.status = "training"
+        self._set_stage(PREPROCESSING)
         dataset = self.preprocess_dataset(dataset, data_args)
-
-        # durs = sorted(utt['duration'] for utt in dataset['train'])
-
         dataset = self.prepare_dataset(dataset, data_args, training_args, processor)
 
         if model_args.freeze_feature_extractor:
             model.freeze_feature_extractor()
 
-        # Training
-        self.stage = "3_train"
-        self.status = "training"
+        # 3. Training
+        self._set_stage(TRAIN)
         trainer = self.get_trainer(dataset, processor, training_args, model)
+        last_checkpoint = self.get_last_checkpoint(training_args)
         if training_args.do_train:
+            # Update Checkpoint
             if last_checkpoint is not None:
                 checkpoint = last_checkpoint
             elif os.path.isdir(model_args.model_name_or_path):
                 checkpoint = model_args.model_name_or_path
             else:
                 checkpoint = None
+            # Train
             train_result = trainer.train(resume_from_checkpoint=checkpoint)
             trainer.save_model()
 
@@ -521,13 +536,12 @@ class HFTransformersModel(BaseModel):
             )
             metrics["train_samples"] = min(max_train_samples, len(train_dataset))
 
-            trainer.log_metrics("train", metrics)
-            trainer.save_metrics("train", metrics)
+            trainer.log_metrics(TRAIN, metrics)
+            trainer.save_metrics(TRAIN, metrics)
             trainer.save_state()
 
-        # Evaluation
-        self.stage = "4_evaluation"
-        self.status = "training"
+        # 4. Evaluation
+        self._set_stage(EVALUATION)
         results = {}
         if training_args.do_eval:
             logger.info("*** Evaluate ***")
@@ -538,7 +552,22 @@ class HFTransformersModel(BaseModel):
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
 
+        self._set_finished_training(True)
         return results
+
+    def _set_finished_training(self, has_finished: bool) -> None:
+        self.status = FINISHED if has_finished else UNFINISHED
+
+    def _set_stage(self, stage: str) -> None:
+        """Updates the training stage to one of the constants specified within
+        TRAINING_STAGES
+        """
+        if stage not in TRAINING_STAGES:
+            return
+
+        index = TRAINING_STAGES.index(stage)
+        self.stage = self.index_prefixed_stages[index]
+    
 
 class ElpisTokenizer(Wav2Vec2CTCTokenizer):
     """
@@ -607,6 +636,8 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
             grapheme_list.append(grapheme)
             grapheme_dict[by(grapheme)] = grapheme_list
         return grapheme_dict
+
+
 
 
 @dataclass
