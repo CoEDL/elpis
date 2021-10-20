@@ -47,7 +47,11 @@ logger = logging.getLogger(__name__)
 def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
+
 class HFTransformersModel(BaseModel):
+
+    OUTPUT_DIR_NAME = "wav2vec2-large-xlsr"
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # HFT does not use a pronunciation dictionary so this will not change from None.
@@ -128,7 +132,7 @@ class HFTransformersModel(BaseModel):
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
             "dataset_config_name": "tr",
-            "output_dir": self.path.joinpath("/wav2vec2-large-xlsr"),
+            "output_dir": self.path.joinpath(OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
             "num_train_epochs": "2",
             "per_device_train_batch_size": "1",
