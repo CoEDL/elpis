@@ -138,7 +138,7 @@ class HFTransformersModel(BaseModel):
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
             "dataset_config_name": "tr",
-            "output_dir": self.path.joinpath(OUTPUT_DIR_NAME),
+            "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
             "num_train_epochs": "2",
             "per_device_train_batch_size": "1",
@@ -162,7 +162,7 @@ class HFTransformersModel(BaseModel):
 
         if DEBUG:
             keyword_arguments.update(QUICK_TRAIN_BUILD_ARGUMENTS)
-            
+
         self.translate_arguments(positional_arguments, keyword_arguments)
 
     def translate_arguments(self, positional_arguments, keyword_arguments):
