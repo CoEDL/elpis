@@ -72,22 +72,32 @@ class HFTransformersTranscription(BaseTranscription):
         # TODO
         print(transcription)
 
-    def _load_audio(self, file) -> Tuple:
+    def _load_audio(self, file: Path) -> Tuple:
         return sf.read(file)
 
-    def prepare_audio(self, audio, on_complete: callable=None):
-        self._process_audio_file(audio)
+    def prepare_audio(self, audio: Path, on_complete: callable=None):
+        self._process_audio_file(audio, self.audio_file_path)
         if on_complete is not None:
             on_complete()
 
-    def _process_audio_file(self, audio):
-        # TODO: Dirty copied from ESPNET Should refactor
-        # TODO: maintain original audio filename
-        # copy audio to the tmp folder for resampling
-        tmp_path = Path(f'/tmp/{self.hash}')
-        tmp_path.mkdir(parents=True, exist_ok=True)
-        tmp_file_path = tmp_path.joinpath('original.wav')
-        with tmp_file_path.open(mode='wb') as fout:
-            fout.write(audio.read())
-        # resample the audio file
-        resample(tmp_file_path, self.path.joinpath('audio.wav'))
+    def _resample_audio_file(self, audio: Path, dest: Path):
+        """Resamples the audio file to be the same sampling rate as the model
+        was trained with.
+
+        Target sampling rate is taken from the HFTransformersModel class.
+
+        Parameters:
+            audio (Path): A path to a soundfile
+            dest (Path): The destination path at which to write the resampled
+                    audio.
+        """
+        data, sample_rate = self._load_audio(audio)
+
+        # Copy to temporary path
+        temporary_path = Path(f'/tmp/{self.hash}')
+        temporary_path.mkdir(parents=True, exist_ok=True)
+        sound_copy = temporary_path.joinpath('original.wav')
+        sf.write(sound_copy, data, sample_rate)
+
+        # Resample and overwrite
+        sf.write(dest, data, HFTransformersModel.SAMPLING_RATE)

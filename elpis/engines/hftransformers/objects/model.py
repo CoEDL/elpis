@@ -74,6 +74,7 @@ FINISHED = "trained"
 class HFTransformersModel(BaseModel):
 
     OUTPUT_DIR_NAME = "wav2vec2-large-xlsr"
+    SAMPLING_RATE = 16_000
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -354,7 +355,12 @@ class HFTransformersModel(BaseModel):
         eval_dataset = eval_dataset.map(remove_special_characters, remove_columns=["sentence"])
 
     def get_feature_extractor(self):
-        return Wav2Vec2FeatureExtractor(feature_size=1, sampling_rate=16_000, padding_value=0.0, do_normalize=True, return_attention_mask=True)
+        return Wav2Vec2FeatureExtractor(
+            feature_size=1, 
+            sampling_rate=HFTransformersModel.SAMPLING_RATE, 
+            padding_value=0.0, 
+            do_normalize=True, 
+            return_attention_mask=True)
 
     def get_processor(self, feature_extractor, tokenizer):
         return Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
@@ -381,7 +387,7 @@ class HFTransformersModel(BaseModel):
             #speech_array, sampling_rate = torchaudio.load(batch["path"])
             #process = psutil.Process(os.getpid())
             #print(process.memory_info().rss)
-            batch["sampling_rate"] = 16_000
+            batch["sampling_rate"] = HFTransformersModel.SAMPLING_RATE
             batch["speech"] = speech[batch['path']][int((batch['start_ms']/1000)*batch['sampling_rate']):int((batch['stop_ms']/1000)*batch['sampling_rate'])]
             batch["target_text"] = batch["text"]
             batch['duration'] = (batch['stop_ms'] - batch['start_ms'])/1000
@@ -427,7 +433,8 @@ class HFTransformersModel(BaseModel):
             audio_paths.add(utt['path'])
         for path in audio_paths:
             speech_array, sampling_rate = torchaudio.load(path)
-            resampler = torchaudio.transforms.Resample(sampling_rate, 16_000)
+            resampler = torchaudio.transforms.Resample(sampling_rate, 
+                    HFTransformersModel.SAMPLING_RATE)
             speech[path] = resampler(speech_array).squeeze().numpy()
         return speech
 
