@@ -51,7 +51,7 @@ def list_field(default=None, metadata=None):
 # Used to reduce training time when debugging
 DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
-    #"max_train_samples": "2", # Setting this causes errors (probably shouldn't)
+    # "max_train_samples": "2", # Setting this causes errors (probably shouldn't)
     "num_train_epochs": "0.02",
 }
 
@@ -568,7 +568,7 @@ class HFTransformersModel(BaseModel):
         index = TRAINING_STAGES.index(stage)
         self.stage = self.index_prefixed_stages[index]
 
-    def get_train_results(self) -> Dict[str: float]:
+    def get_train_results(self) -> Dict[str, float]:
         # TODO Ask Ben what's meant to go here
         return { "comparison_val": 6.9 }
     
