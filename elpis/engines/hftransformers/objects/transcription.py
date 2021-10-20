@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import List, Tuple
+from elpis.engines.common.input.resample import resample
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 from elpis.engines.hftransformers.objects.model import HFTransformersModel
 
@@ -74,4 +75,19 @@ class HFTransformersTranscription(BaseTranscription):
     def _load_audio(self, file) -> Tuple:
         return sf.read(file)
 
-   
+    def prepare_audio(self, audio, on_complete: Callable = None):
+        self._process_audio_file(audio)
+        if on_complete is not None:
+            on_complete()
+
+    def _process_audio_file(self, audio):
+        # TODO: Dirty copied from ESPNET Should refactor
+        # TODO: maintain original audio filename
+        # copy audio to the tmp folder for resampling
+        tmp_path = Path(f'/tmp/{self.hash}')
+        tmp_path.mkdir(parents=True, exist_ok=True)
+        tmp_file_path = tmp_path.joinpath('original.wav')
+        with tmp_file_path.open(mode='wb') as fout:
+            fout.write(audio.read())
+        # resample the audio file
+        resample(tmp_file_path, self.path.joinpath('audio.wav'))
