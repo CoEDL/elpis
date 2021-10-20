@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 from typing import List, Tuple
 from elpis.engines.common.input.resample import resample
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
@@ -22,6 +23,11 @@ class HFTransformersTranscription(BaseTranscription):
         self.xml_path = self.path / "transcription.xml"
         self.elan_path = self.path / "transcription.eaf"
         self.model: HFTransformersModel
+
+        # Setup logging
+        run_log_path = self.path.joinpath('train.log')
+        sys.stdout = open(run_log_path, 'w')
+        sys.stderr = sys.stdout
 
     def transcribe(self, on_complete: callable=None) -> None:
         self.status = "transcribing"
