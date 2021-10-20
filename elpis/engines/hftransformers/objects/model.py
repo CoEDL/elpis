@@ -52,7 +52,6 @@ def list_field(default=None, metadata=None):
 DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
-    "num_train_epochs": "0.02",
 }
 
 # Training Stages
