@@ -47,6 +47,12 @@ logger = logging.getLogger(__name__)
 def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
+DEBUG = True
+QUICK_TRAIN_BUILD_ARGUMENTS = {
+    "max_train_samples": "2",
+    "num_train_epochs": "0.02",
+}
+
 
 class HFTransformersModel(BaseModel):
 
@@ -153,6 +159,10 @@ class HFTransformersModel(BaseModel):
             "group_by_length": True,
             "do_train": True,
             "do_eval": True}
+
+        if DEBUG:
+            keyword_arguments.update(QUICK_TRAIN_BUILD_ARGUMENTS)
+            
         self.translate_arguments(positional_arguments, keyword_arguments)
 
     def translate_arguments(self, positional_arguments, keyword_arguments):
