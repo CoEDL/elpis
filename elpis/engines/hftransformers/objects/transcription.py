@@ -69,8 +69,8 @@ class HFTransformersTranscription(BaseTranscription):
         """Saves a transcription in a bunch of required formats for future
         processing.
         """
-        # TODO
-        print(transcription)
+        # TODO take transcription and output to a bunch of files.
+        print(dir(transcription))
 
     def _load_audio(self, file: Path) -> Tuple:
         return sf.read(file)

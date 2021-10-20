@@ -53,6 +53,7 @@ DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     # "max_train_samples": "2", # Setting this causes errors (probably shouldn't)
     "num_train_epochs": "0.02",
+    "model_name_or_path": "facebook/wav2vec2-base"
 }
 
 # Training Stages
