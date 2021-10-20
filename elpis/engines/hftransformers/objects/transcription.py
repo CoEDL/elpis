@@ -49,11 +49,11 @@ class HFTransformersTranscription(BaseTranscription):
         processor, model = self._get_wav2vec2_requirements()
 
         # Load audio
-        self._set_stage_status(LOAD_AUDIO)
+        self._set_stage(LOAD_AUDIO)
         audio_input, sample_rate = self._load_audio(self.audio_file_path)
 
         # pad input values and return pt tensor
-        self._set_stage_status(PROCESS_INPUT)
+        self._set_stage(PROCESS_INPUT)
         input_values = processor(audio_input, sampling_rate=sample_rate, return_tensors="pt").input_values
 
         # retrieve logits & take argmax
@@ -61,10 +61,10 @@ class HFTransformersTranscription(BaseTranscription):
         predicted_ids = torch.argmax(logits, dim=-1)
 
         # transcribe
-        self._set_stage_status(TRANSCRIPTION)
+        self._set_stage(TRANSCRIPTION)
         transcription = processor.decode(predicted_ids[0])
 
-        self._set_stage_status(SAVING)
+        self._set_stage(SAVING)
         self._save_transcription(transcription)
 
         self._set_finished_transcription(True)
@@ -131,9 +131,9 @@ class HFTransformersTranscription(BaseTranscription):
     def _set_finished_transcription(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
 
-    def _set_stage_status(self, stage: str) -> None:
+    def _set_stage(self, stage: str) -> None:
         """Updates the stage to one of the constants specified within
         STAGES
         """
         if stage in STAGES:
-            self.stage_status = stage
+            self.stage_status = stage, 'starting', ''
