@@ -89,8 +89,8 @@ class HFTransformersModel(BaseModel):
 
         # Setup logging
         run_log_path = self.path.joinpath('train.log')
-        sys.stdout = open(run_log_path, 'w')
-        sys.stderr = sys.stdout
+        #sys.stdout = open(run_log_path, 'w')
+        #sys.stderr = sys.stdout
 
         # Setup stage names
         self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
@@ -230,15 +230,6 @@ class HFTransformersModel(BaseModel):
         #     transformers.utils.logging.set_verbosity_info()
         logger.info("Training/evaluation parameters %s", training_args)
 
-    def get_datasets(self, data_args):
-        """
-        Get the datasets
-        """
-        train_dataset = datasets.load_dataset("common_voice", data_args.dataset_config_name, split=data_args.train_split_name)
-        eval_dataset = datasets.load_dataset("common_voice", data_args.dataset_config_name, split="test")
-        return train_dataset, eval_dataset
-
-
     def get_language_data(self, data_dir, language_file="language_data.json"):
         ## Language-specific data. It should be available from Elpis in a way or another.
         ## For the moment, it is a simple json file with 2 flat lists (graphemes and removables).
@@ -257,6 +248,8 @@ class HFTransformersModel(BaseModel):
         elpis_annotations_fn=(data_dir / 'annotations.json')
         with open(elpis_annotations_fn) as f:
             anno_json = json.load(f)
+
+        import pdb; pdb.set_trace()
 
         train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
         dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
@@ -343,6 +336,7 @@ class HFTransformersModel(BaseModel):
             json.dump(vocab_dict, vocab_file, ensure_ascii=False)
         return file_name
 
+    """
     def tokenize(self, data_args, train_dataset, eval_dataset):
         # Create and save tokenizer
         chars_to_ignore_regex = f'[{"".join(data_args.chars_to_ignore)}]'
@@ -354,6 +348,7 @@ class HFTransformersModel(BaseModel):
 
         train_dataset = train_dataset.map(remove_special_characters, remove_columns=["sentence"])
         eval_dataset = eval_dataset.map(remove_special_characters, remove_columns=["sentence"])
+    """
 
     def get_feature_extractor(self):
         return Wav2Vec2FeatureExtractor(
@@ -485,8 +480,7 @@ class HFTransformersModel(BaseModel):
         self._set_stage(TOKENIZATION)
         self._set_finished_training(False)
 
-        train_dataset, eval_dataset = self.get_datasets(data_args) 
-        self.tokenize(data_args, train_dataset, eval_dataset)
+        #self.tokenize(data_args, train_dataset, eval_dataset)
 
         data_dir = Path(data_args.elpis_data_dir)
         self.create_split(data_args, data_dir)
@@ -503,11 +497,11 @@ class HFTransformersModel(BaseModel):
         processor = self.get_processor(feature_extractor, tokenizer)
         model = self.get_model(model_args, processor)
 
-        if data_args.max_train_samples is not None:
-            train_dataset = train_dataset.select(range(data_args.max_train_samples))
+        #if data_args.max_train_samples is not None:
+        #    train_dataset = train_dataset.select(range(data_args.max_train_samples))
 
-        if data_args.max_val_samples is not None:
-            eval_dataset = eval_dataset.select(range(data_args.max_val_samples))
+        #if data_args.max_val_samples is not None:
+        #    eval_dataset = eval_dataset.select(range(data_args.max_val_samples))
 
         # 2. Preprocessing the datasets.
         # We need to read the audio files as arrays and tokenize the targets.
@@ -538,9 +532,11 @@ class HFTransformersModel(BaseModel):
             if is_main_process(training_args.local_rank):
                 processor.save_pretrained(training_args.output_dir)
 
+            import pdb; pdb.set_trace()
+            print(f"len of dataset: {len(dataset)}")
             metrics = train_result.metrics
             max_train_samples = (
-                data_args.max_train_samples if data_args.max_train_samples is not None else len(train_dataset)
+                data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset)
             )
             metrics["train_samples"] = min(max_train_samples, len(train_dataset))
 
