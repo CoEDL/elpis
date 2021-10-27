@@ -264,6 +264,7 @@
         "engines": {
             "kaldi": {
                 "stages": {
+                    "transcribing": "प्रतिलेखन",
                     "featureExtraction": "फीचर वैक्टर निकले जा रहे हैं|",
                     "modelCreation": "मॉडल बनाना",
                     "transcriptionDecoding": "डिकोडिंग(प्रतिलेखन)",

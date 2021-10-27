@@ -264,6 +264,7 @@
         "engines": {
             "kaldi": {
                 "stages": {
+                    "transcribing": "Transcribing",
                     "featureExtraction": "Extracting feature vectors",
                     "modelCreation": "Creating model",
                     "transcriptionDecoding": "Decoding (transcription)",

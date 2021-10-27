@@ -248,6 +248,7 @@
         "engines": {
             "kaldi": {
                 "stages": {
+                    "transcribing": "Transcription",
                     "featureExtraction": "Extraction des vecteurs de traits",
                     "modelCreation": "Création du modèle",
                     "transcriptionDecoding": "Décodage (transcription)",
