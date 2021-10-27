@@ -83,7 +83,7 @@ def create_eaf_and_textgrid(wav_dictionary:dict,
             # Add the confidence value as a reference annotation
             if conf:
                 # Add a time value to the start time so the ref falls within a parent slot
-                eaf.add_ref_annotation("confidence", "default", start_ms+1, conf[0])
+                eaf.add_ref_annotation("confidence", "default", start_ms+20, conf[0])
 
         # Save as Elan eaf file
         output_eaf = str(Path(output_directory, f'utterance-{index}.eaf'))
@@ -123,6 +123,12 @@ def main() -> None:
     ctm_dictionary = ctm_to_dictionary(arguments.ctm, segments_dictionary, arguments.confidence)
     wav_dictionary = wav_scp_to_dictionary(arguments.wav)
     output_directory = Path(arguments.outdir)
+
+    print("==== CTM to Elan args")
+    print("segments_dictionary", segments_dictionary)
+    print("ctm_dictionary", ctm_dictionary)
+    print("wav_dictionary", wav_dictionary)
+    print("output_directory", output_directory)
 
     if not output_directory.parent:
         Path.mkdir(output_directory.parent, parents=True)
