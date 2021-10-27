@@ -46,7 +46,7 @@ mkdir -p "$splitDir/1"
 # Argh.. the wav.scp file here should be in {utterance_id} to {audio_file} form
 # unlike other usage which requires {audio_id} to {audio_file} format
 # (such as below when we convert ctm to textgrid)
-echo "${utt} ${audio}" > ./data/infer/split1/1/wav.scp
+echo "${utt} audio.wav" > ./data/infer/split1/1/wav.scp
 echo "${utt} ${spk}" > ./data/infer/split1/1/utt2spk
 echo "${spk} ${utt}" > ./data/infer/split1/1/spk2utt
 echo "${utt} ${recid} 0.00 ${length}" > ./data/infer/split1/1/segments
