@@ -190,6 +190,7 @@ class KaldiTranscription(BaseTranscription):
 
         file_util.copy_file(f"{kaldi_infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
         file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
+        file_util.copy_file(f"{kaldi_infer_path.joinpath('ctm_with_conf.ctm')}", f'{self.path}/ctm_with_conf.ctm')
 
         self.status = "transcribed"
 
