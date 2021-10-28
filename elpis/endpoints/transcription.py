@@ -68,3 +68,15 @@ def elan():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
     # TODO fix this to return json wrapper
     return transcription.elan()
+
+
+@bp.route("/confidence", methods=['GET'])
+def confidence():
+    transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
+    data = {
+        "confidence": transcription.get_confidence()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })

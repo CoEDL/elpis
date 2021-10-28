@@ -10,25 +10,16 @@ from distutils import dir_util, file_util
 import wave
 import contextlib
 from subprocess import CalledProcessError
+import librosa
+from csv import reader
+import codecs
 
 
 class KaldiTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        stage_names = {
-            "0_feature_vec.sh": "featureExtraction",
-            "1_model_creation.sh": "modelCreation",
-            "2_transcription_decode.sh": "transcriptionDecoding",
-            "3_transcription_best_path.sh": "transcriptionBestPath",
-            "4_word_boundaries.sh": "wordBoundaries",
-            "5_lattice_to_ctm.sh": "latticeConversion",
-            "6_word_idx_to_words.sh": "wordIndexTranslation",
-            "7_ctm_textgrid.sh": "ctmConversion",
-            "8_textgrid_elan.sh": "textgridConversion",
-            "9_ctm_output.sh": "ctmOutput"
-        }
-        super().build_stage_status(stage_names)
         self.audio_file_path = self.path.joinpath('audio.wav')
+        self.audio_duration = 0.0
 
     @classmethod
     def load(cls, base_path: Path):
@@ -62,22 +53,15 @@ class KaldiTranscription(BaseTranscription):
         tmp_path = Path(f'/tmp/{self.hash}')
         tmp_path.mkdir(parents=True, exist_ok=True)
         tmp_file_path = tmp_path.joinpath('original.wav')
-        # if isinstance(audio, Path) or isinstance(audio, str):
-        #     shutil.copy(f'{audio}', f'{tmp_file_path}')
-        # elif isinstance(audio, BufferedIOBase):
         with tmp_file_path.open(mode='wb') as fout:
             fout.write(audio.read())
         # resample the audio file
         resample(tmp_file_path, self.path.joinpath('audio.wav'))
+        self.audio_duration = librosa.get_duration(filename=tmp_file_path)
+        print("audio duration", self.audio_duration)
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
-        # wipe previous dir to avoid file_exists errors
-        infer_path = Path(self.model.path).joinpath(
-            'kaldi/exp/tri1_online')
-        if infer_path.exists():
-            shutil.rmtree(f'{infer_path}')
-            infer_path.mkdir(parents=True, exist_ok=True)
         # _process_audio_file above a file named audio.wav
         audio_file_name = 'audio.wav'
         # Get the speaker id from the model > kaldi/data/test/spk2utt file. it's the first "word".
@@ -106,11 +90,42 @@ class KaldiTranscription(BaseTranscription):
         self._build_wav_scp_file(rec_id, rel_audio_file_path)
 
     def transcribe(self, on_complete: Callable = None):
+        # TODO move templates templates into transcription state dir, not model
         self.status = "transcribing"
         local_kaldi_path = self.model.path.joinpath('kaldi')
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
-        # TODO move this to templates/infer/stages/ and move the train templates into templates/train/stages
-        gmm_decode_path = Path('/elpis/elpis/engines/kaldi/inference/gmm-decode')
+        print("========= reset exp dir")
+        # wipe previous dir to avoid file_exists errors
+        exp_path = self.model.path.joinpath('kaldi','exp','tri1_online')
+        if exp_path.exists():
+            shutil.rmtree(f'{exp_path}')
+            exp_path.mkdir(parents=True, exist_ok=True)
+
+        print("========= reset templates dir")
+        # TODO use gmm-decode for short audio and gmm-decode-online for long audio (gmm-decode is quicker)
+        # Stage names (rh side) are used in the GUI for i18n
+        if (self.audio_duration > 10):
+            template_dir_path = 'gmm-decode-online-conf'
+            stage_names = {
+                "0_feature_vec.sh": "featureExtraction",
+                "1_model_creation.sh": "modelCreation",
+                "2_transcription_decode.sh": "transcriptionDecoding",
+                "3_lattice_to_conf.sh": "ctmConversion",
+                "4_ctm_output.sh": "ctmOutput"
+            }
+        else:
+            template_dir_path = 'gmm-decode-conf'
+            stage_names = {
+                "gmm-decode-conf.sh": "transcribing"
+            }
+        # Move the relevant templates into the kaldi/data/infer dir.
+        template_dir_abs_path = Path('/elpis/elpis/engines/kaldi/inference/').joinpath(template_dir_path)
+        #  Build status for logging
+        super().build_stage_status(stage_names)
+
+        # Provide a helper script for both methods
+        shutil.copy(Path('/elpis/elpis/engines/kaldi/templates').joinpath('make_split.sh'), f"{local_kaldi_path}")
+        os.chmod(local_kaldi_path.joinpath('make_split.sh'), 0o774)
 
         # Prepare (dump, recreate) main transcription log file
         run_log_path = self.path.joinpath('transcription.log')
@@ -131,26 +146,24 @@ class KaldiTranscription(BaseTranscription):
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
         # Copy parts of transcription process and chmod
-        dir_util.copy_tree(f'{gmm_decode_path}', f"{kaldi_infer_path.joinpath('gmm-decode')}")
-        stages = os.listdir(kaldi_infer_path.joinpath('gmm-decode'))
+        dir_util.copy_tree(f'{template_dir_abs_path}', f"{kaldi_infer_path.joinpath(template_dir_path)}")
+        stages = os.listdir(kaldi_infer_path.joinpath(template_dir_path))
         for file in stages:
-            os.chmod(kaldi_infer_path.joinpath('gmm-decode').joinpath(file), 0o774)
-
-        print('*** kaldi_infer_path', kaldi_infer_path)
-
+            os.chmod(kaldi_infer_path.joinpath(template_dir_path).joinpath(file), 0o774)
         for stage in sorted(stages):
             print(f"Stage {stage} starting")
             self.stage_status = (stage, 'in-progress', '')
 
             # Create log file
             stage_log_path = self.path.joinpath(os.path.join(transcription_log_dir, f'stage_{stage_count}.log'))
-            with open(stage_log_path, 'w+'):
+            with open(stage_log_path, 'w+') as file:
+                print('starting log', file=file)
                 pass
 
             # Run the command, log output. Also redirect Kaldi sterr output to log. These are often not errors :-(
             # These scripts must run from the kaldi dir (so set cwd)
             try:
-                script_path = kaldi_infer_path.joinpath("gmm-decode", stage)
+                script_path = kaldi_infer_path.joinpath(template_dir_path, stage)
                 stage_process = run(f"sh {script_path} >> {stage_log_path}", cwd=f"{local_kaldi_path}")
                 with open(stage_log_path, 'a+') as file:
                     print('stdout', stage_process.stdout, file=file)
@@ -178,6 +191,7 @@ class KaldiTranscription(BaseTranscription):
 
         file_util.copy_file(f"{kaldi_infer_path.joinpath('one-best-hypothesis.txt')}", f'{self.path}/one-best-hypothesis.txt')
         file_util.copy_file(f"{kaldi_infer_path.joinpath('utterance-0.eaf')}", f'{self.path}/{self.hash}.eaf')
+        file_util.copy_file(f"{kaldi_infer_path.joinpath('ctm_with_conf.ctm')}", f'{self.path}/ctm_with_conf.ctm')
 
         self.status = "transcribed"
 
@@ -197,3 +211,18 @@ class KaldiTranscription(BaseTranscription):
     def elan(self):
         with open(f'{self.path}/{self.hash}.eaf', 'rb') as fin:
             return fin.read()
+
+    def get_confidence(self):
+        word_conf = []
+        ctm_file_path = self.path.joinpath('ctm_with_conf.ctm')
+        if ctm_file_path.exists():
+            with open(ctm_file_path, encoding="utf8") as ctm_file:
+                ctm_entries = ctm_file.readlines()
+                print(ctm_entries)
+                for ctm_entry in ctm_entries:
+                    values = ctm_entry.split()
+                    word_conf.append([values[-2], values[-1]])
+            print(word_conf)
+            return word_conf
+        else:
+            return None

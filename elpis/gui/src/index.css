@@ -267,3 +267,36 @@ label.pad-right,
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Container for opacity toggle */
+.conf-tools {
+    text-align: right;
+}
+
+/* Transcription text is output in individual p elements for opacity styling based on confidence values,
+    so wrap them into a sentence for readability */
+.transcription-text {
+    display: flex;
+    flex-wrap: wrap;
+}
+.transcription-text p {
+    margin-right: 0.3em;
+}
+
+/* Override confidence opacity setting on transcription text */
+.transcription-text.ignore-confidence-opacity p {
+    opacity: 1 !important;
+}
+
+/* Change toggle checkbox to purple */
+.ui.toggle.checkbox input:focus:checked~.box:before,
+.ui.toggle.checkbox input:focus:checked~label:before {
+    background-color: #D3A0F0 !important;
+}
+.ui.toggle.checkbox input:checked ~ .box:before,
+.ui.toggle.checkbox input:checked ~ label:before {
+    background-color: #D3A0F0 !important;
+}
+.ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
+    background-color: grey;
+}

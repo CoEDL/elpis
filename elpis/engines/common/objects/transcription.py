@@ -89,3 +89,7 @@ class Transcription(FSObject):
     @abstractmethod
     def elan(self):
         pass
+
+    @abstractmethod
+    def get_confidence(self):
+        pass

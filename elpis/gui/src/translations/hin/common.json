@@ -259,11 +259,13 @@
             "downloadButtonNotReadyYet": "आधार-सामग्री के प्रतिलेखन होने और फ़ाइल उत्पन्न होने के बाद एक डाउनलोड बटन उपलब्ध होगा।",
             "downloadLabel": "डाउनलोड",
             "downloadTextButton": "पाठ फ़ाइल",
-            "downloadElanButton": "Elan फ़ाईल "
+            "downloadElanButton": "Elan फ़ाईल",
+            "toggleOpacityLabel": "अस्पष्टता टॉगल करें"
         },
         "engines": {
             "kaldi": {
                 "stages": {
+                    "transcribing": "प्रतिलेखन",
                     "featureExtraction": "फीचर वैक्टर निकले जा रहे हैं|",
                     "modelCreation": "मॉडल बनाना",
                     "transcriptionDecoding": "डिकोडिंग(प्रतिलेखन)",
