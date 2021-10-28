@@ -86,7 +86,7 @@ class NewTranscription extends Component {
     }
 
     render = () => {
-        const {t, currentEngine, filename, list, status, stage_status, text, confidence, modelName} = this.props;
+        const {t, currentEngine, filename, list, status, stage_status, confidence, modelName} = this.props;
 
         console.log(confidence);
 
