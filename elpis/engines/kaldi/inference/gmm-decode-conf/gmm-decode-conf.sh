@@ -58,6 +58,7 @@
 # Make the split dir with scp, utt2spk etc files
 . $PWD/make_split.sh
 
+echo "==== Using GMM Decode Conf ===="
 
 # AUDIO --> FEATURE VECTORS
 echo "==== Extracting Feature Vectors ===="
@@ -115,7 +116,7 @@ echo >> data/infer/one-best-hypothesis.txt
 cat data/infer/one-best-hypothesis.txt
 
 echo "==== Build the Elan file ===="
-"${POETRY_PATH}/bin/python" /elpis/elpis/engines/common/output/ctm_to_elan.py \
+python3 /elpis/elpis/engines/common/output/ctm_to_elan.py \
     --ctm data/infer/ctm_with_conf.ctm \
     --wav data/infer/split1/1/wav.scp \
     --seg data/infer/split1/1/segments \

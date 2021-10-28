@@ -102,9 +102,10 @@ class KaldiTranscription(BaseTranscription):
             exp_path.mkdir(parents=True, exist_ok=True)
 
         print("========= reset templates dir")
-        # TODO use gmm-decode for short audio and gmm-decode-online for long audio (gmm-decode is quicker)
+        # Use gmm-decode for short audio and gmm-decode-online for long audio (gmm-decode is quicker for short audio)
         # Stage names (rh side) are used in the GUI for i18n
         if (self.audio_duration > 10):
+            print("==== Using gmm-decode-online-conf")
             template_dir_path = 'gmm-decode-online-conf'
             stage_names = {
                 "0_feature_vec.sh": "featureExtraction",
@@ -114,6 +115,7 @@ class KaldiTranscription(BaseTranscription):
                 "4_ctm_output.sh": "ctmOutput"
             }
         else:
+            print("==== Using gmm-decode-conf")
             template_dir_path = 'gmm-decode-conf'
             stage_names = {
                 "gmm-decode-conf.sh": "transcribing"
