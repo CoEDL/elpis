@@ -19,7 +19,7 @@ class KaldiTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.audio_file_path = self.path.joinpath('audio.wav')
-        self.audio_duration = None
+        self.audio_duration = 0.0
 
     @classmethod
     def load(cls, base_path: Path):
@@ -164,7 +164,6 @@ class KaldiTranscription(BaseTranscription):
             # These scripts must run from the kaldi dir (so set cwd)
             try:
                 script_path = kaldi_infer_path.joinpath(template_dir_path, stage)
-                print(script_path)
                 stage_process = run(f"sh {script_path} >> {stage_log_path}", cwd=f"{local_kaldi_path}")
                 with open(stage_log_path, 'a+') as file:
                     print('stdout', stage_process.stdout, file=file)

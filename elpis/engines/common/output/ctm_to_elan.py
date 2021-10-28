@@ -17,6 +17,11 @@ from typing import Dict, Tuple
 import codecs
 from pympi.Elan import Eaf
 
+# The magic number 20 here is to help pympi find the parent annotation.
+# There may be a better way to do it but i noticed that if I used the exact start time,
+# sometimes pympi would locate the child annotation with the parent annotation that is adjacent to the intended one.
+# Also happened for +1 but seems to be finding the parent better with this "buffer" of 20. Weird.
+PYMPI_CHILD_ANNOTATION_OFFSET = 20
 
 def ctm_to_dictionary(ctm_file_path: str,
                       segments_dictionary: Dict[str, str],
@@ -83,7 +88,7 @@ def create_eaf_and_textgrid(wav_dictionary:dict,
             # Add the confidence value as a reference annotation
             if conf:
                 # Add a time value to the start time so the ref falls within a parent slot
-                eaf.add_ref_annotation("confidence", "default", start_ms+20, conf[0])
+                eaf.add_ref_annotation("confidence", "default", start_ms+PYMPI_CHILD_ANNOTATION_OFFSET, conf[0])
 
         # Save as Elan eaf file
         output_eaf = str(Path(output_directory, f'utterance-{index}.eaf'))

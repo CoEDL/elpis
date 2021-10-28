@@ -82,8 +82,6 @@ class NewTranscription extends Component {
     }
     
     handleOpacityToggle = (e, data) => {
-        console.log("it works");
-        console.log(data);
         this.setState({show_confidence_opacity: data.checked});
     }
 
@@ -281,15 +279,6 @@ const mapDispatchToProps = dispatch => ({
         dispatch(transcriptionStatus())
             .then(response => console.log(response));
     },
-    // transcriptionGetText: () => {
-    //     dispatch(transcriptionGetText());
-    // },
-    // transcriptionGetElan: () => {
-    //     dispatch(transcriptionGetElan());
-    // },
-    // transcriptionGetConfidence: () => {
-    //     dispatch(transcriptionGetConfidence());
-    // },
     modelList: () => {
         dispatch(modelList());
     },
