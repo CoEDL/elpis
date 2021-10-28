@@ -11,6 +11,8 @@ import wave
 import contextlib
 from subprocess import CalledProcessError
 import librosa
+from csv import reader
+import codecs
 
 
 class KaldiTranscription(BaseTranscription):
@@ -210,3 +212,18 @@ class KaldiTranscription(BaseTranscription):
     def elan(self):
         with open(f'{self.path}/{self.hash}.eaf', 'rb') as fin:
             return fin.read()
+
+    def get_confidence(self):
+        word_conf = []
+        ctm_file_path = self.path.joinpath('ctm_with_conf.ctm')
+        if ctm_file_path.exists():
+            with open(ctm_file_path, encoding="utf8") as ctm_file:
+                ctm_entries = ctm_file.readlines()
+                print(ctm_entries)
+                for ctm_entry in ctm_entries:
+                    values = ctm_entry.split()
+                    word_conf.append([values[-2], values[-1]])
+            print(word_conf)
+            return word_conf
+        else:
+            return None

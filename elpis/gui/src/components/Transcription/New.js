@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, Dropdown, Form, Grid, Header, Icon, Message, Segment} from "semantic-ui-react";
+import {Button, Checkbox, Dropdown, Form, Grid, Header, Icon, Message, Popup, Segment} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import classNames from "classnames";
@@ -11,7 +11,9 @@ import {
     transcriptionStatus,
     transcriptionTranscribe,
     transcriptionGetText,
-    transcriptionGetElan} from "redux/actions/transcriptionActions";
+    transcriptionGetElan,
+    transcriptionGetConfidence,
+    } from "redux/actions/transcriptionActions";
 import {modelLoad, modelList} from "redux/actions/modelActions";
 import {datasetLoad} from "redux/actions/datasetActions";
 import {engineLoad} from "redux/actions/engineActions";
@@ -23,6 +25,7 @@ import CurrentModelName from "../Model/CurrentModelName";
 class NewTranscription extends Component {
     state = {
         uploading: false,
+        show_confidence_opacity: true,
     }
 
     statusInterval = null
@@ -77,10 +80,19 @@ class NewTranscription extends Component {
 
         modelLoad(modelData, datasetData, engineName, pronDictData);
     }
+    
+    handleOpacityToggle = (e, data) => {
+        console.log("it works");
+        console.log(data);
+        this.setState({show_confidence_opacity: data.checked});
+    }
 
     render = () => {
-        const {t, currentEngine, filename, list, status, stage_status, text, modelName} = this.props;
-        const {uploading} = this.state;
+        const {t, currentEngine, filename, list, status, stage_status, text, confidence, modelName} = this.props;
+
+        console.log(confidence);
+
+        const {uploading, show_confidence_opacity} = this.state;
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
             key: model.name,
@@ -93,6 +105,7 @@ class NewTranscription extends Component {
         let enableTranscription = false;
 
         if (modelName && filename && (status === "ready" || status === "transcribed")) enableTranscription = true;
+
 
         return (
             <div>
@@ -193,14 +206,38 @@ class NewTranscription extends Component {
                             </Message>
                             {status === "transcribed" &&
                                 <Segment>
-                                    <p>{text}</p>
-                                    <p className="label pad-right">{t("transcription.results.downloadLabel")}</p>
-                                    <Button onClick={this.handleDownloadText}>
-                                        {t("transcription.results.downloadTextButton")}
-                                    </Button>
-                                    <Button onClick={this.handleDownloadElan}>
-                                        {t("transcription.results.downloadElanButton")}
-                                    </Button>
+                                    <Segment vertical>
+                                        <div className="conf-tools">
+                                            <Popup
+                                                content={t("transcription.results.toggleOpacityLabel")}
+                                                trigger={
+                                                    <Checkbox
+                                                        toggle
+                                                        onChange={this.handleOpacityToggle}
+                                                        checked={show_confidence_opacity}
+                                                    />
+                                                }
+                                            />
+                                        </div>
+                                        <div
+                                            className={classNames("transcription-text",
+                                            {"ignore-confidence-opacity": !show_confidence_opacity})}
+                                        >
+                                            {confidence && confidence.map((item, index) => (
+                                                <p key={index} style={{opacity: item[1]}}>{item[0]}</p>
+                                                ))
+                                            }
+                                        </div>
+                                    </Segment>
+                                    <Segment vertical>
+                                        <p className="label pad-right">{t("transcription.results.downloadLabel")}</p>
+                                        <Button onClick={this.handleDownloadText}>
+                                            {t("transcription.results.downloadTextButton")}
+                                        </Button>
+                                        <Button onClick={this.handleDownloadElan}>
+                                            {t("transcription.results.downloadElanButton")}
+                                        </Button>
+                                    </Segment>
                                 </Segment>
                             }
                         </Grid.Column>
@@ -220,6 +257,7 @@ const mapStateToProps = state => {
         stage_status: state.transcription.stage_status,
         text: state.transcription.text,
         elan: state.transcription.elan,
+        confidence: state.transcription.confidence,
         currentEngine: state.engine.engine,
     };
 };
@@ -236,18 +274,22 @@ const mapDispatchToProps = dispatch => ({
                 // So we can safely request the text and elan files here
                 dispatch(transcriptionGetText());
                 dispatch(transcriptionGetElan());
+                dispatch(transcriptionGetConfidence());
             });
     },
     transcriptionStatus: () => {
         dispatch(transcriptionStatus())
             .then(response => console.log(response));
     },
-    transcriptionGetText: () => {
-        dispatch(transcriptionGetText());
-    },
-    transcriptionGetElan: () => {
-        dispatch(transcriptionGetElan());
-    },
+    // transcriptionGetText: () => {
+    //     dispatch(transcriptionGetText());
+    // },
+    // transcriptionGetElan: () => {
+    //     dispatch(transcriptionGetElan());
+    // },
+    // transcriptionGetConfidence: () => {
+    //     dispatch(transcriptionGetConfidence());
+    // },
     modelList: () => {
         dispatch(modelList());
     },

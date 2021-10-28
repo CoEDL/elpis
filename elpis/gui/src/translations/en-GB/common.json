@@ -259,7 +259,8 @@
             "downloadButtonNotReadyYet": "A download button will be available after the data has been transcribed and the file has been generated.",
             "downloadLabel": "Download",
             "downloadTextButton": "Text file",
-            "downloadElanButton": "Elan file"
+            "downloadElanButton": "Elan file",
+            "toggleOpacityLabel": "Fade out words that are less certain."
         },
         "engines": {
             "kaldi": {

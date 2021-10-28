@@ -182,3 +182,38 @@ const transcriptionGetElanFailure = error => ({
     type: actionTypes.TRANSCRIPTION_GET_ELAN_FAILURE,
     response: {error},
 });
+
+
+/* * * * * * * * * * * *  Confidence * * * * * * * * * * *  */
+
+export function transcriptionGetConfidence() {
+    const url = baseUrl + urls.api.transcription.confidence;
+    var responseData;
+
+    return async dispatch => {
+        dispatch(transcriptionGetConfidenceStarted());
+        await axios.get(url)
+            .then(response => {
+                responseData = response.data;
+                dispatch(transcriptionGetConfidenceSuccess(response));
+            })
+            .catch(error => {
+                dispatch(transcriptionGetConfidenceFailure(error));
+                throw error;
+            });
+
+        return responseData;
+    };
+}
+
+const transcriptionGetConfidenceStarted = () => ({
+    type: actionTypes.TRANSCRIPTION_GET_CONFIDENCE_STARTED,
+});
+const transcriptionGetConfidenceSuccess = response => ({
+    type: actionTypes.TRANSCRIPTION_GET_CONFIDENCE_SUCCESS,
+    response: {...response},
+});
+const transcriptionGetConfidenceFailure = error => ({
+    type: actionTypes.TRANSCRIPTION_GET_CONFIDENCE_FAILURE,
+    response: {error},
+});
