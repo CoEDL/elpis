@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS=1
+ENV NUM_CPUS=12
 
 ENV TZ=UTC
 
@@ -129,7 +129,8 @@ RUN git clone https://github.com/CoEDL/espnet.git
 
 WORKDIR /espnet
 
-RUN git checkout elpis
+# Pin to this commit rather than just the elpis branch
+RUN git checkout 2b30e931992a97ae0c36ccf1732b9cc0b63f2b0c
 
 # Explicitly installing only the CPU version. We should update this to be an
 # nvidia-docker image and install GPU-supported version of ESPnet.
