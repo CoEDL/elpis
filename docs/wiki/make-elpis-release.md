@@ -79,6 +79,7 @@ Push a commit for the version bump.
 
 * Draft a [new release](https://github.com/CoEDL/elpis/releases/new)
 * Click `Choose a tag` and type the next version num including a leading `v`. E.g. `v0.96.10`
+*  Select `+ Create new tag: xxx on publish` to save the tag when the release is published.
 * Leave release title empty to use the tag as the title.
 * Write a description of the release (should be the same as the changelog info).
 * Click `Publish release`. This will bundle the code as `.zip` and `.tar.gz` assets with the release.
