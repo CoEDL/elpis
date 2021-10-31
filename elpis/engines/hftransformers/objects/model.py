@@ -89,8 +89,8 @@ class HFTransformersModel(BaseModel):
 
         # Setup logging
         run_log_path = self.path.joinpath('train.log')
-        #sys.stdout = open(run_log_path, 'w')
-        #sys.stderr = sys.stdout
+        sys.stdout = open(run_log_path, 'w')
+        sys.stderr = sys.stdout
 
         # Setup stage names
         self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
@@ -249,10 +249,9 @@ class HFTransformersModel(BaseModel):
         with open(elpis_annotations_fn) as f:
             anno_json = json.load(f)
 
-        import pdb; pdb.set_trace()
-
         train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
-        dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
+        #dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
+        dev_annos = test_annos = devtest_annos
 
         split_dir = data_dir / 'splits'
         split_dir.mkdir(exist_ok=True)
@@ -532,13 +531,12 @@ class HFTransformersModel(BaseModel):
             if is_main_process(training_args.local_rank):
                 processor.save_pretrained(training_args.output_dir)
 
-            import pdb; pdb.set_trace()
             print(f"len of dataset: {len(dataset)}")
             metrics = train_result.metrics
             max_train_samples = (
-                data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset)
+                data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset['train'])
             )
-            metrics["train_samples"] = min(max_train_samples, len(train_dataset))
+            metrics["train_samples"] = min(max_train_samples, len(dataset['train']))
 
             trainer.log_metrics(TRAIN, metrics)
             trainer.save_metrics(TRAIN, metrics)
@@ -550,8 +548,8 @@ class HFTransformersModel(BaseModel):
         if training_args.do_eval:
             logger.info("*** Evaluate ***")
             metrics = trainer.evaluate()
-            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(eval_dataset)
-            metrics["eval_samples"] = min(max_val_samples, len(eval_dataset))
+            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(dataset['dev'])
+            metrics["eval_samples"] = min(max_val_samples, len(dataset['dev']))
 
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
