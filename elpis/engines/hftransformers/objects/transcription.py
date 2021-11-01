@@ -34,6 +34,7 @@ class HFTransformersTranscription(BaseTranscription):
         super().__init__(**kwargs)
         # Setup paths
         self.audio_file_path = self.path.joinpath("audio.wav")
+        self.test_labels_path = self.path / "test-labels-path.txt"
         self.text_path = self.path / "one-best-hypothesis.txt"
         self.xml_path = self.path / "transcription.xml"
         self.elan_path = self.path / "transcription.eaf"
@@ -62,17 +63,22 @@ class HFTransformersTranscription(BaseTranscription):
         self._set_stage(PROCESS_INPUT, msg='Processed input values')
 
         # retrieve logits & take argmax
-        logits = model(input_values).logits
+        with torch.no_grad():
+            logits = model(input_values).logits
         predicted_ids = torch.argmax(logits, dim=-1)
         self._set_stage(PROCESS_INPUT, complete=True, msg='Generated predictions')
 
         # transcribe
         self._set_stage(TRANSCRIPTION)
         transcription = processor.decode(predicted_ids[0])
+
+        with processor.as_target_processor():
+            labels = processor(transcription, return_tensors="pt").input_ids
         self._set_stage(TRANSCRIPTION, complete=True)
 
         self._set_stage(SAVING)
-        self._save_transcription(transcription)
+        self._save_transcription(transcription, labels)
+        self._set_stage(SAVING, complete=True)
 
         self._set_finished_transcription(True)
         if on_complete is not None:
@@ -84,7 +90,8 @@ class HFTransformersTranscription(BaseTranscription):
             return text
 
     def elan(self):
-        with open(self.elan_path, 'r') as fin:
+        # TODO change back to self.elan_path
+        with open(self.text_path, 'r') as fin:
             return fin.read()
 
     def _get_wav2vec2_requirements(self) -> Tuple[Wav2Vec2Processor, Wav2Vec2ForCTC]:
@@ -98,12 +105,15 @@ class HFTransformersTranscription(BaseTranscription):
         
         return processor, model
 
-    def _save_transcription(self, transcription: List[str]) -> None:
+    def _save_transcription(self, transcription: str, labels) -> None:
         """Saves a transcription in a bunch of required formats for future
         processing.
         """
-        # TODO take transcription and output to a bunch of files.
-        print(dir(transcription))
+        with open(self.text_path, 'w') as output_file:
+            output_file.write(transcription)
+
+        with open(self.test_labels_path, 'w') as output_file:
+            output_file.write(str(labels))
 
     def _load_audio(self, file: Path) -> Tuple:
         return sf.read(file)
