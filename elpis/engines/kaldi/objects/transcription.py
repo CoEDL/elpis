@@ -47,9 +47,16 @@ class KaldiTranscription(BaseTranscription):
         with wav_scp_path.open(mode='w') as fout:
                 fout.write(f'{rec_id} {rel_audio_file_path}\n')
 
+    # Write audio filename to a file so the shell scripts can read it. Maybe safer than setting ENV?
+    def _build_audio_meta(self, audio_filename: Path):
+        audio_meta_path = self.path.joinpath('audio_meta.txt')
+        with audio_meta_path.open(mode='w') as fout:
+                fout.write(f'{audio_filename}\n')
+
     def _process_audio_file(self, audio):
         # TODO: why save to tmp and not just resample to self.path location?
         # copy audio to the tmp folder for resampling
+        print("========= process audio for transcription", self.path)
         tmp_path = Path(f'/tmp/{self.hash}')
         tmp_path.mkdir(parents=True, exist_ok=True)
         tmp_file_path = tmp_path.joinpath(audio.filename)
@@ -87,6 +94,7 @@ class KaldiTranscription(BaseTranscription):
         self._build_utt2spk_file(utt_id, spk_id)
         self._build_segments_file(utt_id, rec_id, start_ms, stop_ms)
         self._build_wav_scp_file(rec_id, rel_audio_file_path)
+        self._build_audio_meta(self.audio_filename)
 
     def transcribe(self, on_complete: Callable = None):
         # TODO move templates templates into transcription state dir, not model
@@ -147,6 +155,7 @@ class KaldiTranscription(BaseTranscription):
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', self.audio_filename)}")
         # Copy parts of transcription process and chmod
+        os.makedirs(f"{kaldi_infer_path.joinpath(template_dir_path)}", exist_ok=True)
         dir_util.copy_tree(f'{template_dir_abs_path}', f"{kaldi_infer_path.joinpath(template_dir_path)}")
         stages = os.listdir(kaldi_infer_path.joinpath(template_dir_path))
         for file in stages:
