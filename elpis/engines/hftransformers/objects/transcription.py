@@ -1,12 +1,13 @@
 from pathlib import Path
 import sys
 from typing import List, Tuple
-from elpis.engines.common.input.resample import resample
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 from elpis.engines.hftransformers.objects.model import FINISHED, UNFINISHED, HFTransformersModel
 
 import soundfile as sf
 import torch
+from itertools import groupby
+import pympi
 
 from transformers import (
     Wav2Vec2ForCTC,
@@ -28,8 +29,9 @@ STAGES = [
 FINISHED = 'transcribed'
 UNFINISHED = 'transcribing'
 
+
 class HFTransformersTranscription(BaseTranscription):
-    
+
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         # Setup paths
@@ -45,10 +47,10 @@ class HFTransformersTranscription(BaseTranscription):
         sys.stdout = open(run_log_path, 'w')
         sys.stderr = sys.stdout
 
-        stages = { stage: stage for stage in STAGES }
+        stages = {stage: stage for stage in STAGES}
         self.build_stage_status(stages)
 
-    def transcribe(self, on_complete: callable=None) -> None:
+    def transcribe(self, on_complete: callable = None) -> None:
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
 
@@ -59,39 +61,43 @@ class HFTransformersTranscription(BaseTranscription):
 
         # pad input values and return pt tensor
         self._set_stage(PROCESS_INPUT)
-        input_values = processor(audio_input, sampling_rate=sample_rate, return_tensors="pt").input_values
+        input_values = processor(
+            audio_input, sampling_rate=sample_rate, return_tensors="pt").input_values
         self._set_stage(PROCESS_INPUT, msg='Processed input values')
 
         # retrieve logits & take argmax
         with torch.no_grad():
             logits = model(input_values).logits
         predicted_ids = torch.argmax(logits, dim=-1)
-        self._set_stage(PROCESS_INPUT, complete=True, msg='Generated predictions')
+        self._set_stage(PROCESS_INPUT, complete=True)
 
         # transcribe
         self._set_stage(TRANSCRIPTION)
         transcription = processor.decode(predicted_ids[0])
-
-        with processor.as_target_processor():
-            labels = processor(transcription, return_tensors="pt").input_ids
         self._set_stage(TRANSCRIPTION, complete=True)
 
-        self._set_stage(SAVING)
-        self._save_transcription(transcription, labels)
-        self._set_stage(SAVING, complete=True)
 
+        self._set_stage(SAVING)
+        self._save_transcription(transcription)
+
+        self._set_stage(SAVING, msg='Saved transcription, generating utterances')
+        # Utterances to be used creating elan files
+        utterances = self._generate_utterances(
+            processor, predicted_ids, input_values, transcription, sample_rate)
+        self._save_utterances(utterances)
+
+        self._set_stage(SAVING, complete=True)
         self._set_finished_transcription(True)
         if on_complete is not None:
             on_complete()
-    
+
     def text(self):
         with open(self.text_path, 'r') as fin:
             text = fin.read()
             return text
 
     def elan(self):
-        # TODO change back to self.elan_path
-        with open(self.text_path, 'r') as fin:
+        with open(self.elan_path, 'r') as fin:
             return fin.read()
 
     def _get_wav2vec2_requirements(self) -> Tuple[Wav2Vec2Processor, Wav2Vec2ForCTC]:
@@ -102,23 +108,77 @@ class HFTransformersTranscription(BaseTranscription):
 
         processor = Wav2Vec2Processor.from_pretrained(pretrained_path)
         model = Wav2Vec2ForCTC.from_pretrained(pretrained_path)
-        
+
         return processor, model
 
-    def _save_transcription(self, transcription: str, labels) -> None:
-        """Saves a transcription in a bunch of required formats for future
-        processing.
+    def _generate_utterances(self,
+                            processor: Wav2Vec2Processor,
+                            predicted_ids: torch.Tensor,
+                            input_values: torch.Tensor,
+                            transcription: str,
+                            sample_rate: int) -> Tuple[List[str], List[float], List[float]]:
+        """Generates a mapping of words to their start and end times from a transcription.
+
+        Parameters:
+            processor: The wav2vec2 processor from which we take the tokenizer.
+            predicted_ids 
         """
+        words = [word for word in transcription.split(' ') if len(word) > 0]
+        predicted_ids = predicted_ids[0].tolist()
+
+        # Add times to ids
+        duration_sec = input_values.shape[1] / sample_rate
+        def time_from_index(index): return index / \
+            len(predicted_ids) * duration_sec
+        ids_with_time = map(lambda index, id: (time_from_index(index), id),
+                            enumerate(predicted_ids))
+
+        # remove entries which are just "padding" (i.e. no characers are recognized)
+        def is_padding(id): return id == processor.tokenizer.pad_token_id
+        ids_with_time = filter(lambda _, id: not is_padding(id), ids_with_time)
+
+        # now split the ids into groups of ids where each group represents a word
+        def is_delimiter(
+            id): return id == processor.tokenizer.word_delimiter_token_id
+        word_groups = groupby(
+            ids_with_time, lambda x: is_delimiter(x[1]))
+
+        # Get all the groups not containing delimiters
+        split_ids_w_time = [list(group)
+                            for key, group in word_groups if not key]
+
+        # make sure that there are the same number of id-groups as words.
+        # Otherwise something is wrong
+        assert len(split_ids_w_time) == len(words)
+
+        word_start_times = []
+        word_end_times = []
+        for cur_ids_w_time, _ in zip(split_ids_w_time, words):
+            _times = [time for time, _ in cur_ids_w_time]
+            word_start_times.append(min(_times))
+            word_end_times.append(max(_times))
+
+        return words, word_start_times, word_end_times
+
+    def _save_transcription(self, transcription: str) -> None:
+        """Saves a transcription as plaintext"""
         with open(self.text_path, 'w') as output_file:
             output_file.write(transcription)
 
-        with open(self.test_labels_path, 'w') as output_file:
-            output_file.write(str(labels))
+    def _save_utterances(self, utterances) -> None:
+        """Saves Elan output using the pympi library"""
+        result = pympi.Elan.Eaf(file_path = self.elan_path, author="elpis")
+
+        tier = 'spk1' # No idea what this is for
+        result.add_tier(tier)
+
+        for word, start, end in zip(*utterances):
+            result.add_annotation(id_tier=tier, start=start, end=end, value=word)
 
     def _load_audio(self, file: Path) -> Tuple:
         return sf.read(file)
 
-    def prepare_audio(self, audio: Path, on_complete: callable=None):
+    def prepare_audio(self, audio: Path, on_complete: callable = None):
         self._resample_audio_file(audio, self.audio_file_path)
         if on_complete is not None:
             on_complete()
@@ -148,7 +208,7 @@ class HFTransformersTranscription(BaseTranscription):
     def _set_finished_transcription(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
 
-    def _set_stage(self, stage: str, complete: bool=False, msg: str='') -> None:
+    def _set_stage(self, stage: str, complete: bool = False, msg: str = '') -> None:
         """Updates the stage to one of the constants specified within
         STAGES
         """
