@@ -58,6 +58,7 @@ export default {
             load: "/api/pron-dict/load",
             list: "/api/pron-dict/list",
             l2s: "/api/pron-dict/l2s",
+            matching: "/api/pron-dict/matching",
             generateLexicon: "/api/pron-dict/generate-lexicon",
             saveLexicon: "/api/pron-dict/save-lexicon",
         },

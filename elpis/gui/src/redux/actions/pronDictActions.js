@@ -148,6 +148,41 @@ const pronDictL2SFailure = error => ({
 });
 
 
+/* * * * * * * * * * * *  MATCHING * * * * * * * * * * *  */
+
+export function pronDictMatching(postData) {
+    const url = baseUrl + urls.api.pronDict.matching;
+    var responseData;
+    console.log(`Making call to ${url} with ${JSON.stringify(postData)}`);
+
+    return async dispatch => {
+        dispatch(pronDictMatchingStarted());
+        await axios.post(url, postData)
+            .then(response => {
+                responseData = response.data;
+                dispatch(pronDictMatchingSuccess(response));
+            })
+            .catch(error => {
+                dispatch(pronDictMatchingFailure(error));
+                throw error;
+            });
+
+        return responseData;
+    };
+}
+
+const pronDictMatchingStarted = () => ({
+    type: actionTypes.PRON_DICT_MATCHING_STARTED,
+});
+const pronDictMatchingSuccess = response => ({
+    type: actionTypes.PRON_DICT_MATCHING_SUCCESS,
+    response: {...response},
+});
+const pronDictMatchingFailure = error => ({
+    type: actionTypes.PRON_DICT_MATCHING_FAILURE,
+    response: {error},
+});
+
 /* * * * * * * * * * * *  BUILD LEXICON * * * * * * * * * * *  */
 
 export function pronDictBuildLexicon() {

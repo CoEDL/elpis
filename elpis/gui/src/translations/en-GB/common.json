@@ -127,6 +127,12 @@
             "dropFilesHintDragActive": "Here here..",
             "uploadButton": "Upload"
         },
+        "matching": {
+            "lettersHeader": "Letters",
+            "soundsHeader": "Sounds",
+            "description": "The set of letter to sound pairs is used to build a pronunciation dictionary for the corpus. Make one by entering each of the characters in your corpus in the left-hand fields, and the symbols representing how the characters are pronounced in the corresponding right-hand fields. You can use IPA or SAMPA for the pronunication symbols.\n\nYou can add new rows using the green plus button and remove rows using the corresponding trash button.",
+            "save": "Save"
+        },
         "lexicon": {
             "title": "Review the pronunciation dictionary",
             "description": "The pronunciation dictionary is generated from the wordlist and letter-to-sound rules you uploaded. \n\n Characters surrounded by parenthesis were not found in your letter to sound map. Please add them, re-upload the l2s file and check the lexicon again.",
