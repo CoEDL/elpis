@@ -101,8 +101,15 @@ class KaldiTranscription(BaseTranscription):
         self.status = "transcribing"
         local_kaldi_path = self.model.path.joinpath('kaldi')
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
+
+        print("========= reset kaldi infer dir")
+        # wipe the infer dir to clear previous audio and infer fiels
+        if kaldi_infer_path.exists():
+            shutil.rmtree(f'{kaldi_infer_path}')
+            kaldi_infer_path.mkdir(parents=True, exist_ok=True)
+
         print("========= reset exp dir")
-        # wipe previous dir to avoid file_exists errors
+        # wipe previous exp dir to avoid file_exists errors
         exp_path = self.model.path.joinpath('kaldi','exp','tri1_online')
         if exp_path.exists():
             shutil.rmtree(f'{exp_path}')
@@ -151,7 +158,6 @@ class KaldiTranscription(BaseTranscription):
         stage_count = 0
 
         # Build stage scripts
-        os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
         file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', self.audio_filename)}")
         # Copy parts of transcription process and chmod
