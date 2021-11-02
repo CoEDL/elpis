@@ -59,8 +59,15 @@ def status():
 @bp.route("/text", methods=['GET'])
 def text():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
-    # TODO fix this to return json wrapper
-    return transcription.text()
+    data = {
+        "audio_filename": transcription.audio_filename,
+        "text": transcription.text()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
 
 
 @bp.route("/elan", methods=['GET'])

@@ -55,7 +55,11 @@ class NewTranscription extends Component {
     }
 
     handleDownloadText = () => {
-        downloadjs(this.props.text, "text.txt", "text/txt");
+        const {audio_filename, text} = this.props;
+        const audio_base_name = audio_filename.replace(/\.[^/.]+$/, "");
+        const text_file_name = audio_base_name + ".txt";
+
+        downloadjs(text, text_file_name, "text/txt");
     }
 
     handleDownloadElan = () => {
@@ -87,9 +91,6 @@ class NewTranscription extends Component {
 
     render = () => {
         const {t, currentEngine, filename, list, status, stage_status, confidence, modelName} = this.props;
-
-        console.log(confidence);
-
         const {uploading, show_confidence_opacity} = this.state;
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
@@ -253,6 +254,7 @@ const mapStateToProps = state => {
         filename: state.transcription.filename,
         status: state.transcription.status,
         stage_status: state.transcription.stage_status,
+        audio_filename: state.transcription.audio_filename,
         text: state.transcription.text,
         elan: state.transcription.elan,
         confidence: state.transcription.confidence,

@@ -18,54 +18,54 @@ import codecs
 class KaldiTranscription(BaseTranscription):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.audio_file_path = self.path.joinpath('audio.wav')
+        self.audio_filename = None
+        self.audio_file_path = None
         self.audio_duration = 0.0
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
-        self.audio_file_path = self.path.joinpath('audio.wav')
         return self
 
     def _build_spk2utt_file(self, spk_id: str, utt_id: str):
-        spk2utt_path = Path(self.path).joinpath('spk2utt')
+        spk2utt_path = self.path.joinpath('spk2utt')
         with spk2utt_path.open(mode='w') as fout:
                 fout.write(f'{spk_id} {utt_id}\n')
 
     def _build_utt2spk_file(self, utt_id: str, spk_id: str):
-        utt2spk_path = Path(self.path).joinpath('utt2spk')
+        utt2spk_path = self.path.joinpath('utt2spk')
         with utt2spk_path.open(mode='w') as fout:
                 fout.write(f'{utt_id} {spk_id}\n')
 
     def _build_segments_file(self, utt_id: str, rec_id: str, start_ms: float, stop_ms: float):
-        segments_path = Path(self.path).joinpath('segments')
+        segments_path = self.path.joinpath('segments')
         with segments_path.open(mode='w') as fout:
                 fout.write(f'{utt_id} {rec_id} {start_ms} {stop_ms}\n')
 
     def _build_wav_scp_file(self, rec_id: str, rel_audio_file_path: Path):
-        wav_scp_path = Path(self.path).joinpath('wav.scp')
+        wav_scp_path = self.path.joinpath('wav.scp')
         with wav_scp_path.open(mode='w') as fout:
                 fout.write(f'{rec_id} {rel_audio_file_path}\n')
 
     def _process_audio_file(self, audio):
-        # TODO: maintain original audio filename
+        # TODO: why save to tmp and not just resample to self.path location?
         # copy audio to the tmp folder for resampling
         tmp_path = Path(f'/tmp/{self.hash}')
         tmp_path.mkdir(parents=True, exist_ok=True)
-        tmp_file_path = tmp_path.joinpath('original.wav')
+        tmp_file_path = tmp_path.joinpath(audio.filename)
         with tmp_file_path.open(mode='wb') as fout:
             fout.write(audio.read())
         # resample the audio file
-        resample(tmp_file_path, self.path.joinpath('audio.wav'))
+        resample(tmp_file_path, self.path.joinpath(audio.filename))
+        self.audio_filename = audio.filename
+        self.audio_file_path = self.path.joinpath(self.audio_filename)
         self.audio_duration = librosa.get_duration(filename=tmp_file_path)
-        print("audio duration", self.audio_duration)
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
         # _process_audio_file above a file named audio.wav
-        audio_file_name = 'audio.wav'
         # Get the speaker id from the model > kaldi/data/test/spk2utt file. it's the first "word".
-        model_spk2utt_path = Path(self.model.path).joinpath(
+        model_spk2utt_path = self.model.path.joinpath(
             'kaldi/data/test/spk2utt')
         with model_spk2utt_path.open(mode='r') as fin:
             spk_id = fin.read().split()[0]
@@ -74,15 +74,14 @@ class KaldiTranscription(BaseTranscription):
         # Expecting to start at 0 time. Could benefit from VAD here?
         start_ms = 0.00
         # Duration of the audio
-        abs_audio_file_path = Path(self.path).joinpath(audio_file_name)
-        with contextlib.closing(wave.open(str(abs_audio_file_path), 'r')) as fin:
+        with contextlib.closing(wave.open(str(self.audio_file_path), 'r')) as fin:
             frames = fin.getnframes()
             rate = fin.getframerate()
             stop_ms = frames / float(rate)
         # Rec id is arbitrary, use anything you like here
         rec_id = 'decode'
         # Path to the audio, relative to kaldi working dir
-        rel_audio_file_path = os.path.join('data', 'infer', audio_file_name)
+        rel_audio_file_path = os.path.join('data', 'infer', self.audio_filename)
         # Generate the files
         self._build_spk2utt_file(spk_id, utt_id)
         self._build_utt2spk_file(utt_id, spk_id)
@@ -146,7 +145,7 @@ class KaldiTranscription(BaseTranscription):
         # Build stage scripts
         os.makedirs(f"{kaldi_infer_path}", exist_ok=True)
         dir_util.copy_tree(f'{self.path}', f"{kaldi_infer_path}")
-        file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', 'audio.wav')}")
+        file_util.copy_file(f'{self.audio_file_path}', f"{self.model.path.joinpath('kaldi', self.audio_filename)}")
         # Copy parts of transcription process and chmod
         dir_util.copy_tree(f'{template_dir_abs_path}', f"{kaldi_infer_path.joinpath(template_dir_path)}")
         stages = os.listdir(kaldi_infer_path.joinpath(template_dir_path))

@@ -8,6 +8,7 @@ const initState = {
     text: null,
     elan: null,
     confidence: null,
+    audio_filename: null,
 };
 const transcription = (state = initState, action) => {
     switch (action.type) {
@@ -29,8 +30,9 @@ const transcription = (state = initState, action) => {
             return {...state, status, stage_status, type};
 
         case actionTypes.TRANSCRIPTION_GET_TEXT_SUCCESS:
-            // The response here is the file data, not wrapped in a JSON data/status format
-            return {...state, text: action.response.data};
+            var {audio_filename, text} = action.response.data.data;
+
+            return {...state, audio_filename, text};
 
         case actionTypes.TRANSCRIPTION_GET_ELAN_SUCCESS:
             // The response here is the file data, not wrapped in a JSON data/status format
