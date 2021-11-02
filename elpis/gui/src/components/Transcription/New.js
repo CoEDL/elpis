@@ -55,15 +55,18 @@ class NewTranscription extends Component {
     }
 
     handleDownloadText = () => {
-        const {audio_filename, text} = this.props;
-        const audio_base_name = audio_filename.replace(/\.[^/.]+$/, "");
-        const text_file_name = audio_base_name + ".txt";
+        const {filename, text} = this.props;
+        const file_basename = filename.split(".").slice(0, -1).join(".");
+        const text_file_name = file_basename + ".txt";
 
         downloadjs(text, text_file_name, "text/txt");
     }
 
     handleDownloadElan = () => {
-        downloadjs(this.props.elan, "elan.eaf", "text/xml");
+        const {filename, elan} = this.props;
+        const file_basename = filename.split(".").slice(0, -1).join(".");
+
+        downloadjs(elan, file_basename + ".eaf", "text/xml");
     }
 
     onDrop = (acceptedFiles) => {
@@ -254,7 +257,6 @@ const mapStateToProps = state => {
         filename: state.transcription.filename,
         status: state.transcription.status,
         stage_status: state.transcription.stage_status,
-        audio_filename: state.transcription.audio_filename,
         text: state.transcription.text,
         elan: state.transcription.elan,
         confidence: state.transcription.confidence,

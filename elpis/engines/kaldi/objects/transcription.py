@@ -210,7 +210,7 @@ class KaldiTranscription(BaseTranscription):
             return fin.read()
 
     def elan(self):
-        with open(f'{self.path}/{self.hash}.eaf', 'rb') as fin:
+        with open(f'{self.path}/{self.hash}.eaf', 'r') as fin:
             return fin.read()
 
     def get_confidence(self):
