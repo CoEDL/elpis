@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from io import BufferedIOBase
-
+from typing import Dict, List
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
 from elpis.engines.common.input.make_prn_dict import generate_pronunciation_dictionary
@@ -70,6 +70,12 @@ class PronDict(FSObject):
             file_translated.write(file_raw.read().replace('\r\n', '\n'))
         if os.path.exists(tmp_l2s_path):
             os.remove(tmp_l2s_path)
+        self.config['l2s'] = True
+
+    def build_l2s_file(self, mappings: List[Dict[str, str]]):
+        with self.l2s_path.open(mode='w', encoding='utf-8') as l2s_file:
+            for pair in mappings:
+                l2s_file.write(f'{pair["letter"]} {pair["sound"]}\n')
         self.config['l2s'] = True
 
     def get_l2s_content(self):

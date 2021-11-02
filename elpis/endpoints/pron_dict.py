@@ -85,6 +85,22 @@ def l2s():
         "data": data
     })
 
+@bp.route("/matching", methods=['POST'])
+def build_l2s_from_pairs():
+    pron_dict: PronDict = app.config['CURRENT_PRON_DICT']
+    if pron_dict is None:
+        return jsonify({"status": 404,
+                        "data": "No current pron dict exists (perhaps create one first)"})
+    if request.method == 'POST':
+        mappings = request.json['pairs']
+        pron_dict.build_l2s_file(mappings)
+    data = {
+        "l2s": pron_dict.get_l2s_content()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 @bp.route("/generate-lexicon", methods=['GET'])
 def generate_lexicon():
