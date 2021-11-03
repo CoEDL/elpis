@@ -128,18 +128,16 @@ class HFTransformersTranscription(BaseTranscription):
 
         # Add times to ids
         duration_sec = input_values.shape[1] / sample_rate
-        def time_from_index(index): return index / \
-            len(predicted_ids) * duration_sec
+        time_from_index = lambda index: index / len(predicted_ids) * duration_sec
         ids_with_time = map(lambda index, id: (time_from_index(index), id),
                             enumerate(predicted_ids))
 
         # remove entries which are just "padding" (i.e. no characers are recognized)
-        def is_padding(id): return id == processor.tokenizer.pad_token_id
+        is_padding = lambda id: id == processor.tokenizer.pad_token_id
         ids_with_time = filter(lambda _, id: not is_padding(id), ids_with_time)
 
         # now split the ids into groups of ids where each group represents a word
-        def is_delimiter(
-            id): return id == processor.tokenizer.word_delimiter_token_id
+        is_delimiter = lambda id: id == processor.tokenizer.word_delimiter_token_id
         word_groups = groupby(
             ids_with_time, lambda x: is_delimiter(x[1]))
 
