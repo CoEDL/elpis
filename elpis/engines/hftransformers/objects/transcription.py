@@ -1,6 +1,8 @@
 from pathlib import Path
 import sys
 from typing import List, Tuple
+from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
+from elpis.engines.hftransformers.objects.model import HFTransformersModel
 
 import soundfile as sf
 import torch
