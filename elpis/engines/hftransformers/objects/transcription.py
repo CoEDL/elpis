@@ -170,7 +170,7 @@ class HFTransformersTranscription(BaseTranscription):
             word_end_times.append(max(_times))
 
         print('words:', words)
-        pprint(zip(word_start_times, word_end_times))
+        pprint(list(zip(word_start_times, word_end_times)))
         print(flush=True)
         return words, word_start_times, word_end_times
 
