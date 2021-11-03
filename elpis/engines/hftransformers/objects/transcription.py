@@ -148,7 +148,7 @@ class HFTransformersTranscription(BaseTranscription):
         word_groups = groupby(
             ids_with_time, is_delimiter)
 
-        print(list(word_groups))
+        print(list(word_groups), flush=True)
 
         # Get all the groups not containing delimiters
         split_ids_w_time = [list(group)
