@@ -8,6 +8,7 @@ import soundfile as sf
 import torch
 from itertools import groupby
 import pympi
+import string
 
 from transformers import (
     Wav2Vec2ForCTC,
@@ -26,8 +27,8 @@ STAGES = [
     SAVING
 ]
 
-FINISHED = 'transcribed'
-UNFINISHED = 'transcribing'
+# FINISHED = 'transcribed'
+# UNFINISHED = 'transcribing'
 
 
 class HFTransformersTranscription(BaseTranscription):
@@ -47,8 +48,11 @@ class HFTransformersTranscription(BaseTranscription):
         sys.stdout = open(run_log_path, 'w')
         sys.stderr = sys.stdout
 
-        stages = {stage: stage for stage in STAGES}
-        self.build_stage_status(stages)
+        self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(STAGES)]
+        stage_labels = [string.capwords(stage).replace('_', ' ') for stage in STAGES]
+
+        stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
+        self.build_stage_status(stage_names)
 
     def transcribe(self, on_complete: callable = None) -> None:
         self._set_finished_transcription(False)
@@ -131,7 +135,7 @@ class HFTransformersTranscription(BaseTranscription):
 
         time_from_index = lambda index: index / len(predicted_ids) * duration_sec
         generate_timestamps = lambda index, token_id: (time_from_index(index), token_id)
-        
+
         ids_with_time = map(generate_timestamps,
                             enumerate(predicted_ids))
 
@@ -143,6 +147,8 @@ class HFTransformersTranscription(BaseTranscription):
         is_delimiter = lambda _, token_id: token_id == processor.tokenizer.word_delimiter_token_id
         word_groups = groupby(
             ids_with_time, is_delimiter)
+
+        print(list(word_groups))
 
         # Get all the groups not containing delimiters
         split_ids_w_time = [list(group)
@@ -215,4 +221,8 @@ class HFTransformersTranscription(BaseTranscription):
         """
         status = 'completed' if complete else 'in-progress'
         if stage in STAGES:
-            self.stage_status = stage, status, msg
+            index = STAGES.index(stage)
+            self.stage = self.index_prefixed_stages[index]
+            self.stage_status = self.stage, status, msg
+        
+

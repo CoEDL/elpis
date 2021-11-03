@@ -476,10 +476,8 @@ class HFTransformersModel(BaseModel):
         set_seed(training_args.seed)
 
         # 1. Tokenization
-        self._set_stage(TOKENIZATION)
         self._set_finished_training(False)
-
-        #self.tokenize(data_args, train_dataset, eval_dataset)
+        self._set_stage(TOKENIZATION)
 
         data_dir = Path(data_args.elpis_data_dir)
         self.create_split(data_args, data_dir)
@@ -496,11 +494,7 @@ class HFTransformersModel(BaseModel):
         processor = self.get_processor(feature_extractor, tokenizer)
         model = self.get_model(model_args, processor)
 
-        #if data_args.max_train_samples is not None:
-        #    train_dataset = train_dataset.select(range(data_args.max_train_samples))
-
-        #if data_args.max_val_samples is not None:
-        #    eval_dataset = eval_dataset.select(range(data_args.max_val_samples))
+        self._set_stage(TOKENIZATION, complete=True)
 
         # 2. Preprocessing the datasets.
         # We need to read the audio files as arrays and tokenize the targets.
@@ -510,6 +504,9 @@ class HFTransformersModel(BaseModel):
 
         if model_args.freeze_feature_extractor:
             model.freeze_feature_extractor()
+        
+        self._set_stage(PREPROCESSING, complete=True)
+
 
         # 3. Training
         self._set_stage(TRAIN)
@@ -542,6 +539,8 @@ class HFTransformersModel(BaseModel):
             trainer.save_metrics(TRAIN, metrics)
             trainer.save_state()
 
+        self._set_stage(TRAIN, complete=True)
+        
         # 4. Evaluation
         self._set_stage(EVALUATION)
         results = {}
@@ -553,22 +552,26 @@ class HFTransformersModel(BaseModel):
 
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
-
+        
+        self._set_stage(EVALUATION, complete=True)
         self._set_finished_training(True)
         return results
 
     def _set_finished_training(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
 
-    def _set_stage(self, stage: str) -> None:
+    def _set_stage(self, stage: str, complete=False) -> None:
         """Updates the training stage to one of the constants specified within
         TRAINING_STAGES
         """
         if stage not in TRAINING_STAGES:
             return
-
+        
+        status = "completed" if complete else "in-progress"
         index = TRAINING_STAGES.index(stage)
         self.stage = self.index_prefixed_stages[index]
+        self.stage_status = self.stage, status, ''
+
 
     def get_train_results(self) -> Dict[str, float]:
         # TODO Ask Ben what's meant to go here
