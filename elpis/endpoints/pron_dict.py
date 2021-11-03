@@ -41,6 +41,7 @@ def load():
         data = {
             "config": pron_dict.config._load(),
             "l2s": pron_dict.get_l2s_content(),
+            "l2sPairs": pron_dict.get_l2s_pairs(),
             "lexicon": pron_dict.get_lexicon_content()
         }
     except KaldiError:
@@ -78,7 +79,8 @@ def l2s():
         file = request.files['file']
         pron_dict.set_l2s_fp(file)
     data = {
-        "l2s": pron_dict.get_l2s_content()
+        "l2s": pron_dict.get_l2s_content(),
+        "l2sPairs": pron_dict.get_l2s_pairs()
     }
     return jsonify({
         "status": 200,
@@ -95,7 +97,7 @@ def build_l2s_from_pairs():
         mappings = request.json['pairs']
         pron_dict.build_l2s_file(mappings)
     data = {
-        "l2s": pron_dict.get_l2s_content()
+        "l2sPairs": pron_dict.get_l2s_pairs()
     }
     return jsonify({
         "status": 200,

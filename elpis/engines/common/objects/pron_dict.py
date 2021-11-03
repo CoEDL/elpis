@@ -85,6 +85,29 @@ class PronDict(FSObject):
         except FileNotFoundError:
             return False
 
+    def get_l2s_pairs(self):
+        """
+        Returns dictionary of l2s pairs contained within the l2s file, if it exists.
+        """
+        pairs = []
+        
+        try:
+            with self.l2s_path.open(mode='r') as fin:
+                for line in fin:
+                    if line.startswith('#'):
+                        # Ignore commented lines
+                        continue
+                    values = line.split()
+                    if len(values) > 1:
+                        pairs.append({
+                            "letter": values[0],
+                            "sound": values[1]
+                        })
+        except FileNotFoundError:
+            return []
+        
+        return pairs
+        
 
     def generate_lexicon(self):
         # task make-prn-dict

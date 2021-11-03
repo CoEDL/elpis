@@ -6,6 +6,10 @@ const initState = {
     datasetName: "",
     date: null,
     l2s: "",
+    l2sPairs: [{
+        letter: "",
+        sound: "",
+    }],
     lexicon: "",
     apiWaiting: {status: false, message: "something"},
 };
@@ -28,13 +32,14 @@ const pronDict = (state = initState, action) => {
             }
 
         case actionTypes.PRON_DICT_LOAD_SUCCESS:
-            var {config, l2s, lexicon} = action.response.data.data;
+            var {config, l2s, l2sPairs, lexicon} = action.response.data.data;
 
             return {
                 ...state,
                 name: config.name,
                 datasetName: config.dataset_name,
                 l2s,
+                l2sPairs,
                 lexicon,
             };
 
@@ -47,7 +52,7 @@ const pronDict = (state = initState, action) => {
             ({data, status} = action.response.data);
 
             if (status === 200) {
-                return {...state, l2s: data.l2s};
+                return {...state, l2s: data.l2s, l2sPairs: data.l2sPairs};
             } else {
                 console.log("some error with l2s");
 
@@ -70,6 +75,15 @@ const pronDict = (state = initState, action) => {
         // .. could probably use local state
         case actionTypes.PRON_DICT_UPDATE_LEXICON:
             return {...state, lexicon: action.data.lexicon};
+        case actionTypes.PRON_DICT_MATCHING_SUCCESS:
+            ({data, status} = action.response.data);
+            
+            if (status === 200) {
+                return {...state, l2sPairs:data.l2sPairs};
+            } else {
+                console.log("An error occurred relating to l2s matching");
+                return {...state};
+            }
 
         default:
             return {...state};

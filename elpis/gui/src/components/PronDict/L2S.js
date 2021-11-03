@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import {Button, Grid, Header, Message, Segment, Tab} from "semantic-ui-react";
+import {Button, Divider, Grid, Header, Message, Segment, Tab} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import classNames from "classnames";
 import Dropzone from "react-dropzone";
 import {fromEvent} from "file-selector";
-import {pronDictL2S} from "redux/actions/pronDictActions";
+import {pronDictL2S, pronDictMatching} from "redux/actions/pronDictActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentPronDictName from "./CurrentPronDictName";
@@ -25,10 +25,9 @@ class PronDictL2S extends Component {
     }
 
     render() {
-        const {t, currentEngine, l2s, name} = this.props;
+        const {t, currentEngine, l2s, name, pronDictMatching} = this.props;
         const interactionDisabled = name ? false : true;
-        const pron = l2s ? <pre>{l2s}</pre> : null;
-
+        
         return (
             <div>
                 <Branding />
@@ -49,64 +48,46 @@ class PronDictL2S extends Component {
                                 <p>{t("pronDict.common.noCurrentPronDictLabel")}</p>
                             }
                             {currentEngine && name &&
-                                <Tab
-                                    panes={[
-                                        {
-                                            menuItem: "Create",
-                                            render: () =>
-                                                <Tab.Pane>
-                                                    <Message content={t("pronDict.matching.description")} />
-                                                    <MatchingL2S
-                                                        disabled={interactionDisabled}
-                                                        l2s
-                                                    />
-                                                </Tab.Pane>
-                                        },
-                                        {
-                                            menuItem: "Upload",
-                                            render: () =>
-                                            <Tab.Pane>
-                                                <Message content={t("pronDict.l2s.description")} />
-                                                {!pron &&
-                                                    <Segment>
-                                                        <Dropzone
-                                                            disabled={interactionDisabled}
-                                                            className="dropzone"
-                                                            onDrop={this.onDrop}
-                                                            getDataTransferItems={evt => fromEvent(evt)}
-                                                        >
-                                                            {({getRootProps, getInputProps, isDragActive}) => {
-                                                                return (
-                                                                    <div
-                                                                        {...getRootProps()}
-                                                                        className={classNames("dropzone", {
-                                                                            dropzone_active: isDragActive,
-                                                                        })}
-                                                                    >
-                                                                        <input {...getInputProps()} />
-                                                                        {isDragActive ?
-                                                                            <p>{t("pronDict.l2s.dropFilesHintDragActive")}</p> :
-                                                                            <p>{t("pronDict.l2s.dropFilesHint")}</p>
-                                                                        }
-                                                                        <Button>{t("pronDict.l2s.uploadButton")}</Button>
-                                                                    </div>
-                                                                );
-                                                            }}
-                                                        </Dropzone>
-                                                    </Segment>
-                                                }
-                                                <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
-                                                    {t("common.nextButton")}
-                                                </Button>
-                                                {pron &&
-                                                    <Segment>
-                                                        {pron}
-                                                    </Segment>
-                                                }
-                                            </Tab.Pane>
-                                        },
-                                    ]}
-                                />
+                                <div>
+                                    <Segment>
+                                        <Dropzone
+                                            disabled={interactionDisabled}
+                                            className="dropzone"
+                                            onDrop={this.onDrop}
+                                            getDataTransferItems={evt => fromEvent(evt)}
+                                        >
+                                            {({getRootProps, getInputProps, isDragActive}) => {
+                                                return (
+                                                    <div
+                                                        {...getRootProps()}
+                                                        className={classNames("dropzone", {
+                                                            dropzone_active: isDragActive,
+                                                        })}
+                                                    >
+                                                        <input {...getInputProps()} />
+                                                        {isDragActive ?
+                                                            <p>{t("pronDict.l2s.dropFilesHintDragActive")}</p> :
+                                                            <p>{t("pronDict.l2s.dropFilesHint")}</p>
+                                                        }
+                                                        <Button>{t("pronDict.l2s.uploadButton")}</Button>
+                                                    </div>
+                                                );
+                                            }}
+                                        </Dropzone>
+                                    </Segment>
+                                    
+                                    <Divider horizontal>{t("common.or")}</Divider>
+                                    
+                                    <MatchingL2S
+                                        props={this.props}
+                                        changeMatchesCallback={pronDictMatching}
+                                        interactionDisabled={interactionDisabled}
+                                    />
+                                    
+                                    <Button as={Link} to={urls.gui.pronDict.lexicon} disabled={interactionDisabled}>
+                                        {t("common.nextButton")}
+                                    </Button>
+                                </div>
                             }
                         </Grid.Column>
                     </Grid>
@@ -119,6 +100,7 @@ class PronDictL2S extends Component {
 const mapStateToProps = state => {
     return {
         l2s: state.pronDict.l2s,
+        l2sPairs: state.pronDict.l2sPairs,
         name: state.pronDict.name,
         currentEngine: state.engine.engine,
     };
@@ -127,6 +109,9 @@ const mapDispatchToProps = dispatch => ({
     pronDictL2S: postData => {
         dispatch(pronDictL2S(postData));
     },
+    pronDictMatching: postData => {
+        dispatch(pronDictMatching(postData))
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

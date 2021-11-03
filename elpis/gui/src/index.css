@@ -267,3 +267,7 @@ label.pad-right,
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.matching-table {
+    margin-bottom: 1rem !important;
+}
