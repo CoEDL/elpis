@@ -136,7 +136,7 @@ class HFTransformersTranscription(BaseTranscription):
 
         # Add times to ids
         duration_sec = input_values.shape[1] / sample_rate
-        print('time per token:', duration_sec)
+        print('Audio length:', duration_sec)
 
         time_from_index = lambda index: index / len(predicted_ids) * duration_sec
         generate_timestamps = lambda item: (time_from_index(item[0]), item[1])
@@ -170,8 +170,7 @@ class HFTransformersTranscription(BaseTranscription):
             word_end_times.append(max(_times))
 
         print('words:', words)
-        pprint(word_start_times)
-        pprint(word_end_times)
+        pprint(zip(word_start_times, word_end_times))
         print(flush=True)
         return words, word_start_times, word_end_times
 
@@ -189,7 +188,7 @@ class HFTransformersTranscription(BaseTranscription):
 
         to_millis = lambda seconds: int(seconds * 1000)
         for word, start, end in zip(*utterances):
-            start, end = to_millis(start), to_millis(end)
+            start, end = to_millis(start), to_millis(end) + 1
             result.add_annotation(id_tier=tier, start=start, end=end, value=word)
 
         pympi.Elan.to_eaf(self.elan_path, result)
