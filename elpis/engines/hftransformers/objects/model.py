@@ -570,7 +570,7 @@ class HFTransformersModel(BaseModel):
         status = "completed" if complete else "in-progress"
         index = TRAINING_STAGES.index(stage)
         self.stage = self.index_prefixed_stages[index]
-        self.stage_status = self.stage, status, ''
+        self.stage_status = self.stage, status, '', ''
 
 
     def get_train_results(self) -> Dict[str, float]:
