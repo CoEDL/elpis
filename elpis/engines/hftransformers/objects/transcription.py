@@ -148,11 +148,12 @@ class HFTransformersTranscription(BaseTranscription):
         word_groups = groupby(
             ids_with_time, is_delimiter)
 
-        print(list(word_groups), flush=True)
-
         # Get all the groups not containing delimiters
         split_ids_w_time = [list(group)
                             for key, group in word_groups if not key]
+
+        print('words:', words)
+        print(split_ids_w_time, flush=True)
 
         # make sure that there are the same number of id-groups as words.
         # Otherwise something is wrong
