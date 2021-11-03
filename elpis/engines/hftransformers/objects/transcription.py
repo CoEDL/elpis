@@ -128,18 +128,21 @@ class HFTransformersTranscription(BaseTranscription):
 
         # Add times to ids
         duration_sec = input_values.shape[1] / sample_rate
+
         time_from_index = lambda index: index / len(predicted_ids) * duration_sec
-        ids_with_time = map((lambda index, token_id: (time_from_index(index), token_id)),
+        generate_timestamps = lambda index, token_id: (time_from_index(index), token_id)
+        
+        ids_with_time = map(generate_timestamps,
                             enumerate(predicted_ids))
 
         # remove entries which are just "padding" (i.e. no characers are recognized)
-        is_padding = lambda token_id: token_id == processor.tokenizer.pad_token_id
-        ids_with_time = filter((lambda _, token_id: not is_padding(token_id)), ids_with_time)
+        is_not_padding = lambda _, token_id: token_id != processor.tokenizer.pad_token_id
+        ids_with_time = filter(is_not_padding, ids_with_time)
 
         # now split the ids into groups of ids where each group represents a word
-        is_delimiter = lambda token_id: token_id == processor.tokenizer.word_delimiter_token_id
+        is_delimiter = lambda _, token_id: token_id == processor.tokenizer.word_delimiter_token_id
         word_groups = groupby(
-            ids_with_time, lambda x: is_delimiter(x[1]))
+            ids_with_time, is_delimiter)
 
         # Get all the groups not containing delimiters
         split_ids_w_time = [list(group)
