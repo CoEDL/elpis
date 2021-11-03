@@ -3,6 +3,7 @@ import sys
 from typing import List, Tuple
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 from elpis.engines.hftransformers.objects.model import FINISHED, UNFINISHED, HFTransformersModel
+from elpis.engines.common.objects.command import run
 
 import soundfile as sf
 import torch
@@ -175,6 +176,8 @@ class HFTransformersTranscription(BaseTranscription):
 
     def _save_utterances(self, utterances) -> None:
         """Saves Elan output using the pympi library"""
+        if not Path(self.elan_path).is_file():
+            run(f"touch {self.elan_path};")
         result = pympi.Elan.Eaf(file_path = self.elan_path, author="elpis")
 
         tier = 'spk1' # No idea what this is for
