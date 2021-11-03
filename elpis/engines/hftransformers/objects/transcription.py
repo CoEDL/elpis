@@ -88,7 +88,7 @@ class HFTransformersTranscription(BaseTranscription):
         self._set_stage(SAVING, msg='Saved transcription, generating utterances')
         # Utterances to be used creating elan files
         utterances = self._generate_utterances(
-            processor, predicted_ids, input_values, transcription, sample_rate)
+            processor, predicted_ids, input_values, transcription)
         self._save_utterances(utterances)
 
         self._set_stage(SAVING, complete=True)
@@ -120,8 +120,7 @@ class HFTransformersTranscription(BaseTranscription):
                             processor: Wav2Vec2Processor,
                             predicted_ids: torch.Tensor,
                             input_values: torch.Tensor,
-                            transcription: str,
-                            sample_rate: int) -> Tuple[List[str], List[float], List[float]]:
+                            transcription: str) -> Tuple[List[str], List[float], List[float]]:
         """Generates a mapping of words to their start and end times from a transcription.
 
         Parameters:
@@ -130,6 +129,10 @@ class HFTransformersTranscription(BaseTranscription):
         """
         words = [word for word in transcription.split(' ') if len(word) > 0]
         predicted_ids = predicted_ids[0].tolist()
+
+        # Determine original sample rate
+        original_file = Path(f'/tmp/{self.hash}/original.wav')
+        _, sample_rate = self._load_audio(original_file)
 
         # Add times to ids
         duration_sec = input_values.shape[1] / sample_rate
@@ -156,6 +159,7 @@ class HFTransformersTranscription(BaseTranscription):
 
         # make sure that there are the same number of id-groups as words.
         # Otherwise something is wrong
+        print("Length check:", len(split_ids_w_time), len(words))
         assert len(split_ids_w_time) == len(words)
 
         word_start_times = []
