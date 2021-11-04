@@ -49,9 +49,9 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = True
+DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
-    # "max_train_samples": "2", # Setting this causes errors (probably shouldn't)
+    "max_train_samples": "2",
     "num_train_epochs": "0.02",
     "model_name_or_path": "facebook/wav2vec2-base"
 }
@@ -160,16 +160,16 @@ class HFTransformersModel(BaseModel):
             "dataset_config_name": "tr",
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
-            "num_train_epochs": "2",
-            "per_device_train_batch_size": "1",
-            "per_device_eval_batch_size": "1",
-            "gradient_accumulation_steps": "1",
+            "num_train_epochs": "30",
+            "per_device_train_batch_size": "4",
+            "per_device_eval_batch_size": "4",
+            "gradient_accumulation_steps": "2",
             "learning_rate": "3e-4",
-            "warmup_steps": "5",
+            "warmup_steps": "500",
             "evaluation_strategy": "steps",
-            "save_steps": "1",
-            "eval_steps": "1",
-            "logging_steps": "1",
+            "save_steps": "400",
+            "eval_steps": "400",
+            "logging_steps": "400",
             "save_total_limit": "1",
             "freeze_feature_extractor": True,
             "feat_proj_dropout": "0.0",
