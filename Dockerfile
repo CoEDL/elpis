@@ -223,7 +223,7 @@ WORKDIR /elpis
 
 ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
 
-# 5000 is for the Flask server
-EXPOSE 5000
+# 5001 is for the Flask server
+EXPOSE 5001
 # 3000 is for the Webpack dev server
 EXPOSE 3000
