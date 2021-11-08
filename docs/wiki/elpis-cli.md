@@ -34,7 +34,7 @@ Start Docker.
 Run an Elpis docker container, sharing your local recordings directory with the container.
 
 ```
-docker run --rm -it -p 5000:5000/tcp -v ~/Desktop/recordings:/recordings --entrypoint /bin/bash coedl/elpis:0.94.0
+docker run --rm -it -p 5001:5000/tcp -v ~/Desktop/recordings:/recordings --entrypoint /bin/bash coedl/elpis:0.94.0
 ```
 
 
@@ -58,7 +58,7 @@ python examples/cli/transcribe.py
 If you are developing Elpis, you can also mount a local copy of Elpis into the contianer. See the wiki for more deluxe method of developing with VS Code.
 
 ```
-docker run --rm -it -p 5000:5000/tcp -v ~/sandbox/elpis:/elpis -v ~/sandbox/elpis-gui:/elpis-gui -v ~/Desktop/recordings:/recordings  --entrypoint /bin/bash coedl/elpis:0.94.0
+docker run --rm -it -p 5001:5000/tcp -v ~/sandbox/elpis:/elpis -v ~/sandbox/elpis-gui:/elpis-gui -v ~/Desktop/recordings:/recordings  --entrypoint /bin/bash coedl/elpis:0.94.0
 ```
 
 
