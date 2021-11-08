@@ -38,7 +38,7 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt update
 sudo apt install ./containerd.io_1.4.3-1_amd64.deb
 sudo apt install -y docker-ce
-sudo docker run -d --rm -p 80:5000/tcp coedl/elpis:stable
+sudo docker run -d --rm -p 80:5001/tcp coedl/elpis:stable
 ```
 
 Then press "Create"

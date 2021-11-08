@@ -22,7 +22,7 @@ For Windows, open the search field in your taskbar, type  `command` or `cmd` int
 Download and run the Elpis Docker image by pasting this command in a terminal and pressing `Return` (or `Enter`).
 
 ```
-docker run --rm -p 5001:5000/tcp coedl/elpis:latest
+docker run --rm -p 5001:5001/tcp coedl/elpis:latest
 ```
 
 ![Docker run command](assets/elpis-workshop-with-docker/command-1-latest.png)

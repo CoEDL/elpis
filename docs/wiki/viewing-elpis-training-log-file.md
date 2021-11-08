@@ -6,7 +6,7 @@ During the training stage a log file is written to /state/models/XXXX/train.log.
 1. Run Elpis if it isn't already going.
 
 ```shell
-docker run --rm -p 5001:5000/tcp coedl/elpis:latest
+docker run --rm -p 5001:5001/tcp coedl/elpis:latest
 ```
 
 
@@ -20,7 +20,7 @@ docker ps
 
 ```shell
 CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES
-b5d2ec4a5ea3        coedl/elpis:latest   "flask run --host 0.…"   3 minutes ago       Up 3 minutes        0.0.0.0:5001->5000/tcp   elastic_merkle
+b5d2ec4a5ea3        coedl/elpis:latest   "flask run --host 0.…"   3 minutes ago       Up 3 minutes        0.0.0.0:5001->5001/tcp   elastic_merkle
 ```
 
 

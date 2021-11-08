@@ -35,7 +35,7 @@ npm install && npm run watch
 Run the Elpis Docker image. Mount your local repositories into the container. Leave out the mounts you aren't actively developing. Thus you get to use the venv in the Docker container, don't need to set up your own, avoiding version issues.
 
 ```shell
-docker run --rm -it -p 5001:5000/tcp \
+docker run --rm -it -p 5001:5001/tcp \
 	-v ~/sandbox/state:/state \  
 	-v ~/sandbox/elpis:/elpis \  
 	--entrypoint zsh coedl/elpis:latest
@@ -43,7 +43,7 @@ docker run --rm -it -p 5001:5000/tcp \
 
 Run this command to start the Elpis interface.
 ```shell
-export FLASK_APP=elpis && flask run --host=0.0.0.0 --port=5000
+export FLASK_APP=elpis && flask run --host=0.0.0.0 --port=5001
 ```
 
 You can also simply use the alias command inside the container.
@@ -113,7 +113,7 @@ docker build . --file gpu/Dockerfile --tag coedl/elpis-cuda:latest > build.log
 Then, run it by adding the `--gpus all` argument in `docker run`:
 
 ```shell
-docker run --gpus all -it -p 5001:5000/tcp \
+docker run --gpus all -it -p 5001:5001/tcp \
     -v ~/sandbox/elpis:/elpis \
     -v ~/sandbox/espnet/egs/elpis:/espnet/egs/elpis \
     -v ~/sandbox/espnet/utils/:/espnet/utils/ \
