@@ -296,7 +296,7 @@ RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 RUN echo "export PATH=$PATH:/venv/bin:/kaldi/src/bin/" >> ~/.zshrc
-RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
+RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5001\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # ENV vars for non-interactive running
@@ -307,7 +307,7 @@ ENV LANG=C.UTF-8
 
 WORKDIR /elpis
 
-ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
+ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0", "--port", "5001"]
 
-EXPOSE 5000:5000
-EXPOSE 3000:3000
+EXPOSE 5001
+EXPOSE 3000
