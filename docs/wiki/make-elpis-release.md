@@ -49,9 +49,9 @@ If it's all good, retag the image with the coedl org and push it to the Docker H
 ```
 docker login
 docker tag elpis-latest-test coedl/elpis:latest
-docker tag elpis-latest-test coedl/elpis:0.96.10
+docker tag elpis-latest-test coedl/elpis:0.xx.xx
 docker push coedl/elpis:latest 
-docker push coedl/elpis:0.96.10
+docker push coedl/elpis:0.xx.xx
 ```
 
 
