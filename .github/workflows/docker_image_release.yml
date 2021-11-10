@@ -30,4 +30,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: coedl/elpis:${GITHUB_REF:10}
+          tags: coedl/elpis:${GITHUB_REF:11}
