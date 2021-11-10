@@ -25,9 +25,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
+        name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          # Strip `v` prefix
+          strip_v: true
+      -
         name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: coedl/elpis:${GITHUB_REF:11}
+          tags: coedl/elpis:${{steps.tag.outputs.tag}}
