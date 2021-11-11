@@ -16,6 +16,7 @@ Elpis is a tool which language workers with minimal computational experience can
 
    wiki/install-elpis-docker
    wiki/install-elpis-on-gcp
+   wiki/install-elpis-on-gcp-gpu
 
 .. toctree::
    :maxdepth: 1
