@@ -1,4 +1,4 @@
-# Some handy scripts for Google Cloud Platform
+# Install on Google Cloud with GPU
 
 ## Check quotas
 https://console.cloud.google.com/iam-admin/quotas?authuser=2&project=elpis-workshop&folder&organizationId&metric=GPUs%20(all%20regions)&location=GLOBAL
