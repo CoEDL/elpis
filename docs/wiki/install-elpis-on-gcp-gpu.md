@@ -20,7 +20,7 @@ sudo apt update
 sudo apt install ./containerd.io_1.4.3-1_amd64.deb
 sudo apt install -y docker-ce
 sudo chmod 666 /var/run/docker.sock
-sudo docker run -d --rm -p 80:5000/tcp coedl/elpis:latest
+sudo docker run -d --rm -p 80:5001/tcp coedl/elpis:latest
 ```
 
 
@@ -143,7 +143,7 @@ Change the image name as required.
 
 ```
 docker pull coedl/elpis:ben-hft
-docker run --gpus all --name elpis --rm -it -p 80:5000/tcp coedl/elpis:ben-hft
+docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft
 ```
 
 
@@ -161,7 +161,7 @@ sudo unzip data.zip
 ```
 
 ```
-sudo docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5000/tcp coedl/elpis:ben-hft
+sudo docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft
 ```
 
 
