@@ -1,8 +1,10 @@
 # Install on Google Cloud with GPU
 
 ## Check quotas
-https://console.cloud.google.com/iam-admin/quotas?authuser=2&project=elpis-workshop&folder&organizationId&metric=GPUs%20(all%20regions)&location=GLOBAL
-https://console.cloud.google.com/iam-admin/quotas?authuser=2&project=elpis-workshop
+
+[GPU quotas](https://console.cloud.google.com/iam-admin/quotas?authuser=2&project=elpis-workshop&folder&organizationId&metric=GPUs%20(all%20regions)&location=GLOBAL)
+
+[all quotas](https://console.cloud.google.com/iam-admin/quotas?authuser=2&project=elpis-workshop)
 
 
 ## Install requirements
@@ -26,7 +28,7 @@ sudo docker run -d --rm -p 80:5001/tcp coedl/elpis:latest
 
 ### GPU
 
-For GPU, we need to install NVIDIA stuff. Rather than doing this in an install script just start the machine, SSH to it and then execute the commands.
+For GPU, we need to install NVIDIA stuff. Rather than doing this in an install script, start the machine, SSH to it and then install CUDA and Docker.
 
 
 #### Create a new VM
@@ -56,7 +58,7 @@ gcloud compute ssh instance-1
 ```
 
 
-#### Install GPU drivers manually
+#### Install CUDA
 
 From https://cloud.google.com/compute/docs/gpus/install-drivers-gpu#ubuntu-driver-steps
 
@@ -71,25 +73,14 @@ sudo apt -y install cuda
 ```
 
 
-#### Install Docker manually
+#### Install Docker
 
 From https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
-
 
 ```
 curl https://get.docker.com | sh \
   && sudo systemctl --now enable docker
-```
 
-To run Docker as a non-privileged user, consider setting up the
-Docker daemon in rootless mode for your user. Visit https://docs.docker.com/go/rootless/ to learn about rootless mode.
-
-```
-dockerd-rootless-setuptool.sh install
-```
-
-
-```
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - \
    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
@@ -144,7 +135,24 @@ docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-g
 ```
 
 
-#### Optionally, download and share data into the container
+#### Edit the model # epochs for dev sanity
+
+Get into the container in another window
+
+```
+sudo docker exec -it $(sudo docker ps -q) zsh
+```
+
+Edit the model file, set `DEBUG=True`
+
+```
+vim /elpis/elpis/engines/hftransformers/objects/model.py
+```
+
+---
+
+
+### Optionally, download and share data into the container
 
 Use this tool to create a wget command: https://gdrive-wget.glitch.me
 
@@ -161,19 +169,5 @@ sudo unzip data.zip
 sudo docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-gpu
 ```
 
-
-#### Edit the model # epochs for dev sanity
-
-Get into the container in another window
-
-```
-sudo docker exec -it $(sudo docker ps -q) zsh
-```
-
-Edit the model file, set `DEBUG=True`
-
-```
-vim /elpis/elpis/engines/hftransformers/objects/model.py
-```
 
 
