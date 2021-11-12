@@ -139,11 +139,8 @@ sudo chmod 666 /var/run/docker.sock
 
 #### Download/update Elpis
 
-Change the image name as required.
-
 ```
-docker pull coedl/elpis:ben-hft
-docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft
+docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-gpu
 ```
 
 
@@ -161,7 +158,7 @@ sudo unzip data.zip
 ```
 
 ```
-sudo docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft
+sudo docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-gpu
 ```
 
 
