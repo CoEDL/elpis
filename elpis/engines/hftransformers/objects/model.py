@@ -49,10 +49,10 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = False
+DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
-    "num_train_epochs": "0.02",
+    "num_train_epochs": "1",
     "model_name_or_path": 'facebook/wav2vec2-base',
 }
 
@@ -89,8 +89,8 @@ class HFTransformersModel(BaseModel):
 
         # Setup logging
         self.run_log_path = self.path.joinpath('train.log')
-        sys.stdout = open(self.run_log_path, 'w')
-        sys.stderr = sys.stdout
+        # sys.stdout = open(self.run_log_path, 'w')
+        # sys.stderr = sys.stdout
 
         # Setup stage names
         self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
@@ -280,7 +280,7 @@ class HFTransformersModel(BaseModel):
     def get_tokenizer(self, data_dir, dataset, word_delimiter_token="|"):
         file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
 
-        tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
+        tokenizer = Wav2Vec2CTCTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
         return tokenizer
 
     def create_vocabulary(self, data_dir, dataset, word_delimiter_token, file_name="vocab.json"):
