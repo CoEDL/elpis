@@ -112,9 +112,9 @@ class HFTransformersModel(BaseModel):
     def status(self):
         if not Path(self.run_log_path).is_file():
             run(f"touch {self.run_log_path};")
-        with open(self.run_log_path) as log_file:
-            log_text = log_file.read()
-            self.stage_status = (self.stage, "in-progress", "", log_text)
+        # with open(self.run_log_path) as log_file:
+        #     log_text = log_file.read()
+        self.stage_status = (self.stage, "in-progress", "", "")
         return self.config['status']
 
     @status.setter
@@ -576,8 +576,8 @@ class HFTransformersModel(BaseModel):
         index = TRAINING_STAGES.index(stage)
         self.stage = self.index_prefixed_stages[index]
 
-        with open(self.run_log_path) as log_file:
-            log_text = log_file.read()
+        # with open(self.run_log_path) as log_file:
+        #     log_text = log_file.read()
 
         #self.stage_status = self.stage, status, '', log_text
         self.stage_status = self.stage, status, '', ''
