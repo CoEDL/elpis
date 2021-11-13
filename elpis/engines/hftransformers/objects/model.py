@@ -110,11 +110,11 @@ class HFTransformersModel(BaseModel):
 
     @property
     def status(self):
-        if not Path(self.run_log_path).is_file():
-            run(f"touch {self.run_log_path};")
+        # if not Path(self.run_log_path).is_file():
+        #     run(f"touch {self.run_log_path};")
         # with open(self.run_log_path) as log_file:
         #     log_text = log_file.read()
-        self.stage_status = (self.stage, "in-progress", "", "")
+        # self.stage_status = (self.stage, "in-progress", "", "")
         return self.config['status']
 
     @status.setter
