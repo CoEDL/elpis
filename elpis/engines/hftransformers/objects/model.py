@@ -482,16 +482,22 @@ class HFTransformersModel(BaseModel):
         self.create_split(data_args, data_dir)
         dataset = self.get_dataset(data_dir)
 
+        logging.info('Got dataset.')
+
         # Load pretrained model and tokenizer
         #
         # Distributed training:
         # The .from_pretrained methods guarantee that only one local process can concurrently
         # download model & vocab.
 
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        logger.info(f'Running on device: {device}.')
+
         tokenizer = self.get_tokenizer(data_dir, dataset)
         feature_extractor = self.get_feature_extractor()
         processor = self.get_processor(feature_extractor, tokenizer)
         model = self.get_model(model_args, processor)
+        model.to(device)
 
         self._set_stage(TOKENIZATION, complete=True)
 
