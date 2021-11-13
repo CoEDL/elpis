@@ -116,26 +116,26 @@ RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 ########################## ESPNET INSTALLATION #########################
 
 # Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
-RUN echo "===> Install ESPnet dependencies" && \
-    apt-get update && apt-get install -y cmake \
-    sox \
-    ffmpeg \
-    flac \
-    bc
-
-WORKDIR /
-
-# Setting up ESPnet for Elpis forked from the Persephone repository.
-RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
-
-WORKDIR /espnet
-
-# Explicitly installing only the CPU version. We should update this to be an
-# nvidia-docker image and install GPU-supported version of ESPnet.
-WORKDIR /espnet/tools
-
-RUN echo "===> Install ESPnet CPU version" && \
-    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
+#RUN echo "===> Install ESPnet dependencies" && \
+#    apt-get update && apt-get install -y cmake \
+#    sox \
+#    ffmpeg \
+#    flac \
+#    bc
+#
+#WORKDIR /
+#
+## Setting up ESPnet for Elpis forked from the Persephone repository.
+#RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
+#
+#WORKDIR /espnet
+#
+## Explicitly installing only the CPU version. We should update this to be an
+## nvidia-docker image and install GPU-supported version of ESPnet.
+#WORKDIR /espnet/tools
+#
+#RUN echo "===> Install ESPnet CPU version" && \
+#    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
 
 
 ########################## DEV HELPERS INSTALLATION ####################
@@ -184,16 +184,20 @@ RUN pip install --upgrade pip
 # Setting up HF Transformers for Elpis from Persephone repository.
 WORKDIR /
 RUN echo "===> Install HFT transformers & wav2vec2"
-RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
-WORKDIR /transformers
-RUN pip install .
-WORKDIR /transformers/examples/research_projects/wav2vec2
+#RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+#WORKDIR /transformers
+#RUN pip install .
+#WORKDIR /transformers/examples/research_projects/wav2vec2
 # Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
 # Override the dep info from requirements.txt so that we can specifiy CUDA version
 #RUN pip install -r requirements.txt
 RUN pip install transformers datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
 # Set torch version for CUDA 11
 RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+
+#COPY .cache/huggingface/transformers /root/.cache/huggingface/transformers
+COPY download_wav2vec2.py /root/download_wav2vec2.py
+RUN python /root/download_wav2vec2.py
 
 ########################## ELPIS INSTALLATION ########################
 
