@@ -33,19 +33,20 @@ For GPU, we need to install NVIDIA stuff. Rather than doing this in an install s
 
 #### Create a new VM
 
-GPU family
-N1 series
-n1-standard-16 (16 vCPUs, 60 GB memory)
-1 x NVIDIA Tesla T4 (approx $600/month)
+* GPU family
+* N1 series
+* n1-standard-16 (16 vCPUs, 60 GB memory)
+* 1 x NVIDIA Tesla T4 (approx $600/month)
 
-
-Ubuntu 20.04
-standard persistent disk 300GB
-allow http traffic
-
+* Standard persistent disk Ubuntu 20.04 300GB
+* Allow http traffic
 
 Don't use image deploy because this limits OS to container optimised, which prevents use of `--gpus all` docker run flag. To use `--gpus all` flag, we need to install specific version of nvidia drivers, not container optimised.
 
+Here's a command line version.
+```
+gcloud compute instances create instance-name --project=elpis-workshop --zone=us-central1-c --machine-type=n1-standard-16 --network-interface=network-tier=PREMIUM,subnet=default --maintenance-policy=TERMINATE --service-account=XXXXXXXXXXXX-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --accelerator=count=1,type=nvidia-tesla-t4 --tags=http-server --create-disk=auto-delete=yes,boot=yes,device-name=instance-5,image=projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20211102,mode=rw,size=200,type=projects/elpis-workshop/zones/us-central1-c/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+```
 
 #### After starting, ssh to the machine
 
