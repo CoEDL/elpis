@@ -232,12 +232,14 @@ class HFTransformersModel(BaseModel):
     def get_language_data(self, data_dir, language_file="language_data.json"):
         ## Language-specific data. It should be available from Elpis in a way or another.
         ## For the moment, it is a simple json file with 2 flat lists (graphemes and removables).
-        language_data_path = data_dir / language_file
+        language_data_path = Path(".") / language_file
         if language_data_path.exists():
+            print(f"Language data found (used {language_data_path})!")
             with open(language_data_path) as fd:
                 language_data = json.load(fd)
             logger.info(f"Language data: {language_data}")
         else:
+            print(f"Language data not found in {data_dir}!")
             language_data = None
         return language_data
 
@@ -280,7 +282,7 @@ class HFTransformersModel(BaseModel):
     def get_tokenizer(self, data_dir, dataset, word_delimiter_token="|"):
         file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
 
-        tokenizer = Wav2Vec2CTCTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
+        tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
         return tokenizer
 
     def create_vocabulary(self, data_dir, dataset, word_delimiter_token, file_name="vocab.json"):
@@ -350,10 +352,10 @@ class HFTransformersModel(BaseModel):
 
     def get_feature_extractor(self):
         return Wav2Vec2FeatureExtractor(
-            feature_size=1, 
-            sampling_rate=HFTransformersModel.SAMPLING_RATE, 
-            padding_value=0.0, 
-            do_normalize=True, 
+            feature_size=1,
+            sampling_rate=HFTransformersModel.SAMPLING_RATE,
+            padding_value=0.0,
+            do_normalize=True,
             return_attention_mask=True)
 
     def get_processor(self, feature_extractor, tokenizer):
@@ -427,7 +429,7 @@ class HFTransformersModel(BaseModel):
             audio_paths.add(utt['path'])
         for path in audio_paths:
             speech_array, sampling_rate = torchaudio.load(path)
-            resampler = torchaudio.transforms.Resample(sampling_rate, 
+            resampler = torchaudio.transforms.Resample(sampling_rate,
                     HFTransformersModel.SAMPLING_RATE)
             speech[path] = resampler(speech_array).squeeze().numpy()
         return speech
@@ -509,7 +511,7 @@ class HFTransformersModel(BaseModel):
 
         if model_args.freeze_feature_extractor:
             model.freeze_feature_extractor()
-        
+
         self._set_stage(PREPROCESSING, complete=True)
 
 
@@ -545,7 +547,7 @@ class HFTransformersModel(BaseModel):
             trainer.save_state()
 
         self._set_stage(TRAIN, complete=True)
-        
+
         # 4. Evaluation
         self._set_stage(EVALUATION)
         results = {}
@@ -557,7 +559,7 @@ class HFTransformersModel(BaseModel):
 
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
-        
+
         self._set_stage(EVALUATION, complete=True)
         self._set_finished_training(True)
         return results
@@ -585,7 +587,7 @@ class HFTransformersModel(BaseModel):
     def get_train_results(self) -> Dict[str, float]:
         # TODO Ask Ben what's meant to go here
         return { "comparison_val": 6.9 }
-    
+
 
 class ElpisTokenizer(Wav2Vec2CTCTokenizer):
     """
@@ -620,13 +622,14 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.special_characters = ["?", "+", "*", "(", ")", "[", "]", "|"]
         self.pattern: re.Pattern = self.get_pattern()
 
     def get_pattern(self) -> re.Pattern:
         exclusion_pattern = "|".join([self.unk_token, self.bos_token, self.eos_token, self.pad_token])
         exclusion_pattern = re.sub(r"(\[|/)", r"\\\g<1>", exclusion_pattern)
         # logger.info(f"tokenizer – exclusion pattern: {exclusion_pattern}")
-        graphemes = [key for key in self.encoder.keys() if not re.match(exclusion_pattern, key, re.I)]
+        graphemes = [key if key not in self.special_characters else f"\{key}" for key in self.encoder.keys() if not re.match(exclusion_pattern, key, re.I)]
         # logger.info(f"tokenizer – graphemes: {graphemes}")
         pattern = re.compile("|".join(sorted(graphemes, key=lambda grapheme: len(grapheme), reverse=True)))
         # logger.info(f"tokenizer – tokenization pattern: {pattern}")
