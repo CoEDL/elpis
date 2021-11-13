@@ -53,7 +53,7 @@ DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "0.02",
-    "model_name_or_path": "facebook/wav2vec2-base"
+    "model_name_or_path": 'facebook/wav2vec2-base',
 }
 
 # Training Stages
@@ -156,13 +156,13 @@ class HFTransformersModel(BaseModel):
             "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
             "train_size": "0.8",
             "split_seed": "42",
-            "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
+            "model_name_or_path": 'facebook/wav2vec2-base', #"facebook/wav2vec2-large-xlsr-53",
             "dataset_config_name": "tr",
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
-            "num_train_epochs": "30",
-            "per_device_train_batch_size": "4",
-            "per_device_eval_batch_size": "4",
+            "num_train_epochs": "1",
+            "per_device_train_batch_size": "1",
+            "per_device_eval_batch_size": "1",
             "gradient_accumulation_steps": "2",
             "learning_rate": "3e-4",
             "warmup_steps": "500",
@@ -573,7 +573,8 @@ class HFTransformersModel(BaseModel):
         with open(self.run_log_path) as log_file:
             log_text = log_file.read()
 
-        self.stage_status = self.stage, status, '', log_text
+        #self.stage_status = self.stage, status, '', log_text
+        self.stage_status = self.stage, status, '', ''
 
     def get_train_results(self) -> Dict[str, float]:
         # TODO Ask Ben what's meant to go here
