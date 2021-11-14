@@ -3,7 +3,7 @@
 
 ## Use screen to run in background 
 
-(SSH to GCP instance)
+SSH to GCP instance.
 
 Start screen.
 ```
@@ -18,14 +18,14 @@ docker run --gpus all -it -p 80:5000/tcp --entrypoint /bin/zsh coedl/elpis:ben-h
 Do things...
 
 Then,  
-`Ctrl-a` + `Ctrl-d` to detach from the screen  
-`screen -ls` to list screens  
-`screen -r` to reattach  
+* `Ctrl-a` + `Ctrl-d` to detach from the screen  
+* `screen -ls` to list screens  
+* `screen -r` to reattach  
 
 
 ## Copy model files from GCP
 
-(SSH to GCP instance)  
+SSH to GCP instance.  
 
 Get into the docker container.
 ```
