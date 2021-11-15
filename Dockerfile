@@ -116,26 +116,26 @@ RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 ########################## ESPNET INSTALLATION #########################
 
 # Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
-RUN echo "===> Install ESPnet dependencies" && \
-    apt-get update && apt-get install -y cmake \
-    sox \
-    ffmpeg \
-    flac \
-    bc
-
-WORKDIR /
-
-# Setting up ESPnet for Elpis forked from the Persephone repository.
-RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
-
-WORKDIR /espnet
-
-# Explicitly installing only the CPU version. We should update this to be an
-# nvidia-docker image and install GPU-supported version of ESPnet.
-WORKDIR /espnet/tools
-
-RUN echo "===> Install ESPnet CPU version" && \
-    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
+#RUN echo "===> Install ESPnet dependencies" && \
+#    apt-get update && apt-get install -y cmake \
+#    sox \
+#    ffmpeg \
+#    flac \
+#    bc
+#
+#WORKDIR /
+#
+## Setting up ESPnet for Elpis forked from the Persephone repository.
+#RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
+#
+#WORKDIR /espnet
+#
+## Explicitly installing only the CPU version. We should update this to be an
+## nvidia-docker image and install GPU-supported version of ESPnet.
+#WORKDIR /espnet/tools
+#
+#RUN echo "===> Install ESPnet CPU version" && \
+#    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
 
 
 ########################## DEV HELPERS INSTALLATION ####################
@@ -204,7 +204,7 @@ WORKDIR /
 
 # Temporarily use ben-hft branch
 RUN echo "===> Install Elpis"
-RUN git clone --single-branch --branch ben-hft-gpu --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --branch hft --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip
