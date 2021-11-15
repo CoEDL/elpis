@@ -195,9 +195,10 @@ RUN pip install transformers datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.
 # Set torch version for CUDA 11
 RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 
+# revert this -- causing `--gradient_checkpointing: conflicting option string` error
 #COPY .cache/huggingface/transformers /root/.cache/huggingface/transformers
-COPY download_wav2vec2.py /root/download_wav2vec2.py
-RUN python /root/download_wav2vec2.py
+#COPY download_wav2vec2.py /root/download_wav2vec2.py
+#RUN python /root/download_wav2vec2.py
 
 ########################## ELPIS INSTALLATION ########################
 
