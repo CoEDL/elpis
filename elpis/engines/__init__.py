@@ -43,6 +43,5 @@ class HFTransformersEngine(Engine):
 
 ENGINES = {
     "kaldi": KaldiEngine(),
-    "espnet": EspnetEngine(),
     "hftransformers": HFTransformersEngine(),
 }
