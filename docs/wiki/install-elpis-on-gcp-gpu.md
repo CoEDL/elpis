@@ -141,7 +141,7 @@ docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-g
 Get into the container in another window
 
 ```
-sudo docker exec -it $(sudo docker ps -q) zsh
+docker exec -it $(docker ps -q) zsh
 ```
 
 Edit the model file, set `DEBUG=True`
@@ -155,6 +155,8 @@ vim /elpis/elpis/engines/hftransformers/objects/model.py
 
 ### Optionally, download and share data into the container
 
+This may be helpful if you write a python file to run Elpis in the container and avoid the GUI.
+
 Use this tool to create a wget command: https://gdrive-wget.glitch.me
 
 ```
@@ -167,7 +169,7 @@ sudo unzip data.zip
 ```
 
 ```
-sudo docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-gpu
+docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-gpu
 ```
 
 
