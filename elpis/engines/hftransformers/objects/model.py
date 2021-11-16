@@ -93,8 +93,8 @@ class HFTransformersModel(BaseModel):
         self.config['status'] = "untrained"
 
         # Setup logging
-        self.run_log_path = self.path.joinpath('train.log')
-        sys.stdout = open(self.run_log_path, 'w')
+        # self.run_log_path = self.path.joinpath('train.log')
+        # sys.stdout = open(self.run_log_path, 'w')
         sys.stderr = sys.stdout
 
         # Setup stage names
@@ -115,11 +115,6 @@ class HFTransformersModel(BaseModel):
 
     @property
     def status(self):
-        if not Path(self.run_log_path).is_file():
-            run(f"touch {self.run_log_path};")
-        with open(self.run_log_path) as log_file:
-            log_text = log_file.read()
-            self.stage_status = (self.stage, "in-progress", "", log_text)
         return self.config['status']
 
     @status.setter
@@ -578,15 +573,10 @@ class HFTransformersModel(BaseModel):
         """
         if stage not in TRAINING_STAGES:
             return
-
         status = "completed" if complete else "in-progress"
         index = TRAINING_STAGES.index(stage)
         self.stage = self.index_prefixed_stages[index]
-
-        with open(self.run_log_path) as log_file:
-            log_text = log_file.read()
-
-        self.stage_status = self.stage, status, '', log_text
+        self.stage_status = self.stage, status, '', ''
 
     def get_train_results(self) -> Dict[str, float]:
         # TODO Ask Ben what's meant to go here
