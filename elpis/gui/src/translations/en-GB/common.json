@@ -41,9 +41,9 @@
         "common": {
             "currentEngineLabel": "Current type: ",
             "noCurrentEngineLabel": "No engine selected yet.",
-            "kaldi_name": "Word",
+            "kaldi_name": "Kaldi",
             "kaldi_description": "This will require audio files, transcriptions and a 'letter to sound' file.",
-            "espnet_name": "Phoneme (ESPnet)",
+            "espnet_name": "ESPnet",
             "espnet_description": "Requires audio and transcriptions.",
             "hftransformers_name": "HFT",
             "hftransformers_description": "Requires audio and transcriptions."
