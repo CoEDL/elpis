@@ -182,16 +182,16 @@ RUN pip install --upgrade pip
 ########################## HF Transformers INSTALLATION #########################
 
 # Setting up HF Transformers for Elpis from Persephone repository.
-WORKDIR /
-RUN echo "===> Install HFT transformers & wav2vec2"
-RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
-WORKDIR /transformers
-RUN pip install .
-WORKDIR /transformers/examples/research_projects/wav2vec2
+#WORKDIR /
+#RUN echo "===> Install HFT transformers & wav2vec2"
+#RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
+#WORKDIR /transformers
+#RUN pip install .
+#WORKDIR /transformers/examples/research_projects/wav2vec2
 # Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
 # Override the dep info from requirements.txt so that we can specifiy CUDA version
 #RUN pip install -r requirements.txt
-RUN pip install transformers datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
+RUN pip install transformers==4.6.0 datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
 # Set torch version for CUDA 11
 RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 
