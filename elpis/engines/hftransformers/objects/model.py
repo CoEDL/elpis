@@ -235,9 +235,11 @@ class HFTransformersModel(BaseModel):
         logger.info("Training/evaluation parameters %s", training_args)
 
     def get_language_data(self, data_dir, language_file="language_data.json"):
-        ## Language-specific data. It should be available from Elpis in a way or another.
-        ## For the moment, it is a simple json file with 2 flat lists (graphemes and removables).
-        language_data_path = data_dir / language_file
+        # Use a json config file to prepare tokens.
+        # It is a simple json file with 2 flat lists (graphemes and removables).
+        # For now, this must be manually added to the /elpis dir.
+        # TODO add a GUI widget for this
+        language_data_path = Path(".").joinpath(language_file)
         if language_data_path.exists():
             with open(language_data_path) as fd:
                 language_data = json.load(fd)
@@ -624,6 +626,8 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Characters which will disrupt the regex pattern business
+        self.special_characters = ["?", "+", "*", "(", ")", "[", "]", "|"]
         self.pattern: re.Pattern = self.get_pattern()
 
     def get_pattern(self) -> re.Pattern:
