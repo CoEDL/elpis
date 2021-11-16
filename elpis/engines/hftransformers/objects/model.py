@@ -49,11 +49,13 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = False
+DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
-    "num_train_epochs": "0.02",
-    "model_name_or_path": "facebook/wav2vec2-base"
+    "num_train_epochs": "1",
+    "model_name_or_path": "facebook/wav2vec2-base",
+    "per_device_train_batch_size": "1",
+    "per_device_eval_batch_size": "1"
 }
 
 # Training Stages
@@ -71,6 +73,9 @@ TRAINING_STAGES = [
 
 UNFINISHED = "untrained"
 FINISHED = "trained"
+
+# Use Mixed precision training
+FP16 = True if torch.cuda.is_available() else False
 
 class HFTransformersModel(BaseModel):
 
@@ -175,7 +180,7 @@ class HFTransformersModel(BaseModel):
             "feat_proj_dropout": "0.0",
             "layerdrop": "0.1",
             "gradient_checkpointing": True,
-            "fp16": True,
+            "fp16": FP16,
             "group_by_length": True,
             "do_train": True,
             "do_eval": True}
