@@ -4,10 +4,7 @@ Requires Docker.
 
 ## Prepare your data
 
-Make a local directory with your data, including:
-* letter to sound file
-* your training data
-* untranscribed audio file.
+Make a local directory with your data, including your training data, a letter to sound file if using Kaldi, and an untranscribed audio file if you are also transcribing.
 
 > See example at https://github.com/CoEDL/dev-corpora
 
@@ -50,19 +47,4 @@ Use the trained model to transcribe some audio.
 
 ```
 python elpis/examples/cli/kaldi/transcribe.py
-```
-
-
-
-## Notes
-
-If you are developing Elpis, you can also mount a local copy of Elpis into the contianer. See the wiki for more deluxe method of developing with VS Code.
-
-```
-docker run --rm -it -p 5001:5001/tcp \
-  -v ~/sandbox/datasets:/datasets \
-  -v ~/sandbox/state:/state \
-  -v ~/sandbox/elpis:/elpis \
-  --entrypoint /bin/zsh \
-  coedl/elpis:latest
 ```
