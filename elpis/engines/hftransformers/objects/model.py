@@ -162,7 +162,7 @@ class HFTransformersModel(BaseModel):
             "per_device_train_batch_size": "4",
             "per_device_eval_batch_size": "4",
             "gradient_accumulation_steps": "2",
-            "learning_rate": "le-4",
+            "learning_rate": "1e-4",
             "weight_decay": "0.005",
             "warmup_steps": "1000",
             "evaluation_strategy": "steps",
