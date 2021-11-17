@@ -13,6 +13,7 @@ docker run --rm -it -p 5001:5001/tcp \
 Change dataset dir values etc below to suit your data.
 Run the data preparation scripts and do training by calling this script from the /elpis dir.
 
+poetry shell
 python elpis/examples/cli/hft/train.py
 """
 
@@ -46,13 +47,13 @@ elpis.set_engine(engine)
 # Setup a dataset to to train data on.
 # Reuse dataset if it exists
 if DATASET_NAME not in elpis.list_datasets():
-    ds = elpis.new_dataset(DATASET_NAME)
-    ds.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
-    ds.auto_select_importer() # Selects Elan because of eaf file.
-    ds.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
-    ds.process()
+    dataset = elpis.new_dataset(DATASET_NAME)
+    dataset.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
+    dataset.auto_select_importer() # Selects Elan because of eaf file.
+    dataset.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
+    dataset.process()
 else:
-    ds = elpis.get_dataset(DATASET_NAME)
+    dataset = elpis.get_dataset(DATASET_NAME)
 
 
 # Step 3
@@ -62,11 +63,11 @@ i = 0
 while MODEL_NAME in elpis.list_models():
     MODEL_NAME = MODEL_NAME + str(i)
 print('Making new model', MODEL_NAME)
-m = elpis.new_model(MODEL_NAME)
-print('Made model', m.hash)
+model = elpis.new_model(MODEL_NAME)
+print('Made model', model.hash)
 print('Linking dataset')
-m.link_dataset(ds)
+model.link_dataset(dataset)
 print('Start training. This may take a while')
-m.train()
+model.train()
 
 # TODO infer

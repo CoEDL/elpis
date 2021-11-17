@@ -20,14 +20,15 @@ elpis.set_engine(engine)
 # Step 2
 # ======
 # Load Model
-m = elpis.get_model(MODEL_NAME)
+model = elpis.get_model(MODEL_NAME)
 
 # Step 3
 # ======
-# Make a transcription interface and transcribe unseen audio to elan.
-t = elpis.new_transcription(TX_NAME)
-t.link(m)
-with open(INFER_FILE_PATH, 'rb') as faudio:
-    t.prepare_audio(faudio)
-t.transcribe()
-print(t.text())
+# Make a transcription interface and transcribe audio.
+# TODO fix this .. prepare_audio expects a request.file object
+# transcription.link(model)
+# transcription = elpis.new_transcription(TX_NAME)
+# with open(INFER_FILE_PATH, 'rb') as faudio:
+#     transcription.prepare_audio(faudio)
+# transcription.transcribe()
+# print(transcription.text())
