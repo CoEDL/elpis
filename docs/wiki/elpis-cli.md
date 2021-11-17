@@ -34,16 +34,18 @@ docker run --rm -it -p 5001:5001/tcp -v ~/Desktop/datasets:/datasets --entrypoin
 ```
 
 
-In the container, run the Python training script. It will look in the folder you gave, train a system based on the audio and text files it finds, and transcribe the untranscribed audio.
+In the container, set up a virtual environment and install dependencies. Then run the sample Python training script. It will look in the folder you gave, train a system based on the audio and text files it finds, and transcribe the untranscribed audio.
 
-We have a demo script you can try. Base your own training script on this example.
+Base your own training script on the example script.
 
 ```
+cd /elpis
+poetry shell
 python elpis/examples/cli/kaldi/train.py
 ```
 
 
-Use the trained model to transcribe some audio.
+Or, use a trained model to transcribe some audio.
 
 ```
 python elpis/examples/cli/kaldi/transcribe.py
