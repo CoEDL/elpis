@@ -91,18 +91,3 @@ if MODEL_NAME not in elpis.list_models():
 else:
     print("Use existing model")
     model = elpis.get_model(MODEL_NAME)
-
-
-# Step 5
-# ======
-# Make a transcription interface and transcribe audio.
-# TODO fix this .. prepare_audio expects a request.file object
-# i = 0
-# while TX_NAME in elpis.list_transcriptions():
-#     TX_NAME = TX_NAME + str(i)
-# transcription = elpis.new_transcription(TX_NAME)
-# transcription.link(model)
-# with open(INFER_FILE_PATH, 'rb') as faudio:
-#     transcription.prepare_audio(faudio,  on_complete=lambda: print('Prepared audio file!'))
-# transcription.transcribe()
-# print(transcription.text())
