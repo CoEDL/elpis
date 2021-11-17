@@ -154,6 +154,7 @@ class HFTransformersModel(BaseModel):
         positional_arguments = [__file__]
         keyword_arguments = {
             "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
+            "train_size": "0.8",
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
