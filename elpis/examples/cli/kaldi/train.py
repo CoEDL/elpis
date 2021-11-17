@@ -3,12 +3,12 @@ Example code for using Elpis/Kaldi from Python
 
 Start Elpis Docker container, share a volume containing your dataset, e.g.:
 
-docker run --rm -it -p 5000:5000/tcp \
+docker run --rm -it -p 5001:5001/tcp \
   -v ~/sandbox/datasets:/datasets \
   -v ~/sandbox/state:/state \
   -v ~/sandbox/elpis:/elpis \
   --entrypoint /bin/zsh \
-  coedl/elpis:hft
+  coedl/elpis:latest
 
 Change dataset dir values etc below to suit your data.
 Run the data preparation scripts and do training by calling this script from the /elpis dir.

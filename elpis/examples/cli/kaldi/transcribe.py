@@ -1,5 +1,9 @@
 from elpis.engines.common.objects.interface import Interface
 
+MODEL_NAME = 'mx'
+TX_NAME = 'tx'
+INFER_FILE_PATH = '/datasets/abui/untranscribed/audio.wav'
+
 # Step 0
 # ======
 # Create a Kaldi interface directory (where all the associated files/objects
@@ -10,21 +14,20 @@ elpis = Interface(path='/state', use_existing=True)
 # ======
 # Select Engine
 from elpis.engines import ENGINES
-engine_name = 'kaldi'
-engine = ENGINES[engine_name]
+engine = ENGINES['kaldi']
 elpis.set_engine(engine)
 
 # Step 2
 # ======
 # Load Model
-m = elpis.get_model('mx')
+m = elpis.get_model(MODEL_NAME)
 
 # Step 3
 # ======
 # Make a transcription interface and transcribe unseen audio to elan.
-t = elpis.new_transcription('tx')
+t = elpis.new_transcription(TX_NAME)
 t.link(m)
-with open('/recordings/untranscribed/audio.wav', 'rb') as faudio:
+with open(INFER_FILE_PATH, 'rb') as faudio:
     t.prepare_audio(faudio)
 t.transcribe()
 print(t.text())
