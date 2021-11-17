@@ -194,11 +194,16 @@ WORKDIR /elpis-gui
 RUN yarn install && \
     yarn run build
 
-WORKDIR /tmp
+WORKDIR /
 
-# Example data
+# Sample data for command line interaction with Elpis
+WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
-
+RUN git clone --depth=1 https://github.com/CoEDL/timit-elan.git
+WORKDIR /datasets
+RUN ln -s /toy-corpora/abui /datasets/abui
+RUN ln -s /toy-corpora/na /datasets/na
+RUN ln -s /timit-elan /datasets/timit
 
 ########################## RUN THE APP ##########################
 
