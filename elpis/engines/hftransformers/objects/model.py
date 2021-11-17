@@ -624,10 +624,11 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
         exclusion_pattern = "|".join([self.unk_token, self.bos_token, self.eos_token, self.pad_token])
         exclusion_pattern = re.sub(r"(\[|/)", r"\\\g<1>", exclusion_pattern)
         # logger.info(f"tokenizer – exclusion pattern: {exclusion_pattern}")
-        graphemes = [key for key in self.encoder.keys() if not re.match(exclusion_pattern, key, re.I)]
-        # logger.info(f"tokenizer – graphemes: {graphemes}")
+        graphemes = [key if key not in self.special_characters else f"\{key}" for key in self.encoder.keys() if
+                     not re.match(exclusion_pattern, key, re.I)]
+        logger.info(f"tokenizer – graphemes: {graphemes}")
         pattern = re.compile("|".join(sorted(graphemes, key=lambda grapheme: len(grapheme), reverse=True)))
-        # logger.info(f"tokenizer – tokenization pattern: {pattern}")
+        logger.info(f"tokenizer – tokenization pattern: {pattern}")
         return pattern
 
     def _tokenize(self, text: str) -> List[str]:
