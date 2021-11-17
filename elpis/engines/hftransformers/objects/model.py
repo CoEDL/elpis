@@ -154,10 +154,8 @@ class HFTransformersModel(BaseModel):
         positional_arguments = [__file__]
         keyword_arguments = {
             "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
-            "train_size": "0.8",
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
-            "dataset_config_name": "tr",
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
             "num_train_epochs": "30",
@@ -167,20 +165,16 @@ class HFTransformersModel(BaseModel):
             "learning_rate": "le-4",
             "weight_decay": "0.005",
             "warmup_steps": "1000",
-            "save_total_limit": "2",
             "evaluation_strategy": "steps",
             "save_steps": "500",
             "eval_steps": "500",
-            "logging_steps": "400",
-            "save_total_limit": "1",
-            "freeze_feature_extractor": True,
-            "feat_proj_dropout": "0.0",
-            "layerdrop": "0.1",
+            "save_total_limit": "2",
             "gradient_checkpointing": True,
             "fp16": FP16,
             "group_by_length": True,
             "do_train": True,
-            "do_eval": True}
+            "do_eval": True
+        }
 
         if DEBUG:
             keyword_arguments.update(QUICK_TRAIN_BUILD_ARGUMENTS)
