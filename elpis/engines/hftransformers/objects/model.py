@@ -49,7 +49,7 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = True
+DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "1",
@@ -79,7 +79,7 @@ FP16 = True if torch.cuda.is_available() else False
 
 class HFTransformersModel(BaseModel):
 
-    OUTPUT_DIR_NAME = "wav2vec2-large-xlsr"
+    OUTPUT_DIR_NAME = "wav2vec2"
     SAMPLING_RATE = 16_000
 
     def __init__(self, **kwargs):
@@ -160,8 +160,8 @@ class HFTransformersModel(BaseModel):
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
             "num_train_epochs": "30",
-            "per_device_train_batch_size": "4",
-            "per_device_eval_batch_size": "4",
+            "per_device_train_batch_size": "16",
+            "per_device_eval_batch_size": "16",
             "gradient_accumulation_steps": "2",
             "learning_rate": "1e-4",
             "weight_decay": "0.005",
