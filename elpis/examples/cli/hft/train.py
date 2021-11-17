@@ -1,5 +1,5 @@
 """
-Example code for using Elpis/Kaldi from Python
+Example code for using Elpis/HFT from Python
 
 Start Elpis Docker container, share a volume containing your dataset, e.g.:
 
