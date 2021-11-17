@@ -55,11 +55,18 @@ class NewTranscription extends Component {
     }
 
     handleDownloadText = () => {
-        downloadjs(this.props.text, "text.txt", "text/txt");
+        const {filename, text} = this.props;
+        const file_basename = filename.split(".").slice(0, -1).join(".");
+        const text_file_name = file_basename + ".txt";
+
+        downloadjs(text, text_file_name, "text/txt");
     }
 
     handleDownloadElan = () => {
-        downloadjs(this.props.elan, "elan.eaf", "text/xml");
+        const {filename, elan} = this.props;
+        const file_basename = filename.split(".").slice(0, -1).join(".");
+
+        downloadjs(elan, file_basename + ".eaf", "text/xml");
     }
 
     onDrop = (acceptedFiles) => {
@@ -87,9 +94,6 @@ class NewTranscription extends Component {
 
     render = () => {
         const {t, currentEngine, filename, list, status, stage_status, confidence, modelName} = this.props;
-
-        console.log(confidence);
-
         const {uploading, show_confidence_opacity} = this.state;
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
