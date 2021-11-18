@@ -1,5 +1,6 @@
 # Using the CLI for Elpis GPU
 
+*This doc refers to WIP on `hft` branch* 
 
 See the example script in `elpis/examples/cli/hft/train.py` for a simple demo of how to do data prep and training. 
 
