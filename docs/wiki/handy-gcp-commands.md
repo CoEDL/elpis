@@ -35,16 +35,15 @@ ls
 tar -cvf model.tar HASH_DIR_NAME
 ```
 
-Exit the container and copy from the container to the host.
+Keep that Docker container running, and in another SSH terminal, copy from the container to the host.
 ```
 docker cp $(docker ps -q):/state/models/model.tar .
 ```
 
-Exit the host and copy from the host to the local machine.
+Copy from the host to the local machine (do this in a local terminal window).
 ```
 gcloud compute scp instance-3:~/model.tar ~/Downloads/model.tar
 ```
 
 
-Otherwise, could share state dir from host into docker and save a few steps
-
+Otherwise, could share state dir from host into docker and save a few steps...
