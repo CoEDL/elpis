@@ -6,11 +6,11 @@ See the example script in `elpis/examples/cli/hft/train.py` for a simple demo of
 
 The example script will used the bundled TIMIT data that is included in the `datasets` dir in the docker container root. 
 
-The `hft-timit` image comes with `abui`, `na` and `timit` data provided. See below for layout. To use your own data, add it as a subdir of /datasets and change the script `DATASET_DIR` value to suit. (To get your data into the container, use `curl`/`wget`/`git clone`.)
+The `hft-timit` image comes with `abui`, `na` and `timit` data provided. See below for layout. To use your own data, add it as a subdir of `/datasets` and change the script `DATASET_DIR` value to suit. (To get your data into the container, use curl/wget/git clone.)
 
-Running the sample script will prepare/normalise the data and do training. Subsequence run of the script will reuse the prepared dataset, and make a new training session.
+Running the sample script will prepare/normalise the data and do training. Subsequent runs of the script will reuse the prepared dataset, saving having to prepare the data repeatedly, and make a new training session.
 
-To trigger new data preparation, edit the script and change the `DATASET_NAME` value. 
+If you prefer to redo data preparation, edit the Python script and change the `DATASET_NAME` value, while retaining the `DATASET_DIR` value. 
 
 Once training is complete, the model files will be in a `/state/models/XXXXX` dir. 
 
