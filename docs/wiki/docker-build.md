@@ -10,8 +10,9 @@ For example,
 docker build --tag coedl/elpis:latest --tag coedl/elpis:0.96.8 .
 ```
 
-After building, push to the hub.
+After building, push to the hub. Login first
 ```
+docker login
 docker push coedl/elpis:latest
 docker push coedl/elpis:0.96.8
 ```
