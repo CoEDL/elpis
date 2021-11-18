@@ -287,8 +287,6 @@ class HFTransformersModel(BaseModel):
 
         def extract_all_chars(batch):
             all_text = " ".join(batch["text"])
-            print('*** all_text')
-            print(all_text)
             vocab = list(set(all_text))
             return {"vocab": [vocab], "all_text": [all_text]}
 
@@ -326,11 +324,17 @@ class HFTransformersModel(BaseModel):
             vocab_dict = naive_vocab_dict
         vocab_dict["[UNK]"] = len(vocab_dict)
         vocab_dict["[PAD]"] = len(vocab_dict)
+
+        print('vocab dict is', vocab_dict)
+        print('word_delimiter_token is', word_delimiter_token)
+
         if word_delimiter_token in vocab_dict:
             logging.error(f"The word delimiter token ({word_delimiter_token}) seems to be already present in the raw text, please choose another one.")
         if word_delimiter_token != " " and " " in vocab_dict:
+            print('word_delimiter_token != " " and " " in vocab_dict')
             vocab_dict[word_delimiter_token] = vocab_dict.get(" ", len(vocab_dict))
             del vocab_dict[" "]
+            print('deleted " "')
         with open(file_name, "w") as vocab_file:
             json.dump(vocab_dict, vocab_file, ensure_ascii=False)
         return file_name
