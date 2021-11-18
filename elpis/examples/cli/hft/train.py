@@ -47,28 +47,35 @@ elpis.set_engine(engine)
 # ======
 # Setup a dataset to to train data on.
 # Reuse dataset if it exists
-if DATASET_NAME not in elpis.list_datasets():
-    print('Making new dataset', DATASET_NAME)
-    dataset = elpis.new_dataset(DATASET_NAME)
-    print('Adding data')
-    dataset.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
-    print('Select importer')
-    dataset.auto_select_importer() # Selects Elan because of eaf file.
-    print('Set setting')
-    dataset.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
-    print('Process data')
-    dataset.process()
-else:
-    print('Use existing dataset', DATASET_NAME)
-    dataset = elpis.get_dataset(DATASET_NAME)
+
+count = 0
+while DATASET_NAME in elpis.list_datasets():
+    DATASET_NAME = DATASET_NAME + str(count)
+    count += 1
+
+# if DATASET_NAME not in elpis.list_datasets():
+print('Making new dataset', DATASET_NAME)
+dataset = elpis.new_dataset(DATASET_NAME)
+print('Adding data')
+dataset.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
+print('Select importer')
+dataset.auto_select_importer() # Selects Elan because of eaf file.
+print('Set setting')
+dataset.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
+print('Process data')
+dataset.process()
+# else:
+#     print('Use existing dataset', DATASET_NAME)
+#     dataset = elpis.get_dataset(DATASET_NAME)
 
 
 # Step 3
 # ======
 # Link dataset to a new model, then train the model.
-i = 0
+count = 0
 while MODEL_NAME in elpis.list_models():
-    MODEL_NAME = MODEL_NAME + str(i)
+    MODEL_NAME = MODEL_NAME + str(count)
+    count += 1
 print('Making new model', MODEL_NAME)
 model = elpis.new_model(MODEL_NAME)
 print('Made model', model.hash)
