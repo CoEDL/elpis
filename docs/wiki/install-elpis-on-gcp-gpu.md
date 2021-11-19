@@ -157,7 +157,7 @@ vim /elpis/elpis/engines/hftransformers/objects/model.py
 
 This may be helpful if you write a python file to run Elpis in the container and avoid the GUI.
 
-Use this tool to create a wget command: https://gdrive-wget.glitch.me
+Use the tool on [this page](https://angelov.ai/post/2020/wget-files-from-gdrive/) to create a wget command.
 
 ```
 cd /
