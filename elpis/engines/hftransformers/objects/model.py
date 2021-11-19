@@ -45,8 +45,12 @@ if version.parse(torch.__version__) >= version.parse("1.6"):
 
 logger = logging.getLogger(__name__)
 
+
 def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
+
+
+WORD_DELIMITER_TOKEN = " "
 
 # Used to reduce training time when debugging
 DEBUG = False
@@ -276,7 +280,7 @@ class HFTransformersModel(BaseModel):
         ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
         return ds
 
-    def get_tokenizer(self, data_dir, dataset, word_delimiter_token="|"):
+    def get_tokenizer(self, data_dir, dataset, word_delimiter_token=WORD_DELIMITER_TOKEN):
         file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
 
         tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
@@ -501,7 +505,7 @@ class HFTransformersModel(BaseModel):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logger.info(f'Running on device: {device}.')
 
-        tokenizer = self.get_tokenizer(data_dir, dataset)
+        tokenizer = self.get_tokenizer(data_dir, dataset, word_delimiter_token=" ")
         feature_extractor = self.get_feature_extractor()
         processor = self.get_processor(feature_extractor, tokenizer)
         model = self.get_model(model_args, processor)
