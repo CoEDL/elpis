@@ -279,7 +279,7 @@ class HFTransformersModel(BaseModel):
     def get_tokenizer(self, data_dir, dataset, word_delimiter_token="|"):
         file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
 
-        tokenizer = Wav2Vec2CTCTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
+        tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
         return tokenizer
 
     def create_vocabulary(self, data_dir, dataset, word_delimiter_token, file_name="vocab.json"):
@@ -297,6 +297,9 @@ class HFTransformersModel(BaseModel):
             keep_in_memory=True,
             remove_columns=dataset['train'].column_names,)
         vocab_list = list(set(vocab["vocab"][0]))
+        print('*** vocab_list')
+        print(vocab_list)
+
         naive_vocab_dict = {v: k for k, v in enumerate(vocab_list)}
         if language_data:
             if language_data.get("graphemes"):
@@ -626,7 +629,7 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
     def get_pattern(self) -> re.Pattern:
         exclusion_pattern = "|".join([self.unk_token, self.bos_token, self.eos_token, self.pad_token])
         exclusion_pattern = re.sub(r"(\[|/)", r"\\\g<1>", exclusion_pattern)
-        # logger.info(f"tokenizer – exclusion pattern: {exclusion_pattern}")
+        logger.info(f"tokenizer – exclusion pattern: {exclusion_pattern}")
         graphemes = [key if key not in self.special_characters else f"\{key}" for key in self.encoder.keys() if
                      not re.match(exclusion_pattern, key, re.I)]
         logger.info(f"tokenizer – graphemes: {graphemes}")
