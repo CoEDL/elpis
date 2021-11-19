@@ -58,6 +58,10 @@ QUICK_TRAIN_BUILD_ARGUMENTS = {
     "per_device_eval_batch_size": "1"
 }
 
+# TODO get this from a GUI model setting
+WORD_DELIMITER_TOKEN = " "
+NUM_TRAIN_EPOCHS = "10"
+
 # Training Stages
 TOKENIZATION = "tokenization"
 PREPROCESSING = "dataset_preprocessing"
@@ -159,7 +163,7 @@ class HFTransformersModel(BaseModel):
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
-            "num_train_epochs": "30",
+            "num_train_epochs": NUM_TRAIN_EPOCHS,
             "per_device_train_batch_size": "8",
             "per_device_eval_batch_size": "8",
             "gradient_accumulation_steps": "2",
@@ -276,7 +280,7 @@ class HFTransformersModel(BaseModel):
         ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
         return ds
 
-    def get_tokenizer(self, data_dir, dataset, word_delimiter_token="|"):
+    def get_tokenizer(self, data_dir, dataset, word_delimiter_token=WORD_DELIMITER_TOKEN):
         file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
 
         tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
