@@ -49,7 +49,10 @@ logger = logging.getLogger(__name__)
 def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
-
+# Should be soon be retrieved from a GUI entryfield.
+# Multiple chars should be accepted, ideally to make a regex like tokenizer, for a mix of simple and complex graphemes,
+# but it seems HFT wants a simple string (see « class ElpisTokenizer(Wav2Vec2CTCTokenizer) » docstring),
+# so maybe later create a small function to normalize in case of several separators…
 WORD_DELIMITER_TOKEN = " "
 
 # Used to reduce training time when debugging
@@ -230,7 +233,7 @@ class HFTransformersModel(BaseModel):
         #     transformers.utils.logging.set_verbosity_info()
         logger.info("Training/evaluation parameters %s", training_args)
 
-    def get_language_data(self, data_dir, language_file="language_data.json"):
+    def get_language_data(self, data_dir, language_file="language_data_sample.json"):
         # Use a json config file to prepare tokens.
         # It is a simple json file with 2 flat lists (graphemes and removables).
         # For now, this must be manually added to the /elpis dir.
@@ -239,8 +242,9 @@ class HFTransformersModel(BaseModel):
         if language_data_path.exists():
             with open(language_data_path) as fd:
                 language_data = json.load(fd)
-            logger.info(f"Language data: {language_data}")
+            logger.info(f"Language data found:\n{language_data}")
         else:
+            logger.info(f"No language data found!")
             language_data = None
         return language_data
 
@@ -280,7 +284,7 @@ class HFTransformersModel(BaseModel):
         ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
         return ds
 
-    def get_tokenizer(self, data_dir, dataset, word_delimiter_token=WORD_DELIMITER_TOKEN):
+    def get_tokenizer(self, data_dir, dataset, word_delimiter_token="|"):
         file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
 
         tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
@@ -304,13 +308,15 @@ class HFTransformersModel(BaseModel):
         print('*** vocab_list')
         print(vocab_list)
 
-        naive_vocab_dict = {v: k for k, v in enumerate(vocab_list)}
+        naive_vocab_dict = {grapheme: number for number, grapheme in enumerate(vocab_list) if grapheme != word_delimiter_token}
         if language_data:
             if language_data.get("graphemes"):
                 intelligent_vocab_dict = {}
                 data_grapheme_duplications = set()
                 for token in sorted(language_data["graphemes"], key=len):
-                    if token not in intelligent_vocab_dict:
+                    if token == word_delimiter_token:
+                        logger.warning(f"The word delimiter token ({word_delimiter_token}) is inside the language graphemes, it won’t be considered.")
+                    elif token not in intelligent_vocab_dict:
                         intelligent_vocab_dict[token] = len(intelligent_vocab_dict)
                     else:
                         data_grapheme_duplications.add(token)
@@ -323,7 +329,7 @@ class HFTransformersModel(BaseModel):
                 if naive_specific_chars:
                     for character in naive_specific_chars:
                         intelligent_vocab_dict[character] = len(intelligent_vocab_dict)
-                        logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {" ".join(sorted(naive_specific_chars))}; they were added automatically (please update the data file)…""")
+                    logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {" ".join(sorted(naive_specific_chars))}; they were added automatically (please update the data file)…""")
                 if intelligent_specific_chars:
                     logger.warning(f"""Characters present ({len(intelligent_specific_chars)}) in language data but absent in data: {" ".join(sorted(intelligent_specific_chars))}""")
                 vocab_dict = intelligent_vocab_dict
@@ -335,13 +341,6 @@ class HFTransformersModel(BaseModel):
         print('vocab dict is', vocab_dict)
         print('word_delimiter_token is', word_delimiter_token)
 
-        if word_delimiter_token in vocab_dict:
-            logging.error(f"The word delimiter token ({word_delimiter_token}) seems to be already present in the raw text, please choose another one.")
-        if word_delimiter_token != " " and " " in vocab_dict:
-            print('word_delimiter_token != " " and " " in vocab_dict')
-            vocab_dict[word_delimiter_token] = vocab_dict.get(" ", len(vocab_dict))
-            del vocab_dict[" "]
-            print('deleted " "')
         with open(file_name, "w") as vocab_file:
             json.dump(vocab_dict, vocab_file, ensure_ascii=False)
         return file_name
@@ -362,10 +361,10 @@ class HFTransformersModel(BaseModel):
 
     def get_feature_extractor(self):
         return Wav2Vec2FeatureExtractor(
-            feature_size=1, 
-            sampling_rate=HFTransformersModel.SAMPLING_RATE, 
-            padding_value=0.0, 
-            do_normalize=True, 
+            feature_size=1,
+            sampling_rate=HFTransformersModel.SAMPLING_RATE,
+            padding_value=0.0,
+            do_normalize=True,
             return_attention_mask=True)
 
     def get_processor(self, feature_extractor, tokenizer):
@@ -439,7 +438,7 @@ class HFTransformersModel(BaseModel):
             audio_paths.add(utt['path'])
         for path in audio_paths:
             speech_array, sampling_rate = torchaudio.load(path)
-            resampler = torchaudio.transforms.Resample(sampling_rate, 
+            resampler = torchaudio.transforms.Resample(sampling_rate,
                     HFTransformersModel.SAMPLING_RATE)
             speech[path] = resampler(speech_array).squeeze().numpy()
         return speech
@@ -505,7 +504,7 @@ class HFTransformersModel(BaseModel):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logger.info(f'Running on device: {device}.')
 
-        tokenizer = self.get_tokenizer(data_dir, dataset, word_delimiter_token=" ")
+        tokenizer = self.get_tokenizer(data_dir, dataset, word_delimiter_token=WORD_DELIMITER_TOKEN)
         feature_extractor = self.get_feature_extractor()
         processor = self.get_processor(feature_extractor, tokenizer)
         model = self.get_model(model_args, processor)
@@ -521,7 +520,7 @@ class HFTransformersModel(BaseModel):
 
         if model_args.freeze_feature_extractor:
             model.freeze_feature_extractor()
-        
+
         self._set_stage(PREPROCESSING, complete=True)
 
 
@@ -557,7 +556,7 @@ class HFTransformersModel(BaseModel):
             trainer.save_state()
 
         self._set_stage(TRAIN, complete=True)
-        
+
         # 4. Evaluation
         self._set_stage(EVALUATION)
         results = {}
@@ -569,7 +568,7 @@ class HFTransformersModel(BaseModel):
 
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
-        
+
         self._set_stage(EVALUATION, complete=True)
         self._set_finished_training(True)
         return results
@@ -591,7 +590,7 @@ class HFTransformersModel(BaseModel):
     def get_train_results(self) -> Dict[str, float]:
         # TODO Ask Ben what's meant to go here
         return { "comparison_val": 6.9 }
-    
+
 
 class ElpisTokenizer(Wav2Vec2CTCTokenizer):
     """
