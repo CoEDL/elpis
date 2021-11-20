@@ -21,6 +21,7 @@ import torch
 import torchaudio
 from packaging import version
 from torch import nn
+from torch.utils.tensorboard import SummaryWriter
 
 # import transformers
 from transformers import (
@@ -252,8 +253,11 @@ class HFTransformersModel(BaseModel):
             anno_json = json.load(f)
 
         train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
+        train_annos = train_annos[:10]
+        devtest_annos = devtest_annos[:6]
         #dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
         dev_annos = test_annos = devtest_annos
+
 
         split_dir = data_dir / 'splits'
         split_dir.mkdir(exist_ok=True)
@@ -435,7 +439,7 @@ class HFTransformersModel(BaseModel):
             speech[path] = resampler(speech_array).squeeze().numpy()
         return speech
 
-    def get_trainer(self, dataset, processor, training_args, model, metric_name="wer"):
+    def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
         # Metric
         metric = datasets.load_metric(metric_name)
 
@@ -468,9 +472,13 @@ class HFTransformersModel(BaseModel):
             train_dataset=dataset['train'] if training_args.do_train else None,
             eval_dataset=dataset['dev'] if training_args.do_eval else None,
             tokenizer=processor.feature_extractor,)
+        trainer.tb_writer = tb_writer
         return trainer
 
     def train(self, on_complete:Callable=None):
+
+        tb_writer = SummaryWriter(self.path / 'runs')
+
         model_args, data_args, training_args = self.get_arguments()
         self.setup_logging(training_args)
 
@@ -478,6 +486,7 @@ class HFTransformersModel(BaseModel):
         set_seed(training_args.seed)
 
         # 1. Tokenization
+        print('Tokenizing...')
         self._set_finished_training(False)
         self._set_stage(TOKENIZATION)
 
@@ -493,8 +502,10 @@ class HFTransformersModel(BaseModel):
         # The .from_pretrained methods guarantee that only one local process can concurrently
         # download model & vocab.
 
+        # TODO Get the device from the training args.
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logger.info(f'Running on device: {device}.')
+        print(f'Running on device: {device}.')
 
         tokenizer = self.get_tokenizer(data_dir, dataset)
         feature_extractor = self.get_feature_extractor()
@@ -506,6 +517,7 @@ class HFTransformersModel(BaseModel):
 
         # 2. Preprocessing the datasets.
         # We need to read the audio files as arrays and tokenize the targets.
+        print('Preprocessing the dataset.')
         self._set_stage(PREPROCESSING)
         dataset = self.preprocess_dataset(dataset, data_args)
         dataset = self.prepare_dataset(dataset, data_args, training_args, processor)
@@ -515,10 +527,11 @@ class HFTransformersModel(BaseModel):
         
         self._set_stage(PREPROCESSING, complete=True)
 
+        print(f"len of dataset: {len(dataset)}")
 
         # 3. Training
         self._set_stage(TRAIN)
-        trainer = self.get_trainer(dataset, processor, training_args, model)
+        trainer = self.get_trainer(dataset, processor, training_args, model, tb_writer)
         last_checkpoint = self.get_last_checkpoint(training_args)
         if training_args.do_train:
             # Update Checkpoint
@@ -536,7 +549,6 @@ class HFTransformersModel(BaseModel):
             if is_main_process(training_args.local_rank):
                 processor.save_pretrained(training_args.output_dir)
 
-            print(f"len of dataset: {len(dataset)}")
             metrics = train_result.metrics
             max_train_samples = (
                 data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset['train'])
@@ -874,6 +886,9 @@ class CTCTrainer(Trainer):
             self.deepspeed.backward(loss)
         else:
             loss.backward()
+
+        print('loss', loss)
+        self.tb_writer.add_scalar('Loss/train', loss)
 
         return loss.detach()
 
