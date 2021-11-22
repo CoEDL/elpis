@@ -74,4 +74,5 @@ Connect to the tensorboard that shows train loss (currently in the HFT branch).
 * Create/edit a VM instance.
 * Include the `firewall` tagname in the list of VM Network tags.
 * Start the VM and connect to it. `gcloud compute ssh instance-3`
-* Run tensorbaord with host arg. `tensorboard --logdir=/state/models/MODEL-HASH/runs --port 6006 --host=0.0.0.0`
+* Start Docker and expose the 6006 port. `docker run --gpus all -it -p 80:5001/tcp -p 6006:6006/tcp --entrypoint /bin/zsh coedl/elpis:hft`
+* Run Tensorboard with host arg. `tensorboard --logdir=/state/models/MODEL-HASH/runs --port 6006 --host=0.0.0.0`
