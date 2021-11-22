@@ -68,10 +68,11 @@ else:
 # Link dataset to a new model, then train the model.
 i = 0
 while MODEL_NAME in elpis.list_models():
-    MODEL_NAME = MODEL_NAME + str(i)
+    i = i + 1
+    MODEL_NAME = f"{MODEL_NAME}{i}"
 print('Making new model', MODEL_NAME)
 model = elpis.new_model(MODEL_NAME)
-print('Made model', model.hash)
+print('*** Made model', model.hash)
 print('Linking dataset')
 model.link_dataset(dataset)
 print('Start training. This may take a while')
