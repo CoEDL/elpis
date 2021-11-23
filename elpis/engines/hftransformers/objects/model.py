@@ -165,8 +165,8 @@ class HFTransformersModel(BaseModel):
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
             "num_train_epochs": NUM_TRAIN_EPOCHS,
-            "per_device_train_batch_size": "8",
-            "per_device_eval_batch_size": "8",
+            "per_device_train_batch_size": "32",
+            "per_device_eval_batch_size": "32",
             "gradient_accumulation_steps": "2",
             "learning_rate": "5e-4",
             "weight_decay": "0.005",
@@ -893,7 +893,8 @@ class CTCTrainer(Trainer):
             loss.backward()
 
         print('\nLoss', self.state.epoch, loss) # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
-        self.tb_writer.add_scalar('Loss', loss.item(), self.state.epoch)
+        epoch_multiplier = 10 # to see what is happening in finer detail, multiply epoch so that eg epoch 0.1 will be logged as 1
+        self.tb_writer.add_scalar('Loss', loss.item(), self.state.epoch * epoch_multiplier)
 
         return loss.detach()
 
