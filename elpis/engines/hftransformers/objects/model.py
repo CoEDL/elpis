@@ -288,7 +288,7 @@ class HFTransformersModel(BaseModel):
     def get_tokenizer(self, data_dir, dataset, word_delimiter_token=WORD_DELIMITER_TOKEN):
         file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
 
-        tokenizer = ElpisTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
+        tokenizer = Wav2Vec2CTCTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
         return tokenizer
 
     def create_vocabulary(self, data_dir, dataset, word_delimiter_token, file_name="vocab.json"):
