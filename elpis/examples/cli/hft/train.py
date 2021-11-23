@@ -24,14 +24,14 @@ import os
 
 USE_DATASET = 'timit'
 
-if USE_DATASET is 'gk':
+if USE_DATASET == 'gk':
     DATASET_DIR = '/datasets/gk'
     DATASET_NAME = 'gk'
     IMPORTER_METHOD = 'tier_type'
     IMPORTER_VALUE = 'tx'
     MODEL_NAME = 'mx'
 
-elif USE_DATASET is 'timit':
+elif USE_DATASET == 'timit':
     DATASET_DIR = '/datasets/timit/training_data'
     DATASET_NAME = 'timit'
     IMPORTER_METHOD = 'tier_name'
