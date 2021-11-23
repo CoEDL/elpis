@@ -179,7 +179,8 @@ class HFTransformersModel(BaseModel):
             "fp16": FP16,
             "group_by_length": True,
             "do_train": True,
-            "do_eval": True
+            "do_eval": True,
+            "logging_dir": self.path.joinpath("runs")
         }
 
         if DEBUG:

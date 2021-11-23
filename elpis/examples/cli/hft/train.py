@@ -19,14 +19,28 @@ python elpis/examples/cli/hft/train.py
 
 from elpis.engines.common.objects.interface import Interface
 from pathlib import Path
+import os
 
 
-DATASET_DIR = '/datasets/gk'
-DATASET_NAME = 'gk'
-IMPORTER_METHOD = 'tier_type'
-IMPORTER_VALUE = 'tx'
-MODEL_NAME = 'mx'
+USE_DATASET = 'timit'
 
+if USE_DATASET is 'gk':
+    DATASET_DIR = '/datasets/gk'
+    DATASET_NAME = 'gk'
+    IMPORTER_METHOD = 'tier_type'
+    IMPORTER_VALUE = 'tx'
+    MODEL_NAME = 'mx'
+
+elif USE_DATASET is 'timit':
+    DATASET_DIR = '/datasets/timit/training_data'
+    DATASET_NAME = 'timit'
+    IMPORTER_METHOD = 'tier_name'
+    IMPORTER_VALUE = 'default'
+    MODEL_NAME = 'mx'
+
+else:
+    print('which dataset?')
+    quit()
 
 # Step 0
 # ======
