@@ -50,7 +50,7 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = False
+DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "1",
@@ -253,8 +253,9 @@ class HFTransformersModel(BaseModel):
             anno_json = json.load(f)
 
         train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
-        train_annos = train_annos[:10]
-        devtest_annos = devtest_annos[:6]
+        if DEBUG:
+            train_annos = train_annos[:10]
+            devtest_annos = devtest_annos[:6]
         #dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
         dev_annos = test_annos = devtest_annos
 
