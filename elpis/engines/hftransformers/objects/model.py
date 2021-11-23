@@ -459,8 +459,8 @@ class HFTransformersModel(BaseModel):
                     print('REF:', file=f)
                     print(ref, file=f)
                     # for tensorboard
-                    tb_writer.add_text('pred', pred, self.state.epoch)
-                    tb_writer.add_text('ref', ref, self.state.epoch)
+                    tb_writer.add_text('pred', pred, time_str)
+                    tb_writer.add_text('ref', ref, time_str)
 
             metric_result = metric.compute(predictions=pred_str, references=label_str)
             return {metric_name: metric_result}
