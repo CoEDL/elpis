@@ -512,7 +512,7 @@ class HFTransformersModel(BaseModel):
         feature_extractor = self.get_feature_extractor()
         processor = self.get_processor(feature_extractor, tokenizer)
         model = self.get_model(model_args, processor)
-        model = nn.DataParallel(model)
+        model = nn.TensorParallel(model)
         model.to(device)
 
         self._set_stage(TOKENIZATION, complete=True)
