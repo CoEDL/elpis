@@ -67,11 +67,12 @@ else:
 # ======
 # Link dataset to a new model, then train the model.
 i = 0
-while MODEL_NAME in elpis.list_models():
+model_name = f"{MODEL_NAME}{i}"
+while model_name in elpis.list_models():
     i = i + 1
-    MODEL_NAME = f"{MODEL_NAME}{i}"
-print('Making new model', MODEL_NAME)
-model = elpis.new_model(MODEL_NAME)
+    model_name = f"{MODEL_NAME}{i}"
+print('Making new model', model_name)
+model = elpis.new_model(model_name)
 print('*** Made model', model.hash)
 print('Linking dataset')
 model.link_dataset(dataset)
