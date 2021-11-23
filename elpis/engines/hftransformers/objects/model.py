@@ -50,7 +50,7 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = True
+DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "1",
@@ -168,7 +168,7 @@ class HFTransformersModel(BaseModel):
             "per_device_train_batch_size": "8",
             "per_device_eval_batch_size": "8",
             "gradient_accumulation_steps": "2",
-            "learning_rate": "1e-4",
+            "learning_rate": "5e-4",
             "weight_decay": "0.005",
             "warmup_steps": "1000",
             "evaluation_strategy": "steps",
@@ -687,22 +687,23 @@ class ModelArguments:
         metadata={"help": "Where do you want to store the pretrained models downloaded from huggingface.co"},
     )
     freeze_feature_extractor: Optional[bool] = field(
-        default=True, metadata={"help": "Whether to freeze the feature extractor layers of the model."}
+        default=True,
+        metadata={"help": "Whether to freeze the feature extractor layers of the model."}
     )
     attention_dropout: Optional[float] = field(
-        default=0.1, metadata={"help": "The dropout ratio for the attention probabilities."}
+        default=0.1,
+        metadata={"help": "The dropout ratio for the attention probabilities."}
     )
     activation_dropout: Optional[float] = field(
-        default=0.1, metadata={"help": "The dropout ratio for activations inside the fully connected layer."}
+        default=0.1,
+        metadata={"help": "The dropout ratio for activations inside the fully connected layer."}
     )
     hidden_dropout: Optional[float] = field(
         default=0.1,
-        metadata={
-            "help": "The dropout probabilitiy for all fully connected layers in the embeddings, encoder, and pooler."
-        },
+        metadata={"help": "The dropout probabilitiy for all fully connected layers in the embeddings, encoder, and pooler."},
     )
     feat_proj_dropout: Optional[float] = field(
-        default=0.1,
+        default=0.0,
         metadata={"help": "The dropout probabilitiy for all 1D convolutional layers in feature extractor."},
     )
     mask_time_prob: Optional[float] = field(
@@ -715,11 +716,12 @@ class ModelArguments:
     )
     gradient_checkpointing: Optional[bool] = field(
         default=True,
-        metadata={
-            "help": "If True, use gradient checkpointing to save memory at the expense of slower backward pass."
-        },
+        metadata={"help": "If True, use gradient checkpointing to save memory at the expense of slower backward pass."},
     )
-    layerdrop: Optional[float] = field(default=0.0, metadata={"help": "The LayerDrop probability."})
+    layerdrop: Optional[float] = field(
+        default=0.0,
+        metadata={"help": "The LayerDrop probability."}
+    )
 
 
 @dataclass
@@ -890,7 +892,7 @@ class CTCTrainer(Trainer):
         else:
             loss.backward()
 
-        print('\nLoss', loss) # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
+        print('\nLoss', self.state.epoch, loss) # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
         self.tb_writer.add_scalar('Loss', loss.item(), self.state.epoch)
 
         return loss.detach()
