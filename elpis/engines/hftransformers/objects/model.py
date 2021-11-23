@@ -165,8 +165,8 @@ class HFTransformersModel(BaseModel):
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
             "num_train_epochs": NUM_TRAIN_EPOCHS,
-            "per_device_train_batch_size": "16",
-            "per_device_eval_batch_size": "16",
+            "per_device_train_batch_size": "4",
+            "per_device_eval_batch_size": "4",
             "gradient_accumulation_steps": "2",
             "learning_rate": "5e-4",
             "weight_decay": "0.005",
@@ -512,7 +512,6 @@ class HFTransformersModel(BaseModel):
         feature_extractor = self.get_feature_extractor()
         processor = self.get_processor(feature_extractor, tokenizer)
         model = self.get_model(model_args, processor)
-        model = nn.TensorParallel(model)
         model.to(device)
 
         self._set_stage(TOKENIZATION, complete=True)
