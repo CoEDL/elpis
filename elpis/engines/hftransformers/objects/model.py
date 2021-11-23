@@ -380,7 +380,8 @@ class HFTransformersModel(BaseModel):
             layerdrop=model_args.layerdrop,
             ctc_loss_reduction="mean",
             pad_token_id=processor.tokenizer.pad_token_id,
-            vocab_size=len(processor.tokenizer),)
+            vocab_size=len(processor.tokenizer),
+            ctc_zero_infinity=True)
 
     def preprocess_dataset(self, dataset, data_args):
         speech = self.prepare_speech(dataset)
