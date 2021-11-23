@@ -572,6 +572,8 @@ class HFTransformersModel(BaseModel):
 
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
+            print("*** metrics")
+            print(metrics)
         
         self._set_stage(EVALUATION, complete=True)
         self._set_finished_training(True)
