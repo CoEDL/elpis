@@ -889,8 +889,8 @@ class CTCTrainer(Trainer):
         else:
             loss.backward()
 
-        print('loss', loss) # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
-        self.tb_writer.add_scalar('Loss/train', loss.item(), self.state.epoch)
+        print('\nLoss', loss) # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
+        self.tb_writer.add_scalar('Loss', loss.item(), self.state.epoch)
 
         return loss.detach()
 
