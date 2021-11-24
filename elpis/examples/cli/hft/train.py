@@ -90,7 +90,7 @@ model = elpis.new_model(model_name)
 print('*** Made model', model.hash)
 print('Linking dataset')
 model.link_dataset(dataset)
-if os.path("/state/models/latest"):
+if os.path.isdir("/state/models/latest"):
     os.remove("/state/models/latest")
 os.symlink(f"/state/models/{model.hash}", "/state/models/latest", target_is_directory=True)
 print('Start training. This may take a while')
