@@ -3,6 +3,7 @@ import json
 import logging
 from pathlib import Path
 import os
+import random
 import re
 import sys
 import time
@@ -50,7 +51,7 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = False
+DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "1",
@@ -62,6 +63,7 @@ QUICK_TRAIN_BUILD_ARGUMENTS = {
 # TODO get this from a GUI model setting
 WORD_DELIMITER_TOKEN = " "
 NUM_TRAIN_EPOCHS = "10"
+MINIMUM_DURATION = 0
 
 # Training Stages
 TOKENIZATION = "tokenization"
@@ -429,17 +431,29 @@ class HFTransformersModel(BaseModel):
     def prepare_speech(self, dataset):
         speech = {}
         audio_paths = set()
+        rejected = 0
         for utt in dataset['train']:
-            audio_paths.add(utt['path'])
+            audio_paths.add((utt['path'], utt['text']))
         for utt in dataset['dev']:
-            audio_paths.add(utt['path'])
+            audio_paths.add((utt['path'], utt['text']))
         for utt in dataset['test']:
-            audio_paths.add(utt['path'])
-        for path in audio_paths:
+            audio_paths.add((utt['path'], utt['text']))
+        for path, text in audio_paths:
             speech_array, sampling_rate = torchaudio.load(path)
-            resampler = torchaudio.transforms.Resample(sampling_rate, 
-                    HFTransformersModel.SAMPLING_RATE)
-            speech[path] = resampler(speech_array).squeeze().numpy()
+            audio_metadata = torchaudio.info(path)
+            duration = speech_array.size(dim=1) / audio_metadata.sample_rate
+            # Num frames exceeds number of characters, wav file is not all zeros, and duration exceeds minimum
+            if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
+                    and duration > MINIMUM_DURATION:
+                resampler = torchaudio.transforms.Resample(sampling_rate, 
+                        HFTransformersModel.SAMPLING_RATE)
+                speech[path] = resampler(speech_array).squeeze().numpy()
+            else:
+                rejected += 1
+
+        print("Random sample of 10 transcriptions")
+        print("\n".join(random.choices([i[1] for i in audio_paths], k=10)))
+        print(rejected, "files removed due to number of frames, zero wav or too short")
         return speech
 
     def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
