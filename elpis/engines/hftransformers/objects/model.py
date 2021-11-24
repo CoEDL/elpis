@@ -912,8 +912,10 @@ class CTCTrainer(Trainer):
         else:
             loss.backward()
 
-        print('\nLoss', self.state.epoch, loss) # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
-        epoch_multiplier = 10 # to see what is happening in finer detail, multiply epoch so that eg epoch 0.1 will be logged as 1
+        print(f"\nLoss|epoch {loss} {self.state.epoch}") # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
+        # TODO sum the loss over training steps to get loss per epoch, instead of ben's hacky business below
+        # To see what is happening in finer detail, multiply epoch so that eg epoch 0.1 will be logged as 1
+        epoch_multiplier = 10
         self.tb_writer.add_scalar('Loss', loss.item(), self.state.epoch * epoch_multiplier)
 
         return loss.detach()
