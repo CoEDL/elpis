@@ -94,6 +94,7 @@ if os.path.isdir("/state/models/latest"):
     os.remove("/state/models/latest")
 os.symlink(f"/state/models/{model.hash}", "/state/models/latest", target_is_directory=True)
 print('Start training. This may take a while')
+model.pretrain()
 model.train()
 
 # TODO infer
