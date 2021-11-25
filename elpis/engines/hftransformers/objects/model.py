@@ -748,7 +748,7 @@ class CTCTrainer(Trainer):
     def __init__(self, custom_args, *args, **kwargs):
         super().__init__(*args, **kwargs)
         training_args = HfArgumentParser((TrainingArguments))
-        self.args = training_args.parse_dict(custom_args)
+        self.args = args = training_args.parse_dict(custom_args)
 
     def training_step(self, model: nn.Module, inputs: Dict[str, Union[torch.Tensor, Any]]) -> torch.Tensor:
         """
