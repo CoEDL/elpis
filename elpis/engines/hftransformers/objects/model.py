@@ -134,7 +134,7 @@ class HFTransformersModel(BaseModel):
     def has_been_trained(self):
         return self.status == "trained"
 
-    def link_dataset(self, dataset: Dataset, _pron_dict):
+    def link_dataset(self, dataset: Dataset):
         self.dataset = dataset
         self.config['dataset_name'] = dataset.name
         # Note the _pron_dict is ignored as it's irrelevant to HFT.
