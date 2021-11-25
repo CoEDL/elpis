@@ -446,8 +446,8 @@ class HFTransformersModel(BaseModel):
 
             # TODO this is loading the whole file, not the annotation clip
             # start reading from frame_offset
-            start_frame = start_ms/1000 * audio_metadata.sample_rate
-            stop_frame = stop_ms/1000 * audio_metadata.sample_rate
+            start_frame = (start_ms/1000) * audio_metadata.sample_rate
+            stop_frame = (stop_ms/1000) * audio_metadata.sample_rate
             # read num_frames
             num_frames = stop_frame - start_frame
             speech_array, sampling_rate = torchaudio.load(filepath=path,
