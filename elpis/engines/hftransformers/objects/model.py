@@ -479,6 +479,7 @@ class HFTransformersModel(BaseModel):
         print(speech.keys())
         print(rejected)
         dataset = dataset.filter(lambda x: x["path"] in speech.keys() and x["start_ms"] not in rejected[x["path"]])
+        print(dataset)
 
         print("Random sample of 10 transcriptions")
         print("\n".join(random.choices([i[1] for i in audio_paths], k=10)))
