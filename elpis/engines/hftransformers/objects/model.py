@@ -190,16 +190,16 @@ class HFTransformersModel(BaseModel):
         return [f"--{key}" if value is True else f"--{key}={value}" 
             for key, value in keyword_arguments.items() if value]
 
-    def get_last_checkpoint(self, training_args):
+    def get_last_checkpoint(self):
         """
         Detect last checkpoint.
         """
         last_checkpoint = None
-        if os.path.isdir(training_args.output_dir) and training_args.do_train and not training_args.overwrite_output_dir:
-            last_checkpoint = get_last_checkpoint(training_args.output_dir)
-            if last_checkpoint is None and len(os.listdir(training_args.output_dir)) > 0:
+        if os.path.isdir(self.training_args.output_dir) and self.training_args.do_train and not self.training_args.overwrite_output_dir:
+            last_checkpoint = get_last_checkpoint(self.training_args.output_dir)
+            if last_checkpoint is None and len(os.listdir(self.training_args.output_dir)) > 0:
                 raise ValueError(
-                    f"Output directory ({training_args.output_dir}) already exists and is not empty. "
+                    f"Output directory ({self.training_args.output_dir}) already exists and is not empty. "
                     "Use --overwrite_output_dir to overcome.")
             elif last_checkpoint is not None:
                 logger.info(
@@ -207,7 +207,7 @@ class HFTransformersModel(BaseModel):
                     "the `--output_dir` or add `--overwrite_output_dir` to train from scratch.")
         return last_checkpoint
 
-    def setup_logging(self, training_args):
+    def setup_logging(self):
         """
         Setup logging.
         """
@@ -215,16 +215,16 @@ class HFTransformersModel(BaseModel):
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
             datefmt="%m/%d/%Y %H:%M:%S",
             handlers=[logging.StreamHandler(sys.stdout)],)
-        logger.setLevel(logging.INFO if is_main_process(training_args.local_rank) else logging.WARN)
+        logger.setLevel(logging.INFO if is_main_process(self.training_args.local_rank) else logging.WARN)
 
         # Log on each process the small summary:
         logger.warning(
-            f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
-            + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}")
+            f"Process rank: {self.training_args.local_rank}, device: {self.training_args.device}, n_gpu: {self.training_args.n_gpu}"
+            + f"distributed training: {bool(self.training_args.local_rank != -1)}, 16-bits training: {self.training_args.fp16}")
         # Set the verbosity to info of the Transformers logger (on main process only):
         # if is_main_process(training_args.local_rank):
         #     transformers.utils.logging.set_verbosity_info()
-        logger.info("Training/evaluation parameters %s", training_args)
+        logger.info("Training/evaluation parameters %s", self.training_args)
 
     def get_language_data(self, data_dir, language_file="language_data.json"):
         # Use a json config file to prepare tokens.
@@ -240,14 +240,18 @@ class HFTransformersModel(BaseModel):
             language_data = None
         return language_data
 
-    def create_split(self, data_args, data_dir):
+    def create_split(self, data_dir):
         """ Create annotations files for the train/dev/test splits. """
 
         elpis_annotations_fn=(data_dir / 'annotations.json')
         with open(elpis_annotations_fn) as f:
             anno_json = json.load(f)
 
-        train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
+        train_annos, devtest_annos = train_test_split(
+            anno_json,
+            test_size=(1-self.data_args.train_size),
+            random_state=self.data_args.split_seed
+        )
         if DEBUG:
             train_annos = train_annos[:200]
             devtest_annos = devtest_annos[:60]
@@ -362,23 +366,23 @@ class HFTransformersModel(BaseModel):
     def get_processor(self, feature_extractor, tokenizer):
         return Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
 
-    def get_model(self, model_args, processor):
+    def get_model(self):
         return Wav2Vec2ForCTC.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=model_args.cache_dir,
-            activation_dropout=model_args.activation_dropout,
-            attention_dropout=model_args.attention_dropout,
-            hidden_dropout=model_args.hidden_dropout,
-            feat_proj_dropout=model_args.feat_proj_dropout,
-            mask_time_prob=model_args.mask_time_prob,
-            gradient_checkpointing=model_args.gradient_checkpointing,
-            layerdrop=model_args.layerdrop,
+            self.model_args.model_name_or_path,
+            cache_dir=self.model_args.cache_dir,
+            activation_dropout=self.model_args.activation_dropout,
+            attention_dropout=self.model_args.attention_dropout,
+            hidden_dropout=self.model_args.hidden_dropout,
+            feat_proj_dropout=self.model_args.feat_proj_dropout,
+            mask_time_prob=self.model_args.mask_time_prob,
+            gradient_checkpointing=self.model_args.gradient_checkpointing,
+            layerdrop=self.model_args.layerdrop,
             ctc_loss_reduction="mean",
-            pad_token_id=processor.tokenizer.pad_token_id,
-            vocab_size=len(processor.tokenizer),
+            pad_token_id=self.processor.tokenizer.pad_token_id,
+            vocab_size=len(self.processor.tokenizer),
             ctc_zero_infinity=True)
 
-    def preprocess_dataset(self, data_args):
+    def preprocess_dataset(self):
         speech = self.prepare_speech()
 
         def speech_file_to_array_fn(batch):
@@ -395,27 +399,27 @@ class HFTransformersModel(BaseModel):
         self.hf_dataset = self.hf_dataset.map(
             speech_file_to_array_fn,
             remove_columns=self.hf_dataset['train'].column_names,
-            num_proc=data_args.preprocessing_num_workers,
+            num_proc=self.data_args.preprocessing_num_workers,
         )
 
-    def prepare_dataset(self, data_args, training_args, processor):
+    def prepare_dataset(self):
         def prepare_dataset(batch):
             # check that all files have the correct sampling rate
             assert (
                 len(set(batch["sampling_rate"])) == 1
-            ), f"Make sure all inputs have the same sampling rate of {processor.feature_extractor.sampling_rate}."
-            batch["input_values"] = processor(batch["speech"], sampling_rate=batch["sampling_rate"][0]).input_values
+            ), f"Make sure all inputs have the same sampling rate of {self.processor.feature_extractor.sampling_rate}."
+            batch["input_values"] = self.processor(batch["speech"], sampling_rate=batch["sampling_rate"][0]).input_values
             # Setup the processor for targets
-            with processor.as_target_processor():
-                batch["labels"] = processor(batch["target_text"]).input_ids
+            with self.processor.as_target_processor():
+                batch["labels"] = self.processor(batch["target_text"]).input_ids
             return batch
 
         self.hf_dataset = self.hf_dataset.map(
             prepare_dataset,
             remove_columns=self.hf_dataset['train'].column_names,
-            batch_size=training_args.per_device_train_batch_size,
+            batch_size=self.training_args.per_device_train_batch_size,
             batched=True,
-            num_proc=data_args.preprocessing_num_workers,
+            num_proc=self.data_args.preprocessing_num_workers,
         )
 
     def prepare_speech(self):
@@ -446,19 +450,19 @@ class HFTransformersModel(BaseModel):
         print(rejected, "files removed due to number of frames, zero wav or too short")
         return speech
 
-    def get_trainer(self, processor, training_args, model, metric_name="wer"):
+    def get_trainer(self, metric_name="wer"):
         # Metric
         metric = datasets.load_metric(metric_name)
 
         def compute_metrics(pred):
             pred_logits = pred.predictions
             pred_ids = np.argmax(pred_logits, axis=-1)
-            pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
-            pred_str = processor.batch_decode(pred_ids)
+            pred.label_ids[pred.label_ids == -100] = self.processor.tokenizer.pad_token_id
+            pred_str = self.processor.batch_decode(pred_ids)
             # we do not want to group tokens when computing the metrics
-            label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
+            label_str = self.processor.batch_decode(pred.label_ids, group_tokens=False)
             time_str = time.strftime('%Y-%m-%d_%H:%M', time.localtime())
-            with open(training_args.output_dir + f'/dev_preds{time_str}.txt', 'w') as f:
+            with open(self.training_args.output_dir + f'/dev_preds{time_str}.txt', 'w') as f:
                 for pred, ref in zip(pred_str, label_str):
                     print('----------------------------------------', file=f)
                     print('HYP:', file=f)
@@ -473,16 +477,16 @@ class HFTransformersModel(BaseModel):
             return {metric_name: metric_result}
 
         # Data collator
-        data_collator = DataCollatorCTCWithPadding(processor=processor, padding=True)
+        data_collator = DataCollatorCTCWithPadding(processor=self.processor, padding=True)
         # Initialize our Trainer
         trainer = CTCTrainer(
-            model=model,
+            model=self.hf_model,
             data_collator=data_collator,
-            args=training_args,
+            args=self.training_args,
             compute_metrics=compute_metrics,
-            train_dataset=self.hf_dataset['train'] if training_args.do_train else None,
-            eval_dataset=self.hf_dataset['dev'] if training_args.do_eval else None,
-            tokenizer=processor.feature_extractor,)
+            train_dataset=self.hf_dataset['train'] if self.training_args.do_train else None,
+            eval_dataset=self.hf_dataset['dev'] if self.training_args.do_eval else None,
+            tokenizer=self.processor.feature_extractor,)
         trainer.tb_writer = self.tb_writer
         return trainer
 
@@ -496,18 +500,18 @@ class HFTransformersModel(BaseModel):
 
         model_args, data_args, training_args = self.get_arguments()
         self.set_args(model_args, data_args, training_args)
-        self.setup_logging(training_args)
+        self.setup_logging()
 
         # Set seed before initializing model.
-        set_seed(training_args.seed)
+        set_seed(self.training_args.seed)
 
         # 1. Tokenization
         print('Tokenizing...')
         self._set_finished_training(False)
         self._set_stage(TOKENIZATION)
 
-        data_dir = Path(data_args.elpis_data_dir)
-        self.create_split(data_args, data_dir)
+        data_dir = Path(self.data_args.elpis_data_dir)
+        self.create_split(data_dir)
         self.hf_dataset = self.get_dataset(data_dir)
 
         logging.info('Got dataset.')
@@ -525,9 +529,9 @@ class HFTransformersModel(BaseModel):
 
         tokenizer = self.get_tokenizer(data_dir)
         feature_extractor = self.get_feature_extractor()
-        processor = self.get_processor(feature_extractor, tokenizer)
-        model = self.get_model(model_args, processor)
-        model.to(device)
+        self.processor = self.get_processor(feature_extractor, tokenizer)
+        self.hf_model = self.get_model()
+        self.hf_model.to(device)
 
         self._set_stage(TOKENIZATION, complete=True)
 
@@ -535,11 +539,11 @@ class HFTransformersModel(BaseModel):
         # We need to read the audio files as arrays and tokenize the targets.
         print('Preprocessing the dataset.')
         self._set_stage(PREPROCESSING)
-        self.preprocess_dataset(data_args)
-        self.prepare_dataset(data_args, training_args, processor)
+        self.preprocess_dataset()
+        self.prepare_dataset()
 
-        if model_args.freeze_feature_extractor:
-            model.freeze_feature_extractor()
+        if self.model_args.freeze_feature_extractor:
+            self.hf_model.freeze_feature_extractor()
         
         self._set_stage(PREPROCESSING, complete=True)
 
@@ -548,14 +552,14 @@ class HFTransformersModel(BaseModel):
     def train(self, on_complete:Callable=None):
         # 3. Training
         self._set_stage(TRAIN)
-        trainer = self.get_trainer(processor, training_args, model)
-        last_checkpoint = self.get_last_checkpoint(training_args)
-        if training_args.do_train:
+        trainer = self.get_trainer(self.hf_model)
+        last_checkpoint = self.get_last_checkpoint()
+        if self.training_args.do_train:
             # Update Checkpoint
             if last_checkpoint is not None:
                 checkpoint = last_checkpoint
-            elif os.path.isdir(model_args.model_name_or_path):
-                checkpoint = model_args.model_name_or_path
+            elif os.path.isdir(self.model_args.model_name_or_path):
+                checkpoint = self.model_args.model_name_or_path
             else:
                 checkpoint = None
             # Train
@@ -563,12 +567,12 @@ class HFTransformersModel(BaseModel):
             trainer.save_model()
 
             # save the feature_extractor and the tokenizer
-            if is_main_process(training_args.local_rank):
-                processor.save_pretrained(training_args.output_dir)
+            if is_main_process(self.training_args.local_rank):
+                self.processor.save_pretrained(self.training_args.output_dir)
 
             metrics = train_result.metrics
             max_train_samples = (
-                data_args.max_train_samples if data_args.max_train_samples is not None else len(self.hf_dataset['train'])
+                self.data_args.max_train_samples if self.data_args.max_train_samples is not None else len(self.hf_dataset['train'])
             )
             metrics["train_samples"] = min(max_train_samples, len(self.hf_dataset['train']))
 
@@ -581,10 +585,10 @@ class HFTransformersModel(BaseModel):
         # 4. Evaluation
         self._set_stage(EVALUATION)
         results = {}
-        if training_args.do_eval:
+        if self.training_args.do_eval:
             logger.info("*** Evaluate ***")
             metrics = trainer.evaluate()
-            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(self.hf_dataset['dev'])
+            max_val_samples = self.data_args.max_val_samples if self.data_args.max_val_samples is not None else len(self.hf_dataset['dev'])
             metrics["eval_samples"] = min(max_val_samples, len(self.hf_dataset['dev']))
 
             trainer.log_metrics("eval", metrics)
