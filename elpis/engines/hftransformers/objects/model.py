@@ -280,13 +280,13 @@ class HFTransformersModel(BaseModel):
         ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
         return ds
 
-    def get_tokenizer(self, data_dir, dataset, word_delimiter_token=WORD_DELIMITER_TOKEN):
-        file_name = self.create_vocabulary(data_dir, dataset, word_delimiter_token)
+    def get_tokenizer(self, data_dir, word_delimiter_token=WORD_DELIMITER_TOKEN):
+        file_name = self.create_vocabulary(data_dir, word_delimiter_token)
 
         tokenizer = Wav2Vec2CTCTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
         return tokenizer
 
-    def create_vocabulary(self, data_dir, dataset, word_delimiter_token, file_name="vocab.json"):
+    def create_vocabulary(self, data_dir, word_delimiter_token, file_name="vocab.json"):
         language_data = self.get_language_data(data_dir)
 
         def extract_all_chars(batch):
@@ -294,12 +294,12 @@ class HFTransformersModel(BaseModel):
             vocab = list(set(all_text))
             return {"vocab": [vocab], "all_text": [all_text]}
 
-        vocab = dataset['train'].map(
+        vocab = self.hf_dataset['train'].map(
             extract_all_chars,
             batched=True,
             batch_size=-1,
             keep_in_memory=True,
-            remove_columns=dataset['train'].column_names,)
+            remove_columns=self.hf_dataset['train'].column_names,)
         vocab_list = list(set(vocab["vocab"][0]))
         naive_vocab_dict = {v: k for k, v in enumerate(vocab_list)}
         if language_data:
@@ -378,8 +378,8 @@ class HFTransformersModel(BaseModel):
             vocab_size=len(processor.tokenizer),
             ctc_zero_infinity=True)
 
-    def preprocess_dataset(self, dataset, data_args):
-        speech = self.prepare_speech(dataset)
+    def preprocess_dataset(self, data_args):
+        speech = self.prepare_speech()
 
         def speech_file_to_array_fn(batch):
             #speech_array, sampling_rate = torchaudio.load(batch["path"])
@@ -392,14 +392,13 @@ class HFTransformersModel(BaseModel):
             batch['duration'] = len(batch['speech'])/batch['sampling_rate']
             return batch
 
-        dataset = dataset.map(
+        self.hf_dataset = self.hf_dataset.map(
             speech_file_to_array_fn,
-            remove_columns=dataset['train'].column_names,
+            remove_columns=self.hf_dataset['train'].column_names,
             num_proc=data_args.preprocessing_num_workers,
         )
-        return dataset
 
-    def prepare_dataset(self, dataset, data_args, training_args, processor):
+    def prepare_dataset(self, data_args, training_args, processor):
         def prepare_dataset(batch):
             # check that all files have the correct sampling rate
             assert (
@@ -411,24 +410,23 @@ class HFTransformersModel(BaseModel):
                 batch["labels"] = processor(batch["target_text"]).input_ids
             return batch
 
-        dataset = dataset.map(
+        self.hf_dataset = self.hf_dataset.map(
             prepare_dataset,
-            remove_columns=dataset['train'].column_names,
+            remove_columns=self.hf_dataset['train'].column_names,
             batch_size=training_args.per_device_train_batch_size,
             batched=True,
             num_proc=data_args.preprocessing_num_workers,
         )
-        return dataset
 
-    def prepare_speech(self, dataset):
+    def prepare_speech(self):
         speech = {}
         audio_paths = set()
         rejected = 0
-        for utt in dataset['train']:
+        for utt in self.hf_dataset['train']:
             audio_paths.add((utt['path'], utt['text']))
-        for utt in dataset['dev']:
+        for utt in self.hf_dataset['dev']:
             audio_paths.add((utt['path'], utt['text']))
-        for utt in dataset['test']:
+        for utt in self.hf_dataset['test']:
             audio_paths.add((utt['path'], utt['text']))
         for path, text in audio_paths:
             speech_array, sampling_rate = torchaudio.load(path)
@@ -448,7 +446,7 @@ class HFTransformersModel(BaseModel):
         print(rejected, "files removed due to number of frames, zero wav or too short")
         return speech
 
-    def get_trainer(self, dataset, processor, training_args, model, metric_name="wer"):
+    def get_trainer(self, processor, training_args, model, metric_name="wer"):
         # Metric
         metric = datasets.load_metric(metric_name)
 
@@ -482,8 +480,8 @@ class HFTransformersModel(BaseModel):
             data_collator=data_collator,
             args=training_args,
             compute_metrics=compute_metrics,
-            train_dataset=dataset['train'] if training_args.do_train else None,
-            eval_dataset=dataset['dev'] if training_args.do_eval else None,
+            train_dataset=self.hf_dataset['train'] if training_args.do_train else None,
+            eval_dataset=self.hf_dataset['dev'] if training_args.do_eval else None,
             tokenizer=processor.feature_extractor,)
         trainer.tb_writer = self.tb_writer
         return trainer
@@ -510,9 +508,7 @@ class HFTransformersModel(BaseModel):
 
         data_dir = Path(data_args.elpis_data_dir)
         self.create_split(data_args, data_dir)
-        dataset = self.get_dataset(data_dir)
-        print(dataset)
-        print(self.dataset)
+        self.hf_dataset = self.get_dataset(data_dir)
 
         logging.info('Got dataset.')
 
@@ -527,7 +523,7 @@ class HFTransformersModel(BaseModel):
         logger.info(f'Running on device: {device}.')
         print(f'Running on device: {device}.')
 
-        tokenizer = self.get_tokenizer(data_dir, dataset)
+        tokenizer = self.get_tokenizer(data_dir)
         feature_extractor = self.get_feature_extractor()
         processor = self.get_processor(feature_extractor, tokenizer)
         model = self.get_model(model_args, processor)
@@ -539,20 +535,20 @@ class HFTransformersModel(BaseModel):
         # We need to read the audio files as arrays and tokenize the targets.
         print('Preprocessing the dataset.')
         self._set_stage(PREPROCESSING)
-        dataset = self.preprocess_dataset(dataset, data_args)
-        dataset = self.prepare_dataset(dataset, data_args, training_args, processor)
+        self.preprocess_dataset(data_args)
+        self.prepare_dataset(data_args, training_args, processor)
 
         if model_args.freeze_feature_extractor:
             model.freeze_feature_extractor()
         
         self._set_stage(PREPROCESSING, complete=True)
 
-        print(f"len of dataset: {len(dataset)}")
+        print(f"len of dataset: {len(self.hf_dataset)}")
 
     def train(self, on_complete:Callable=None):
         # 3. Training
         self._set_stage(TRAIN)
-        trainer = self.get_trainer(dataset, processor, training_args, model)
+        trainer = self.get_trainer(processor, training_args, model)
         last_checkpoint = self.get_last_checkpoint(training_args)
         if training_args.do_train:
             # Update Checkpoint
@@ -572,9 +568,9 @@ class HFTransformersModel(BaseModel):
 
             metrics = train_result.metrics
             max_train_samples = (
-                data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset['train'])
+                data_args.max_train_samples if data_args.max_train_samples is not None else len(self.hf_dataset['train'])
             )
-            metrics["train_samples"] = min(max_train_samples, len(dataset['train']))
+            metrics["train_samples"] = min(max_train_samples, len(self.hf_dataset['train']))
 
             trainer.log_metrics(TRAIN, metrics)
             trainer.save_metrics(TRAIN, metrics)
@@ -588,8 +584,8 @@ class HFTransformersModel(BaseModel):
         if training_args.do_eval:
             logger.info("*** Evaluate ***")
             metrics = trainer.evaluate()
-            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(dataset['dev'])
-            metrics["eval_samples"] = min(max_val_samples, len(dataset['dev']))
+            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(self.hf_dataset['dev'])
+            metrics["eval_samples"] = min(max_val_samples, len(self.hf_dataset['dev']))
 
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
