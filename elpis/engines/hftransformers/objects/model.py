@@ -470,8 +470,7 @@ class HFTransformersModel(BaseModel):
         print(rejected_count, "files removed due to number of frames, zero wav or too short")
 
         print("Random sample of 10 transcriptions from the original dataset")
-        print(dataset["train"])
-        # print("\n".join(random.choices(dataset.map(lambda x: x["text"]), k=10)))
+        print("\n".join(random.choices([x["text"] for x in dataset["train"]], k=10)))
         return speech, dataset
 
     def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
