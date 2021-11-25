@@ -441,8 +441,11 @@ class HFTransformersModel(BaseModel):
         for utt in dataset['test']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for path, text, start_ms, stop_ms in audio_paths:
+            print("---")
             audio_metadata = torchaudio.info(path)
             dur_ms = stop_ms - start_ms
+
+            print(f"{utt['start_ms']} {utt['stop_ms']} {dur_ms/1000}")
 
             # TODO this is loading the whole file, not the annotation clip
             # start reading from frame_offset
@@ -454,17 +457,6 @@ class HFTransformersModel(BaseModel):
                                                           frame_offset=start_frame,
                                                           num_frames=num_frames)
             samples = speech_array.size(dim=1)
-            print(samples)
-            print(f"start_ms {start_ms} | "
-                  f"stop_ms {stop_ms} | "
-                  f"start_frame {start_frame} | "
-                  f"stop_frame {stop_frame} | "
-                  f"num_frames {num_frames} | "
-                  f"duration_ms {dur_ms} | "
-                  f"Samples {str.rjust(str(samples), 12)} | "
-                  f"Dur {str.rjust(str(round(dur_ms, 2)), 12)} | "
-                  f"{str.rjust(os.path.basename(path), 20)} | "
-                  f"{text}")
             # Num frames exceeds number of characters, wav file is not all zeros, and duration between minimum, maximum
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
                     and MINIMUM_DURATION_SECONDS < dur_ms < MAXIMUM_DURATION_SECONDS:
