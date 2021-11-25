@@ -744,7 +744,7 @@ class DataCollatorCTCWithPadding:
 
 class CTCTrainer(Trainer):
     def __init__(self, *args, **kwargs):
-        self.args.seed = self.args["seed"]
+        self.args.seed = args["seed"]
         super().__init__(*args, **kwargs)
 
     def training_step(self, model: nn.Module, inputs: Dict[str, Union[torch.Tensor, Any]]) -> torch.Tensor:
