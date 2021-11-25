@@ -63,7 +63,8 @@ QUICK_TRAIN_BUILD_ARGUMENTS = {
 # TODO get this from a GUI model setting
 WORD_DELIMITER_TOKEN = " "
 NUM_TRAIN_EPOCHS = "10"
-MINIMUM_DURATION = 0
+MINIMUM_DURATION_SECONDS = 0
+MAXIMUM_DURATION_SECONDS = 120
 
 # Training Stages
 TOKENIZATION = "tokenization"
@@ -441,12 +442,16 @@ class HFTransformersModel(BaseModel):
         for path, text in audio_paths:
             speech_array, sampling_rate = torchaudio.load(path)
             audio_metadata = torchaudio.info(path)
-            duration = speech_array.size(dim=1) / audio_metadata.sample_rate
-            # Num frames exceeds number of characters, wav file is not all zeros, and duration exceeds minimum
+            samples = speech_array.size(dim=1)
+            duration = speech_array.size(dim=1) / sampling_rate # audio length in seconds
+            print(f"Samples {str.rjust(str(samples), 12)} | "
+                  f"Dur {str.rjust(str(round(duration, 2)), 12)} | "
+                  f"{str.rjust(os.path.basename(path), 20)} | "
+                  f"{text}")
+            # Num frames exceeds number of characters, wav file is not all zeros, and duration between minimum, maximum
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
-                    and duration > MINIMUM_DURATION:
-                resampler = torchaudio.transforms.Resample(sampling_rate, 
-                        HFTransformersModel.SAMPLING_RATE)
+                    and MINIMUM_DURATION_SECONDS < duration < MAXIMUM_DURATION_SECONDS:
+                resampler = torchaudio.transforms.Resample(sampling_rate, HFTransformersModel.SAMPLING_RATE)
                 speech[path] = resampler(speech_array).squeeze().numpy()
             else:
                 rejected += 1
