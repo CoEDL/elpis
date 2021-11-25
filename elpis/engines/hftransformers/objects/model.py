@@ -10,6 +10,7 @@ import time
 import string
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Set, Optional, Union, Callable
+from types import SimpleNamespace
 
 from elpis.engines.common.objects.command import run
 from elpis.engines.common.objects.dataset import Dataset
@@ -454,7 +455,7 @@ class HFTransformersModel(BaseModel):
             # we do not want to group tokens when computing the metrics
             label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
             time_str = time.strftime('%Y-%m-%d_%H:%M', time.localtime())
-            with open(self.training_args["output_dir"] + f'/dev_preds{time_str}.txt', 'w') as f:
+            with open(str(self.training_args["output_dir"]) + f'/dev_preds{time_str}.txt', 'w') as f:
                 for pred, ref in zip(pred_str, label_str):
                     print('----------------------------------------', file=f)
                     print('HYP:', file=f)
@@ -746,8 +747,7 @@ class DataCollatorCTCWithPadding:
 class CTCTrainer(Trainer):
     def __init__(self, custom_args, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.custom_args = custom_args
-        self.args.seed = custom_args["seed"]
+        self.args = SimpleNamespace(**custom_args)
 
     def training_step(self, model: nn.Module, inputs: Dict[str, Union[torch.Tensor, Any]]) -> torch.Tensor:
         """
@@ -777,7 +777,7 @@ class CTCTrainer(Trainer):
         else:
             loss = self.compute_loss(model, inputs)
 
-        if self.custom_args["n_gpu"] > 1:
+        if self.args.n_gpu > 1:
             if model.module.config.ctc_loss_reduction == "mean":
                 loss = loss.mean()
             elif model.module.config.ctc_loss_reduction == "sum":
@@ -785,8 +785,8 @@ class CTCTrainer(Trainer):
             else:
                 raise ValueError(f"{model.config.ctc_loss_reduction} is not valid. Choose one of ['mean', 'sum']")
 
-        if self.custom_args["gradient_accumulation_steps"] > 1:
-            loss = loss / self.custom_args["gradient_accumulation_steps"]
+        if self.args.gradient_accumulation_steps > 1:
+            loss = loss / self.args.gradient_accumulation_steps
 
         if self.use_amp:
             self.scaler.scale(loss).backward()
