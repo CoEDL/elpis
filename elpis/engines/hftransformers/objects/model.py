@@ -152,7 +152,7 @@ class HFTransformersModel(BaseModel):
             # let's parse it to get our arguments.
             return parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
         else:
-            return parser.parse_args_into_dataclasses(arguments)
+            return parser.parse_args_into_dataclasses(args=arguments)
 
     def build_arguments(self):
         """
