@@ -52,7 +52,7 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = False
+DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "1",
@@ -437,6 +437,7 @@ class HFTransformersModel(BaseModel):
         rejected_count = 0
 
         for utt in dataset['train']:
+            print(utt)
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for utt in dataset['dev']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
@@ -451,8 +452,7 @@ class HFTransformersModel(BaseModel):
             speech_array, sampling_rate = torchaudio.load(filepath=path,
                                                           frame_offset=start_frame,
                                                           num_frames=num_frames)
-            samples = speech_array.size(dim=1)
-            print(f"num_frames {num_frames} | samples {samples}")
+            # samples = speech_array.size(dim=1)
             # Num frames exceeds number of characters, wav file is not all zeros, and duration between minimum, maximum
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
                     and MINIMUM_DURATION_SECONDS < dur_ms/1000 < MAXIMUM_DURATION_SECONDS:
