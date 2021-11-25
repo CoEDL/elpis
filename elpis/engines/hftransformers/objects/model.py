@@ -435,23 +435,25 @@ class HFTransformersModel(BaseModel):
         rejected = 0
 
         for utt in dataset['train']:
-            audio_paths.add((utt['path'], utt['text']))
+            dur = (utt['stop_ms'] - utt['start_ms']) / 1000
+            audio_paths.add((utt['path'], utt['text'], dur))
         for utt in dataset['dev']:
-            audio_paths.add((utt['path'], utt['text']))
+            dur = (utt['stop_ms'] - utt['start_ms']) / 1000
+            audio_paths.add((utt['path'], utt['text'], dur))
         for utt in dataset['test']:
-            audio_paths.add((utt['path'], utt['text']))
-        for path, text in audio_paths:
+            dur = (utt['stop_ms'] - utt['start_ms']) / 1000
+            audio_paths.add((utt['path'], utt['text'], dur))
+        for path, text, dur in audio_paths:
             speech_array, sampling_rate = torchaudio.load(path)
             audio_metadata = torchaudio.info(path)
             samples = speech_array.size(dim=1)
-            duration = speech_array.size(dim=1) / sampling_rate # audio length in seconds
             print(f"Samples {str.rjust(str(samples), 12)} | "
-                  f"Dur {str.rjust(str(round(duration, 2)), 12)} | "
+                  f"Dur {str.rjust(str(round(dur, 2)), 12)} | "
                   f"{str.rjust(os.path.basename(path), 20)} | "
                   f"{text}")
             # Num frames exceeds number of characters, wav file is not all zeros, and duration between minimum, maximum
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
-                    and MINIMUM_DURATION_SECONDS < duration < MAXIMUM_DURATION_SECONDS:
+                    and MINIMUM_DURATION_SECONDS < dur < MAXIMUM_DURATION_SECONDS:
                 resampler = torchaudio.transforms.Resample(sampling_rate, HFTransformersModel.SAMPLING_RATE)
                 speech[path] = resampler(speech_array).squeeze().numpy()
             else:
