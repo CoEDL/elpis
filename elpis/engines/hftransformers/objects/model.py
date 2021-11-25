@@ -383,7 +383,7 @@ class HFTransformersModel(BaseModel):
 
     def preprocess_dataset(self):
         print("=== Preprocessing Dataset")
-        speech = self.prepare_speech(self.hf_dataset)
+        speech = self.prepare_speech()
 
         def speech_file_to_array_fn(batch):
             #speech_array, sampling_rate = torchaudio.load(batch["path"])
