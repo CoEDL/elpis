@@ -445,6 +445,7 @@ class HFTransformersModel(BaseModel):
             audio_metadata = torchaudio.info(path)
             dur_ms = stop_ms - start_ms
 
+
             print(f"start_ms: {start_ms} | stop_ms: {stop_ms} | dur_ms: {dur_ms} | dur_s: {dur_ms/1000}")
 
             # TODO this is loading the whole file, not the annotation clip
@@ -463,7 +464,7 @@ class HFTransformersModel(BaseModel):
             # samples = speech_array.size(dim=1)
             # Num frames exceeds number of characters, wav file is not all zeros, and duration between minimum, maximum
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
-                    and MINIMUM_DURATION_SECONDS < dur_ms < MAXIMUM_DURATION_SECONDS:
+                    and MINIMUM_DURATION_SECONDS < dur_ms/1000 < MAXIMUM_DURATION_SECONDS:
                 resampler = torchaudio.transforms.Resample(sampling_rate, HFTransformersModel.SAMPLING_RATE)
                 speech[path] = resampler(speech_array).squeeze().numpy()
             else:
