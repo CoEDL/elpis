@@ -388,7 +388,7 @@ class HFTransformersModel(BaseModel):
             ctc_zero_infinity=True)
 
     def preprocess_dataset(self, dataset, data_args):
-        speech = self.prepare_speech(dataset)
+        speech, dataset = self.prepare_speech(dataset)
 
         def speech_file_to_array_fn(batch):
             #speech_array, sampling_rate = torchaudio.load(batch["path"])
@@ -470,12 +470,12 @@ class HFTransformersModel(BaseModel):
                 rejected += 1
 
         # TODO filter dataset, keep rows if path in speech keys
-        # dataset = dataset.filter(keep-if-path-in-speech-keys)
+        dataset = dataset.filter(lambda x: x["path"] in speech.keys())
 
         print("Random sample of 10 transcriptions")
         print("\n".join(random.choices([i[1] for i in audio_paths], k=10)))
         print(rejected, "files removed due to number of frames, zero wav or too short")
-        return speech
+        return speech, dataset
 
     def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
         # Metric
