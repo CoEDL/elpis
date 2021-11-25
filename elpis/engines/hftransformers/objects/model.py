@@ -743,6 +743,10 @@ class DataCollatorCTCWithPadding:
 
 
 class CTCTrainer(Trainer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.args.seed = self.args["seed"]
+
     def training_step(self, model: nn.Module, inputs: Dict[str, Union[torch.Tensor, Any]]) -> torch.Tensor:
         """
         Perform a training step on a batch of inputs.
@@ -771,7 +775,7 @@ class CTCTrainer(Trainer):
         else:
             loss = self.compute_loss(model, inputs)
 
-        if self.args.n_gpu > 1:
+        if self.args["n_gpu"] > 1:
             if model.module.config.ctc_loss_reduction == "mean":
                 loss = loss.mean()
             elif model.module.config.ctc_loss_reduction == "sum":
@@ -779,8 +783,8 @@ class CTCTrainer(Trainer):
             else:
                 raise ValueError(f"{model.config.ctc_loss_reduction} is not valid. Choose one of ['mean', 'sum']")
 
-        if self.args.gradient_accumulation_steps > 1:
-            loss = loss / self.args.gradient_accumulation_steps
+        if self.args["gradient_accumulation_steps"] > 1:
+            loss = loss / self.args["gradient_accumulation_steps"]
 
         if self.use_amp:
             self.scaler.scale(loss).backward()
