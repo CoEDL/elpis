@@ -89,7 +89,7 @@ class HFTransformersModel(BaseModel):
     OUTPUT_DIR_NAME = "wav2vec2"
     SAMPLING_RATE = 16_000
 
-    def __init__(self, training_args={}, data_args={}, model_args={}, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # HFT does not use a pronunciation dictionary so this will not change from None.
         self.pron_dict = None
@@ -100,9 +100,7 @@ class HFTransformersModel(BaseModel):
         self.config['status'] = "untrained"
 
         # Setup arguments
-        self.training_args = training_args
-        self.data_args = data_args
-        self.model_args = model_args
+        self.set_arguments()
 
         # Setup logging
         # self.run_log_path = self.path.joinpath('train.log')
@@ -146,7 +144,7 @@ class HFTransformersModel(BaseModel):
         # All the file building is done in the initial steps of train().
         # Could move that here, but for now let's leave it as is.
 
-    def get_arguments(self):
+    def set_arguments(self):
         self.model_args = {
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
             "gradient_checkpointing": True,
