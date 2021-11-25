@@ -53,16 +53,16 @@ def list_field(default=None, metadata=None):
 # Used to reduce training time when debugging
 DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
-    "max_train_samples": "2",
-    "num_train_epochs": "1",
+    "max_train_samples": 2,
+    "num_train_epochs": 1,
     "model_name_or_path": "facebook/wav2vec2-base",
-    "per_device_train_batch_size": "1",
-    "per_device_eval_batch_size": "1"
+    "per_device_train_batch_size": 1,
+    "per_device_eval_batch_size": 1
 }
 
 # TODO get this from a GUI model setting
 WORD_DELIMITER_TOKEN = " "
-NUM_TRAIN_EPOCHS = "10"
+NUM_TRAIN_EPOCHS = 10
 MINIMUM_DURATION = 0
 
 # Training Stages
@@ -153,8 +153,8 @@ class HFTransformersModel(BaseModel):
             "ctc_zero_infinity": True,
         }
         self.data_args = {
-            "train_size": "0.8",
-            "split_seed": "42",
+            "train_size": 0.8,
+            "split_seed": 42,
             "max_train_samples": None,
             "preprocessing_num_workers": None,
         }
@@ -162,9 +162,9 @@ class HFTransformersModel(BaseModel):
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
             "num_train_epochs": NUM_TRAIN_EPOCHS,
-            "per_device_train_batch_size": "4",
-            "per_device_eval_batch_size": "4",
-            "gradient_accumulation_steps": "2",
+            "per_device_train_batch_size": 4,
+            "per_device_eval_batch_size": 4,
+            "gradient_accumulation_steps": 2,
             "fp16": FP16,
             "do_train": True,
             "do_eval": True,
