@@ -142,19 +142,6 @@ class HFTransformersModel(BaseModel):
         # Could move that here, but for now let's leave it as is.
 
     def get_arguments(self):
-        arguments = self.build_arguments()
-        # See all possible arguments in src/transformers/training_args.py
-        # or by passing the --help flag to this script.
-        # We now keep distinct sets of args, for a cleaner separation of concerns.
-        parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
-        if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
-            # If we pass only one argument to the script and it's the path to a json file,
-            # let's parse it to get our arguments.
-            return parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
-        else:
-            return parser.parse_args_into_dataclasses(args=arguments)
-
-    def build_arguments(self):
         """
         Build arguments from various sources (GUI, files, default, etc.).
         """
@@ -187,8 +174,18 @@ class HFTransformersModel(BaseModel):
         if DEBUG:
             keyword_arguments.update(QUICK_TRAIN_BUILD_ARGUMENTS)
 
-        return [f"--{key}" if value is True else f"--{key}={value}" 
+        arguments = [f"--{key}" if value is True else f"--{key}={value}" 
             for key, value in keyword_arguments.items() if value]
+        # See all possible arguments in src/transformers/training_args.py
+        # or by passing the --help flag to this script.
+        # We now keep distinct sets of args, for a cleaner separation of concerns.
+        parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
+        if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
+            # If we pass only one argument to the script and it's the path to a json file,
+            # let's parse it to get our arguments.
+            return parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
+        else:
+            return parser.parse_args_into_dataclasses(args=arguments)
 
     def get_last_checkpoint(self):
         """
