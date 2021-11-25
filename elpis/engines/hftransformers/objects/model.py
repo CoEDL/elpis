@@ -395,7 +395,7 @@ class HFTransformersModel(BaseModel):
             #process = psutil.Process(os.getpid())
             #print(process.memory_info().rss)
             batch["sampling_rate"] = HFTransformersModel.SAMPLING_RATE
-            batch["speech"] = speech[batch['path']][int((batch['start_ms']/1000)*batch['sampling_rate']):int((batch['stop_ms']/1000)*batch['sampling_rate'])]
+            batch["speech"] = speech[batch['path']]
             batch["target_text"] = batch["text"]
             batch['duration'] = (batch['stop_ms'] - batch['start_ms'])/1000
             batch['duration'] = len(batch['speech'])/batch['sampling_rate']
