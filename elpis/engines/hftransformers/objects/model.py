@@ -462,10 +462,10 @@ class HFTransformersModel(BaseModel):
 
         texts = [x["text"] for x in self.hf_dataset["train"]]
         if len(texts) > 10:
-            print(f"Random sample of {len(texts)} valid transcriptions from the original dataset")
+            print(f"Random sample of {len(texts)} valid transcriptions from the original training set")
             print("\n".join(random.choices(texts, k=len(texts))))
         else:
-            print(f"All {len(texts)} valid transcriptions from the original dataset")
+            print(f"All {len(texts)} valid transcriptions from the original training set")
             print("\n".join(texts))
         return speech
 
