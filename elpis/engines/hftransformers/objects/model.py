@@ -413,8 +413,7 @@ class HFTransformersModel(BaseModel):
     def prepare_dataset(self, dataset, data_args, training_args, processor):
         print("=== Preparing Dataset")
         def prepare_dataset(batch):
-            print("Check sample rate for all files")
-            # check that all files have the correct sampling rate
+            # Check that all files have the correct sampling rate
             assert (
                 len(set(batch["sampling_rate"])) == 1
             ), f"Make sure all inputs have the same sampling rate of {processor.feature_extractor.sampling_rate}."
