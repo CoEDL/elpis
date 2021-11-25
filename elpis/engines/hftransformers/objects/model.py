@@ -187,7 +187,7 @@ class HFTransformersModel(BaseModel):
         if DEBUG:
             keyword_arguments.update(QUICK_TRAIN_BUILD_ARGUMENTS)
 
-        return [__file__] + [f"--{key}" if value is True else f"--{key}={value}" 
+        return [f"--{key}" if value is True else f"--{key}={value}" 
             for key, value in keyword_arguments.items() if value]
 
     def get_last_checkpoint(self, training_args):
