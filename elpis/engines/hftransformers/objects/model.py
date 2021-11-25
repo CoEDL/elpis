@@ -2,6 +2,7 @@
 import json
 import logging
 from pathlib import Path
+from collections import defaultdict
 import os
 import random
 import re
@@ -432,7 +433,8 @@ class HFTransformersModel(BaseModel):
     def prepare_speech(self, dataset):
         speech = {}
         audio_paths = set()
-        rejected = 0
+        rejected = defaultdict(lambda: [])
+        rejected_count = 0
 
         for utt in dataset['train']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
@@ -468,17 +470,19 @@ class HFTransformersModel(BaseModel):
                 resampler = torchaudio.transforms.Resample(sampling_rate, HFTransformersModel.SAMPLING_RATE)
                 speech[path] = resampler(speech_array).squeeze().numpy()
             else:
-                rejected += 1
+                rejected_count += 1
+                rejected[path].append(start_ms)
                 print('rejected', os.path.basename(path))
 
         # TODO filter dataset, keep rows if path in speech keys
         print(speech)
         print(speech.keys())
-        dataset = dataset.filter(lambda x: x["path"] in speech.keys())
+        print(rejected)
+        dataset = dataset.filter(lambda x: x["path"] in speech.keys() and x["start_ms"] not in rejected[x["path"]])
 
         print("Random sample of 10 transcriptions")
         print("\n".join(random.choices([i[1] for i in audio_paths], k=10)))
-        print(rejected, "files removed due to number of frames, zero wav or too short")
+        print(rejected_count, "files removed due to number of frames, zero wav or too short")
         return speech, dataset
 
     def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
