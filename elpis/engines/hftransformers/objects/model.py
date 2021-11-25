@@ -6,6 +6,7 @@ import os
 import re
 import sys
 import time
+import datetime
 import string
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Set, Optional, Union, Callable
@@ -110,6 +111,8 @@ class HFTransformersModel(BaseModel):
         super().build_stage_status(stage_names)
 
         self._set_stage(TOKENIZATION)
+        # Use this when adding text to tensorboard so that we get to see predictions for each compute_metric run
+        self.compute_metrics_count = 0
 
 
     @classmethod
@@ -254,9 +257,9 @@ class HFTransformersModel(BaseModel):
             anno_json = json.load(f)
 
         train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
-        if DEBUG:
-            train_annos = train_annos[:200]
-            devtest_annos = devtest_annos[:60]
+        # if DEBUG:
+        train_annos = train_annos[:400]
+        devtest_annos = devtest_annos[:60]
         #dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
         dev_annos = test_annos = devtest_annos
 
@@ -447,24 +450,25 @@ class HFTransformersModel(BaseModel):
         metric = datasets.load_metric(metric_name)
 
         def compute_metrics(pred):
+            self.compute_metrics_count = self.compute_metrics_count + 1
+            print('*** compute metrics count', self.compute_metrics_count)
             pred_logits = pred.predictions
             pred_ids = np.argmax(pred_logits, axis=-1)
             pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
             pred_str = processor.batch_decode(pred_ids)
             # we do not want to group tokens when computing the metrics
             label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
-            time_str = time.strftime('%Y-%m-%d_%H:%M', time.localtime())
-            with open(training_args.output_dir + f'/dev_preds{time_str}.txt', 'w') as f:
-                for pred, ref in zip(pred_str, label_str):
-                    print('----------------------------------------', file=f)
-                    print('HYP:', file=f)
-                    print(pred, file=f)
-                    print('REF:', file=f)
-                    print(ref, file=f)
-                    # for tensorboard
-                    tb_writer.add_text('pred', pred)
-                    tb_writer.add_text('ref', ref)
-
+            now = time.localtime()
+            file_time_id = time.strftime('%Y%m%d_%H%M', now)
+            all_predictions_str = ""
+            # Build a string with all the reference text and prediction pairs
+            for ref, pred in zip(label_str, pred_str):
+                all_predictions_str = all_predictions_str + f"-----  \nR:  {ref}  \nP: {pred}  \n"
+            # Write it to a text file
+            with open(f'{training_args.output_dir}/dev_preds_{file_time_id}.txt', 'w') as f:
+                f.write(all_predictions_str)
+            # And add it to the tensorboard, with a timestamp so we retain these as training progresses
+            tb_writer.add_text(f'Predictions {self.compute_metrics_count}', all_predictions_str)
             metric_result = metric.compute(predictions=pred_str, references=label_str)
             return {metric_name: metric_result}
 
@@ -898,11 +902,9 @@ class CTCTrainer(Trainer):
         else:
             loss.backward()
 
-        print(f"\nLoss|epoch {loss} {self.state.epoch}") # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
-        # TODO sum the loss over training steps to get loss per epoch, instead of ben's hacky business below
-        # To see what is happening in finer detail, multiply epoch so that eg epoch 0.1 will be logged as 1
-        epoch_multiplier = 10
-        self.tb_writer.add_scalar('Loss', loss.item(), self.state.epoch * epoch_multiplier)
+        print(f"\nEpoch {str.ljust(str(self.state.epoch), 20)} | Step {str.ljust(str(self.state.global_step), 10)} | Loss {loss}", end='\r') # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
+        # TODO sum the loss over training steps?
+        self.tb_writer.add_scalar('Loss', loss.item(), self.state.global_step)
 
         return loss.detach()
 
