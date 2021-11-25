@@ -171,6 +171,7 @@ class HFTransformersModel(BaseModel):
             "local_rank": -1,
             "n_gpu": 1,
             "device": torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+            "seed": 42,
         }
 
         additional_args = {}
@@ -485,6 +486,8 @@ class HFTransformersModel(BaseModel):
         tb_writer = SummaryWriter(self.path / 'runs')
 
         self.setup_logging()
+
+        set_seed(self.training_args["seed"])
 
         # 1. Tokenization
         print('Tokenizing...')
