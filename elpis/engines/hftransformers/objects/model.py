@@ -142,7 +142,7 @@ class HFTransformersModel(BaseModel):
         # Could move that here, but for now let's leave it as is.
 
     def get_arguments(self):
-        self.build_arguments()
+        arguments = self.build_arguments()
         # See all possible arguments in src/transformers/training_args.py
         # or by passing the --help flag to this script.
         # We now keep distinct sets of args, for a cleaner separation of concerns.
@@ -152,13 +152,12 @@ class HFTransformersModel(BaseModel):
             # let's parse it to get our arguments.
             return parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
         else:
-            return parser.parse_args_into_dataclasses()
+            return parser.parse_args_into_dataclasses(arguments)
 
     def build_arguments(self):
         """
         Build arguments from various sources (GUI, files, default, etc.).
         """
-        positional_arguments = [__file__]
         keyword_arguments = {
             "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
             "train_size": "0.8",
@@ -188,15 +187,8 @@ class HFTransformersModel(BaseModel):
         if DEBUG:
             keyword_arguments.update(QUICK_TRAIN_BUILD_ARGUMENTS)
 
-        self.translate_arguments(positional_arguments, keyword_arguments)
-
-    def translate_arguments(self, positional_arguments, keyword_arguments):
-        """
-        Translate arguments into sys.argv to emulate a file call. TODO: Verify if we can do it in a more straightforward way (without emulation)…
-        """
-        keyword_arguments = [f"--{key}" if value is True else f"--{key}={value}" for key, value in keyword_arguments.items() if value]
-        sys.argv = positional_arguments + keyword_arguments
-        print("Emulated arguments (as a file call):\n", sys.argv)
+        return [__file__] + [f"--{key}" if value is True else f"--{key}={value}" 
+            for key, value in keyword_arguments.items() if value]
 
     def get_last_checkpoint(self, training_args):
         """
