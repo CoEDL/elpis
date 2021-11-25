@@ -192,7 +192,7 @@ class HFTransformersModel(BaseModel):
         Detect last checkpoint.
         """
         last_checkpoint = None
-        if self.training_args.output_dir.is_dir() and self.training_args.do_train and not self.training_args.overwrite_output_dir:
+        if Path(self.training_args.output_dir).is_dir() and self.training_args.do_train and not self.training_args.overwrite_output_dir:
             last_checkpoint = get_last_checkpoint(self.training_args.output_dir)
             if last_checkpoint is None and len(os.listdir(self.training_args.output_dir)) > 0:
                 raise ValueError(
@@ -555,7 +555,7 @@ class HFTransformersModel(BaseModel):
             # Update Checkpoint
             if last_checkpoint is not None:
                 checkpoint = last_checkpoint
-            elif self.model_args.model_name_or_path.is_dir():
+            elif Path(self.model_args.model_name_or_path).is_dir():
                 checkpoint = self.model_args.model_name_or_path
             else:
                 checkpoint = None
