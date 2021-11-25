@@ -226,6 +226,9 @@ WORKDIR /datasets
 RUN ln -s /toy-corpora/abui /datasets/abui
 RUN ln -s /toy-corpora/na /datasets/na
 RUN ln -s /timit-elan /datasets/timit
+WORKDIR /datasets/gk
+RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1Irxz6GB3yB4h95C2b_RfP31dDNHzbv_f' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1Irxz6GB3yB4h95C2b_RfP31dDNHzbv_f" -O gk.zip && rm -rf /tmp/cookies.txt
+RUN unzip -j gk.zip
 
 ########################## RUN THE APP ##########################
 
