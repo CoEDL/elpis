@@ -433,6 +433,7 @@ class HFTransformersModel(BaseModel):
         speech = {}
         audio_paths = set()
         rejected = 0
+
         for utt in dataset['train']:
             audio_paths.add((utt['path'], utt['text']))
         for utt in dataset['dev']:
@@ -455,6 +456,9 @@ class HFTransformersModel(BaseModel):
                 speech[path] = resampler(speech_array).squeeze().numpy()
             else:
                 rejected += 1
+
+        # TODO filter dataset, keep rows if path in speech keys
+        # dataset = dataset.filter(keep-if-path-in-speech-keys)
 
         print("Random sample of 10 transcriptions")
         print("\n".join(random.choices([i[1] for i in audio_paths], k=10)))
