@@ -2,6 +2,7 @@
 import json
 import logging
 from pathlib import Path
+from collections import defaultdict
 import os
 import random
 import re
@@ -63,7 +64,8 @@ QUICK_TRAIN_BUILD_ARGUMENTS = {
 # TODO get this from a GUI model setting
 WORD_DELIMITER_TOKEN = " "
 NUM_TRAIN_EPOCHS = "10"
-MINIMUM_DURATION = 0
+MINIMUM_DURATION_SECONDS = 0
+MAXIMUM_DURATION_SECONDS = 3
 
 # Training Stages
 TOKENIZATION = "tokenization"
@@ -257,8 +259,8 @@ class HFTransformersModel(BaseModel):
 
         train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
         if DEBUG:
-            train_annos = train_annos[:200]
-            devtest_annos = devtest_annos[:60]
+            train_annos = train_annos[:10]
+            devtest_annos = devtest_annos[:6]
         #dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
         dev_annos = test_annos = devtest_annos
 
@@ -387,14 +389,15 @@ class HFTransformersModel(BaseModel):
             ctc_zero_infinity=True)
 
     def preprocess_dataset(self, dataset, data_args):
-        speech = self.prepare_speech(dataset)
+        print("=== Preprocessing Dataset")
+        speech, dataset = self.prepare_speech(dataset)
 
         def speech_file_to_array_fn(batch):
             #speech_array, sampling_rate = torchaudio.load(batch["path"])
             #process = psutil.Process(os.getpid())
             #print(process.memory_info().rss)
             batch["sampling_rate"] = HFTransformersModel.SAMPLING_RATE
-            batch["speech"] = speech[batch['path']][int((batch['start_ms']/1000)*batch['sampling_rate']):int((batch['stop_ms']/1000)*batch['sampling_rate'])]
+            batch["speech"] = speech[batch['path']]
             batch["target_text"] = batch["text"]
             batch['duration'] = (batch['stop_ms'] - batch['start_ms'])/1000
             batch['duration'] = len(batch['speech'])/batch['sampling_rate']
@@ -408,8 +411,9 @@ class HFTransformersModel(BaseModel):
         return dataset
 
     def prepare_dataset(self, dataset, data_args, training_args, processor):
+        print("=== Preparing Dataset")
         def prepare_dataset(batch):
-            # check that all files have the correct sampling rate
+            # Check that all files have the correct sampling rate
             assert (
                 len(set(batch["sampling_rate"])) == 1
             ), f"Make sure all inputs have the same sampling rate of {processor.feature_extractor.sampling_rate}."
@@ -429,32 +433,50 @@ class HFTransformersModel(BaseModel):
         return dataset
 
     def prepare_speech(self, dataset):
+        print("=== Preparing Speech")
         speech = {}
         audio_paths = set()
-        rejected = 0
+        rejected = defaultdict(lambda: [])
+        rejected_count = 0
+
         for utt in dataset['train']:
-            audio_paths.add((utt['path'], utt['text']))
+            print(utt)
+            audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for utt in dataset['dev']:
-            audio_paths.add((utt['path'], utt['text']))
+            audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for utt in dataset['test']:
-            audio_paths.add((utt['path'], utt['text']))
-        for path, text in audio_paths:
-            speech_array, sampling_rate = torchaudio.load(path)
+            audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
+        for path, text, start_ms, stop_ms in audio_paths:
             audio_metadata = torchaudio.info(path)
-            duration = speech_array.size(dim=1) / audio_metadata.sample_rate
-            # Num frames exceeds number of characters, wav file is not all zeros, and duration exceeds minimum
+            dur_ms = stop_ms - start_ms
+            start_frame = int((start_ms/1000) * audio_metadata.sample_rate)
+            stop_frame = int((stop_ms/1000) * audio_metadata.sample_rate)
+            num_frames = stop_frame - start_frame
+            speech_array, sampling_rate = torchaudio.load(filepath=path,
+                                                          frame_offset=start_frame,
+                                                          num_frames=num_frames)
+            # samples = speech_array.size(dim=1)
+            # Check that frames exceeds number of characters, wav file is not all zeros, and duration between min, max
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
-                    and duration > MINIMUM_DURATION:
-                resampler = torchaudio.transforms.Resample(sampling_rate, 
-                        HFTransformersModel.SAMPLING_RATE)
+                    and MINIMUM_DURATION_SECONDS < dur_ms/1000 < MAXIMUM_DURATION_SECONDS:
+                resampler = torchaudio.transforms.Resample(sampling_rate, HFTransformersModel.SAMPLING_RATE)
                 speech[path] = resampler(speech_array).squeeze().numpy()
             else:
-                rejected += 1
+                rejected_count += 1
+                rejected[path].append(start_ms)
+                print(f'rejected {os.path.basename(path)} {start_ms} {stop_ms}')
 
-        print("Random sample of 10 transcriptions")
-        print("\n".join(random.choices([i[1] for i in audio_paths], k=10)))
-        print(rejected, "files removed due to number of frames, zero wav or too short")
-        return speech
+        dataset = dataset.filter(lambda x: x["path"] in speech.keys() and x["start_ms"] not in rejected[x["path"]])
+        print(rejected_count, "files removed due to number of frames, zero wav or too short")
+
+        texts = [x["text"] for x in dataset["train"]]
+        if len(texts) > 10:
+            print(f"Random sample of {len(texts)} valid transcriptions from the original dataset")
+            print("\n".join(random.choices(texts, k=len(texts))))
+        else:
+            print(f"All {len(texts)} valid transcriptions from the original dataset")
+            print("\n".join(texts))
+        return speech, dataset
 
     def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
         # Metric
