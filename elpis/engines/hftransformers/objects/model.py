@@ -470,6 +470,8 @@ class HFTransformersModel(BaseModel):
                 rejected += 1
 
         # TODO filter dataset, keep rows if path in speech keys
+        print(speech)
+        print(speech.keys())
         dataset = dataset.filter(lambda x: x["path"] in speech.keys())
 
         print("Random sample of 10 transcriptions")
