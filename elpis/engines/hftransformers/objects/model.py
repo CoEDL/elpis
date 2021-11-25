@@ -192,7 +192,7 @@ class HFTransformersModel(BaseModel):
         Detect last checkpoint.
         """
         last_checkpoint = None
-        if os.path.isdir(self.training_args.output_dir) and self.training_args.do_train and not self.training_args.overwrite_output_dir:
+        if self.training_args.output_dir.is_dir() and self.training_args.do_train and not self.training_args.overwrite_output_dir:
             last_checkpoint = get_last_checkpoint(self.training_args.output_dir)
             if last_checkpoint is None and len(os.listdir(self.training_args.output_dir)) > 0:
                 raise ValueError(
@@ -221,7 +221,7 @@ class HFTransformersModel(BaseModel):
         # Set the verbosity to info of the Transformers logger (on main process only):
         # if is_main_process(training_args.local_rank):
         #     transformers.utils.logging.set_verbosity_info()
-        logger.info("Training/evaluation parameters %s", self.training_args)
+        logger.info(f"Training/evaluation parameters {self.training_args}")
 
     def get_language_data(self, data_dir, language_file="language_data.json"):
         # Use a json config file to prepare tokens.
@@ -555,7 +555,7 @@ class HFTransformersModel(BaseModel):
             # Update Checkpoint
             if last_checkpoint is not None:
                 checkpoint = last_checkpoint
-            elif os.path.isdir(self.model_args.model_name_or_path):
+            elif self.model_args.model_name_or_path.is_dir():
                 checkpoint = self.model_args.model_name_or_path
             else:
                 checkpoint = None
