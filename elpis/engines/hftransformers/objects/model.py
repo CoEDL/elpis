@@ -484,7 +484,7 @@ class HFTransformersModel(BaseModel):
             pred.label_ids[pred.label_ids == -100] = self.processor.tokenizer.pad_token_id
             pred_str = self.processor.batch_decode(pred_ids)
             # we do not want to group tokens when computing the metrics
-            label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
+            label_str = self.processor.batch_decode(pred.label_ids, group_tokens=False)
             now = time.localtime()
             file_time_id = time.strftime('%Y%m%d_%H%M', now)
             all_predictions_str = ""
@@ -492,10 +492,10 @@ class HFTransformersModel(BaseModel):
             for ref, pred in zip(label_str, pred_str):
                 all_predictions_str = all_predictions_str + f"-----  \nR:  {ref}  \nP: {pred}  \n"
             # Write it to a text file
-            with open(f'{training_args.output_dir}/dev_preds_{file_time_id}.txt', 'w') as f:
+            with open(f'{self.training_args.output_dir}/dev_preds_{file_time_id}.txt', 'w') as f:
                 f.write(all_predictions_str)
             # And add it to the tensorboard, with a timestamp so we retain these as training progresses
-            tb_writer.add_text(f'Predictions {self.compute_metrics_count}', all_predictions_str)
+            self.tb_writer.add_text(f'Predictions {self.compute_metrics_count}', all_predictions_str)
             metric_result = metric.compute(predictions=pred_str, references=label_str)
             return {metric_name: metric_result}
 
