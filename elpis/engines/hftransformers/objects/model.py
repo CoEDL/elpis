@@ -434,7 +434,6 @@ class HFTransformersModel(BaseModel):
         rejected_count = 0
 
         for utt in self.hf_dataset['train']:
-            print(utt)
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for utt in self.hf_dataset['dev']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
