@@ -389,6 +389,7 @@ class HFTransformersModel(BaseModel):
             ctc_zero_infinity=True)
 
     def preprocess_dataset(self, dataset, data_args):
+        logger.info("=== Preprocessing Dataset")
         speech, dataset = self.prepare_speech(dataset)
 
         def speech_file_to_array_fn(batch):
@@ -410,6 +411,7 @@ class HFTransformersModel(BaseModel):
         return dataset
 
     def prepare_dataset(self, dataset, data_args, training_args, processor):
+        logger.info("=== Preparing Dataset")
         def prepare_dataset(batch):
             # check that all files have the correct sampling rate
             assert (
@@ -431,6 +433,7 @@ class HFTransformersModel(BaseModel):
         return dataset
 
     def prepare_speech(self, dataset):
+        logger.info("=== Preparing Speech")
         speech = {}
         audio_paths = set()
         rejected = defaultdict(lambda: [])
