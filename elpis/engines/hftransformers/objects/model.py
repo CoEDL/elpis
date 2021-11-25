@@ -52,7 +52,7 @@ def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = True
+DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "1",
@@ -443,27 +443,16 @@ class HFTransformersModel(BaseModel):
         for utt in dataset['test']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for path, text, start_ms, stop_ms in audio_paths:
-            print("---")
             audio_metadata = torchaudio.info(path)
             dur_ms = stop_ms - start_ms
-
-
-            print(f"start_ms: {start_ms} | stop_ms: {stop_ms} | dur_ms: {dur_ms} | dur_s: {dur_ms/1000}")
-
-            # TODO this is loading the whole file, not the annotation clip
-            # start reading from frame_offset
             start_frame = int((start_ms/1000) * audio_metadata.sample_rate)
             stop_frame = int((stop_ms/1000) * audio_metadata.sample_rate)
-            # read num_frames
-            print(f'start_frame {start_frame} | stop_frame {stop_frame}')
             num_frames = stop_frame - start_frame
-            print(f"num_frames: {num_frames}")
-
             speech_array, sampling_rate = torchaudio.load(filepath=path,
                                                           frame_offset=start_frame,
                                                           num_frames=num_frames)
-            print(f'speech_array {speech_array}')
-            # samples = speech_array.size(dim=1)
+            samples = speech_array.size(dim=1)
+            print(f"num_frames {num_frames} | samples {samples}")
             # Num frames exceeds number of characters, wav file is not all zeros, and duration between minimum, maximum
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
                     and MINIMUM_DURATION_SECONDS < dur_ms/1000 < MAXIMUM_DURATION_SECONDS:
