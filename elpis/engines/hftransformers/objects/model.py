@@ -64,7 +64,7 @@ QUICK_TRAIN_BUILD_ARGUMENTS = {
 WORD_DELIMITER_TOKEN = " "
 NUM_TRAIN_EPOCHS = "10"
 MINIMUM_DURATION_SECONDS = 0
-MAXIMUM_DURATION_SECONDS = 120
+MAXIMUM_DURATION_SECONDS = 3
 
 # Training Stages
 TOKENIZATION = "tokenization"
@@ -258,8 +258,8 @@ class HFTransformersModel(BaseModel):
 
         train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
         if DEBUG:
-            train_annos = train_annos[:200]
-            devtest_annos = devtest_annos[:60]
+            train_annos = train_annos[:10]
+            devtest_annos = devtest_annos[:6]
         #dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
         dev_annos = test_annos = devtest_annos
 
@@ -445,7 +445,7 @@ class HFTransformersModel(BaseModel):
             audio_metadata = torchaudio.info(path)
             dur_ms = stop_ms - start_ms
 
-            print(f"start_ms: {start_ms} | stop_ms: {stop_ms} | dur_s: {dur_ms/1000}")
+            print(f"start_ms: {start_ms} | stop_ms: {stop_ms} | dur_ms: {dur_ms} | dur_s: {dur_ms/1000}")
 
             # TODO this is loading the whole file, not the annotation clip
             # start reading from frame_offset
