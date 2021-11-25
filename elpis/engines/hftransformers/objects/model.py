@@ -690,9 +690,6 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
             grapheme_dict[by(grapheme)] = grapheme_list
         return grapheme_dict
 
-
-
-
 @dataclass
 class ModelArguments:
     """
@@ -700,49 +697,61 @@ class ModelArguments:
     """
 
     model_name_or_path: str = field(
-        metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
+        metadata={
+            "help": "Path to pretrained model or model identifier from huggingface.co/models."
+        }
     )
     cache_dir: Optional[str] = field(
         default=None,
-        metadata={"help": "Where do you want to store the pretrained models downloaded from huggingface.co"},
+        metadata={
+            "help": "Where you want to store the pretrained models downloaded from huggingface.co."
+        },
     )
     freeze_feature_extractor: Optional[bool] = field(
         default=True,
-        metadata={"help": "Whether to freeze the feature extractor layers of the model."}
+        metadata={
+            "help": "Whether to freeze the feature extractor layers of the model."
+        },
     )
     attention_dropout: Optional[float] = field(
         default=0.1,
-        metadata={"help": "The dropout ratio for the attention probabilities."}
+        metadata={"help": "The dropout ratio for the attention probabilities."},
     )
     activation_dropout: Optional[float] = field(
         default=0.1,
-        metadata={"help": "The dropout ratio for activations inside the fully connected layer."}
+        metadata={
+            "help": "The dropout ratio for activations inside the fully connected layer."
+        },
     )
     hidden_dropout: Optional[float] = field(
         default=0.1,
-        metadata={"help": "The dropout probabilitiy for all fully connected layers in the embeddings, encoder, and pooler."},
+        metadata={
+            "help": "The dropout probability for all fully connected layers in the embeddings, encoder, and pooler."
+        },
     )
     feat_proj_dropout: Optional[float] = field(
         default=0.0,
-        metadata={"help": "The dropout probabilitiy for all 1D convolutional layers in feature extractor."},
+        metadata={
+            "help": "The dropout probability for all 1D convolutional layers in feature extractor."
+        },
     )
     mask_time_prob: Optional[float] = field(
         default=0.05,
         metadata={
-            "help": "Propability of each feature vector along the time axis to be chosen as the start of the vector"
+            "help": "Probability of each feature vector along the time axis to be chosen as the start of the vector"
             "span to be masked. Approximately ``mask_time_prob * sequence_length // mask_time_length`` feature"
             "vectors will be masked along the time axis. This is only relevant if ``apply_spec_augment is True``."
         },
     )
     gradient_checkpointing: Optional[bool] = field(
         default=True,
-        metadata={"help": "If True, use gradient checkpointing to save memory at the expense of slower backward pass."},
+        metadata={
+            "help": "If True, use gradient checkpointing to save memory at the expense of slower backward pass."
+        },
     )
     layerdrop: Optional[float] = field(
-        default=0.0,
-        metadata={"help": "The LayerDrop probability."}
+        default=0.0, metadata={"help": "The LayerDrop probability."}
     )
-
 
 @dataclass
 class DataTrainingArguments:
@@ -755,16 +764,25 @@ class DataTrainingArguments:
     """
 
     elpis_data_dir: str = field(
-        metadata={"help": "The path to the directory containing Elpis-preprocessed data."}
+        metadata={
+            "help": "The path to the directory containing Elpis-preprocessed data."
+        }
     )
     train_size: Optional[float] = field(
-        default=0.8, metadata={"help": "The fraction of the data used for training. The rest is split evenly between the dev and test sets."}
+        default=0.8,
+        metadata={
+            "help": "The fraction of the data used for training. The rest is split evenly between the dev and test sets."
+        },
     )
     split_seed: Optional[int] = field(
-        default=42, metadata={"help": "The random seed used to create the train/dev/test splits."}
+        default=42,
+        metadata={"help": "The random seed used to create the train/dev/test splits."},
     )
     dataset_config_name: Optional[str] = field(
-        default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
+        default=None,
+        metadata={
+            "help": "The configuration name of the dataset to use (via the datasets library)."
+        },
     )
     train_split_name: Optional[str] = field(
         default="train+validation",
@@ -773,7 +791,8 @@ class DataTrainingArguments:
         },
     )
     overwrite_cache: bool = field(
-        default=False, metadata={"help": "Overwrite the cached preprocessed datasets or not."}
+        default=False,
+        metadata={"help": "Overwrite the cached preprocessed datasets or not."},
     )
     preprocessing_num_workers: Optional[int] = field(
         default=None,
@@ -797,7 +816,6 @@ class DataTrainingArguments:
         default=[",", "?", ".", "!", "-", ";", ":", '""', "%", "'", '"', "�"],
         metadata={"help": "A list of characters to remove from the transcripts."},
     )
-
 
 @dataclass
 class DataCollatorCTCWithPadding:
