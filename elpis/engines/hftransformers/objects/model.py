@@ -452,6 +452,7 @@ class HFTransformersModel(BaseModel):
             start_frame = (start_ms/1000) * audio_metadata.sample_rate
             stop_frame = (stop_ms/1000) * audio_metadata.sample_rate
             # read num_frames
+            print(f'start_frame {start_frame} | stop_frame {stop_frame}')
             num_frames = stop_frame - start_frame
             print(f"num_frames: {num_frames}")
 
