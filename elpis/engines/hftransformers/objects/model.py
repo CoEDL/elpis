@@ -474,11 +474,12 @@ class HFTransformersModel(BaseModel):
         trainer = CTCTrainer(
             model=model,
             data_collator=data_collator,
-            args=self.training_args,
             compute_metrics=compute_metrics,
             train_dataset=dataset['train'] if self.training_args["do_train"] else None,
             eval_dataset=dataset['dev'] if self.training_args["do_eval"] else None,
-            tokenizer=processor.feature_extractor,)
+            tokenizer=processor.feature_extractor,
+            custom_args=self.training_args
+        )
         trainer.tb_writer = tb_writer
         return trainer
 
@@ -743,9 +744,10 @@ class DataCollatorCTCWithPadding:
 
 
 class CTCTrainer(Trainer):
-    def __init__(self, *args, **kwargs):
-        self.args.seed = args["seed"]
+    def __init__(self, custom_args, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.custom_args = custom_args
+        self.args.seed = custom_args["seed"]
 
     def training_step(self, model: nn.Module, inputs: Dict[str, Union[torch.Tensor, Any]]) -> torch.Tensor:
         """
@@ -775,7 +777,7 @@ class CTCTrainer(Trainer):
         else:
             loss = self.compute_loss(model, inputs)
 
-        if self.args["n_gpu"] > 1:
+        if self.custom_args["n_gpu"] > 1:
             if model.module.config.ctc_loss_reduction == "mean":
                 loss = loss.mean()
             elif model.module.config.ctc_loss_reduction == "sum":
@@ -783,8 +785,8 @@ class CTCTrainer(Trainer):
             else:
                 raise ValueError(f"{model.config.ctc_loss_reduction} is not valid. Choose one of ['mean', 'sum']")
 
-        if self.args["gradient_accumulation_steps"] > 1:
-            loss = loss / self.args["gradient_accumulation_steps"]
+        if self.custom_args["gradient_accumulation_steps"] > 1:
+            loss = loss / self.custom_args["gradient_accumulation_steps"]
 
         if self.use_amp:
             self.scaler.scale(loss).backward()
