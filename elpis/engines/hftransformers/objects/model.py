@@ -453,7 +453,7 @@ class HFTransformersModel(BaseModel):
                                                           frame_offset=start_frame,
                                                           num_frames=num_frames)
             # samples = speech_array.size(dim=1)
-            # Num frames exceeds number of characters, wav file is not all zeros, and duration between minimum, maximum
+            # Check that frames exceeds number of characters, wav file is not all zeros, and duration between min, max
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
                     and MINIMUM_DURATION_SECONDS < dur_ms/1000 < MAXIMUM_DURATION_SECONDS:
                 resampler = torchaudio.transforms.Resample(sampling_rate, HFTransformersModel.SAMPLING_RATE)
@@ -461,18 +461,13 @@ class HFTransformersModel(BaseModel):
             else:
                 rejected_count += 1
                 rejected[path].append(start_ms)
-                print('rejected', os.path.basename(path))
+                print(f'rejected {os.path.basename(path)} {start_ms} {stop_ms}')
 
-        # TODO filter dataset, keep rows if path in speech keys
-        print(speech)
-        print(speech.keys())
-        print(rejected)
         dataset = dataset.filter(lambda x: x["path"] in speech.keys() and x["start_ms"] not in rejected[x["path"]])
-        print(dataset)
+        print(rejected_count, "files removed due to number of frames, zero wav or too short")
 
         print("Random sample of 10 transcriptions")
-        print("\n".join(random.choices([i[1] for i in audio_paths], k=10)))
-        print(rejected_count, "files removed due to number of frames, zero wav or too short")
+        print("\n".join(random.choices([i[1] for i in dataset], k=10)))
         return speech, dataset
 
     def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
