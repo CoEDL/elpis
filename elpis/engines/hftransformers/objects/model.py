@@ -89,7 +89,7 @@ class HFTransformersModel(BaseModel):
     OUTPUT_DIR_NAME = "wav2vec2"
     SAMPLING_RATE = 16_000
 
-    def __init__(self, **kwargs):
+    def __init__(self, training_args={}, data_args={}, model_args={}, **kwargs):
         super().__init__(**kwargs)
         # HFT does not use a pronunciation dictionary so this will not change from None.
         self.pron_dict = None
@@ -98,6 +98,11 @@ class HFTransformersModel(BaseModel):
         self.config['ngram'] = None
         self.config['engine_name'] = "hftransformers"
         self.config['status'] = "untrained"
+
+        # Setup arguments
+        self.training_args = training_args
+        self.data_args = data_args
+        self.model_args = model_args
 
         # Setup logging
         # self.run_log_path = self.path.joinpath('train.log')
@@ -142,72 +147,60 @@ class HFTransformersModel(BaseModel):
         # Could move that here, but for now let's leave it as is.
 
     def get_arguments(self):
-        self.build_arguments()
-        # See all possible arguments in src/transformers/training_args.py
-        # or by passing the --help flag to this script.
-        # We now keep distinct sets of args, for a cleaner separation of concerns.
-        parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
-        if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
-            # If we pass only one argument to the script and it's the path to a json file,
-            # let's parse it to get our arguments.
-            return parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
-        else:
-            return parser.parse_args_into_dataclasses()
-
-    def build_arguments(self):
-        """
-        Build arguments from various sources (GUI, files, default, etc.).
-        """
-        positional_arguments = [__file__]
-        keyword_arguments = {
+        self.model_args = {
+            "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
+            "gradient_checkpointing": True,
+            "freeze_feature_extractor": True,
+            "ctc_loss_reduction": "mean",
+            "ctc_zero_infinity": True,
+        }
+        self.data_args = {
             "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
             "train_size": "0.8",
             "split_seed": "42",
-            "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
+            "max_train_samples": None,
+            "preprocessing_num_workers": None,
+        }
+        self.training_args = {
             "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
             "overwrite_output_dir": True,
             "num_train_epochs": NUM_TRAIN_EPOCHS,
             "per_device_train_batch_size": "4",
             "per_device_eval_batch_size": "4",
             "gradient_accumulation_steps": "2",
-            "learning_rate": "5e-4",
-            "weight_decay": "0.005",
-            "warmup_steps": "1000",
-            "evaluation_strategy": "steps",
-            "save_steps": "500",
-            "eval_steps": "500",
-            "save_total_limit": "2",
-            "gradient_checkpointing": True,
             "fp16": FP16,
-            "group_by_length": True,
             "do_train": True,
             "do_eval": True,
-            "logging_dir": self.path.joinpath("runs")
+            "local_rank": -1,
+            "n_gpu": 1,
+            "device": torch.device("cuda" if torch.cuda.is_available() else "cpu"),
         }
 
-        if DEBUG:
-            keyword_arguments.update(QUICK_TRAIN_BUILD_ARGUMENTS)
+        additional_args = {}
+        if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
+            with open(sys.argv[1]) as json_file:
+                additional_args = json.load(json_file)
+        else:
+            if DEBUG:
+                additional_args = QUICK_TRAIN_BUILD_ARGUMENTS
+        for key, value in additional_args.items():
+            if key in self.model_args.keys():
+                self.model_args[key] = value
+            if key in self.data_args.keys():
+                self.data_args[key] = value
+            if key in self.training_args.keys():
+                self.training_args[key] = value
 
-        self.translate_arguments(positional_arguments, keyword_arguments)
-
-    def translate_arguments(self, positional_arguments, keyword_arguments):
-        """
-        Translate arguments into sys.argv to emulate a file call. TODO: Verify if we can do it in a more straightforward way (without emulation)…
-        """
-        keyword_arguments = [f"--{key}" if value is True else f"--{key}={value}" for key, value in keyword_arguments.items() if value]
-        sys.argv = positional_arguments + keyword_arguments
-        print("Emulated arguments (as a file call):\n", sys.argv)
-
-    def get_last_checkpoint(self, training_args):
+    def get_last_checkpoint(self):
         """
         Detect last checkpoint.
         """
         last_checkpoint = None
-        if os.path.isdir(training_args.output_dir) and training_args.do_train and not training_args.overwrite_output_dir:
-            last_checkpoint = get_last_checkpoint(training_args.output_dir)
-            if last_checkpoint is None and len(os.listdir(training_args.output_dir)) > 0:
+        if os.path.isdir(self.training_args["output_dir"]) and self.training_args["do_train"] and not self.training_args["overwrite_output_dir"]:
+            last_checkpoint = get_last_checkpoint(self.training_args["output_dir"])
+            if last_checkpoint is None and len(os.listdir(self.training_args["output_dir"])) > 0:
                 raise ValueError(
-                    f"Output directory ({training_args.output_dir}) already exists and is not empty. "
+                    f"Output directory ({self.training_args['output_dir']}) already exists and is not empty. "
                     "Use --overwrite_output_dir to overcome.")
             elif last_checkpoint is not None:
                 logger.info(
@@ -215,7 +208,7 @@ class HFTransformersModel(BaseModel):
                     "the `--output_dir` or add `--overwrite_output_dir` to train from scratch.")
         return last_checkpoint
 
-    def setup_logging(self, training_args):
+    def setup_logging(self):
         """
         Setup logging.
         """
@@ -223,16 +216,16 @@ class HFTransformersModel(BaseModel):
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
             datefmt="%m/%d/%Y %H:%M:%S",
             handlers=[logging.StreamHandler(sys.stdout)],)
-        logger.setLevel(logging.INFO if is_main_process(training_args.local_rank) else logging.WARN)
+        logger.setLevel(logging.INFO if is_main_process(self.training_args["local_rank"]) else logging.WARN)
 
         # Log on each process the small summary:
         logger.warning(
-            f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
-            + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}")
+            f"Process rank: {self.training_args['local_rank']}, device: {self.training_args['device']}, n_gpu: {self.training_args['n_gpu']}"
+            + f"distributed training: {bool(self.training_args['local_rank'] != -1)}, 16-bits training: {self.training_args['fp16']}")
         # Set the verbosity to info of the Transformers logger (on main process only):
         # if is_main_process(training_args.local_rank):
         #     transformers.utils.logging.set_verbosity_info()
-        logger.info("Training/evaluation parameters %s", training_args)
+        logger.info("Training/evaluation parameters %s", self.training_args)
 
     def get_language_data(self, data_dir, language_file="language_data.json"):
         # Use a json config file to prepare tokens.
@@ -248,14 +241,16 @@ class HFTransformersModel(BaseModel):
             language_data = None
         return language_data
 
-    def create_split(self, data_args, data_dir):
+    def create_split(self, data_dir):
         """ Create annotations files for the train/dev/test splits. """
 
         elpis_annotations_fn=(data_dir / 'annotations.json')
         with open(elpis_annotations_fn) as f:
             anno_json = json.load(f)
 
-        train_annos, devtest_annos = train_test_split(anno_json, test_size=(1-data_args.train_size), random_state=data_args.split_seed)
+        train_annos, devtest_annos = train_test_split(anno_json,
+                test_size=(1-self.data_args["train_size"]),
+                random_state=self.data_args["split_seed"])
         if DEBUG:
             train_annos = train_annos[:200]
             devtest_annos = devtest_annos[:60]
@@ -370,23 +365,16 @@ class HFTransformersModel(BaseModel):
     def get_processor(self, feature_extractor, tokenizer):
         return Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
 
-    def get_model(self, model_args, processor):
+    def get_model(self, processor):
         return Wav2Vec2ForCTC.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=model_args.cache_dir,
-            activation_dropout=model_args.activation_dropout,
-            attention_dropout=model_args.attention_dropout,
-            hidden_dropout=model_args.hidden_dropout,
-            feat_proj_dropout=model_args.feat_proj_dropout,
-            mask_time_prob=model_args.mask_time_prob,
-            gradient_checkpointing=model_args.gradient_checkpointing,
-            layerdrop=model_args.layerdrop,
-            ctc_loss_reduction="mean",
+            self.model_args['model_name_or_path'],
+            gradient_checkpointing=self.model_args['gradient_checkpointing'],
+            ctc_loss_reduction=self.model_args['ctc_loss_reduction'],
             pad_token_id=processor.tokenizer.pad_token_id,
             vocab_size=len(processor.tokenizer),
             ctc_zero_infinity=True)
 
-    def preprocess_dataset(self, dataset, data_args):
+    def preprocess_dataset(self, dataset):
         speech = self.prepare_speech(dataset)
 
         def speech_file_to_array_fn(batch):
@@ -403,11 +391,11 @@ class HFTransformersModel(BaseModel):
         dataset = dataset.map(
             speech_file_to_array_fn,
             remove_columns=dataset['train'].column_names,
-            num_proc=data_args.preprocessing_num_workers,
+            num_proc=self.data_args["preprocessing_num_workers"],
         )
         return dataset
 
-    def prepare_dataset(self, dataset, data_args, training_args, processor):
+    def prepare_dataset(self, dataset, processor):
         def prepare_dataset(batch):
             # check that all files have the correct sampling rate
             assert (
@@ -422,9 +410,9 @@ class HFTransformersModel(BaseModel):
         dataset = dataset.map(
             prepare_dataset,
             remove_columns=dataset['train'].column_names,
-            batch_size=training_args.per_device_train_batch_size,
+            batch_size=self.training_args["per_device_train_batch_size"],
             batched=True,
-            num_proc=data_args.preprocessing_num_workers,
+            num_proc=self.data_args["preprocessing_num_workers"],
         )
         return dataset
 
@@ -456,7 +444,7 @@ class HFTransformersModel(BaseModel):
         print(rejected, "files removed due to number of frames, zero wav or too short")
         return speech
 
-    def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
+    def get_trainer(self, dataset, processor, model, tb_writer, metric_name="wer"):
         # Metric
         metric = datasets.load_metric(metric_name)
 
@@ -468,7 +456,7 @@ class HFTransformersModel(BaseModel):
             # we do not want to group tokens when computing the metrics
             label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
             time_str = time.strftime('%Y-%m-%d_%H:%M', time.localtime())
-            with open(training_args.output_dir + f'/dev_preds{time_str}.txt', 'w') as f:
+            with open(self.training_args["output_dir"] + f'/dev_preds{time_str}.txt', 'w') as f:
                 for pred, ref in zip(pred_str, label_str):
                     print('----------------------------------------', file=f)
                     print('HYP:', file=f)
@@ -488,31 +476,26 @@ class HFTransformersModel(BaseModel):
         trainer = CTCTrainer(
             model=model,
             data_collator=data_collator,
-            args=training_args,
+            args=self.training_args,
             compute_metrics=compute_metrics,
-            train_dataset=dataset['train'] if training_args.do_train else None,
-            eval_dataset=dataset['dev'] if training_args.do_eval else None,
+            train_dataset=dataset['train'] if self.training_args["do_train"] else None,
+            eval_dataset=dataset['dev'] if self.training_args["do_eval"] else None,
             tokenizer=processor.feature_extractor,)
         trainer.tb_writer = tb_writer
         return trainer
 
-    def train(self, on_complete:Callable=None):
-
+    def pretrain(self):
         tb_writer = SummaryWriter(self.path / 'runs')
 
-        model_args, data_args, training_args = self.get_arguments()
-        self.setup_logging(training_args)
-
-        # Set seed before initializing model.
-        set_seed(training_args.seed)
+        self.setup_logging()
 
         # 1. Tokenization
         print('Tokenizing...')
         self._set_finished_training(False)
         self._set_stage(TOKENIZATION)
 
-        data_dir = Path(data_args.elpis_data_dir)
-        self.create_split(data_args, data_dir)
+        data_dir = Path(self.data_args["elpis_data_dir"])
+        self.create_split(data_dir)
         dataset = self.get_dataset(data_dir)
 
         logging.info('Got dataset.')
@@ -523,16 +506,14 @@ class HFTransformersModel(BaseModel):
         # The .from_pretrained methods guarantee that only one local process can concurrently
         # download model & vocab.
 
-        # TODO Get the device from the training args.
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        logger.info(f'Running on device: {device}.')
-        print(f'Running on device: {device}.')
+        logger.info(f'Running on device: {self.training_args["device"]}.')
+        print(f'Running on device: {self.training_args["device"]}.')
 
         tokenizer = self.get_tokenizer(data_dir, dataset)
         feature_extractor = self.get_feature_extractor()
         processor = self.get_processor(feature_extractor, tokenizer)
-        model = self.get_model(model_args, processor)
-        model.to(device)
+        model = self.get_model(processor)
+        model.to(self.training_args["device"])
 
         self._set_stage(TOKENIZATION, complete=True)
 
@@ -540,26 +521,33 @@ class HFTransformersModel(BaseModel):
         # We need to read the audio files as arrays and tokenize the targets.
         print('Preprocessing the dataset.')
         self._set_stage(PREPROCESSING)
-        dataset = self.preprocess_dataset(dataset, data_args)
-        dataset = self.prepare_dataset(dataset, data_args, training_args, processor)
+        dataset = self.preprocess_dataset(dataset)
+        dataset = self.prepare_dataset(dataset, processor)
 
-        if model_args.freeze_feature_extractor:
+        if self.model_args["freeze_feature_extractor"]:
             model.freeze_feature_extractor()
         
         self._set_stage(PREPROCESSING, complete=True)
 
         print(f"len of dataset: {len(dataset)}")
+        
+        # Here to allow for interaction between pretraining and training
+        self.dataset = dataset
+        self.model = model
+        self.processor = processor
+        self.tb_writer = tb_writer
 
+    def train(self, on_complete:Callable=None):
         # 3. Training
         self._set_stage(TRAIN)
-        trainer = self.get_trainer(dataset, processor, training_args, model, tb_writer)
-        last_checkpoint = self.get_last_checkpoint(training_args)
-        if training_args.do_train:
+        trainer = self.get_trainer(self.dataset, self.processor, self.training_args, self.model, self.tb_writer)
+        last_checkpoint = self.get_last_checkpoint(self.training_args)
+        if self.training_args["do_train"]:
             # Update Checkpoint
             if last_checkpoint is not None:
                 checkpoint = last_checkpoint
-            elif os.path.isdir(model_args.model_name_or_path):
-                checkpoint = model_args.model_name_or_path
+            elif os.path.isdir(self.model_args["model_name_or_path"]):
+                checkpoint = self.model_args["model_name_or_path"]
             else:
                 checkpoint = None
             # Train
@@ -567,14 +555,14 @@ class HFTransformersModel(BaseModel):
             trainer.save_model()
 
             # save the feature_extractor and the tokenizer
-            if is_main_process(training_args.local_rank):
-                processor.save_pretrained(training_args.output_dir)
+            if is_main_process(self.training_args["local_rank"]):
+                self.processor.save_pretrained(self.training_args["output_dir"])
 
             metrics = train_result.metrics
             max_train_samples = (
-                data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset['train'])
+                self.data_args['max_train_samples'] if self.data_args['max_train_samples'] is not None else len(self.dataset['train'])
             )
-            metrics["train_samples"] = min(max_train_samples, len(dataset['train']))
+            metrics["train_samples"] = min(max_train_samples, len(self.dataset['train']))
 
             trainer.log_metrics(TRAIN, metrics)
             trainer.save_metrics(TRAIN, metrics)
@@ -585,11 +573,11 @@ class HFTransformersModel(BaseModel):
         # 4. Evaluation
         self._set_stage(EVALUATION)
         results = {}
-        if training_args.do_eval:
+        if self.training_args["do_eval"]:
             logger.info("*** Evaluate ***")
             metrics = trainer.evaluate()
-            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(dataset['dev'])
-            metrics["eval_samples"] = min(max_val_samples, len(dataset['dev']))
+            max_val_samples = self.data_args['max_train_samples'] if self.data_args['max_train_samples'] is not None else len(self.dataset['dev'])
+            metrics["eval_samples"] = min(max_val_samples, len(self.dataset['dev']))
 
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
@@ -689,115 +677,6 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
             grapheme_list.append(grapheme)
             grapheme_dict[by(grapheme)] = grapheme_list
         return grapheme_dict
-
-
-
-
-@dataclass
-class ModelArguments:
-    """
-    Arguments pertaining to which model/config/tokenizer we are going to fine-tune from.
-    """
-
-    model_name_or_path: str = field(
-        metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
-    )
-    cache_dir: Optional[str] = field(
-        default=None,
-        metadata={"help": "Where do you want to store the pretrained models downloaded from huggingface.co"},
-    )
-    freeze_feature_extractor: Optional[bool] = field(
-        default=True,
-        metadata={"help": "Whether to freeze the feature extractor layers of the model."}
-    )
-    attention_dropout: Optional[float] = field(
-        default=0.1,
-        metadata={"help": "The dropout ratio for the attention probabilities."}
-    )
-    activation_dropout: Optional[float] = field(
-        default=0.1,
-        metadata={"help": "The dropout ratio for activations inside the fully connected layer."}
-    )
-    hidden_dropout: Optional[float] = field(
-        default=0.1,
-        metadata={"help": "The dropout probabilitiy for all fully connected layers in the embeddings, encoder, and pooler."},
-    )
-    feat_proj_dropout: Optional[float] = field(
-        default=0.0,
-        metadata={"help": "The dropout probabilitiy for all 1D convolutional layers in feature extractor."},
-    )
-    mask_time_prob: Optional[float] = field(
-        default=0.05,
-        metadata={
-            "help": "Propability of each feature vector along the time axis to be chosen as the start of the vector"
-            "span to be masked. Approximately ``mask_time_prob * sequence_length // mask_time_length`` feature"
-            "vectors will be masked along the time axis. This is only relevant if ``apply_spec_augment is True``."
-        },
-    )
-    gradient_checkpointing: Optional[bool] = field(
-        default=True,
-        metadata={"help": "If True, use gradient checkpointing to save memory at the expense of slower backward pass."},
-    )
-    layerdrop: Optional[float] = field(
-        default=0.0,
-        metadata={"help": "The LayerDrop probability."}
-    )
-
-
-@dataclass
-class DataTrainingArguments:
-    """
-    Arguments pertaining to what data we are going to input our model for training and eval.
-
-    Using `HfArgumentParser` we can turn this class
-    into argparse arguments to be able to specify them on
-    the command line.
-    """
-
-    elpis_data_dir: str = field(
-        metadata={"help": "The path to the directory containing Elpis-preprocessed data."}
-    )
-    train_size: Optional[float] = field(
-        default=0.8, metadata={"help": "The fraction of the data used for training. The rest is split evenly between the dev and test sets."}
-    )
-    split_seed: Optional[int] = field(
-        default=42, metadata={"help": "The random seed used to create the train/dev/test splits."}
-    )
-    dataset_config_name: Optional[str] = field(
-        default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
-    )
-    train_split_name: Optional[str] = field(
-        default="train+validation",
-        metadata={
-            "help": "The name of the training data set split to use (via the datasets library). Defaults to 'train'"
-        },
-    )
-    overwrite_cache: bool = field(
-        default=False, metadata={"help": "Overwrite the cached preprocessed datasets or not."}
-    )
-    preprocessing_num_workers: Optional[int] = field(
-        default=None,
-        metadata={"help": "The number of processes to use for the preprocessing."},
-    )
-    max_train_samples: Optional[int] = field(
-        default=None,
-        metadata={
-            "help": "For debugging purposes or quicker training, truncate the number of training examples to this "
-            "value if set."
-        },
-    )
-    max_val_samples: Optional[int] = field(
-        default=None,
-        metadata={
-            "help": "For debugging purposes or quicker training, truncate the number of validation examples to this "
-            "value if set."
-        },
-    )
-    chars_to_ignore: List[str] = list_field(
-        default=[",", "?", ".", "!", "-", ";", ":", '""', "%", "'", '"', "�"],
-        metadata={"help": "A list of characters to remove from the transcripts."},
-    )
-
 
 @dataclass
 class DataCollatorCTCWithPadding:
