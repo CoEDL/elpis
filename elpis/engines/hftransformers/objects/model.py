@@ -134,7 +134,7 @@ class HFTransformersModel(BaseModel):
     def has_been_trained(self):
         return self.status == "trained"
 
-    def link(self, dataset: Dataset, _pron_dict):
+    def link_dataset(self, dataset: Dataset, _pron_dict):
         self.dataset = dataset
         self.config['dataset_name'] = dataset.name
         # Note the _pron_dict is ignored as it's irrelevant to HFT.
@@ -153,7 +153,6 @@ class HFTransformersModel(BaseModel):
             "ctc_zero_infinity": True,
         }
         self.data_args = {
-            "elpis_data_dir": None,
             "train_size": "0.8",
             "split_seed": "42",
             "max_train_samples": None,
@@ -492,7 +491,8 @@ class HFTransformersModel(BaseModel):
         self._set_finished_training(False)
         self._set_stage(TOKENIZATION)
 
-        data_dir = Path(self.data_args["elpis_data_dir"])
+        # Assume dataset has already been linked
+        data_dir = Path(self.dataset.pathto.basepath.as_posix())
         self.create_split(data_dir)
         dataset = self.get_dataset(data_dir)
 
