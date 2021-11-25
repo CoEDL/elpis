@@ -448,7 +448,7 @@ class HFTransformersModel(BaseModel):
         print(rejected, "files removed due to number of frames, zero wav or too short")
         return speech
 
-    def get_trainer(self, dataset, processor, training_args, model, tb_writer, metric_name="wer"):
+    def get_trainer(self, dataset, processor, training_args, model, metric_name="wer"):
         # Metric
         metric = datasets.load_metric(metric_name)
 
@@ -468,8 +468,8 @@ class HFTransformersModel(BaseModel):
                     print('REF:', file=f)
                     print(ref, file=f)
                     # for tensorboard
-                    tb_writer.add_text('pred', pred)
-                    tb_writer.add_text('ref', ref)
+                    self.tb_writer.add_text('pred', pred)
+                    self.tb_writer.add_text('ref', ref)
 
             metric_result = metric.compute(predictions=pred_str, references=label_str)
             return {metric_name: metric_result}
@@ -485,14 +485,19 @@ class HFTransformersModel(BaseModel):
             train_dataset=dataset['train'] if training_args.do_train else None,
             eval_dataset=dataset['dev'] if training_args.do_eval else None,
             tokenizer=processor.feature_extractor,)
-        trainer.tb_writer = tb_writer
+        trainer.tb_writer = self.tb_writer
         return trainer
 
-    def train(self, on_complete:Callable=None):
+    def set_args(self, model_args, data_args, training_args):
+        self.model_args = model_args
+        self.data_args = data_args
+        self.training_args = training_args
 
-        tb_writer = SummaryWriter(self.path / 'runs')
+    def pretrain(self):
+        self.tb_writer = SummaryWriter(self.path / 'runs')
 
         model_args, data_args, training_args = self.get_arguments()
+        self.set_args(model_args, data_args, training_args)
         self.setup_logging(training_args)
 
         # Set seed before initializing model.
@@ -506,6 +511,8 @@ class HFTransformersModel(BaseModel):
         data_dir = Path(data_args.elpis_data_dir)
         self.create_split(data_args, data_dir)
         dataset = self.get_dataset(data_dir)
+        print(dataset)
+        print(self.dataset)
 
         logging.info('Got dataset.')
 
@@ -542,9 +549,10 @@ class HFTransformersModel(BaseModel):
 
         print(f"len of dataset: {len(dataset)}")
 
+    def train(self, on_complete:Callable=None):
         # 3. Training
         self._set_stage(TRAIN)
-        trainer = self.get_trainer(dataset, processor, training_args, model, tb_writer)
+        trainer = self.get_trainer(dataset, processor, training_args, model)
         last_checkpoint = self.get_last_checkpoint(training_args)
         if training_args.do_train:
             # Update Checkpoint
