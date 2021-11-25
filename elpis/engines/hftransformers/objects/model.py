@@ -153,7 +153,7 @@ class HFTransformersModel(BaseModel):
             "ctc_zero_infinity": True,
         }
         self.data_args = {
-            "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
+            "elpis_data_dir": None,
             "train_size": "0.8",
             "split_seed": "42",
             "max_train_samples": None,
