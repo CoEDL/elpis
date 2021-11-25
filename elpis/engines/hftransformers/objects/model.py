@@ -538,7 +538,7 @@ class HFTransformersModel(BaseModel):
     def train(self, on_complete:Callable=None):
         # 3. Training
         self._set_stage(TRAIN)
-        trainer = self.get_trainer(self.dataset, self.processor, self.training_args, self.model, self.tb_writer)
+        trainer = self.get_trainer(self.dataset, self.processor, self.model, self.tb_writer)
         last_checkpoint = self.get_last_checkpoint(self.training_args)
         if self.training_args["do_train"]:
             # Update Checkpoint
