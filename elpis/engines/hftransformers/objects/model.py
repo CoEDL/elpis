@@ -469,6 +469,7 @@ class HFTransformersModel(BaseModel):
                 speech[path] = resampler(speech_array).squeeze().numpy()
             else:
                 rejected += 1
+                print('rejected', os.path.basename(path))
 
         # TODO filter dataset, keep rows if path in speech keys
         print(speech)
