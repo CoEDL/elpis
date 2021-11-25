@@ -445,7 +445,7 @@ class HFTransformersModel(BaseModel):
             audio_metadata = torchaudio.info(path)
             dur_ms = stop_ms - start_ms
 
-            print(f"{utt['start_ms']} {utt['stop_ms']} {dur_ms/1000}")
+            print(f"{start_ms} {stop_ms} {dur_ms/1000}")
 
             # TODO this is loading the whole file, not the annotation clip
             # start reading from frame_offset
