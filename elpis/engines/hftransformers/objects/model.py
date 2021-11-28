@@ -56,7 +56,7 @@ def list_field(default=None, metadata=None):
 DEBUG = True
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
-    "num_train_epochs": "1",
+    "num_train_epochs": "3",
     "model_name_or_path": "facebook/wav2vec2-base",
     "per_device_train_batch_size": "1",
     "per_device_eval_batch_size": "1"
@@ -510,6 +510,12 @@ class HFTransformersModel(BaseModel):
             eval_dataset=self.hf_dataset['dev'] if self.training_args.do_eval else None,
             tokenizer=self.processor.feature_extractor,)
         trainer.tb_writer = self.tb_writer
+        # Set a variable to track the total loss for a given epoch. (Unsure why
+        # trainer doesn't do this; maybe in a later version of Transformers it
+        # does.)
+        trainer.epoch_loss = 0.0
+        # Variable to track the last epoch we logged with tensorboard
+        trainer.last_tb_epoch = 0
         return trainer
 
     def set_args(self, model_args, data_args, training_args):
@@ -586,6 +592,8 @@ class HFTransformersModel(BaseModel):
                 checkpoint = None
             # Train
             train_result = trainer.train(resume_from_checkpoint=checkpoint)
+            # Log loss for final epoch in tensorboard.
+            trainer.tb_writer.add_scalar('train/loss', trainer.epoch_loss, int(trainer.state.epoch)-1)
             trainer.save_model()
 
             # save the feature_extractor and the tokenizer
@@ -922,6 +930,13 @@ class CTCTrainer(Trainer):
             :obj:`torch.Tensor`: The tensor with training loss on this batch.
         """
 
+        # When we've finished the previous epoch, log the loss for
+        # that epoch in tensorboard.
+        if int(self.state.epoch) > self.last_tb_epoch:
+            self.tb_writer.add_scalar('train/loss', self.epoch_loss, int(self.state.epoch)-1)
+            self.last_tb_epoch = int(self.state.epoch)
+            self.epoch_loss = 0.0
+
         model.train()
         inputs = self._prepare_inputs(inputs)
 
@@ -952,9 +967,7 @@ class CTCTrainer(Trainer):
         else:
             loss.backward()
 
-        print(f"\nEpoch {str.ljust(str(self.state.epoch), 20)} | Step {str.ljust(str(self.state.global_step), 10)} | Loss {loss}", end='\r') # tensor(3.9470, device='cuda:0', grad_fn=<DivBackward0>)
-        # TODO sum the loss over training steps?
-        self.tb_writer.add_scalar('Loss', loss.item(), self.state.global_step)
+        self.epoch_loss += loss.item()
 
         return loss.detach()
 
