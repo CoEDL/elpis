@@ -183,7 +183,7 @@ class HFTransformersTranscription(BaseTranscription):
         """Saves Elan output using the pympi library"""
         result = pympi.Elan.Eaf(author="elpis")
 
-        tier = 'spk1' # No idea what this is for
+        tier = 'tx'
         result.add_tier(tier)
 
         to_millis = lambda seconds: int(seconds * 1000)

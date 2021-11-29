@@ -87,20 +87,8 @@ class HFTransformersModel(BaseModel):
         self.config['engine_name'] = "hftransformers"
         self.config['status'] = "untrained"
 
-        # Setup logging
-        self.run_log_path = self.path.joinpath('train.log')
-        sys.stdout = open(self.run_log_path, 'w')
-        sys.stderr = sys.stdout
-
-        # Setup stage names
-        self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
-        stage_labels = [string.capwords(stage).replace('_', ' ') for stage in TRAINING_STAGES]
-
-        stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
-        super().build_stage_status(stage_names)
-
-        self._set_stage(TOKENIZATION)
-
+        self._setup_logging()
+        self._setup_stages()
 
     @classmethod
     def load(cls, base_path: Path):
@@ -108,18 +96,119 @@ class HFTransformersModel(BaseModel):
         self.pron_dict = None
         return self
 
-    @property
-    def status(self):
-        if not Path(self.run_log_path).is_file():
-            run(f"touch {self.run_log_path};")
+    def train(self, on_complete:Callable=None):
+        model_args, data_args, training_args = self.get_arguments()
+
+        # Set seed before initializing model.
+        set_seed(training_args.seed)
+
+        # 1. Tokenization
+        self._set_finished_training(False)
+        self._set_stage(TOKENIZATION)
+
+        data_dir = Path(data_args.elpis_data_dir)
+        self.create_split(data_args, data_dir)
+        dataset = self.get_dataset(data_dir)
+
+        # Load pretrained model and tokenizer
+        #
+        # Distributed training:
+        # The .from_pretrained methods guarantee that only one local process can concurrently
+        # download model & vocab.
+
+        tokenizer = self.get_tokenizer(data_dir, dataset)
+        feature_extractor = self.get_feature_extractor()
+        processor = self.get_processor(feature_extractor, tokenizer)
+        model = self.get_model(model_args, processor)
+
+        self._set_stage(TOKENIZATION, complete=True)
+
+        # 2. Preprocessing the datasets.
+        # We need to read the audio files as arrays and tokenize the targets.
+        self._set_stage(PREPROCESSING)
+        dataset = self.preprocess_dataset(dataset, data_args)
+        dataset = self.prepare_dataset(dataset, data_args, training_args, processor)
+
+        if model_args.freeze_feature_extractor:
+            model.freeze_feature_extractor()
+        
+        self._set_stage(PREPROCESSING, complete=True)
+
+        # 3. Training
+        self._set_stage(TRAIN)
+        trainer = self.get_trainer(dataset, processor, training_args, model)
+        last_checkpoint = self.get_last_checkpoint(training_args)
+        if training_args.do_train:
+            # Update Checkpoint
+            if last_checkpoint is not None:
+                checkpoint = last_checkpoint
+            elif os.path.isdir(model_args.model_name_or_path):
+                checkpoint = model_args.model_name_or_path
+            else:
+                checkpoint = None
+            # Train
+            train_result = trainer.train(resume_from_checkpoint=checkpoint)
+            trainer.save_model()
+
+            # save the feature_extractor and the tokenizer
+            if is_main_process(training_args.local_rank):
+                processor.save_pretrained(training_args.output_dir)
+
+            print(f"len of dataset: {len(dataset)}")
+            metrics = train_result.metrics
+            max_train_samples = (
+                data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset['train'])
+            )
+            metrics["train_samples"] = min(max_train_samples, len(dataset['train']))
+
+            trainer.log_metrics(TRAIN, metrics)
+            trainer.save_metrics(TRAIN, metrics)
+            trainer.save_state()
+
+        self._set_stage(TRAIN, complete=True)
+        
+        # 4. Evaluation
+        self._set_stage(EVALUATION)
+        results = {}
+        if training_args.do_eval:
+            logger.info("*** Evaluate ***")
+            metrics = trainer.evaluate()
+            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(dataset['dev'])
+            metrics["eval_samples"] = min(max_val_samples, len(dataset['dev']))
+
+            trainer.log_metrics("eval", metrics)
+            trainer.save_metrics("eval", metrics)
+        
+        self._set_stage(EVALUATION, complete=True)
+        self._set_finished_training(True)
+
+        if on_complete is not None:
+            on_complete()
+            
+        return results
+
+    def _set_finished_training(self, has_finished: bool) -> None:
+        self.status = FINISHED if has_finished else UNFINISHED
+
+    def _set_stage(self, stage: str, complete=False) -> None:
+        """Updates the training stage to one of the constants specified within
+        TRAINING_STAGES
+        """
+        if stage not in TRAINING_STAGES:
+            return
+
+        status = "completed" if complete else "in-progress"
+        index = TRAINING_STAGES.index(stage)
+        self.stage = self.index_prefixed_stages[index]
+
         with open(self.run_log_path) as log_file:
             log_text = log_file.read()
-            self.stage_status = (self.stage, "in-progress", "", log_text)
-        return self.config['status']
 
-    @status.setter
-    def status(self, value: str):
-        self.config['status'] = value
+        self.stage_status = self.stage, status, '', log_text
+
+    def get_train_results(self) -> Dict[str, float]:
+        # TODO Ask Ben what's meant to go here
+        return { "comparison_val": 6.9 }
 
     def has_been_trained(self):
         return self.status == "trained"
@@ -210,10 +299,25 @@ class HFTransformersModel(BaseModel):
                     "the `--output_dir` or add `--overwrite_output_dir` to train from scratch.")
         return last_checkpoint
 
-    def setup_logging(self, training_args):
+    def _setup_stages(self):
+        """Set up the stages used for displaying training information to the user."""
+        self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
+        stage_labels = [string.capwords(stage).replace('_', ' ') for stage in TRAINING_STAGES]
+
+        stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
+        super().build_stage_status(stage_names)
+
+    def _setup_logging(self, training_args):
         """
         Setup logging.
         """
+        self.run_log_path = self.path.joinpath('train.log')
+        if not Path(self.run_log_path).is_file():
+            run(f"touch {self.run_log_path};")
+
+        sys.stdout = open(self.run_log_path, 'w')
+        sys.stderr = sys.stdout
+
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
             datefmt="%m/%d/%Y %H:%M:%S",
@@ -467,117 +571,7 @@ class HFTransformersModel(BaseModel):
             tokenizer=processor.feature_extractor,)
         return trainer
 
-    def train(self, on_complete:Callable=None):
-        model_args, data_args, training_args = self.get_arguments()
-        self.setup_logging(training_args)
-
-        # Set seed before initializing model.
-        set_seed(training_args.seed)
-
-        # 1. Tokenization
-        self._set_finished_training(False)
-        self._set_stage(TOKENIZATION)
-
-        data_dir = Path(data_args.elpis_data_dir)
-        self.create_split(data_args, data_dir)
-        dataset = self.get_dataset(data_dir)
-
-        # Load pretrained model and tokenizer
-        #
-        # Distributed training:
-        # The .from_pretrained methods guarantee that only one local process can concurrently
-        # download model & vocab.
-
-        tokenizer = self.get_tokenizer(data_dir, dataset)
-        feature_extractor = self.get_feature_extractor()
-        processor = self.get_processor(feature_extractor, tokenizer)
-        model = self.get_model(model_args, processor)
-
-        self._set_stage(TOKENIZATION, complete=True)
-
-        # 2. Preprocessing the datasets.
-        # We need to read the audio files as arrays and tokenize the targets.
-        self._set_stage(PREPROCESSING)
-        dataset = self.preprocess_dataset(dataset, data_args)
-        dataset = self.prepare_dataset(dataset, data_args, training_args, processor)
-
-        if model_args.freeze_feature_extractor:
-            model.freeze_feature_extractor()
-        
-        self._set_stage(PREPROCESSING, complete=True)
-
-
-        # 3. Training
-        self._set_stage(TRAIN)
-        trainer = self.get_trainer(dataset, processor, training_args, model)
-        last_checkpoint = self.get_last_checkpoint(training_args)
-        if training_args.do_train:
-            # Update Checkpoint
-            if last_checkpoint is not None:
-                checkpoint = last_checkpoint
-            elif os.path.isdir(model_args.model_name_or_path):
-                checkpoint = model_args.model_name_or_path
-            else:
-                checkpoint = None
-            # Train
-            train_result = trainer.train(resume_from_checkpoint=checkpoint)
-            trainer.save_model()
-
-            # save the feature_extractor and the tokenizer
-            if is_main_process(training_args.local_rank):
-                processor.save_pretrained(training_args.output_dir)
-
-            print(f"len of dataset: {len(dataset)}")
-            metrics = train_result.metrics
-            max_train_samples = (
-                data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset['train'])
-            )
-            metrics["train_samples"] = min(max_train_samples, len(dataset['train']))
-
-            trainer.log_metrics(TRAIN, metrics)
-            trainer.save_metrics(TRAIN, metrics)
-            trainer.save_state()
-
-        self._set_stage(TRAIN, complete=True)
-        
-        # 4. Evaluation
-        self._set_stage(EVALUATION)
-        results = {}
-        if training_args.do_eval:
-            logger.info("*** Evaluate ***")
-            metrics = trainer.evaluate()
-            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(dataset['dev'])
-            metrics["eval_samples"] = min(max_val_samples, len(dataset['dev']))
-
-            trainer.log_metrics("eval", metrics)
-            trainer.save_metrics("eval", metrics)
-        
-        self._set_stage(EVALUATION, complete=True)
-        self._set_finished_training(True)
-        return results
-
-    def _set_finished_training(self, has_finished: bool) -> None:
-        self.status = FINISHED if has_finished else UNFINISHED
-
-    def _set_stage(self, stage: str, complete=False) -> None:
-        """Updates the training stage to one of the constants specified within
-        TRAINING_STAGES
-        """
-        if stage not in TRAINING_STAGES:
-            return
-
-        status = "completed" if complete else "in-progress"
-        index = TRAINING_STAGES.index(stage)
-        self.stage = self.index_prefixed_stages[index]
-
-        with open(self.run_log_path) as log_file:
-            log_text = log_file.read()
-
-        self.stage_status = self.stage, status, '', log_text
-
-    def get_train_results(self) -> Dict[str, float]:
-        # TODO Ask Ben what's meant to go here
-        return { "comparison_val": 6.9 }
+    
     
 
 class ElpisTokenizer(Wav2Vec2CTCTokenizer):
