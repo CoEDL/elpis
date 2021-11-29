@@ -97,11 +97,11 @@ def list_existing():
 
 @bp.route("/settings", methods=['POST'])
 def settings():
-    def setup(model):
+    def setup(model: Model):
         if request.method == 'POST':
             model.ngram = request.json['ngram']
 
-    def build_data(model):
+    def build_data(model: Model):
         return {
             "settings": {
                 "ngram": model.ngram
@@ -113,10 +113,10 @@ def settings():
 
 @bp.route("/train", methods=['GET'])
 def train():
-    def setup(model):
+    def setup(model: Model):
         model.train(on_complete=lambda: print('Trained model!'))
 
-    def build_data(model):
+    def build_data(model: Model):
         return {
             "status": model.status,
             "stage_status": model.stage_status
@@ -127,7 +127,7 @@ def train():
 
 @bp.route("/status", methods=['GET'])
 def status():
-    def build_data(model):
+    def build_data(model: Model):
         return {
             "status": model.status,
             "stage_status": model.stage_status
@@ -137,7 +137,7 @@ def status():
 
 @bp.route("/log", methods=['GET'])
 def log():
-    def build_data(model):
+    def build_data(model: Model):
         return {
             "log": model.log
         }
