@@ -1,4 +1,7 @@
-# Installing Elpis on Google Cloud Platform
+# Install Elpis on Google Cloud for Kaldi
+
+
+## Setup your account
 
 Create an account at [Google Cloud](https://cloud.google.com).
 
@@ -14,6 +17,8 @@ When the project has been created, the console will show the project's Dashboard
 
 To add a server to the project, open the left side Navigation Menu and select "Compute Engine". Then select "VM Instances". If this is the first time your Google account has used Cloud Platform you may be offered a free trial! If so, go through the process of signing up for it. Otherwise, you may need to add billing details to access VM instances (TODO add more info about that). You will need to enter credit card details during the free trial opt-in process, but you won't be billed unless you turn on Automatic Billing.
 
+
+## Create a Virtual Machine 
 
 Now that your account has free trial or billing set up, the VM instances page should show "Create" and "Import" buttons.
 
@@ -33,12 +38,12 @@ Paste the following code into the "Startup Script" box
 sudo apt update
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-curl -O https://download.docker.com/linux/debian/dists/buster/pool/stable/amd64/containerd.io_1.4.3-1_amd64.deb
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 sudo apt update
 sudo apt install ./containerd.io_1.4.3-1_amd64.deb
 sudo apt install -y docker-ce
-sudo docker run -d --rm -p 80:5001/tcp coedl/elpis:stable
+sudo chmod 666 /var/run/docker.sock
+sudo docker run -d --rm -p 80:5001/tcp coedl/elpis:latest
 ```
 
 Then press "Create"
