@@ -62,7 +62,7 @@ sudo chmod 666 /var/run/docker.sock
 docker pull coedl/elpis:hft
 
 # Handy little app to check NVIDIA GPUs stats
-sudo apt install nvtop
+sudo apt -y install nvtop
 
 # Get elpis
 cd ~
