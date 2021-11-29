@@ -1,3 +1,4 @@
+from typing import Callable, Dict
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
 import subprocess
@@ -5,12 +6,14 @@ from elpis.engines.common.objects.model import Model
 from elpis.engines.common.errors import InterfaceError
 
 MISSING_MODEL_MESSAGE = "No current model exists (perhaps create one first)"
-MISSING_MODEL_RESPONSE = jsonify({"status": 404, "data": MISSING_MODEL_MESSAGE})
+MISSING_MODEL_RESPONSE = jsonify(
+    {"status": 404, "data": MISSING_MODEL_MESSAGE})
 
 MISSING_LOG_MESSAGE = "No log file was found, couldn't parse the results"
 MISSING_LOG_RESPONSE = jsonify({"status": 404, "data": MISSING_LOG_MESSAGE})
 
 bp = Blueprint("model", __name__, url_prefix="/model")
+
 
 def run(cmd: str) -> str:
     import shlex
@@ -78,13 +81,13 @@ def list_existing():
     interface = app.config['INTERFACE']
     data = {
         "list": [{
-                'name': model['name'],
-                'dataset_name': model['dataset_name'],
-                'engine_name': model['engine_name'],
-                'pron_dict_name': model['pron_dict_name'],
-                'status': model['status'],
-                'results': model['results']
-                } for model in interface.list_models_verbose()]
+            'name': model['name'],
+            'dataset_name': model['dataset_name'],
+            'engine_name': model['engine_name'],
+            'pron_dict_name': model['pron_dict_name'],
+            'status': model['status'],
+            'results': model['results']
+        } for model in interface.list_models_verbose()]
     }
     return jsonify({
         "status": 200,
@@ -94,65 +97,52 @@ def list_existing():
 
 @bp.route("/settings", methods=['POST'])
 def settings():
-    model = app.config['CURRENT_MODEL']
-    if model is None:
-        return MISSING_MODEL_RESPONSE
-    if request.method == 'POST':
-        model.ngram = request.json['ngram']
-    data = {
-        "settings": {
-            "ngram": model.ngram
+    def setup(model):
+        if request.method == 'POST':
+            model.ngram = request.json['ngram']
+
+    def build_data(model):
+        return {
+            "settings": {
+                "ngram": model.ngram
+            }
         }
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+
+    return _model_response(setup=setup, build_data=build_data)
 
 
 @bp.route("/train", methods=['GET'])
 def train():
-    model: Model = app.config['CURRENT_MODEL']
-    if model is None:
-        return MISSING_MODEL_RESPONSE
-    model.train(on_complete=lambda: print('Trained model!'))
-    data = {
-        "status": model.status,
-        "stage_status": model.stage_status
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    def setup(model):
+        model.train(on_complete=lambda: print('Trained model!'))
+
+    def build_data(model):
+        return {
+            "status": model.status,
+            "stage_status": model.stage_status
+        }
+
+    return _model_response(setup=setup, build_data=build_data)
 
 
 @bp.route("/status", methods=['GET'])
 def status():
-    model: Model = app.config['CURRENT_MODEL']
-    if model is None:
-        return MISSING_MODEL_RESPONSE
-    data = {
-        "status": model.status,
-        "stage_status": model.stage_status
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    def build_data(model):
+        return {
+            "status": model.status,
+            "stage_status": model.stage_status
+        }
+    return _model_response(build_data=build_data)
+
 
 @bp.route("/log", methods=['GET'])
 def log():
-    model: Model = app.config['CURRENT_MODEL']
-    if model is None:
-        return MISSING_MODEL_RESPONSE
-    data = {
-        "log": model.log
-    }
-    print(log)
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    def build_data(model):
+        return {
+            "log": model.log
+        }
+    return _model_response(build_data=build_data)
+
 
 @bp.route("/results", methods=['GET'])
 def results():
@@ -167,6 +157,32 @@ def results():
     data = {
         "results": results
     }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
+
+def _model_response(build_data: Callable[[Model], Dict],
+                    setup: Callable[[Model], None] = (lambda model: None)):
+    """Sets up the model and returns the requested data, based on a supplied 
+    function to extract the data from the model, with an optional setup function
+    that will run first.
+
+    Parameters:
+        build_data: A function to extract the necessary information from the model.
+        setup: An optional function to run before the data transformation.
+
+    Returns:
+        A 200 response with the supplied data, if successful. 
+    """
+    model: Model = app.config['CURRENT_MODEL']
+    if model is None:
+        return MISSING_MODEL_RESPONSE
+
+    setup(model)
+    data = build_data(model)
+
     return jsonify({
         "status": 200,
         "data": data
