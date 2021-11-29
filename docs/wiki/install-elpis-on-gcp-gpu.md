@@ -23,10 +23,14 @@ For a basic machine, use these settings:
 * Add the script below to the `Management` > `Startup scripts` section
 
 ```shell
-# GPU startup script v0.1
+# GPU startup script v0.3
 
 # Check if this has been done before & skip if so
-if [[ -f /etc/startup_installed ]]; then exit 0; fi
+if [[ -f /etc/startup_installed ]];
+then
+  sudo chmod 666 /var/run/docker.sock
+  exit 0;
+fi
 
 
 # Install CUDA
@@ -63,6 +67,9 @@ sudo apt install nvtop
 # Get elpis
 cd ~
 git clone https://github.com/CoEDL/elpis.git
+
+# Will make it easier to copy model files etc out of the container
+mkdir state
 
 # Pull Docker image
 docker pull coedl/elpis:hft
