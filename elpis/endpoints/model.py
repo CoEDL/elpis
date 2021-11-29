@@ -4,8 +4,13 @@ import subprocess
 from elpis.engines.common.objects.model import Model
 from elpis.engines.common.errors import InterfaceError
 
-bp = Blueprint("model", __name__, url_prefix="/model")
+MISSING_MODEL_MESSAGE = "No current model exists (perhaps create one first)"
+MISSING_MODEL_RESPONSE = jsonify({"status": 404, "data": MISSING_MODEL_MESSAGE})
 
+MISSING_LOG_MESSAGE = "No log file was found, couldn't parse the results"
+MISSING_LOG_RESPONSE = jsonify({"status": 404, "data": MISSING_LOG_MESSAGE})
+
+bp = Blueprint("model", __name__, url_prefix="/model")
 
 def run(cmd: str) -> str:
     import shlex
@@ -91,8 +96,7 @@ def list_existing():
 def settings():
     model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status": 404,
-                        "data": "No current model exists (perhaps create one first)"})
+        return MISSING_MODEL_RESPONSE
     if request.method == 'POST':
         model.ngram = request.json['ngram']
     data = {
@@ -110,8 +114,7 @@ def settings():
 def train():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status": 404,
-                        "data": "No current model exists (perhaps create one first)"})
+        return MISSING_MODEL_RESPONSE
     model.train(on_complete=lambda: print('Trained model!'))
     data = {
         "status": model.status,
@@ -127,8 +130,7 @@ def train():
 def status():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status": 404,
-                        "data": "No current model exists (perhaps create one first)"})
+        return MISSING_MODEL_RESPONSE
     data = {
         "status": model.status,
         "stage_status": model.stage_status
@@ -142,8 +144,7 @@ def status():
 def log():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status": 404,
-                        "data": "No current model exists (perhaps create one first)"})
+        return MISSING_MODEL_RESPONSE
     data = {
         "log": model.log
     }
@@ -157,13 +158,12 @@ def log():
 def results():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return jsonify({"status": 404, "data": "No current model exists (perhaps create one first)"})
+        return MISSING_MODEL_RESPONSE
     try:
         results = model.get_train_results()
     except FileNotFoundError:
         print("Results file not found.")
-        return jsonify({"status": 404,
-                        "data": "No log file was found, couldn't parse the results"})
+        return MISSING_LOG_RESPONSE
     data = {
         "results": results
     }
