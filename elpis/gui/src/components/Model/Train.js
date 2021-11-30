@@ -13,7 +13,11 @@ import {
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import ReactTimeout from "react-timeout";
-import { modelTrain, modelStatus, modelGetLogs } from "redux/actions/modelActions";
+import {
+  modelTrain,
+  modelStatus,
+  modelGetLogs,
+} from "redux/actions/modelActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
@@ -46,16 +50,17 @@ class ModelTrain extends Component {
   };
 
   handleLogDownload = async () => {
-    const { log, modelGetLogs } = this.props
+    const { log, modelGetLogs } = this.props;
 
     if (!log) {
-        // If we haven't currently downloaded the logs, make a request first.
-        let data = await modelGetLogs();
-        downloadjs(data.log, "log.txt", "text/txt");
+      // If we haven't currently downloaded the logs, make a request first.
+      let data = await modelGetLogs();
+
+      downloadjs(data.log, "log.txt", "text/txt");
     } else {
-        downloadjs(log, "log.txt", "text/txt");
+      downloadjs(log, "log.txt", "text/txt");
     }
-  }
+  };
 
   onScroll = () => {};
 
@@ -149,7 +154,10 @@ class ModelTrain extends Component {
                           <p>{status}</p>
                           <Button
                             onClick={this.handleLogDownload}
-                            disabled={!name || !(status === "trained" || status === "error")}
+                            disabled={
+                              !name ||
+                              !(status === "trained" || status === "error")
+                            }
                           >
                             {t("model.train.logButton")}
                           </Button>
@@ -201,7 +209,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   modelGetLogs: () => {
     dispatch(modelGetLogs());
-  }
+  },
 });
 
 export default connect(
