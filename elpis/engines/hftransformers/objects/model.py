@@ -87,7 +87,6 @@ class HFTransformersModel(BaseModel):
         self.config['engine_name'] = "hftransformers"
         self.config['status'] = "untrained"
 
-        self._setup_logging()
         self._setup_stages()
 
     @classmethod
@@ -98,6 +97,7 @@ class HFTransformersModel(BaseModel):
 
     def train(self, on_complete:Callable=None):
         model_args, data_args, training_args = self.get_arguments()
+        self._setup_logging(training_args)
 
         # Set seed before initializing model.
         set_seed(training_args.seed)
