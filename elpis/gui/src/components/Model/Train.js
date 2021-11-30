@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
 import {
   Accordion,
   Grid,
@@ -10,8 +10,8 @@ import {
   Button,
   Message,
 } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { withTranslation } from "react-i18next";
+import {connect} from "react-redux";
+import {withTranslation} from "react-i18next";
 import ReactTimeout from "react-timeout";
 import {
   modelTrain,
@@ -41,7 +41,7 @@ class ModelTrain extends Component {
   };
 
   handleModelStatus = () => {
-    const { status, modelStatus } = this.props;
+    const {status, modelStatus} = this.props;
 
     modelStatus();
 
@@ -50,7 +50,7 @@ class ModelTrain extends Component {
   };
 
   handleLogDownload = async () => {
-    const { log, modelGetLogs } = this.props;
+    const {log, modelGetLogs} = this.props;
 
     if (!log) {
       // If we haven't currently downloaded the logs, make a request first.
@@ -67,127 +67,127 @@ class ModelTrain extends Component {
   follow = () => {};
 
   selectAccordion = (i) => {
-    this.setState({ ...this.state, activeIndex: i });
+    this.setState({...this.state, activeIndex: i});
   };
 
   render() {
-    const { t, currentEngine, name, settings, status, stage_status } =
+    const {t, currentEngine, name, settings, status, stage_status} =
       this.props;
 
-    return (
-      <div>
-        <Branding />
-        <Segment>
-          <Grid centered>
-            <Grid.Column width={4}>
-              <SideNav />
-            </Grid.Column>
-            <Grid.Column width={12}>
-              <Header as="h1" text="true">
-                {t("model.train.title")}
-              </Header>
-              <CurrentModelName />
-              {!currentEngine && (
-                <p>{t("engine.common.noCurrentEngineLabel")}</p>
-              )}
-              {currentEngine && !name && (
-                <p>{t("model.common.noCurrentModelLabel")}</p>
-              )}
-              {currentEngine && name && (
-                <>
-                  {/* Only Kaldi has settings. Should make this dynamic */}
-                  {currentEngine && currentEngine === "kaldi" && (
-                    <Card fluid>
-                      <Card.Content header={t("model.train.settingsHeader")} />
-                      <Card.Content
-                        description={
-                          t("model.settings.ngramLabel") + " " + settings.ngram
-                        }
-                      />
-                    </Card>
-                  )}
-                  <Message icon>
-                    <Message.Content className="train-log">
-                      {stage_status && (
-                        <div className="stages">
-                          <Accordion fluid styled exclusive={false}>
-                            {Object.keys(stage_status).map((stage, i) => {
-                              let name = stage_status[stage]["name"];
-                              let status = stage_status[stage]["status"];
-                              let log = stage_status[stage]["log"];
-                              let icon =
-                                status === "in-progress" ? (
-                                  <Icon name="circle notched" loading />
-                                ) : (
-                                  <Icon name="dropdown" />
-                                );
-                              let stage_status_icon =
-                                status === "complete" ? (
-                                  <Icon name="check" />
-                                ) : (
-                                  ""
-                                );
-                              let active =
-                                this.state.activeIndex === i ||
-                                status === "in-progress";
+        return (
+            <div>
+                <Branding />
+                <Segment>
+                    <Grid centered>
+                        <Grid.Column width={4}>
+                            <SideNav />
+                        </Grid.Column>
+                        <Grid.Column width={12}>
+                            <Header as="h1" text="true">
+                                {t("model.train.title")}
+                            </Header>
+                            <CurrentModelName />
+                            {!currentEngine && (
+                                <p>{t("engine.common.noCurrentEngineLabel")}</p>
+                            )}
+                            {currentEngine && !name && (
+                                <p>{t("model.common.noCurrentModelLabel")}</p>
+                            )}
+                            {currentEngine && name && (
+                                <>
+                                    {/* Only Kaldi has settings. Should make this dynamic */}
+                                    {currentEngine && currentEngine === "kaldi" && (
+                                        <Card fluid>
+                                            <Card.Content header={t("model.train.settingsHeader")} />
+                                            <Card.Content
+                                                description={
+                                                    t("model.settings.ngramLabel") + " " + settings.ngram
+                                                }
+                                            />
+                                        </Card>
+                                    )}
+                                    <Message icon>
+                                        <Message.Content className="train-log">
+                                            {stage_status && (
+                                                <div className="stages">
+                                                    <Accordion fluid styled exclusive={false}>
+                                                        {Object.keys(stage_status).map((stage, i) => {
+                                                            let name = stage_status[stage]["name"];
+                                                            let status = stage_status[stage]["status"];
+                                                            let log = stage_status[stage]["log"];
+                                                            let icon =
+                                                                status === "in-progress" ? (
+                                                                    <Icon name="circle notched" loading />
+                                                                ) : (
+                                                                    <Icon name="dropdown" />
+                                                                );
+                                                            let stage_status_icon =
+                                                                status === "complete" ? (
+                                                                    <Icon name="check" />
+                                                                ) : (
+                                                                    ""
+                                                                );
+                                                            let active =
+                                                                this.state.activeIndex === i ||
+                                                                status === "in-progress";
 
-                              return (
-                                <div key={name}>
-                                  <Accordion.Title
-                                    index={i}
-                                    active={active}
-                                    onClick={() => this.selectAccordion(i)}
-                                  >
-                                    {icon}
-                                    {name} {stage_status_icon}
-                                  </Accordion.Title>
-                                  <Accordion.Content
-                                    className="accordion_log"
-                                    active={this.state.activeIndex === i}
-                                  >
-                                    {log}
-                                  </Accordion.Content>
-                                </div>
-                              );
-                            })}
-                          </Accordion>
-                          <p>{status}</p>
-                          <Button
-                            onClick={this.handleLogDownload}
-                            disabled={
-                              !name ||
-                              !(status === "trained" || status === "error")
-                            }
-                          >
-                            {t("model.train.logButton")}
-                          </Button>
-                        </div>
-                      )}
-                    </Message.Content>
-                  </Message>
-                  <Segment>
-                    <Button
-                      onClick={this.handleModelTrain}
-                      disabled={!name || status !== "ready"}
-                    >
-                      {t("model.train.trainButton")}
-                    </Button>
-                    <Button
-                      as={Link}
-                      to={urls.gui.model.results}
-                      disabled={status === "ready" || status === "training"}
-                    >
-                      {t("common.nextButton")}
-                    </Button>
-                  </Segment>
-                </>
-              )}
-            </Grid.Column>
-          </Grid>
-        </Segment>
-      </div>
-    );
-  }
+                                                            return (
+                                                                <div key={name}>
+                                                                    <Accordion.Title
+                                                                        index={i}
+                                                                        active={active}
+                                                                        onClick={() => this.selectAccordion(i)}
+                                                                    >
+                                                                        {icon}
+                                                                        {name} {stage_status_icon}
+                                                                    </Accordion.Title>
+                                                                    <Accordion.Content
+                                                                        className="accordion_log"
+                                                                        active={this.state.activeIndex === i}
+                                                                    >
+                                                                        {log}
+                                                                    </Accordion.Content>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </Accordion>
+                                                    <p>{status}</p>
+                                                    <Button
+                                                        onClick={this.handleLogDownload}
+                                                        disabled={
+                                                            !name ||
+                                                            !(status === "trained" || status === "error")
+                                                        }
+                                                    >
+                                                        {t("model.train.logButton")}
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </Message.Content>
+                                    </Message>
+                                    <Segment>
+                                        <Button
+                                            onClick={this.handleModelTrain}
+                                            disabled={!name || status !== "ready"}
+                                        >
+                                            {t("model.train.trainButton")}
+                                        </Button>
+                                        <Button
+                                            as={Link}
+                                            to={urls.gui.model.results}
+                                            disabled={status === "ready" || status === "training"}
+                                        >
+                                            {t("common.nextButton")}
+                                        </Button>
+                                    </Segment>
+                                </>
+                            )}
+                        </Grid.Column>
+                    </Grid>
+                </Segment>
+            </div>
+        );
+    }
 }
 
 const mapStateToProps = (state) => {

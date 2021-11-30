@@ -62,7 +62,6 @@
     "padded-blocks": ["error", "never"],
     "lines-between-class-members": ["error", "always"],
     "no-multiple-empty-lines": ["error", {max: 2}],
-    "multiline-ternary": ["error", "always-multiline"],
     "react/jsx-curly-spacing": ["error", {when: "never"}],
     "react/jsx-closing-tag-location": "error",
     "react/jsx-closing-bracket-location": "error",
