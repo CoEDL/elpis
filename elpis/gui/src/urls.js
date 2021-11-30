@@ -69,6 +69,7 @@ export default {
             train: "/api/model/train",
             status: "/api/model/status",
             results: "/api/model/results",
+            log: "/api/model/log",
         },
         transcription: {
             new: "/api/transcription/new",

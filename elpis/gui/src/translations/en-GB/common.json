@@ -173,7 +173,8 @@
             "logsHeader": "Logs",
             "logsDescription": "gory detail from Kaldi (coming soon)",
             "trainButton": "Start training",
-            "statusButton": "Check progress"
+            "statusButton": "Check progress",
+            "logButton": "Download logs"
         },
         "results": {
             "title": "Results",

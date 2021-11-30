@@ -676,7 +676,7 @@ class HFTransformersModel(BaseModel):
         if stage not in TRAINING_STAGES:
             return
 
-        status = "completed" if complete else "in-progress"
+        status = "complete" if complete else "in-progress"
         index = TRAINING_STAGES.index(stage)
         self.stage = self.index_prefixed_stages[index]
 

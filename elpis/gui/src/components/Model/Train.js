@@ -13,11 +13,12 @@ import {
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import ReactTimeout from "react-timeout";
-import { modelTrain, modelStatus } from "redux/actions/modelActions";
+import { modelTrain, modelStatus, modelGetLogs } from "redux/actions/modelActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
 import urls from "urls";
+import downloadjs from "downloadjs";
 
 class ModelTrain extends Component {
   state = {
@@ -43,6 +44,18 @@ class ModelTrain extends Component {
     if (status === "trained")
       this.props.clearInterval(this.state.statusInterval);
   };
+
+  handleLogDownload = async () => {
+    const { log, modelGetLogs } = this.props
+
+    if (!log) {
+        // If we haven't currently downloaded the logs, make a request first.
+        let data = await modelGetLogs();
+        downloadjs(data.log, "log.txt", "text/txt");
+    } else {
+        downloadjs(log, "log.txt", "text/txt");
+    }
+  }
 
   onScroll = () => {};
 
@@ -134,6 +147,12 @@ class ModelTrain extends Component {
                             })}
                           </Accordion>
                           <p>{status}</p>
+                          <Button
+                            onClick={this.handleLogDownload}
+                            disabled={!name || !(status === "trained" || status === "error")}
+                          >
+                            {t("model.train.logButton")}
+                          </Button>
                         </div>
                       )}
                     </Message.Content>
@@ -170,6 +189,7 @@ const mapStateToProps = (state) => {
     status: state.model.status,
     stage_status: state.model.stage_status,
     currentEngine: state.engine.engine,
+    log: state.model.log,
   };
 };
 const mapDispatchToProps = (dispatch) => ({
@@ -179,6 +199,9 @@ const mapDispatchToProps = (dispatch) => ({
   modelStatus: () => {
     dispatch(modelStatus());
   },
+  modelGetLogs: () => {
+    dispatch(modelGetLogs());
+  }
 });
 
 export default connect(

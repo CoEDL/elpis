@@ -250,3 +250,37 @@ const modelResultsFailure = error => ({
     type: actionTypes.MODEL_RESULTS_FAILURE,
     response: {error},
 });
+
+
+/* * * * * * * * * * * *  LOGS  * * * * * * * * * * *  */
+export function modelGetLogs() {
+    const url = baseUrl + urls.api.model.log;
+    var responseData;
+
+    return async dispatch => {
+        dispatch(modelGetLogStarted());
+        await axios.get(url)
+            .then(response => {
+                responseData = response.data;
+                dispatch(modelGetLogSuccess(response));
+            })
+            .catch(error => {
+                dispatch(modelGetLogFailure(error));
+                throw error;
+            });
+
+        return responseData;
+    };
+}
+
+const modelGetLogStarted = () => ({
+    type: actionTypes.MODEL_GET_LOG_STARTED,
+});
+const modelGetLogSuccess = response => ({
+    type: actionTypes.MODEL_GET_LOG_SUCCESS,
+    response: {...response},
+});
+const modelGetLogFailure = error => ({
+    type: actionTypes.MODEL_GET_LOG_FAILURE,
+    response: {error},
+});
