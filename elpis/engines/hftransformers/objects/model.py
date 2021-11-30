@@ -573,7 +573,7 @@ class HFTransformersModel(BaseModel):
 
     def train(self, on_complete:Callable=None):
         model_args, data_args, training_args = self.get_arguments()
-        self.setup_logging(training_args)
+        self._setup_logging(training_args)
 
         # Set seed before initializing model.
         set_seed(training_args.seed)
