@@ -6,11 +6,10 @@ from elpis.engines.common.objects.model import Model
 from elpis.engines.common.errors import InterfaceError
 
 MISSING_MODEL_MESSAGE = "No current model exists (perhaps create one first)"
-MISSING_MODEL_RESPONSE = jsonify(
-    {"status": 404, "data": MISSING_MODEL_MESSAGE})
+MISSING_MODEL_RESPONSE = {"status": 404, "data": MISSING_MODEL_MESSAGE}
 
 MISSING_LOG_MESSAGE = "No log file was found, couldn't parse the results"
-MISSING_LOG_RESPONSE = jsonify({"status": 404, "data": MISSING_LOG_MESSAGE})
+MISSING_LOG_RESPONSE = {"status": 404, "data": MISSING_LOG_MESSAGE}
 
 bp = Blueprint("model", __name__, url_prefix="/model")
 
@@ -148,12 +147,12 @@ def log():
 def results():
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return MISSING_MODEL_RESPONSE
+        return jsonify(MISSING_MODEL_RESPONSE)
     try:
         results = model.get_train_results()
     except FileNotFoundError:
         print("Results file not found.")
-        return MISSING_LOG_RESPONSE
+        return jsonify(MISSING_LOG_RESPONSE)
     data = {
         "results": results
     }
@@ -178,7 +177,7 @@ def _model_response(build_data: Callable[[Model], Dict],
     """
     model: Model = app.config['CURRENT_MODEL']
     if model is None:
-        return MISSING_MODEL_RESPONSE
+        return jsonify(MISSING_MODEL_RESPONSE)
 
     setup(model)
     data = build_data(model)
