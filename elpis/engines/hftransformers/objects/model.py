@@ -88,6 +88,7 @@ class HFTransformersModel(BaseModel):
         self.config['status'] = "untrained"
 
         self._setup_stages()
+        self._setup_logging()
 
     @classmethod
     def load(cls, base_path: Path):
@@ -95,9 +96,13 @@ class HFTransformersModel(BaseModel):
         self.pron_dict = None
         return self
 
+    @property
+    def log(self):
+        with open(self.run_log_path) as logs:
+            return logs.read()
+
     def train(self, on_complete:Callable=None):
         model_args, data_args, training_args = self.get_arguments()
-        self._setup_logging(training_args)
 
         # Set seed before initializing model.
         set_seed(training_args.seed)
@@ -307,7 +312,7 @@ class HFTransformersModel(BaseModel):
         stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
         super().build_stage_status(stage_names)
 
-    def _setup_logging(self, training_args):
+    def _setup_logging(self) -> None:
         """
         Setup logging.
         """
@@ -317,6 +322,8 @@ class HFTransformersModel(BaseModel):
 
         sys.stdout = open(self.run_log_path, 'w')
         sys.stderr = sys.stdout
+
+        _, _, training_args = self.get_arguments()
 
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
@@ -637,7 +644,7 @@ class HFTransformersModel(BaseModel):
             if is_main_process(training_args.local_rank):
                 processor.save_pretrained(training_args.output_dir)
 
-            print(f"len of dataset: {len(dataset)}")
+            logger.info(f"len of dataset: {len(dataset)}")
             metrics = train_result.metrics
             max_train_samples = (
                 data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset['train'])
@@ -747,10 +754,14 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
         return tokens
 
     #############################################
-    # Not sure if it is useful yet (the tokenizer function, later, will create a pattern with longest graphemes before the shortest ones, but maybe some linguists won’t give the graphemes in an classified way and this function could be useful for printing data or whatever…
+    # Not sure if it is useful yet (the tokenizer function, later, will create a
+    # pattern with longest graphemes before the shortest ones, but maybe some
+    # linguists won’t give the graphemes in an classified way and this function
+    # could be useful for printing data or whatever…
     def classify_graphemes(graphemes: Union[List[str], Set[str]], by: Callable = len) -> Dict[int, List[str]]:
-        """
-        Returns a dict where keys are the criteria results of a function applied on graphemes, and values lists of graphemes under this criteria (length by default).
+        """ Returns a dict where keys are the criteria results of a function 
+        applied on graphemes, and values lists of graphemes under this criteria 
+        (length by default).
         """
         grapheme_dict = {}
         for grapheme in graphemes:
