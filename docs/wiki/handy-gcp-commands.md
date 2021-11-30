@@ -70,9 +70,16 @@ gcloud compute ssh --zone "us-central1-c" "instance-3"  --tunnel-through-iap --p
 
 Connect to the tensorboard that shows train loss (currently in the HFT branch).
 
+
+Do this once for your GCP account:
 * Add a Firewall rule in `GCP > VPC networks > Firewall` for TCP port `6006` using a tagname `firewall`.
-* Create/edit a VM instance.
+
+
+Then, for your VM instances:
 * Include the `firewall` tagname in the list of VM Network tags.
 * Start the VM and connect to it. `gcloud compute ssh instance-3`
 * Start Docker and expose the 6006 port. `docker run --gpus all -it -p 80:5001/tcp -p 6006:6006/tcp --entrypoint /bin/zsh coedl/elpis:hft`
 * Run Tensorboard with host arg. `tensorboard --logdir=/state/models/MODEL-HASH/runs --port 6006 --host=0.0.0.0`
+* Browse to the machine's IP address, on http. `http://34.132.91.225:6006`
+
+If the page isn't connecting, check that you aren't on a VPN which could be blocking the port.
