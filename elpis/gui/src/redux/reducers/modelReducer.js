@@ -102,12 +102,13 @@ const model = (state = initState, action) => {
         
         case actionTypes.MODEL_STATUS_FAILURE:
         case actionTypes.MODEL_TRAIN_FAILURE:
-            return {...state, status: "error"}
+            return {...state, status: "error"};
         
         case actionTypes.MODEL_GET_LOG_SUCCESS:
             if (status === 200) {
                 return {...state, log: action.response.data.log};
             }
+
             return {...state};
 
         default:
