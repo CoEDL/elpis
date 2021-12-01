@@ -54,7 +54,7 @@ class ModelTrain extends Component {
 
     if (!log) {
       // If we haven't currently downloaded the logs, make a request first.
-      let data = await modelGetLogs()();
+      let data = await modelGetLogs();
 
       console.log(data);
       downloadjs(data.log, "log.txt", "text/txt");
