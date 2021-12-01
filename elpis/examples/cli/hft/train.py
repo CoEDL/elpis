@@ -22,7 +22,7 @@ from pathlib import Path
 import os
 
 
-USE_DATASET = 'timit'
+USE_DATASET = 'gk'
 
 if USE_DATASET == 'gk':
     DATASET_DIR = '/datasets/gk'

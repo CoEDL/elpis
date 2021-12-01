@@ -67,6 +67,7 @@ WORD_DELIMITER_TOKEN = " "
 NUM_TRAIN_EPOCHS = "10"
 MINIMUM_DURATION_SECONDS = 0
 MAXIMUM_DURATION_SECONDS = 60
+LEARNING_RATE = "1e-4"
 
 # Training Stages
 TOKENIZATION = "tokenization"
@@ -86,6 +87,7 @@ FINISHED = "trained"
 
 # Use Mixed precision training
 FP16 = True if torch.cuda.is_available() else False
+
 
 class HFTransformersModel(BaseModel):
 
@@ -118,6 +120,9 @@ class HFTransformersModel(BaseModel):
         # Use this when adding text to tensorboard so that we get to see predictions for each compute_metric run
         self.compute_metrics_count = 0
 
+        # Use this to test audio - eg save resampled audio for listening to
+        Path('/tmp/audio').mkdir(parents=True, exist_ok=True)
+        self.tmp_audio_path = Path('/tmp/audio')
 
     @classmethod
     def load(cls, base_path: Path):
@@ -161,7 +166,7 @@ class HFTransformersModel(BaseModel):
             "per_device_train_batch_size": "4",
             "per_device_eval_batch_size": "4",
             "gradient_accumulation_steps": "2",
-            "learning_rate": "5e-4",
+            "learning_rate": LEARNING_RATE,
             "weight_decay": "0.005",
             "warmup_steps": "1000",
             "evaluation_strategy": "steps",
@@ -254,9 +259,9 @@ class HFTransformersModel(BaseModel):
             test_size=(1-self.data_args.train_size),
             random_state=self.data_args.split_seed
         )
-        if DEBUG:
-            train_annos = train_annos[:10]
-            devtest_annos = devtest_annos[:6]
+        # if DEBUG:
+        train_annos = train_annos[:10]
+        devtest_annos = devtest_annos[:6]
         #dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
         dev_annos = test_annos = devtest_annos
 
@@ -389,11 +394,12 @@ class HFTransformersModel(BaseModel):
         speech = self.prepare_speech()
 
         def speech_file_to_array_fn(batch):
-            #speech_array, sampling_rate = torchaudio.load(batch["path"])
-            #process = psutil.Process(os.getpid())
-            #print(process.memory_info().rss)
+            path = batch['path']
+            start_ms = batch['start_ms']
+            stop_ms = batch['stop_ms']
+            unique_key = f'{path}{start_ms}{stop_ms}'
+            batch["speech"] = speech[unique_key]
             batch["sampling_rate"] = HFTransformersModel.SAMPLING_RATE
-            batch["speech"] = speech[batch['path']]
             batch["target_text"] = batch["text"]
             batch['duration'] = (batch['stop_ms'] - batch['start_ms'])/1000
             batch['duration'] = len(batch['speech'])/batch['sampling_rate']
@@ -404,6 +410,9 @@ class HFTransformersModel(BaseModel):
             remove_columns=self.hf_dataset['train'].column_names,
             num_proc=self.data_args.preprocessing_num_workers,
         )
+        print("=== hf_dataset")
+        print(self.hf_dataset)
+
 
     def prepare_dataset(self):
         print("=== Preparing Dataset")
@@ -430,9 +439,7 @@ class HFTransformersModel(BaseModel):
         print("=== Preparing Speech")
         speech = {}
         audio_paths = set()
-        rejected = defaultdict(lambda: [])
         rejected_count = 0
-
         for utt in self.hf_dataset['train']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for utt in self.hf_dataset['dev']:
@@ -441,31 +448,40 @@ class HFTransformersModel(BaseModel):
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for path, text, start_ms, stop_ms in audio_paths:
             audio_metadata = torchaudio.info(path)
+            start_frame = int(start_ms * (audio_metadata.sample_rate/1000))
+            end_frame = int(stop_ms * (audio_metadata.sample_rate/1000))
+            num_frames = end_frame - start_frame
             dur_ms = stop_ms - start_ms
-            start_frame = int((start_ms/1000) * audio_metadata.sample_rate)
-            stop_frame = int((stop_ms/1000) * audio_metadata.sample_rate)
-            num_frames = stop_frame - start_frame
-            speech_array, sampling_rate = torchaudio.load(filepath=path,
-                                                          frame_offset=start_frame,
-                                                          num_frames=num_frames)
-            # samples = speech_array.size(dim=1)
+            speech_array, sample_rate = torchaudio.load(filepath=path, frame_offset=start_frame, num_frames=num_frames)
             # Check that frames exceeds number of characters, wav file is not all zeros, and duration between min, max
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
                     and MINIMUM_DURATION_SECONDS < dur_ms/1000 < MAXIMUM_DURATION_SECONDS:
-                resampler = torchaudio.transforms.Resample(sampling_rate, HFTransformersModel.SAMPLING_RATE)
-                speech[path] = resampler(speech_array).squeeze().numpy()
+                # Resample if required
+                if sample_rate != HFTransformersModel.SAMPLING_RATE:
+                    print(f'Resample from {sample_rate} to {HFTransformersModel.SAMPLING_RATE} | '
+                          f'{os.path.basename(path).rjust(20)} | '
+                          f'{str(start_ms/1000).rjust(15)} : {str(stop_ms/1000).ljust(15)} | '
+                          f'{str(start_frame).rjust(15)} : {str(end_frame).ljust(15)}')
+                    resampler = torchaudio.transforms.Resample(sample_rate, HFTransformersModel.SAMPLING_RATE)
+                    speech_array = resampler(speech_array)
+                # Use a unique key for the speech key
+                unique_key = f'{path}{start_ms}{stop_ms}'
+                # print(unique_key)
+                speech[unique_key] = speech_array.squeeze().numpy()
+                # For debugging/ checking dataset, generate an audio file for listening
+                # torchaudio.save(self.tmp_audio_path.joinpath(os.path.basename(path)), speech_array, HFTransformersModel.SAMPLING_RATE)
             else:
                 rejected_count += 1
-                rejected[path].append(start_ms)
                 print(f'rejected {os.path.basename(path)} {start_ms} {stop_ms}')
 
-        self.hf_dataset = self.hf_dataset.filter(lambda x: x["path"] in speech.keys() and x["start_ms"] not in rejected[x["path"]])
+        # Remove rejected speech by filtering on speech matching length the required conditions
+        self.hf_dataset = self.hf_dataset.filter(lambda x: f'{path}{start_ms}{stop_ms}' in speech.keys())
         print(rejected_count, "files removed due to number of frames, zero wav or too short")
-
+        # Output some examples of the data for sanity check
         texts = [x["text"] for x in self.hf_dataset["train"]]
         if len(texts) > 10:
             print(f"Random sample of {len(texts)} valid transcriptions from the original training set")
-            print("\n".join(random.choices(texts, k=len(texts))))
+            print("\n".join(random.choices(texts, k=10)))
         else:
             print(f"All {len(texts)} valid transcriptions from the original training set")
             print("\n".join(texts))
@@ -534,7 +550,7 @@ class HFTransformersModel(BaseModel):
         set_seed(self.training_args.seed)
 
         # 1. Tokenization
-        print('Tokenizing...')
+        print('=== Tokenizing')
         self._set_finished_training(False)
         self._set_stage(TOKENIZATION)
 
@@ -547,13 +563,11 @@ class HFTransformersModel(BaseModel):
         # Load pretrained model and tokenizer
         #
         # Distributed training:
-        # The .from_pretrained methods guarantee that only one local process can concurrently
-        # download model & vocab.
+        # The .from_pretrained methods guarantee that only one local process can concurrently download model & vocab.
 
         # TODO Get the device from the training args.
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logger.info(f'Running on device: {device}.')
-        print(f'Running on device: {device}.')
 
         tokenizer = self.get_tokenizer(data_dir)
         feature_extractor = self.get_feature_extractor()
@@ -565,7 +579,6 @@ class HFTransformersModel(BaseModel):
 
         # 2. Preprocessing the datasets.
         # We need to read the audio files as arrays and tokenize the targets.
-        print('Preprocessing the dataset.')
         self._set_stage(PREPROCESSING)
         self.preprocess_dataset()
         self.prepare_dataset()
