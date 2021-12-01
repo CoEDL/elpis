@@ -88,7 +88,6 @@ class HFTransformersModel(BaseModel):
         self.config['status'] = "untrained"
 
         self._setup_stages()
-        self._setup_logging()
 
     @classmethod
     def load(cls, base_path: Path):
@@ -106,6 +105,8 @@ class HFTransformersModel(BaseModel):
 
         # Set seed before initializing model.
         set_seed(training_args.seed)
+        self._setup_logging(training_args)
+
 
         # 1. Tokenization
         self._set_finished_training(False)
@@ -312,7 +313,7 @@ class HFTransformersModel(BaseModel):
         stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
         super().build_stage_status(stage_names)
 
-    def _setup_logging(self) -> None:
+    def _setup_logging(self, training_args) -> None:
         """
         Setup logging.
         """
@@ -322,8 +323,6 @@ class HFTransformersModel(BaseModel):
 
         sys.stdout = open(self.run_log_path, 'w')
         sys.stderr = sys.stdout
-
-        _, _, training_args = self.get_arguments()
 
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
