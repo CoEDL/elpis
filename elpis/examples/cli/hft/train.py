@@ -87,7 +87,7 @@ while model_name in elpis.list_models():
     model_name = f"{MODEL_NAME}{i}"
 print('Making new model', model_name)
 model = elpis.new_model(model_name)
-print('*** Made model', model.hash)
+print('Made model', model.hash)
 print('Linking dataset')
 model.link_dataset(dataset)
 if os.path.isdir("/state/models/latest"):
