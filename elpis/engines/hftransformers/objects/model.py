@@ -103,7 +103,7 @@ class HFTransformersModel(BaseModel):
         self.config['ngram'] = None
         self.config['engine_name'] = "hftransformers"
         self.config['status'] = "untrained"
-        self.train_results = {}
+        self.config['results'] = {}
 
         # Setup logging
         # self.run_log_path = self.path.joinpath('train.log')
@@ -640,7 +640,7 @@ class HFTransformersModel(BaseModel):
             trainer.save_metrics("eval", metrics)
             print("*** metrics")
             print(metrics)
-            self.train_results = metrics
+            self.config['results'] = metrics
 
             # {'eval_loss': 6.958859443664551, 'eval_wer': 1.0, 'eval_runtime': 0.9987, 'eval_samples_per_second': 1.001,
             #  'epoch': 3.0, 'eval_samples': 1}
@@ -670,10 +670,10 @@ class HFTransformersModel(BaseModel):
         # 'eval_samples_per_second': 0.203,
         # 'epoch': 3.0,
         # 'eval_samples': 1
-        results = {"comparison_val": float(self.train_results['eval_wer']),
+        results = {"comparison_val": float(self.config['results']['eval_wer']),
                    # property common to all engines so the GUI can sort models by a result value
-                   "wer": float(self.train_results['eval_wer']),
-                   "eval_loss": self.train_results['eval_loss']
+                   "wer": float(self.config['results']['eval_wer']),
+                   "eval_loss": self.config['results']['eval_loss']
                    }
         return results
     
