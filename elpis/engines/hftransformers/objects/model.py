@@ -297,8 +297,10 @@ class HFTransformersModel(BaseModel):
         tokenizer = Wav2Vec2CTCTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
         return tokenizer
 
-    def create_vocabulary(self, data_dir, word_delimiter_token, file_name="vocab.json"):
+    def create_vocabulary(self, data_dir, word_delimiter_token):
         language_data = self.get_language_data(data_dir)
+
+        vocab_json_file = self.path.joinpath("vocab.json")
 
         def extract_all_chars(batch):
             all_text = " ".join(batch["text"])
@@ -344,9 +346,9 @@ class HFTransformersModel(BaseModel):
         if word_delimiter_token != " " and " " in vocab_dict:
             vocab_dict[word_delimiter_token] = vocab_dict.get(" ", len(vocab_dict))
             del vocab_dict[" "]
-        with open(file_name, "w") as vocab_file:
+        with open(vocab_json_file, "w") as vocab_file:
             json.dump(vocab_dict, vocab_file, ensure_ascii=False)
-        return file_name
+        return vocab_json_file
 
     """
     def tokenize(self, data_args, train_dataset, eval_dataset):
