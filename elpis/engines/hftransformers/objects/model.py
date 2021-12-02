@@ -103,6 +103,7 @@ class HFTransformersModel(BaseModel):
         self.config['ngram'] = None
         self.config['engine_name'] = "hftransformers"
         self.config['status'] = "untrained"
+        self.train_results = {}
 
         # Setup logging
         # self.run_log_path = self.path.joinpath('train.log')
@@ -629,7 +630,6 @@ class HFTransformersModel(BaseModel):
         
         # 4. Evaluation
         self._set_stage(EVALUATION)
-        results = {}
         if self.training_args.do_eval:
             logger.info("*** Evaluate ***")
             metrics = trainer.evaluate()
@@ -640,13 +640,13 @@ class HFTransformersModel(BaseModel):
             trainer.save_metrics("eval", metrics)
             print("*** metrics")
             print(metrics)
+            self.train_results = metrics
 
             # {'eval_loss': 6.958859443664551, 'eval_wer': 1.0, 'eval_runtime': 0.9987, 'eval_samples_per_second': 1.001,
             #  'epoch': 3.0, 'eval_samples': 1}
         
         self._set_stage(EVALUATION, complete=True)
         self._set_finished_training(True)
-        return results
 
     def _set_finished_training(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
@@ -663,8 +663,19 @@ class HFTransformersModel(BaseModel):
         self.stage_status = self.stage, status, '', ''
 
     def get_train_results(self) -> Dict[str, float]:
-        # TODO Ask Ben what's meant to go here
-        return { "comparison_val": 6.9 }
+        # Sample results data
+        # 'eval_loss': 6.954674243927002,
+        # 'eval_wer': 1.0,
+        # 'eval_runtime': 4.9278,
+        # 'eval_samples_per_second': 0.203,
+        # 'epoch': 3.0,
+        # 'eval_samples': 1
+        results = {"comparison_val": float(self.train_results['eval_wer']),
+                   # property common to all engines so the GUI can sort models by a result value
+                   "wer": float(self.train_results['eval_wer']),
+                   "eval_loss": self.train_results['eval_loss']
+                   }
+        return results
     
 
 class ElpisTokenizer(Wav2Vec2CTCTokenizer):
