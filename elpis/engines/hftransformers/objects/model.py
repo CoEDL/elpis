@@ -539,7 +539,7 @@ class HFTransformersModel(BaseModel):
         self.data_args = data_args
         self.training_args = training_args
 
-    def pretrain(self):
+    def train(self, on_complete:Callable=None):
         self.tb_writer = SummaryWriter(self.path / 'runs')
 
         model_args, data_args, training_args = self.get_arguments()
@@ -585,12 +585,11 @@ class HFTransformersModel(BaseModel):
 
         if self.model_args.freeze_feature_extractor:
             self.hf_model.freeze_feature_extractor()
-        
+
         self._set_stage(PREPROCESSING, complete=True)
 
         print(f"len of dataset: {len(self.hf_dataset)}")
 
-    def train(self, on_complete:Callable=None):
         # 3. Training
         self._set_stage(TRAIN)
         trainer = self.get_trainer()
@@ -638,6 +637,9 @@ class HFTransformersModel(BaseModel):
             trainer.save_metrics("eval", metrics)
             print("*** metrics")
             print(metrics)
+
+            # {'eval_loss': 6.958859443664551, 'eval_wer': 1.0, 'eval_runtime': 0.9987, 'eval_samples_per_second': 1.001,
+            #  'epoch': 3.0, 'eval_samples': 1}
         
         self._set_stage(EVALUATION, complete=True)
         self._set_finished_training(True)

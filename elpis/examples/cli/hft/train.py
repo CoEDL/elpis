@@ -22,7 +22,7 @@ from pathlib import Path
 import os
 
 
-USE_DATASET = 'gk'
+USE_DATASET = 'abui'
 
 if USE_DATASET == 'gk':
     DATASET_DIR = '/datasets/gk'
@@ -37,6 +37,13 @@ elif USE_DATASET == 'timit':
     IMPORTER_METHOD = 'tier_name'
     IMPORTER_VALUE = 'default'
     MODEL_NAME = 'mx'
+
+elif USE_DATASET == 'abui':
+    DATASET_DIR = '/datasets/abui/transcribed'
+    DATASET_NAME = 'abui'
+    IMPORTER_METHOD = 'tier_name'
+    IMPORTER_VALUE = 'Phrase'
+    MODEL_NAME = 'abui-mx'
 
 else:
     print('which dataset?')
@@ -94,7 +101,6 @@ if os.path.isdir("/state/models/latest"):
     os.remove("/state/models/latest")
 os.symlink(f"/state/models/{model.hash}", "/state/models/latest", target_is_directory=True)
 print('Start training. This may take a while')
-model.pretrain()
 model.train()
 
 # TODO infer
