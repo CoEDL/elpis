@@ -30,8 +30,10 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libsqlite3-dev \
     libbz2-dev \
     liblzma-dev \
+    lsof \
     lzma \
     make \
+    nvtop \
     software-properties-common \
     subversion \
     tree \
