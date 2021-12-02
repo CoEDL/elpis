@@ -147,8 +147,9 @@ class HFTransformersModel(BaseModel):
         # Note the _pron_dict is ignored as it's irrelevant to HFT.
 
     def build_structure(self):
-        print("BUILD STRUCTURE")
-        # All the file building is done in the initial steps of train().
+        pass
+        # HFT doesn't need file building like Kaldi does.
+        # However it does do a bunch of data processing.
         # Could move that here, but for now let's leave it as is.
 
     def get_arguments(self):
