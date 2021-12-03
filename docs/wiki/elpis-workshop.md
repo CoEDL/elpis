@@ -49,7 +49,7 @@ After the zip file has downloaded, unzip it to create a folder somewhere handy (
 
 - We will provide a list of servers on the workshop day.
 - Get an address from the list.
-- If you are using Elpis in Docker on your own computer, the address will be `0.0.0.0:5000`
+- If you are using Elpis in Docker on your own computer, the address will be `0.0.0.0:5001`
 - Open a new web browser (Chrome or Firefox).
 - Paste the address into the location bar.
 - Press Enter/Return to start Elpis.
@@ -281,7 +281,9 @@ Again, we see progress through the transcription stages, and more speech recogni
 
 After the transcription is done, the transcription will show on the page, and the transcription can be downloaded in text or Elan format.
 
-![](assets/latest/140-transcribed.png)
+The transcription text may be shown in a range of tones from black to light grey. The darkness of the text is relative to how confident the system was about suggesting that text for that particular sound. This is knows as "confidence".  When you download the Elan file the confidence values are included on a tier. You can switch off the confidence display using the toggle switch on the right hand side of the panel. 
+
+![](assets/latest/145-transcribed-confidence.png)
 
 
 Listen in Elan.

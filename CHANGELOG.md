@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.96.12] - 2021-11-10
+### Added
+- Automated docker builds on releases (vX.Y.Z) and pushes to master (latest)
+
+## [0.96.11] - 2021-11-09
+### Changed
+- Change ports from 5000 to 5001 to avoid conflict with greedy MacOS Airplay speaker thing 
+
+## [0.96.10] - 2021-10-28
+### Changed
+- Show Kaldi hypothesis confidence on the transcription page 
+
 ## [0.96.9] - 2021-08-27
 ### Changed
 - Updated pympi, praatio, llvm, librosa, numba versions

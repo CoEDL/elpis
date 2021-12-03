@@ -60,7 +60,7 @@ elpis = Interface(path=Path('/state'), use_existing=True)
 # Select Engine
 print('Set engine')
 from elpis.engines import ENGINES
-engine = ENGINES['hftransformers']
+engine = ENGINES['hft']
 elpis.set_engine(engine)
 
 

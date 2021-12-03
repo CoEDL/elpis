@@ -116,6 +116,7 @@ RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 
 ########################## ESPNET INSTALLATION #########################
+# Will be removed in a future commit.
 
 # Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
 #RUN echo "===> Install ESPnet dependencies" && \
@@ -243,7 +244,7 @@ RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 WORKDIR /elpis
 RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
 RUN echo "export PATH=$PATH:${POETRY_PATH}/bin:/kaldi/src/bin/" >> ~/.zshrc
-RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
+RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5001\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # ENV vars for non-interactive running
@@ -254,7 +255,9 @@ ENV LANG=C.UTF-8
 
 WORKDIR /elpis
 
-ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
+ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0", "--port", "5001"]
 
-EXPOSE 5000:5000
-EXPOSE 3000:3000
+# 5001 is for the Flask server
+EXPOSE 5001
+# 3000 is for the Webpack dev server
+EXPOSE 3000

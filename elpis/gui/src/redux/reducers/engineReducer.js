@@ -3,7 +3,7 @@ import * as actionTypes from "../actionTypes/appActionTypes";
 const initialEngineState = {
     engine: null,
     engine_list: [],
-    engine_human_names: {kaldi: "word", hftransformers: "hft"},
+    engine_human_names: {kaldi: "word", hft: "hft"},
 };
 const engine = (state = initialEngineState, action) => {
 	switch (action.type) {
