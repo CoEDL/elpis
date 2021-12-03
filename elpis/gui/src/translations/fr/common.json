@@ -183,7 +183,7 @@
                 "ins": "INS",
                 "sub": "SUB"
             },
-            "hftransformers": {
+            "hft": {
                 "wer": "WER",
                 "eval_loss": "Eval loss"
             }

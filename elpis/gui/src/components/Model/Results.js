@@ -18,7 +18,7 @@ class ModelResults extends Component {
         const {t, currentEngine, name, results} = this.props;
         const wer_text = currentEngine === "kaldi" ? t("model.results.kaldi.wer") : t("model.results.espnet.wer");
         const count_text = currentEngine === "kaldi" ? t("model.results.kaldi.count") : t("model.results.espnet.count");
-        const eval_loss = t("model.results.hftransformers.eval_loss");
+        const eval_loss = t("model.results.hft.eval_loss");
         const per_text = t("model.results.espnet.per");
         const del_text = currentEngine === "kaldi" ? t("model.results.kaldi.del") : t("model.results.espnet.del");
         const ins_text = currentEngine === "kaldi" ? t("model.results.kaldi.ins") : t("model.results.espnet.ins");
@@ -56,7 +56,7 @@ class ModelResults extends Component {
                                     </Table.Cell>
                                 </Table.Row>
                             }
-                            {currentEngine && currentEngine === "hftransformers" &&
+                            {currentEngine && currentEngine === "hft" &&
                                     <Table.Row>
                                         <Table.Cell>
                                             {eval_loss}

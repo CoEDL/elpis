@@ -89,7 +89,7 @@ FINISHED = "trained"
 FP16 = True if torch.cuda.is_available() else False
 
 
-class HFTransformersModel(BaseModel):
+class HFTModel(BaseModel):
 
     OUTPUT_DIR_NAME = "wav2vec2"
     SAMPLING_RATE = 16_000
@@ -101,7 +101,7 @@ class HFTransformersModel(BaseModel):
         self.config['pron_dict_name'] = None
         # HFT doesn't use an n-gram language model, so this will not change from None.
         self.config['ngram'] = None
-        self.config['engine_name'] = "hftransformers"
+        self.config['engine_name'] = "hft"
         self.config['status'] = "untrained"
         self.config['results'] = {}
 
@@ -369,7 +369,7 @@ class HFTransformersModel(BaseModel):
     def get_feature_extractor(self):
         return Wav2Vec2FeatureExtractor(
             feature_size=1, 
-            sampling_rate=HFTransformersModel.SAMPLING_RATE, 
+            sampling_rate=HFTModel.SAMPLING_RATE, 
             padding_value=0.0, 
             do_normalize=True, 
             return_attention_mask=True)
@@ -403,7 +403,7 @@ class HFTransformersModel(BaseModel):
             stop_ms = batch['stop_ms']
             unique_key = f'{path}{start_ms}{stop_ms}'
             batch["speech"] = speech[unique_key]
-            batch["sampling_rate"] = HFTransformersModel.SAMPLING_RATE
+            batch["sampling_rate"] = HFTModel.SAMPLING_RATE
             batch["target_text"] = batch["text"]
             batch['duration'] = (batch['stop_ms'] - batch['start_ms'])/1000
             batch['duration'] = len(batch['speech'])/batch['sampling_rate']
@@ -461,19 +461,19 @@ class HFTransformersModel(BaseModel):
             if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
                     and MINIMUM_DURATION_SECONDS < dur_ms/1000 < MAXIMUM_DURATION_SECONDS:
                 # Resample if required
-                if sample_rate != HFTransformersModel.SAMPLING_RATE:
-                    print(f'Resample from {sample_rate} to {HFTransformersModel.SAMPLING_RATE} | '
+                if sample_rate != HFTModel.SAMPLING_RATE:
+                    print(f'Resample from {sample_rate} to {HFTModel.SAMPLING_RATE} | '
                           f'{os.path.basename(path).rjust(20)} | '
                           f'{str(start_ms/1000).rjust(15)} : {str(stop_ms/1000).ljust(15)} | '
                           f'{str(start_frame).rjust(15)} : {str(end_frame).ljust(15)}')
-                    resampler = torchaudio.transforms.Resample(sample_rate, HFTransformersModel.SAMPLING_RATE)
+                    resampler = torchaudio.transforms.Resample(sample_rate, HFTModel.SAMPLING_RATE)
                     speech_array = resampler(speech_array)
                 # Use a unique key for the speech key
                 unique_key = f'{path}{start_ms}{stop_ms}'
                 # print(unique_key)
                 speech[unique_key] = speech_array.squeeze().numpy()
                 # For debugging/ checking dataset, generate an audio file for listening
-                # torchaudio.save(self.tmp_audio_path.joinpath(os.path.basename(path)), speech_array, HFTransformersModel.SAMPLING_RATE)
+                # torchaudio.save(self.tmp_audio_path.joinpath(os.path.basename(path)), speech_array, HFTModel.SAMPLING_RATE)
             else:
                 rejected_count += 1
                 print(f'rejected {os.path.basename(path)} {start_ms} {stop_ms}')
@@ -1002,5 +1002,5 @@ class CTCTrainer(Trainer):
 
 # For dev test purpose (to run without the GUI)…
 if __name__ == "__main__":
-    model = HFTransformersModel(parent_path="..")
+    model = HFTModel(parent_path="..")
     model.train()

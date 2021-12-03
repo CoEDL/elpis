@@ -8,8 +8,8 @@ from elpis.engines.kaldi.objects.model import KaldiModel
 from elpis.engines.kaldi.objects.transcription import KaldiTranscription
 from elpis.engines.espnet.objects.model import EspnetModel
 from elpis.engines.espnet.objects.transcription import EspnetTranscription
-from elpis.engines.hftransformers.objects.model import HFTransformersModel
-from elpis.engines.hftransformers.objects.transcription import HFTransformersTranscription
+from elpis.engines.hft.objects.model import HFTModel
+from elpis.engines.hft.objects.transcription import HFTTranscription
 
 class Engine(ABC):
     def __init__(self, model: Type[Model], transcription: Type[Transcription]):
@@ -36,12 +36,12 @@ class EspnetEngine(Engine):
     def __init__(self):
         super().__init__(EspnetModel, EspnetTranscription)
 
-class HFTransformersEngine(Engine):
+class HFTEngine(Engine):
     def __init__(self):
-        super().__init__(HFTransformersModel, HFTransformersTranscription)
+        super().__init__(HFTModel, HFTTranscription)
 
 
 ENGINES = {
     "kaldi": KaldiEngine(),
-    "hftransformers": HFTransformersEngine(),
+    "hft": HFTEngine(),
 }

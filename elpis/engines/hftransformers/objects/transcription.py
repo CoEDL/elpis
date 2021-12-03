@@ -2,7 +2,7 @@ from pathlib import Path
 import sys
 from typing import List, Tuple
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
-from elpis.engines.hftransformers.objects.model import HFTransformersModel
+from elpis.engines.hft.objects.model import HFTModel
 
 import soundfile as sf
 import torch
@@ -34,7 +34,7 @@ FINISHED = 'transcribed'
 UNFINISHED = 'transcribing'
 
 
-class HFTransformersTranscription(BaseTranscription):
+class HFTTranscription(BaseTranscription):
 
     SAMPLING_RATE = 16_000
 
@@ -46,7 +46,7 @@ class HFTransformersTranscription(BaseTranscription):
         self.text_path = self.path / "one-best-hypothesis.txt"
         self.xml_path = self.path / "transcription.xml"
         self.elan_path = self.path / "transcription.eaf"
-        self.model: HFTransformersModel
+        self.model: HFTModel
 
         # Setup logging
         # run_log_path = self.path.joinpath('train.log')
@@ -77,7 +77,7 @@ class HFTransformersTranscription(BaseTranscription):
         self._set_stage(PROCESS_INPUT)
         print("=== Process input")
         input_values = processor(
-            audio_input, sampling_rate=HFTransformersTranscription.SAMPLING_RATE, return_tensors="pt").input_values
+            audio_input, sampling_rate=HFTTranscription.SAMPLING_RATE, return_tensors="pt").input_values
         self._set_stage(PROCESS_INPUT, msg='Processed input values')
 
         # retrieve logits & take argmax
@@ -207,7 +207,7 @@ class HFTransformersTranscription(BaseTranscription):
         pympi.Elan.to_eaf(self.elan_path, result)
 
     def _load_audio(self, file: Path) -> Tuple:
-        audio, sample_rate = librosa.load(file, sr=HFTransformersTranscription.SAMPLING_RATE)
+        audio, sample_rate = librosa.load(file, sr=HFTTranscription.SAMPLING_RATE)
         return audio, sample_rate
 
     def prepare_audio(self, audio: Path, on_complete: callable = None):
@@ -220,7 +220,7 @@ class HFTransformersTranscription(BaseTranscription):
         """Resamples the audio file to be the same sampling rate as the model
         was trained with.
 
-        Target sampling rate is taken from the HFTransformersModel class.
+        Target sampling rate is taken from the HFTModel class.
 
         Parameters:
             audio (Path): A path to a soundfile
@@ -236,7 +236,7 @@ class HFTransformersTranscription(BaseTranscription):
         sf.write(sound_copy, data, sample_rate)
 
         # Resample and overwrite
-        sf.write(dest, data, HFTransformersModel.SAMPLING_RATE)
+        sf.write(dest, data, HFTModel.SAMPLING_RATE)
 
     def _set_finished_transcription(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
