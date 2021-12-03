@@ -70,7 +70,6 @@ class KaldiTranscription(BaseTranscription):
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
-        # _process_audio_file above a file named audio.wav
         # Get the speaker id from the model > kaldi/data/test/spk2utt file. it's the first "word".
         model_spk2utt_path = self.model.path.joinpath(
             'kaldi/data/test/spk2utt')
@@ -116,7 +115,7 @@ class KaldiTranscription(BaseTranscription):
             exp_path.mkdir(parents=True, exist_ok=True)
 
         print("========= reset templates dir")
-        # Use gmm-decode for short audio and gmm-decode-online for long audio (gmm-decode is quicker for short audio)
+        # Use gmm-decode-conf for short audio and gmm-decode-online-conf for long audio (gmm-decode is quicker for short audio)
         # Stage names (rh side) are used in the GUI for i18n
         if (self.audio_duration > 10):
             print("==== Using gmm-decode-online-conf")
