@@ -226,7 +226,7 @@ class HFTModel(BaseModel):
         if not Path(self.run_log_path).is_file():
             run(f"touch {self.run_log_path};")
 
-        # sys.stdout = open(self.run_log_path, 'w')
+        sys.stdout = open(self.run_log_path, 'w')
         sys.stderr = sys.stdout
 
         logging.basicConfig(
@@ -562,9 +562,9 @@ class HFTModel(BaseModel):
         self.model_args = model_args
         self.data_args = data_args
         self.training_args = training_args
-        print('model_args', model_args)
-        print('data_args', data_args)
-        print('training_args', training_args)
+        print('\n\n=== Model args\n', model_args)
+        print('\n\n=== Data args\n', data_args)
+        print('\n\n=== Training args\n', training_args)
 
     def train(self, on_complete:Callable=None):
         self.tb_writer = SummaryWriter(self.path / 'runs')
