@@ -196,13 +196,8 @@ class HFTTranscription(BaseTranscription):
         """Saves Elan output using the pympi library"""
         result = pympi.Elan.Eaf(author="elpis")
 
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/transcription.py
-        tier = 'tx'
-        result.add_tier(tier)
-=======
         result.add_linked_file("audio.wav")
         result.add_tier('default')
->>>>>>> hft:elpis/engines/hft/objects/transcription.py
 
         to_millis = lambda seconds: int(seconds * 1000)
         for word, start, end in zip(*utterances):
