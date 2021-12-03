@@ -4,7 +4,8 @@
 line=$(head -n 1 ./data/infer/spk2utt)
 utt=` echo ${line} | cut -d ' ' -f 2`
 spk=` echo ${line} | cut -d ' ' -f 1` # this was seg
-audio="audio.wav"
+#audio="audio.wav"
+audio=$(<./data/infer/audio_meta.txt)
 length=`sox --i -D ${audio}`
 recid="decode"
 
