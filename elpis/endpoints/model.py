@@ -94,11 +94,9 @@ def settings():
         return jsonify({"status": 404,
                         "data": "No current model exists (perhaps create one first)"})
     if request.method == 'POST':
-        model.ngram = request.json['ngram']
+        model.settings = request.json['settings']
     data = {
-        "settings": {
-            "ngram": model.ngram
-        }
+        "settings": model.settings
     }
     return jsonify({
         "status": 200,

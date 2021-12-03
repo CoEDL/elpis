@@ -267,6 +267,12 @@ label.pad-right,
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.training_settings .ui.form tr {
+    padding: 0.5em 0;
+}
+.training_settings .ui.form tr {
+    padding: 0 0.5em;
+}
 
 /* Container for opacity toggle */
 .conf-tools {

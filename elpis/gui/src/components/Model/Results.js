@@ -66,7 +66,6 @@ class ModelResults extends Component {
                                         </Table.Cell>
                                     </Table.Row>
                             }
-
                             {currentEngine && ["espnet", "kaldi"].includes(currentEngine) &&
                                 <>
                                     <Table.Row>
