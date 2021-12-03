@@ -1,1 +1,0 @@
-from .generate_infer_files import generate_files
