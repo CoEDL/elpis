@@ -106,8 +106,9 @@ class NewTranscription extends Component {
             null;
         let enableTranscription = false;
 
-        if (modelName && filename && (status === "ready" || status === "transcribed")) enableTranscription = true;
+        console.log("confidence", confidence);
 
+        if (modelName && filename && (status === "ready" || status === "transcribed")) enableTranscription = true;
 
         return (
             <div>
