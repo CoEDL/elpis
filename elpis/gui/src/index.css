@@ -33,6 +33,12 @@ code {
 .train-log {
     width: 100%;
 }
+.compiled-log {
+    font-family: monospace;
+    overflow: scroll;
+    height: 300px;
+    white-space: pre;
+}
 
 .accordion {
     margin-bottom: 2rem;

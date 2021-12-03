@@ -171,8 +171,9 @@ class ModelTrain extends Component {
                                     </Segment>
                                     {/* Logs */}
                                     {status !== "ready" && (
-                                        <Segment padded="very" inverted loading={log === null}>
-                                            <p style={{overflow: "scroll", height: "300px"}}>
+                                        <Segment loading={log === null}>
+                                            {/* TODO add message about these logs */}
+                                            <p className="compiled-log">
                                                 {log}
                                             </p>
                                             <Button
