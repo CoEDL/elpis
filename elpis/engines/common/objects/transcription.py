@@ -17,6 +17,7 @@ class Transcription(FSObject):
         self.config['exporter'] = None
         self.config['has_been_transcribed'] = False
         self.config['stage_status'] = {}
+        self.audio_filename = None
 
     @classmethod
     def load(cls, base_path: Path):

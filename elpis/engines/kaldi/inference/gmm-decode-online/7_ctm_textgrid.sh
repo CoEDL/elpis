@@ -13,7 +13,7 @@ echo "decode audio.wav" > ./data/infer/split1/1/wav.scp
 
 echo "==== Converting CTM to Textgrid ===="
 # python /kaldi-helpers/kaldi_helpers/output_scripts/ctm_to_textgrid.py \
-"${POETRY_PATH}/bin/python" /elpis/elpis/engines/common/output/ctm_to_textgrid.py \
+python /elpis/elpis/engines/common/output/ctm_to_textgrid.py \
     --ctm data/infer/align-words-best-wordkeys.ctm \
     --wav data/infer/split1/1/wav.scp \
     --seg data/infer/split1/1/segments \

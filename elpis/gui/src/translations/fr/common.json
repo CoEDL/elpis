@@ -182,6 +182,10 @@
                 "del": "DEL",
                 "ins": "INS",
                 "sub": "SUB"
+            },
+            "hft": {
+                "wer": "WER",
+                "eval_loss": "Eval loss"
             }
         },
         "generated": {

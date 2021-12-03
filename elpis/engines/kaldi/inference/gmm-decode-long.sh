@@ -96,7 +96,7 @@ utils/int2sym.pl -f 5- \
     > data/infer/align-words-best-wordkeys.ctm
 
 # Activate Python 3.6.3 virtual environment
-source /venv/bin/activate
+#source /venv/bin/activate
 
 # Now, wav.scp needs to be in segment form
 # eg audio_id filename

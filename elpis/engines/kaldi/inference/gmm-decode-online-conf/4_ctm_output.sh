@@ -11,7 +11,8 @@ echo "==== CTM output ===="
 
 # Now, wav.scp needs to be in segment form
 # eg audio_id filename
-echo "decode audio.wav" > ./data/infer/split1/1/wav.scp
+audio_filename=$(<./data/infer/audio_meta.txt)
+echo "decode ${audio_filename}" > ./data/infer/split1/1/wav.scp
 
 awk  -F" " 'BEGIN { ORS=" " }; {print $(NF-1)}' \
   data/infer/ctm_with_conf.ctm \
@@ -23,7 +24,7 @@ echo >> data/infer/one-best-hypothesis.txt
 cat data/infer/one-best-hypothesis.txt
 
 echo "==== Build the Elan file ===="
-"${POETRY_PATH}/bin/python" /elpis/elpis/engines/common/output/ctm_to_elan.py \
+python3 /elpis/elpis/engines/common/output/ctm_to_elan.py \
     --ctm data/infer/ctm_with_conf.ctm \
     --wav data/infer/split1/1/wav.scp \
     --seg data/infer/split1/1/segments \

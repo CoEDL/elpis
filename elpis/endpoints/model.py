@@ -39,7 +39,7 @@ def new():
         pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
         model.link_pron_dict(pron_dict)
         app.config['CURRENT_PRON_DICT'] = pron_dict
-    if 'engine' in request.json and request.json['engine'] == 'espnet':
+    if 'engine' in request.json and request.json['engine'] in ["espnet", "hft"]:
         pass
     model.build_structure()
     app.config['CURRENT_MODEL'] = model
@@ -94,11 +94,9 @@ def settings():
         return jsonify({"status": 404,
                         "data": "No current model exists (perhaps create one first)"})
     if request.method == 'POST':
-        model.ngram = request.json['ngram']
+        model.settings = request.json['settings']
     data = {
-        "settings": {
-            "ngram": model.ngram
-        }
+        "settings": model.settings
     }
     return jsonify({
         "status": 200,

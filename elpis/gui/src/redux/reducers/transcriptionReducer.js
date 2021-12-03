@@ -10,6 +10,7 @@ const initState = {
     confidence: null,
 };
 const transcription = (state = initState, action) => {
+
     switch (action.type) {
         case actionTypes.TRANSCRIPTION_NEW_SUCCESS:
             var {originalFilename} = action.response.data.data;
@@ -29,12 +30,15 @@ const transcription = (state = initState, action) => {
             return {...state, status, stage_status, type};
 
         case actionTypes.TRANSCRIPTION_GET_TEXT_SUCCESS:
-            // The response here is the file data, not wrapped in a JSON data/status format
-            return {...state, text: action.response.data};
+            return {...state, text: action.response.data.data.text};
 
         case actionTypes.TRANSCRIPTION_GET_ELAN_SUCCESS:
-            // The response here is the file data, not wrapped in a JSON data/status format
-            return {...state, elan: action.response.data};
+            return {...state, elan: action.response.data.data.elan};
+
+        case actionTypes.TRANSCRIPTION_GET_CONFIDENCE_SUCCESS:
+            var {confidence} = action.response.data.data;
+
+            return {...state, confidence: confidence};
 
         case actionTypes.TRANSCRIPTION_GET_CONFIDENCE_SUCCESS:
             var {confidence} = action.response.data.data;

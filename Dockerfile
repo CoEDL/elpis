@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS=1
+ENV NUM_CPUS=12
 
 ENV TZ=UTC
 
@@ -30,7 +30,10 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libsqlite3-dev \
     libbz2-dev \
     liblzma-dev \
+    lsof \
+    lzma \
     make \
+    nvtop \
     software-properties-common \
     subversion \
     tree \
@@ -87,7 +90,7 @@ RUN echo "===> Install Kaldi dependencies" && \
 
 WORKDIR /
 
-RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
+RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
     make -j$NUM_CPUS && \
@@ -113,35 +116,39 @@ RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 
 ########################## ESPNET INSTALLATION #########################
+# Will be removed in a future commit.
 
-# Some ESPnet dependencies may be covered above but listing all for the sake of completeness
-RUN echo "===> Install ESPnet dependencies" && \
-    apt-get update && apt-get install -y cmake \
-    sox \
-    ffmpeg \
-    flac \
-    bc
-
-WORKDIR /
-
-# Setting up ESPnet for Elpis from Persephone repository
-RUN git clone https://github.com/CoEDL/espnet.git
-
-WORKDIR /espnet
-
-RUN git checkout elpis
-
-# Explicitly installing only the CPU version. We should update this to be an
-# nvidia-docker image and install GPU-supported version of ESPnet.
-WORKDIR /espnet/tools
-
-RUN echo "===> install ESPnet" && \
-    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
+# Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
+#RUN echo "===> Install ESPnet dependencies" && \
+#    apt-get update && apt-get install -y cmake \
+#    sox \
+#    ffmpeg \
+#    flac \
+#    bc
+#
+#WORKDIR /
+#
+## Setting up ESPnet for Elpis forked from the Persephone repository.
+#RUN git clone --single-branch --branch elpis --depth=1 https://github.com/CoEDL/espnet.git
+#
+#WORKDIR /espnet
+#
+## Explicitly installing only the CPU version. We should update this to be an
+## nvidia-docker image and install GPU-supported version of ESPnet.
+#WORKDIR /espnet/tools
+#
+#RUN echo "===> Install ESPnet CPU version" && \
+#    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
 
 
 ########################## DEV HELPERS INSTALLATION ####################
 
 WORKDIR /tmp
+
+RUN echo "===> Install dev helpers"
+
+# Example data
+RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
 # Add jq
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
@@ -164,40 +171,67 @@ RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
-# Add random number generator to skip Docker building from cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
+########################## VENV ########################
+
+WORKDIR /
+RUN pyenv global 3.8.2
+RUN python -m venv venv
+RUN source venv/bin/activate
+RUN pip install --upgrade pip
+
+
+########################## HF Transformers INSTALLATION #########################
+
+# Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
+# Override the dep info from requirements.txt so that we can specifiy CUDA version
+# Pin transformers to 4.6.0 because the model class has args code which breaks on later versions
+RUN pip install transformers==4.6.0 datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
+# Set torch version for CUDA 11
+RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip install tensorboard==2.7.0
+# Cache the pretrained models
+COPY download_wav2vec2.py /root/download_wav2vec2.py
+RUN python /root/download_wav2vec2.py
 
 ########################## ELPIS INSTALLATION ########################
 
+# Add random number generator to skip Docker building from cache
+ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+
 WORKDIR /
 
-# Elpis
-RUN pwd
-
-# To test Docker with a specific branch use --single-branch --branch BRANCHNAME
-#RUN git clone --single-branch --branch ben-eslint --depth=1 https://github.com/CoEDL/elpis.git
-RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
+RUN echo "===> Install Elpis"
+# Remove `--single-branch` or include `--branch hft` below for development
+RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
-RUN pip install poetry \
-    && poetry run pip install --upgrade pip \
-    && poetry config virtualenvs.create true --local \
-    && poetry install
-
-WORKDIR /
+RUN pip install --upgrade pip
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install
 
 # Elpis GUI
+WORKDIR /
 RUN ln -s /elpis/elpis/gui /elpis-gui
 WORKDIR /elpis-gui
 RUN yarn install && \
     yarn run build
 
-WORKDIR /tmp
+WORKDIR /
 
-# Example data
+# Sample data for command line interaction with Elpis
+WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
-
+RUN git clone --depth=1 https://github.com/CoEDL/timit-elan.git
+WORKDIR /datasets
+RUN ln -s /toy-corpora/abui /datasets/abui
+RUN ln -s /toy-corpora/na /datasets/na
+RUN ln -s /timit-elan /datasets/timit
+# Download the GK data from Google Drive folder. Temporarily from Ben's account. TODO, find a more permanent location
+WORKDIR /datasets/gk
+RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1Irxz6GB3yB4h95C2b_RfP31dDNHzbv_f' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1Irxz6GB3yB4h95C2b_RfP31dDNHzbv_f" -O gk.zip && rm -rf /tmp/cookies.txt
+RUN unzip -j gk.zip && rm -f gk.zip
 
 ########################## RUN THE APP ##########################
 
@@ -209,7 +243,7 @@ RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 WORKDIR /elpis
 RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
 RUN echo "export PATH=$PATH:${POETRY_PATH}/bin:/kaldi/src/bin/" >> ~/.zshrc
-RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
+RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5001\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # ENV vars for non-interactive running
@@ -220,7 +254,9 @@ ENV LANG=C.UTF-8
 
 WORKDIR /elpis
 
-ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
+ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0", "--port", "5001"]
 
-EXPOSE 5000:5000
-EXPOSE 3000:3000
+# 5001 is for the Flask server
+EXPOSE 5001
+# 3000 is for the Webpack dev server
+EXPOSE 3000

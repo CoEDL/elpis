@@ -16,12 +16,10 @@ from elpis.engines.kaldi.input.json_to_kaldi import create_kaldi_structure
 class EspnetModel(BaseModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # ESPnet does not use a pronunciation dictionary so this will not
-        # change from None.
+        # ESPnet does not use a pronunciation dictionary so this will not change from None.
         self.pron_dict = None
         self.config['pron_dict_name'] = None
-        # ESPnet doesn't use an n-gram language model, so this will not change
-        # from None.
+        # ESPnet doesn't use an n-gram language model, so this will not change from None.
         self.config['ngram'] = None
         self.config['engine_name'] = 'espnet'
         self.config['status'] = 'untrained'
@@ -41,9 +39,10 @@ class EspnetModel(BaseModel):
 
     @property
     def status(self):
-        #  Update stage status
+
+        #  read the log here and pass it back to the api
         run_log_path = self.path.joinpath('train.log')
-        if not run_log_path.is_file():
+        if not Path(run_log_path).is_file():
             run(f"touch {run_log_path};")
         with open(run_log_path) as log_file:
             log_text = log_file.read()
@@ -104,7 +103,8 @@ class EspnetModel(BaseModel):
             # stuff into the appropriate subdirectory.
 
             # First make a copy of the ESPNET Elpis recipe
-            local_espnet_path = self.path.joinpath("espnet-asr1")
+            model_path = self.path
+            local_espnet_path = model_path.joinpath("espnet-asr1")
             shutil.copytree("/espnet/egs/elpis/asr1", f"{local_espnet_path}")
 
             # Then move the train/test data across.

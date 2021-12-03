@@ -59,8 +59,9 @@ def get_segment_dictionary(segment_file_name: str) -> Dict[str, Tuple[str, float
 def wav_scp_to_dictionary(scp_file_name: str) -> dict:
     wav_dictionary = dict()
     with open(scp_file_name) as file:
-        wav_entries = list(reader(file, delimiter=" "))
-        for entry in wav_entries:
+        wav_entries = file.read().splitlines()
+        for line in wav_entries:
+            entry = line.split(" ", 1) # use 1 here in case wav filenames include spaces
             utterance_id = entry[0]
             wav_file_path = entry[1]
             wav_dictionary[utterance_id] = wav_file_path
@@ -70,9 +71,9 @@ def create_eaf_and_textgrid(wav_dictionary:dict,
                ctm_dictionary:dict,
                confidence:bool,
                output_directory:str):
-    for index, [utterance_id, basename] in enumerate(wav_dictionary.items()):
+    for index, [utterance_id, audio_filename] in enumerate(wav_dictionary.items()):
         eaf = Eaf()
-        eaf.add_linked_file(str(Path(output_directory, basename)))
+        eaf.add_linked_file(audio_filename)
         eaf.add_linguistic_type("conf_lt", "Symbolic_Association")
         eaf.add_tier("default")
         if confidence:
