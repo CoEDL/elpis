@@ -291,10 +291,12 @@ const mapDispatchToProps = dispatch => ({
         dispatch(modelList());
     },
     modelLoad: (modelData, datasetData, engineName, pronDictData) => {
+        console.log("model load")
         dispatch(engineLoad(engineName))
             .then(()=> dispatch(modelLoad(modelData)))
             .then(() => dispatch(datasetLoad(datasetData)))
             .then(() => {
+                console.log("pronDictData", pronDictData)
                 if (pronDictData) {
                     dispatch(pronDictLoad(pronDictData))
                 }
