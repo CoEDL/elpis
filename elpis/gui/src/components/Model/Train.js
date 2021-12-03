@@ -50,12 +50,11 @@ class ModelTrain extends Component {
   };
 
   handleLogDownload = async () => {
-    const {log, modelGetLogs} = this.props;
+    const {modelGetLogs} = this.props;
 
-    if (!log) {
-      // If we haven't currently downloaded the logs, make a request first.
-      await modelGetLogs();
-    }
+    await modelGetLogs();
+
+    const {log} = this.props;
 
     downloadjs(log, "log.txt", "text/txt");
   };
