@@ -52,15 +52,10 @@ if version.parse(torch.__version__) >= version.parse("1.6"):
 DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
-    "num_train_epochs": "0.02",
-    "model_name_or_path": 'facebook/wav2vec2-base',
-=======
     "num_train_epochs": "3",
     "model_name_or_path": "facebook/wav2vec2-base",
     "per_device_train_batch_size": "1",
     "per_device_eval_batch_size": "1"
->>>>>>> hft:elpis/engines/hft/objects/model.py
 }
 
 # Training Stages
@@ -110,29 +105,14 @@ class HFTModel(BaseModel):
         }
         print("model settings", self.settings)
 
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
         self._setup_stages()
-=======
-        # Setup logging
-        # self.run_log_path = self.path.joinpath('train.log')
-        # sys.stdout = open(self.run_log_path, 'w')
-        sys.stderr = sys.stdout
 
-        # Setup stage names
-        self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
-        stage_labels = [string.capwords(stage).replace('_', ' ') for stage in TRAINING_STAGES]
-
-        stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
-        super().build_stage_status(stage_names)
-
-        self._set_stage(TOKENIZATION)
         # Use this when adding text to tensorboard so that we get to see predictions for each compute_metric run
         self.compute_metrics_count = 0
 
         # Use this to test audio - eg save resampled audio for listening to
         Path('/tmp/audio').mkdir(parents=True, exist_ok=True)
         self.tmp_audio_path = Path('/tmp/audio')
->>>>>>> hft:elpis/engines/hft/objects/model.py
 
     @classmethod
     def load(cls, base_path: Path):
@@ -141,126 +121,12 @@ class HFTModel(BaseModel):
         return self
 
     @property
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
     def log(self):
         with open(self.run_log_path) as logs:
             return logs.read()
 
-    def train(self, on_complete:Callable=None):
-        model_args, data_args, training_args = self.get_arguments()
-
-        # Set seed before initializing model.
-        set_seed(training_args.seed)
-        self._setup_logging(training_args)
-
-
-        # 1. Tokenization
-        self._set_finished_training(False)
-        self._set_stage(TOKENIZATION)
-
-        data_dir = Path(data_args.elpis_data_dir)
-        self.create_split(data_args, data_dir)
-        dataset = self.get_dataset(data_dir)
-
-        # Load pretrained model and tokenizer
-        #
-        # Distributed training:
-        # The .from_pretrained methods guarantee that only one local process can concurrently
-        # download model & vocab.
-
-        tokenizer = self.get_tokenizer(data_dir, dataset)
-        feature_extractor = self.get_feature_extractor()
-        processor = self.get_processor(feature_extractor, tokenizer)
-        model = self.get_model(model_args, processor)
-
-        self._set_stage(TOKENIZATION, complete=True)
-
-        # 2. Preprocessing the datasets.
-        # We need to read the audio files as arrays and tokenize the targets.
-        self._set_stage(PREPROCESSING)
-        dataset = self.preprocess_dataset(dataset, data_args)
-        dataset = self.prepare_dataset(dataset, data_args, training_args, processor)
-
-        if model_args.freeze_feature_extractor:
-            model.freeze_feature_extractor()
-        
-        self._set_stage(PREPROCESSING, complete=True)
-
-        # 3. Training
-        self._set_stage(TRAIN)
-        trainer = self.get_trainer(dataset, processor, training_args, model)
-        last_checkpoint = self.get_last_checkpoint(training_args)
-        if training_args.do_train:
-            # Update Checkpoint
-            if last_checkpoint is not None:
-                checkpoint = last_checkpoint
-            elif os.path.isdir(model_args.model_name_or_path):
-                checkpoint = model_args.model_name_or_path
-            else:
-                checkpoint = None
-            # Train
-            train_result = trainer.train(resume_from_checkpoint=checkpoint)
-            trainer.save_model()
-
-            # save the feature_extractor and the tokenizer
-            if is_main_process(training_args.local_rank):
-                processor.save_pretrained(training_args.output_dir)
-
-            print(f"len of dataset: {len(dataset)}")
-            metrics = train_result.metrics
-            max_train_samples = (
-                data_args.max_train_samples if data_args.max_train_samples is not None else len(dataset['train'])
-            )
-            metrics["train_samples"] = min(max_train_samples, len(dataset['train']))
-
-            trainer.log_metrics(TRAIN, metrics)
-            trainer.save_metrics(TRAIN, metrics)
-            trainer.save_state()
-
-        self._set_stage(TRAIN, complete=True)
-        
-        # 4. Evaluation
-        self._set_stage(EVALUATION)
-        results = {}
-        if training_args.do_eval:
-            logger.info("*** Evaluate ***")
-            metrics = trainer.evaluate()
-            max_val_samples = data_args.max_val_samples if data_args.max_val_samples is not None else len(dataset['dev'])
-            metrics["eval_samples"] = min(max_val_samples, len(dataset['dev']))
-
-            trainer.log_metrics("eval", metrics)
-            trainer.save_metrics("eval", metrics)
-        
-        self._set_stage(EVALUATION, complete=True)
-        self._set_finished_training(True)
-
-        if on_complete is not None:
-            on_complete()
-            
-        return results
-
     def _set_finished_training(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
-
-    def _set_stage(self, stage: str, complete=False) -> None:
-        """Updates the training stage to one of the constants specified within
-        TRAINING_STAGES
-        """
-        if stage not in TRAINING_STAGES:
-            return
-
-        status = "completed" if complete else "in-progress"
-        index = TRAINING_STAGES.index(stage)
-        self.stage = self.index_prefixed_stages[index]
-
-        with open(self.run_log_path) as log_file:
-            log_text = log_file.read()
-=======
-    def status(self):
-        return self.config['status']
->>>>>>> hft:elpis/engines/hft/objects/model.py
-
-        self.stage_status = self.stage, status, '', log_text
 
     def get_train_results(self) -> Dict[str, float]:
         # TODO Ask Ben what's meant to go here
@@ -288,22 +154,12 @@ class HFTModel(BaseModel):
             "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
             "train_size": "0.8",
             "split_seed": "42",
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
-            "model_name_or_path": 'facebook/wav2vec2-base', #"facebook/wav2vec2-large-xlsr-53",
-            "dataset_config_name": "tr",
-            "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
-            "overwrite_output_dir": True,
-            "num_train_epochs": "1",
-            "per_device_train_batch_size": "1",
-            "per_device_eval_batch_size": "1",
-=======
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
             "output_dir": self.path.joinpath('wav2vec2'),
             "overwrite_output_dir": True,
             "num_train_epochs": int(self.settings['num_train_epochs']),
             "per_device_train_batch_size": int(self.settings['batch_size']),
             "per_device_eval_batch_size": int(self.settings['batch_size']),
->>>>>>> hft:elpis/engines/hft/objects/model.py
             "gradient_accumulation_steps": "2",
             "learning_rate": self.settings['learning_rate'],
             "weight_decay": "0.005",
@@ -353,7 +209,6 @@ class HFTModel(BaseModel):
                     "the `--output_dir` or add `--overwrite_output_dir` to train from scratch.")
         return last_checkpoint
 
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
     def _setup_stages(self):
         """Set up the stages used for displaying training information to the user."""
         self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
@@ -362,10 +217,7 @@ class HFTModel(BaseModel):
         stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
         super().build_stage_status(stage_names)
 
-    def _setup_logging(self, training_args) -> None:
-=======
-    def setup_logging(self):
->>>>>>> hft:elpis/engines/hft/objects/model.py
+    def _setup_logging(self) -> None:
         """
         Setup logging.
         """
@@ -714,12 +566,8 @@ class HFTModel(BaseModel):
         self.tb_writer = SummaryWriter(self.path / 'runs')
 
         model_args, data_args, training_args = self.get_arguments()
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
-        self._setup_logging(training_args)
-=======
         self.set_args(model_args, data_args, training_args)
-        self.setup_logging()
->>>>>>> hft:elpis/engines/hft/objects/model.py
+        self._setup_logging()
 
         # Set seed before initializing model.
         set_seed(self.training_args.seed)
@@ -746,22 +594,11 @@ class HFTModel(BaseModel):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logger.info(f'Running on device: {device}.')
 
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        logger.info(f'Running on device: {device}.')
-
-        tokenizer = self.get_tokenizer(data_dir, dataset)
-        feature_extractor = self.get_feature_extractor()
-        processor = self.get_processor(feature_extractor, tokenizer)
-        model = self.get_model(model_args, processor)
-        model.to(device)
-=======
         tokenizer = self.get_tokenizer(data_dir)
         feature_extractor = self.get_feature_extractor()
         self.processor = self.get_processor(feature_extractor, tokenizer)
         self.hft_model = self.get_model()
         self.hft_model.to(device)
->>>>>>> hft:elpis/engines/hft/objects/model.py
 
         self._set_stage(TOKENIZATION, complete=True)
 
@@ -800,10 +637,6 @@ class HFTModel(BaseModel):
             if is_main_process(self.training_args.local_rank):
                 self.processor.save_pretrained(self.training_args.output_dir)
 
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
-            logger.info(f"len of dataset: {len(dataset)}")
-=======
->>>>>>> hft:elpis/engines/hft/objects/model.py
             metrics = train_result.metrics
             max_train_samples = (
                 self.data_args.max_train_samples if self.data_args.max_train_samples is not None else len(self.hft_dataset['train'])
@@ -842,21 +675,9 @@ class HFTModel(BaseModel):
         """
         if stage not in TRAINING_STAGES:
             return
-<<<<<<< HEAD:elpis/engines/hftransformers/objects/model.py
-
         status = "complete" if complete else "in-progress"
         index = TRAINING_STAGES.index(stage)
         self.stage = self.index_prefixed_stages[index]
-
-        with open(self.run_log_path) as log_file:
-            log_text = log_file.read()
-
-        #self.stage_status = self.stage, status, '', log_text
-=======
-        status = "completed" if complete else "in-progress"
-        index = TRAINING_STAGES.index(stage)
-        self.stage = self.index_prefixed_stages[index]
->>>>>>> hft:elpis/engines/hft/objects/model.py
         self.stage_status = self.stage, status, '', ''
 
     def get_train_results(self) -> Dict[str, float]:
