@@ -45,7 +45,7 @@ class ModelTrain extends Component {
 
     modelStatus();
 
-    if (status === "trained")
+    if (status === "trained" || status === "error")
       this.props.clearInterval(this.state.statusInterval);
   };
 
@@ -54,13 +54,9 @@ class ModelTrain extends Component {
 
     if (!log) {
       // If we haven't currently downloaded the logs, make a request first.
-      let data = await modelGetLogs();
+      await modelGetLogs();
 
-      console.log(data);
-      downloadjs(data.log, "log.txt", "text/txt");
-    } else {
-      downloadjs(log, "log.txt", "text/txt");
-    }
+    downloadjs(log, "log.txt", "text/txt");
   };
 
   onScroll = () => {};
