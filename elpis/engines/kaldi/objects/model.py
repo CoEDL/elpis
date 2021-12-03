@@ -37,12 +37,20 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.config['current_stage'] = None
         self.settings = {'ngram': 1}
         print("model settings", self.settings)
+        self.run_log_path = self.path.joinpath('train.log')
+        if not Path(self.run_log_path).is_file():
+            run(f"touch {self.run_log_path};")
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
         self.pron_dict = None
         return self
+
+    @property
+    def log(self):
+        with open(self.run_log_path) as logs:
+            return logs.read()
 
     def link_pron_dict(self, pron_dict: PronDict):
         self.pron_dict = pron_dict
@@ -209,12 +217,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')
 
-            # Prepare (dump, recreate) main train log file
-            run_log_path = self.path.joinpath('train.log')
-            if run_log_path.is_file():
-                os.remove(run_log_path)
-            run(f"touch {run_log_path};")
-
             # Organise stage logs in a dir
             train_log_dir = self.path.joinpath('train-logs')
             if train_log_dir.exists():
@@ -262,17 +264,15 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                     self.stage_status = (stage, 'failed', '', 'LOG-C')
                     break
 
-            self.log = ''
             # Concat all the files in the train-log dir
             log_filenames = os.listdir(train_log_dir)
             log_filenames.sort()
-            with open(run_log_path, 'w') as outfile:
+            with open(self.run_log_path, 'w') as outfile:
                 for log_file in log_filenames:
                     with open(train_log_dir.joinpath(log_file)) as infile:
                         log_contents = infile.read()
                         outfile.write(log_contents)
                         outfile.write("\n")
-                        self.log += log_contents
 
         def run_training_in_background():
             def background_train_task():
