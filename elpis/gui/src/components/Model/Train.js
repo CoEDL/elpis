@@ -41,20 +41,19 @@ class ModelTrain extends Component {
   };
 
   handleModelStatus = () => {
-    const {status, modelStatus} = this.props;
+    const {status, modelStatus, modelGetLogs} = this.props;
 
     modelStatus();
+    modelGetLogs();
 
     if (status === "trained" || status === "error")
       this.props.clearInterval(this.state.statusInterval);
   };
 
-  handleLogDownload = async () => {
-    const {modelGetLogs} = this.props;
+  handleLogDownload = () => {
+    const {log, modelGetLogs} = this.props;
 
-    await modelGetLogs();
-
-    const {log} = this.props;
+    modelGetLogs();
 
     downloadjs(log, "log.txt", "text/txt");
   };
@@ -68,7 +67,7 @@ class ModelTrain extends Component {
   };
 
   render() {
-    const {t, currentEngine, name, settings, status, stage_status} =
+    const {t, currentEngine, name, settings, status, stage_status, log} =
       this.props;
 
         return (
@@ -149,15 +148,7 @@ class ModelTrain extends Component {
                                                         })}
                                                     </Accordion>
                                                     <p>{status}</p>
-                                                    <Button
-                                                        onClick={this.handleLogDownload}
-                                                        disabled={
-                                                            !name ||
-                                                            !(status === "trained" || status === "error")
-                                                        }
-                                                    >
-                                                        {t("model.train.logButton")}
-                                                    </Button>
+                                                   
                                                 </div>
                                             )}
                                         </Message.Content>
@@ -177,6 +168,23 @@ class ModelTrain extends Component {
                                             {t("common.nextButton")}
                                         </Button>
                                     </Segment>
+                                    {/* Logs */}
+                                    {status !== "ready" && (
+                                        <Segment padded inverted loading={log === null}>
+                                            <p style={{overflow: "scroll", height: "300px"}}>
+                                                {log}
+                                            </p>
+                                            <Button
+                                                onClick={this.handleLogDownload}
+                                                disabled={
+                                                    !name ||
+                                                    !(status === "trained" || status === "error")
+                                                }
+                                            >
+                                                {t("model.train.logButton")}
+                                            </Button>
+                                        </Segment>
+                                    )}
                                 </>
                             )}
                         </Grid.Column>
