@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {
   Accordion,
@@ -10,7 +10,7 @@ import {
   Card,
   Button,
   Message,
-  Loader
+  Loader,
 } from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
@@ -197,18 +197,18 @@ class ModelTrain extends Component {
 }
 
 function StatusIndicator({status}) {
-    if (status === 'training') {
-        return <Loader size="medium" text>Training</Loader>
+    if (status === "training") {
+        return (<Loader size="medium" text>Training</Loader>);
     }
 
     return (
         <p>{status}</p>
-    )
+    );
 }
 
 StatusIndicator.propTypes = {
     status: PropTypes.string.isRequired,
-}
+};
 
 
 const mapStateToProps = (state) => {
