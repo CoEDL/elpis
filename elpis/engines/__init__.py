@@ -43,9 +43,5 @@ class HFTEngine(Engine):
 
 ENGINES = {
     "kaldi": KaldiEngine(),
-<<<<<<< HEAD
-    "hftransformers": HFTransformersEngine(),
-=======
     "hft": HFTEngine(),
->>>>>>> hft
 }
