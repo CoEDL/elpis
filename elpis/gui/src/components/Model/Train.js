@@ -171,7 +171,7 @@ class ModelTrain extends Component {
                                     </Segment>
                                     {/* Logs */}
                                     {status !== "ready" && (
-                                        <Segment padded inverted loading={log === null}>
+                                        <Segment padded="very" inverted loading={log === null}>
                                             <p style={{overflow: "scroll", height: "300px"}}>
                                                 {log}
                                             </p>
@@ -197,7 +197,7 @@ class ModelTrain extends Component {
 }
 
 function StatusIndicator({status}) {
-    if (status === "training") {
+    if (status === "untrained") {
         return (<Loader size="medium" text>Training</Loader>);
     }
 
