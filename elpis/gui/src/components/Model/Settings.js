@@ -101,6 +101,7 @@ class ModelSettings extends Component {
                                 // max_duration_s = 60
                                 // learning_rate = "1e-4"
                                 // batch_size: 4
+                                // debug: True
                                 <>
                                     <Message content={t("model.settings.description")} />
                                     <Formik
@@ -113,6 +114,7 @@ class ModelSettings extends Component {
                                             max_duration_s: settings.max_duration_s,
                                             learning_rate: settings.learning_rate,
                                             batch_size: settings.batch_size,
+                                            debug: settings.debug,
                                         }}
                                         validate={values => {
                                             let errors = {};
@@ -130,6 +132,7 @@ class ModelSettings extends Component {
                                                 max_duration_s: values.max_duration_s,
                                                 learning_rate: values.learning_rate,
                                                 batch_size: values.batch_size,
+                                                debug: values.debug,
                                             }};
 
                                             modelSettings(postData);
@@ -207,6 +210,17 @@ class ModelSettings extends Component {
                                                                 <Field
                                                                     name="batch_size"
                                                                     placeholder="4"
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                        <Table.Row key="debug">
+                                                            <Table.Cell collapsing>
+                                                                Debug with 10:6 train val split
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    type="checkbox"
+                                                                    name="debug"
                                                                 />
                                                             </Table.Cell>
                                                         </Table.Row>

@@ -74,6 +74,7 @@ class Model(FSObject):  # TODO not thread safe
 
     @settings.setter
     def settings(self, value: dict) -> None:
+        print('model set settings', value)
         self.config['settings'] = value
 
     def build_stage_status(self, stage_names: Dict[str, str]):

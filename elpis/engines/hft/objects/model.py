@@ -101,9 +101,10 @@ class HFTModel(BaseModel):
             'min_duration_s': 0,
             'max_duration_s': 60,
             'learning_rate': 1e-4,
-            'batch_size': 4
+            'batch_size': 4,
+            'debug': False
         }
-        print("model settings", self.settings)
+        print('model default settings', self.settings)
 
         self._setup_stages()
 
@@ -173,7 +174,7 @@ class HFTModel(BaseModel):
             "group_by_length": True,
             "do_train": True,
             "do_eval": True,
-            "logging_dir": self.path.joinpath("runs")
+            "logging_dir": self.path.joinpath("runs"),
         }
 
         if DEBUG:
@@ -225,7 +226,7 @@ class HFTModel(BaseModel):
         if not Path(self.run_log_path).is_file():
             run(f"touch {self.run_log_path};")
 
-        sys.stdout = open(self.run_log_path, 'w')
+        # sys.stdout = open(self.run_log_path, 'w')
         sys.stderr = sys.stdout
 
         logging.basicConfig(
@@ -274,7 +275,7 @@ class HFTModel(BaseModel):
             random_state=self.data_args.split_seed
         )
         # Reduce the dataset size for debugging
-        if DEBUG:
+        if DEBUG or self.settings['debug'] is True:
             train_annos = train_annos[:10]
             devtest_annos = devtest_annos[:6]
 
@@ -561,6 +562,9 @@ class HFTModel(BaseModel):
         self.model_args = model_args
         self.data_args = data_args
         self.training_args = training_args
+        print('model_args', model_args)
+        print('data_args', data_args)
+        print('training_args', training_args)
 
     def train(self, on_complete:Callable=None):
         self.tb_writer = SummaryWriter(self.path / 'runs')
