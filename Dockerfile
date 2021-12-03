@@ -178,7 +178,6 @@ WORKDIR /
 RUN pyenv global 3.8.2
 RUN python -m venv venv
 RUN source venv/bin/activate
-#ENV PATH="/venv/bin:$PATH"
 RUN pip install --upgrade pip
 
 
@@ -202,9 +201,9 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 WORKDIR /
 
-# Temporarily use ben-hft branch
 RUN echo "===> Install Elpis"
-RUN git clone --single-branch --branch hft --depth=1 https://github.com/CoEDL/elpis.git
+# Remove `--single-branch` or include `--branch hft` below for development
+RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip

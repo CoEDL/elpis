@@ -653,9 +653,6 @@ class HFTModel(BaseModel):
             print(metrics)
             self.config['results'] = metrics
 
-            # {'eval_loss': 6.958859443664551, 'eval_wer': 1.0, 'eval_runtime': 0.9987, 'eval_samples_per_second': 1.001,
-            #  'epoch': 3.0, 'eval_samples': 1}
-        
         self._set_stage(EVALUATION, complete=True)
         self._set_finished_training(True)
 
@@ -674,15 +671,8 @@ class HFTModel(BaseModel):
         self.stage_status = self.stage, status, '', ''
 
     def get_train_results(self) -> Dict[str, float]:
-        # Sample results data
-        # 'eval_loss': 6.954674243927002,
-        # 'eval_wer': 1.0,
-        # 'eval_runtime': 4.9278,
-        # 'eval_samples_per_second': 0.203,
-        # 'epoch': 3.0,
-        # 'eval_samples': 1
+        # comparison_val is a property common to all engines so the GUI can sort models by a result value
         results = {"comparison_val": float(self.config['results']['eval_wer']),
-                   # property common to all engines so the GUI can sort models by a result value
                    "wer": float(self.config['results']['eval_wer']),
                    "eval_loss": self.config['results']['eval_loss']
                    }
@@ -744,7 +734,6 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
         if self.do_lower_case:
             text = text.upper()
         tokens = re.findall(self.pattern, text)
-        # logger.info(f"tokenizer – tokens: {text} → {tokens}")
         return tokens
 
     #############################################
@@ -827,10 +816,6 @@ class ModelArguments:
 class DataTrainingArguments:
     """
     Arguments pertaining to what data we are going to input our model for training and eval.
-
-    Using `HfArgumentParser` we can turn this class
-    into argparse arguments to be able to specify them on
-    the command line.
     """
 
     elpis_data_dir: str = field(
@@ -925,7 +910,6 @@ class DataCollatorCTCWithPadding:
         # different padding methods
         input_features = [{"input_values": feature["input_values"]} for feature in features]
         label_features = [{"input_ids": feature["labels"]} for feature in features]
-
         batch = self.processor.pad(
             input_features,
             padding=self.padding,
@@ -941,12 +925,9 @@ class DataCollatorCTCWithPadding:
                 pad_to_multiple_of=self.pad_to_multiple_of_labels,
                 return_tensors="pt",
             )
-
         # replace padding with -100 to ignore loss correctly
         labels = labels_batch["input_ids"].masked_fill(labels_batch.attention_mask.ne(1), -100)
-
         batch["labels"] = labels
-
         return batch
 
 
@@ -970,8 +951,7 @@ class CTCTrainer(Trainer):
             :obj:`torch.Tensor`: The tensor with training loss on this batch.
         """
 
-        # When we've finished the previous epoch, log the loss for
-        # that epoch in tensorboard.
+        # When we've finished the previous epoch, log the loss for that epoch in tensorboard.
         if int(self.state.epoch) > self.last_tb_epoch:
             self.tb_writer.add_scalar('train/loss', self.epoch_loss, int(self.state.epoch)-1)
             self.last_tb_epoch = int(self.state.epoch)
@@ -1008,8 +988,8 @@ class CTCTrainer(Trainer):
             loss.backward()
 
         self.epoch_loss += loss.item()
-
         return loss.detach()
+
 
 # For dev test purpose (to run without the GUI)…
 if __name__ == "__main__":
