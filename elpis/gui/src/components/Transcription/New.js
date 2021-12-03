@@ -93,7 +93,7 @@ class NewTranscription extends Component {
     }
 
     render = () => {
-        const {t, currentEngine, filename, list, status, stage_status, confidence, modelName} = this.props;
+        const {t, currentEngine, filename, list, status, stage_status, confidence, modelName, text} = this.props;
         const {uploading, show_confidence_opacity} = this.state;
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
@@ -105,8 +105,6 @@ class NewTranscription extends Component {
             <Icon name="circle notched" size="big" loading /> :
             null;
         let enableTranscription = false;
-
-        console.log("confidence", confidence);
 
         if (modelName && filename && (status === "ready" || status === "transcribed")) enableTranscription = true;
 
@@ -210,18 +208,20 @@ class NewTranscription extends Component {
                             {status === "transcribed" &&
                                 <Segment>
                                     <Segment vertical>
-                                        <div className="conf-tools">
-                                            <Popup
-                                                content={t("transcription.results.toggleOpacityLabel")}
-                                                trigger={
-                                                    <Checkbox
-                                                        toggle
-                                                        onChange={this.handleOpacityToggle}
-                                                        checked={show_confidence_opacity}
-                                                    />
-                                                }
-                                            />
-                                        </div>
+                                        {confidence &&
+                                            <div className="conf-tools">
+                                                <Popup
+                                                    content={t("transcription.results.toggleOpacityLabel")}
+                                                    trigger={
+                                                        <Checkbox
+                                                            toggle
+                                                            onChange={this.handleOpacityToggle}
+                                                            checked={show_confidence_opacity}
+                                                        />
+                                                    }
+                                                />
+                                            </div>
+                                        }
                                         <div
                                             className={classNames("transcription-text",
                                             {"ignore-confidence-opacity": !show_confidence_opacity})}
@@ -229,6 +229,9 @@ class NewTranscription extends Component {
                                             {confidence && confidence.map((item, index) => (
                                                 <p key={index} style={{opacity: item[1]}}>{item[0]}</p>
                                                 ))
+                                            }
+                                            {!confidence && text &&
+                                                <p>{text}</p>
                                             }
                                         </div>
                                     </Segment>

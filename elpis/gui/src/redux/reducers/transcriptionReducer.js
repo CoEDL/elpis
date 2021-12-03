@@ -37,8 +37,6 @@ const transcription = (state = initState, action) => {
         case actionTypes.TRANSCRIPTION_GET_CONFIDENCE_SUCCESS:
             var {confidence} = action.response.data.data;
 
-            console.log("reducer got confidence", confidence);
-
             return {...state, confidence: confidence};
 
         default:
