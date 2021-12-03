@@ -76,6 +76,7 @@ export default {
             status: "/api/transcription/status",
             text: "/api/transcription/text",
             elan: "/api/transcription/elan",
+            confidence: "/api/transcription/confidence",
         },
     },
 };

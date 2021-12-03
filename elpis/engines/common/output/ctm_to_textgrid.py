@@ -77,7 +77,6 @@ def create_textgrid(wav_dictionary: Dict[str, str],
                        includeBlankSpaces=False
                        )
 
-
 def main() -> None:
     parser: ArgumentParser = ArgumentParser(description="Converts Kaldi CTM format to Praat Textgrid Format.")
     parser.add_argument("-c", "--ctm",

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "elpis"
-version = "0.96.7"
+version = "0.96.12"
 description = "Elpis is a tool which allows language workers with minimal computational experience to build their own speech recognition models to automatically transcribe audio."
 authors = ["CoEDL"]
 license = "Apache-2.0"
@@ -24,7 +24,6 @@ numba = "0.47.0"
 python-dotenv = "^0.15.0"
 praatio = "^5.0.0"
 nltk = "^3.6.5"
-
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"

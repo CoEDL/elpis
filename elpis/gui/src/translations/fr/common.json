@@ -247,11 +247,13 @@
             "downloadButtonNotReadyYet": "Un bouton de téléchargement sera disponible lorsque les données auront été transcrites et que le fichier aura été généré",
             "downloadLabel": "Télécharger",
             "downloadTextButton": "Fichier texte",
-            "downloadElanButton": "Fichier Elan"
+            "downloadElanButton": "Fichier Elan",
+            "toggleOpacityLabel": "Basculer l'opacité."
         },
         "engines": {
             "kaldi": {
                 "stages": {
+                    "transcribing": "Transcription",
                     "featureExtraction": "Extraction des vecteurs de traits",
                     "modelCreation": "Création du modèle",
                     "transcriptionDecoding": "Décodage (transcription)",
