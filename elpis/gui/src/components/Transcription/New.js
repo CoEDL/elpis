@@ -297,7 +297,7 @@ const mapDispatchToProps = dispatch => ({
             .then(() => dispatch(datasetLoad(datasetData)))
             .then(() => {
                 console.log("pronDictData", pronDictData)
-                if (pronDictData) {
+                if (pronDictData && pronDictData["name"]) {
                     dispatch(pronDictLoad(pronDictData))
                 }
             });
