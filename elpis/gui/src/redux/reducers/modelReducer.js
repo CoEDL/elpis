@@ -106,6 +106,7 @@ const model = (state = initState, action) => {
         
         case actionTypes.MODEL_GET_LOG_SUCCESS:
             ({data, status} = action.response.data);
+            
             if (status === 200) {
                 return {...state, log: data.log};
             }
