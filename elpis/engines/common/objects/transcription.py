@@ -93,4 +93,4 @@ class Transcription(FSObject):
 
     @abstractmethod
     def get_confidence(self):
-        return None
+        pass

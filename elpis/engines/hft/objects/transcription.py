@@ -118,6 +118,9 @@ class HFTTranscription(BaseTranscription):
         with open(self.elan_path, 'r') as fin:
             return fin.read()
 
+    def get_confidence(self):
+        return None
+
     def _get_wav2vec2_requirements(self) -> Tuple[Wav2Vec2Processor, Wav2Vec2ForCTC]:
         """Builds and returns pretrained Wav2Vec2 Processor and Model from the
         project path.
