@@ -68,6 +68,14 @@ class Model(FSObject):  # TODO not thread safe
     def results(self, value: str):
         self.config['results'] = value
 
+    @property
+    def settings(self) -> dict:
+        return self.config['settings']
+
+    @settings.setter
+    def settings(self, value: dict) -> None:
+        self.config['settings'] = value
+
     def build_stage_status(self, stage_names: Dict[str, str]):
         for stage_file, stage_name in stage_names.items():
             stage_status = self.config['stage_status']

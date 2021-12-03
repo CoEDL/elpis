@@ -48,9 +48,10 @@ class ModelDashboard extends Component {
     }
 
     render() {
-        const {t, currentEngine, engineHumanNames, name, list} = this.props;
+        const {t, engine, engineHumanNames, name, list} = this.props;
         const {column, direction} = this.state;
-        const redirectAfterModel = currentEngine === "kaldi" ?
+        // TODO remove this when removing ESPnet
+        const redirectAfterModel = (["kaldi", "hftransformers"].includes(engine)) ?
             urls.gui.model.settings :
             urls.gui.model.train;
         let listEl = <p>{t("model.dashboard.noneMessage")}</p>;
@@ -149,7 +150,7 @@ class ModelDashboard extends Component {
                                 {t("model.dashboard.title")}
                             </Header>
                             <CurrentModelName />
-                            {currentEngine &&
+                            {engine &&
                                 <>
                                     {list.length === 0 &&
                                         <NewForm />
@@ -186,7 +187,7 @@ const mapStateToProps = state => {
     return {
         name: state.model.name,
         list: state.model.modelList,
-        currentEngine: state.engine.engine,
+        engine: state.engine.engine,
         engineHumanNames: state.engine.engine_human_names,
     };
 };

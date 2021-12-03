@@ -57,16 +57,15 @@ class ModelResults extends Component {
                                 </Table.Row>
                             }
                             {currentEngine && currentEngine === "hftransformers" &&
-                                    <Table.Row>
-                                        <Table.Cell>
-                                            {eval_loss}
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {results.eval_loss}
-                                        </Table.Cell>
-                                    </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {eval_loss}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {results.eval_loss}
+                                    </Table.Cell>
+                                </Table.Row>
                             }
-
                             {currentEngine && ["espnet", "kaldi"].includes(currentEngine) &&
                                 <>
                                     <Table.Row>

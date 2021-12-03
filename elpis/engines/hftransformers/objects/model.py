@@ -47,13 +47,9 @@ if version.parse(torch.__version__) >= version.parse("1.6"):
     _is_native_amp_available = True
     from torch.cuda.amp import autocast
 
-logger = logging.getLogger(__name__)
-
-def list_field(default=None, metadata=None):
-    return field(default_factory=lambda: default, metadata=metadata)
 
 # Used to reduce training time when debugging
-DEBUG = True
+DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "max_train_samples": "2",
     "num_train_epochs": "3",
@@ -61,13 +57,6 @@ QUICK_TRAIN_BUILD_ARGUMENTS = {
     "per_device_train_batch_size": "1",
     "per_device_eval_batch_size": "1"
 }
-
-# TODO get this from a GUI model setting
-WORD_DELIMITER_TOKEN = " "
-NUM_TRAIN_EPOCHS = "10"
-MINIMUM_DURATION_SECONDS = 0
-MAXIMUM_DURATION_SECONDS = 60
-LEARNING_RATE = "1e-4"
 
 # Training Stages
 TOKENIZATION = "tokenization"
@@ -85,14 +74,16 @@ TRAINING_STAGES = [
 UNFINISHED = "untrained"
 FINISHED = "trained"
 
-# Use Mixed precision training
-FP16 = True if torch.cuda.is_available() else False
+logger = logging.getLogger(__name__)
+
+def list_field(default=None, metadata=None):
+    return field(default_factory=lambda: default, metadata=metadata)
 
 
 class HFTransformersModel(BaseModel):
 
-    OUTPUT_DIR_NAME = "wav2vec2"
-    SAMPLING_RATE = 16_000
+    # TODO check if 16_000 works without _
+    SAMPLING_RATE = 16_000 # This is standard for HFT
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -104,6 +95,15 @@ class HFTransformersModel(BaseModel):
         self.config['engine_name'] = "hftransformers"
         self.config['status'] = "untrained"
         self.config['results'] = {}
+        self.settings = {
+            'word_delimiter_token': " ",
+            'num_train_epochs': 10,
+            'min_duration_s': 0,
+            'max_duration_s': 60,
+            'learning_rate': 1e-4,
+            'batch_size': 4
+        }
+        print("model settings", self.settings)
 
         # Setup logging
         # self.run_log_path = self.path.joinpath('train.log')
@@ -162,13 +162,13 @@ class HFTransformersModel(BaseModel):
             "train_size": "0.8",
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
-            "output_dir": self.path.joinpath(self.OUTPUT_DIR_NAME),
+            "output_dir": self.path.joinpath('wav2vec2'),
             "overwrite_output_dir": True,
-            "num_train_epochs": NUM_TRAIN_EPOCHS,
-            "per_device_train_batch_size": "4",
-            "per_device_eval_batch_size": "4",
+            "num_train_epochs": int(self.settings['num_train_epochs']),
+            "per_device_train_batch_size": int(self.settings['batch_size']),
+            "per_device_eval_batch_size": int(self.settings['batch_size']),
             "gradient_accumulation_steps": "2",
-            "learning_rate": LEARNING_RATE,
+            "learning_rate": self.settings['learning_rate'],
             "weight_decay": "0.005",
             "warmup_steps": "1000",
             "evaluation_strategy": "steps",
@@ -176,7 +176,7 @@ class HFTransformersModel(BaseModel):
             "eval_steps": "500",
             "save_total_limit": "2",
             "gradient_checkpointing": True,
-            "fp16": FP16,
+            "fp16": True if torch.cuda.is_available() else False,
             "group_by_length": True,
             "do_train": True,
             "do_eval": True,
@@ -228,8 +228,12 @@ class HFTransformersModel(BaseModel):
 
         # Log on each process the small summary:
         logger.warning(
-            f"Process rank: {self.training_args.local_rank}, device: {self.training_args.device}, n_gpu: {self.training_args.n_gpu}"
-            + f"distributed training: {bool(self.training_args.local_rank != -1)}, 16-bits training: {self.training_args.fp16}")
+            f"Process rank: {self.training_args.local_rank}, "
+            f"device: {self.training_args.device}, "
+            f"n_gpu: {self.training_args.n_gpu}, "
+            f"distributed training: {bool(self.training_args.local_rank != -1)}, "
+            f"16-bits training: {self.training_args.fp16}"
+        )
         # Set the verbosity to info of the Transformers logger (on main process only):
         # if is_main_process(training_args.local_rank):
         #     transformers.utils.logging.set_verbosity_info()
@@ -261,12 +265,13 @@ class HFTransformersModel(BaseModel):
             test_size=(1-self.data_args.train_size),
             random_state=self.data_args.split_seed
         )
-        # if DEBUG:
-        train_annos = train_annos[:10]
-        devtest_annos = devtest_annos[:6]
-        #dev_annos, test_annos = train_test_split(devtest_annos, test_size=0.5, random_state=data_args.split_seed)
-        dev_annos = test_annos = devtest_annos
+        # Reduce the dataset size for debugging
+        if DEBUG:
+            train_annos = train_annos[:10]
+            devtest_annos = devtest_annos[:6]
 
+        # Make dev and test the same because we are mostly working with small datasets
+        dev_annos = test_annos = devtest_annos
 
         split_dir = data_dir / 'splits'
         split_dir.mkdir(exist_ok=True)
@@ -293,10 +298,14 @@ class HFTransformersModel(BaseModel):
         ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
         return ds
 
-    def get_tokenizer(self, data_dir, word_delimiter_token=WORD_DELIMITER_TOKEN):
-        file_name = self.create_vocabulary(data_dir, word_delimiter_token)
+    def get_tokenizer(self, data_dir):
+        file_name = self.create_vocabulary(data_dir, self.settings['word_delimiter_token'])
 
-        tokenizer = Wav2Vec2CTCTokenizer(file_name, unk_token='[UNK]', pad_token='[PAD]', word_delimiter_token=word_delimiter_token,)
+        tokenizer = Wav2Vec2CTCTokenizer(file_name,
+                                         unk_token='[UNK]',
+                                         pad_token='[PAD]',
+                                         word_delimiter_token=self.settings['word_delimiter_token']
+                                         )
         return tokenizer
 
     def create_vocabulary(self, data_dir, word_delimiter_token):
@@ -458,8 +467,10 @@ class HFTransformersModel(BaseModel):
             dur_ms = stop_ms - start_ms
             speech_array, sample_rate = torchaudio.load(filepath=path, frame_offset=start_frame, num_frames=num_frames)
             # Check that frames exceeds number of characters, wav file is not all zeros, and duration between min, max
-            if audio_metadata.num_frames >= len(text) and speech_array.count_nonzero() \
-                    and MINIMUM_DURATION_SECONDS < dur_ms/1000 < MAXIMUM_DURATION_SECONDS:
+            print('text length', len(text))
+            if int(audio_metadata.num_frames) >= len(text) \
+                    and speech_array.count_nonzero() \
+                    and float(self.settings['min_duration_s']) < dur_ms/1000 < float(self.settings['max_duration_s']):
                 # Resample if required
                 if sample_rate != HFTransformersModel.SAMPLING_RATE:
                     print(f'Resample from {sample_rate} to {HFTransformersModel.SAMPLING_RATE} | '
@@ -468,9 +479,9 @@ class HFTransformersModel(BaseModel):
                           f'{str(start_frame).rjust(15)} : {str(end_frame).ljust(15)}')
                     resampler = torchaudio.transforms.Resample(sample_rate, HFTransformersModel.SAMPLING_RATE)
                     speech_array = resampler(speech_array)
-                # Use a unique key for the speech key
+                # Use a unique key for the speech key in case there are multiple annotations for audio files
+                # i.e. don't use the audio file path as the key
                 unique_key = f'{path}{start_ms}{stop_ms}'
-                # print(unique_key)
                 speech[unique_key] = speech_array.squeeze().numpy()
                 # For debugging/ checking dataset, generate an audio file for listening
                 # torchaudio.save(self.tmp_audio_path.joinpath(os.path.basename(path)), speech_array, HFTransformersModel.SAMPLING_RATE)

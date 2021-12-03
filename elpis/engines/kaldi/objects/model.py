@@ -22,7 +22,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         super().__init__(**kwargs)
         self.pron_dict: PronDict = None
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
-        self.config['ngram'] = 1  # default to 1 to make playing quicker
         self.config['engine_name'] = 'kaldi'
         stage_names = {
             "0_setup.sh": "setup",
@@ -36,6 +35,8 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         super().build_stage_status(stage_names)
         self.config['stage_count'] = 0
         self.config['current_stage'] = None
+        self.settings = {'ngram': 1}
+        print("model settings", self.settings)
 
     @classmethod
     def load(cls, base_path: Path):
@@ -46,14 +47,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     def link_pron_dict(self, pron_dict: PronDict):
         self.pron_dict = pron_dict
         self.config['pron_dict_name'] = pron_dict.name
-
-    @property
-    def ngram(self) -> int:
-        return int(self.config['ngram'])
-
-    @ngram.setter
-    def ngram(self, value: int) -> None:
-        self.config['ngram'] = value
 
     @BaseModel.stage_status.getter
     def stage_status(self):
@@ -246,7 +239,8 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'r') as file :
                     filedata = file.read()
                 # Add settings to replace here
-                filedata = filedata.replace('lm_order=1', f'lm_order={self.ngram}')
+                ngram = self.settings['ngram']
+                filedata = filedata.replace('lm_order=1', f'lm_order={ngram}')
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'w') as file:
                     file.write(filedata)
 
