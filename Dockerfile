@@ -30,8 +30,10 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libsqlite3-dev \
     libbz2-dev \
     liblzma-dev \
+    lsof \
     lzma \
     make \
+    nvtop \
     software-properties-common \
     subversion \
     tree \
@@ -114,6 +116,7 @@ RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 
 ########################## ESPNET INSTALLATION #########################
+# Will be removed in a future commit.
 
 # Some ESPnet dependencies may be covered above but listing all for the sake of completeness.
 #RUN echo "===> Install ESPnet dependencies" && \
@@ -175,25 +178,21 @@ WORKDIR /
 RUN pyenv global 3.8.2
 RUN python -m venv venv
 RUN source venv/bin/activate
-#ENV PATH="/venv/bin:$PATH"
 RUN pip install --upgrade pip
 
 
 ########################## HF Transformers INSTALLATION #########################
 
-# Setting up HF Transformers for Elpis from Persephone repository.
-WORKDIR /
-RUN echo "===> Install HFT transformers & wav2vec2"
-#RUN git clone --single-branch --branch elpis_wav2vec2_integration --depth=1 https://github.com/persephone-tools/transformers
-#WORKDIR /transformers
-#RUN pip install .
-#WORKDIR /transformers/examples/research_projects/wav2vec2
 # Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
 # Override the dep info from requirements.txt so that we can specifiy CUDA version
-#RUN pip install -r requirements.txt
-RUN pip install transformers datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
+# Pin transformers to 4.6.0 because the model class has args code which breaks on later versions
+RUN pip install transformers==4.6.0 datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
 # Set torch version for CUDA 11
 RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip install tensorboard==2.7.0
+# Cache the pretrained models
+COPY download_wav2vec2.py /root/download_wav2vec2.py
+RUN python /root/download_wav2vec2.py
 
 # revert this -- causing `--gradient_checkpointing: conflicting option string` error
 #COPY .cache/huggingface/transformers /root/.cache/huggingface/transformers
@@ -207,9 +206,9 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 WORKDIR /
 
-# Temporarily use ben-hft branch
 RUN echo "===> Install Elpis"
-RUN git clone --single-branch --branch ben-hft-gpu --depth=1 https://github.com/CoEDL/elpis.git
+# Remove `--single-branch` or include `--branch hft` below for development
+RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip
@@ -224,6 +223,20 @@ WORKDIR /elpis-gui
 RUN yarn install && \
     yarn run build
 
+WORKDIR /
+
+# Sample data for command line interaction with Elpis
+WORKDIR /
+RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
+RUN git clone --depth=1 https://github.com/CoEDL/timit-elan.git
+WORKDIR /datasets
+RUN ln -s /toy-corpora/abui /datasets/abui
+RUN ln -s /toy-corpora/na /datasets/na
+RUN ln -s /timit-elan /datasets/timit
+# Download the GK data from Google Drive folder. Temporarily from Ben's account. TODO, find a more permanent location
+WORKDIR /datasets/gk
+RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1Irxz6GB3yB4h95C2b_RfP31dDNHzbv_f' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1Irxz6GB3yB4h95C2b_RfP31dDNHzbv_f" -O gk.zip && rm -rf /tmp/cookies.txt
+RUN unzip -j gk.zip && rm -f gk.zip
 
 ########################## RUN THE APP ##########################
 
@@ -235,7 +248,7 @@ RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 WORKDIR /elpis
 RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
 RUN echo "export PATH=$PATH:${POETRY_PATH}/bin:/kaldi/src/bin/" >> ~/.zshrc
-RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5000\"" >> ~/.zshrc
+RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5001\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # ENV vars for non-interactive running
@@ -246,7 +259,9 @@ ENV LANG=C.UTF-8
 
 WORKDIR /elpis
 
-ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
+ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0", "--port", "5001"]
 
-EXPOSE 5000:5000
-EXPOSE 3000:3000
+# 5001 is for the Flask server
+EXPOSE 5001
+# 3000 is for the Webpack dev server
+EXPOSE 3000

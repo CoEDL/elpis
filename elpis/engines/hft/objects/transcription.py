@@ -2,10 +2,12 @@ from pathlib import Path
 import sys
 from typing import List, Tuple
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
-from elpis.engines.hftransformers.objects.model import HFTransformersModel
+from elpis.engines.hft.objects.model import HFTModel
 
 import soundfile as sf
 import torch
+import torchaudio
+import librosa
 from itertools import groupby
 import pympi
 import string
@@ -32,7 +34,9 @@ FINISHED = 'transcribed'
 UNFINISHED = 'transcribing'
 
 
-class HFTransformersTranscription(BaseTranscription):
+class HFTTranscription(BaseTranscription):
+
+    SAMPLING_RATE = 16_000
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -42,11 +46,11 @@ class HFTransformersTranscription(BaseTranscription):
         self.text_path = self.path / "one-best-hypothesis.txt"
         self.xml_path = self.path / "transcription.xml"
         self.elan_path = self.path / "transcription.eaf"
-        self.model: HFTransformersModel
+        self.model: HFTModel
 
         # Setup logging
-        run_log_path = self.path.joinpath('train.log')
-        sys.stdout = open(run_log_path, 'w')
+        # run_log_path = self.path.joinpath('train.log')
+        # sys.stdout = open(run_log_path, 'w')
         sys.stderr = sys.stdout
 
         self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(STAGES)]
@@ -56,18 +60,24 @@ class HFTransformersTranscription(BaseTranscription):
         self.build_stage_status(stage_names)
 
     def transcribe(self, on_complete: callable = None) -> None:
+        print("=== Load processor and model")
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
 
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # model.to(device)
+
         # Load audio
         self._set_stage(LOAD_AUDIO)
+        print("=== Load audio")
         audio_input, sample_rate = self._load_audio(self.audio_file_path)
         self._set_stage(LOAD_AUDIO, complete=True)
 
         # pad input values and return pt tensor
         self._set_stage(PROCESS_INPUT)
+        print("=== Process input")
         input_values = processor(
-            audio_input, sampling_rate=sample_rate, return_tensors="pt").input_values
+            audio_input, sampling_rate=HFTTranscription.SAMPLING_RATE, return_tensors="pt").input_values
         self._set_stage(PROCESS_INPUT, msg='Processed input values')
 
         # retrieve logits & take argmax
@@ -79,16 +89,19 @@ class HFTransformersTranscription(BaseTranscription):
         # transcribe
         self._set_stage(TRANSCRIPTION)
         transcription = processor.decode(predicted_ids[0])
+        print('transcription', transcription)
         self._set_stage(TRANSCRIPTION, complete=True)
 
-
         self._set_stage(SAVING)
+        print('=== Save transcription')
         self._save_transcription(transcription)
 
         self._set_stage(SAVING, msg='Saved transcription, generating utterances')
         # Utterances to be used creating elan files
+        print('=== Generate utterances')
         utterances = self._generate_utterances(
             processor, predicted_ids, input_values, transcription)
+        print('=== Save utterances (elan and text)')
         self._save_utterances(utterances)
 
         self._set_stage(SAVING, complete=True)
@@ -183,20 +196,27 @@ class HFTransformersTranscription(BaseTranscription):
         """Saves Elan output using the pympi library"""
         result = pympi.Elan.Eaf(author="elpis")
 
+<<<<<<< HEAD:elpis/engines/hftransformers/objects/transcription.py
         tier = 'tx'
         result.add_tier(tier)
+=======
+        result.add_linked_file("audio.wav")
+        result.add_tier('default')
+>>>>>>> hft:elpis/engines/hft/objects/transcription.py
 
         to_millis = lambda seconds: int(seconds * 1000)
         for word, start, end in zip(*utterances):
             start, end = to_millis(start), to_millis(end) + 1
-            result.add_annotation(id_tier=tier, start=start, end=end, value=word)
+            result.add_annotation(id_tier='default', start=start, end=end, value=word)
 
         pympi.Elan.to_eaf(self.elan_path, result)
 
     def _load_audio(self, file: Path) -> Tuple:
-        return sf.read(file)
+        audio, sample_rate = librosa.load(file, sr=HFTTranscription.SAMPLING_RATE)
+        return audio, sample_rate
 
     def prepare_audio(self, audio: Path, on_complete: callable = None):
+        print("=== Prepare audio", audio, self.audio_file_path)
         self._resample_audio_file(audio, self.audio_file_path)
         if on_complete is not None:
             on_complete()
@@ -205,7 +225,7 @@ class HFTransformersTranscription(BaseTranscription):
         """Resamples the audio file to be the same sampling rate as the model
         was trained with.
 
-        Target sampling rate is taken from the HFTransformersModel class.
+        Target sampling rate is taken from the HFTModel class.
 
         Parameters:
             audio (Path): A path to a soundfile
@@ -221,7 +241,7 @@ class HFTransformersTranscription(BaseTranscription):
         sf.write(sound_copy, data, sample_rate)
 
         # Resample and overwrite
-        sf.write(dest, data, HFTransformersModel.SAMPLING_RATE)
+        sf.write(dest, data, HFTModel.SAMPLING_RATE)
 
     def _set_finished_transcription(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED

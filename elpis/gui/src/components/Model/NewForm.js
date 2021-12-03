@@ -76,7 +76,10 @@ class NewForm extends Component {
                         modelData["dataset_name"] = values.dataset_name;
                     }
 
-                    const redirectAfterModel = engine === "kaldi" ? urls.gui.model.settings : urls.gui.model.train;
+                    // TODO remove this when removing ESPnet
+                    const redirectAfterModel = (["kaldi", "hft"].includes(engine)) ?
+                        urls.gui.model.settings :
+                        urls.gui.model.train;
 
                     modelNew(modelData, this.props.history, redirectAfterModel);
                 }}

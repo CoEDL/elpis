@@ -47,6 +47,7 @@ def create_app(test_config=None):
     import logging
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.DEBUG)
+    # Prevent the HTTP request logs polluting more important train logs
     log.disabled = True
 
     # When making this multi-user, the secret key would require to be a secure hash.

@@ -234,7 +234,7 @@ class Interface(FSObject):
     def list_models_verbose(self):
         models = []
         for hash_dir in os.listdir(f'{self.models_path}'):
-            if not hash_dir.startswith('.'):
+            if not hash_dir.startswith('.') or not 'latest':
                 config_file_path = self.models_path.joinpath(hash_dir, "model.json")
                 if os.path.isfile(config_file_path):
                     with config_file_path.open() as model_config_file:
@@ -275,7 +275,7 @@ class Interface(FSObject):
         if not Path(f'{self.transcriptions_path}').exists():
             return names # no directory -> no items in list
         for hash_dir in os.listdir(f'{self.transcriptions_path}'):
-            if not hash_dir.startswith('.'):
+            if not hash_dir.startswith('.') or not 'latest':
                 with self.transcriptions_path.joinpath(
                         hash_dir, self.engine.transcription._config_file).open() as fin:
                     name = json.load(fin)['name']
