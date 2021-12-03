@@ -94,7 +94,7 @@ class ModelSettings extends Component {
                                     </Formik>
                                 </>
                             }
-                            {currentEngine && currentEngine === "hftransformers" && name &&
+                            {currentEngine && currentEngine === "hft" && name &&
                                 // word_delimiter_token = " "
                                 // num_train_epochs = "10"
                                 // min_duration_s = 0

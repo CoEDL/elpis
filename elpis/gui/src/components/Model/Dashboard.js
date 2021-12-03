@@ -51,7 +51,7 @@ class ModelDashboard extends Component {
         const {t, engine, engineHumanNames, name, list} = this.props;
         const {column, direction} = this.state;
         // TODO remove this when removing ESPnet
-        const redirectAfterModel = (["kaldi", "hftransformers"].includes(engine)) ?
+        const redirectAfterModel = (["kaldi", "hft"].includes(engine)) ?
             urls.gui.model.settings :
             urls.gui.model.train;
         let listEl = <p>{t("model.dashboard.noneMessage")}</p>;

@@ -77,7 +77,7 @@ class NewForm extends Component {
                     }
 
                     // TODO remove this when removing ESPnet
-                    const redirectAfterModel = (["kaldi", "hftransformers"].includes(engine)) ?
+                    const redirectAfterModel = (["kaldi", "hft"].includes(engine)) ?
                         urls.gui.model.settings :
                         urls.gui.model.train;
 
