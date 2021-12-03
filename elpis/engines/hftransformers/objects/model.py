@@ -309,12 +309,12 @@ class HFTransformersModel(BaseModel):
             vocab = list(set(all_text))
             return {"vocab": [vocab], "all_text": [all_text]}
 
-        vocab = self.hf_dataset['train'].map(
+        vocab = self.hft_dataset['train'].map(
             extract_all_chars,
             batched=True,
             batch_size=-1,
             keep_in_memory=True,
-            remove_columns=self.hf_dataset['train'].column_names,)
+            remove_columns=self.hft_dataset['train'].column_names,)
         vocab_list = list(set(vocab["vocab"][0]))
         naive_vocab_dict = {v: k for k, v in enumerate(vocab_list)}
         if language_data:
@@ -409,13 +409,13 @@ class HFTransformersModel(BaseModel):
             batch['duration'] = len(batch['speech'])/batch['sampling_rate']
             return batch
 
-        self.hf_dataset = self.hf_dataset.map(
+        self.hft_dataset = self.hft_dataset.map(
             speech_file_to_array_fn,
-            remove_columns=self.hf_dataset['train'].column_names,
+            remove_columns=self.hft_dataset['train'].column_names,
             num_proc=self.data_args.preprocessing_num_workers,
         )
-        print("=== hf_dataset")
-        print(self.hf_dataset)
+        print("=== hft_dataset")
+        print(self.hft_dataset)
 
 
     def prepare_dataset(self):
@@ -431,9 +431,9 @@ class HFTransformersModel(BaseModel):
                 batch["labels"] = self.processor(batch["target_text"]).input_ids
             return batch
 
-        self.hf_dataset = self.hf_dataset.map(
+        self.hft_dataset = self.hft_dataset.map(
             prepare_dataset,
-            remove_columns=self.hf_dataset['train'].column_names,
+            remove_columns=self.hft_dataset['train'].column_names,
             batch_size=self.training_args.per_device_train_batch_size,
             batched=True,
             num_proc=self.data_args.preprocessing_num_workers,
@@ -444,11 +444,11 @@ class HFTransformersModel(BaseModel):
         speech = {}
         audio_paths = set()
         rejected_count = 0
-        for utt in self.hf_dataset['train']:
+        for utt in self.hft_dataset['train']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
-        for utt in self.hf_dataset['dev']:
+        for utt in self.hft_dataset['dev']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
-        for utt in self.hf_dataset['test']:
+        for utt in self.hft_dataset['test']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
         for path, text, start_ms, stop_ms in audio_paths:
             audio_metadata = torchaudio.info(path)
@@ -479,10 +479,10 @@ class HFTransformersModel(BaseModel):
                 print(f'rejected {os.path.basename(path)} {start_ms} {stop_ms}')
 
         # Remove rejected speech by filtering on speech matching length the required conditions
-        self.hf_dataset = self.hf_dataset.filter(lambda x: f'{path}{start_ms}{stop_ms}' in speech.keys())
+        self.hft_dataset = self.hft_dataset.filter(lambda x: f'{path}{start_ms}{stop_ms}' in speech.keys())
         print(rejected_count, "files removed due to number of frames, zero wav or too short")
         # Output some examples of the data for sanity check
-        texts = [x["text"] for x in self.hf_dataset["train"]]
+        texts = [x["text"] for x in self.hft_dataset["train"]]
         if len(texts) > 10:
             print(f"Random sample of {len(texts)} valid transcriptions from the original training set")
             print("\n".join(random.choices(texts, k=10)))
@@ -522,12 +522,12 @@ class HFTransformersModel(BaseModel):
         data_collator = DataCollatorCTCWithPadding(processor=self.processor, padding=True)
         # Initialize our Trainer
         trainer = CTCTrainer(
-            model=self.hf_model,
+            model=self.hft_model,
             data_collator=data_collator,
             args=self.training_args,
             compute_metrics=compute_metrics,
-            train_dataset=self.hf_dataset['train'] if self.training_args.do_train else None,
-            eval_dataset=self.hf_dataset['dev'] if self.training_args.do_eval else None,
+            train_dataset=self.hft_dataset['train'] if self.training_args.do_train else None,
+            eval_dataset=self.hft_dataset['dev'] if self.training_args.do_eval else None,
             tokenizer=self.processor.feature_extractor,)
         trainer.tb_writer = self.tb_writer
         # Set a variable to track the total loss for a given epoch. (Unsure why
@@ -560,7 +560,7 @@ class HFTransformersModel(BaseModel):
 
         data_dir = Path(self.data_args.elpis_data_dir)
         self.create_split(data_dir)
-        self.hf_dataset = self.get_dataset(data_dir)
+        self.hft_dataset = self.get_dataset(data_dir)
 
         logging.info('Got dataset.')
 
@@ -576,8 +576,8 @@ class HFTransformersModel(BaseModel):
         tokenizer = self.get_tokenizer(data_dir)
         feature_extractor = self.get_feature_extractor()
         self.processor = self.get_processor(feature_extractor, tokenizer)
-        self.hf_model = self.get_model()
-        self.hf_model.to(device)
+        self.hft_model = self.get_model()
+        self.hft_model.to(device)
 
         self._set_stage(TOKENIZATION, complete=True)
 
@@ -588,11 +588,11 @@ class HFTransformersModel(BaseModel):
         self.prepare_dataset()
 
         if self.model_args.freeze_feature_extractor:
-            self.hf_model.freeze_feature_extractor()
+            self.hft_model.freeze_feature_extractor()
 
         self._set_stage(PREPROCESSING, complete=True)
 
-        print(f"len of dataset: {len(self.hf_dataset)}")
+        print(f"len of dataset: {len(self.hft_dataset)}")
 
         # 3. Training
         self._set_stage(TRAIN)
@@ -618,9 +618,9 @@ class HFTransformersModel(BaseModel):
 
             metrics = train_result.metrics
             max_train_samples = (
-                self.data_args.max_train_samples if self.data_args.max_train_samples is not None else len(self.hf_dataset['train'])
+                self.data_args.max_train_samples if self.data_args.max_train_samples is not None else len(self.hft_dataset['train'])
             )
-            metrics["train_samples"] = min(max_train_samples, len(self.hf_dataset['train']))
+            metrics["train_samples"] = min(max_train_samples, len(self.hft_dataset['train']))
 
             trainer.log_metrics(TRAIN, metrics)
             trainer.save_metrics(TRAIN, metrics)
@@ -633,8 +633,8 @@ class HFTransformersModel(BaseModel):
         if self.training_args.do_eval:
             logger.info("*** Evaluate ***")
             metrics = trainer.evaluate()
-            max_val_samples = self.data_args.max_val_samples if self.data_args.max_val_samples is not None else len(self.hf_dataset['dev'])
-            metrics["eval_samples"] = min(max_val_samples, len(self.hf_dataset['dev']))
+            max_val_samples = self.data_args.max_val_samples if self.data_args.max_val_samples is not None else len(self.hft_dataset['dev'])
+            metrics["eval_samples"] = min(max_val_samples, len(self.hft_dataset['dev']))
 
             trainer.log_metrics("eval", metrics)
             trainer.save_metrics("eval", metrics)
