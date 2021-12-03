@@ -198,7 +198,7 @@ class ModelTrain extends Component {
 
 function StatusIndicator({status}) {
     if (status === "untrained") {
-        return (<Loader size="medium" text>Training</Loader>);
+        return (<Loader size="medium" text active>Training</Loader>);
     }
 
     return (
