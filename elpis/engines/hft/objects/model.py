@@ -115,6 +115,13 @@ class HFTModel(BaseModel):
         Path('/tmp/audio').mkdir(parents=True, exist_ok=True)
         self.tmp_audio_path = Path('/tmp/audio')
 
+        # Prepare logging
+        self.run_log_path = self.path.joinpath('train.log')
+        if not Path(self.run_log_path).is_file():
+            run(f"touch {self.run_log_path};")
+        sys.stdout = open(self.run_log_path, 'w')
+        sys.stderr = sys.stdout
+
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
@@ -222,18 +229,12 @@ class HFTModel(BaseModel):
         """
         Setup logging.
         """
-        self.run_log_path = self.path.joinpath('train.log')
-        if not Path(self.run_log_path).is_file():
-            run(f"touch {self.run_log_path};")
-
-        sys.stdout = open(self.run_log_path, 'w')
-        sys.stderr = sys.stdout
 
         logging.basicConfig(
             format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
             datefmt="%m/%d/%Y %H:%M:%S",
             handlers=[logging.StreamHandler(sys.stdout)],)
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.INFO if is_main_process(self.training_args.local_rank) else logging.WARN)
 
         # Log on each process the small summary:
         logger.warning(
@@ -568,10 +569,10 @@ class HFTModel(BaseModel):
 
     def train(self, on_complete:Callable=None):
         self.tb_writer = SummaryWriter(self.path / 'runs')
-        self._setup_logging()
 
         model_args, data_args, training_args = self.get_arguments()
         self.set_args(model_args, data_args, training_args)
+        self._setup_logging()
 
         # Set seed before initializing model.
         set_seed(self.training_args.seed)
