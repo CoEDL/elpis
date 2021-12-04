@@ -568,10 +568,10 @@ class HFTModel(BaseModel):
 
     def train(self, on_complete:Callable=None):
         self.tb_writer = SummaryWriter(self.path / 'runs')
+        self._setup_logging()
 
         model_args, data_args, training_args = self.get_arguments()
         self.set_args(model_args, data_args, training_args)
-        self._setup_logging()
 
         # Set seed before initializing model.
         set_seed(self.training_args.seed)
