@@ -4,7 +4,7 @@ import os
 
 MODEL_NAME = 'mx9'
 TX_NAME = 'tx'
-INFER_FILE_PATH = '/datasets/decode/gk-441.wav'
+INFER_FILE_PATH = '/datasets/abui/untranscribed/audio.wav'
 
 # Step 0
 # ======
