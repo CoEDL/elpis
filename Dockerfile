@@ -194,10 +194,6 @@ RUN pip install tensorboard==2.7.0
 COPY download_wav2vec2.py /root/download_wav2vec2.py
 RUN python /root/download_wav2vec2.py
 
-# revert this -- causing `--gradient_checkpointing: conflicting option string` error
-#COPY .cache/huggingface/transformers /root/.cache/huggingface/transformers
-#COPY download_wav2vec2.py /root/download_wav2vec2.py
-#RUN python /root/download_wav2vec2.py
 
 ########################## ELPIS INSTALLATION ########################
 
@@ -217,13 +213,9 @@ RUN pip install poetry && \
     poetry install
 
 # Elpis GUI
-WORKDIR /
-RUN ln -s /elpis/elpis/gui /elpis-gui
-WORKDIR /elpis-gui
+WORKDIR /elpis/elpis/gui/
 RUN yarn install && \
     yarn run build
-
-WORKDIR /
 
 # Sample data for command line interaction with Elpis
 WORKDIR /
