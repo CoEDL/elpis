@@ -236,9 +236,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 try:
                     run(f"cd {local_kaldi_path}; stages/{stage} >> {self.run_log_path}")
                     print(f"Stage {stage} complete")
-                    # with open(stage_log_path, 'r') as file:
-                    #     stage_log = file.read()
-                    # print(f"Stage {stage} log", stage_log)
                     self.stage_status = (stage, 'complete')
                     self.config['stage_count'] = self.config['stage_count'] + 1
                 except CalledProcessError as error:
@@ -248,16 +245,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                     print(f"Stage {stage} failed")
                     self.stage_status = (stage, 'failed', '', 'LOG-C')
                     break
-
-            # Concat all the files in the train-log dir
-            # log_filenames = os.listdir(train_log_dir)
-            # log_filenames.sort()
-            # with open(self.run_log_path, 'w') as outfile:
-            #     for log_file in log_filenames:
-            #         with open(train_log_dir.joinpath(log_file)) as infile:
-            #             log_contents = infile.read()
-            #             outfile.write(log_contents)
-            #             outfile.write("\n")
 
         def run_training_in_background():
             def background_train_task():
