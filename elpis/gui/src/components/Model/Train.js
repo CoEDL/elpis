@@ -25,6 +25,7 @@ import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
 import urls from "urls";
 import downloadjs from "downloadjs";
+import ScrollToBottom from "react-scroll-to-bottom";
 
 class ModelTrain extends Component {
   state = {
@@ -69,8 +70,7 @@ class ModelTrain extends Component {
   };
 
   render() {
-    const {t, currentEngine, name, settings, status, stage_status, log} =
-      this.props;
+    const {t, currentEngine, name, settings, status, stage_status, log} = this.props;
 
         return (
             <div>
@@ -173,9 +173,9 @@ class ModelTrain extends Component {
                                     {status !== "ready" && (
                                         <Segment loading={log === null}>
                                             {/* TODO add message about these logs */}
-                                            <p className="compiled-log">
+                                            <ScrollToBottom className="compiled-log">
                                                 {log}
-                                            </p>
+                                            </ScrollToBottom>
                                             <Button
                                                 onClick={this.handleLogDownload}
                                                 disabled={

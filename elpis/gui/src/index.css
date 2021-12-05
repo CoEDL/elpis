@@ -35,9 +35,11 @@ code {
 }
 .compiled-log {
     font-family: monospace;
-    overflow: scroll;
     height: 300px;
     white-space: pre;
+}
+.compiled-log > div {
+    padding-bottom: 1.2em;
 }
 
 .accordion {

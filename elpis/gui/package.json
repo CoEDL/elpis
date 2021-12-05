@@ -22,6 +22,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-scroll-to-bottom": "^4.2.0",
     "react-timeout": "^2.0.1",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.9",
