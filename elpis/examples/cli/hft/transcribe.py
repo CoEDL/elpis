@@ -46,7 +46,7 @@ def main(model_name, infer_path):
     print('Linking model')
     transcription.link(model)
 
-    if os.path.isdir('/state/transcriptions/latest'):
+    if Path('/state/transcriptions/latest').is_dir():
         os.remove('/state/transcriptions/latest')
     os.symlink(f'/state/transcriptions/{transcription.hash}',
                '/state/transcriptions/latest',

@@ -9,7 +9,7 @@
   plugins: ["@babel"],
   extends: [
     "eslint:recommended",
-//    "plugin:react/recommended"
+    "plugin:react/recommended"
   ],
   settings: {
     react: {

@@ -95,13 +95,6 @@ class ModelSettings extends Component {
                                 </>
                             }
                             {currentEngine && currentEngine === "hft" && name &&
-                                // word_delimiter_token = " "
-                                // num_train_epochs = "10"
-                                // min_duration_s = 0
-                                // max_duration_s = 60
-                                // learning_rate = "1e-4"
-                                // batch_size: 4
-                                // debug: True
                                 <>
                                     <Message content={t("model.settings.description")} />
                                     <Formik
