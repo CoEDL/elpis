@@ -2,61 +2,73 @@
 Use this file to prepare an Elpis dataset from a directory of files on the machine
 """
 
-from elpis.engines.common.objects.interface import Interface
-from pathlib import Path
+import argparse
 import os
+import shutil
+from pathlib import Path
+from elpis.engines.common.objects.interface import Interface
 
 
-USE_DATASET = 'timit'
+def main(dataset_name, reset):
+    presets = {
+        'abui': {
+            'dataset_dir': '/datasets/abui/transcribed',
+            'importer_method': 'tier_name',
+            'importer_value': 'Phrase',
+        },
+        'timit': {
+            'dataset_dir': '/datasets/timit/training_data',
+            'importer_method': 'tier_name',
+            'importer_value': 'default',
+        }
+    }
+    print(f'Using preset for {dataset_name}')
+    print(presets[dataset_name])
 
-if USE_DATASET == 'timit':
-    DATASET_DIR = '/datasets/timit/training_data'
-    DATASET_NAME = 'timit'
-    IMPORTER_METHOD = 'tier_name'
-    IMPORTER_VALUE = 'default'
-    MODEL_NAME = 'mx'
+    # Step 0
+    # ======
+    # Use or create the Elpis interface directory where all the associated files/objects are stored.
+    print('Create interface')
+    elpis = Interface(path=Path('/state'), use_existing=reset)
 
-elif USE_DATASET == 'abui':
-    DATASET_DIR = '/datasets/abui/transcribed'
-    DATASET_NAME = 'abui'
-    IMPORTER_METHOD = 'tier_name'
-    IMPORTER_VALUE = 'Phrase'
-    MODEL_NAME = 'abui-mx'
-
-else:
-    print('which dataset?')
-    quit()
-
-# Step 0
-# ======
-# Create a Kaldi interface directory (where all the associated files/objects will be stored).
-elpis = Interface(path=Path('/state'), use_existing=True)
-
-
-# Step 1
-# ======
-# Select Engine
-print('Set engine')
-from elpis.engines import ENGINES
-engine = ENGINES['hft']
-elpis.set_engine(engine)
+    # Step 1
+    # ======
+    # Select Engine
+    print('Set engine')
+    from elpis.engines import ENGINES
+    engine = ENGINES['hft']
+    elpis.set_engine(engine)
 
 
-# Step 2
-# ======
-# Setup a dataset to to train data on.
-# Reuse dataset if it exists
-if DATASET_NAME not in elpis.list_datasets():
-    print('Making new dataset', DATASET_NAME)
-    dataset = elpis.new_dataset(DATASET_NAME)
-    print('Adding data from', DATASET_DIR)
-    dataset.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
-    print('Select importer')
-    dataset.auto_select_importer() # Selects Elan because of eaf file.
-    print('Set setting')
-    dataset.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
-    print('Process data')
-    dataset.process()
-else:
-    print('Use existing dataset', DATASET_NAME)
-    dataset = elpis.get_dataset(DATASET_NAME)
+    # Step 2
+    # ======
+    # Setup a dataset to to train data on.
+    # Reuse dataset if it exists
+    print('Current datasets', elpis.list_datasets())
+    if dataset_name not in elpis.list_datasets():
+        print('Making new dataset', dataset_name)
+        dataset = elpis.new_dataset(dataset_name)
+        print('Adding data from', presets[dataset_name]['dataset_dir'])
+        dataset.add_directory(presets[dataset_name]['dataset_dir'], extensions=['eaf', 'wav'])
+        print('Select importer')
+        dataset.auto_select_importer() # Selects Elan because of eaf file.
+        print('Set setting')
+        dataset.importer.set_setting(presets[dataset_name]['importer_method'], presets[dataset_name]['importer_value'])
+        print('Process data')
+        dataset.process()
+    else:
+        print('Use existing dataset', dataset_name)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Prepare a dataset.')
+    parser.add_argument('--name',
+                        default='abui',
+                        type=str,
+                        help='Which dataset to use?')
+    parser.add_argument('--reset',
+                        action='store_false',
+                        help='Reset state to create a new dataset with the given name.')
+    args = parser.parse_args()
+
+    main(dataset_name=args.name, reset=bool(args.reset))
