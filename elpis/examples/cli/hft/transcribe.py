@@ -8,7 +8,7 @@ from pathlib import Path
 from elpis.engines.common.objects.interface import Interface
 
 
-def main(model_name, infer_path):
+def main(model_name: str, infer_path: str):
 
     # Step 0
     # ======

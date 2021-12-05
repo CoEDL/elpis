@@ -8,7 +8,7 @@ from pathlib import Path
 from elpis.engines.common.objects.interface import Interface
 
 
-def main(dataset_name, reset):
+def main(dataset_name: str, reset: bool):
     presets = {
         'abui': {
             'dataset_dir': '/datasets/abui/transcribed',
