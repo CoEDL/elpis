@@ -135,10 +135,6 @@ class HFTModel(BaseModel):
     def _set_finished_training(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
 
-    def get_train_results(self) -> Dict[str, float]:
-        # TODO Ask Ben what's meant to go here
-        return { 'comparison_val': 6.9 }
-
     def has_been_trained(self):
         return self.status == 'trained'
 
