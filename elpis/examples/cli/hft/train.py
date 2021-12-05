@@ -37,8 +37,7 @@ def main(dataset_name, reset):
     # Select Engine
     print('Set engine')
     from elpis.engines import ENGINES
-    engine = ENGINES['hft']
-    elpis.set_engine(engine)
+    elpis.set_engine(ENGINES['hft'])
 
     # Step 2
     # ======
