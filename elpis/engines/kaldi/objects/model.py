@@ -44,6 +44,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
+        print('load', base_path)
         self.pron_dict = None
         return self
 
@@ -219,6 +220,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 self.config['current_stage'] = stage
 
                 # Create log file
+                # TODO remove this and the error logging
                 stage_log_path = train_log_dir.joinpath(f"stage_{self.config['stage_count']}.log")
                 with open(stage_log_path, 'w+'):
                     pass
@@ -262,38 +264,41 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             prepare_for_training()
             train()
             self.status = 'trained'
-            self.results = KaldiModel.get_train_results(self)
+            self.results = self.get_train_results(self)
         else:
             run_training_in_background()
         return
 
     def get_train_results(self):
-        log_file = self.path.joinpath('train-logs', 'stage_6.log')
         results = {}
-        with log_file.open() as fin:
+        # self.run_log_path isn't available...
+        print('self.path', self.path)
+        run_log_path = self.path.joinpath('train.log')
+        with run_log_path.open() as log_file:
             wer_lines = []
-            for line in reversed(list(fin)):
+            for line in reversed(list(log_file)):
                 line = line.rstrip()
                 if "%WER" in line:
                     # use line to sort by best val
                     line_r = line.replace('%WER ', '')
                     wer_lines.append(line_r)
-            wer_lines.sort(reverse = True)
-            line = wer_lines[0]
-            line_split = line.split(None, 1)
-            wer = line_split[0]
-            line_results = line_split[1]
-            line_results = re.sub("[\[\]]", "", line_results)
-            results_split = line_results.split(',')
-            count_val = results_split[0].strip()
-            ins_val = results_split[1].replace(' ins', '').strip()
-            del_val = results_split[2].replace(' del', '').strip()
-            sub_val = results_split[3].replace(' sub', '').strip()
-            results = {"comparison_val": float(wer),  # property common to all engines so the GUI can sort models by a result value
-                       "wer": float(wer),
-                       "count_val": str(count_val),
-                       "ins_val": int(ins_val),
-                       "del_val": int(del_val),
-                       "sub_val": int(sub_val)}
-            print(results)
+            if len(wer_lines) > 0:
+                wer_lines.sort(reverse = True)
+                line = wer_lines[0]
+                line_split = line.split(None, 1)
+                wer = line_split[0]
+                line_results = line_split[1]
+                line_results = re.sub("[\[\]]", "", line_results)
+                results_split = line_results.split(',')
+                count_val = results_split[0].strip()
+                ins_val = results_split[1].replace(' ins', '').strip()
+                del_val = results_split[2].replace(' del', '').strip()
+                sub_val = results_split[3].replace(' sub', '').strip()
+                results = {"comparison_val": float(wer),  # property common to all engines so the GUI can sort models by a result value
+                           "wer": float(wer),
+                           "count_val": str(count_val),
+                           "ins_val": int(ins_val),
+                           "del_val": int(del_val),
+                           "sub_val": int(sub_val)}
+                print(results)
         return results
