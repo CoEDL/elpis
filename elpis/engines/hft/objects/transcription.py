@@ -1,22 +1,22 @@
 from pathlib import Path
+import string
 import sys
 from typing import List, Tuple
-from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
-from elpis.engines.hft.objects.model import HFTModel
+from pprint import pprint
+from itertools import groupby
 
+import librosa
+import pympi
 import soundfile as sf
 import torch
-import torchaudio
-import librosa
-from itertools import groupby
-import pympi
-import string
-from pprint import pprint
-
 from transformers import (
     Wav2Vec2ForCTC,
     Wav2Vec2Processor,
 )
+
+from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
+from elpis.engines.hft.objects.model import HFTModel
+
 
 LOAD_AUDIO = 'load_audio'
 PROCESS_INPUT = 'process_input'
@@ -41,11 +41,11 @@ class HFTTranscription(BaseTranscription):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         # Setup paths
-        self.audio_file_path = self.path.joinpath("audio.wav")
-        self.test_labels_path = self.path / "test-labels-path.txt"
-        self.text_path = self.path / "one-best-hypothesis.txt"
-        self.xml_path = self.path / "transcription.xml"
-        self.elan_path = self.path / "transcription.eaf"
+        self.audio_file_path = self.path.joinpath('audio.wav')
+        self.test_labels_path = self.path / 'test-labels-path.txt'
+        self.text_path = self.path / 'one-best-hypothesis.txt'
+        self.xml_path = self.path / 'transcription.xml'
+        self.elan_path = self.path / 'transcription.eaf'
         self.model: HFTModel
 
         # Setup logging
@@ -53,40 +53,37 @@ class HFTTranscription(BaseTranscription):
         # sys.stdout = open(run_log_path, 'w')
         sys.stderr = sys.stdout
 
-        self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(STAGES)]
+        self.index_prefixed_stages = [f'{i}_{stage}' for (i, stage) in enumerate(STAGES)]
         stage_labels = [string.capwords(stage).replace('_', ' ') for stage in STAGES]
 
         stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
         self.build_stage_status(stage_names)
 
     def transcribe(self, on_complete: callable = None) -> None:
-        print("=== Load processor and model")
+        print('=== Load processor and model')
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
 
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        # model.to(device)
-
         # Load audio
         self._set_stage(LOAD_AUDIO)
-        print("=== Load audio")
+        print('=== Load audio')
         audio_input, sample_rate = self._load_audio(self.audio_file_path)
         self._set_stage(LOAD_AUDIO, complete=True)
 
-        # pad input values and return pt tensor
+        # Pad input values and return pt tensor
         self._set_stage(PROCESS_INPUT)
-        print("=== Process input")
+        print('=== Process input')
         input_values = processor(
-            audio_input, sampling_rate=HFTTranscription.SAMPLING_RATE, return_tensors="pt").input_values
+            audio_input, sampling_rate=HFTTranscription.SAMPLING_RATE, return_tensors='pt').input_values
         self._set_stage(PROCESS_INPUT, msg='Processed input values')
 
-        # retrieve logits & take argmax
+        # Retrieve logits & take argmax
         with torch.no_grad():
             logits = model(input_values).logits
         predicted_ids = torch.argmax(logits, dim=-1)
         self._set_stage(PROCESS_INPUT, complete=True)
 
-        # transcribe
+        # Transcribe
         self._set_stage(TRANSCRIPTION)
         transcription = processor.decode(predicted_ids[0])
         print('transcription', transcription)
@@ -122,14 +119,12 @@ class HFTTranscription(BaseTranscription):
         return None
 
     def _get_wav2vec2_requirements(self) -> Tuple[Wav2Vec2Processor, Wav2Vec2ForCTC]:
-        """Builds and returns pretrained Wav2Vec2 Processor and Model from the
-        project path.
+        """
+        Builds and returns pretrained Wav2Vec2 Processor and Model from the project path.
         """
         pretrained_path = Path(self.model.path) / "wav2vec2"
-
         processor = Wav2Vec2Processor.from_pretrained(pretrained_path)
         model = Wav2Vec2ForCTC.from_pretrained(pretrained_path)
-
         return processor, model
 
     def _generate_utterances(self,
@@ -137,7 +132,8 @@ class HFTTranscription(BaseTranscription):
                              predicted_ids: torch.Tensor,
                              input_values: torch.Tensor,
                              transcription: str) -> Tuple[List[str], List[float], List[float]]:
-        """Generates a mapping of words to their start and end times from a transcription.
+        """
+        Generates a mapping of words to their start and end times from a transcription.
 
         Parameters:
             processor: The wav2vec2 processor from which we take the tokenizer.
@@ -162,7 +158,7 @@ class HFTTranscription(BaseTranscription):
         ids_with_time = map(generate_timestamps,
                             enumerate(predicted_ids))
 
-        # remove entries which are just "padding" (i.e. no characers are recognized)
+        # remove entries which are just 'padding' (i.e. no characers are recognized)
         is_not_padding = lambda item: item[1] != processor.tokenizer.pad_token_id
         ids_with_time = filter(is_not_padding, ids_with_time)
 
@@ -176,7 +172,7 @@ class HFTTranscription(BaseTranscription):
 
         # make sure that there are the same number of id-groups as words.
         # Otherwise something is wrong
-        print("Length check:", len(split_ids_w_time), len(words))
+        print('Length check:', len(split_ids_w_time), len(words))
         assert len(split_ids_w_time) == len(words)
 
         word_start_times = []
@@ -192,15 +188,19 @@ class HFTTranscription(BaseTranscription):
         return words, word_start_times, word_end_times
 
     def _save_transcription(self, transcription: str) -> None:
-        """Saves a transcription as plaintext"""
+        """
+        Saves a transcription as plaintext
+        """
         with open(self.text_path, 'w') as output_file:
             output_file.write(transcription)
 
     def _save_utterances(self, utterances) -> None:
-        """Saves Elan output using the pympi library"""
-        result = pympi.Elan.Eaf(author="elpis")
+        """
+        Saves Elan output using the pympi library
+        """
+        result = pympi.Elan.Eaf(author='elpis')
 
-        result.add_linked_file("audio.wav")
+        result.add_linked_file('audio.wav')
         result.add_tier('default')
 
         to_millis = lambda seconds: int(seconds * 1000)
@@ -215,13 +215,14 @@ class HFTTranscription(BaseTranscription):
         return audio, sample_rate
 
     def prepare_audio(self, audio: Path, on_complete: callable = None):
-        print("=== Prepare audio", audio, self.audio_file_path)
+        print('=== Prepare audio', audio, self.audio_file_path)
         self._resample_audio_file(audio, self.audio_file_path)
         if on_complete is not None:
             on_complete()
 
     def _resample_audio_file(self, audio: Path, dest: Path):
-        """Resamples the audio file to be the same sampling rate as the model
+        """
+        Resamples the audio file to be the same sampling rate as the model
         was trained with.
 
         Target sampling rate is taken from the HFTModel class.
@@ -246,8 +247,8 @@ class HFTTranscription(BaseTranscription):
         self.status = FINISHED if has_finished else UNFINISHED
 
     def _set_stage(self, stage: str, complete: bool = False, msg: str = '') -> None:
-        """Updates the stage to one of the constants specified within
-        STAGES
+        """
+        Updates the stage to one of the constants specified within STAGES
         """
         status = 'completed' if complete else 'in-progress'
         if stage in STAGES:

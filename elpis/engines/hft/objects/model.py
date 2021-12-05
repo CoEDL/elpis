@@ -148,10 +148,11 @@ class HFTModel(BaseModel):
         # Note the _pron_dict is ignored as it's irrelevant to HFT.
 
     def build_structure(self):
+        """
+        HFT doesn't need file building like Kaldi does. However it does do a bunch of data processing.
+        Could move that here, but for now let's leave it as is.
+        """
         pass
-        # HFT doesn't need file building like Kaldi does.
-        # However it does do a bunch of data processing.
-        # Could move that here, but for now let's leave it as is.
 
     def get_arguments(self):
         """
@@ -230,7 +231,6 @@ class HFTModel(BaseModel):
         """
         Setup logging.
         """
-
         logging.basicConfig(
             format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
             datefmt='%m/%d/%Y %H:%M:%S',
@@ -257,7 +257,6 @@ class HFTModel(BaseModel):
         For now, this must be manually added to the /elpis dir.
         TODO add a GUI widget for this
         """
-
         language_data_path = Path('.').joinpath(language_file)
         if language_data_path.exists():
             with open(language_data_path) as fd:
@@ -271,7 +270,6 @@ class HFTModel(BaseModel):
         """
         Create annotations files for the train/dev/test splits.
         """
-
         elpis_annotations_fn=(data_dir / 'annotations.json')
         with open(elpis_annotations_fn) as f:
             anno_json = json.load(f)
@@ -742,7 +740,6 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
         """
         Converts a string in a sequence of tokens (string), using the tokenizer.
         """
-
         if self.do_lower_case:
             text = text.upper()
         tokens = re.findall(self.pattern, text)
@@ -950,7 +947,6 @@ class CTCTrainer(Trainer):
         Return:
             :obj:`torch.Tensor`: The tensor with training loss on this batch.
         """
-
         # When we've finished the previous epoch, log the loss for that epoch in tensorboard.
         if int(self.state.epoch) > self.last_tb_epoch:
             self.tb_writer.add_scalar('train/loss', self.epoch_loss, int(self.state.epoch)-1)
