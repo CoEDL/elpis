@@ -51,7 +51,7 @@ class ModelDashboard extends Component {
         const {t, engine, engineHumanNames, name, list} = this.props;
         const {column, direction} = this.state;
         let listEl = <p>{t("model.dashboard.noneMessage")}</p>;
-        const list_sorted = arraySort(list, 'name')
+        const list_sorted = arraySort(list, "name");
 
         console.log(list_sorted);
 
