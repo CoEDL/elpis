@@ -1,32 +1,26 @@
-""" Support for training Hugging Face Transformers (wav2vec2) models."""
+"""
+Support for training Hugging Face Transformers (wav2vec2) models.
+"""
 import json
 import logging
 from pathlib import Path
-from collections import defaultdict
 import os
 import random
 import re
 import sys
 import time
-import datetime
 import string
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Set, Optional, Union, Callable
-
-from elpis.engines.common.objects.command import run
-from elpis.engines.common.objects.dataset import Dataset
-from elpis.engines.common.objects.model import Model as BaseModel
+from packaging import version
 
 import datasets
 import numpy as np
 from sklearn.model_selection import train_test_split
 import torch
 import torchaudio
-from packaging import version
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
-
-# import transformers
 from transformers import (
     HfArgumentParser,
     Trainer,
@@ -39,6 +33,11 @@ from transformers import (
     set_seed,
 )
 from transformers.trainer_utils import get_last_checkpoint, is_main_process
+
+from elpis.engines.common.objects.command import run
+from elpis.engines.common.objects.dataset import Dataset
+from elpis.engines.common.objects.model import Model as BaseModel
+
 
 if is_apex_available():
     from apex import amp
@@ -218,7 +217,9 @@ class HFTModel(BaseModel):
         return last_checkpoint
 
     def _setup_stages(self):
-        """Set up the stages used for displaying training information to the user."""
+        """
+        Set up the stages used for displaying training information to the user.
+        """
         self.index_prefixed_stages = [f'{i}_{stage}' for (i, stage) in enumerate(TRAINING_STAGES)]
         stage_labels = [string.capwords(stage).replace('_', ' ') for stage in TRAINING_STAGES]
 
@@ -267,7 +268,9 @@ class HFTModel(BaseModel):
         return language_data
 
     def create_split(self, data_dir):
-        """ Create annotations files for the train/dev/test splits. """
+        """
+        Create annotations files for the train/dev/test splits.
+        """
 
         elpis_annotations_fn=(data_dir / 'annotations.json')
         with open(elpis_annotations_fn) as f:
@@ -349,7 +352,8 @@ class HFTModel(BaseModel):
                     else:
                         data_grapheme_duplications.add(token)
                 if data_grapheme_duplications:
-                    logger.warning(f"""Characters duplicated ({len(data_grapheme_duplications)}) in language data: {' '.join(sorted(data_grapheme_duplications))}; duplications were ignored (please clean the data file)…""")
+                    logger.warning(f'{len(data_grapheme_duplications)} duplicated characters found and were ignored.\n'
+                                   f'{" ".join(sorted(data_grapheme_duplications))}')
                 naive_vocab_set = set(naive_vocab_dict)
                 intelligent_vocab_set = set("".join(intelligent_vocab_dict))
                 naive_specific_chars = naive_vocab_set - intelligent_vocab_set
@@ -357,16 +361,20 @@ class HFTModel(BaseModel):
                 if naive_specific_chars:
                     for character in naive_specific_chars:
                         intelligent_vocab_dict[character] = len(intelligent_vocab_dict)
-                        logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {' '.join(sorted(naive_specific_chars))}; they were added automatically (please update the data file)…""")
+                        logger.warning(f'{len(naive_specific_chars)} characters found in data '
+                                       f'but absent from language data and automatically added.\n'
+                                       f'{" ".join(sorted(naive_specific_chars))}')
                 if intelligent_specific_chars:
-                    logger.warning(f"""Characters present ({len(intelligent_specific_chars)}) in language data but absent in data: {' '.join(sorted(intelligent_specific_chars))}""")
+                    logger.warning(f'{len(intelligent_specific_chars)} characters found in language data '
+                                   f'but absent in data.\n'
+                                   f'{" ".join(sorted(intelligent_specific_chars))}')
                 vocab_dict = intelligent_vocab_dict
         else:
             vocab_dict = naive_vocab_dict
         vocab_dict['[UNK]'] = len(vocab_dict)
         vocab_dict['[PAD]'] = len(vocab_dict)
         if word_delimiter_token in vocab_dict:
-            logging.error(f'The word delimiter token ({word_delimiter_token}) seems to be already present in the raw text, please choose another one.')
+            logging.warning(f'The word delimiter token ({word_delimiter_token}) is present in the vocab dict.')
         if word_delimiter_token != ' ' and ' ' in vocab_dict:
             vocab_dict[word_delimiter_token] = vocab_dict.get(' ', len(vocab_dict))
             del vocab_dict[' ']
@@ -429,12 +437,10 @@ class HFTModel(BaseModel):
     def prepare_dataset(self):
         print('=== Preparing Dataset')
         def prepare_dataset(batch):
-            # Check that all files have the correct sampling rate
             assert (
                 len(set(batch['sampling_rate'])) == 1
             ), f'Make sure all inputs have the same sampling rate of {self.processor.feature_extractor.sampling_rate}.'
             batch['input_values'] = self.processor(batch['speech'], sampling_rate=batch['sampling_rate'][0]).input_values
-            # Setup the processor for targets
             with self.processor.as_target_processor():
                 batch['labels'] = self.processor(batch['target_text']).input_ids
             return batch
@@ -507,7 +513,6 @@ class HFTModel(BaseModel):
 
         def compute_metrics(pred):
             self.compute_metrics_count = self.compute_metrics_count + 1
-            print('*** compute metrics count', self.compute_metrics_count)
             pred_logits = pred.predictions
             pred_ids = np.argmax(pred_logits, axis=-1)
             pred.label_ids[pred.label_ids == -100] = self.processor.tokenizer.pad_token_id
@@ -646,14 +651,13 @@ class HFTModel(BaseModel):
         # 4. Evaluation
         self._set_stage(EVALUATION)
         if self.training_args.do_eval:
-            logger.info('*** Evaluate ***')
+            logger.info('=== Evaluate')
             metrics = trainer.evaluate()
             max_val_samples = self.data_args.max_val_samples if self.data_args.max_val_samples is not None else len(self.hft_dataset['dev'])
             metrics['eval_samples'] = min(max_val_samples, len(self.hft_dataset['dev']))
-
             trainer.log_metrics('eval', metrics)
             trainer.save_metrics('eval', metrics)
-            print('*** metrics')
+            print('=== Metrics')
             print(metrics)
             self.config['results'] = metrics
 
@@ -664,8 +668,8 @@ class HFTModel(BaseModel):
         self.status = FINISHED if has_finished else UNFINISHED
 
     def _set_stage(self, stage: str, complete=False) -> None:
-        """Updates the training stage to one of the constants specified within
-        TRAINING_STAGES
+        """
+        Updates the training stage to one of the constants specified within TRAINING_STAGES
         """
         if stage not in TRAINING_STAGES:
             return
@@ -738,6 +742,7 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
         """
         Converts a string in a sequence of tokens (string), using the tokenizer.
         """
+
         if self.do_lower_case:
             text = text.upper()
         tokens = re.findall(self.pattern, text)
