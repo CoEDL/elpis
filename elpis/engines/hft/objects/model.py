@@ -839,7 +839,7 @@ class DataTrainingArguments:
     train_split_name: Optional[str] = field(
         default='train+validation',
         metadata={
-            'help': 'The name of the training data set split to use (via the datasets library). Defaults to 'train''
+            'help': 'The name of the training data set split to use (via the datasets library). Defaults to "train"'
         },
     )
     overwrite_cache: bool = field(
