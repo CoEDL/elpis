@@ -50,10 +50,6 @@ class ModelDashboard extends Component {
     render() {
         const {t, engine, engineHumanNames, name, list} = this.props;
         const {column, direction} = this.state;
-        // TODO remove this when removing ESPnet
-        const redirectAfterModel = (["kaldi", "hft"].includes(engine)) ?
-            urls.gui.model.settings :
-            urls.gui.model.train;
         let listEl = <p>{t("model.dashboard.noneMessage")}</p>;
 
         if (list.length > 0) {
@@ -168,7 +164,7 @@ class ModelDashboard extends Component {
                                                 />
                                             </Segment>
                                             {listEl}
-                                            <Button as={Link} to={redirectAfterModel} disabled={!name}>
+                                            <Button as={Link} to={urls.gui.model.settings} disabled={!name}>
                                                 {t("common.nextButton")}
                                             </Button>
                                         </>
