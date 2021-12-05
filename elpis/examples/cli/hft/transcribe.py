@@ -41,7 +41,6 @@ def main(model_name: str, infer_path: str):
     print('Making new transcriber', tx_name)
     transcription = elpis.new_transcription(tx_name)
     print('Made transcriber', transcription.hash)
-
     print('Linking model')
     transcription.link(model)
 

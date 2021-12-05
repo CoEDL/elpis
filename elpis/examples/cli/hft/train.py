@@ -72,7 +72,7 @@ def main(dataset_name: str, reset: bool):
     # TODO add model settings
     print('Linking dataset')
     model.link_dataset(dataset)
-    if os.path.isdir('/state/models/latest'):
+    if Path('/state/models/latest').is_dir():
         os.remove('/state/models/latest')
     os.symlink(f'/state/models/{model.hash}', '/state/models/latest', target_is_directory=True)
     print('Start training. This may take a while')
