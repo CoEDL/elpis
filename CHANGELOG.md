@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.97] - 2021-12-05
+### Added
+- Huggingface Transformers wav2vec2 engine
+### Changed
+- Fixed CLI examples
+### Removed 
+- ESPnet engine
+
 ## [0.96.12] - 2021-11-10
 ### Added
 - Automated docker builds on releases (vX.Y.Z) and pushes to master (latest)

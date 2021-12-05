@@ -2,7 +2,7 @@
 
 This guide can assist in setting up directory structures to load repositories into a Docker container, enabling you to develop code and interact with the changes. This guide doesn't cover testing.
 
-The recommended folder structure is to have a `~/sandbox` folder inside your user directory. This can contain the `elpis` Git repository, the `espnet` repository and the `state` folder to view the state that the program generates.
+The recommended folder structure is to have a `~/sandbox` folder inside your user directory. This can contain the `elpis` Git repository and a `state` folder to view the dataset, model and transcription sessions that the program generates.
 
 This guide assumes the use of `zsh` rather than `bash`.
 
@@ -68,57 +68,3 @@ Open a new Terminal and get another window into the running Elpis container usin
 ```shell
 docker exec -it $(docker ps -q) zsh
 ```
-
-### CUDA (beta, for ESPnet).
-
-If you have a CUDA-compatible GPU it is possible to achieve better performance by utilising the GPU in training your models. For this purpose, CUDA driver and runtime must be installed on host machine (more informations [here](https://www.celantur.com/blog/run-cuda-in-docker-on-linux/) and [there](https://github.com/NVIDIA/nvidia-docker)):
-
-Driver installation – if necessary (XXX is the version number):
-
-```shell
-sudo apt-get install nvidia-driver-XXX
-```
-
-Runtime installation (beware of distributions not yet supported…):
-
-```shell
-curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add -
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list |\
-    sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
-sudo apt-get update
-sudo apt-get install nvidia-container-runtime
-```
-
-But sometimes an older version (like *ubuntu20.04* runtime on your Ubuntu 20.10 distribution) can work, so you can try to force the distribution variable if necessary, for example with:
-
-```shell
-curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add -
-distribution=ubuntu20.04
-curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list |\
-    sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
-sudo apt-get update
-sudo apt-get install nvidia-container-runtime
-```
-
-Then you can try the CUDA-specific Dockerfile (`gpu/Dockerfile` in root folder):
-
-```shell
-cd ~/sandbox/elpis
-docker build . --file gpu/Dockerfile --tag coedl/elpis-cuda:latest > build.log
-```
-
-(It will write all logs in `build.log` file, because it is not so trivial to make it work flawlessly.)
-
-Then, run it by adding the `--gpus all` argument in `docker run`:
-
-```shell
-docker run --gpus all -it -p 5001:5001/tcp \
-    -v ~/sandbox/elpis:/elpis \
-    -v ~/sandbox/espnet/egs/elpis:/espnet/egs/elpis \
-    -v ~/sandbox/espnet/utils/:/espnet/utils/ \
-    --entrypoint /bin/zsh \
-    coedl/elpis-cuda:latest
-```
-
-**This feature is currently in a beta stage. Utilising the GPU for training is only currently recommended for those who know what they're doing or those particularly interested in achieving higher performance.**

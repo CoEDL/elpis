@@ -30,9 +30,6 @@ recordings/
 # mac files
 .DS_Store
 
-# During the inheritance test.
-elpis/engines/persephone/
-
 # Build & Docs
 build/
 dist/
