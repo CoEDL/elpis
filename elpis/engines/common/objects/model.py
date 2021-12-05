@@ -33,15 +33,15 @@ class Model(FSObject):  # TODO not thread safe
 
     @property
     def status(self):
-        return self.config['status'] if self.config['status'] else ''
+        return self.config['status'] if self.config['status'] else 'pass'
 
     @property
     def log(self):
-        return self.config['log'] if self.config['log'] else ''
+        return self.config['log'] if self.config['log'] else 'pass'
 
     @property
     def stage_status(self):
-        return self.config['stage_status'] if self.config['stage_status'] else ''
+        return self.config['stage_status'] if self.config['stage_status'] else 'pass'
 
     @property
     def results(self):
