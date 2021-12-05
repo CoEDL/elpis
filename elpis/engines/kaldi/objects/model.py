@@ -33,6 +33,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             "6_tri1.sh": "triphoneTraining"
         }
         super().build_stage_status(stage_names)
+        self.status = 'untrained'
         self.config['stage_count'] = 0
         self.config['current_stage'] = '0_setup.sh'
         self.settings = {'ngram': 1}

@@ -49,13 +49,11 @@ class Model(FSObject):  # TODO not thread safe
 
     @status.setter
     def status(self, value: str):
-        if value:
-            self.config['status'] = value
+        self.config['status'] = value
 
     @log.setter
     def log(self, value: str):
-        if value:
-            self.config['log'] = value
+        self.config['log'] = value
 
     @stage_status.setter
     def stage_status(self, status_info: Tuple[str, str]):
