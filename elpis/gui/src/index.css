@@ -293,6 +293,7 @@ label.pad-right,
 }
 .transcription-text p {
     margin-right: 0.3em;
+    word-break: break-all;
 }
 
 /* Override confidence opacity setting on transcription text */
