@@ -46,7 +46,7 @@ def new():
         pron_dict = interface.get_pron_dict(request.json['pron_dict_name'])
         model.link_pron_dict(pron_dict)
         app.config['CURRENT_PRON_DICT'] = pron_dict
-    if 'engine' in request.json and request.json['engine'] in ["hft"]:
+    if 'engine' in request.json and request.json['engine'] == 'hft':
         pass
     model.build_structure()
     app.config['CURRENT_MODEL'] = model
