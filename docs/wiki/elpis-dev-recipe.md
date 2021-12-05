@@ -27,7 +27,7 @@ The Docker container has a build of the React app GUI in it. If you are cloning 
 
 ```shell
 cd ~/sandbox/elpis/elpis/gui
-npm install && npm run watch
+yarn install && yarn watch
 ```
 
 ## Mount local dirs into existing image.
