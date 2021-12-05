@@ -110,13 +110,13 @@ class HFTTranscription(BaseTranscription):
             on_complete()
 
     def text(self):
-        with open(self.text_path, 'r') as fin:
-            text = fin.read()
+        with open(self.text_path, 'r') as text_file:
+            text = text_file.read()
             return text
 
     def elan(self):
-        with open(self.elan_path, 'r') as fin:
-            return fin.read()
+        with open(self.elan_path, 'r') as elan_file:
+            return elan_file.read()
 
     def get_confidence(self):
         return None
@@ -133,15 +133,17 @@ class HFTTranscription(BaseTranscription):
         return processor, model
 
     def _generate_utterances(self,
-                            processor: Wav2Vec2Processor,
-                            predicted_ids: torch.Tensor,
-                            input_values: torch.Tensor,
-                            transcription: str) -> Tuple[List[str], List[float], List[float]]:
+                             processor: Wav2Vec2Processor,
+                             predicted_ids: torch.Tensor,
+                             input_values: torch.Tensor,
+                             transcription: str) -> Tuple[List[str], List[float], List[float]]:
         """Generates a mapping of words to their start and end times from a transcription.
 
         Parameters:
             processor: The wav2vec2 processor from which we take the tokenizer.
-            predicted_ids 
+            predicted_ids: TODO
+            input_values: TODO
+            transcription: The hypothesis text.
         """
         words = [word for word in transcription.split(' ') if len(word) > 0]
         predicted_ids = predicted_ids[0].tolist()
@@ -170,8 +172,7 @@ class HFTTranscription(BaseTranscription):
             ids_with_time, is_delimiter)
 
         # Get all the groups not containing delimiters
-        split_ids_w_time = [list(group)
-                            for key, group in word_groups if not key]
+        split_ids_w_time = [list(group) for key, group in word_groups if not key]
 
         # make sure that there are the same number of id-groups as words.
         # Otherwise something is wrong

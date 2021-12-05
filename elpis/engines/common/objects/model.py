@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, Any
 
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
@@ -69,11 +69,11 @@ class Model(FSObject):  # TODO not thread safe
         self.config['results'] = value
 
     @property
-    def settings(self) -> dict:
+    def settings(self) -> Dict[str, Any]:
         return self.config['settings']
 
     @settings.setter
-    def settings(self, value: dict) -> None:
+    def settings(self, value: Dict[str, Any]) -> None:
         print('model set settings', value)
         self.config['settings'] = value
 

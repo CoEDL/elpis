@@ -241,8 +241,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'r') as file :
                     filedata = file.read()
                 # Add settings to replace here
-                ngram = self.settings['ngram']
-                filedata = filedata.replace('lm_order=1', f'lm_order={ngram}')
+                filedata = filedata.replace('lm_order=1', f'lm_order={self.settings["ngram"]}')
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'w') as file:
                     file.write(filedata)
 
