@@ -25,6 +25,7 @@ import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
 import urls from "urls";
 import downloadjs from "downloadjs";
+import ScrollToBottom from "react-scroll-to-bottom";
 
 class ModelTrain extends Component {
   state = {
@@ -69,8 +70,7 @@ class ModelTrain extends Component {
   };
 
   render() {
-    const {t, currentEngine, name, settings, status, stage_status, log} =
-      this.props;
+    const {t, currentEngine, name, settings, status, stage_status, log} = this.props;
 
         return (
             <div>
@@ -93,7 +93,6 @@ class ModelTrain extends Component {
                             )}
                             {currentEngine && name && (
                                 <>
-                                    {/* Only Kaldi has settings. Should make this dynamic */}
                                     {currentEngine && currentEngine === "kaldi" && (
                                         <Card fluid>
                                             <Card.Content header={t("model.train.settingsHeader")} />
@@ -104,56 +103,59 @@ class ModelTrain extends Component {
                                             />
                                         </Card>
                                     )}
-                                    <Message icon>
-                                        <Message.Content className="train-log">
-                                            {stage_status && (
-                                                <div className="stages">
-                                                    <Accordion fluid styled exclusive={false}>
-                                                        {Object.keys(stage_status).map((stage, i) => {
-                                                            let name = stage_status[stage]["name"];
-                                                            let status = stage_status[stage]["status"];
-                                                            let log = stage_status[stage]["log"];
-                                                            let icon =
-                                                                status === "in-progress" ? (
-                                                                    <Icon name="circle notched" loading />
-                                                                ) : (
-                                                                    <Icon name="dropdown" />
-                                                                );
-                                                            let stage_status_icon =
-                                                                status === "complete" ? (
-                                                                    <Icon name="check" />
-                                                                ) : (
-                                                                    ""
-                                                                );
-                                                            let active =
-                                                                this.state.activeIndex === i ||
-                                                                status === "in-progress";
+                                    {/*TODO add HFT settings here*/}
+                                    {currentEngine && status !== "ready" &&
+                                        <Message icon>
+                                            <Message.Content className="train-log">
+                                                {stage_status && (
+                                                    <div className="stages">
+                                                        <Accordion fluid styled exclusive={false}>
+                                                            {Object.keys(stage_status).map((stage, i) => {
+                                                                let name = stage_status[stage]["name"];
+                                                                let status = stage_status[stage]["status"];
+                                                                let log = stage_status[stage]["log"];
+                                                                let icon =
+                                                                    status === "in-progress" ? (
+                                                                        <Icon name="circle notched" loading />
+                                                                    ) : (
+                                                                        <Icon name="dropdown" />
+                                                                    );
+                                                                let stage_status_icon =
+                                                                    status === "complete" ? (
+                                                                        <Icon name="check" />
+                                                                    ) : (
+                                                                        ""
+                                                                    );
+                                                                let active =
+                                                                    this.state.activeIndex === i ||
+                                                                    status === "in-progress";
 
-                                                            return (
-                                                                <div key={name}>
-                                                                    <Accordion.Title
-                                                                        index={i}
-                                                                        active={active}
-                                                                        onClick={() => this.selectAccordion(i)}
-                                                                    >
-                                                                        {icon}
-                                                                        {name} {stage_status_icon}
-                                                                    </Accordion.Title>
-                                                                    <Accordion.Content
-                                                                        className="accordion_log"
-                                                                        active={this.state.activeIndex === i}
-                                                                    >
-                                                                        {log}
-                                                                    </Accordion.Content>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </Accordion>
-                                                    <StatusIndicator status={status} />
-                                                </div>
-                                            )}
-                                        </Message.Content>
-                                    </Message>
+                                                                return (
+                                                                    <div key={name}>
+                                                                        <Accordion.Title
+                                                                            index={i}
+                                                                            active={active}
+                                                                            onClick={() => this.selectAccordion(i)}
+                                                                        >
+                                                                            {icon}
+                                                                            {name} {stage_status_icon}
+                                                                        </Accordion.Title>
+                                                                        <Accordion.Content
+                                                                            className="accordion_log"
+                                                                            active={this.state.activeIndex === i}
+                                                                        >
+                                                                            {log}
+                                                                        </Accordion.Content>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </Accordion>
+                                                        <StatusIndicator status={status} />
+                                                    </div>
+                                                )}
+                                            </Message.Content>
+                                        </Message>
+                                    }
                                     <Segment>
                                         <Button
                                             onClick={this.handleModelTrain}
@@ -173,15 +175,12 @@ class ModelTrain extends Component {
                                     {status !== "ready" && (
                                         <Segment loading={log === null}>
                                             {/* TODO add message about these logs */}
-                                            <p className="compiled-log">
+                                            <ScrollToBottom className="compiled-log">
                                                 {log}
-                                            </p>
+                                            </ScrollToBottom>
                                             <Button
                                                 onClick={this.handleLogDownload}
-                                                disabled={
-                                                    !name ||
-                                                    !(status === "trained" || status === "error")
-                                                }
+                                                disabled={!name}
                                             >
                                                 {t("model.train.logButton")}
                                             </Button>

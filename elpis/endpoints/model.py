@@ -117,7 +117,6 @@ def train():
             "status": model.status,
             "stage_status": model.stage_status
         }
-
     return _model_response(setup=setup, build_data=build_data)
 
 
