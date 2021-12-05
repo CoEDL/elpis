@@ -272,7 +272,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     def get_train_results(self):
         results = {}
         # self.run_log_path isn't available...
-        print('self.path', self.path)
         run_log_path = self.path.joinpath('train.log')
         with run_log_path.open() as log_file:
             wer_lines = []
