@@ -205,12 +205,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')
 
-            # Organise stage logs in a dir
-            train_log_dir = self.path.joinpath('train-logs')
-            if train_log_dir.exists():
-                shutil.rmtree(train_log_dir)
-            os.mkdir(train_log_dir)
-
             self.config['stage_count'] = 0
             stages = os.listdir(local_kaldi_path.joinpath('stages'))
 
@@ -219,14 +213,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 self.stage_status = (stage, 'in-progress')
                 self.config['current_stage'] = stage
 
-                # Create log file
-                # TODO remove this and the error logging
-                stage_log_path = train_log_dir.joinpath(f"stage_{self.config['stage_count']}.log")
-                with open(stage_log_path, 'w+'):
-                    pass
-
-                #  Manipulate stage templates with user-defined settings
-                # TODO replace with jinja templates or something similar
+                # TODO update stage templates with jinja templates or something similar
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'r') as file :
                     filedata = file.read()
                 # Add settings to replace here
@@ -241,7 +228,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                     self.stage_status = (stage, 'complete')
                     self.config['stage_count'] = self.config['stage_count'] + 1
                 except CalledProcessError as error:
-                    with open(stage_log_path, 'a+') as file:
+                    with open(self.run_log_path, 'a+') as file:
                         print('stderr', error.stderr, file=file)
                         print('failed', file=file)
                     print(f"Stage {stage} failed")
@@ -264,7 +251,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             prepare_for_training()
             train()
             self.status = 'trained'
-            self.results = self.get_train_results(self)
+            self.results = KaldiModel.get_train_results(self)
         else:
             run_training_in_background()
         return
