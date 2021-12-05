@@ -43,7 +43,7 @@ from transformers.trainer_utils import get_last_checkpoint, is_main_process
 if is_apex_available():
     from apex import amp
 
-if version.parse(torch.__version__) >= version.parse("1.6"):
+if version.parse(torch.__version__) >= version.parse('1.6'):
     _is_native_amp_available = True
     from torch.cuda.amp import autocast
 
@@ -51,18 +51,18 @@ if version.parse(torch.__version__) >= version.parse("1.6"):
 # Used to reduce training time when debugging
 DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
-    "max_train_samples": "2",
-    "num_train_epochs": "3",
-    "model_name_or_path": "facebook/wav2vec2-base",
-    "per_device_train_batch_size": "1",
-    "per_device_eval_batch_size": "1"
+    'max_train_samples': '2',
+    'num_train_epochs': '3',
+    'model_name_or_path': 'facebook/wav2vec2-base',
+    'per_device_train_batch_size': '1',
+    'per_device_eval_batch_size': '1'
 }
 
 # Training Stages
-TOKENIZATION = "tokenization"
-PREPROCESSING = "dataset_preprocessing"
-TRAIN = "train"
-EVALUATION = "evaluation"
+TOKENIZATION = 'tokenization'
+PREPROCESSING = 'dataset_preprocessing'
+TRAIN = 'train'
+EVALUATION = 'evaluation'
 
 TRAINING_STAGES = [
     TOKENIZATION,
@@ -71,8 +71,8 @@ TRAINING_STAGES = [
     EVALUATION
 ]
 
-UNFINISHED = "untrained"
-FINISHED = "trained"
+UNFINISHED = 'untrained'
+FINISHED = 'trained'
 
 logger = logging.getLogger(__name__)
 
@@ -92,11 +92,11 @@ class HFTModel(BaseModel):
         self.config['pron_dict_name'] = None
         # HFT doesn't use an n-gram language model, so this will not change from None.
         self.config['ngram'] = None
-        self.config['engine_name'] = "hft"
-        self.config['status'] = "untrained"
+        self.config['engine_name'] = 'hft'
+        self.config['status'] = 'untrained'
         self.config['results'] = {}
         self.settings = {
-            'word_delimiter_token': " ",
+            'word_delimiter_token': ' ',
             'num_train_epochs': 10,
             'min_duration_s': 0,
             'max_duration_s': 60,
@@ -118,7 +118,7 @@ class HFTModel(BaseModel):
         # Prepare logging
         self.run_log_path = self.path.joinpath('train.log')
         if not Path(self.run_log_path).is_file():
-            run(f"touch {self.run_log_path};")
+            run(f'touch {self.run_log_path};')
         sys.stdout = open(self.run_log_path, 'w')
         sys.stderr = sys.stdout
 
@@ -138,10 +138,10 @@ class HFTModel(BaseModel):
 
     def get_train_results(self) -> Dict[str, float]:
         # TODO Ask Ben what's meant to go here
-        return { "comparison_val": 6.9 }
+        return { 'comparison_val': 6.9 }
 
     def has_been_trained(self):
-        return self.status == "trained"
+        return self.status == 'trained'
 
     def link(self, dataset: Dataset, _pron_dict):
         self.dataset = dataset
@@ -159,41 +159,41 @@ class HFTModel(BaseModel):
         Build arguments from various sources (GUI, files, default, etc.).
         """
         keyword_arguments = {
-            "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
-            "train_size": "0.8",
-            "split_seed": "42",
-            "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
-            "output_dir": self.path.joinpath('wav2vec2'),
-            "overwrite_output_dir": True,
-            "num_train_epochs": int(self.settings['num_train_epochs']),
-            "per_device_train_batch_size": int(self.settings['batch_size']),
-            "per_device_eval_batch_size": int(self.settings['batch_size']),
-            "gradient_accumulation_steps": "2",
-            "learning_rate": self.settings['learning_rate'],
-            "weight_decay": "0.005",
-            "warmup_steps": "1000",
-            "evaluation_strategy": "steps",
-            "save_steps": "500",
-            "eval_steps": "500",
-            "save_total_limit": "2",
-            "gradient_checkpointing": True,
-            "fp16": True if torch.cuda.is_available() else False,
-            "group_by_length": True,
-            "do_train": True,
-            "do_eval": True,
-            "logging_dir": self.path.joinpath("runs"),
+            'elpis_data_dir': self.dataset.pathto.basepath.as_posix(),
+            'train_size': '0.8',
+            'split_seed': '42',
+            'model_name_or_path': 'facebook/wav2vec2-large-xlsr-53',
+            'output_dir': self.path.joinpath('wav2vec2'),
+            'overwrite_output_dir': True,
+            'num_train_epochs': int(self.settings['num_train_epochs']),
+            'per_device_train_batch_size': int(self.settings['batch_size']),
+            'per_device_eval_batch_size': int(self.settings['batch_size']),
+            'gradient_accumulation_steps': '2',
+            'learning_rate': self.settings['learning_rate'],
+            'weight_decay': '0.005',
+            'warmup_steps': '1000',
+            'evaluation_strategy': 'steps',
+            'save_steps': '500',
+            'eval_steps': '500',
+            'save_total_limit': '2',
+            'gradient_checkpointing': True,
+            'fp16': True if torch.cuda.is_available() else False,
+            'group_by_length': True,
+            'do_train': True,
+            'do_eval': True,
+            'logging_dir': self.path.joinpath('runs'),
         }
 
         if DEBUG:
             keyword_arguments.update(QUICK_TRAIN_BUILD_ARGUMENTS)
 
-        arguments = [f"--{key}" if value is True else f"--{key}={value}" 
+        arguments = [f'--{key}' if value is True else f'--{key}={value}'
             for key, value in keyword_arguments.items() if value]
         # See all possible arguments in src/transformers/training_args.py
         # or by passing the --help flag to this script.
         # We now keep distinct sets of args, for a cleaner separation of concerns.
         parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
-        if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
+        if len(sys.argv) == 2 and sys.argv[1].endswith('.json'):
             # If we pass only one argument to the script and it's the path to a json file,
             # let's parse it to get our arguments.
             return parser.parse_json_file(json_file=Path(sys.argv[1]).resolve())
@@ -209,17 +209,17 @@ class HFTModel(BaseModel):
             last_checkpoint = get_last_checkpoint(self.training_args.output_dir)
             if last_checkpoint is None and len(os.listdir(self.training_args.output_dir)) > 0:
                 raise ValueError(
-                    f"Output directory ({self.training_args.output_dir}) already exists and is not empty. "
-                    "Use --overwrite_output_dir to overcome.")
+                    f'Output directory ({self.training_args.output_dir}) already exists and is not empty. '
+                    'Use --overwrite_output_dir to overcome.')
             elif last_checkpoint is not None:
                 logger.info(
-                    f"Checkpoint detected, resuming training at {last_checkpoint}. To avoid this behavior, change "
-                    "the `--output_dir` or add `--overwrite_output_dir` to train from scratch.")
+                    f'Checkpoint detected, resuming training at {last_checkpoint}. To avoid this behavior, change '
+                    'the `--output_dir` or add `--overwrite_output_dir` to train from scratch.')
         return last_checkpoint
 
     def _setup_stages(self):
         """Set up the stages used for displaying training information to the user."""
-        self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(TRAINING_STAGES)]
+        self.index_prefixed_stages = [f'{i}_{stage}' for (i, stage) in enumerate(TRAINING_STAGES)]
         stage_labels = [string.capwords(stage).replace('_', ' ') for stage in TRAINING_STAGES]
 
         stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
@@ -231,25 +231,25 @@ class HFTModel(BaseModel):
         """
 
         logging.basicConfig(
-            format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
-            datefmt="%m/%d/%Y %H:%M:%S",
+            format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
+            datefmt='%m/%d/%Y %H:%M:%S',
             handlers=[logging.StreamHandler(sys.stdout)],)
         logger.setLevel(logging.INFO if is_main_process(self.training_args.local_rank) else logging.WARN)
 
         # Log on each process the small summary:
         logger.warning(
-            f"Process rank: {self.training_args.local_rank}, "
-            f"device: {self.training_args.device}, "
-            f"n_gpu: {self.training_args.n_gpu}, "
-            f"distributed training: {bool(self.training_args.local_rank != -1)}, "
-            f"16-bits training: {self.training_args.fp16}"
+            f'Process rank: {self.training_args.local_rank}, '
+            f'device: {self.training_args.device}, '
+            f'n_gpu: {self.training_args.n_gpu}, '
+            f'distributed training: {bool(self.training_args.local_rank != -1)}, '
+            f'16-bits training: {self.training_args.fp16}'
         )
         # Set the verbosity to info of the Transformers logger (on main process only):
         # if is_main_process(training_args.local_rank):
         #     transformers.utils.logging.set_verbosity_info()
-        logger.info(f"Training/evaluation parameters {self.training_args}")
+        logger.info(f'Training/evaluation parameters {self.training_args}')
 
-    def get_language_data(self, data_dir, language_file="language_data.json"):
+    def get_language_data(self, data_dir, language_file='language_data.json'):
         """
         Use a json config file to prepare tokens.
         It is a simple json file with 2 flat lists (graphemes and removables).
@@ -257,11 +257,11 @@ class HFTModel(BaseModel):
         TODO add a GUI widget for this
         """
 
-        language_data_path = Path(".").joinpath(language_file)
+        language_data_path = Path('.').joinpath(language_file)
         if language_data_path.exists():
             with open(language_data_path) as fd:
                 language_data = json.load(fd)
-            logger.info(f"Language data: {language_data}")
+            logger.info(f'Language data: {language_data}')
         else:
             language_data = None
         return language_data
@@ -305,8 +305,8 @@ class HFTModel(BaseModel):
                                 field='data')
 
         def make_text_col(batch):
-            batch["text"] = batch['transcript']
-            batch["path"] = str(data_dir / 'resampled' / batch['audio_file_name'])
+            batch['text'] = batch['transcript']
+            batch['path'] = str(data_dir / 'resampled' / batch['audio_file_name'])
             return batch
         ds = ds.map(make_text_col, remove_columns=['transcript', 'audio_file_name'])
         return ds
@@ -324,12 +324,12 @@ class HFTModel(BaseModel):
     def create_vocabulary(self, data_dir, word_delimiter_token):
         language_data = self.get_language_data(data_dir)
 
-        vocab_json_file = self.path.joinpath("vocab.json")
+        vocab_json_file = self.path.joinpath('vocab.json')
 
         def extract_all_chars(batch):
-            all_text = " ".join(batch["text"])
+            all_text = ' '.join(batch['text'])
             vocab = list(set(all_text))
-            return {"vocab": [vocab], "all_text": [all_text]}
+            return {'vocab': [vocab], 'all_text': [all_text]}
 
         vocab = self.hft_dataset['train'].map(
             extract_all_chars,
@@ -337,19 +337,19 @@ class HFTModel(BaseModel):
             batch_size=-1,
             keep_in_memory=True,
             remove_columns=self.hft_dataset['train'].column_names,)
-        vocab_list = list(set(vocab["vocab"][0]))
+        vocab_list = list(set(vocab['vocab'][0]))
         naive_vocab_dict = {v: k for k, v in enumerate(vocab_list)}
         if language_data:
-            if language_data.get("graphemes"):
+            if language_data.get('graphemes'):
                 intelligent_vocab_dict = {}
                 data_grapheme_duplications = set()
-                for token in sorted(language_data["graphemes"], key=len):
+                for token in sorted(language_data['graphemes'], key=len):
                     if token not in intelligent_vocab_dict:
                         intelligent_vocab_dict[token] = len(intelligent_vocab_dict)
                     else:
                         data_grapheme_duplications.add(token)
                 if data_grapheme_duplications:
-                    logger.warning(f"""Characters duplicated ({len(data_grapheme_duplications)}) in language data: {" ".join(sorted(data_grapheme_duplications))}; duplications were ignored (please clean the data file)…""")
+                    logger.warning(f"""Characters duplicated ({len(data_grapheme_duplications)}) in language data: {' '.join(sorted(data_grapheme_duplications))}; duplications were ignored (please clean the data file)…""")
                 naive_vocab_set = set(naive_vocab_dict)
                 intelligent_vocab_set = set("".join(intelligent_vocab_dict))
                 naive_specific_chars = naive_vocab_set - intelligent_vocab_set
@@ -357,20 +357,20 @@ class HFTModel(BaseModel):
                 if naive_specific_chars:
                     for character in naive_specific_chars:
                         intelligent_vocab_dict[character] = len(intelligent_vocab_dict)
-                        logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {" ".join(sorted(naive_specific_chars))}; they were added automatically (please update the data file)…""")
+                        logger.warning(f"""Characters present ({len(naive_specific_chars)}) in data but absent in language data: {' '.join(sorted(naive_specific_chars))}; they were added automatically (please update the data file)…""")
                 if intelligent_specific_chars:
-                    logger.warning(f"""Characters present ({len(intelligent_specific_chars)}) in language data but absent in data: {" ".join(sorted(intelligent_specific_chars))}""")
+                    logger.warning(f"""Characters present ({len(intelligent_specific_chars)}) in language data but absent in data: {' '.join(sorted(intelligent_specific_chars))}""")
                 vocab_dict = intelligent_vocab_dict
         else:
             vocab_dict = naive_vocab_dict
-        vocab_dict["[UNK]"] = len(vocab_dict)
-        vocab_dict["[PAD]"] = len(vocab_dict)
+        vocab_dict['[UNK]'] = len(vocab_dict)
+        vocab_dict['[PAD]'] = len(vocab_dict)
         if word_delimiter_token in vocab_dict:
-            logging.error(f"The word delimiter token ({word_delimiter_token}) seems to be already present in the raw text, please choose another one.")
-        if word_delimiter_token != " " and " " in vocab_dict:
-            vocab_dict[word_delimiter_token] = vocab_dict.get(" ", len(vocab_dict))
-            del vocab_dict[" "]
-        with open(vocab_json_file, "w") as vocab_file:
+            logging.error(f'The word delimiter token ({word_delimiter_token}) seems to be already present in the raw text, please choose another one.')
+        if word_delimiter_token != ' ' and ' ' in vocab_dict:
+            vocab_dict[word_delimiter_token] = vocab_dict.get(' ', len(vocab_dict))
+            del vocab_dict[' ']
+        with open(vocab_json_file, 'w') as vocab_file:
             json.dump(vocab_dict, vocab_file, ensure_ascii=False)
         return vocab_json_file
 
@@ -396,13 +396,13 @@ class HFTModel(BaseModel):
             mask_time_prob=self.model_args.mask_time_prob,
             gradient_checkpointing=self.model_args.gradient_checkpointing,
             layerdrop=self.model_args.layerdrop,
-            ctc_loss_reduction="mean",
+            ctc_loss_reduction='mean',
             pad_token_id=self.processor.tokenizer.pad_token_id,
             vocab_size=len(self.processor.tokenizer),
             ctc_zero_infinity=True)
 
     def preprocess_dataset(self):
-        print("=== Preprocessing Dataset")
+        print('=== Preprocessing Dataset')
         speech = self.prepare_speech()
 
         def speech_file_to_array_fn(batch):
@@ -410,9 +410,9 @@ class HFTModel(BaseModel):
             start_ms = batch['start_ms']
             stop_ms = batch['stop_ms']
             unique_key = f'{path}{start_ms}{stop_ms}'
-            batch["speech"] = speech[unique_key]
-            batch["sampling_rate"] = HFTModel.SAMPLING_RATE
-            batch["target_text"] = batch["text"]
+            batch['speech'] = speech[unique_key]
+            batch['sampling_rate'] = HFTModel.SAMPLING_RATE
+            batch['target_text'] = batch['text']
             batch['duration'] = (batch['stop_ms'] - batch['start_ms'])/1000
             batch['duration'] = len(batch['speech'])/batch['sampling_rate']
             return batch
@@ -422,21 +422,21 @@ class HFTModel(BaseModel):
             remove_columns=self.hft_dataset['train'].column_names,
             num_proc=self.data_args.preprocessing_num_workers,
         )
-        print("=== hft_dataset")
+        print('=== hft_dataset')
         print(self.hft_dataset)
 
 
     def prepare_dataset(self):
-        print("=== Preparing Dataset")
+        print('=== Preparing Dataset')
         def prepare_dataset(batch):
             # Check that all files have the correct sampling rate
             assert (
-                len(set(batch["sampling_rate"])) == 1
-            ), f"Make sure all inputs have the same sampling rate of {self.processor.feature_extractor.sampling_rate}."
-            batch["input_values"] = self.processor(batch["speech"], sampling_rate=batch["sampling_rate"][0]).input_values
+                len(set(batch['sampling_rate'])) == 1
+            ), f'Make sure all inputs have the same sampling rate of {self.processor.feature_extractor.sampling_rate}.'
+            batch['input_values'] = self.processor(batch['speech'], sampling_rate=batch['sampling_rate'][0]).input_values
             # Setup the processor for targets
             with self.processor.as_target_processor():
-                batch["labels"] = self.processor(batch["target_text"]).input_ids
+                batch['labels'] = self.processor(batch['target_text']).input_ids
             return batch
 
         self.hft_dataset = self.hft_dataset.map(
@@ -448,7 +448,7 @@ class HFTModel(BaseModel):
         )
 
     def prepare_speech(self):
-        print("=== Preparing Speech")
+        print('=== Preparing Speech')
         speech = {}
         audio_paths = set()
         rejected_count = 0
@@ -490,18 +490,18 @@ class HFTModel(BaseModel):
 
         # Remove rejected speech by filtering on speech matching length the required conditions
         self.hft_dataset = self.hft_dataset.filter(lambda x: f'{path}{start_ms}{stop_ms}' in speech.keys())
-        print(rejected_count, "files removed due to number of frames, zero wav or too short")
+        print(rejected_count, 'files removed due to number of frames, zero wav or too short')
         # Output some examples of the data for sanity check
-        texts = [x["text"] for x in self.hft_dataset["train"]]
+        texts = [x['text'] for x in self.hft_dataset['train']]
         if len(texts) > 10:
-            print(f"Random sample of {len(texts)} valid transcriptions from the original training set")
-            print("\n".join(random.choices(texts, k=10)))
+            print(f'Random sample of {len(texts)} valid transcriptions from the original training set')
+            print('\n'.join(random.choices(texts, k=10)))
         else:
-            print(f"All {len(texts)} valid transcriptions from the original training set")
-            print("\n".join(texts))
+            print(f'All {len(texts)} valid transcriptions from the original training set')
+            print('\n'.join(texts))
         return speech
 
-    def get_trainer(self, metric_name="wer"):
+    def get_trainer(self, metric_name='wer'):
         # Metric
         metric = datasets.load_metric(metric_name)
 
@@ -519,7 +519,7 @@ class HFTModel(BaseModel):
             all_predictions_str = ""
             # Build a string with all the reference text and prediction pairs
             for ref, pred in zip(label_str, pred_str):
-                all_predictions_str = all_predictions_str + f"-----  \nR:  {ref}  \nP: {pred}  \n"
+                all_predictions_str = all_predictions_str + f'-----  \nR:  {ref}  \nP: {pred}  \n'
             # Write it to a text file
             with open(f'{self.training_args.output_dir}/dev_preds_{file_time_id}.txt', 'w') as f:
                 f.write(all_predictions_str)
@@ -585,7 +585,7 @@ class HFTModel(BaseModel):
         # The .from_pretrained methods guarantee that only one local process can concurrently download model & vocab.
 
         # TODO Get the device from the training args.
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         logger.info(f'Running on device: {device}.')
 
         tokenizer = self.get_tokenizer(data_dir)
@@ -607,7 +607,7 @@ class HFTModel(BaseModel):
 
         self._set_stage(PREPROCESSING, complete=True)
 
-        print(f"len of dataset: {len(self.hft_dataset)}")
+        print(f'len of dataset: {len(self.hft_dataset)}')
 
         # 3. Training
         self._set_stage(TRAIN)
@@ -635,7 +635,7 @@ class HFTModel(BaseModel):
             max_train_samples = (
                 self.data_args.max_train_samples if self.data_args.max_train_samples is not None else len(self.hft_dataset['train'])
             )
-            metrics["train_samples"] = min(max_train_samples, len(self.hft_dataset['train']))
+            metrics['train_samples'] = min(max_train_samples, len(self.hft_dataset['train']))
 
             trainer.log_metrics(TRAIN, metrics)
             trainer.save_metrics(TRAIN, metrics)
@@ -646,14 +646,14 @@ class HFTModel(BaseModel):
         # 4. Evaluation
         self._set_stage(EVALUATION)
         if self.training_args.do_eval:
-            logger.info("*** Evaluate ***")
+            logger.info('*** Evaluate ***')
             metrics = trainer.evaluate()
             max_val_samples = self.data_args.max_val_samples if self.data_args.max_val_samples is not None else len(self.hft_dataset['dev'])
-            metrics["eval_samples"] = min(max_val_samples, len(self.hft_dataset['dev']))
+            metrics['eval_samples'] = min(max_val_samples, len(self.hft_dataset['dev']))
 
-            trainer.log_metrics("eval", metrics)
-            trainer.save_metrics("eval", metrics)
-            print("*** metrics")
+            trainer.log_metrics('eval', metrics)
+            trainer.save_metrics('eval', metrics)
+            print('*** metrics')
             print(metrics)
             self.config['results'] = metrics
 
@@ -669,16 +669,16 @@ class HFTModel(BaseModel):
         """
         if stage not in TRAINING_STAGES:
             return
-        status = "complete" if complete else "in-progress"
+        status = 'complete' if complete else 'in-progress'
         index = TRAINING_STAGES.index(stage)
         self.stage = self.index_prefixed_stages[index]
         self.stage_status = self.stage, status, '', ''
 
     def get_train_results(self) -> Dict[str, float]:
         # comparison_val is a property common to all engines so the GUI can sort models by a result value
-        results = {"comparison_val": float(self.config['results']['eval_wer']),
-                   "wer": float(self.config['results']['eval_wer']),
-                   "eval_loss": self.config['results']['eval_loss']
+        results = {'comparison_val': float(self.config['results']['eval_wer']),
+                   'wer': float(self.config['results']['eval_wer']),
+                   'eval_loss': self.config['results']['eval_loss']
                    }
         return results
     
@@ -689,23 +689,26 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
 
     This tokenizer inherits from :class:`~transformers.Wav2Vec2CTCTokenizer` which contains some of the main methods.
     Users should refer to the superclass for more information regarding such methods.
-    The specificity of this specialized tokenizer is to manage complexe graphemes (when phonemes are coded on multiple characters) the same way as simple graphemes (see https://github.com/huggingface/transformers/issues/10942).
-    It was then managed in a different way by an official PR on the main repository (https://github.com/huggingface/transformers/pull/11349) but I keep for the moment this method based on regular expressions because I prefer semantically not to manage complex graphemes in the same way as "special tokens".
+    The specificity of this specialized tokenizer is to manage complexe graphemes (when phonemes are coded on multiple
+    characters) the same way as simple graphemes (see https://github.com/huggingface/transformers/issues/10942).
+    It was then managed in a different way by an official PR on the main repository
+    (https://github.com/huggingface/transformers/pull/11349) but I keep for the moment this method based on regular
+    expressions because I prefer semantically not to manage complex graphemes in the same way as 'special tokens'.
     We should later test their method (and update our fork) to verify that everything works similarly.
 
     Args:
         vocab_file (:obj:`str`):
             File containing the vocabulary.
-        bos_token (:obj:`str`, `optional`, defaults to :obj:`"<s>"`):
+        bos_token (:obj:`str`, `optional`, defaults to :obj:`'<s>'`):
             The beginning of sentence token.
-        eos_token (:obj:`str`, `optional`, defaults to :obj:`"</s>"`):
+        eos_token (:obj:`str`, `optional`, defaults to :obj:`'</s>'`):
             The end of sentence token.
-        unk_token (:obj:`str`, `optional`, defaults to :obj:`"<unk>"`):
+        unk_token (:obj:`str`, `optional`, defaults to :obj:`'<unk>'`):
             The unknown token. A token that is not in the vocabulary cannot be converted to an ID and is set to be this
             token instead.
-        pad_token (:obj:`str`, `optional`, defaults to :obj:`"<pad>"`):
+        pad_token (:obj:`str`, `optional`, defaults to :obj:`'<pad>'`):
             The token used for padding, for example when batching sequences of different lengths.
-        word_delimiter_token (:obj:`str`, `optional`, defaults to :obj:`"|"`):
+        word_delimiter_token (:obj:`str`, `optional`, defaults to :obj:`'|'`):
             The token used for defining the end of a word.
         do_lower_case (:obj:`bool`, `optional`, defaults to :obj:`False`):
             Whether or not to accept lowercase input and lowercase the output when decoding.
@@ -717,18 +720,18 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Characters which will disrupt the regex pattern business
-        self.special_characters = ["?", "+", "*", "(", ")", "[", "]", "|"]
+        self.special_characters = ['?', '+', '*', '(', ')', '[', ']', '|']
         self.pattern: re.Pattern = self.get_pattern()
 
     def get_pattern(self) -> re.Pattern:
-        exclusion_pattern = "|".join([self.unk_token, self.bos_token, self.eos_token, self.pad_token])
-        exclusion_pattern = re.sub(r"(\[|/)", r"\\\g<1>", exclusion_pattern)
-        # logger.info(f"tokenizer – exclusion pattern: {exclusion_pattern}")
-        graphemes = [key if key not in self.special_characters else f"\{key}" for key in self.encoder.keys() if
+        exclusion_pattern = '|'.join([self.unk_token, self.bos_token, self.eos_token, self.pad_token])
+        exclusion_pattern = re.sub(r'(\[|/)', r'\\\g<1>', exclusion_pattern)
+        # logger.info(f'tokenizer – exclusion pattern: {exclusion_pattern}')
+        graphemes = [key if key not in self.special_characters else f'\{key}' for key in self.encoder.keys() if
                      not re.match(exclusion_pattern, key, re.I)]
-        logger.info(f"tokenizer – graphemes: {graphemes}")
-        pattern = re.compile("|".join(sorted(graphemes, key=lambda grapheme: len(grapheme), reverse=True)))
-        logger.info(f"tokenizer – tokenization pattern: {pattern}")
+        logger.info(f'tokenizer – graphemes: {graphemes}')
+        pattern = re.compile('|'.join(sorted(graphemes, key=lambda grapheme: len(grapheme), reverse=True)))
+        logger.info(f'tokenizer – tokenization pattern: {pattern}')
         return pattern
 
     def _tokenize(self, text: str) -> List[str]:
@@ -740,22 +743,6 @@ class ElpisTokenizer(Wav2Vec2CTCTokenizer):
         tokens = re.findall(self.pattern, text)
         return tokens
 
-    #############################################
-    # Not sure if it is useful yet (the tokenizer function, later, will create a
-    # pattern with longest graphemes before the shortest ones, but maybe some
-    # linguists won’t give the graphemes in an classified way and this function
-    # could be useful for printing data or whatever…
-    def classify_graphemes(graphemes: Union[List[str], Set[str]], by: Callable = len) -> Dict[int, List[str]]:
-        """ Returns a dict where keys are the criteria results of a function 
-        applied on graphemes, and values lists of graphemes under this criteria 
-        (length by default).
-        """
-        grapheme_dict = {}
-        for grapheme in graphemes:
-            grapheme_list = grapheme_dict.get(by(grapheme), [])
-            grapheme_list.append(grapheme)
-            grapheme_dict[by(grapheme)] = grapheme_list
-        return grapheme_dict
 
 @dataclass
 class ModelArguments:
@@ -765,59 +752,59 @@ class ModelArguments:
 
     model_name_or_path: str = field(
         metadata={
-            "help": "Path to pretrained model or model identifier from huggingface.co/models."
+            'help': 'Path to pretrained model or model identifier from huggingface.co/models.'
         }
     )
     cache_dir: Optional[str] = field(
         default=None,
         metadata={
-            "help": "Where you want to store the pretrained models downloaded from huggingface.co."
+            'help': 'Where you want to store the pretrained models downloaded from huggingface.co.'
         },
     )
     freeze_feature_extractor: Optional[bool] = field(
         default=True,
         metadata={
-            "help": "Whether to freeze the feature extractor layers of the model."
+            'help': 'Whether to freeze the feature extractor layers of the model.'
         },
     )
     attention_dropout: Optional[float] = field(
         default=0.1,
-        metadata={"help": "The dropout ratio for the attention probabilities."},
+        metadata={'help': 'The dropout ratio for the attention probabilities.'},
     )
     activation_dropout: Optional[float] = field(
         default=0.1,
         metadata={
-            "help": "The dropout ratio for activations inside the fully connected layer."
+            'help': 'The dropout ratio for activations inside the fully connected layer.'
         },
     )
     hidden_dropout: Optional[float] = field(
         default=0.1,
         metadata={
-            "help": "The dropout probability for all fully connected layers in the embeddings, encoder, and pooler."
+            'help': 'The dropout probability for all fully connected layers in the embeddings, encoder, and pooler.'
         },
     )
     feat_proj_dropout: Optional[float] = field(
         default=0.0,
         metadata={
-            "help": "The dropout probability for all 1D convolutional layers in feature extractor."
+            'help': 'The dropout probability for all 1D convolutional layers in feature extractor.'
         },
     )
     mask_time_prob: Optional[float] = field(
         default=0.05,
         metadata={
-            "help": "Probability of each feature vector along the time axis to be chosen as the start of the vector"
-            "span to be masked. Approximately ``mask_time_prob * sequence_length // mask_time_length`` feature"
-            "vectors will be masked along the time axis. This is only relevant if ``apply_spec_augment is True``."
+            'help': 'Probability of each feature vector along the time axis to be chosen as the start of the vector'
+            'span to be masked. Approximately ``mask_time_prob * sequence_length // mask_time_length`` feature'
+            'vectors will be masked along the time axis. This is only relevant if ``apply_spec_augment is True``.'
         },
     )
     gradient_checkpointing: Optional[bool] = field(
         default=True,
         metadata={
-            "help": "If True, use gradient checkpointing to save memory at the expense of slower backward pass."
+            'help': 'If True, use gradient checkpointing to save memory at the expense of slower backward pass.'
         },
     )
     layerdrop: Optional[float] = field(
-        default=0.0, metadata={"help": "The LayerDrop probability."}
+        default=0.0, metadata={'help': 'The LayerDrop probability.'}
     )
 
 @dataclass
@@ -828,56 +815,56 @@ class DataTrainingArguments:
 
     elpis_data_dir: str = field(
         metadata={
-            "help": "The path to the directory containing Elpis-preprocessed data."
+            'help': 'The path to the directory containing Elpis-preprocessed data.'
         }
     )
     train_size: Optional[float] = field(
         default=0.8,
         metadata={
-            "help": "The fraction of the data used for training. The rest is split evenly between the dev and test sets."
+            'help': 'The fraction of the data used for training. The rest is split evenly between the dev and test sets.'
         },
     )
     split_seed: Optional[int] = field(
         default=42,
-        metadata={"help": "The random seed used to create the train/dev/test splits."},
+        metadata={'help': 'The random seed used to create the train/dev/test splits.'},
     )
     dataset_config_name: Optional[str] = field(
         default=None,
         metadata={
-            "help": "The configuration name of the dataset to use (via the datasets library)."
+            'help': 'The configuration name of the dataset to use (via the datasets library).'
         },
     )
     train_split_name: Optional[str] = field(
-        default="train+validation",
+        default='train+validation',
         metadata={
-            "help": "The name of the training data set split to use (via the datasets library). Defaults to 'train'"
+            'help': 'The name of the training data set split to use (via the datasets library). Defaults to 'train''
         },
     )
     overwrite_cache: bool = field(
         default=False,
-        metadata={"help": "Overwrite the cached preprocessed datasets or not."},
+        metadata={'help': 'Overwrite the cached preprocessed datasets or not.'},
     )
     preprocessing_num_workers: Optional[int] = field(
         default=None,
-        metadata={"help": "The number of processes to use for the preprocessing."},
+        metadata={'help': 'The number of processes to use for the preprocessing.'},
     )
     max_train_samples: Optional[int] = field(
         default=None,
         metadata={
-            "help": "For debugging purposes or quicker training, truncate the number of training examples to this "
-            "value if set."
+            'help': 'For debugging purposes or quicker training, truncate the number of training examples to this '
+            'value if set.'
         },
     )
     max_val_samples: Optional[int] = field(
         default=None,
         metadata={
-            "help": "For debugging purposes or quicker training, truncate the number of validation examples to this "
-            "value if set."
+            'help': 'For debugging purposes or quicker training, truncate the number of validation examples to this '
+            'value if set.'
         },
     )
     chars_to_ignore: List[str] = list_field(
-        default=[",", "?", ".", "!", "-", ";", ":", '""', "%", "'", '"', "�"],
-        metadata={"help": "A list of characters to remove from the transcripts."},
+        default=[',', '?', '.', '!', '-', ';', ':', '""', '%', ''', ''', '�'],
+        metadata={'help': 'A list of characters to remove from the transcripts.'},
     )
 
 @dataclass
@@ -916,14 +903,14 @@ class DataCollatorCTCWithPadding:
     def __call__(self, features: List[Dict[str, Union[List[int], torch.Tensor]]]) -> Dict[str, torch.Tensor]:
         # split inputs and labels since they have to be of different lenghts and need
         # different padding methods
-        input_features = [{"input_values": feature["input_values"]} for feature in features]
-        label_features = [{"input_ids": feature["labels"]} for feature in features]
+        input_features = [{'input_values': feature['input_values']} for feature in features]
+        label_features = [{'input_ids': feature['labels']} for feature in features]
         batch = self.processor.pad(
             input_features,
             padding=self.padding,
             max_length=self.max_length,
             pad_to_multiple_of=self.pad_to_multiple_of,
-            return_tensors="pt",
+            return_tensors='pt',
         )
         with self.processor.as_target_processor():
             labels_batch = self.processor.pad(
@@ -931,11 +918,11 @@ class DataCollatorCTCWithPadding:
                 padding=self.padding,
                 max_length=self.max_length_labels,
                 pad_to_multiple_of=self.pad_to_multiple_of_labels,
-                return_tensors="pt",
+                return_tensors='pt',
             )
         # replace padding with -100 to ignore loss correctly
-        labels = labels_batch["input_ids"].masked_fill(labels_batch.attention_mask.ne(1), -100)
-        batch["labels"] = labels
+        labels = labels_batch['input_ids'].masked_fill(labels_batch.attention_mask.ne(1), -100)
+        batch['labels'] = labels
         return batch
 
 
@@ -975,12 +962,12 @@ class CTCTrainer(Trainer):
             loss = self.compute_loss(model, inputs)
 
         if self.args.n_gpu > 1:
-            if model.module.config.ctc_loss_reduction == "mean":
+            if model.module.config.ctc_loss_reduction == 'mean':
                 loss = loss.mean()
-            elif model.module.config.ctc_loss_reduction == "sum":
-                loss = loss.sum() / (inputs["labels"] >= 0).sum()
+            elif model.module.config.ctc_loss_reduction == 'sum':
+                loss = loss.sum() / (inputs['labels'] >= 0).sum()
             else:
-                raise ValueError(f"{model.config.ctc_loss_reduction} is not valid. Choose one of ['mean', 'sum']")
+                raise ValueError(f'{model.config.ctc_loss_reduction} is not valid. Choose one of ["mean", "sum"]')
 
         if self.args.gradient_accumulation_steps > 1:
             loss = loss / self.args.gradient_accumulation_steps
@@ -1000,6 +987,6 @@ class CTCTrainer(Trainer):
 
 
 # For dev test purpose (to run without the GUI)…
-if __name__ == "__main__":
-    model = HFTModel(parent_path="..")
+if __name__ == '__main__':
+    model = HFTModel(parent_path='..')
     model.train()
