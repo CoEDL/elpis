@@ -97,8 +97,7 @@ def list_existing():
 @bp.route("/settings", methods=['POST'])
 def settings():
     def setup(model: Model):
-        if request.method == 'POST':
-            model.settings = request.json['settings']
+        model.settings = request.json['settings']
 
     def build_data(model: Model):
         return {
@@ -174,7 +173,7 @@ def _model_response(build_data: Callable[[Model], Dict],
         A 200 response with the supplied data, if successful. 
     """
     model: Model = app.config['CURRENT_MODEL']
-    if model is None:
+    if not model:
         return jsonify(MISSING_MODEL_RESPONSE)
 
     setup(model)
