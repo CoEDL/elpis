@@ -250,10 +250,13 @@ class HFTModel(BaseModel):
         logger.info(f"Training/evaluation parameters {self.training_args}")
 
     def get_language_data(self, data_dir, language_file="language_data.json"):
-        # Use a json config file to prepare tokens.
-        # It is a simple json file with 2 flat lists (graphemes and removables).
-        # For now, this must be manually added to the /elpis dir.
-        # TODO add a GUI widget for this
+        """
+        Use a json config file to prepare tokens.
+        It is a simple json file with 2 flat lists (graphemes and removables).
+        For now, this must be manually added to the /elpis dir.
+        TODO add a GUI widget for this
+        """
+
         language_data_path = Path(".").joinpath(language_file)
         if language_data_path.exists():
             with open(language_data_path) as fd:
@@ -370,20 +373,6 @@ class HFTModel(BaseModel):
         with open(vocab_json_file, "w") as vocab_file:
             json.dump(vocab_dict, vocab_file, ensure_ascii=False)
         return vocab_json_file
-
-    """
-    def tokenize(self, data_args, train_dataset, eval_dataset):
-        # Create and save tokenizer
-        chars_to_ignore_regex = f'[{"".join(data_args.chars_to_ignore)}]'
-
-        # Is there a better way than doing a nested function here?
-        def remove_special_characters(batch):
-            batch["text"] = re.sub(chars_to_ignore_regex, "", batch["sentence"]).lower() + " "
-            return batch
-
-        train_dataset = train_dataset.map(remove_special_characters, remove_columns=["sentence"])
-        eval_dataset = eval_dataset.map(remove_special_characters, remove_columns=["sentence"])
-    """
 
     def get_feature_extractor(self):
         return Wav2Vec2FeatureExtractor(
