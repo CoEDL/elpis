@@ -95,7 +95,7 @@ const mapDispatchToProps = dispatch => ({
                 if (pronDictData) {
                     dispatch(pronDictLoad(pronDictData));
                 }
-                });
+            });
     },
 });
 
