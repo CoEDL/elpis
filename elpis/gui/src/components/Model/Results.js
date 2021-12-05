@@ -22,14 +22,24 @@ class ModelResults extends Component {
                 <Table celled className="attached">
                     <Table.Body>
                         {currentEngine && currentEngine === "hft" &&
-                            <Table.Row>
-                                <Table.Cell>
-                                    {t("model.results.hft.eval_loss")}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {results.eval_loss}
-                                </Table.Cell>
-                            </Table.Row>
+                            <>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {t("model.results.hft.wer")}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {results.wer}
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {t("model.results.hft.eval_loss")}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {results.eval_loss}
+                                    </Table.Cell>
+                                </Table.Row>
+                            </>
                         }
                         {currentEngine && currentEngine === "kaldi" &&
                             <>
