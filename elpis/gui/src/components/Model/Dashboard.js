@@ -51,8 +51,11 @@ class ModelDashboard extends Component {
         const {t, engine, engineHumanNames, name, list} = this.props;
         const {column, direction} = this.state;
         let listEl = <p>{t("model.dashboard.noneMessage")}</p>;
+        const list_sorted = arraySort(list, 'name')
 
-        if (list.length > 0) {
+        console.log(list_sorted);
+
+        if (list_sorted.length > 0) {
             listEl = (
                 <Table sortable celled fixed unstackable>
                     <Table.Header>
@@ -90,7 +93,7 @@ class ModelDashboard extends Component {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {list.map(model => {
+                        {list_sorted.map(model => {
                             const className = (name === model.name) ? "current" : "";
 
                             return (
