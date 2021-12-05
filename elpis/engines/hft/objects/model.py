@@ -81,8 +81,7 @@ def list_field(default=None, metadata=None):
 
 class HFTModel(BaseModel):
 
-    # TODO check if 16_000 works without _
-    SAMPLING_RATE = 16_000 # This is standard for HFT
+    SAMPLING_RATE = 16_000
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
