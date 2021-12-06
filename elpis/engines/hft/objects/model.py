@@ -130,6 +130,7 @@ class HFTModel(BaseModel):
 
     @property
     def log(self):
+        print('*** log file is', self.config['run_log_path'])
         with open(self.config['run_log_path']) as logs:
             return logs.read()
 
