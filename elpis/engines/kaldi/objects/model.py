@@ -22,7 +22,6 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         super().__init__(**kwargs)
         self.pron_dict: PronDict = None
         self.config['pron_dict_name'] = None  # pron_dict hash has not been linked
-        self.config['ngram'] = 1  # default to 1 to make playing quicker
         self.config['engine_name'] = 'kaldi'
         stage_names = {
             "0_setup.sh": "setup",
@@ -34,39 +33,30 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             "6_tri1.sh": "triphoneTraining"
         }
         super().build_stage_status(stage_names)
+        self.status = 'untrained'
         self.config['stage_count'] = 0
-        self.config['current_stage'] = None
+        self.config['current_stage'] = '0_setup.sh'
+        self.settings = {'ngram': 1}
+        print("model default settings", self.settings)
+        self.run_log_path = self.path.joinpath('train.log')
+        if not Path(self.run_log_path).is_file():
+            run(f"touch {self.run_log_path};")
 
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
+        print('load', base_path)
         self.pron_dict = None
         return self
+
+    @property
+    def log(self):
+        with open(self.run_log_path) as logs:
+            return logs.read()
 
     def link_pron_dict(self, pron_dict: PronDict):
         self.pron_dict = pron_dict
         self.config['pron_dict_name'] = pron_dict.name
-
-    @property
-    def ngram(self) -> int:
-        return int(self.config['ngram'])
-
-    @ngram.setter
-    def ngram(self, value: int) -> None:
-        self.config['ngram'] = value
-
-    @BaseModel.stage_status.getter
-    def stage_status(self):
-        # read latest data from stage logs
-        train_log_dir = self.path.joinpath('train-logs')
-        stage_log_path = train_log_dir.joinpath(f"stage_{self.config['stage_count']}.log")
-        if stage_log_path.is_file():
-            with open(stage_log_path, 'r') as file:
-                stage_log = file.read()
-            # update value
-            self.stage_status = (self.config['current_stage'], 'in-progress', '', stage_log)
-        # return value
-        return self.config['stage_status']
 
     def build_structure(self):
         # task json-to-kaldi
@@ -122,7 +112,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
             # task make-nonsil-phones > {{ .KALDI_OUTPUT_PATH }}/tmp/nonsilence_phones.txt
             nonsilence_phones_path = kaldi_data_local_dict.joinpath('nonsilence_phones.txt')
-            # build a unnique non-sorted list of the phone symbols
+            # build a unique non-sorted list of the phone symbols
             # can't use sorting, because the rules may have order significance
             # ignore comment lines that begin with #
             seen = OrderedDict()
@@ -216,69 +206,35 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')
 
-            # Prepare (dump, recreate) main train log file
-            run_log_path = self.path.joinpath('train.log')
-            if run_log_path.is_file():
-                os.remove(run_log_path)
-            run(f"touch {run_log_path};")
-
-            # Organise stage logs in a dir
-            train_log_dir = self.path.joinpath('train-logs')
-            if train_log_dir.exists():
-                shutil.rmtree(train_log_dir)
-            os.mkdir(train_log_dir)
-
             self.config['stage_count'] = 0
             stages = os.listdir(local_kaldi_path.joinpath('stages'))
 
             for stage in sorted(stages):
                 print(f"Stage {stage} starting")
-                self.stage_status = (stage, 'in-progress', '', 'starting')
+                self.stage_status = (stage, 'in-progress')
                 self.config['current_stage'] = stage
 
-                # Create log file
-                stage_log_path = train_log_dir.joinpath(f"stage_{self.config['stage_count']}.log")
-                with open(stage_log_path, 'w+'):
-                    pass
-
-                #  Manipulate stage templates with user-defined settings
-                # TODO replace with jinja templates or something similar
+                # TODO update stage templates with jinja templates or something similar
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'r') as file :
                     filedata = file.read()
                 # Add settings to replace here
-                filedata = filedata.replace('lm_order=1', f'lm_order={self.ngram}')
+                filedata = filedata.replace('lm_order=1', f'lm_order={self.settings["ngram"]}')
                 with open(local_kaldi_path.joinpath('stages').joinpath(stage), 'w') as file:
                     file.write(filedata)
 
                 # Run the command, log output. Also redirect Kaldi sterr output to log. These are often not errors :-(
                 try:
-                    stage_process = run(f"cd {local_kaldi_path}; stages/{stage} &> {stage_log_path}")
-                    print('done')
+                    run(f"cd {local_kaldi_path}; stages/{stage} >> {self.run_log_path}")
                     print(f"Stage {stage} complete")
-                    with open(stage_log_path, 'r') as file:
-                        stage_log = file.read()
-                    print(f"Stage {stage} log", stage_log)
-                    self.stage_status = (stage, 'complete', '', stage_log)
+                    self.stage_status = (stage, 'complete')
                     self.config['stage_count'] = self.config['stage_count'] + 1
                 except CalledProcessError as error:
-                    with open(stage_log_path, 'a+') as file:
+                    with open(self.run_log_path, 'a+') as file:
                         print('stderr', error.stderr, file=file)
                         print('failed', file=file)
                     print(f"Stage {stage} failed")
-                    self.stage_status = (stage, 'failed', '', 'LOG-C')
+                    self.stage_status = (stage, 'failed')
                     break
-
-            self.log = ''
-            # Concat all the files in the train-log dir
-            log_filenames = os.listdir(train_log_dir)
-            log_filenames.sort()
-            with open(run_log_path, 'w') as outfile:
-                for log_file in log_filenames:
-                    with open(train_log_dir.joinpath(log_file)) as infile:
-                        log_contents = infile.read()
-                        outfile.write(log_contents)
-                        outfile.write("\n")
-                        self.log += log_contents
 
         def run_training_in_background():
             def background_train_task():
@@ -302,32 +258,34 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         return
 
     def get_train_results(self):
-        log_file = self.path.joinpath('train-logs', 'stage_6.log')
         results = {}
-        with log_file.open() as fin:
+        # self.run_log_path isn't available...
+        run_log_path = self.path.joinpath('train.log')
+        with run_log_path.open() as log_file:
             wer_lines = []
-            for line in reversed(list(fin)):
+            for line in reversed(list(log_file)):
                 line = line.rstrip()
                 if "%WER" in line:
                     # use line to sort by best val
                     line_r = line.replace('%WER ', '')
                     wer_lines.append(line_r)
-            wer_lines.sort(reverse = True)
-            line = wer_lines[0]
-            line_split = line.split(None, 1)
-            wer = line_split[0]
-            line_results = line_split[1]
-            line_results = re.sub("[\[\]]", "", line_results)
-            results_split = line_results.split(',')
-            count_val = results_split[0].strip()
-            ins_val = results_split[1].replace(' ins', '').strip()
-            del_val = results_split[2].replace(' del', '').strip()
-            sub_val = results_split[3].replace(' sub', '').strip()
-            results = {"comparison_val": float(wer),  # property common to all engines so the GUI can sort models by a result value
-                       "wer": float(wer),
-                       "count_val": str(count_val),
-                       "ins_val": int(ins_val),
-                       "del_val": int(del_val),
-                       "sub_val": int(sub_val)}
-            print(results)
+            if len(wer_lines) > 0:
+                wer_lines.sort(reverse = True)
+                line = wer_lines[0]
+                line_split = line.split(None, 1)
+                wer = line_split[0]
+                line_results = line_split[1]
+                line_results = re.sub("[\[\]]", "", line_results)
+                results_split = line_results.split(',')
+                count_val = results_split[0].strip()
+                ins_val = results_split[1].replace(' ins', '').strip()
+                del_val = results_split[2].replace(' del', '').strip()
+                sub_val = results_split[3].replace(' sub', '').strip()
+                results = {"comparison_val": float(wer),  # property common to all engines so the GUI can sort models by a result value
+                           "wer": float(wer),
+                           "count_val": str(count_val),
+                           "ins_val": int(ins_val),
+                           "del_val": int(del_val),
+                           "sub_val": int(sub_val)}
+                print(results)
         return results

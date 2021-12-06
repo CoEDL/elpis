@@ -13,6 +13,7 @@ docker run --rm -it -p 5001:5001/tcp \
 Change dataset dir values etc below to suit your data.
 Run the data preparation scripts and do training by calling this script from the /elpis dir.
 
+poetry shell
 python elpis/examples/cli/kaldi/train.py
 """
 
@@ -51,14 +52,14 @@ elpis.set_engine(engine)
 # Reuse dataset if it exists
 if DATASET_NAME not in elpis.list_datasets():
     print("Making new dataset")
-    ds = elpis.new_dataset(DATASET_NAME)
-    ds.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
-    ds.auto_select_importer() # Selects Elan because of eaf file.
-    ds.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
-    ds.process()
+    dataset = elpis.new_dataset(DATASET_NAME)
+    dataset.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
+    dataset.auto_select_importer() # Selects Elan because of eaf file.
+    dataset.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
+    dataset.process()
 else:
     print("Use existing dataset")
-    ds = elpis.get_dataset(DATASET_NAME)
+    dataset = elpis.get_dataset(DATASET_NAME)
 
 
 # Step 3
@@ -67,13 +68,13 @@ else:
 # Reuse pronunciation dictionary if it exists
 if PRON_DICT_NAME not in elpis.list_pron_dicts():
     print("Making new pron dict")
-    pd = elpis.new_pron_dict(PRON_DICT_NAME)
-    pd.link(ds)
-    pd.set_l2s_path(L2S_PATH)
-    pd.generate_lexicon()
+    pron_dict = elpis.new_pron_dict(PRON_DICT_NAME)
+    pron_dict.link(dataset)
+    pron_dict.set_l2s_path(L2S_PATH)
+    pron_dict.generate_lexicon()
 else:
     print("Use existing pron dict")
-    pd = elpis.get_pron_dict(PRON_DICT_NAME)
+    pron_dict = elpis.get_pron_dict(PRON_DICT_NAME)
 
 
 # Step 4
@@ -82,25 +83,11 @@ else:
 # Load model if it exists
 if MODEL_NAME not in elpis.list_models():
     print("Making new model")
-    m = elpis.new_model(MODEL_NAME)
-    m.link_dataset(ds)
-    m.link_pron_dict(pd)
-    m.build_structure()
-    m.train() # may take a while
+    model = elpis.new_model(MODEL_NAME)
+    model.link_dataset(dataset)
+    model.link_pron_dict(pron_dict)
+    model.build_structure()
+    model.train() # may take a while
 else:
     print("Use existing model")
-    m = elpis.get_model(MODEL_NAME)
-
-
-# Step 5
-# ======
-# Make a transcription interface and transcribe audio.
-i = 0
-while TX_NAME in elpis.list_transcriptions():
-    TX_NAME = TX_NAME + str(i)
-t = elpis.new_transcription(TX_NAME)
-t.link(m)
-with open(INFER_FILE_PATH, 'rb') as faudio:
-    t.prepare_audio(faudio)
-t.transcribe()
-print(t.text())
+    model = elpis.get_model(MODEL_NAME)

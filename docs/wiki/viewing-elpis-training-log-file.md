@@ -42,14 +42,8 @@ cd XXXX
 ```
 
 
-7. If `train.log` file is there, you can look at it for some insight into what Kaldi is doing. We'll add some better feedback for knowing when this file is created soon.
+7. If `train.log` file is there, you can look at it for some insight into what Kaldi or HFT are doing. 
 
 ```shell
-tail -f train.log
-```
-
-For ESPnet, you will need to look in the egs dir for processing after stage 4. 
-```shell
-cd espnet-asr1/exp/train_nodev*
 tail -f train.log
 ```

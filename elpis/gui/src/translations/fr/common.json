@@ -175,13 +175,9 @@
                 "ins": "INS",
                 "sub": "SUB"
             },
-            "espnet": {
+            "hft": {
                 "wer": "WER",
-                "per": "PER",
-                "count": "incorrect/total",
-                "del": "DEL",
-                "ins": "INS",
-                "sub": "SUB"
+                "eval_loss": "Eval loss"
             }
         },
         "generated": {

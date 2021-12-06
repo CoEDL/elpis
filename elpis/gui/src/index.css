@@ -33,6 +33,14 @@ code {
 .train-log {
     width: 100%;
 }
+.compiled-log {
+    font-family: monospace;
+    height: 300px;
+    white-space: pre;
+}
+.compiled-log > div {
+    padding-bottom: 1.2em;
+}
 
 .accordion {
     margin-bottom: 2rem;
@@ -267,6 +275,12 @@ label.pad-right,
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.training_settings .ui.form tr {
+    padding: 0.5em 0;
+}
+.training_settings .ui.form tr {
+    padding: 0 0.5em;
+}
 
 /* Container for opacity toggle */
 .conf-tools {
@@ -281,6 +295,7 @@ label.pad-right,
 }
 .transcription-text p {
     margin-right: 0.3em;
+    word-break: break-all;
 }
 
 /* Override confidence opacity setting on transcription text */

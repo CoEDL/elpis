@@ -16,82 +16,73 @@ class ModelResults extends Component {
 
     render() {
         const {t, currentEngine, name, results} = this.props;
-        const wer_text = currentEngine === "kaldi" ? t("model.results.kaldi.wer") : t("model.results.espnet.wer");
-        const count_text = currentEngine === "kaldi" ? t("model.results.kaldi.count") : t("model.results.espnet.count");
-        const per_text = t("model.results.espnet.per");
-        const del_text = currentEngine === "kaldi" ? t("model.results.kaldi.del") : t("model.results.espnet.del");
-        const ins_text = currentEngine === "kaldi" ? t("model.results.kaldi.ins") : t("model.results.espnet.ins");
-        const sub_text = currentEngine === "kaldi" ? t("model.results.kaldi.sub") : t("model.results.espnet.sub");
-        let resultsEl = <p>{t("model.results.noResults")}</p>;
-
-        if (results) {
-            resultsEl = (
-                <>
-                    <Message attached content={t("model.results.description")} />
-                    <Table celled className="attached">
-                        <Table.Body>
-
-                            {currentEngine && currentEngine === "espnet" ?
+        const resultsEl = results ? (
+            <>
+                <Message attached content={t("model.results.description")} />
+                <Table celled className="attached">
+                    <Table.Body>
+                        {currentEngine && currentEngine === "hft" &&
+                            <>
                                 <Table.Row>
-                                    <Table.Cell className="results-title">
-                                        {per_text}
+                                    <Table.Cell>
+                                        {t("model.results.hft.wer")}
                                     </Table.Cell>
-                                    <Table.Cell className="results-title">
-                                        {results.per}
-                                        {results.per &&
-                                            <>%</>
-                                                }
-                                    </Table.Cell>
-                                </Table.Row> :
-                                <Table.Row>
-                                    <Table.Cell className="results-title">
-                                        {wer_text}
-                                    </Table.Cell>
-                                    <Table.Cell className="results-title">
+                                    <Table.Cell>
                                         {results.wer}
-                                        {results.wer &&
-                                            <>%</>
-                                                }
                                     </Table.Cell>
                                 </Table.Row>
-                                }
-                            <Table.Row>
-                                <Table.Cell>
-                                    {count_text}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {results.count_val}
-                                </Table.Cell>
-                            </Table.Row>
-                            <Table.Row>
-                                <Table.Cell>
-                                    {del_text}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {results.del_val}
-                                </Table.Cell>
-                            </Table.Row>
-                            <Table.Row>
-                                <Table.Cell>
-                                    {ins_text}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {results.ins_val}
-                                </Table.Cell>
-                            </Table.Row>
-                            <Table.Row>
-                                <Table.Cell>
-                                    {sub_text}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {results.sub_val}
-                                </Table.Cell>
-                            </Table.Row>
-                        </Table.Body>
-                    </Table>
-                </>
-            );
-        }
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {t("model.results.hft.eval_loss")}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {results.eval_loss}
+                                    </Table.Cell>
+                                </Table.Row>
+                            </>
+                        }
+                        {currentEngine && currentEngine === "kaldi" &&
+                            <>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {t("model.results.kaldi.count")}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {results.count_val}
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {t("model.results.kaldi.del")}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {results.del_val}
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {t("model.results.kaldi.ins")}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {results.ins_val}
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {t("model.results.kaldi.sub")}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {results.sub_val}
+                                    </Table.Cell>
+                                </Table.Row>
+                            </>
+                        }
+                    </Table.Body>
+                </Table>
+            </>
+        ) : (
+            <p>{t("model.results.noResults")}</p>
+        );
 
         return (
             <div>

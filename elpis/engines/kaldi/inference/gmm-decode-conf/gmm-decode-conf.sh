@@ -5,9 +5,6 @@
 #               Joshua Meyer - (2016)
 #               Scott Heath - (University of Queensland, 2018)
 #               Nicholas Lambourne - (University of Queensland, 2018)
-
-# USAGE:
-#    $ kaldi/egs/your-model/your-model-1/gmm-decode.sh
 #
 #    This script is meant to demonstrate how an existing GMM-HMM
 #    model and its corresponding HCLG graph, build via Kaldi,

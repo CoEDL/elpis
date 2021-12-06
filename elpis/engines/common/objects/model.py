@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, Any
 
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.fsobject import FSObject
@@ -33,15 +33,15 @@ class Model(FSObject):  # TODO not thread safe
 
     @property
     def status(self):
-        return self.config['status']
+        return self.config['status'] if self.config['status'] else 'pass'
 
     @property
     def log(self):
-        return self.config['log']
+        return self.config['log'] if self.config['log'] else 'pass'
 
     @property
     def stage_status(self):
-        return self.config['stage_status']
+        return self.config['stage_status'] if self.config['stage_status'] else 'pass'
 
     @property
     def results(self):
@@ -56,28 +56,31 @@ class Model(FSObject):  # TODO not thread safe
         self.config['log'] = value
 
     @stage_status.setter
-    def stage_status(self, status_info: Tuple[str, str, str, str]):
-        stage, status, message, log = status_info
+    def stage_status(self, status_info: Tuple[str, str]):
+        stage, status = status_info
         stage_status = self.config['stage_status']
         stage_status[stage]['status'] = status
-        stage_status[stage]['message'] = message
-        stage_status[stage]['log'] = log
         self.config['stage_status'] = stage_status
 
     @results.setter
     def results(self, value: str):
         self.config['results'] = value
 
+    @property
+    def settings(self) -> Dict[str, Any]:
+        return self.config['settings']
+
+    @settings.setter
+    def settings(self, value: Dict[str, Any]) -> None:
+        print('model set settings', value)
+        self.config['settings'] = value
+
     def build_stage_status(self, stage_names: Dict[str, str]):
-        for stage_file, stage_name in stage_names.items():
-            stage_status = self.config['stage_status']
-            stage_status.update({stage_file: {
-                'name': stage_name,
-                'status': 'ready',
-                'message': '',
-                'log': ''
-            }})
-            self.config['stage_status'] = stage_status
+        stage_status = {}
+        for stage, name in stage_names.items():
+            stage_status[stage] = {'name': name, 'status': 'ready'}
+        print('built stage status', stage_status)
+        self.config['stage_status'] = stage_status
 
     def link_dataset(self, dataset: Dataset):
         self.dataset = dataset

@@ -48,14 +48,14 @@ class ModelDashboard extends Component {
     }
 
     render() {
-        const {t, currentEngine, engineHumanNames, name, list} = this.props;
+        const {t, engine, engineHumanNames, name, list} = this.props;
         const {column, direction} = this.state;
-        const redirectAfterModel = currentEngine === "kaldi" ?
-            urls.gui.model.settings :
-            urls.gui.model.train;
         let listEl = <p>{t("model.dashboard.noneMessage")}</p>;
+        const list_sorted = arraySort(list, "name");
 
-        if (list.length > 0) {
+        console.log(list_sorted);
+
+        if (list_sorted.length > 0) {
             listEl = (
                 <Table sortable celled fixed unstackable>
                     <Table.Header>
@@ -93,7 +93,7 @@ class ModelDashboard extends Component {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {list.map(model => {
+                        {list_sorted.map(model => {
                             const className = (name === model.name) ? "current" : "";
 
                             return (
@@ -149,7 +149,7 @@ class ModelDashboard extends Component {
                                 {t("model.dashboard.title")}
                             </Header>
                             <CurrentModelName />
-                            {currentEngine &&
+                            {engine &&
                                 <>
                                     {list.length === 0 &&
                                         <NewForm />
@@ -167,7 +167,7 @@ class ModelDashboard extends Component {
                                                 />
                                             </Segment>
                                             {listEl}
-                                            <Button as={Link} to={redirectAfterModel} disabled={!name}>
+                                            <Button as={Link} to={urls.gui.model.settings} disabled={!name}>
                                                 {t("common.nextButton")}
                                             </Button>
                                         </>
@@ -186,7 +186,7 @@ const mapStateToProps = state => {
     return {
         name: state.model.name,
         list: state.model.modelList,
-        currentEngine: state.engine.engine,
+        engine: state.engine.engine,
         engineHumanNames: state.engine.engine_human_names,
     };
 };

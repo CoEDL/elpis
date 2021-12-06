@@ -30,7 +30,10 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libsqlite3-dev \
     libbz2-dev \
     liblzma-dev \
+    lsof \
+    lzma \
     make \
+    nvtop \
     software-properties-common \
     subversion \
     tree \
@@ -87,7 +90,7 @@ RUN echo "===> Install Kaldi dependencies" && \
 
 WORKDIR /
 
-RUN echo "===> install Kaldi (pinned at version 5.3)"  && \
+RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
     cd /kaldi/tools && \
     make -j$NUM_CPUS && \
@@ -112,37 +115,14 @@ RUN apt-get install gawk && \
 RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 
-########################## ESPNET INSTALLATION #########################
-
-# Some ESPnet dependencies may be covered above but listing all for the sake of completeness
-RUN echo "===> Install ESPnet dependencies" && \
-    apt-get update && apt-get install -y cmake \
-    sox \
-    ffmpeg \
-    flac \
-    bc
-
-WORKDIR /
-
-# Setting up ESPnet for Elpis from Persephone repository
-RUN git clone https://github.com/CoEDL/espnet.git
-
-WORKDIR /espnet
-
-# Pin to this commit rather than just the elpis branch
-RUN git checkout 2b30e931992a97ae0c36ccf1732b9cc0b63f2b0c
-
-# Explicitly installing only the CPU version. We should update this to be an
-# nvidia-docker image and install GPU-supported version of ESPnet.
-WORKDIR /espnet/tools
-
-RUN echo "===> install ESPnet" && \
-    make KALDI=/kaldi CUPY_VERSION='' -j $(nproc)
-
-
 ########################## DEV HELPERS INSTALLATION ####################
 
 WORKDIR /tmp
+
+RUN echo "===> Install dev helpers"
+
+# Example data
+RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
 
 # Add jq
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
@@ -165,40 +145,60 @@ RUN apt-get install zsh
 RUN chsh -s /usr/bin/zsh root
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/master/zsh-in-docker.sh)" -- -t robbyrussell -p history-substring-search -p git
 
-# Add random number generator to skip Docker building from cache
-ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+
+########################## VENV ########################
+
+WORKDIR /
+RUN pyenv global 3.8.2
+RUN python -m venv venv
+RUN source venv/bin/activate
+RUN pip install --upgrade pip
+
+
+########################## HF Transformers INSTALLATION #########################
+
+# Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
+# Override the dep info from requirements.txt so that we can specifiy CUDA version
+# Pin transformers to 4.6.0 because the model class has args code which breaks on later versions
+RUN pip install transformers==4.6.0 datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
+# Set torch version for CUDA 11
+RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip install tensorboard==2.7.0
+# Cache the pretrained models
+COPY download_wav2vec2.py /root/download_wav2vec2.py
+RUN python /root/download_wav2vec2.py
 
 
 ########################## ELPIS INSTALLATION ########################
 
+# Add random number generator to skip Docker building from cache
+ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
+
 WORKDIR /
 
-# Elpis
-RUN pwd
-
-# To test Docker with a specific branch use --single-branch --branch BRANCHNAME
-#RUN git clone --single-branch --branch ben-eslint --depth=1 https://github.com/CoEDL/elpis.git
-RUN git clone --depth=1 https://github.com/CoEDL/elpis.git
+RUN echo "===> Install Elpis"
+# Remove `--single-branch` or include `--branch hft` below for development
+RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
-RUN pip install poetry \
-    && poetry run pip install --upgrade pip \
-    && poetry config virtualenvs.create true --local \
-    && poetry install
-
-WORKDIR /
+RUN pip install --upgrade pip
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install
 
 # Elpis GUI
-RUN ln -s /elpis/elpis/gui /elpis-gui
-WORKDIR /elpis-gui
+WORKDIR /elpis/elpis/gui/
 RUN yarn install && \
     yarn run build
 
-WORKDIR /tmp
-
-# Example data
+# Sample data for command line interaction with Elpis
+WORKDIR /
 RUN git clone --depth=1 https://github.com/CoEDL/toy-corpora.git
-
+RUN git clone --depth=1 https://github.com/CoEDL/timit-elan.git
+WORKDIR /datasets
+RUN ln -s /toy-corpora/abui /datasets/abui
+RUN ln -s /toy-corpora/na /datasets/na
+RUN ln -s /timit-elan /datasets/timit
 
 ########################## RUN THE APP ##########################
 

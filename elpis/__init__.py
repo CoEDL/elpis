@@ -10,8 +10,8 @@ from dotenv import load_dotenv
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
-    GUI_BUILD_DIR = "/elpis-gui/build"
-    GUI_PUBLIC_DIR = "/elpis-gui/public"
+    GUI_BUILD_DIR = "/elpis/elpis/gui/build"
+    GUI_PUBLIC_DIR = "/elpis/elpis/gui/public"
 
     # Variable to control the use of a proxy to support webpackdevserver
     WEBPACK_DEV_SERVER_PROXY = os.environ.get("WEBPACK_DEV_SERVER_PROXY", None)
@@ -46,7 +46,9 @@ def create_app(test_config=None):
 
     import logging
     log = logging.getLogger('werkzeug')
-    log.setLevel(logging.ERROR)
+    log.setLevel(logging.DEBUG)
+    # Prevent the HTTP request logs polluting more important train logs
+    log.disabled = True
 
     # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(

@@ -91,7 +91,11 @@ const mapDispatchToProps = dispatch => ({
         dispatch(engineLoad(engineName))
             .then(() => dispatch(modelLoad(modelData)))
             .then(() => dispatch(datasetLoad(datasetData)))
-            .then(() => dispatch(pronDictLoad(pronDictData)));
+            .then(() => {
+                if (pronDictData) {
+                    dispatch(pronDictLoad(pronDictData));
+                }
+            });
     },
 });
 

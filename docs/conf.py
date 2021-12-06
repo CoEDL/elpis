@@ -21,7 +21,7 @@ copyright = '2020, The University of Queensland'
 author = 'Ben Foley, Nicholas Lambourne, Nay San'
 
 # The full version, including alpha/beta/rc tags
-release = '0.96.12'
+release = '0.97.0'
 
 master_doc = 'index'
 # -- General configuration ---------------------------------------------------

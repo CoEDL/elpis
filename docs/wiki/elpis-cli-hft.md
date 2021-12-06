@@ -33,7 +33,7 @@ To manipulate training params, open another terminal and modify the model.py fil
 ```
 gcloud compute ssh instance-3
 docker exec -it $(docker ps -q) zsh
-vim /elpis/elpis/engines/hftransformers/objects/model.py
+vim /elpis/elpis/engines/hft/objects/model.py
 ```
 
 

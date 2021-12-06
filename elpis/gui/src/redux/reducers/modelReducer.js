@@ -6,9 +6,10 @@ const initState = {
     datasetName: "",
     pronDictName: "",
     results: null,
-    settings: {ngram: 1},
+    settings: {},
     status: "ready",
     stage_status: null,
+    log: null,
 };
 const model = (state = initState, action) => {
     let data, status;
@@ -21,20 +22,26 @@ const model = (state = initState, action) => {
                     error: action.response.data.error,
                 };
             } else {
-                const {name, dataset_name, pron_dict_name} = action.response.data.data.config;
+                const {name, dataset_name, pron_dict_name, settings} = action.response.data.data.config;
+
+                console.log("model reducer new success");
+                console.log(settings);
 
                 // pron_dict_name could be null if not using pron dicts
                 return {
                     ...initState,
                     name,
+                    settings,
                     datasetName: dataset_name,
                     pronDictName: pron_dict_name,
                 };
             }
-
         case actionTypes.MODEL_LOAD_SUCCESS: {
-            var {name, dataset_name, engine_name, pron_dict_name, ngram, results} = action.response.data.data.config;
+            var {name, dataset_name, engine_name, pron_dict_name, settings, results} = action.response.data.data.config;
             let model_status = action.response.data.data.config;
+
+            console.log("model reducer load success");
+            console.log(settings);
 
             // pron_dict_name could be null if not using pron dicts
             return {
@@ -45,16 +52,17 @@ const model = (state = initState, action) => {
                 datasetName: dataset_name,
                 engineName: engine_name,
                 pronDictName: pron_dict_name,
-                settings: {...state.settings, ngram: ngram},
+                settings: settings,
             };
         }
         case actionTypes.MODEL_LIST_SUCCESS:
             var {list} = action.response.data.data;
 
             return {...state, modelList: list};
-
         case actionTypes.MODEL_SETTINGS_SUCCESS:
             ({data, status} = action.response.data);
+            console.log("model reducer settings success");
+            console.log(data, status);
 
             if (status === 200) {
                 return {...state, settings: data.settings};
@@ -63,8 +71,6 @@ const model = (state = initState, action) => {
 
                 return {...state};
             }
-
-        // crazy, there will be three layers of objects with status properties here!
         case actionTypes.MODEL_TRAIN_SUCCESS:
             ({data, status} = action.response.data);
 
@@ -75,7 +81,6 @@ const model = (state = initState, action) => {
 
                 return {...state};
             }
-
         case actionTypes.MODEL_STATUS_SUCCESS:
             ({data, status} = action.response.data);
 
@@ -86,7 +91,6 @@ const model = (state = initState, action) => {
 
                 return {...state};
             }
-
         case actionTypes.MODEL_RESULTS_SUCCESS:
             ({data, status} = action.response.data);
             console.log(data, status);
@@ -98,6 +102,19 @@ const model = (state = initState, action) => {
 
                 return {...state};
             }
+        
+        case actionTypes.MODEL_STATUS_FAILURE:
+        case actionTypes.MODEL_TRAIN_FAILURE:
+            return {...state, status: "error"};
+        
+        case actionTypes.MODEL_GET_LOG_SUCCESS:
+            ({data, status} = action.response.data);
+            
+            if (status === 200) {
+                return {...state, log: data.log};
+            }
+
+            return {...state};
 
         default:
             return {...state};
