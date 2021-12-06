@@ -52,22 +52,6 @@ def create_app(test_config=None):
     # Prevent the HTTP request logs polluting more important train logs
     log.disabled = True
 
-    print('check for tensorboard')
-    tensorboard_running = False
-    for proc in psutil.process_iter():
-        for conns in proc.connections(kind='inet'):
-            if conns.laddr.port == 6006:
-                tensorboard_running = True
-                print('tensorboard is running on', proc.pid)
-    if not tensorboard_running:
-        tensorboard = program.TensorBoard()
-        tensorboard.configure(argv=['tensorboard',
-                                    '--logdir=/state/models',
-                                    '--port=6006',
-                                    '--host=0.0.0.0'])
-        url = tensorboard.launch()
-        print(f"Tensorflow listening on {url}")
-
     # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(
         SECRET_KEY='dev'
@@ -94,6 +78,21 @@ def create_app(test_config=None):
     app.register_blueprint(endpoints.bp)
     # print(app.url_map)
 
+    # Start Tensorboard if not already running (because Flask init happens twice)
+    tensorboard_running = False
+    for proc in psutil.process_iter():
+        for conns in proc.connections(kind='inet'):
+            if conns.laddr.port == 6006:
+                tensorboard_running = True
+                print('tensorboard is running on', proc.pid)
+    if not tensorboard_running:
+        tensorboard = program.TensorBoard()
+        tensorboard.configure(argv=['tensorboard',
+                                    '--logdir=/state/models',
+                                    '--port=6006',
+                                    '--host=0.0.0.0'])
+        url = tensorboard.launch()
+        print(f"Tensorflow listening on {url}")
 
     # the rest of the routes below are for the single file react app.
     @app.route('/index.html')
