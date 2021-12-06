@@ -11,6 +11,7 @@ import wave
 import contextlib
 from subprocess import CalledProcessError
 import librosa
+from loguru import logger
 from csv import reader
 import codecs
 
@@ -181,6 +182,8 @@ class KaldiTranscription(BaseTranscription):
             try:
                 script_path = kaldi_infer_path.joinpath(template_dir_path, stage)
                 stage_process = run(f"sh {script_path} >> {stage_log_path}", cwd=f"{local_kaldi_path}")
+                for line in stage_process:
+                    logger.info(f"Kaldi: {line}")
                 with open(stage_log_path, 'a+') as file:
                     print('stdout', stage_process.stdout, file=file)
                     print('stderr', stage_process.stderr, file=file)
