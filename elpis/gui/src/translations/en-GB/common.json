@@ -172,7 +172,8 @@
             "logsDescription": "gory detail from Kaldi (coming soon)",
             "trainButton": "Start training",
             "statusButton": "Check progress",
-            "logButton": "Download logs"
+            "logButton": "Download logs",
+            "tensorboardButton": "View progress in TensorBoard"
         },
         "results": {
             "title": "Results",

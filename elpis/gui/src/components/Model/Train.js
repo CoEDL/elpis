@@ -61,6 +61,10 @@ class ModelTrain extends Component {
     downloadjs(log, "log.txt", "text/txt");
   };
 
+  handleTensorBoard = (e) => {
+    e.target.port = 6006;
+  }
+
   onScroll = () => {};
 
   follow = () => {};
@@ -183,6 +187,12 @@ class ModelTrain extends Component {
                                                 disabled={!name}
                                             >
                                                 {t("model.train.logButton")}
+                                            </Button>
+                                            <Button
+                                                onClick={this.handleTensorBoard}
+                                                disabled={!name}
+                                            >
+                                                {t("model.train.tensorboardButton")}
                                             </Button>
                                         </Segment>
                                     )}
