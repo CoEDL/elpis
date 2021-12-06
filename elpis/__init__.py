@@ -53,14 +53,12 @@ def create_app(test_config=None):
     log.disabled = True
 
     print('check for tensorboard')
-
     tensorboard_running = False
-
     for proc in psutil.process_iter():
         for conns in proc.connections(kind='inet'):
             if conns.laddr.port == 6006:
                 tensorboard_running = True
-
+                print('tensorboard is running on', proc.pid)
     if not tensorboard_running:
         tensorboard = program.TensorBoard()
         tensorboard.configure(argv=['tensorboard',
