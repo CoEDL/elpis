@@ -621,7 +621,7 @@ class HFTModel(BaseModel):
             # Train
             train_result = trainer.train(resume_from_checkpoint=checkpoint)
             # Log loss for final epoch in tensorboard.
-            # self.tb_writer.add_scalar('train/loss', trainer.epoch_loss, int(trainer.state.epoch)-1)
+            self.tb_writer.add_scalar('train/loss', trainer.epoch_loss, int(trainer.state.epoch)-1)
             trainer.save_model()
 
             # save the feature_extractor and the tokenizer
