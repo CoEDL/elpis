@@ -85,9 +85,9 @@ def create_app(test_config=None):
             for conns in proc.connections(kind='inet'):
                 if conns.laddr.port == 6006:
                     tensorboard_running = True
-                    print('tensorboard is running on', proc.pid)
+                    print('Tensorboard is running on', proc.pid)
         if not tensorboard_running:
-            print('tensorboard is not running, start it')
+            print('Tensorboard is not running, start it')
             tensorboard = program.TensorBoard()
             tensorboard.configure(argv=['tensorboard',
                                         '--logdir=/state/models',
