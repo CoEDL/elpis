@@ -458,7 +458,6 @@ class HFTModel(BaseModel):
             dur_ms = stop_ms - start_ms
             speech_array, sample_rate = torchaudio.load(filepath=path, frame_offset=start_frame, num_frames=num_frames)
             # Check that frames exceeds number of characters, wav file is not all zeros, and duration between min, max
-            logger.info('text length', len(text))
             if int(audio_metadata.num_frames) >= len(text) \
                     and speech_array.count_nonzero() \
                     and float(self.settings['min_duration_s']) < dur_ms/1000 < float(self.settings['max_duration_s']):
