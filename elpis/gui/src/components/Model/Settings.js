@@ -206,7 +206,7 @@ class ModelSettings extends Component {
                                                         </Table.Row>
                                                         <Table.Row key="debug">
                                                             <Table.Cell collapsing>
-                                                                Debug with 10:6 train val split
+                                                                Debug using a subset of the data
                                                             </Table.Cell>
                                                             <Table.Cell>
                                                                 <Grid className="settings_debug">
@@ -223,11 +223,15 @@ class ModelSettings extends Component {
                                                                         >
                                                                             <Grid.Row>
                                                                                 <Field name="data_split_train" />
-                                                                                <span>Training split</span>
+                                                                                <span>
+                                                                                    Number of items for training
+                                                                                </span>
                                                                             </Grid.Row>
                                                                             <Grid.Row>
                                                                                 <Field name="data_split_val" />
-                                                                                <span>Validation split</span>
+                                                                                <span>
+                                                                                    Number of items for validation
+                                                                                </span>
                                                                             </Grid.Row>
                                                                         </Grid.Column>
                                                                     }
