@@ -86,6 +86,7 @@ def create_app(test_config=None):
                 tensorboard_running = True
                 print('tensorboard is running on', proc.pid)
     if not tensorboard_running:
+        print('tensorboard is not running, start it')
         tensorboard = program.TensorBoard()
         tensorboard.configure(argv=['tensorboard',
                                     '--logdir=/state/models',
