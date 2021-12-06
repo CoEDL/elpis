@@ -226,9 +226,11 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
                 # Run the command, log output. Also redirect Kaldi sterr output to log. These are often not errors :-(
                 try:
-                    stage_process = run(f"cd {local_kaldi_path}; stages/{stage} >> {self.run_log_path}")
-                    logger.info(f"Kaldi stdout =================\n{stage_process.stdout}")
-                    logger.info(f"Kaldi stderr =================\n{stage_process.stderr}")
+                    stage_process = run(f"cd {local_kaldi_path}; stages/{stage}")
+                    if len(stage_process.stdout) > 0:
+                        logger.info(stage_process.stdout)
+                    if len(stage_process.stderr) > 0:
+                        logger.info(stage_process.stderr)
                     logger.info(f"Stage {stage} complete")
                     self.stage_status = (stage, 'complete')
                     self.config['stage_count'] = self.config['stage_count'] + 1
