@@ -50,7 +50,6 @@ if version.parse(torch.__version__) >= version.parse('1.6'):
 # Used to reduce training time when debugging
 DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
-    'max_train_samples': '2',
     'num_train_epochs': '3',
     'model_name_or_path': 'facebook/wav2vec2-base',
     'per_device_train_batch_size': '1',
@@ -632,10 +631,7 @@ class HFTModel(BaseModel):
                 self.processor.save_pretrained(self.training_args.output_dir)
 
             metrics = train_result.metrics
-            max_train_samples = (
-                self.data_args.max_train_samples if self.data_args.max_train_samples is not None else len(self.hft_dataset['train'])
-            )
-            metrics['train_samples'] = min(max_train_samples, len(self.hft_dataset['train']))
+            metrics['train_samples'] = len(self.hft_dataset['train'])
 
             trainer.log_metrics(TRAIN, metrics)
             trainer.save_metrics(TRAIN, metrics)
@@ -648,8 +644,7 @@ class HFTModel(BaseModel):
         if self.training_args.do_eval:
             logger.info('=== Evaluate')
             metrics = trainer.evaluate()
-            max_val_samples = self.data_args.max_val_samples if self.data_args.max_val_samples is not None else len(self.hft_dataset['dev'])
-            metrics['eval_samples'] = min(max_val_samples, len(self.hft_dataset['dev']))
+            metrics['eval_samples'] = len(self.hft_dataset['dev'])
             trainer.log_metrics('eval', metrics)
             trainer.save_metrics('eval', metrics)
             print('=== Metrics')
@@ -843,20 +838,6 @@ class DataTrainingArguments:
     preprocessing_num_workers: Optional[int] = field(
         default=None,
         metadata={'help': 'The number of processes to use for the preprocessing.'},
-    )
-    max_train_samples: Optional[int] = field(
-        default=None,
-        metadata={
-            'help': 'For debugging purposes or quicker training, truncate the number of training examples to this '
-            'value if set.'
-        },
-    )
-    max_val_samples: Optional[int] = field(
-        default=None,
-        metadata={
-            'help': 'For debugging purposes or quicker training, truncate the number of validation examples to this '
-            'value if set.'
-        },
     )
     chars_to_ignore: List[str] = list_field(
         default=[',', '?', '.', '!', '-', ';', ':', '""', '%', ''', ''', '�'],
