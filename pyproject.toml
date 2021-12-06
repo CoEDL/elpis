@@ -24,6 +24,7 @@ numba = "0.54.0"
 python-dotenv = "^0.15.0"
 praatio = "^5.0.0"
 nltk = "^3.6.5"
+psutil = "^5.8.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"

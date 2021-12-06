@@ -171,7 +171,9 @@
             "logsHeader": "लॉग्स",
             "logsDescription": "कलदी से घमासान विवरण (जल्द ही आ रहा है)",
             "trainButton": "प्रशिक्षण शुरू करें",
-            "statusButton": "प्रगति की जाँच करें"
+            "statusButton": "प्रगति की जाँच करें",
+            "logButton": "Download logs",
+            "tensorboardButton": "View progress in TensorBoard"
         },
         "results": {
             "title": "परिणाम",

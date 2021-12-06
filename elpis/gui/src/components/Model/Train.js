@@ -61,6 +61,10 @@ class ModelTrain extends Component {
     downloadjs(log, "log.txt", "text/txt");
   };
 
+  handleTensorBoard = () => {
+    window.open(window.location.protocol + "//" + window.location.hostname + ":6006", "_blank").focus();
+  }
+
   onScroll = () => {};
 
   follow = () => {};
@@ -183,6 +187,12 @@ class ModelTrain extends Component {
                                                 disabled={!name}
                                             >
                                                 {t("model.train.logButton")}
+                                            </Button>
+                                            <Button
+                                                onClick={this.handleTensorBoard}
+                                                disabled={!name}
+                                            >
+                                                {t("model.train.tensorboardButton")}
                                             </Button>
                                         </Segment>
                                     )}
