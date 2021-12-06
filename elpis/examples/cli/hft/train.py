@@ -45,9 +45,9 @@ def main(dataset_name: str, reset: bool):
     # Setup a dataset to to train data on.
     # Reuse dataset if it exists
     if dataset_name not in elpis.list_datasets():
-        logger.info('Making new dataset', dataset_name)
+        logger.info(f'Making new dataset {dataset_name}')
         dataset = elpis.new_dataset(dataset_name)
-        logger.info('Adding data from', presets[dataset_name]['dataset_dir'])
+        logger.info(f'Adding data from {presets[dataset_name]['dataset_dir']}')
         dataset.add_directory(presets[dataset_name]['dataset_dir'], extensions=['eaf', 'wav'])
         logger.info('Select importer')
         dataset.auto_select_importer() # Selects Elan because of eaf file.
@@ -56,7 +56,7 @@ def main(dataset_name: str, reset: bool):
         logger.info('Process data')
         dataset.process()
     else:
-        logger.info('Use existing dataset', dataset_name)
+        logger.info(f'Use existing dataset {dataset_name}')
         dataset = elpis.get_dataset(dataset_name)
 
     # Step 3
@@ -67,9 +67,9 @@ def main(dataset_name: str, reset: bool):
     while model_name in elpis.list_models():
         i = i + 1
         model_name = f'{presets[dataset_name]["model_name"]}{i}'
-    logger.info('Making new model', model_name)
+    logger.info(f'Making new model {model_name}')
     model = elpis.new_model(model_name)
-    logger.info('Made model', model.hash)
+    logger.info(f'Made model {model.hash}')
     # TODO add model settings
     logger.info('Linking dataset')
     model.link_dataset(dataset)

@@ -76,7 +76,7 @@ def process_eaf(input_elan_file: str = '',
 
     # Look for wav file matching the eaf file in same directory
     if os.path.isfile(os.path.join(input_directory, file_name + ".wav")):
-        logger.info("WAV file found for " + file_name, file=sys.stderr)
+        logger.info(f"WAV file found for {file_name}")
     else:
         raise ValueError(f"WAV file not found for {full_file_name}. "
                          f"Please put it next to the eaf file in {input_directory}.")

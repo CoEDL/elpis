@@ -44,7 +44,7 @@ def create_app(test_config=None):
         #     static_dir = static_dir_build
         # else:
         #     static_dir = static_dir_watch
-        logger.info('using static_dir:', static_dir)
+        logger.info(f'using static_dir: {static_dir}')
         # Create a custom Flask instance defined in the app.py file. Same as a
         # normal Flask class but with a specialised blueprint function.
         app = Flask(__name__,
@@ -91,7 +91,7 @@ def create_app(test_config=None):
     @app.route('/', defaults={'path': ''})
     @app.route("/<path:path>")
     def index(path):
-        logger.info('in index with:', path)
+        logger.info(f'in index with: {path}')
         if (WEBPACK_DEV_SERVER_PROXY):
             # If we are running the webpack dev server, 
             # We proxy webpack requests through to the dev server

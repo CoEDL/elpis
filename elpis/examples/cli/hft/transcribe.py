@@ -39,9 +39,9 @@ def main(model_name: str, infer_path: str):
     while tx_name in elpis.list_transcriptions():
         i = i + 1
         tx_name = f'{base_name}{i}'
-    logger.info('Making new transcriber', tx_name)
+    logger.info(f'Making new transcriber {tx_name}')
     transcription = elpis.new_transcription(tx_name)
-    logger.info('Made transcriber', transcription.hash)
+    logger.info(f'Made transcriber {transcription.hash}')
     logger.info('Linking model')
     transcription.link(model)
 

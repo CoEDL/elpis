@@ -481,7 +481,7 @@ class HFTModel(BaseModel):
 
         # Remove rejected speech by filtering on speech matching length the required conditions
         self.hft_dataset = self.hft_dataset.filter(lambda x: f'{path}{start_ms}{stop_ms}' in speech.keys())
-        logger.info(rejected_count, 'files removed due to number of frames, zero wav or too short')
+        logger.info(f'{rejected_count} files removed due to number of frames, zero wav or too short')
         # Output some examples of the data for sanity check
         texts = [x['text'] for x in self.hft_dataset['train']]
         if len(texts) > 10:
@@ -542,9 +542,9 @@ class HFTModel(BaseModel):
         self.model_args = model_args
         self.data_args = data_args
         self.training_args = training_args
-        logger.info('\n\n=== Model args\n', model_args)
-        logger.info('\n\n=== Data args\n', data_args)
-        logger.info('\n\n=== Training args\n', training_args)
+        logger.info(f'\n\n=== Model args\n {model_args}')
+        logger.info(f'\n\n=== Data args\n {data_args}')
+        logger.info(f'\n\n=== Training args\n {training_args}')
 
     def train(self, on_complete:Callable=None):
         self.tb_writer = SummaryWriter(self.path / 'runs')

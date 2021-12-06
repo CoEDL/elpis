@@ -81,7 +81,7 @@ def generate_word_list(transcription_file: str,
     """
     json_data: List[Dict[str, str]] = load_json_file(transcription_file)
 
-    logger.info("Extracting word list(s)...", flush=True, file=sys.stderr)
+    logger.info("Extracting word list(s)...")
 
     # Retrieve ELAN word data
     word_list = extract_word_list(json_data)
@@ -100,7 +100,7 @@ def generate_word_list(transcription_file: str,
 
     logger.debug(sorted(word_list))
 
-    logger.info(f"Writing wordlist to file...", flush=True, file=sys.stderr)
+    logger.info(f"Writing wordlist to file...")
     save_word_list(word_list, output_file)
 
 
