@@ -39,6 +39,7 @@ const model = (state = initState, action) => {
         case actionTypes.MODEL_LOAD_SUCCESS: {
             var {name, dataset_name, engine_name, pron_dict_name, settings, results} = action.response.data.data.config;
             let model_status = action.response.data.data.config;
+            let log = action.response.data.data.log;
 
             console.log("model reducer load success");
             console.log(settings);
@@ -48,6 +49,7 @@ const model = (state = initState, action) => {
                 ...state,
                 name,
                 results,
+                log,
                 status: model_status,
                 datasetName: dataset_name,
                 engineName: engine_name,
