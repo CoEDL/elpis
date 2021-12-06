@@ -54,7 +54,7 @@ QUICK_TRAIN_BUILD_ARGUMENTS = {
     'num_train_epochs': '3',
     'model_name_or_path': 'facebook/wav2vec2-base',
     'per_device_train_batch_size': '1',
-    'per_device_eval_batch_size': '1'
+    'per_device_eval_batch_size': '1',
 }
 
 # Training Stages
@@ -101,7 +101,9 @@ class HFTModel(BaseModel):
             'max_duration_s': 60,
             'learning_rate': 1e-4,
             'batch_size': 4,
-            'debug': False
+            'debug': False,
+            'data_split_train': 10,
+            'data_split_val': 6,
         }
         print('model default settings', self.settings)
 
@@ -278,8 +280,8 @@ class HFTModel(BaseModel):
         )
         # Reduce the dataset size for debugging
         if DEBUG or self.settings['debug'] is True:
-            train_annos = train_annos[:10]
-            devtest_annos = devtest_annos[:6]
+            train_annos = train_annos[:self.settings['data_split_train']]
+            devtest_annos = devtest_annos[:self.settings['data_split_val']]
 
         # Make dev and test the same because we are mostly working with small datasets
         dev_annos = test_annos = devtest_annos
