@@ -130,7 +130,7 @@ class HFTModel(BaseModel):
 
     @property
     def log(self):
-        with open(self.run_log_path) as logs:
+        with open(self.config['run_log_path']) as logs:
             return logs.read()
 
     def _set_finished_training(self, has_finished: bool) -> None:
