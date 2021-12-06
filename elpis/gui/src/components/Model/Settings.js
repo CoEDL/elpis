@@ -1,6 +1,5 @@
-{/* eslint-disable max-len */}
 import React, {Component} from "react";
-import {Button, Divider, Form, Grid, Header, Label, Message, Segment, Table} from "semantic-ui-react";
+import {Button, Divider, Form, Grid, Header, Message, Segment, Table} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import {Formik, Field} from "formik";
@@ -220,7 +219,10 @@ class ModelSettings extends Component {
                                                                             />
                                                                         </Grid.Column>
                                                                         {values && values.debug &&
-                                                                            <Grid.Column width={14} className="data_split_inputs">
+                                                                            <Grid.Column
+                                                                                width={14}
+                                                                                className="data_split_inputs"
+                                                                            >
                                                                                 <Grid.Row>
                                                                                     <Field name="data_split_train" />
                                                                                     <span>Training split</span>
