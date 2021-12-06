@@ -537,7 +537,6 @@ class HFTModel(BaseModel):
             train_dataset=self.hft_dataset['train'] if self.training_args.do_train else None,
             eval_dataset=self.hft_dataset['dev'] if self.training_args.do_eval else None,
             tokenizer=self.processor.feature_extractor,)
-        trainer.tb_writer = self.tb_writer
         # Set a variable to track the total loss for a given epoch. (Unsure why
         # trainer doesn't do this; maybe in a later version of Transformers it
         # does.)
@@ -622,7 +621,7 @@ class HFTModel(BaseModel):
             # Train
             train_result = trainer.train(resume_from_checkpoint=checkpoint)
             # Log loss for final epoch in tensorboard.
-            trainer.tb_writer.add_scalar('train/loss', trainer.epoch_loss, int(trainer.state.epoch)-1)
+            self.tb_writer.add_scalar('train/loss', trainer.epoch_loss, int(trainer.state.epoch)-1)
             trainer.save_model()
 
             # save the feature_extractor and the tokenizer
