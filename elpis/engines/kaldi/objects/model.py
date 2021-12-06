@@ -39,6 +39,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.settings = {'ngram': 1}
         print("model default settings", self.settings)
         self.run_log_path = self.path.joinpath('train.log')
+        self.config['run_log_path'] = self.run_log_path.as_posix()
         if not Path(self.run_log_path).is_file():
             run(f"touch {self.run_log_path};")
 
@@ -51,7 +52,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
     @property
     def log(self):
-        with open(self.run_log_path) as logs:
+        with open(self.config['run_log_path']) as logs:
             return logs.read()
 
     def link_pron_dict(self, pron_dict: PronDict):
@@ -259,9 +260,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
     def get_train_results(self):
         results = {}
-        # self.run_log_path isn't available...
-        run_log_path = self.path.joinpath('train.log')
-        with run_log_path.open() as log_file:
+        with self.config['run_log_path'].open() as log_file:
             wer_lines = []
             for line in reversed(list(log_file)):
                 line = line.rstrip()
