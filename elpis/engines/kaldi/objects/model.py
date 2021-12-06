@@ -42,6 +42,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.run_log_path = self.path.joinpath('train.log')
         if not Path(self.run_log_path).is_file():
             run(f"touch {self.run_log_path};")
+        logger.add(self.run_log_path)
 
     @classmethod
     def load(cls, base_path: Path):
@@ -262,6 +263,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         results = {}
         # self.run_log_path isn't available...
         run_log_path = self.path.joinpath('train.log')
+        logger.add(self.run_log_path)
         with run_log_path.open() as log_file:
             wer_lines = []
             for line in reversed(list(log_file)):

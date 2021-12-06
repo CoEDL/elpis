@@ -115,8 +115,7 @@ class HFTModel(BaseModel):
         self.run_log_path = self.path.joinpath('train.log')
         if not Path(self.run_log_path).is_file():
             run(f'touch {self.run_log_path};')
-        sys.stdout = open(self.run_log_path, 'w')
-        sys.stderr = sys.stdout
+        logger.add(self.run_log_path)
 
     @classmethod
     def load(cls, base_path: Path):

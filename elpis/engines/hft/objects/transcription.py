@@ -49,11 +49,6 @@ class HFTTranscription(BaseTranscription):
         self.elan_path = self.path / 'transcription.eaf'
         self.model: HFTModel
 
-        # Setup logging
-        # run_log_path = self.path.joinpath('train.log')
-        # sys.stdout = open(run_log_path, 'w')
-        sys.stderr = sys.stdout
-
         self.index_prefixed_stages = [f'{i}_{stage}' for (i, stage) in enumerate(STAGES)]
         stage_labels = [string.capwords(stage).replace('_', ' ') for stage in STAGES]
 
