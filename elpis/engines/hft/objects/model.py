@@ -427,7 +427,6 @@ class HFTModel(BaseModel):
         print('=== hft_dataset')
         print(self.hft_dataset)
 
-
     def prepare_dataset(self):
         print('=== Preparing Dataset')
         def prepare_dataset(batch):
@@ -657,9 +656,6 @@ class HFTModel(BaseModel):
 
         self._set_stage(EVALUATION, complete=True)
         self._set_finished_training(True)
-
-    def _set_finished_training(self, has_finished: bool) -> None:
-        self.status = FINISHED if has_finished else UNFINISHED
 
     def _set_stage(self, stage: str, complete=False) -> None:
         """
