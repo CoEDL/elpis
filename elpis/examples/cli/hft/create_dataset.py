@@ -55,7 +55,7 @@ def main(dataset_name: str, reset: bool):
         print('Process data')
         dataset.process()
     else:
-        print('Use existing dataset', dataset_name)
+        print(f'Use existing dataset {dataset_name}')
 
 
 if __name__ == '__main__':

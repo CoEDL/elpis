@@ -9,6 +9,7 @@ Contributors:
               Nicholas Buckeridge - (The University of Queensland, 2019)
 """
 
+import logging
 import re
 import string
 import sys
@@ -96,7 +97,7 @@ elan.general_setting(key='translation_tags',
 
 @elan.validate_files('eaf')
 def elan_validator(file_paths: List[Path]):
-    print("validating:", file_paths)
+    print(f"validating: {file_paths}")
     return None
 
 @elan.update_ui

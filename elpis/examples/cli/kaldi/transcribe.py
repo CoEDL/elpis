@@ -1,4 +1,5 @@
 from elpis.engines.common.objects.interface import Interface
+import logging
 
 MODEL_NAME = 'mx'
 TX_NAME = 'tx'
@@ -30,4 +31,4 @@ t.link(m)
 with open(INFER_FILE_PATH, 'rb') as faudio:
     t.prepare_audio(faudio)
 t.transcribe()
-print(t.text())
+logging.info(t.text())

@@ -3,6 +3,7 @@ Example code for transcribing from Python with existing Elpis/HFT model
 """
 
 import argparse
+import logging
 import os
 from pathlib import Path
 from elpis.engines.common.objects.interface import Interface
@@ -13,20 +14,20 @@ def main(model_name: str, infer_path: str):
     # Step 0
     # ======
     # Use the Elpis interface directory where all the associated files/objects are stored.
-    print('Create interface')
+    logging.info('Create interface')
     elpis = Interface(path=Path('/state'), use_existing=True)
 
     # Step 1
     # ======
     # Select Engine
-    print('Set engine')
+    logging.info('Set engine')
     from elpis.engines import ENGINES
     elpis.set_engine(ENGINES['hft'])
 
     # Step 2
     # ======
     # Load Model
-    print(f'Get elpis model for {model_name}')
+    logging.info(f'Get elpis model for {model_name}')
     model = elpis.get_model(model_name)
 
     # Step 3
@@ -38,10 +39,10 @@ def main(model_name: str, infer_path: str):
     while tx_name in elpis.list_transcriptions():
         i = i + 1
         tx_name = f'{base_name}{i}'
-    print('Making new transcriber', tx_name)
+    logging.info('Making new transcriber', tx_name)
     transcription = elpis.new_transcription(tx_name)
-    print('Made transcriber', transcription.hash)
-    print('Linking model')
+    logging.info('Made transcriber', transcription.hash)
+    logging.info('Linking model')
     transcription.link(model)
 
     if Path('/state/transcriptions/latest').is_dir():
@@ -50,13 +51,13 @@ def main(model_name: str, infer_path: str):
                '/state/transcriptions/latest',
                target_is_directory=True)
 
-    print(f'Load audio from {infer_path}')
+    logging.info(f'Load audio from {infer_path}')
     with open(infer_path, 'rb') as infer_audio_file:
         transcription.prepare_audio(infer_audio_file)
 
-    print('Transcribe')
+    logging.info('Transcribe')
     transcription.transcribe()
-    print(transcription.text())
+    logging.info(transcription.text())
 
 
 if __name__ == '__main__':

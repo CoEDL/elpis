@@ -3,6 +3,7 @@ Example code for using Elpis/HFT from Python
 """
 
 import argparse
+import logging
 import os
 from pathlib import Path
 from elpis.engines.common.objects.interface import Interface

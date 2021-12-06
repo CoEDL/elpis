@@ -12,6 +12,7 @@ Contributors:
 """
 
 import argparse
+import logging
 import os
 import sys
 from typing import List, Dict
@@ -27,7 +28,7 @@ def save_word_list(word_list: List[str], file_name: str) -> None:
     with open(file_name, "w", encoding='utf-8') as f:
         for word in word_list:
             f.write(word + "\n",)
-        print(f"Wrote word list to {file_name}")
+        logging.info(f"Wrote word list to {file_name}")
 
 
 def extract_word_list(json_data: List[Dict[str, str]]) -> List[str]:
@@ -55,12 +56,12 @@ def extract_additional_words(file_name: str) -> List[str]:
     words = []
     if os.path.exists(file_name):
         with open(file_name, "r") as f:
-            print(f"Extracting additional words from {file_name}")
+            logging.info(f"Extracting additional words from {file_name}")
             for line in f.readlines():
                 new_words = line.strip().split(" ")
                 words += [word for word in new_words]
     else:
-        print(f"WARNING: Additional word list file at {file_name} does not exist, skipping!")
+        logging.warning(f"Additional word list file at {file_name} does not exist, skipping!")
     return words
 
 
@@ -80,7 +81,7 @@ def generate_word_list(transcription_file: str,
     """
     json_data: List[Dict[str, str]] = load_json_file(transcription_file)
 
-    print("Extracting word list(s)...", flush=True, file=sys.stderr)
+    logging.info("Extracting word list(s)...", flush=True, file=sys.stderr)
 
     # Retrieve ELAN word data
     word_list = extract_word_list(json_data)
@@ -97,9 +98,9 @@ def generate_word_list(transcription_file: str,
     # Remove duplicates
     word_list = list(set(word_list))
 
-    print(sorted(word_list))
+    logging.debug(sorted(word_list))
 
-    print(f"Writing wordlist to file...", flush=True, file=sys.stderr)
+    logging.info(f"Writing wordlist to file...", flush=True, file=sys.stderr)
     save_word_list(word_list, output_file)
 
 
@@ -135,7 +136,7 @@ def main():
                        additional_corpus_txt=arguments.additional_corpus_txt
                        )
 
-    print("Done.", file=sys.stderr)
+    logging.info("Done.")
 
 
 if __name__ == '__main__':

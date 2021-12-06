@@ -13,6 +13,7 @@ Contributors:
 
 import argparse
 import glob
+import logging
 import os
 import sys
 from typing import List, Dict, Tuple, Optional
@@ -67,7 +68,7 @@ def process_eaf(input_elan_file: str = '',
     :return: a list of dictionaries, where each dictionary is an annotation
     """
 
-    print(f"processing eaf {input_elan_file} using {tier_order} {tier_type} {tier_name}")
+    logging.info(f"processing eaf {input_elan_file} using {tier_order} {tier_type} {tier_name}")
 
     # Get paths to files
     input_directory, full_file_name = os.path.split(input_elan_file)
@@ -75,7 +76,7 @@ def process_eaf(input_elan_file: str = '',
 
     # Look for wav file matching the eaf file in same directory
     if os.path.isfile(os.path.join(input_directory, file_name + ".wav")):
-        print("WAV file found for " + file_name, file=sys.stderr)
+        logging.info("WAV file found for " + file_name, file=sys.stderr)
     else:
         raise ValueError(f"WAV file not found for {full_file_name}. "
                          f"Please put it next to the eaf file in {input_directory}.")
@@ -101,30 +102,30 @@ def process_eaf(input_elan_file: str = '',
         # tier_order is 1-index but List indexing is 0-index
         try:
             tier_name = tier_names[tier_order - 1]
-            print(f"using tier order {tier_order} to get tier name {tier_name}")
+            logging.info(f"using tier order {tier_order} to get tier name {tier_name}")
         except IndexError:
-            print("couldn't find a tier")
+            logging.warning("couldn't find a tier")
             pass
     else:
         # else use tier type to get a tier name
         if tier_type in tier_types:
-            print(f"found tier type {tier_type}")
+            logging.info(f"found tier type {tier_type}")
             tier_names = input_eaf.get_tier_ids_for_linguistic_type(tier_type)
             tier_name = tier_names[0]
             if tier_name:
-                print(f"found tier name {tier_name}")
+                logging.info(f"found tier name {tier_name}")
         else:
-            print("tier type not found in this file")
+            logging.warning("tier type not found in this file")
 
     if tier_name in tier_names:
-        print(f"using tier name {tier_name}")
+        logging.info(f"using tier name {tier_name}")
         annotations = input_eaf.get_annotation_data_for_tier(tier_name)
 
     if annotations:
-        print(f"annotations {annotations}")
+        logging.info(f"annotations {annotations}")
         annotations = sorted(annotations)
         parameters: Dict[str, str] = input_eaf.get_parameters_for_tier(tier_name)
-        print(f"parameters {parameters}")
+        logging.info(f"parameters {parameters}")
         speaker_id: str = parameters.get("PARTICIPANT", "")
 
     for annotation in annotations:
@@ -132,7 +133,7 @@ def process_eaf(input_elan_file: str = '',
         end: str = annotation[1]
         annotation_text: str = annotation[2]
 
-        print(f"annotation {annotation} {start} {end}")
+        logging.info(f"annotation {annotation} {start} {end}")
         obj = {
             "audio_file_name": f"{file_name}.wav",
             "transcript": annotation_text,

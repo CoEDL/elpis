@@ -4,7 +4,7 @@ from flask import current_app as app, jsonify
 from elpis.engines import Interface
 from elpis.engines.common.objects.pron_dict import PronDict
 from elpis.engines.common.errors import InterfaceError
-
+import logging
 
 bp = Blueprint("pron_dict", __name__, url_prefix="/pron-dict")
 
@@ -19,7 +19,7 @@ def new():
             "status": 500,
             "error": e.human_message
         })
-    print(f"****{request.json['name']}****")
+    logging.info(f"****{request.json['name']}****")
     dataset = interface.get_dataset(request.json['dataset_name'])
     pron_dict.link(dataset)
     app.config['CURRENT_PRON_DICT'] = pron_dict

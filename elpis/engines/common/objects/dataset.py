@@ -1,5 +1,6 @@
 import json
 import glob
+import logging
 import os
 import string
 
@@ -354,7 +355,7 @@ class Dataset(FSObject):
             file_name, extension = os.path.splitext(file_)
             if extension == ".txt":
                 corpus_files.append(file_)
-        print(f"corpus_files {corpus_files}")
+        logging.info(f"corpus_files {corpus_files}")
         # Compile and clean the additional corpora content into a single file
         # Reset first to prevent files being added multiple times
         if os.path.exists(self.pathto.corpus_txt):

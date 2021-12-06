@@ -1,6 +1,7 @@
 from typing import Callable, Dict
 from flask import request, current_app as app, jsonify
 from ..blueprint import Blueprint
+import logging
 import subprocess
 from elpis.engines.common.objects.model import Model
 from elpis.engines.common.errors import InterfaceError
@@ -33,7 +34,7 @@ def new():
     interface = app.config['INTERFACE']
     try:
         model = interface.new_model(request.json["name"])
-        print(f"New model created {model.name} {model.hash}")
+        logging.info(f"New model created {model.name} {model.hash}")
     except InterfaceError as e:
         return jsonify({
             "status": 500,
@@ -110,7 +111,7 @@ def settings():
 @bp.route("/train", methods=['GET'])
 def train():
     def setup(model: Model):
-        model.train(on_complete=lambda: print('Trained model!'))
+        model.train(on_complete=lambda: logging.info('Trained model!'))
 
     def build_data(model: Model):
         return {
@@ -147,7 +148,7 @@ def results():
     try:
         results = model.get_train_results()
     except FileNotFoundError:
-        print("Results file not found.")
+        logging.error("Results file not found.")
         return jsonify(MISSING_LOG_RESPONSE)
     data = {
         "results": results

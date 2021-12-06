@@ -15,6 +15,7 @@ Contributors:
               Nicholas Lambourne - (The University of Queensland, 2019)
 """
 
+import logging
 import os
 import re
 import sys
@@ -96,7 +97,7 @@ def are_words_valid(clean_words: List[str],
 
     # Exclude utterance if > 10% english
     if remove_english and len(clean_words) > 0 and english_word_count / len(clean_words) > 0.1:
-        # print(round(english_word_count / len(clean_words)), trans, file=sys.stderr)
+        # logging.debug(round(english_word_count / len(clean_words)), trans, file=sys.stderr)
         return False
 
     # Exclude utterance if langid thinks its english
@@ -203,14 +204,14 @@ def extract_additional_corpora(additional_corpus: str = '',
     :param punctuation_to_collapse_by: punctuation marks to strip
     :param punctuation_to_explode_by: punctuation marks to replace with spaces
     """
-    print("corpus_txt", corpus_txt)
+    logging.info(f"{corpus_txt=}")
     if os.path.exists(corpus_txt):
         write_mode = 'a'  # append if already exists
     else:
         write_mode = 'w'  # make a new file if not
     with open(corpus_txt, write_mode) as corpus_txt_file:
         if os.path.exists(additional_corpus):
-            print(f"Extracting corpus examples from: {additional_corpus}")
+            logging.info(f"Extracting corpus examples from: {additional_corpus}")
             with open(additional_corpus, "r", encoding="utf-8", ) as file_:
                 for line in file_.readlines():
                     # clean the text along the way
@@ -222,7 +223,7 @@ def extract_additional_corpora(additional_corpus: str = '',
                         line = line + '\n'
                     corpus_txt_file.writelines(line)
         else:
-            print(f"Provided additional text additional_corpus file path invalid: "
+            logging.warning(f"Provided additional text additional_corpus file path invalid: "
                   f"{additional_corpus}")
 
 
@@ -280,7 +281,7 @@ def main() -> None:
     dirty_json_data: List[Dict[str, str]] = load_json_file(arguments.infile)
     outfile = arguments.outfile if arguments.outfile else sys.stdout
 
-    print(f"Filtering dirty json data {arguments.infile}...")
+    logging.info(f"Filtering dirty json data {arguments.infile}...")
 
     filtered_data = clean_json_data(json_data=dirty_json_data,
                                     remove_english=arguments.remove_english,
@@ -291,7 +292,7 @@ def main() -> None:
     write_data_to_json_file(data=list(filtered_data),
                             file_name=outfile)
 
-    print(f"Finished! Wrote {str(len(filtered_data))} transcriptions.")
+    logging.info(f"Finished! Wrote {str(len(filtered_data))} transcriptions.")
 
 
 if __name__ == "__main__":

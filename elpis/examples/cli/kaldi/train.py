@@ -19,7 +19,7 @@ python elpis/examples/cli/kaldi/train.py
 
 from elpis.engines.common.objects.interface import Interface
 from pathlib import Path
-
+import logging
 
 DATASET_DIR = '/datasets/abui/transcribed'
 DATASET_NAME = 'ds'
