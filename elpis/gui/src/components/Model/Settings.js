@@ -134,116 +134,113 @@ class ModelSettings extends Component {
                                             handleSubmit,
                                             handleChange,
                                         }) => (
-                                            <>
-                                                {console.log("values", values)}
-                                                <Form onSubmit={handleChange}>
-                                                    <Table>
-                                                        <Table.Body>
-                                                            <Table.Row key="word_delimiter_token">
-                                                                <Table.Cell collapsing>
-                                                                    Word delimiter token
-                                                                </Table.Cell>
-                                                                <Table.Cell>
-                                                                    <Field
-                                                                        name="word_delimiter_token"
-                                                                        placeholder=" "
-                                                                        label="Word delimiter"
-                                                                    />
-                                                                </Table.Cell>
-                                                            </Table.Row>
-                                                            <Table.Row key="num_train_epochs">
-                                                                <Table.Cell collapsing>
-                                                                    Number of epochs
-                                                                </Table.Cell>
-                                                                <Table.Cell>
-                                                                    <Field
-                                                                        name="num_train_epochs"
-                                                                        placeholder="2"
-                                                                    />
-                                                                </Table.Cell>
-                                                            </Table.Row>
-                                                            <Table.Row key="min_duration_s">
-                                                                <Table.Cell collapsing>
-                                                                    Min duration
-                                                                </Table.Cell>
-                                                                <Table.Cell>
-                                                                    <Field
-                                                                        name="min_duration_s"
-                                                                        placeholder="0"
-                                                                    />
-                                                                </Table.Cell>
-                                                            </Table.Row>
-                                                            <Table.Row key="max_duration_s">
-                                                                <Table.Cell collapsing>
-                                                                    Max duration
-                                                                </Table.Cell>
-                                                                <Table.Cell>
-                                                                    <Field
-                                                                        name="max_duration_s"
-                                                                        placeholder="60"
-                                                                    />
-                                                                </Table.Cell>
-                                                            </Table.Row>
-                                                            <Table.Row key="learning_rate">
-                                                                <Table.Cell collapsing>
-                                                                    Learning rate
-                                                                </Table.Cell>
-                                                                <Table.Cell>
-                                                                    <Field
-                                                                        name="learning_rate"
-                                                                        placeholder="1e-4"
-                                                                    />
-                                                                </Table.Cell>
-                                                            </Table.Row>
-                                                            <Table.Row key="batch_size">
-                                                                <Table.Cell collapsing>
-                                                                    Batch size
-                                                                </Table.Cell>
-                                                                <Table.Cell>
-                                                                    <Field
-                                                                        name="batch_size"
-                                                                        placeholder="4"
-                                                                    />
-                                                                </Table.Cell>
-                                                            </Table.Row>
-                                                            <Table.Row key="debug">
-                                                                <Table.Cell collapsing>
-                                                                    Debug with 10:6 train val split
-                                                                </Table.Cell>
-                                                                <Table.Cell>
-                                                                    <Grid className="settings_debug">
-                                                                        <Grid.Column width={2}>
-                                                                            <Field
-                                                                                type="checkbox"
-                                                                                name="debug"
-                                                                            />
+                                            <Form onSubmit={handleChange}>
+                                                <Table>
+                                                    <Table.Body>
+                                                        <Table.Row key="word_delimiter_token">
+                                                            <Table.Cell collapsing>
+                                                                Word delimiter token
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    name="word_delimiter_token"
+                                                                    placeholder=" "
+                                                                    label="Word delimiter"
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                        <Table.Row key="num_train_epochs">
+                                                            <Table.Cell collapsing>
+                                                                Number of epochs
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    name="num_train_epochs"
+                                                                    placeholder="2"
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                        <Table.Row key="min_duration_s">
+                                                            <Table.Cell collapsing>
+                                                                Min duration
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    name="min_duration_s"
+                                                                    placeholder="0"
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                        <Table.Row key="max_duration_s">
+                                                            <Table.Cell collapsing>
+                                                                Max duration
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    name="max_duration_s"
+                                                                    placeholder="60"
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                        <Table.Row key="learning_rate">
+                                                            <Table.Cell collapsing>
+                                                                Learning rate
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    name="learning_rate"
+                                                                    placeholder="1e-4"
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                        <Table.Row key="batch_size">
+                                                            <Table.Cell collapsing>
+                                                                Batch size
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    name="batch_size"
+                                                                    placeholder="4"
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                        <Table.Row key="debug">
+                                                            <Table.Cell collapsing>
+                                                                Debug with 10:6 train val split
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Grid className="settings_debug">
+                                                                    <Grid.Column width={2}>
+                                                                        <Field
+                                                                            type="checkbox"
+                                                                            name="debug"
+                                                                        />
+                                                                    </Grid.Column>
+                                                                    {values && values.debug &&
+                                                                        <Grid.Column
+                                                                            width={14}
+                                                                            className="data_split_inputs"
+                                                                        >
+                                                                            <Grid.Row>
+                                                                                <Field name="data_split_train" />
+                                                                                <span>Training split</span>
+                                                                            </Grid.Row>
+                                                                            <Grid.Row>
+                                                                                <Field name="data_split_val" />
+                                                                                <span>Validation split</span>
+                                                                            </Grid.Row>
                                                                         </Grid.Column>
-                                                                        {values && values.debug &&
-                                                                            <Grid.Column
-                                                                                width={14}
-                                                                                className="data_split_inputs"
-                                                                            >
-                                                                                <Grid.Row>
-                                                                                    <Field name="data_split_train" />
-                                                                                    <span>Training split</span>
-                                                                                </Grid.Row>
-                                                                                <Grid.Row>
-                                                                                    <Field name="data_split_val" />
-                                                                                    <span>Validation split</span>
-                                                                                </Grid.Row>
-                                                                            </Grid.Column>
-                                                                        }
-                                                                    </Grid>
-                                                                </Table.Cell>
-                                                            </Table.Row>
-                                                        </Table.Body>
-                                                    </Table>
-                                                    <Divider />
-                                                    <Button type="button" onClick={handleSubmit} disabled={!name}>
-                                                        {t("common.nextButton")}
-                                                    </Button>
-                                                </Form>
-                                            </>
+                                                                    }
+                                                                </Grid>
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                    </Table.Body>
+                                                </Table>
+                                                <Divider />
+                                                <Button type="button" onClick={handleSubmit} disabled={!name}>
+                                                    {t("common.nextButton")}
+                                                </Button>
+                                            </Form>
                                         ) }
                                     </Formik>
                                 </>
