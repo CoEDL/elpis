@@ -6,6 +6,7 @@ from elpis.engines import Interface
 from pathlib import Path
 from requests import get
 from dotenv import load_dotenv
+from tensorboard import program
 
 
 def create_app(test_config=None):
@@ -79,6 +80,15 @@ def create_app(test_config=None):
     # add the endpoints routes
     app.register_blueprint(endpoints.bp)
     # print(app.url_map)
+
+    # Start a single tensorboard for the entire app
+    tensorboard = program.TensorBoard()
+    tensorboard.configure(argv=['tensorboard',
+                                '--logdir=/state/models',
+                                '--port=6006',
+                                '--host=0.0.0.0'])
+    url = tensorboard.launch()
+    print(f"Tensorflow listening on {url}")
 
     # the rest of the routes below are for the single file react app.
     @app.route('/index.html')
