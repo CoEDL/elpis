@@ -47,7 +47,7 @@ def main(dataset_name: str, reset: bool):
     if dataset_name not in elpis.list_datasets():
         logger.info(f'Making new dataset {dataset_name}')
         dataset = elpis.new_dataset(dataset_name)
-        logger.info(f'Adding data from {presets[dataset_name]['dataset_dir']}')
+        logger.info(f"Adding data from {presets[dataset_name]['dataset_dir']}")
         dataset.add_directory(presets[dataset_name]['dataset_dir'], extensions=['eaf', 'wav'])
         logger.info('Select importer')
         dataset.auto_select_importer() # Selects Elan because of eaf file.
