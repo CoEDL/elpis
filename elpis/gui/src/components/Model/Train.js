@@ -62,7 +62,7 @@ class ModelTrain extends Component {
   };
 
   handleTensorBoard = (e) => {
-    e.target.port = 6006;
+    window.open(, window.location.protocol + '//' + window.location.hostname + ':6006').focus();
   }
 
   onScroll = () => {};
