@@ -180,7 +180,7 @@ class KaldiTranscription(BaseTranscription):
             # These scripts must run from the kaldi dir (so set cwd)
             try:
                 script_path = kaldi_infer_path.joinpath(template_dir_path, stage)
-                stage_process = run(f"sh {script_path} >> {stage_log_path}", cwd=f"{local_kaldi_path}")
+                stage_process = run(f"sh {script_path} 2>&1 | tee {stage_log_path}", cwd=f"{local_kaldi_path}")
                 with open(stage_log_path, 'a+') as file:
                     print('stdout', stage_process.stdout, file=file)
                     print('stderr', stage_process.stderr, file=file)
