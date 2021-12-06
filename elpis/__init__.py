@@ -78,7 +78,7 @@ def create_app(test_config=None):
     app.register_blueprint(endpoints.bp)
     # print(app.url_map)
 
-    if is_running_from_reloader:
+    if is_running_from_reloader():
         # Start Tensorboard if not already running (because Flask init happens twice)
         tensorboard_running = False
         for proc in psutil.process_iter():
