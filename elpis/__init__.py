@@ -8,7 +8,7 @@ from requests import get
 from dotenv import load_dotenv
 from tensorboard import program
 import psutil
-import signal
+from werkzeug.serving import is_running_from_reloader
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
@@ -78,22 +78,23 @@ def create_app(test_config=None):
     app.register_blueprint(endpoints.bp)
     # print(app.url_map)
 
-    # Start Tensorboard if not already running (because Flask init happens twice)
-    tensorboard_running = False
-    for proc in psutil.process_iter():
-        for conns in proc.connections(kind='inet'):
-            if conns.laddr.port == 6006:
-                tensorboard_running = True
-                print('tensorboard is running on', proc.pid)
-    if not tensorboard_running:
-        print('tensorboard is not running, start it')
-        tensorboard = program.TensorBoard()
-        tensorboard.configure(argv=['tensorboard',
-                                    '--logdir=/state/models',
-                                    '--port=6006',
-                                    '--host=0.0.0.0'])
-        url = tensorboard.launch()
-        print(f"Tensorflow listening on {url}")
+    if is_running_from_reloader:
+        # Start Tensorboard if not already running (because Flask init happens twice)
+        tensorboard_running = False
+        for proc in psutil.process_iter():
+            for conns in proc.connections(kind='inet'):
+                if conns.laddr.port == 6006:
+                    tensorboard_running = True
+                    print('tensorboard is running on', proc.pid)
+        if not tensorboard_running:
+            print('tensorboard is not running, start it')
+            tensorboard = program.TensorBoard()
+            tensorboard.configure(argv=['tensorboard',
+                                        '--logdir=/state/models',
+                                        '--port=6006',
+                                        '--host=0.0.0.0'])
+            url = tensorboard.launch()
+            print(f"Tensorflow listening on {url}")
 
     # the rest of the routes below are for the single file react app.
     @app.route('/index.html')
