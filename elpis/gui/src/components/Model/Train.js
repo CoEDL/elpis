@@ -154,7 +154,7 @@ class ModelTrain extends Component {
                                                                 );
                                                             })}
                                                         </Accordion>
-                                                        <StatusIndicator status={status} />
+                                                        {/*<StatusIndicator status={status} />*/}
                                                     </div>
                                                 )}
                                             </Message.Content>
@@ -208,7 +208,7 @@ class ModelTrain extends Component {
 
 function StatusIndicator({status}) {
     if (status === "untrained") {
-        return (<Loader size="medium" text active>Training</Loader>);
+        return (<Loader size="medium" text="true" active>Training</Loader>);
     }
 
     return (
