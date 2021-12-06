@@ -76,6 +76,7 @@ def main(dataset_name: str, reset: bool):
     if Path('/state/models/latest').is_dir():
         os.remove('/state/models/latest')
     os.symlink(f'/state/models/{model.hash}', '/state/models/latest', target_is_directory=True)
+    logger.add(f'/state/models/{model.hash}/train.log')
     logger.info('Start training. This may take a while')
     model.train()
 
