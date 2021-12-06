@@ -280,8 +280,8 @@ class HFTModel(BaseModel):
         )
         # Reduce the dataset size for debugging
         if DEBUG or self.settings['debug'] is True:
-            train_annos = train_annos[:self.settings['data_split_train']]
-            devtest_annos = devtest_annos[:self.settings['data_split_val']]
+            train_annos = train_annos[:int(self.settings['data_split_train'])]
+            devtest_annos = devtest_annos[:int(self.settings['data_split_val'])]
 
         # Make dev and test the same because we are mostly working with small datasets
         dev_annos = test_annos = devtest_annos
