@@ -73,9 +73,6 @@ TRAINING_STAGES = [
 UNFINISHED = 'untrained'
 FINISHED = 'trained'
 
-logger = logging.getLogger(__name__)
-
-
 def list_field(default=None, metadata=None):
     return field(default_factory=lambda: default, metadata=metadata)
 
@@ -227,11 +224,7 @@ class HFTModel(BaseModel):
         """
         Setup logging.
         """
-        logging.basicConfig(
-            format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
-            datefmt='%m/%d/%Y %H:%M:%S',
-            handlers=[logging.StreamHandler(sys.stdout)],)
-        logger.setLevel(logger.info if is_main_process(self.training_args.local_rank) else logging.WARN)
+        # logger.setLevel(logger.info if is_main_process(self.training_args.local_rank) else logger.WARN)
 
         # Log on each process the small summary:
         logger.warning(
