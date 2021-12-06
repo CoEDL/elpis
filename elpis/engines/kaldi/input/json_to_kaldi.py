@@ -20,7 +20,7 @@ Contributors:
 
 import argparse
 import json
-import logging
+from loguru import logger
 import os
 import uuid
 from typing import Dict, List, TextIO
@@ -182,7 +182,7 @@ def create_kaldi_structure(input_json: str,
         with open(input_json, "r") as input_file:
             json_transcripts: str = json.loads(input_file.read())
     except FileNotFoundError:
-        logging.error(f"JSON file could not be found: {input_json}")
+        logger.error(f"JSON file could not be found: {input_json}")
         return
 
     if not os.path.exists(output_folder):
@@ -204,7 +204,7 @@ def create_kaldi_structure(input_json: str,
             for line in file_.readlines():
                 training_input.corpus_list.append(line)
     else:
-        logging.warning("No additional text corpus provided.")
+        logger.warning("No additional text corpus provided.")
 
     testing_input.write_and_close()
     training_input.write_and_close()

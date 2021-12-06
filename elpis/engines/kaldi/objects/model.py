@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 import os
 import re
 import shutil
@@ -38,7 +38,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
         self.config['stage_count'] = 0
         self.config['current_stage'] = '0_setup.sh'
         self.settings = {'ngram': 1}
-        logging.info(f"model default settings {self.settings}")
+        logger.info(f"model default settings {self.settings}")
         self.run_log_path = self.path.joinpath('train.log')
         if not Path(self.run_log_path).is_file():
             run(f"touch {self.run_log_path};")
@@ -46,7 +46,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
-        logging.info(f'load {base_path}')
+        logger.info(f'load {base_path}')
         self.pron_dict = None
         return self
 
@@ -79,7 +79,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     def train(self, on_complete:Callable=None):
 
         def prepare_for_training():
-            logging.info("prepare_for_training")
+            logger.info("prepare_for_training")
             # task make-kaldi-subfolders
             kaldi_structure = PathStructure(self.path)
 
@@ -200,9 +200,9 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                     src = f'{self.dataset.pathto.resampled.joinpath(audio_file)}'
                     dst = f'{local_kaldi_path}'
                     shutil.copy(src, dst)
-                logging.info('kaldi dirs preparation done.')
+                logger.info('kaldi dirs preparation done.')
             except OSError as error:
-                logging.error('couldnt prepare kaldi dirs: ', error)
+                logger.error('couldnt prepare kaldi dirs: ', error)
 
         def train():
             local_kaldi_path = self.path.joinpath('kaldi')
@@ -211,7 +211,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
             stages = os.listdir(local_kaldi_path.joinpath('stages'))
 
             for stage in sorted(stages):
-                logging.info(f"Stage {stage} starting")
+                logger.info(f"Stage {stage} starting")
                 self.stage_status = (stage, 'in-progress')
                 self.config['current_stage'] = stage
 
@@ -226,14 +226,14 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 # Run the command, log output. Also redirect Kaldi sterr output to log. These are often not errors :-(
                 try:
                     run(f"cd {local_kaldi_path}; stages/{stage} >> {self.run_log_path}")
-                    logging.info(f"Stage {stage} complete")
+                    logger.info(f"Stage {stage} complete")
                     self.stage_status = (stage, 'complete')
                     self.config['stage_count'] = self.config['stage_count'] + 1
                 except CalledProcessError as error:
                     with open(self.run_log_path, 'a+') as file:
                         print('stderr', error.stderr, file=file)
                         print('failed', file=file)
-                    logging.error(f"Stage {stage} failed")
+                    logger.error(f"Stage {stage} failed")
                     self.stage_status = (stage, 'failed', '', 'LOG-C')
                     break
 
@@ -288,5 +288,5 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                            "ins_val": int(ins_val),
                            "del_val": int(del_val),
                            "sub_val": int(sub_val)}
-                logging.info(results)
+                logger.info(results)
         return results

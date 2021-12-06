@@ -1,5 +1,5 @@
 import json
-import logging
+from loguru import logger
 import os
 from pathlib import Path
 import shutil
@@ -255,7 +255,7 @@ class Interface(FSObject):
     def new_transcription(self, tname):
         if self.engine is None:
             raise RuntimeError("Engine must be set prior to transcription")
-        logging.info(f"{self.engine}")
+        logger.info(f"{self.engine}")
         t = self.engine.transcription(parent_path=self.transcriptions_path, name=tname)
         transcriptions = self.config['transcriptions']
         transcriptions[tname] = t.hash

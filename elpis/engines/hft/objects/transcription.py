@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from pathlib import Path
 import string
 import sys
@@ -61,19 +61,19 @@ class HFTTranscription(BaseTranscription):
         self.build_stage_status(stage_names)
 
     def transcribe(self, on_complete: callable = None) -> None:
-        logging.info('=== Load processor and model')
+        logger.info('=== Load processor and model')
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
 
         # Load audio
         self._set_stage(LOAD_AUDIO)
-        logging.info('=== Load audio')
+        logger.info('=== Load audio')
         audio_input, sample_rate = self._load_audio(self.audio_file_path)
         self._set_stage(LOAD_AUDIO, complete=True)
 
         # Pad input values and return pt tensor
         self._set_stage(PROCESS_INPUT)
-        logging.info('=== Process input')
+        logger.info('=== Process input')
         input_values = processor(
             audio_input, sampling_rate=HFTTranscription.SAMPLING_RATE, return_tensors='pt').input_values
         self._set_stage(PROCESS_INPUT, msg='Processed input values')
@@ -87,19 +87,19 @@ class HFTTranscription(BaseTranscription):
         # Transcribe
         self._set_stage(TRANSCRIPTION)
         transcription = processor.decode(predicted_ids[0])
-        logging.info(f'{transcription=}')
+        logger.info(f'{transcription=}')
         self._set_stage(TRANSCRIPTION, complete=True)
 
         self._set_stage(SAVING)
-        logging.info('=== Save transcription')
+        logger.info('=== Save transcription')
         self._save_transcription(transcription)
 
         self._set_stage(SAVING, msg='Saved transcription, generating utterances')
         # Utterances to be used creating elan files
-        logging.info('=== Generate utterances')
+        logger.info('=== Generate utterances')
         utterances = self._generate_utterances(
             processor, predicted_ids, input_values, transcription)
-        logging.info('=== Save utterances (elan and text)')
+        logger.info('=== Save utterances (elan and text)')
         self._save_utterances(utterances)
 
         self._set_stage(SAVING, complete=True)
@@ -151,7 +151,7 @@ class HFTTranscription(BaseTranscription):
 
         # Add times to ids
         duration_sec = input_values.shape[1] / sample_rate
-        logging.info(f'Audio length: {duration_sec}')
+        logger.info(f'Audio length: {duration_sec}')
 
         time_from_index = lambda index: index / len(predicted_ids) * duration_sec
         generate_timestamps = lambda item: (time_from_index(item[0]), item[1])
@@ -173,7 +173,7 @@ class HFTTranscription(BaseTranscription):
 
         # make sure that there are the same number of id-groups as words.
         # Otherwise something is wrong
-        logging.info(f'Length check: {len(split_ids_w_time)} {len(words)}')
+        logger.info(f'Length check: {len(split_ids_w_time)} {len(words)}')
         assert len(split_ids_w_time) == len(words)
 
         word_start_times = []
@@ -183,7 +183,7 @@ class HFTTranscription(BaseTranscription):
             word_start_times.append(min(_times))
             word_end_times.append(max(_times))
 
-        logging.info(f'{words=}')
+        logger.info(f'{words=}')
         pprint(list(zip(word_start_times, word_end_times)))
         return words, word_start_times, word_end_times
 
@@ -215,7 +215,7 @@ class HFTTranscription(BaseTranscription):
         return audio, sample_rate
 
     def prepare_audio(self, audio: Path, on_complete: callable = None):
-        logging.info(f'=== Prepare audio {audio} {self.audio_file_path}')
+        logger.info(f'=== Prepare audio {audio} {self.audio_file_path}')
         self._resample_audio_file(audio, self.audio_file_path)
         if on_complete is not None:
             on_complete()

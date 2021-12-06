@@ -11,7 +11,7 @@ import wave
 import contextlib
 from subprocess import CalledProcessError
 import librosa
-import logging
+from loguru import logger
 from csv import reader
 import codecs
 
@@ -57,7 +57,7 @@ class KaldiTranscription(BaseTranscription):
     def _process_audio_file(self, audio):
         # TODO: why save to tmp and not just resample to self.path location?
         # copy audio to the tmp folder for resampling
-        logging.info(f"========= process audio for transcription {self.path}")
+        logger.info(f"========= process audio for transcription {self.path}")
         tmp_path = Path(f'/tmp/{self.hash}')
         tmp_path.mkdir(parents=True, exist_ok=True)
         tmp_file_path = tmp_path.joinpath(audio.filename)
@@ -102,24 +102,24 @@ class KaldiTranscription(BaseTranscription):
         local_kaldi_path = self.model.path.joinpath('kaldi')
         kaldi_infer_path = self.model.path.joinpath('kaldi', 'data', 'infer')
 
-        logging.info("========= reset kaldi infer dir")
+        logger.info("========= reset kaldi infer dir")
         # wipe the infer dir to clear previous audio and infer fiels
         if kaldi_infer_path.exists():
             shutil.rmtree(f'{kaldi_infer_path}')
             kaldi_infer_path.mkdir(parents=True, exist_ok=True)
 
-        logging.info("========= reset exp dir")
+        logger.info("========= reset exp dir")
         # wipe previous exp dir to avoid file_exists errors
         exp_path = self.model.path.joinpath('kaldi','exp','tri1_online')
         if exp_path.exists():
             shutil.rmtree(f'{exp_path}')
             exp_path.mkdir(parents=True, exist_ok=True)
 
-        logging.info("========= reset templates dir")
+        logger.info("========= reset templates dir")
         # Use gmm-decode-conf for short audio and gmm-decode-online-conf for long audio (gmm-decode is quicker for short audio)
         # Stage names (rh side) are used in the GUI for i18n
         if (self.audio_duration > 10):
-            logging.info("==== Using gmm-decode-online-conf")
+            logger.info("==== Using gmm-decode-online-conf")
             template_dir_path = 'gmm-decode-online-conf'
             stage_names = {
                 "0_feature_vec.sh": "featureExtraction",
@@ -129,7 +129,7 @@ class KaldiTranscription(BaseTranscription):
                 "4_ctm_output.sh": "ctmOutput"
             }
         else:
-            logging.info("==== Using gmm-decode-conf")
+            logger.info("==== Using gmm-decode-conf")
             template_dir_path = 'gmm-decode-conf'
             stage_names = {
                 "gmm-decode-conf.sh": "transcribing"
@@ -167,7 +167,7 @@ class KaldiTranscription(BaseTranscription):
         for file in stages:
             os.chmod(kaldi_infer_path.joinpath(template_dir_path).joinpath(file), 0o774)
         for stage in sorted(stages):
-            logging.info(f"Stage {stage} starting")
+            logger.info(f"Stage {stage} starting")
             self.stage_status = (stage, 'in-progress', '')
 
             # Create log file
@@ -185,14 +185,14 @@ class KaldiTranscription(BaseTranscription):
                     print('stdout', stage_process.stdout, file=file)
                     print('stderr', stage_process.stderr, file=file)
                     print('done', file=file)
-                logging.info(f"Stage {stage} complete")
+                logger.info(f"Stage {stage} complete")
                 self.stage_status = (stage, 'complete', '')
                 stage_count = stage_count + 1
             except CalledProcessError as error:
                 with open(stage_log_path, 'a+') as file:
                     print('stderr', error.stderr, file=file)
                     print('failed', file=file)
-                logging.error(f"Stage {stage} failed")
+                logger.error(f"Stage {stage} failed")
                 self.stage_status = (stage, 'failed', '')
                 break
 
@@ -234,11 +234,11 @@ class KaldiTranscription(BaseTranscription):
         if ctm_file_path.exists():
             with open(ctm_file_path, encoding="utf8") as ctm_file:
                 ctm_entries = ctm_file.readlines()
-                logging.info(ctm_entries)
+                logger.info(ctm_entries)
                 for ctm_entry in ctm_entries:
                     values = ctm_entry.split()
                     word_conf.append([values[-2], values[-1]])
-            logging.info(word_conf)
+            logger.info(word_conf)
             return word_conf
         else:
             return None

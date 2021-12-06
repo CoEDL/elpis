@@ -4,7 +4,7 @@ from elpis.engines import Interface
 from elpis.engines.common.objects.model import Model
 from elpis.engines.common.objects.transcription import Transcription
 from elpis.engines.common.utilities import hasher
-import logging
+from loguru import logger
 
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 
@@ -17,7 +17,7 @@ def new():
     transcription.link(model)
     app.config['CURRENT_TRANSCRIPTION'] = transcription
     file = request.files['file']
-    transcription.prepare_audio(file, on_complete=lambda: logging.info('Prepared audio file!'))
+    transcription.prepare_audio(file, on_complete=lambda: logger.info('Prepared audio file!'))
     data = {
         "status": transcription.status,
         "originalFilename": file.filename
@@ -31,7 +31,7 @@ def new():
 @bp.route("/transcribe", methods=['GET'])
 def transcribe():
     transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
-    transcription.transcribe(on_complete=lambda: logging.info('Transcribed text!'))
+    transcription.transcribe(on_complete=lambda: logger.info('Transcribed text!'))
     data = {
         "status": transcription.status,
         "stage_status": transcription.stage_status

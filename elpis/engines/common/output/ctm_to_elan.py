@@ -12,7 +12,7 @@ Contributors:
 
 from argparse import ArgumentParser
 from csv import reader
-import logging
+from loguru import logger
 from pathlib import Path
 from typing import Dict, Tuple
 import codecs
@@ -131,11 +131,11 @@ def main() -> None:
     wav_dictionary = wav_scp_to_dictionary(arguments.wav)
     output_directory = Path(arguments.outdir)
 
-    logging.info("==== CTM to Elan args")
-    logging.info(f"{segments_dictionary=}")
-    logging.info(f"{ctm_dictionary=}")
-    logging.info(f"{wav_dictionary=}")
-    logging.info(f"{output_directory=}")
+    logger.info("==== CTM to Elan args")
+    logger.info(f"{segments_dictionary=}")
+    logger.info(f"{ctm_dictionary=}")
+    logger.info(f"{wav_dictionary=}")
+    logger.info(f"{output_directory=}")
 
     if not output_directory.parent:
         Path.mkdir(output_directory.parent, parents=True)

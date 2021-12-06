@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import librosa
-import logging
+from loguru import logger
 import numpy
 from typing import Any, Dict, List, Tuple
 
@@ -16,7 +16,7 @@ def get_chunks(audio_path: str, method: str, parameter: float) -> List[Tuple[flo
     """
     audio_data = read_audio_path(audio_path)
     threshold = find_best_threshold(audio_data, method=method, parameter=parameter)
-    logging.info(f"""Top db = {audio_data["top db"]}, chosen threshold = {threshold} (method = {method})""")
+    logger.info(f"""Top db = {audio_data["top db"]}, chosen threshold = {threshold} (method = {method})""")
     time_voice_sections = get_voice_sections(audio_data, threshold)
     return time_voice_sections
 

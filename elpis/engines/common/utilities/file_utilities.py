@@ -7,7 +7,7 @@ Contributors:
 """
 
 import glob
-import logging
+from loguru import logger
 import os
 from typing import Set, List
 
@@ -20,10 +20,10 @@ def find_files_by_extensions(set_of_all_files: Set[str], extensions: Set[str]) -
     :return: set of file_names matched with given extension. if none exists, returns an empty set.
     """
     results = set()
-    logging.info(set_of_all_files)
+    logger.info(set_of_all_files)
     for file_path in set_of_all_files:
         name, extension = os.path.splitext(file_path)
-        logging.info(extension)
+        logger.info(extension)
         if extension in extensions:
             results.add(file_path)
     return results

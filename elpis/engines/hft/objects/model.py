@@ -2,7 +2,7 @@
 Support for training Hugging Face Transformers (wav2vec2) models.
 """
 import json
-import logging
+from loguru import logger
 from pathlib import Path
 import os
 import random
@@ -103,7 +103,7 @@ class HFTModel(BaseModel):
             'batch_size': 4,
             'debug': False
         }
-        logging.info(f"model default settings {self.settings}")
+        logger.info(f"model default settings {self.settings}")
 
         self._setup_stages()
 
@@ -231,7 +231,7 @@ class HFTModel(BaseModel):
             format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
             datefmt='%m/%d/%Y %H:%M:%S',
             handlers=[logging.StreamHandler(sys.stdout)],)
-        logger.setLevel(logging.INFO if is_main_process(self.training_args.local_rank) else logging.WARN)
+        logger.setLevel(logger.info if is_main_process(self.training_args.local_rank) else logging.WARN)
 
         # Log on each process the small summary:
         logger.warning(
@@ -368,7 +368,7 @@ class HFTModel(BaseModel):
         vocab_dict['[UNK]'] = len(vocab_dict)
         vocab_dict['[PAD]'] = len(vocab_dict)
         if word_delimiter_token in vocab_dict:
-            logging.warning(f'The word delimiter token ({word_delimiter_token}) is present in the vocab dict.')
+            logger.warning(f'The word delimiter token ({word_delimiter_token}) is present in the vocab dict.')
         if word_delimiter_token != ' ' and ' ' in vocab_dict:
             vocab_dict[word_delimiter_token] = vocab_dict.get(' ', len(vocab_dict))
             del vocab_dict[' ']
@@ -404,7 +404,7 @@ class HFTModel(BaseModel):
             ctc_zero_infinity=True)
 
     def preprocess_dataset(self):
-        logging.info('=== Preprocessing Dataset')
+        logger.info('=== Preprocessing Dataset')
         speech = self.prepare_speech()
 
         def speech_file_to_array_fn(batch):
@@ -424,11 +424,11 @@ class HFTModel(BaseModel):
             remove_columns=self.hft_dataset['train'].column_names,
             num_proc=self.data_args.preprocessing_num_workers,
         )
-        logging.info('=== hft_dataset')
-        logging.info(self.hft_dataset)
+        logger.info('=== hft_dataset')
+        logger.info(self.hft_dataset)
 
     def prepare_dataset(self):
-        logging.info('=== Preparing Dataset')
+        logger.info('=== Preparing Dataset')
         def prepare_dataset(batch):
             assert (
                 len(set(batch['sampling_rate'])) == 1
@@ -447,7 +447,7 @@ class HFTModel(BaseModel):
         )
 
     def prepare_speech(self):
-        logging.info('=== Preparing Speech')
+        logger.info('=== Preparing Speech')
         speech = {}
         audio_paths = set()
         rejected_count = 0
@@ -465,13 +465,13 @@ class HFTModel(BaseModel):
             dur_ms = stop_ms - start_ms
             speech_array, sample_rate = torchaudio.load(filepath=path, frame_offset=start_frame, num_frames=num_frames)
             # Check that frames exceeds number of characters, wav file is not all zeros, and duration between min, max
-            logging.info('text length', len(text))
+            logger.info('text length', len(text))
             if int(audio_metadata.num_frames) >= len(text) \
                     and speech_array.count_nonzero() \
                     and float(self.settings['min_duration_s']) < dur_ms/1000 < float(self.settings['max_duration_s']):
                 # Resample if required
                 if sample_rate != HFTModel.SAMPLING_RATE:
-                    logging.info(f'Resample from {sample_rate} to {HFTModel.SAMPLING_RATE} | '
+                    logger.info(f'Resample from {sample_rate} to {HFTModel.SAMPLING_RATE} | '
                           f'{os.path.basename(path).rjust(20)} | '
                           f'{str(start_ms/1000).rjust(15)} : {str(stop_ms/1000).ljust(15)} | '
                           f'{str(start_frame).rjust(15)} : {str(end_frame).ljust(15)}')
@@ -485,19 +485,19 @@ class HFTModel(BaseModel):
                 # torchaudio.save(self.tmp_audio_path.joinpath(os.path.basename(path)), speech_array, HFTModel.SAMPLING_RATE)
             else:
                 rejected_count += 1
-                logging.info(f'rejected {os.path.basename(path)} {start_ms} {stop_ms}')
+                logger.info(f'rejected {os.path.basename(path)} {start_ms} {stop_ms}')
 
         # Remove rejected speech by filtering on speech matching length the required conditions
         self.hft_dataset = self.hft_dataset.filter(lambda x: f'{path}{start_ms}{stop_ms}' in speech.keys())
-        logging.info(rejected_count, 'files removed due to number of frames, zero wav or too short')
+        logger.info(rejected_count, 'files removed due to number of frames, zero wav or too short')
         # Output some examples of the data for sanity check
         texts = [x['text'] for x in self.hft_dataset['train']]
         if len(texts) > 10:
-            logging.info(f'Random sample of {len(texts)} valid transcriptions from the original training set')
-            logging.info('\n'.join(random.choices(texts, k=10)))
+            logger.info(f'Random sample of {len(texts)} valid transcriptions from the original training set')
+            logger.info('\n'.join(random.choices(texts, k=10)))
         else:
-            logging.info(f'All {len(texts)} valid transcriptions from the original training set')
-            logging.info('\n'.join(texts))
+            logger.info(f'All {len(texts)} valid transcriptions from the original training set')
+            logger.info('\n'.join(texts))
         return speech
 
     def get_trainer(self, metric_name='wer'):
@@ -550,9 +550,9 @@ class HFTModel(BaseModel):
         self.model_args = model_args
         self.data_args = data_args
         self.training_args = training_args
-        logging.info('\n\n=== Model args\n', model_args)
-        logging.info('\n\n=== Data args\n', data_args)
-        logging.info('\n\n=== Training args\n', training_args)
+        logger.info('\n\n=== Model args\n', model_args)
+        logger.info('\n\n=== Data args\n', data_args)
+        logger.info('\n\n=== Training args\n', training_args)
 
     def train(self, on_complete:Callable=None):
         self.tb_writer = SummaryWriter(self.path / 'runs')
@@ -565,7 +565,7 @@ class HFTModel(BaseModel):
         set_seed(self.training_args.seed)
 
         # 1. Tokenization
-        logging.info('=== Tokenizing')
+        logger.info('=== Tokenizing')
         self._set_finished_training(False)
         self._set_stage(TOKENIZATION)
 
@@ -573,7 +573,7 @@ class HFTModel(BaseModel):
         self.create_split(data_dir)
         self.hft_dataset = self.get_dataset(data_dir)
 
-        logging.info('Got dataset.')
+        logger.info('Got dataset.')
 
         # Load pretrained model and tokenizer
         #
@@ -603,7 +603,7 @@ class HFTModel(BaseModel):
 
         self._set_stage(PREPROCESSING, complete=True)
 
-        logging.info(f'len of dataset: {len(self.hft_dataset)}')
+        logger.info(f'len of dataset: {len(self.hft_dataset)}')
 
         # 3. Training
         self._set_stage(TRAIN)
@@ -648,8 +648,8 @@ class HFTModel(BaseModel):
             metrics['eval_samples'] = min(max_val_samples, len(self.hft_dataset['dev']))
             trainer.log_metrics('eval', metrics)
             trainer.save_metrics('eval', metrics)
-            logging.info('=== Metrics')
-            logging.info(metrics)
+            logger.info('=== Metrics')
+            logger.info(metrics)
             self.config['results'] = metrics
 
         self._set_stage(EVALUATION, complete=True)

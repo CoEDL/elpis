@@ -3,7 +3,7 @@ Example code for transcribing from Python with existing Elpis/HFT model
 """
 
 import argparse
-import logging
+from loguru import logger
 import os
 from pathlib import Path
 from elpis.engines.common.objects.interface import Interface
@@ -14,20 +14,20 @@ def main(model_name: str, infer_path: str):
     # Step 0
     # ======
     # Use the Elpis interface directory where all the associated files/objects are stored.
-    logging.info('Create interface')
+    logger.info('Create interface')
     elpis = Interface(path=Path('/state'), use_existing=True)
 
     # Step 1
     # ======
     # Select Engine
-    logging.info('Set engine')
+    logger.info('Set engine')
     from elpis.engines import ENGINES
     elpis.set_engine(ENGINES['hft'])
 
     # Step 2
     # ======
     # Load Model
-    logging.info(f'Get elpis model for {model_name}')
+    logger.info(f'Get elpis model for {model_name}')
     model = elpis.get_model(model_name)
 
     # Step 3
@@ -39,10 +39,10 @@ def main(model_name: str, infer_path: str):
     while tx_name in elpis.list_transcriptions():
         i = i + 1
         tx_name = f'{base_name}{i}'
-    logging.info('Making new transcriber', tx_name)
+    logger.info('Making new transcriber', tx_name)
     transcription = elpis.new_transcription(tx_name)
-    logging.info('Made transcriber', transcription.hash)
-    logging.info('Linking model')
+    logger.info('Made transcriber', transcription.hash)
+    logger.info('Linking model')
     transcription.link(model)
 
     if Path('/state/transcriptions/latest').is_dir():
@@ -51,13 +51,13 @@ def main(model_name: str, infer_path: str):
                '/state/transcriptions/latest',
                target_is_directory=True)
 
-    logging.info(f'Load audio from {infer_path}')
+    logger.info(f'Load audio from {infer_path}')
     with open(infer_path, 'rb') as infer_audio_file:
         transcription.prepare_audio(infer_audio_file)
 
-    logging.info('Transcribe')
+    logger.info('Transcribe')
     transcription.transcribe()
-    logging.info(transcription.text())
+    logger.info(transcription.text())
 
 
 if __name__ == '__main__':

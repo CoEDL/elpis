@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict, Tuple
 from praatio import textgrid
 import codecs
-import logging
+from loguru import logger
 
 
 def ctm_to_dictionary(ctm_file_path: str,
@@ -63,7 +63,7 @@ def wav_scp_to_dictionary(scp_file_name: str) -> dict:
 def create_textgrid(wav_dictionary: Dict[str, str],
                     ctm_dictionary: dict,
                     output_directory: str) -> None:
-    logging.info(f"create_textgrid {ctm_dictionary=}")
+    logger.info(f"create_textgrid {ctm_dictionary=}")
 
     for index, utterance_id in enumerate(wav_dictionary.keys()):
         text_grid = textgrid.Textgrid()
