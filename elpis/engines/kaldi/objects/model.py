@@ -261,7 +261,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     def get_train_results(self):
         results = {}
         if Path(self.config['run_log_path']).exists():
-            with self.config['run_log_path'].open() as log_file:
+            with Path(self.config['run_log_path']).open() as log_file:
                 wer_lines = []
                 for line in reversed(list(log_file)):
                     line = line.rstrip()
