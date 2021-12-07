@@ -15,13 +15,13 @@ Contributors:
               Nicholas Lambourne - (The University of Queensland, 2019)
 """
 
-from loguru import logger
 import os
 import re
 import sys
 import nltk
 from argparse import ArgumentParser
 from langid.langid import LanguageIdentifier, model
+from loguru import logger
 from nltk.corpus import words
 from typing import Dict, List, Set
 from ..utilities import load_json_file, write_data_to_json_file

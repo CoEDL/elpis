@@ -47,7 +47,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
-        logger.info(f'load {base_path}')
+        logger.info(f"load {base_path}")
         self.pron_dict = None
         return self
 

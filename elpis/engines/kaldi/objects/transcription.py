@@ -117,7 +117,7 @@ class KaldiTranscription(BaseTranscription):
             exp_path.mkdir(parents=True, exist_ok=True)
 
         print("========= reset templates dir")
-        # Use gmm-decode for short audio and gmm-decode-online for long audio (gmm-decode is quicker for short audio)
+        # Use gmm-decode-conf for short audio and gmm-decode-online-conf for long audio (gmm-decode is quicker for short audio)
         # Stage names (rh side) are used in the GUI for i18n
         if (self.audio_duration > 10):
             print("==== Using gmm-decode-online-conf")
