@@ -13,8 +13,6 @@ class ModelSettings extends Component {
     render() {
         const {t, currentEngine, settings, modelSettings, name} = this.props;
 
-        console.log("Settings.js", settings);
-
         return (
             <div className="training_settings">
                 <Branding />
