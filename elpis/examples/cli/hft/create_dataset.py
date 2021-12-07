@@ -17,6 +17,11 @@ def main(dataset_name: str, reset: bool):
             'importer_method': 'tier_name',
             'importer_value': 'Phrase',
         },
+        'gk': {
+            'dataset_dir': '/datasets/gk',
+            'importer_method': 'tier_type',
+            'importer_value': 'tx',
+        },
         'timit': {
             'dataset_dir': '/datasets/timit/training_data',
             'importer_method': 'tier_name',

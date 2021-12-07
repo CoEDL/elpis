@@ -68,7 +68,8 @@ def load():
     app.config['CURRENT_PRON_DICT'] = model.pron_dict
     app.config['CURRENT_MODEL'] = model
     data = {
-        "config": model.config._load()
+        "config": model.config._load(),
+        "log": model.log
     }
     return jsonify({
         "status": 200,

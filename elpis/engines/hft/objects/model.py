@@ -50,11 +50,10 @@ if version.parse(torch.__version__) >= version.parse('1.6'):
 # Used to reduce training time when debugging
 DEBUG = False
 QUICK_TRAIN_BUILD_ARGUMENTS = {
-    'max_train_samples': '2',
     'num_train_epochs': '3',
     'model_name_or_path': 'facebook/wav2vec2-base',
     'per_device_train_batch_size': '1',
-    'per_device_eval_batch_size': '1'
+    'per_device_eval_batch_size': '1',
 }
 
 # Training Stages
@@ -98,7 +97,9 @@ class HFTModel(BaseModel):
             'max_duration_s': 60,
             'learning_rate': 1e-4,
             'batch_size': 4,
-            'debug': False
+            'debug': False,
+            'data_split_train': 10,
+            'data_split_val': 6,
         }
         logger.info(f"model default settings {self.settings}")
 
@@ -113,6 +114,7 @@ class HFTModel(BaseModel):
 
         # Prepare logging
         self.run_log_path = self.path.joinpath('train.log')
+        self.config['run_log_path'] = self.run_log_path.as_posix()
         if not Path(self.run_log_path).is_file():
             run(f'touch {self.run_log_path};')
         logger.add(self.run_log_path)
@@ -125,7 +127,7 @@ class HFTModel(BaseModel):
 
     @property
     def log(self):
-        with open(self.run_log_path) as logs:
+        with open(self.config['run_log_path']) as logs:
             return logs.read()
 
     def _set_finished_training(self, has_finished: bool) -> None:
@@ -269,8 +271,8 @@ class HFTModel(BaseModel):
         )
         # Reduce the dataset size for debugging
         if DEBUG or self.settings['debug'] is True:
-            train_annos = train_annos[:10]
-            devtest_annos = devtest_annos[:6]
+            train_annos = train_annos[:int(self.settings['data_split_train'])]
+            devtest_annos = devtest_annos[:int(self.settings['data_split_val'])]
 
         # Make dev and test the same because we are mostly working with small datasets
         dev_annos = test_annos = devtest_annos
@@ -619,10 +621,7 @@ class HFTModel(BaseModel):
                 self.processor.save_pretrained(self.training_args.output_dir)
 
             metrics = train_result.metrics
-            max_train_samples = (
-                self.data_args.max_train_samples if self.data_args.max_train_samples is not None else len(self.hft_dataset['train'])
-            )
-            metrics['train_samples'] = min(max_train_samples, len(self.hft_dataset['train']))
+            metrics['train_samples'] = len(self.hft_dataset['train'])
 
             trainer.log_metrics(TRAIN, metrics)
             trainer.save_metrics(TRAIN, metrics)
@@ -635,8 +634,7 @@ class HFTModel(BaseModel):
         if self.training_args.do_eval:
             logger.info('=== Evaluate')
             metrics = trainer.evaluate()
-            max_val_samples = self.data_args.max_val_samples if self.data_args.max_val_samples is not None else len(self.hft_dataset['dev'])
-            metrics['eval_samples'] = min(max_val_samples, len(self.hft_dataset['dev']))
+            metrics['eval_samples'] = len(self.hft_dataset['dev'])
             trainer.log_metrics('eval', metrics)
             trainer.save_metrics('eval', metrics)
             logger.info('=== Metrics')
@@ -830,20 +828,6 @@ class DataTrainingArguments:
     preprocessing_num_workers: Optional[int] = field(
         default=None,
         metadata={'help': 'The number of processes to use for the preprocessing.'},
-    )
-    max_train_samples: Optional[int] = field(
-        default=None,
-        metadata={
-            'help': 'For debugging purposes or quicker training, truncate the number of training examples to this '
-            'value if set.'
-        },
-    )
-    max_val_samples: Optional[int] = field(
-        default=None,
-        metadata={
-            'help': 'For debugging purposes or quicker training, truncate the number of validation examples to this '
-            'value if set.'
-        },
     )
     chars_to_ignore: List[str] = list_field(
         default=[',', '?', '.', '!', '-', ';', ':', '""', '%', ''', ''', '�'],

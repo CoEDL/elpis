@@ -40,6 +40,7 @@ code {
 }
 .compiled-log > div {
     padding-bottom: 1.2em;
+    white-space: break-spaces;
 }
 
 .accordion {
@@ -281,6 +282,22 @@ label.pad-right,
 .training_settings .ui.form tr {
     padding: 0 0.5em;
 }
+.training_settings .settings_debug {
+    display: flex;
+    align-items: center;
+}
+.training_settings .settings_debug input {
+    width: 80px !important;
+}
+.data_split_inputs div {
+    display: flex;
+    align-items: center;
+}
+.data_split_inputs span {
+    padding-left: 1em;
+    font-style: italic;
+}
+
 
 /* Container for opacity toggle */
 .conf-tools {

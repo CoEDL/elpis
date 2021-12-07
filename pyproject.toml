@@ -25,6 +25,7 @@ python-dotenv = "^0.15.0"
 praatio = "^5.0.0"
 nltk = "^3.6.5"
 loguru = "^0.5.3"
+psutil = "^5.8.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"

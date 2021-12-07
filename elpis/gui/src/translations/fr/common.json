@@ -162,7 +162,9 @@
             "logsHeader": "Journalisation",
             "logsDescription": "Détail sanglain pour Kaldi (arrivée prochaine)",
             "trainButton": "Démarrer l’entraînement",
-            "statusButton": "Voir l’avancement"
+            "statusButton": "Voir l’avancement",
+            "logButton": "Download logs",
+            "tensorboardButton": "View progress in TensorBoard"
         },
         "results": {
             "title": "Résultats",

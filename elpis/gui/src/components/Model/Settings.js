@@ -13,8 +13,6 @@ class ModelSettings extends Component {
     render() {
         const {t, currentEngine, settings, modelSettings, name} = this.props;
 
-        console.log("Settings.js", settings);
-
         return (
             <div className="training_settings">
                 <Branding />
@@ -101,6 +99,8 @@ class ModelSettings extends Component {
                                             learning_rate: settings.learning_rate,
                                             batch_size: settings.batch_size,
                                             debug: settings.debug,
+                                            data_split_train: settings.data_split_train,
+                                            data_split_val: settings.data_split_val,
                                         }}
                                         validate={values => {
                                             let errors = {};
@@ -119,6 +119,8 @@ class ModelSettings extends Component {
                                                 learning_rate: values.learning_rate,
                                                 batch_size: values.batch_size,
                                                 debug: values.debug,
+                                                data_split_train: values.data_split_train,
+                                                data_split_val: values.data_split_val,
                                             }};
 
                                             modelSettings(postData);
@@ -126,8 +128,9 @@ class ModelSettings extends Component {
                                         }}
                                     >
                                         {({
-                                          handleSubmit,
-                                          handleChange,
+                                            values,
+                                            handleSubmit,
+                                            handleChange,
                                         }) => (
                                             <Form onSubmit={handleChange}>
                                                 <Table>
@@ -201,13 +204,36 @@ class ModelSettings extends Component {
                                                         </Table.Row>
                                                         <Table.Row key="debug">
                                                             <Table.Cell collapsing>
-                                                                Debug with 10:6 train val split
+                                                                Debug using a subset of the data
                                                             </Table.Cell>
                                                             <Table.Cell>
-                                                                <Field
-                                                                    type="checkbox"
-                                                                    name="debug"
-                                                                />
+                                                                <Grid className="settings_debug">
+                                                                    <Grid.Column width={2}>
+                                                                        <Field
+                                                                            type="checkbox"
+                                                                            name="debug"
+                                                                        />
+                                                                    </Grid.Column>
+                                                                    {values && values.debug &&
+                                                                        <Grid.Column
+                                                                            width={14}
+                                                                            className="data_split_inputs"
+                                                                        >
+                                                                            <Grid.Row>
+                                                                                <Field name="data_split_train" />
+                                                                                <span>
+                                                                                    Number of items for training
+                                                                                </span>
+                                                                            </Grid.Row>
+                                                                            <Grid.Row>
+                                                                                <Field name="data_split_val" />
+                                                                                <span>
+                                                                                    Number of items for validation
+                                                                                </span>
+                                                                            </Grid.Row>
+                                                                        </Grid.Column>
+                                                                    }
+                                                                </Grid>
                                                             </Table.Cell>
                                                         </Table.Row>
                                                     </Table.Body>
@@ -228,6 +254,7 @@ class ModelSettings extends Component {
         );
     }
 }
+
 
 const mapStateToProps = state => {
     return {

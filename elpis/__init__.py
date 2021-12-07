@@ -9,7 +9,9 @@ from elpis.engines import Interface
 from pathlib import Path
 from requests import get
 from dotenv import load_dotenv
-
+from tensorboard import program
+import psutil
+from werkzeug.serving import is_running_from_reloader
 
 def create_app(test_config=None):
     # Called by the flask run command in the cli.
@@ -69,10 +71,6 @@ def create_app(test_config=None):
         app.config['INTERFACE'] = Interface(interface_path)
     else:
         app.config['INTERFACE'] = Interface(interface_path, use_existing=True)
-    # app.config['CURRENT_DATASET'] = None # not okay for multi-user
-    # app.config['CURRENT_PRON_DICT'] = None # not okay for multi-user & need to remove later because it is Kaldi-specific.
-    # app.config['CURRENT_MODEL'] = None # not okay for multi-user
-    # app.config['CURRENT_TRANSCRIPTION'] = None  # not okay for multi-user
 
     # Developer-friendly mode has convenient interface widgets for setting engine etc
     load_dotenv()
@@ -81,6 +79,24 @@ def create_app(test_config=None):
     # add the endpoints routes
     app.register_blueprint(endpoints.bp)
     # print(app.url_map)
+
+    if is_running_from_reloader():
+        # Start Tensorboard if not already running (because Flask init happens twice)
+        tensorboard_running = False
+        for proc in psutil.process_iter():
+            for conns in proc.connections(kind='inet'):
+                if conns.laddr.port == 6006:
+                    tensorboard_running = True
+                    print('Tensorboard is running on', proc.pid)
+        if not tensorboard_running:
+            print('Tensorboard is not running, start it')
+            tensorboard = program.TensorBoard()
+            tensorboard.configure(argv=['tensorboard',
+                                        '--logdir=/state/models',
+                                        '--port=6006',
+                                        '--host=0.0.0.0'])
+            url = tensorboard.launch()
+            print(f"Tensorflow listening on {url}")
 
     # the rest of the routes below are for the single file react app.
     @app.route('/index.html')
