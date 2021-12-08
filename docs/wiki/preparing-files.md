@@ -29,9 +29,9 @@ Identify which Elan tier the transcriptions are on that you want the system to l
 
 ## Audio
 
-Elpis trains using 16 bit, 44.1kHz, mono WAV format audio. It will convert WAV files to the required specification, however converting your audio to these specifications beforehand will reduce the training time.
+Elpis trains using 16 bit, 16kHz, mono WAV format audio. It will convert WAV files to the required specification, however converting your audio to these specifications beforehand will reduce the training time.
 - 16 bit is the bit-depth, the number of values in each audio sample. 
-- 44.1kHz is the sample rate, also known as the sample frequency.
+- 16kHz is the sample rate, also known as the sample frequency.
 - Mono refers to the audio having only a single channel, rather than stereo being two channels.
 
 Ensure the audio is in WAV format. MP3 is not suitable because the MP3 compression removes much of the information in the audio signal. Converting from MP3 to WAV doesn't work either, as the information lost in the compression is not recovered in conversion. 

@@ -42,7 +42,7 @@ def process_item(sox_arguments: Tuple[int, str, threading.Lock, Set[str], str]) 
     temporary_file_name = join_norm(output_directory, "%s.%s" % (base_directory, "wav"))
 
     if not os.path.exists(temporary_file_name):
-        sox_arguments = [SOX_PATH, input_name, "-b", "16", "-c", "1", "-r", "44.1k", "-t", "wav",
+        sox_arguments = [SOX_PATH, input_name, "-b", "16", "-c", "1", "-r", "16k", "-t", "wav",
                          temporary_file_name]
         subprocess.call(sox_arguments)
     return temporary_file_name
