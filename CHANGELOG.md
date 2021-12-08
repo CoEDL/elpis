@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.97.1] - 2021-12-08
+### Changed 
+- 44.1kHz sample rate to 16kHz
+
 ## [0.97.0] - 2021-12-05
 ### Added
 - Huggingface Transformers wav2vec2 engine
