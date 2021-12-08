@@ -262,31 +262,32 @@ class KaldiModel(BaseModel):  # TODO not thread safe
 
     def get_train_results(self):
         results = {}
-        with self.config['run_log_path'].open() as log_file:
-            wer_lines = []
-            for line in reversed(list(log_file)):
-                line = line.rstrip()
-                if "%WER" in line:
-                    # use line to sort by best val
-                    line_r = line.replace('%WER ', '')
-                    wer_lines.append(line_r)
-            if len(wer_lines) > 0:
-                wer_lines.sort(reverse = True)
-                line = wer_lines[0]
-                line_split = line.split(None, 1)
-                wer = line_split[0]
-                line_results = line_split[1]
-                line_results = re.sub("[\[\]]", "", line_results)
-                results_split = line_results.split(',')
-                count_val = results_split[0].strip()
-                ins_val = results_split[1].replace(' ins', '').strip()
-                del_val = results_split[2].replace(' del', '').strip()
-                sub_val = results_split[3].replace(' sub', '').strip()
-                results = {"comparison_val": float(wer),  # property common to all engines so the GUI can sort models by a result value
-                           "wer": float(wer),
-                           "count_val": str(count_val),
-                           "ins_val": int(ins_val),
-                           "del_val": int(del_val),
-                           "sub_val": int(sub_val)}
-                logger.info(results)
+        if Path(self.config['run_log_path']).exists():
+            with Path(self.config['run_log_path']).open() as log_file:
+                wer_lines = []
+                for line in reversed(list(log_file)):
+                    line = line.rstrip()
+                    if "%WER" in line:
+                        # use line to sort by best val
+                        line_r = line.replace('%WER ', '')
+                        wer_lines.append(line_r)
+                if len(wer_lines) > 0:
+                    wer_lines.sort(reverse = True)
+                    line = wer_lines[0]
+                    line_split = line.split(None, 1)
+                    wer = line_split[0]
+                    line_results = line_split[1]
+                    line_results = re.sub("[\[\]]", "", line_results)
+                    results_split = line_results.split(',')
+                    count_val = results_split[0].strip()
+                    ins_val = results_split[1].replace(' ins', '').strip()
+                    del_val = results_split[2].replace(' del', '').strip()
+                    sub_val = results_split[3].replace(' sub', '').strip()
+                    results = {"comparison_val": float(wer),  # common for all engines so GUI can sort by a result value
+                               "wer": float(wer),
+                               "count_val": str(count_val),
+                               "ins_val": int(ins_val),
+                               "del_val": int(del_val),
+                               "sub_val": int(sub_val)}
+                    print(results)
         return results
