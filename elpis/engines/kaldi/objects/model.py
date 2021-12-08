@@ -147,7 +147,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                             'MFCC_SAMPLE_FREQUENCY': '16000',
                             'MFCC_FRAME_LENGTH': '25',
                             'MFCC_LOW_FREQ': '20',
-                            'MFCC_HIGH_FREQ': '22050',
+                            'MFCC_HIGH_FREQ': '7800',
                             'MFCC_NUM_CEPS': '7',
                         }
                     )
