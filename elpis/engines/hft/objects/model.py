@@ -453,23 +453,29 @@ class HFTModel(BaseModel):
         speech = {}
         audio_paths = set()
         rejected_count = 0
+
         for utt in self.hft_dataset['train']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
+
         for utt in self.hft_dataset['dev']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
+
         for utt in self.hft_dataset['test']:
             audio_paths.add((utt['path'], utt['text'], utt['start_ms'], utt['stop_ms']))
+
         for path, text, start_ms, stop_ms in audio_paths:
             audio_metadata = torchaudio.info(path)
+
             start_frame = int(start_ms * (audio_metadata.sample_rate/1000))
             end_frame = int(stop_ms * (audio_metadata.sample_rate/1000))
             num_frames = end_frame - start_frame
+
             dur_ms = stop_ms - start_ms
             speech_array, sample_rate = torchaudio.load(filepath=path, frame_offset=start_frame, num_frames=num_frames)
             # Check that frames exceeds number of characters, wav file is not all zeros, and duration between min, max
-            if int(audio_metadata.num_frames) >= len(text) \
-                    and speech_array.count_nonzero() \
-                    and float(self.settings['min_duration_s']) < dur_ms/1000 < float(self.settings['max_duration_s']):
+            if (int(audio_metadata.num_frames) >= len(text) 
+                    and speech_array.count_nonzero() 
+                    and float(self.settings['min_duration_s']) < dur_ms/1000 < float(self.settings['max_duration_s'])):
                 # Resample if required
                 if sample_rate != HFTModel.SAMPLING_RATE:
                     print(f'Resample from {sample_rate} to {HFTModel.SAMPLING_RATE} | '
@@ -499,6 +505,7 @@ class HFTModel(BaseModel):
         else:
             print(f'All {len(texts)} valid transcriptions from the original training set')
             print('\n'.join(texts))
+
         return speech
 
     def get_trainer(self, metric_name='wer'):

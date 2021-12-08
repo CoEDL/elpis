@@ -4,10 +4,9 @@ import sys
 from typing import List, Tuple
 from pprint import pprint
 from itertools import groupby
+import elpis.engines.common.utilities.resampling as resampler
 
-import librosa
 import pympi
-import soundfile as sf
 import torch
 from transformers import (
     Wav2Vec2ForCTC,
@@ -67,7 +66,8 @@ class HFTTranscription(BaseTranscription):
         # Load audio
         self._set_stage(LOAD_AUDIO)
         print('=== Load audio')
-        audio_input, sample_rate = self._load_audio(self.audio_file_path)
+        audio_input, _ = resampler.load_audio(self.audio_file_path,
+                                              target_sampling_rate=HFTTranscription.SAMPLING_RATE)
         self._set_stage(LOAD_AUDIO, complete=True)
 
         # Pad input values and return pt tensor
@@ -145,8 +145,8 @@ class HFTTranscription(BaseTranscription):
         predicted_ids = predicted_ids[0].tolist()
 
         # Determine original sample rate
-        original_file = Path(f'/tmp/{self.hash}/original.wav')
-        _, sample_rate = self._load_audio(original_file)
+        original_file = resampler.ORIGINAL_SOUND_FILE_DIRECTORY / self.audio_file_path.name
+        _, sample_rate = resampler.load_audio(original_file)
 
         # Add times to ids
         duration_sec = input_values.shape[1] / sample_rate
@@ -210,38 +210,11 @@ class HFTTranscription(BaseTranscription):
 
         pympi.Elan.to_eaf(self.elan_path, result)
 
-    def _load_audio(self, file: Path) -> Tuple:
-        audio, sample_rate = librosa.load(file, sr=HFTTranscription.SAMPLING_RATE)
-        return audio, sample_rate
-
     def prepare_audio(self, audio: Path, on_complete: callable = None):
         print('=== Prepare audio', audio, self.audio_file_path)
-        self._resample_audio_file(audio, self.audio_file_path)
+        resampler.resample_audio(audio, self.audio_file_path, HFTModel.SAMPLING_RATE)
         if on_complete is not None:
             on_complete()
-
-    def _resample_audio_file(self, audio: Path, dest: Path):
-        """
-        Resamples the audio file to be the same sampling rate as the model
-        was trained with.
-
-        Target sampling rate is taken from the HFTModel class.
-
-        Parameters:
-            audio (Path): A path to a soundfile
-            dest (Path): The destination path at which to write the resampled
-                    audio.
-        """
-        data, sample_rate = self._load_audio(audio)
-
-        # Copy to temporary path
-        temporary_path = Path(f'/tmp/{self.hash}')
-        temporary_path.mkdir(parents=True, exist_ok=True)
-        sound_copy = temporary_path.joinpath('original.wav')
-        sf.write(sound_copy, data, sample_rate)
-
-        # Resample and overwrite
-        sf.write(dest, data, HFTModel.SAMPLING_RATE)
 
     def _set_finished_transcription(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
