@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 import re
 
 from appdirs import user_data_dir
@@ -67,9 +68,18 @@ class Interface(FSObject):
                 # We need to keep the dir and delete the contents...
                 for root, subdirectories, files in os.walk(path):
                     for file_ in files:
-                        os.unlink(os.path.join(root, file_))
+                        # Move to a different directory for the time being
+                        deletion_path = os.path.join(root, f"{file_}_old")
+                        shutil.move(os.path.join(root, file_), deletion_path)
+                        # Delete in the background
+                        subprocess.Popen(["rm", "-r", deletion_path])
                     for directory in subdirectories:
-                        shutil.rmtree(os.path.join(root, directory))
+                        # Move to a different directory for the time being
+                        deletion_path = os.path.join(root, f"{directory}_old")
+                        shutil.move(os.path.join(root, directory), deletion_path)
+                        # Delete in the background
+                        subprocess.Popen(["rm", "-r", deletion_path])
+                
 
             super().__init__(
                 parent_path=path.parent,
