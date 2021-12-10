@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Tuple
+from typing import Any, Dict, Tuple
 
 import numpy as np
 import soundfile as sf
@@ -47,11 +47,21 @@ def resample_audio(file: Path, destination: Path, target_sample_rate: int) -> No
     sf.write(destination, data, target_sample_rate)
 
 
-def resample_from_file_storage(file: FileStorage, destination: Path, target_sample_rate: int) -> None:
+def resample_from_file_storage(file: FileStorage, destination: Path, target_sample_rate: int) -> Dict:
+    """ Performs audio resampling from a flask request FileStorage file, and
+    returns some information about the original file.
+    
+    """
     # Create temporary directory if it hasn't already been created
     ORIGINAL_SOUND_FILE_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
     original = ORIGINAL_SOUND_FILE_DIRECTORY / file.filename
-    file.save(original)
+    with original.open(mode='wb') as fout:
+        fout.write(file.read())
+
+    info = {
+        'duration': librosa.get_duration(filename=original)
+    }
 
     resample_audio(original, destination, target_sample_rate)
+    return info

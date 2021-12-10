@@ -61,13 +61,10 @@ class KaldiTranscription(BaseTranscription):
         print("========= process audio for transcription", self.path)
         self.audio_filename = audio.filename
         self.audio_file_path = self.path.joinpath(self.audio_filename)
-        
-        # Find duration of original file
-        temp = Path(f'/tmp/{audio.filename}')
-        audio.save(temp)
-        self.audio_duration = librosa.get_duration(filename=temp)
 
-        resampler.resample_from_file_storage(audio, self.audio_file_path, KaldiTranscription.SAMPLE_RATE)
+        info = resampler.resample_from_file_storage(
+            audio, self.audio_file_path, KaldiTranscription.SAMPLE_RATE)
+        self.audio_duration = info['duration']
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
