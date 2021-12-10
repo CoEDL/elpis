@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 import re
 
 from appdirs import user_data_dir
@@ -52,7 +53,7 @@ class Interface(FSObject):
                 and path.is_dir()
                 and config_file_path.exists()
                 and config_file_path.is_file()):
-                # a valid interface exists. (this is a shallow check)
+                    # a valid interface exists. (this is a shallow check)
                     pass
             else:
                 raise InvalidInterfaceError
@@ -61,15 +62,10 @@ class Interface(FSObject):
         except InvalidInterfaceError:
             # Must wipe the interface and make a new one
             if path.exists():
-                # Tempted to use shutil.rmtree? It breaks if we have mounted /state from
-                # local filesystem into the docker container.
-                # Error is "Device or resource busy: '/state'"
-                # We need to keep the dir and delete the contents...
-                for root, subdirectories, files in os.walk(path):
-                    for file_ in files:
-                        os.unlink(os.path.join(root, file_))
-                    for directory in subdirectories:
-                        shutil.rmtree(os.path.join(root, directory))
+                deletion_path = Path('/state/tmp')
+                path.rename(deletion_path)
+                # Delete in the background
+                subprocess.Popen(["rm", "-r", deletion_path])
 
             super().__init__(
                 parent_path=path.parent,
