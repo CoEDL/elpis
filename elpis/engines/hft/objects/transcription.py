@@ -16,6 +16,8 @@ from transformers import (
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 from elpis.engines.hft.objects.model import HFTModel
 
+from workzeug.datastructures import FileStorage
+
 
 LOAD_AUDIO = 'load_audio'
 PROCESS_INPUT = 'process_input'
@@ -210,9 +212,9 @@ class HFTTranscription(BaseTranscription):
 
         pympi.Elan.to_eaf(self.elan_path, result)
 
-    def prepare_audio(self, audio: Path, on_complete: callable = None):
+    def prepare_audio(self, audio: FileStorage, on_complete: callable = None):
         print('=== Prepare audio', audio, self.audio_file_path)
-        resampler.resample_audio(audio, self.audio_file_path, HFTModel.SAMPLING_RATE)
+        resampler.resample_from_file_storage(audio, self.audio_file_path, HFTModel.SAMPLING_RATE)
         if on_complete is not None:
             on_complete()
 

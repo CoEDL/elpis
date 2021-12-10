@@ -5,10 +5,13 @@ import numpy as np
 import soundfile as sf
 import librosa
 
+from workzeug.datastructures import FileStorage
+
 
 ORIGINAL_SOUND_FILE_DIRECTORY = Path('/tmp/origial_sound_files/')
 
-def load_audio(file: Path, target_sample_rate: int=None) -> Tuple[np.ndarray, int]:
+
+def load_audio(file: Path, target_sample_rate: int = None) -> Tuple[np.ndarray, int]:
     """Loads a file and returns the data wtihin.
 
     Parameters:
@@ -25,10 +28,11 @@ def load_audio(file: Path, target_sample_rate: int=None) -> Tuple[np.ndarray, in
 
     return sf.read(file)
 
+
 def resample_audio(file: Path, destination: Path, target_sample_rate: int) -> None:
     """Writes a resampled audio file to the supplied destination, with a supplied
     sample rate.
-    
+
     Parameters:
         file (Path): The path of the file to resample
         destination (Path): The destination at which to create the resampled file
@@ -45,3 +49,13 @@ def resample_audio(file: Path, destination: Path, target_sample_rate: int) -> No
 
     # Resample and overwrite
     sf.write(destination, data, target_sample_rate)
+
+
+def resample_from_file_storage(file: FileStorage, destination: Path, target_sample_rate: int) -> None:
+    # Create temporary directory if it hasn't already been created
+    ORIGINAL_SOUND_FILE_DIRECTORY.mkdir(parents=True, exist_ok=True)
+
+    original = ORIGINAL_SOUND_FILE_DIRECTORY / file.filename
+    file.save(original)
+    
+    resample_audio(original, destination, target_sample_rate)

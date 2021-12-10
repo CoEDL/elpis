@@ -56,20 +56,13 @@ class KaldiTranscription(BaseTranscription):
             fout.write(f'{audio_filename}\n')
 
     def _process_audio_file(self, audio):
-        # TODO: why save to tmp and not just resample to self.path location?
-        # copy audio to the tmp folder for resampling
         print("========= process audio for transcription", self.path)
-        tmp_path = Path(f'/tmp/{self.hash}')
-        tmp_path.mkdir(parents=True, exist_ok=True)
-        tmp_file_path = tmp_path.joinpath(audio.filename)
-        with tmp_file_path.open(mode='wb') as fout:
-            fout.write(audio.read())
-        # resample the audio file
-        resampler.resample_audio(tmp_file_path, self.path.joinpath(
-            audio.filename), KaldiTranscription.SAMPLE_RATE)
         self.audio_filename = audio.filename
         self.audio_file_path = self.path.joinpath(self.audio_filename)
-        self.audio_duration = librosa.get_duration(filename=tmp_file_path)
+
+        resampler.resample_from_file_storage(audio, self.audio_file_path, KaldiTranscription.SAMPLE_RATE)
+        # TODO Might have a potential error since this now gets the duration after resampling 
+        self.audio_duration = librosa.get_duration(filename=self.audio_file_path)
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
