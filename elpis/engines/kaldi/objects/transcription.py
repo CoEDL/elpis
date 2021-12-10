@@ -13,6 +13,8 @@ import librosa
 from csv import reader
 import codecs
 
+from werkzeug.datastructures import FileStorage
+
 
 class KaldiTranscription(BaseTranscription):
 
@@ -55,14 +57,17 @@ class KaldiTranscription(BaseTranscription):
         with audio_meta_path.open(mode='w') as fout:
             fout.write(f'{audio_filename}\n')
 
-    def _process_audio_file(self, audio):
+    def _process_audio_file(self, audio: FileStorage):
         print("========= process audio for transcription", self.path)
         self.audio_filename = audio.filename
         self.audio_file_path = self.path.joinpath(self.audio_filename)
+        
+        # Find duration of original file
+        temp = Path(f'temp/{audio.filename}')
+        audio.save(temp)
+        self.audio_duration = librosa.get_duration(filename=temp)
 
         resampler.resample_from_file_storage(audio, self.audio_file_path, KaldiTranscription.SAMPLE_RATE)
-        # TODO Might have a potential error since this now gets the duration after resampling 
-        self.audio_duration = librosa.get_duration(filename=self.audio_file_path)
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
