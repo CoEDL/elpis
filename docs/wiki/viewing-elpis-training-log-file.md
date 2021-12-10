@@ -34,9 +34,9 @@ docker exec -it CONTAINER_ID bash
 5. Or use this one-liner: `docker exec -it $(docker ps -q) bash`
 
 
-6. Look in the `/state/models` directory. The hashes are directories of the models that have been made. Change into the current model dir. 
+6. Look in the `/state/of_origin/models` directory. The hashes are directories of the models that have been made. Change into the current model dir. 
 ```shell
-cd /state/models
+cd /state/of_origin/models
 ls
 cd XXXX
 ```

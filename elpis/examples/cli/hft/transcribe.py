@@ -15,7 +15,7 @@ def main(model_name: str, infer_path: str):
     # ======
     # Use the Elpis interface directory where all the associated files/objects are stored.
     logger.info('Create interface')
-    elpis = Interface(path=Path('/state'), use_existing=True)
+    elpis = Interface(path=Path('/state/of_origin'), use_existing=True)
 
     # Step 1
     # ======
@@ -45,10 +45,10 @@ def main(model_name: str, infer_path: str):
     logger.info('Linking model')
     transcription.link(model)
 
-    if Path('/state/transcriptions/latest').is_dir():
-        os.remove('/state/transcriptions/latest')
-    os.symlink(f'/state/transcriptions/{transcription.hash}',
-               '/state/transcriptions/latest',
+    if Path('/state/of_origin/transcriptions/latest').is_dir():
+        os.remove('/state/of_origin/transcriptions/latest')
+    os.symlink(f'/state/of_origin/transcriptions/{transcription.hash}',
+               '/state/of_origin/transcriptions/latest',
                target_is_directory=True)
 
     logger.info(f'Load audio from {infer_path}')

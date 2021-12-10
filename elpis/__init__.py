@@ -66,7 +66,7 @@ def create_app(test_config=None):
     # the app.config, however, this would need to change for multi-user.
     # Each user would require a unique Interface. One Interface
     # stores all the artifacts that user has generated.
-    interface_path = Path(os.path.join(elpis_path, '/state'))
+    interface_path = Path(os.path.join(elpis_path, '/state/of_origin'))
     if not interface_path.exists():
         app.config['INTERFACE'] = Interface(interface_path)
     else:
@@ -92,7 +92,7 @@ def create_app(test_config=None):
             print('Tensorboard is not running, start it')
             tensorboard = program.TensorBoard()
             tensorboard.configure(argv=['tensorboard',
-                                        '--logdir=/state/models',
+                                        '--logdir=/state/of_origin/models',
                                         '--port=6006',
                                         '--host=0.0.0.0'])
             url = tensorboard.launch()

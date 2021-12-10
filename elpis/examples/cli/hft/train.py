@@ -31,7 +31,7 @@ def main(dataset_name: str, reset: bool):
     # ======
     # Use or create the Elpis interface directory where all the associated files/objects are stored.
     logger.info('Create interface')
-    elpis = Interface(path=Path('/state'), use_existing=reset)
+    elpis = Interface(path=Path('/state/of_origin'), use_existing=reset)
 
     # Step 1
     # ======
@@ -73,9 +73,9 @@ def main(dataset_name: str, reset: bool):
     # TODO add model settings
     logger.info('Linking dataset')
     model.link_dataset(dataset)
-    if Path('/state/models/latest').is_dir():
-        os.remove('/state/models/latest')
-    os.symlink(f'/state/models/{model.hash}', '/state/models/latest', target_is_directory=True)
+    if Path('/state/of_origin/models/latest').is_dir():
+        os.remove('/state/of_origin/models/latest')
+    os.symlink(f'/state/of_origin/models/{model.hash}', '/state/of_origin/models/latest', target_is_directory=True)
     logger.add(f'/state/models/{model.hash}/train.log')
     logger.info('Start training. This may take a while')
     model.train()

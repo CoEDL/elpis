@@ -302,7 +302,7 @@ You will typically get better results with few hours of files by using recording
 
 For Elpis, the file format requirements are:
 
-a) WAV audio, preferably 44.1kHz mono but the system can convert stereo files and resample from different sample rates.
+a) WAV audio, preferably 16kHz mono but the system can convert stereo files and resample from different sample rates.
 
 b) Orthographic transcription of the audio. For today’s workshop, the interface is using Elan transcriptions, soon we will be able to use text files.
 

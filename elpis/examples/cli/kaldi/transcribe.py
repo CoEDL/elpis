@@ -9,7 +9,7 @@ INFER_FILE_PATH = '/datasets/abui/untranscribed/audio.wav'
 # ======
 # Create a Kaldi interface directory (where all the associated files/objects
 # will be stored).
-elpis = Interface(path='/state', use_existing=True)
+elpis = Interface(path='/state/of_origin', use_existing=True)
 
 # Step 1
 # ======

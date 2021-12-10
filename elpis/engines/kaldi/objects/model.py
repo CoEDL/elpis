@@ -146,10 +146,10 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                 with mfcc_resource.open() as fin:
                     content = Template(fin.read()).render(
                         {
-                            'MFCC_SAMPLE_FREQUENCY': '44100',
+                            'MFCC_SAMPLE_FREQUENCY': '16000',
                             'MFCC_FRAME_LENGTH': '25',
                             'MFCC_LOW_FREQ': '20',
-                            'MFCC_HIGH_FREQ': '22050',
+                            'MFCC_HIGH_FREQ': '7800',
                             'MFCC_NUM_CEPS': '7',
                         }
                     )
