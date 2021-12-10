@@ -69,7 +69,7 @@ class HFTTranscription(BaseTranscription):
         self._set_stage(LOAD_AUDIO)
         print('=== Load audio')
         audio_input, _ = resampler.load_audio(self.audio_file_path,
-                                              target_sampling_rate=HFTTranscription.SAMPLING_RATE)
+                                              target_sample_rate=HFTTranscription.SAMPLING_RATE)
         self._set_stage(LOAD_AUDIO, complete=True)
 
         # Pad input values and return pt tensor
