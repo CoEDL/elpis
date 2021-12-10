@@ -176,6 +176,8 @@ class Interface(FSObject):
             ds.add_directory(presets[dsname]['dataset_dir'], extensions=['eaf', 'wav'])
             print('Select importer')
             ds.auto_select_importer()
+            ds.validate()
+            ds.refresh_ui()
             print('Set setting')
             ds.importer.set_setting(presets[dsname]['importer_method'], presets[dsname]['importer_value'])
             print('Process data')
