@@ -63,7 +63,7 @@ class KaldiTranscription(BaseTranscription):
         self.audio_file_path = self.path.joinpath(self.audio_filename)
         
         # Find duration of original file
-        temp = Path(f'temp/{audio.filename}')
+        temp = Path(f'/tmp/{audio.filename}')
         audio.save(temp)
         self.audio_duration = librosa.get_duration(filename=temp)
 
