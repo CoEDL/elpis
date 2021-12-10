@@ -11,7 +11,8 @@ import urls from "urls";
 class NewForm extends Component {
     handleImportNamed = (name) => {
         const postData = {name: name};
-        datasetImportNamed(postData, this.props.history)
+        
+        datasetImportNamed(postData, this.props.history);
     } 
 
     render() {
