@@ -293,6 +293,7 @@ const datasetUIUpdateFailure = error => ({
 export function datasetImportNamed(postData) {
     const url = baseUrl + urls.api.dataset.named;
     var responseData;
+    axios.post(url, postData).then(response => console.log(response));
 
     return async dispatch => {
         dispatch(datasetImportNamedStarted());

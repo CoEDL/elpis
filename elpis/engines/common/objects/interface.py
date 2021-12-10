@@ -154,16 +154,37 @@ class Interface(FSObject):
         return ds
 
     def import_named_dataset(self, dsname):
+        presets = {
+            'abui': {
+                'dataset_dir': '/datasets/abui/transcribed',
+                'importer_method': 'tier_name',
+                'importer_value': 'Phrase',
+                'model_name': 'abui'
+            },
+            'timit': {
+                'dataset_dir': '/datasets/timit/training_data',
+                'importer_method': 'tier_name',
+                'importer_value': 'default',
+                'model_name': 'timit'
+            }
+        }
         print(dsname)
-        if dsname == 'abui':
-            print(dsname)
-        elif dsname == 'na':
-            print(dsname)
-        elif dsname == 'timit':
-            print(dsname)
-        elif dsname == 'gk':
-            print(dsname)
-        else:
+        try:
+            print('Making new dataset', dsname)
+            ds = self.new_dataset(dsname)
+            print('Adding data from', presets[dsname]['dataset_dir'])
+            ds.add_directory(presets[dsname]['dataset_dir'], extensions=['eaf', 'wav'])
+            print('Select importer')
+            ds.auto_select_importer()
+            print('Set setting')
+            ds.importer.set_setting(presets[dsname]['importer_method'], presets[dsname]['importer_value'])
+            print('Process data')
+            ds.process()
+            datasets = self.config['datasets']
+            datasets[dsname] = ds.hash
+            self.config['datasets'] = datasets
+            return ds
+        except KeyError:
             raise InterfaceError(f"Tried to load preloaded dataset {dsname} that does not exist.")
 
     def get_dataset(self, dsname):
