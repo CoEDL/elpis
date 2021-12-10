@@ -34,7 +34,7 @@ def main(dataset_name: str, reset: bool):
     # ======
     # Use or create the Elpis interface directory where all the associated files/objects are stored.
     print('Create interface')
-    elpis = Interface(path=Path('/state'), use_existing=reset)
+    elpis = Interface(path=Path('/state/of_origin'), use_existing=reset)
 
     # Step 1
     # ======
