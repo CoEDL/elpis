@@ -34,7 +34,7 @@ def resample_audio(file: Path, destination: Path, target_sample_rate: int) -> No
         destination (Path): The destination at which to create the resampled file
         target_sample_rate (int): The target sample rate for the resampled audio.
     """
-    data, sample_rate = librosa.load(file)
+    data, sample_rate = librosa.load(file, sr=None)
 
     # Create temporary directory if it hasn't already been created
     ORIGINAL_SOUND_FILE_DIRECTORY.mkdir(parents=True, exist_ok=True)
