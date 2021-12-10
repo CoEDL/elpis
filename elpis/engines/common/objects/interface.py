@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 import shutil
 import re
+import tarfile
+import urllib.request as urllib
 
 from appdirs import user_data_dir
 from elpis.engines.common.objects.fsobject import FSObject
@@ -166,9 +168,33 @@ class Interface(FSObject):
                 'importer_method': 'tier_name',
                 'importer_value': 'default',
                 'model_name': 'timit'
+            },
+            'na': {
+                'dataset_dir': '/datasets/na/transcribed',
+                'importer_method': 'tier_name',
+                'importer_value': 'Phrase',
+                'model_name': 'na'
+            },
+            'gk': {
+                'dataset_dir': '/datasets/gk/gk-data',
+                'importer_method': 'tier_type',
+                'importer_value': 'tx',
+                'model_name': 'gk'
             }
         }
-        print(dsname)
+        # Need to download dataset if gk
+        if dsname == 'gk':
+            # Callback to report percentage
+            def callback(block, block_size, file_size):
+                if block % 100 == 0:
+                    per = 100.0 * block * block_size / file_size
+                    print(f"{round(per, 3)}% complete" if per <= 100 else "100% complete")
+
+            GK_URL = "http://elpis.cloud/datasets/gk-data.tar.gz"
+            tar_path, _ = urllib.urlretrieve(GK_URL, reporthook=callback)
+            with tarfile.open(tar_path, "r:gz") as f:
+                f.extractall("/datasets/gk")
+
         try:
             print('Making new dataset', dsname)
             ds = self.new_dataset(dsname)

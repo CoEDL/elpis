@@ -146,7 +146,6 @@ def settings_ui(dataset: Dataset):
 
 @bp.route("/import/named", methods=['POST'])
 def import_named():
-    print("Testing")
     interface: Interface = app.config['INTERFACE']
     try:
         dataset = interface.import_named_dataset(request.json['name'])
