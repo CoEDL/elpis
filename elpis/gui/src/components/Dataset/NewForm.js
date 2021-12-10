@@ -4,14 +4,15 @@ import {Formik, ErrorMessage} from "formik";
 import {Form, Input, Button} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
-import {datasetImportNamed, datasetNew} from "redux/actions/datasetActions";
+import {datasetImportNamed, datasetLoad, datasetNew} from "redux/actions/datasetActions";
 import urls from "urls";
 
 
 class NewForm extends Component {
     handleImportNamed = (name) => {
         const postData = {name: name};
-        
+        const {datasetImportNamed} = this.props;
+
         datasetImportNamed(postData, this.props.history);
     } 
 
@@ -93,8 +94,8 @@ const mapStateToProps = state => {
     };
 };
 const mapDispatchToProps = dispatch => ({
-    datasetNew: (name, history) => {
-        dispatch(datasetNew(name, history))
+    datasetNew: (postData, history) => {
+        dispatch(datasetNew(postData))
             .then(response => {
                 if (response.status === 500) {
                     throw Error(response.error);
@@ -107,17 +108,22 @@ const mapDispatchToProps = dispatch => ({
             })
             .catch(error => console.log("error", error));
     },
-    datasetImportNamed: (name, history) => {
-        dispatch(datasetImportNamed(name, history))
+    datasetImportNamed: (postData, history) => {
+        console.log("dispatch datasetImportNamed");
+        dispatch(datasetImportNamed(postData))
             .then(response => {
                 if (response.status === 500) {
                     throw Error(response.error);
                 }
 
+                console.log("loaded dataset");
+
                 return response;
             })
             .then(() => {
-                history.push(urls.gui.model);
+                console.log("dispatch dataset load");
+                dispatch(datasetLoad(postData));
+                history.push(urls.gui.dataset.prepare);
             })
             .catch(error => console.log("error", error));
     },
