@@ -153,6 +153,19 @@ class Interface(FSObject):
         self.config['datasets'] = datasets
         return ds
 
+    def import_named_dataset(self, dsname):
+        print(dsname)
+        if dsname == 'abui':
+            print(dsname)
+        elif dsname == 'na':
+            print(dsname)
+        elif dsname == 'timit':
+            print(dsname)
+        elif dsname == 'gk':
+            print(dsname)
+        else:
+            raise InterfaceError(f"Tried to load preloaded dataset {dsname} that does not exist.")
+
     def get_dataset(self, dsname):
         if dsname not in self.list_datasets():
             raise InterfaceError(f'Tried to load a dataset called "{dsname}" that does not exist')

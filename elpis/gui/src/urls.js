@@ -44,6 +44,7 @@ export default {
             delete: "/api/dataset/files/delete",
             settings: "/api/dataset/import/settings",
             ui: "/api/dataset/import/ui",
+            named: "/api/dataset/import/named",
             prepare: "/api/dataset/prepare",
         },
         engine: {

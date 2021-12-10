@@ -274,7 +274,11 @@
         "selectOneBelow": "Créez-en un nouveau, ou sélectionnez-en un dans la liste.",
         "choose": "Choisissez",
         "chooseOrNewLabel": "Choisissez-en un.",
-        "invalidCharacterErrorMessage": "Veuillez utiliser ces caractères : \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
+        "invalidCharacterErrorMessage": "Veuillez utiliser ces caractères : \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @",
+        "abui": "Abui",
+        "na": "Na",
+        "timit": "Timit",
+        "gk": "Gurindji Kriol (requires download)"
     },
     "status": {
         "ready": "étape prête",

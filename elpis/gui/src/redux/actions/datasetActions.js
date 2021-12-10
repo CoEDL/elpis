@@ -288,3 +288,36 @@ const datasetUIUpdateFailure = error => ({
     type: actionTypes.DATASET_UI_UPDATE_FAILURE,
     response: {error},
 });
+
+/* * * * * * * * * * * * IMPORT NAMED  * * * * * * * * * *  */
+export function datasetImportNamed(postData) {
+    const url = baseUrl + urls.api.dataset.named;
+    var responseData;
+
+    return async dispatch => {
+        dispatch(datasetImportNamedStarted());
+        await axios.post(url, postData)
+            .then(response => {
+                responseData = response.data;
+                dispatch(datasetImportNamedSuccess(response));
+            })
+            .catch(error => {
+                dispatch(datasetImportNamedFailure(error));
+                throw error;
+            });
+
+        return responseData;
+    };
+}
+
+const datasetImportNamedStarted = () => ({
+    type: actionTypes.DATASET_IMPORT_NAMED_STARTED,
+});
+const datasetImportNamedSuccess = response => ({
+    type: actionTypes.DATASET_IMPORT_NAMED_SUCCESS,
+    response: {...response},
+});
+const datasetImportNamedFailure = error => ({
+    type: actionTypes.DATASET_IMPORT_NAMED_FAILURE,
+    response: {error},
+});

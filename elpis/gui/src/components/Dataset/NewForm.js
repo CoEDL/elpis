@@ -4,12 +4,17 @@ import {Formik, ErrorMessage} from "formik";
 import {Form, Input, Button} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
-import {datasetNew} from "redux/actions/datasetActions";
+import {datasetImportNamed, datasetNew} from "redux/actions/datasetActions";
 import urls from "urls";
 
 
 class NewForm extends Component {
-     render() {
+    handleImportNamed = (name) => {
+        const postData = {name: name};
+        datasetImportNamed(postData, this.props.history)
+    } 
+
+    render() {
         const {t, error, datasetNew} = this.props;
 
         return (
@@ -60,6 +65,19 @@ class NewForm extends Component {
                         <Button type="button" onClick={handleSubmit}>
                             {t("common.addNewButton")}
                         </Button>
+                        <p>Or, load an existing dataset:</p>
+                        <Button type="button" onClick={() => this.handleImportNamed("abui")}>
+                            {t("common.abui")}
+                        </Button>
+                        <Button type="button" onClick={() => this.handleImportNamed("na")}>
+                            {t("common.na")}
+                        </Button>
+                        <Button type="button" onClick={() => this.handleImportNamed("timit")}>
+                            {t("common.timit")}
+                        </Button>
+                        <Button type="button" onClick={() => this.handleImportNamed("gk")}>
+                            {t("common.gk")}
+                        </Button>
                     </Form>
                     )}
             </Formik>
@@ -85,6 +103,20 @@ const mapDispatchToProps = dispatch => ({
             })
             .then(() => {
                 history.push(urls.gui.dataset.files);
+            })
+            .catch(error => console.log("error", error));
+    },
+    datasetImportNamed: (name, history) => {
+        dispatch(datasetImportNamed(name, history))
+            .then(response => {
+                if (response.status === 500) {
+                    throw Error(response.error);
+                }
+
+                return response;
+            })
+            .then(() => {
+                history.push(urls.gui.model);
             })
             .catch(error => console.log("error", error));
     },

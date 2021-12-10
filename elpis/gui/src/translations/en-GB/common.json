@@ -298,7 +298,11 @@
         "selectOneBelow": "Make a new one, or select one from the list below.",
         "choose": "Choose",
         "chooseOrNewLabel": "Choose one.",
-        "invalidCharacterErrorMessage": "Please use these characters: \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @"
+        "invalidCharacterErrorMessage": "Please use these characters: \n 0 1 2 3 4 5 6 7 8 9 \n a b c d e f g h I j k l m n o p q r s t u v w x y z \n A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n – _ @",
+        "abui": "Abui",
+        "na": "Na",
+        "timit": "Timit",
+        "gk": "Gurindji Kriol (requires download)"
     },
     "status": {
         "ready": "ready",

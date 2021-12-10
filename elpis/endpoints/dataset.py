@@ -144,7 +144,25 @@ def settings_ui(dataset: Dataset):
         "data": data
     })
 
-
+@bp.route("/import/named", methods=['POST'])
+def import_named():
+    print("Testing")
+    interface: Interface = app.config['INTERFACE']
+    try:
+        dataset = interface.import_named_dataset(request.json['name'])
+    except InterfaceError as e:
+        return jsonify({
+            "status": 500,
+            "error": e.human_message
+        })
+    app.config['CURRENT_DATASET'] = dataset
+    data = {
+        "state": dataset.config._load()
+    }
+    return jsonify({
+        "status": 200,
+        "data": data,
+    })
 
 # TODO prepare endpoint returns file contents as text.
 # Probably nicer to send back JSON data instead
