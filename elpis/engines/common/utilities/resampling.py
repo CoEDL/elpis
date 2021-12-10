@@ -23,11 +23,7 @@ def load_audio(file: Path, target_sample_rate: int = None) -> Tuple[np.ndarray, 
         (Tuple<np.ndarray, int>): A tuple containing the numpy array of
             the audio data, and the native sample rate of the file.
     """
-    if target_sample_rate is not None:
-        return librosa.load(file, sr=target_sample_rate)
-
-    return sf.read(file)
-
+    return librosa.load(file, sr=target_sample_rate)
 
 def resample_audio(file: Path, destination: Path, target_sample_rate: int) -> None:
     """Writes a resampled audio file to the supplied destination, with a supplied
@@ -38,7 +34,7 @@ def resample_audio(file: Path, destination: Path, target_sample_rate: int) -> No
         destination (Path): The destination at which to create the resampled file
         target_sample_rate (int): The target sample rate for the resampled audio.
     """
-    data, sample_rate = sf.read(file)
+    data, sample_rate = librosa.load(file)
 
     # Create temporary directory if it hasn't already been created
     ORIGINAL_SOUND_FILE_DIRECTORY.mkdir(parents=True, exist_ok=True)
