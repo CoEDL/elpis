@@ -16,7 +16,7 @@ from transformers import (
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 from elpis.engines.hft.objects.model import HFTModel
 
-from workzeug.datastructures import FileStorage
+from werkzeug.datastructures import FileStorage
 
 
 LOAD_AUDIO = 'load_audio'

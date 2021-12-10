@@ -5,7 +5,7 @@ import numpy as np
 import soundfile as sf
 import librosa
 
-from workzeug.datastructures import FileStorage
+from werkzeug.datastructures import FileStorage
 
 
 ORIGINAL_SOUND_FILE_DIRECTORY = Path('/tmp/origial_sound_files/')
@@ -57,5 +57,5 @@ def resample_from_file_storage(file: FileStorage, destination: Path, target_samp
 
     original = ORIGINAL_SOUND_FILE_DIRECTORY / file.filename
     file.save(original)
-    
+
     resample_audio(original, destination, target_sample_rate)
