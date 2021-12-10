@@ -9,6 +9,7 @@ Contributors:
               Nicholas Buckeridge - (The University of Queensland, 2019)
 """
 
+from loguru import logger
 import re
 import string
 import sys
@@ -96,7 +97,7 @@ elan.general_setting(key='translation_tags',
 
 @elan.validate_files('eaf')
 def elan_validator(file_paths: List[Path]):
-    print("validating:", file_paths)
+    logger.info(f"validating: {file_paths}")
     return None
 
 @elan.update_ui
@@ -110,11 +111,11 @@ def update_ui(file_paths: List[Path], ui):
     _tier_names: Set[str] = set(ui['data']['tier_name']['options'])
     tier_max_count = 0
 
-    print('**** ui data')
-    print(ui['data'])
+    logger.info('**** ui data')
+    logger.info(ui['data'])
 
-    print('**** _tier_types')
-    print(_tier_types)
+    logger.info('**** _tier_types')
+    logger.info(_tier_types)
 
     eaf_paths = [p for p in file_paths if f'{p}'.endswith('.eaf')]
     for eaf_path in eaf_paths:
@@ -184,23 +185,23 @@ def import_eaf_file(eaf_paths: List[str],
         if isinstance(tier_order, int):
             try:
                 tier_name = tier_names[tier_order]
-                print(f"using tier order {tier_order} to get tier name {tier_name}")
+                logger.info(f"using tier order {tier_order} to get tier name {tier_name}")
             except IndexError:
-                print("couldn't find a tier")
+                logger.warning("couldn't find a tier")
                 pass
         else:
             # else use tier type to get a tier name
             if tier_type in tier_types:
-                print(f"found tier type {tier_type}")
+                logger.info(f"found tier type {tier_type}")
                 tier_names = input_eaf.get_tier_ids_for_linguistic_type(tier_type)
                 tier_name = tier_names[0]
                 if tier_name:
-                    print(f"found tier name {tier_name}")
+                    logger.info(f"found tier name {tier_name}")
             else:
-                print("tier type not found in this file")
+                logger.warning("tier type not found in this file")
 
         if tier_name in tier_names:
-            print(f"using tier name {tier_name}")
+            logger.info(f"using tier name {tier_name}")
             annotations = input_eaf.get_annotation_data_for_tier(tier_name)
         else:
             pass  # TODO: Alert user of a skip due to missing tier_name in file

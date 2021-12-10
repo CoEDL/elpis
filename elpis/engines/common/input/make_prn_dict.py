@@ -9,6 +9,7 @@ Contributors:
 """
 
 import argparse
+from loguru import logger
 import sys
 from typing import List, Tuple, Set, TextIO
 
@@ -105,9 +106,9 @@ def generate_pronunciation_dictionary(word_list: str,
                                    missing_characters=missing_characters)
 
     for character in missing_characters:
-        print(f"Unexpected character: {character}", file=sys.stderr)
+        logger.warning(f"Unexpected character: {character}")
 
-    print(f"Wrote lexicon to {pronunciation_dictionary}", file=sys.stderr)
+    logger.info(f"Wrote lexicon to {pronunciation_dictionary}")
 
 
 def main():

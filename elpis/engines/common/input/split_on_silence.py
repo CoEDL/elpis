@@ -8,6 +8,7 @@ Contributors:
               Nicholas Lambourne - (The University of Queensland, 2019)
 """
 
+from loguru import logger
 from argparse import ArgumentParser
 from pathlib import Path
 from pydub import AudioSegment
@@ -51,7 +52,7 @@ def split_audio_file_on_silence(file_path: str,
         audio_segment = silence + segment + silence
         normalised_segment = match_target_amplitude(audio_segment, -20)
         export_file_name = f"_file_{file_index}-part_{segment_index}.wav"
-        print(f"Exporting {export_file_name}")
+        logger.info(f"Exporting {export_file_name}")
         normalised_segment.export(Path(output_directory, export_file_name))
 
 

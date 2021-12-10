@@ -3,6 +3,7 @@ Use this file to prepare an Elpis dataset from a directory of files on the machi
 """
 
 import argparse
+from loguru import logger
 import os
 import shutil
 from pathlib import Path
@@ -27,19 +28,19 @@ def main(dataset_name: str, reset: bool):
             'importer_value': 'default',
         }
     }
-    print(f'Using preset for {dataset_name}')
-    print(presets[dataset_name])
+    logger.info(f'Using preset for {dataset_name}')
+    logger.info(presets[dataset_name])
 
     # Step 0
     # ======
     # Use or create the Elpis interface directory where all the associated files/objects are stored.
-    print('Create interface')
+    logger.info('Create interface')
     elpis = Interface(path=Path('/state/of_origin'), use_existing=reset)
 
     # Step 1
     # ======
     # Select Engine
-    print('Set engine')
+    logger.info('Set engine')
     from elpis.engines import ENGINES
     elpis.set_engine(ENGINES['hft'])
 
@@ -47,20 +48,20 @@ def main(dataset_name: str, reset: bool):
     # ======
     # Setup a dataset to to train data on.
     # Reuse dataset if it exists
-    print('Current datasets', elpis.list_datasets())
+    logger.info(f'Current datasets {elpis.list_datasets()}')
     if dataset_name not in elpis.list_datasets():
-        print('Making new dataset', dataset_name)
+        logger.info(f'Making new dataset {dataset_name}')
         dataset = elpis.new_dataset(dataset_name)
-        print('Adding data from', presets[dataset_name]['dataset_dir'])
+        logger.info(f"Adding data from {presets[dataset_name]['dataset_dir']}")
         dataset.add_directory(presets[dataset_name]['dataset_dir'], extensions=['eaf', 'wav'])
-        print('Select importer')
+        logger.info('Select importer')
         dataset.auto_select_importer() # Selects Elan because of eaf file.
-        print('Set setting')
+        logger.info('Set setting')
         dataset.importer.set_setting(presets[dataset_name]['importer_method'], presets[dataset_name]['importer_value'])
-        print('Process data')
+        logger.info('Process data')
         dataset.process()
     else:
-        print('Use existing dataset', dataset_name)
+        logger.info(f'Use existing dataset {dataset_name}')
 
 
 if __name__ == '__main__':

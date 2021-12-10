@@ -19,7 +19,7 @@ python elpis/examples/cli/kaldi/train.py
 
 from elpis.engines.common.objects.interface import Interface
 from pathlib import Path
-
+from loguru import logger
 
 DATASET_DIR = '/datasets/abui/transcribed'
 DATASET_NAME = 'ds'
@@ -51,14 +51,14 @@ elpis.set_engine(engine)
 # Setup a dataset to to train data on.
 # Reuse dataset if it exists
 if DATASET_NAME not in elpis.list_datasets():
-    print("Making new dataset")
+    logger.info("Making new dataset")
     dataset = elpis.new_dataset(DATASET_NAME)
     dataset.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
     dataset.auto_select_importer() # Selects Elan because of eaf file.
     dataset.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
     dataset.process()
 else:
-    print("Use existing dataset")
+    logger.info("Use existing dataset")
     dataset = elpis.get_dataset(DATASET_NAME)
 
 
@@ -67,13 +67,13 @@ else:
 # Build pronunciation dictionary
 # Reuse pronunciation dictionary if it exists
 if PRON_DICT_NAME not in elpis.list_pron_dicts():
-    print("Making new pron dict")
+    logger.info("Making new pron dict")
     pron_dict = elpis.new_pron_dict(PRON_DICT_NAME)
     pron_dict.link(dataset)
     pron_dict.set_l2s_path(L2S_PATH)
     pron_dict.generate_lexicon()
 else:
-    print("Use existing pron dict")
+    logger.info("Use existing pron dict")
     pron_dict = elpis.get_pron_dict(PRON_DICT_NAME)
 
 
@@ -82,12 +82,12 @@ else:
 # Link dataset and pd to a new model, then train the model.
 # Load model if it exists
 if MODEL_NAME not in elpis.list_models():
-    print("Making new model")
+    logger.info("Making new model")
     model = elpis.new_model(MODEL_NAME)
     model.link_dataset(dataset)
     model.link_pron_dict(pron_dict)
     model.build_structure()
     model.train() # may take a while
 else:
-    print("Use existing model")
+    logger.info("Use existing model")
     model = elpis.get_model(MODEL_NAME)

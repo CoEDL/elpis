@@ -35,6 +35,8 @@ code {
 }
 .compiled-log {
     font-family: monospace;
+    font-size: 0.8em;
+    line-height: 1.3em;
     height: 300px;
     white-space: pre;
 }

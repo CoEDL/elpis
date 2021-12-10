@@ -1,3 +1,4 @@
+from loguru import logger
 from pathlib import Path
 from typing import Optional, Tuple, Dict, Any
 
@@ -72,14 +73,14 @@ class Model(FSObject):  # TODO not thread safe
 
     @settings.setter
     def settings(self, value: Dict[str, Any]) -> None:
-        print('model set settings', value)
+        logger.info(f"model set settings {value}")
         self.config['settings'] = value
 
     def build_stage_status(self, stage_names: Dict[str, str]):
         stage_status = {}
         for stage, name in stage_names.items():
             stage_status[stage] = {'name': name, 'status': 'ready'}
-        print('built stage status', stage_status)
+        logger.info(f"built stage status {stage_status}")
         self.config['stage_status'] = stage_status
 
     def link_dataset(self, dataset: Dataset):
