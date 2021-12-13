@@ -10,6 +10,7 @@ import wave
 import contextlib
 from subprocess import CalledProcessError
 import librosa
+from loguru import logger
 from csv import reader
 import codecs
 
@@ -68,6 +69,7 @@ class KaldiTranscription(BaseTranscription):
 
     # Prepare the files we need for inference, based on the audio we receive
     def _generate_inference_files(self):
+        # _process_audio_file above a file named audio.wav
         # Get the speaker id from the model > kaldi/data/test/spk2utt file. it's the first "word".
         model_spk2utt_path = self.model.path.joinpath(
             'kaldi/data/test/spk2utt')

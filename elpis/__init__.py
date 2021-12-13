@@ -1,4 +1,7 @@
 import os
+import logging
+from loguru import logger
+
 from flask import redirect
 from . import endpoints
 from .app import Flask
@@ -17,6 +20,11 @@ def create_app(test_config=None):
 
     # Variable to control the use of a proxy to support webpackdevserver
     WEBPACK_DEV_SERVER_PROXY = os.environ.get("WEBPACK_DEV_SERVER_PROXY", None)
+
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.DEBUG)
+    # Prevent the HTTP request logs polluting more important train logs
+    log.disabled = True
 
     if WEBPACK_DEV_SERVER_PROXY:
         app = Flask(__name__,
@@ -38,19 +46,13 @@ def create_app(test_config=None):
         #     static_dir = static_dir_build
         # else:
         #     static_dir = static_dir_watch
-        print('using static_dir:', static_dir)
+        logger.info(f'using static_dir: {static_dir}')
         # Create a custom Flask instance defined in the app.py file. Same as a
         # normal Flask class but with a specialised blueprint function.
         app = Flask(__name__,
                     instance_relative_config=True,
                     static_folder=GUI_BUILD_DIR + static_dir,
                     static_url_path=static_dir)
-
-    import logging
-    log = logging.getLogger('werkzeug')
-    log.setLevel(logging.DEBUG)
-    # Prevent the HTTP request logs polluting more important train logs
-    log.disabled = True
 
     # When making this multi-user, the secret key would require to be a secure hash.
     app.config.from_mapping(
@@ -64,7 +66,7 @@ def create_app(test_config=None):
     # the app.config, however, this would need to change for multi-user.
     # Each user would require a unique Interface. One Interface
     # stores all the artifacts that user has generated.
-    interface_path = Path(os.path.join(elpis_path, '/state'))
+    interface_path = Path(os.path.join(elpis_path, '/state/of_origin'))
     if not interface_path.exists():
         app.config['INTERFACE'] = Interface(interface_path)
     else:
@@ -90,7 +92,7 @@ def create_app(test_config=None):
             print('Tensorboard is not running, start it')
             tensorboard = program.TensorBoard()
             tensorboard.configure(argv=['tensorboard',
-                                        '--logdir=/state/models',
+                                        '--logdir=/state/of_origin/models',
                                         '--port=6006',
                                         '--host=0.0.0.0'])
             url = tensorboard.launch()
@@ -105,7 +107,7 @@ def create_app(test_config=None):
     @app.route('/', defaults={'path': ''})
     @app.route("/<path:path>")
     def index(path):
-        print('in index with:', path)
+        logger.info(f'in index with: {path}')
         if (WEBPACK_DEV_SERVER_PROXY):
             # If we are running the webpack dev server, 
             # We proxy webpack requests through to the dev server
