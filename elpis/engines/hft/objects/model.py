@@ -398,7 +398,7 @@ class HFTModel(BaseModel):
             ctc_zero_infinity=True)
 
     def preprocess_dataset(self):
-        logger.info('=== Preprocessing Dataset')
+        logger.info('==== Preprocessing Dataset ====')
         speech = self.prepare_speech()
 
         def speech_file_to_array_fn(batch):
@@ -418,11 +418,11 @@ class HFTModel(BaseModel):
             remove_columns=self.hft_dataset['train'].column_names,
             num_proc=self.data_args.preprocessing_num_workers,
         )
-        logger.info('=== hft_dataset')
+        logger.info('==== hft_dataset ====')
         logger.info(self.hft_dataset)
 
     def prepare_dataset(self):
-        logger.info('=== Preparing Dataset')
+        logger.info('==== Preparing Dataset ====')
         def prepare_dataset(batch):
             assert (
                 len(set(batch['sampling_rate'])) == 1
@@ -441,7 +441,7 @@ class HFTModel(BaseModel):
         )
 
     def prepare_speech(self):
-        logger.info('=== Preparing Speech')
+        logger.info('==== Preparing Speech ====')
         speech = {}
         audio_paths = set()
         rejected_count = 0
@@ -543,9 +543,9 @@ class HFTModel(BaseModel):
         self.model_args = model_args
         self.data_args = data_args
         self.training_args = training_args
-        logger.info(f'\n\n=== Model args\n {model_args}')
-        logger.info(f'\n\n=== Data args\n {data_args}')
-        logger.info(f'\n\n=== Training args\n {training_args}')
+        logger.info(f'\n\n==== Model args ====\n {model_args}')
+        logger.info(f'\n\n==== Data args ====\n {data_args}')
+        logger.info(f'\n\n==== Training args ====\n {training_args}')
 
     def train(self, on_complete:Callable=None):
         self.tb_writer = SummaryWriter(self.path / 'runs')
@@ -558,7 +558,7 @@ class HFTModel(BaseModel):
         set_seed(self.training_args.seed)
 
         # 1. Tokenization
-        logger.info('=== Tokenizing')
+        logger.info('==== Tokenizing ====')
         self._set_finished_training(False)
         self._set_stage(TOKENIZATION)
 
@@ -632,12 +632,12 @@ class HFTModel(BaseModel):
         # 4. Evaluation
         self._set_stage(EVALUATION)
         if self.training_args.do_eval:
-            logger.info('=== Evaluate')
+            logger.info('==== Evaluate ====')
             metrics = trainer.evaluate()
             metrics['eval_samples'] = len(self.hft_dataset['dev'])
             trainer.log_metrics('eval', metrics)
             trainer.save_metrics('eval', metrics)
-            logger.info('=== Metrics')
+            logger.info('==== Metrics ====')
             logger.info(metrics)
             self.config['results'] = metrics
 

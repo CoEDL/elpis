@@ -56,19 +56,19 @@ class HFTTranscription(BaseTranscription):
         self.build_stage_status(stage_names)
 
     def transcribe(self, on_complete: callable = None) -> None:
-        logger.info('=== Load processor and model')
+        logger.info('==== Load processor and model ====')
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
 
         # Load audio
         self._set_stage(LOAD_AUDIO)
-        logger.info('=== Load audio')
+        logger.info('==== Load audio ====')
         audio_input, sample_rate = self._load_audio(self.audio_file_path)
         self._set_stage(LOAD_AUDIO, complete=True)
 
         # Pad input values and return pt tensor
         self._set_stage(PROCESS_INPUT)
-        logger.info('=== Process input')
+        logger.info('==== Process input ====')
         input_values = processor(
             audio_input, sampling_rate=HFTTranscription.SAMPLING_RATE, return_tensors='pt').input_values
         self._set_stage(PROCESS_INPUT, msg='Processed input values')
@@ -86,15 +86,15 @@ class HFTTranscription(BaseTranscription):
         self._set_stage(TRANSCRIPTION, complete=True)
 
         self._set_stage(SAVING)
-        logger.info('=== Save transcription')
+        logger.info('==== Save transcription ====')
         self._save_transcription(transcription)
 
         self._set_stage(SAVING, msg='Saved transcription, generating utterances')
         # Utterances to be used creating elan files
-        logger.info('=== Generate utterances')
+        logger.info('==== Generate utterances ====')
         utterances = self._generate_utterances(
             processor, predicted_ids, input_values, transcription)
-        logger.info('=== Save utterances (elan and text)')
+        logger.info('==== Save utterances (elan and text) ====')
         self._save_utterances(utterances)
 
         self._set_stage(SAVING, complete=True)
@@ -210,7 +210,7 @@ class HFTTranscription(BaseTranscription):
         return audio, sample_rate
 
     def prepare_audio(self, audio: Path, on_complete: callable = None):
-        logger.info(f'=== Prepare audio {audio} {self.audio_file_path}')
+        logger.info(f'==== Prepare audio {audio} {self.audio_file_path} ====')
         self._resample_audio_file(audio, self.audio_file_path)
         if on_complete is not None:
             on_complete()
