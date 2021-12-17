@@ -111,10 +111,10 @@ def update_ui(file_paths: List[Path], ui):
     _tier_names: Set[str] = set(ui['data']['tier_name']['options'])
     tier_max_count = 0
 
-    logger.info('**** ui data')
+    logger.info('==== ui data ====')
     logger.info(ui['data'])
 
-    logger.info('**** _tier_types')
+    logger.info('==== _tier_types ====')
     logger.info(_tier_types)
 
     eaf_paths = [p for p in file_paths if f'{p}'.endswith('.eaf')]

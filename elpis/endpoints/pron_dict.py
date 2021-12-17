@@ -19,7 +19,7 @@ def new():
             "status": 500,
             "error": e.human_message
         })
-    logger.info(f"****{request.json['name']}****")
+    logger.info(f"==== {request.json['name']} ====")
     dataset = interface.get_dataset(request.json['dataset_name'])
     pron_dict.link(dataset)
     app.config['CURRENT_PRON_DICT'] = pron_dict
