@@ -42,8 +42,24 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
+            // importer_name, settings and ui are overrides in case there is no importer
             let {name, files, importer} = action.response.data.data.state;
             let wordlist = {};
+
+            // so that we can "load" datasets which have no files yet
+            if (!importer) {
+                return {
+                    ...state,
+                    name,
+                    status,
+                    importer_name: null,
+                    settings: null,
+                    ui: null,
+                    audioFiles: [],
+                    additionalTextFiles: [],
+                    transcriptionFiles: [],
+                }
+            }
 
             if (action.response.data.data.wordlist) {
                 const wordlistObj = JSON.parse(action.response.data.data.wordlist);
@@ -53,7 +69,7 @@ const dataset = (state = initState, action) => {
                 });
             }
 
-           const status = wordlist.length > 0 ? "wordlist-prepared" : "";
+            const status = wordlist.length > 0 ? "wordlist-prepared" : "";
 
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = files.filter(file => getFileExtension(file) === "wav").sort();

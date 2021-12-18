@@ -43,6 +43,8 @@ def load():
         data.update({
             "wordlist": wordlist
         })
+    else:
+        dataset.auto_select_importer()
     return jsonify({
         "status": 200,
         "data": data
@@ -126,22 +128,26 @@ def files_delete(dataset: Dataset):
 @bp.route("/import/settings", methods=['GET', 'POST'])
 @require_dataset
 def settings(dataset: Dataset):
-    # Only edit if POST
-    if request.method == 'POST':
-        settings = dataset.importer.get_settings()
-        for key in request.json.keys():
-            if key in settings.keys():
-                dataset.importer.set_setting(key, request.json[key])
-            else:
-                pass # TODO throw an invalid key error here?
-        
+    if dataset.importer is not None:
+        # Only edit if POST
+        if request.method == 'POST':
+            settings = dataset.importer.get_settings()
+            for key in request.json.keys():
+                if key in settings.keys():
+                    dataset.importer.set_setting(key, request.json[key])
+                else:
+                    pass # TODO throw an invalid key error here?
     # Return imports current/updated settings.
-    data = {
-        'settings': dataset.importer.get_settings()
-    }
+        data = {
+            'settings': dataset.importer.get_settings()
+        }
+        return jsonify({
+            "status": 200,
+            "data": data
+        })
     return jsonify({
         "status": 200,
-        "data": data
+        "data": {}
     })
 
 

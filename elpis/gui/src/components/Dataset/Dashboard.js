@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, Grid, Header, Icon, Segment, Table} from "semantic-ui-react";
+import {Button, Grid, Header, Icon, Label, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
@@ -70,20 +70,18 @@ class DatasetDashboard extends Component {
                     </Table.Header>
                     <Table.Body>
                         {list.map(datasetName => {
-                            const className = (datasetName === name) ? "current" : "";
+                            const className = (datasetName === name) ? "dataset-label current" : "dataset-label";
 
                             return (
                                 <Table.Row key={datasetName}>
                                     <Table.Cell>
-                                        <Button
-                                            className={className}
-                                            fluid
-                                            onClick={() => this.handleLoad(datasetName)}
-                                        >
-                                            {datasetName}
-                                        </Button>
-                                        <Button icon onClick={() => this.handleDelete(datasetName)}>
-                                            <Icon name="trash" />
+                                        <Button as="div" labelPosition="left" className="dataset-button">
+                                            <Label as="a" className={className} onClick={() => this.handleLoad(datasetName)} basic>
+                                                <div className="dataset-truncate">{datasetName}</div>
+                                            </Label>
+                                            <Button icon onClick={() => this.handleDelete(datasetName)}>
+                                                <Icon name="trash" />
+                                            </Button>
                                         </Button>
                                     </Table.Cell>
                                 </Table.Row>
