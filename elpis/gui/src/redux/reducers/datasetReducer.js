@@ -58,7 +58,7 @@ const dataset = (state = initState, action) => {
                     audioFiles: [],
                     additionalTextFiles: [],
                     transcriptionFiles: [],
-                }
+                };
             }
 
             if (action.response.data.data.wordlist) {
@@ -100,7 +100,7 @@ const dataset = (state = initState, action) => {
         case actionTypes.DATASET_DELETE_SUCCESS: {
             return {...state, 
                 datasetList: action.response.data.data.list,
-                name: action.response.data.data.name
+                name: action.response.data.data.name,
             };
         }
 

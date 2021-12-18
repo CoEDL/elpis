@@ -82,7 +82,12 @@ class PronDictDashboard extends Component {
                                 <Table.Row key={pronDict.name}>
                                     <Table.Cell>
                                         <Button as="div" labelPosition="left" className="pron-dict-button">
-                                            <Label as="a" className={className} onClick={() => this.handleLoad(pronDict)} basic>
+                                            <Label
+                                                as="a"
+                                                className={className}
+                                                onClick={() => this.handleLoad(pronDict)}
+                                                basic
+                                            >
                                                 <div className="pron-dict-truncate">{pronDict.name}</div>
                                             </Label>
                                             <Button icon onClick={() => this.handleDelete(pronDict)}>
@@ -168,7 +173,7 @@ const mapDispatchToProps = dispatch => ({
             .then(response => {
                 console.log("Pron dict deleted", response);
             })
-            .catch(error => console.log("error", error));;
+            .catch(error => console.log("error", error));
     },
 });
 

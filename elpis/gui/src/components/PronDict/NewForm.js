@@ -7,8 +7,6 @@ import {withTranslation} from "react-i18next";
 import {pronDictNew} from "redux/actions/pronDictActions";
 import {datasetList} from "redux/actions/datasetActions";
 import urls from "urls";
-import dataset from "redux/reducers/datasetReducer";
-
 
 class NewForm extends Component {
     componentDidMount() {

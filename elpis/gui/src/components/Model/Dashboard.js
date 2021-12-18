@@ -107,7 +107,12 @@ class ModelDashboard extends Component {
                                 <Table.Row key={model.name}>
                                     <Table.Cell>
                                         <Button as="div" labelPosition="left" className="model-button">
-                                            <Label as="a" className={className} onClick={() => this.handleLoad(model)} basic>
+                                            <Label
+                                                as="a"
+                                                className={className}
+                                                onClick={() => this.handleLoad(model)}
+                                                basic
+                                            >
                                                 <div className="model-truncate">{model.name}</div>
                                             </Label>
                                             <Button icon onClick={() => this.handleDelete(model)}>

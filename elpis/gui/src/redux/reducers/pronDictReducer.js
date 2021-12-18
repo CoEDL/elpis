@@ -34,8 +34,8 @@ const pronDict = (state = initState, action) => {
                 return {
                     ...state,
                     name: null,
-                    datasetName: null
-                }
+                    datasetName: null,
+                };
             }
 
             return {
@@ -47,14 +47,17 @@ const pronDict = (state = initState, action) => {
             };
 
         case actionTypes.PRON_DICT_DELETE_SUCCESS:
-            var {list, name} = action.response.data.data;
-
-            return {...state, pronDictList: list, name: name};
+            return {
+                ...state,
+                pronDictList: action.response.data.data.list,
+                name: action.response.data.data.name,
+            };
 
         case actionTypes.PRON_DICT_LIST_SUCCESS:
-            var {list} = action.response.data.data;
-
-            return {...state, pronDictList: list};
+            return {
+                ...state,
+                pronDictList: action.response.data.data.list,
+            };
 
         case actionTypes.PRON_DICT_L2S_SUCCESS:
             ({data, status} = action.response.data);

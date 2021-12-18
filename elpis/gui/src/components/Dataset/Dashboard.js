@@ -76,7 +76,12 @@ class DatasetDashboard extends Component {
                                 <Table.Row key={datasetName}>
                                     <Table.Cell>
                                         <Button as="div" labelPosition="left" className="dataset-button">
-                                            <Label as="a" className={className} onClick={() => this.handleLoad(datasetName)} basic>
+                                            <Label
+                                                as="a"
+                                                className={className}
+                                                onClick={() => this.handleLoad(datasetName)}
+                                                basic
+                                            >
                                                 <div className="dataset-truncate">{datasetName}</div>
                                             </Label>
                                             <Button icon onClick={() => this.handleDelete(datasetName)}>
