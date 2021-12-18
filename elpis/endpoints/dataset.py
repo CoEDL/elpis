@@ -48,6 +48,18 @@ def load():
         "data": data
     })
 
+@bp.route("/delete", methods=['POST'])
+def delete():
+    interface: Interface = app.config['INTERFACE']
+    interface.remove_dataset(request.json['name'])
+    data = {
+        "list": interface.list_datasets(),
+        "name": ""
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 @bp.route("/list", methods=['GET'])
 def list_existing():
@@ -100,7 +112,7 @@ def files(dataset: Dataset):
 
 @bp.route("/files/delete", methods=['POST'])
 @require_dataset
-def delete(dataset: Dataset):
+def files_delete(dataset: Dataset):
     if request.method == 'POST':
         dataset.remove_file(request.form["file"])
         dataset.refresh_ui()

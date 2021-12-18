@@ -156,6 +156,14 @@ class Interface(FSObject):
         hash_dir = self.config['datasets'][dsname]
         return Dataset.load(self.datasets_path.joinpath(hash_dir))
 
+    def remove_dataset(self, dsname):
+        if dsname not in self.list_datasets():
+            raise InterfaceError(f'Tried to delete a dataset called "{dsname}" that does not exist')
+        datasets = self.config['datasets']
+        del datasets[dsname]
+        self.config['datasets'] = datasets
+        return self.config['datasets']
+
     def list_datasets(self):
         names = [name for name in self.config['datasets'].keys()]
         return names

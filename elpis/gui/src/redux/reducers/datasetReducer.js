@@ -81,6 +81,13 @@ const dataset = (state = initState, action) => {
             };
         }
 
+        case actionTypes.DATASET_DELETE_SUCCESS: {
+            return {...state, 
+                datasetList: action.response.data.data.list,
+                name: action.response.data.data.name
+            };
+        }
+
         case actionTypes.DATASET_LIST_SUCCESS:
             return {
                 ...state,
@@ -116,7 +123,7 @@ const dataset = (state = initState, action) => {
                 return {...state, status: "ready"};
             }
 
-        case actionTypes.DATASET_DELETE_SUCCESS:
+        case actionTypes.DATASET_FILES_DELETE_SUCCESS:
             ({data, status} = action.response.data);
 
             if (status === 200) {

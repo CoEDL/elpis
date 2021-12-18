@@ -3,7 +3,7 @@ import {Button, Grid, Header, Icon, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
-import {datasetList, datasetLoad} from "redux/actions/datasetActions";
+import {datasetDelete, datasetList, datasetLoad} from "redux/actions/datasetActions";
 import arraySort from "array-sort";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
@@ -43,6 +43,13 @@ class DatasetDashboard extends Component {
         datasetLoad(postData);
     }
 
+    handleDelete = name => {
+        const {datasetDelete} = this.props;
+        const postData = {name: name};
+
+        datasetDelete(postData);
+    }
+
     render() {
         const {t, currentEngine, name, list} = this.props;
         const {column, direction} = this.state;
@@ -74,6 +81,9 @@ class DatasetDashboard extends Component {
                                             onClick={() => this.handleLoad(datasetName)}
                                         >
                                             {datasetName}
+                                        </Button>
+                                        <Button icon onClick={() => this.handleDelete(datasetName)}>
+                                            <Icon name="trash" />
                                         </Button>
                                     </Table.Cell>
                                 </Table.Row>
@@ -147,6 +157,13 @@ const mapDispatchToProps = dispatch => ({
         dispatch(datasetLoad(postData))
             .then(response => {
                 console.log("Dataset loaded", response);
+            })
+            .catch(error => console.log("error", error));
+    },
+    datasetDelete: postData => {
+        dispatch(datasetDelete(postData))
+            .then(response => {
+                console.log("Dataset deleted", response);
             })
             .catch(error => console.log("error", error));
     },
