@@ -152,20 +152,20 @@ const datasetFilesFailure = error => ({
 
 /* * * * * * * * * * * *  FILES DELETE * * * * * * * * * * *  */
 
-export function datasetDelete(postData) {
-    const url = baseUrl + urls.api.dataset.delete;
+export function datasetFilesDelete(postData) {
+    const url = baseUrl + urls.api.dataset.filesDelete;
     const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
 
     return async dispatch => {
-        dispatch(datasetDeleteStarted());
+        dispatch(datasetFilesDeleteStarted());
         await axios.post(url, postData, config)
             .then(response => {
                 responseData = response.data;
-                dispatch(datasetDeleteSuccess(response));
+                dispatch(datasetFilesDeleteSuccess(response));
             })
             .catch(error => {
-                dispatch(datasetDeleteFailure(error));
+                dispatch(datasetFilesDeleteFailure(error));
                 throw error;
             });
         console.log(responseData["data"]);
@@ -174,14 +174,14 @@ export function datasetDelete(postData) {
     };
 }
 
-const datasetDeleteStarted = () => ({
+const datasetFilesDeleteStarted = () => ({
     type: actionTypes.DATASET_DELETE_STARTED,
 });
-const datasetDeleteSuccess = response => ({
+const datasetFilesDeleteSuccess = response => ({
     type: actionTypes.DATASET_DELETE_SUCCESS,
     response: {...response},
 });
-const datasetDeleteFailure = error => ({
+const datasetFilesDeleteFailure = error => ({
     type: actionTypes.DATASET_DELETE_FAILURE,
     response: {error},
 });

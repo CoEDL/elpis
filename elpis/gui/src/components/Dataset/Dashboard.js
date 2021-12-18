@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, Grid, Header, Segment, Table} from "semantic-ui-react";
+import {Button, Grid, Header, Icon, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
