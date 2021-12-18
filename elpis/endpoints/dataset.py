@@ -54,7 +54,6 @@ def load():
 def delete():
     interface: Interface = app.config['INTERFACE']
     dsname = request.json['name']
-    print("VERBOSE", interface.list_models_verbose(), interface.list_pron_dicts_verbose())
     # Cascade down, first remove models, then pron_dicts
     for m in interface.list_models_verbose():
         if m['dataset_name'] == dsname:
@@ -62,7 +61,6 @@ def delete():
     for pd in interface.list_pron_dicts_verbose():
         if pd['dataset_name'] == dsname:
             interface.remove_pron_dict(pd['name'])
-    print("VERBOSE2", interface.list_models_verbose(), interface.list_pron_dicts_verbose())
     # Then, remove the dataset
     interface.remove_dataset(dsname)
     data = {

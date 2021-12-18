@@ -255,7 +255,6 @@ class Interface(FSObject):
     def remove_model(self, mname):
         if mname not in self.list_models():
             raise InterfaceError(f'Tried to delete a model called "{mname}" that does not exist')
-        print("remove_model prior", self.config['models'])
         models = self.config['models']
         del models[mname]
         self.config['models'] = models
@@ -267,7 +266,6 @@ class Interface(FSObject):
                 for name in names:
                     if name == mname:
                         shutil.rmtree(self.models_path.joinpath(hash_dir))
-        print("remove_model", self.config['models'])
         return self.config['models']
 
     def list_models(self):
