@@ -266,21 +266,21 @@ label.pad-right,
     max-width: 300px;
 }
 
-.file-button {
-    width: 100%;
+.file-button, .pron-dict-button {
+    width: 99%;
 }
 
 .dataset-button {
     width: 50%;
 }
 
-.file-label, .dataset-label {
+.file-label, .dataset-label, .pron-dict-label {
     /* width: 90%; results in strange behaviour and i don't know why */
     min-width: 90%;
     max-width: 90%;
 }
 
-.file-truncate, .dataset-truncate {
+.file-truncate, .dataset-truncate, .pron-dict-truncate {
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
