@@ -10,6 +10,7 @@ Update the changelog and version details in the Elpis repo.
 ```
 ~/sandbox/elpis/CHANGELOG.md
 ~/sandbox/elpis/pyproject.toml
+~/sandbox/elpis/docs/conf.py
 ~/sandbox/elpis/elpis/gui/package.json
 ```
 
