@@ -53,10 +53,19 @@ const model = (state = initState, action) => {
             };
         }
 
-        case actionTypes.MODEL_LIST_SUCCESS:
-            var {list} = action.response.data.data;
+        case actionTypes.MODEL_DELETE_SUCCESS: {
+            return {
+                ...state,
+                modelList: action.response.data.data.list,
+                name: action.response.data.data.name,
+            };
+        }
 
-            return {...state, modelList: list};
+        case actionTypes.MODEL_LIST_SUCCESS:
+            return {
+                ...state,
+                modelList: action.response.data.data.list,
+            };
 
         case actionTypes.MODEL_SETTINGS_SUCCESS:
             ({data, status} = action.response.data);

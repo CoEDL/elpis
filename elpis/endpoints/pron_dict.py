@@ -43,13 +43,30 @@ def load():
             "l2s": pron_dict.get_l2s_content(),
             "lexicon": pron_dict.get_lexicon_content()
         }
-    except KaldiError:
+    except KeyError:
         datasets = interface.list_datasets()
         dataset = interface.get_dataset(datasets[0])
         pron_dict = None
         data = {}
     app.config['CURRENT_PRON_DICT'] = pron_dict
     app.config['CURRENT_DATASET'] = dataset
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
+
+@bp.route("/delete", methods=['POST'])
+def delete():
+    interface: Interface = app.config['INTERFACE']
+    pdname = request.json['name']
+    for m in interface.list_models_verbose():
+        if m['pron_dict_name'] == pdname:
+            interface.remove_model(m['name'])
+    interface.remove_pron_dict(pdname)
+    data = {
+        "list": interface.list_pron_dicts_verbose(),
+        "name": ""
+    }
     return jsonify({
         "status": 200,
         "data": data

@@ -102,7 +102,7 @@ class NewForm extends Component {
                         {engine && engine === "kaldi" &&
                             <Form.Field>
                                 <label>{t("model.new.selectPronDictLabel")}</label>
-                                <Field component="select" name="pron_dict_name">
+                                <Field component="select" name="pron_dict_name" disabled={pronDicts.length === 0}>
                                     {pronDicts.map(pronDict => (
                                         <option key={pronDict.name} value={pronDict.name}>
                                             {pronDict.name} | {pronDict.dataset_name}
@@ -115,7 +115,7 @@ class NewForm extends Component {
                         {engine && engine !== "kaldi" &&
                             <Form.Field>
                                 <label>{t("model.new.selectDatasetLabel")}</label>
-                                <Field component="select" name="dataset_name">
+                                <Field component="select" name="dataset_name" disabled={datasets.length === 0}>
                                     {datasets.map(dataset => (
                                         <option key={dataset} value={dataset}>
                                             {dataset}
@@ -127,9 +127,16 @@ class NewForm extends Component {
                         {error &&
                             <p className={"error-message"}>{error}</p>
                             }
-                        <Button type="button" onClick={handleSubmit}>
-                            {t("common.addNewButton")}
-                        </Button>
+                        {engine && engine === "kaldi" &&
+                            <Button type="button" onClick={handleSubmit} disabled={pronDicts.length === 0}>
+                                {t("common.addNewButton")}
+                            </Button>
+                        }    
+                        {engine && engine !== "kaldi" &&
+                            <Button type="button" onClick={handleSubmit} disabled={datasets.length === 0}>
+                                {t("common.addNewButton")}
+                            </Button>
+                        }               
                     </Form>
                     )}
             </Formik>

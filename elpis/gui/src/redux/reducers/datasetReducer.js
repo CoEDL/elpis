@@ -42,8 +42,24 @@ const dataset = (state = initState, action) => {
 
         case actionTypes.DATASET_LOAD_SUCCESS: {
             // loading existing data set might have files and settings
+            // importer_name, settings and ui are overrides in case there is no importer
             let {name, files, importer} = action.response.data.data.state;
             let wordlist = {};
+
+            // so that we can "load" datasets which have no files yet
+            if (!importer) {
+                return {
+                    ...state,
+                    name,
+                    status,
+                    importer_name: null,
+                    settings: null,
+                    ui: null,
+                    audioFiles: [],
+                    additionalTextFiles: [],
+                    transcriptionFiles: [],
+                };
+            }
 
             if (action.response.data.data.wordlist) {
                 const wordlistObj = JSON.parse(action.response.data.data.wordlist);
@@ -53,7 +69,7 @@ const dataset = (state = initState, action) => {
                 });
             }
 
-           const status = wordlist.length > 0 ? "wordlist-prepared" : "";
+            const status = wordlist.length > 0 ? "wordlist-prepared" : "";
 
             // action.data is an array of filenames. parse this, split into separate lists
             audioFiles = files.filter(file => getFileExtension(file) === "wav").sort();
@@ -78,6 +94,13 @@ const dataset = (state = initState, action) => {
                 settings: importer.settings,
                 ui: importer.ui,
                 wordlist,
+            };
+        }
+
+        case actionTypes.DATASET_DELETE_SUCCESS: {
+            return {...state, 
+                datasetList: action.response.data.data.list,
+                name: action.response.data.data.name,
             };
         }
 
@@ -116,7 +139,7 @@ const dataset = (state = initState, action) => {
                 return {...state, status: "ready"};
             }
 
-        case actionTypes.DATASET_DELETE_SUCCESS:
+        case actionTypes.DATASET_FILES_DELETE_SUCCESS:
             ({data, status} = action.response.data);
 
             if (status === 200) {

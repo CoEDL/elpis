@@ -76,6 +76,40 @@ const pronDictLoadFailure = error => ({
     response: {error},
 });
 
+/* * * * * * * * * * * *  DELETE * * * * * * * * * * *  */
+
+export function pronDictDelete(postData) {
+    const url = baseUrl + urls.api.pronDict.delete;
+    var responseData;
+
+    return async dispatch => {
+        dispatch(pronDictDeleteStarted());
+        await axios.post(url, postData)
+            .then(response => {
+                responseData = response.data;
+                dispatch(pronDictDeleteSuccess(response));
+            })
+            .catch(error => {
+                dispatch(pronDictDeleteFailure(error));
+                throw error;
+            });
+
+        return responseData;
+    };
+}
+
+const pronDictDeleteStarted = () => ({
+    type: actionTypes.PRON_DICT_DELETE_STARTED,
+});
+const pronDictDeleteSuccess = response => ({
+    type: actionTypes.PRON_DICT_DELETE_SUCCESS,
+    response: {...response},
+});
+const pronDictDeleteFailure = error => ({
+    type: actionTypes.PRON_DICT_DELETE_FAILURE,
+    response: {error},
+});
+
 
 /* * * * * * * * * * * *  LIST * * * * * * * * * * *  */
 
