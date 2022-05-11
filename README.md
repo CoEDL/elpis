@@ -5,8 +5,6 @@
 [![Build Status](https://travis-ci.org/CoEDL/elpis.svg?branch=master)](https://travis-ci.org/CoEDL/elpis)
 [![Coverage Status](https://coveralls.io/repos/github/CoEDL/elpis/badge.svg?branch=master)](https://coveralls.io/github/CoEDL/elpis?branch=master)
 
-This project is under construction and not yet ready for everyday use. Please contact us by email at `elpis.asr@gmail.com` to be informed when a stable version is ready.
-
 Elpis is a tool which allows language workers with minimal computational experience to build their own speech recognition models 
 to automatically transcribe audio. Elpis provides a way to use multiple speech recognition systems for orthographic or phonemic transcription. The current systems included are [Kaldi](https://kaldi-asr.org) and [Huggingface Transformers wav2vec2](https://huggingface.co/docs/transformers/model_doc/wav2vec2).
 
