@@ -11,6 +11,9 @@
     "eslint:recommended",
     "plugin:react/recommended"
   ],
+  env: {
+    es6: true,
+  },
   settings: {
     react: {
       version: "detect"

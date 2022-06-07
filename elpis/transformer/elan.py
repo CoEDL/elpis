@@ -216,11 +216,20 @@ def import_eaf_file(eaf_paths: List[str],
             end = annotation[1]
             annotation = annotation[2]
 
+            time_origin = input_eaf.get_linked_files()[0].get("TIME_ORIGIN")
+            offset = int(time_origin) if time_origin is not None else 0
+
+            # If matching file, use that. Otherwise, fall back to the relative media url.
+            if os.path.isfile(f"{file_name}.wav"):
+                audio_file_name = f"{file_name}.wav"
+            else:
+                audio_file_name = input_eaf.get_linked_files()[0].get("RELATIVE_MEDIA_URL")
+
             utterance = {
-                "audio_file_name": f"{file_name}.wav",
+                "audio_file_name": audio_file_name,
                 "transcript": annotation,
-                "start_ms": start,
-                "stop_ms": end,
+                "start_ms": start + offset,
+                "stop_ms": end + offset,
                 "speaker_id": speaker_id
             }
 
