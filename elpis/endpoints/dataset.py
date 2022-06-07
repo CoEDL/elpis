@@ -103,7 +103,12 @@ def require_dataset(f):
 @require_dataset
 def files(dataset: Dataset):
     if request.method == 'POST':
-        for file in request.files.getlist("file"):
+        print("Getting file list...")
+        files = request.files.getlist("file")
+        print("File list obtained")
+        for idx, file in enumerate(files):
+            if (idx + 1) % 5 == 0:
+                print(f"Processed {idx+1}/{len(files)} files ({round((idx+1)*100/len(files), 4)}%)")
             dataset.add_fp(fp=file, fname=file.filename, destination='original')
         data = {"files": dataset.files}
         dataset.auto_select_importer()
