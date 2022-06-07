@@ -30,6 +30,14 @@ const pronDict = (state = initState, action) => {
         case actionTypes.PRON_DICT_LOAD_SUCCESS:
             var {config, l2s, lexicon} = action.response.data.data;
 
+            if (!config) {
+                return {
+                    ...state,
+                    name: null,
+                    datasetName: null,
+                };
+            }
+
             return {
                 ...state,
                 name: config.name,
@@ -38,10 +46,18 @@ const pronDict = (state = initState, action) => {
                 lexicon,
             };
 
-        case actionTypes.PRON_DICT_LIST_SUCCESS:
-            var {list} = action.response.data.data;
+        case actionTypes.PRON_DICT_DELETE_SUCCESS:
+            return {
+                ...state,
+                pronDictList: action.response.data.data.list,
+                name: action.response.data.data.name,
+            };
 
-            return {...state, pronDictList: list};
+        case actionTypes.PRON_DICT_LIST_SUCCESS:
+            return {
+                ...state,
+                pronDictList: action.response.data.data.list,
+            };
 
         case actionTypes.PRON_DICT_L2S_SUCCESS:
             ({data, status} = action.response.data);

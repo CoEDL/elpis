@@ -156,6 +156,22 @@ class Interface(FSObject):
         hash_dir = self.config['datasets'][dsname]
         return Dataset.load(self.datasets_path.joinpath(hash_dir))
 
+    def remove_dataset(self, dsname):
+        if dsname not in self.list_datasets():
+            raise InterfaceError(f'Tried to delete a dataset called "{dsname}" that does not exist')
+        datasets = self.config['datasets']
+        del datasets[dsname]
+        self.config['datasets'] = datasets
+        for hash_dir in os.listdir(f'{self.datasets_path}'):
+            if not hash_dir.startswith('.'):
+                names = []
+                with self.datasets_path.joinpath(hash_dir, "dataset.json").open() as fin:
+                    names.append(json.load(fin)['name'])
+                for name in names:
+                    if name == dsname:
+                        shutil.rmtree(self.datasets_path.joinpath(hash_dir))
+        return self.config['datasets']
+
     def list_datasets(self):
         names = [name for name in self.config['datasets'].keys()]
         return names
@@ -180,6 +196,22 @@ class Interface(FSObject):
         pd = PronDict.load(self.pron_dicts_path.joinpath(hash_dir))
         pd.dataset = self.get_dataset(pd.config['dataset_name'])
         return pd
+
+    def remove_pron_dict(self, pdname):
+        if pdname not in self.list_pron_dicts():
+            raise InterfaceError(f'Tried to delete a pron dict called "{pdname}" that does not exist')
+        pron_dicts = self.config['pron_dicts']
+        del pron_dicts[pdname]
+        self.config['pron_dicts'] = pron_dicts
+        for hash_dir in os.listdir(f'{self.pron_dicts_path}'):
+            if not hash_dir.startswith('.'):
+                names = []
+                with self.pron_dicts_path.joinpath(hash_dir, "pron_dict.json").open() as fin:
+                    names.append(json.load(fin)['name'])
+                for name in names:
+                    if name == pdname:
+                        shutil.rmtree(self.pron_dicts_path.joinpath(hash_dir))
+        return self.config['pron_dicts']
 
     def list_pron_dicts(self):
         names = [name for name in self.config['pron_dicts'].keys()]
@@ -219,6 +251,22 @@ class Interface(FSObject):
         if m.config['pron_dict_name'] is not None:
             m.pron_dict = self.get_pron_dict(m.config['pron_dict_name'])
         return m
+
+    def remove_model(self, mname):
+        if mname not in self.list_models():
+            raise InterfaceError(f'Tried to delete a model called "{mname}" that does not exist')
+        models = self.config['models']
+        del models[mname]
+        self.config['models'] = models
+        for hash_dir in os.listdir(f'{self.models_path}'):
+            if not hash_dir.startswith('.'):
+                names = []
+                with self.models_path.joinpath(hash_dir, "model.json").open() as fin:
+                    names.append(json.load(fin)['name'])
+                for name in names:
+                    if name == mname:
+                        shutil.rmtree(self.models_path.joinpath(hash_dir))
+        return self.config['models']
 
     def list_models(self):
         models = []

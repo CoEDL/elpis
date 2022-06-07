@@ -18,10 +18,10 @@ sys.path.insert(0, os.path.abspath('..'))
 
 project = 'Elpis'
 copyright = '2020, The University of Queensland'
-author = 'Ben Foley, Nicholas Lambourne, Nay San'
+author = 'Ben Foley, Nicholas Lambourne, Nay San, Matthew Low, Harry Keightley'
 
 # The full version, including alpha/beta/rc tags
-release = '0.97.1'
+release = '0.97.2'
 
 master_doc = 'index'
 # -- General configuration ---------------------------------------------------

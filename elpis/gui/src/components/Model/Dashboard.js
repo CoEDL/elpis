@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import {Button, Grid, Header, Segment, Table} from "semantic-ui-react";
+import {Button, Grid, Header, Icon, Label, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
-import {modelLoad, modelList} from "redux/actions/modelActions";
+import {modelDelete, modelLoad, modelList} from "redux/actions/modelActions";
 import {datasetLoad} from "redux/actions/datasetActions";
 import {pronDictLoad} from "redux/actions/pronDictActions";
 import arraySort from "array-sort";
@@ -45,6 +45,13 @@ class ModelDashboard extends Component {
         const pronDictData = {name: values.pron_dict_name};
 
         modelLoad(modelData, datasetData, pronDictData);
+    }
+
+    handleDelete = values => {
+        const {modelDelete} = this.props;
+        const modelData = {name: values.name};
+
+        modelDelete(modelData);
     }
 
     render() {
@@ -94,17 +101,23 @@ class ModelDashboard extends Component {
                     </Table.Header>
                     <Table.Body>
                         {list_sorted.map(model => {
-                            const className = (name === model.name) ? "current" : "";
+                            const className = (name === model.name) ? "model-label current" : "model-label";
 
                             return (
-                                <Table.Row key={model.name} className={className}>
+                                <Table.Row key={model.name}>
                                     <Table.Cell>
-                                        <Button
-                                            className={className}
-                                            fluid
-                                            onClick={() => this.handleLoad(model)}
-                                        >
-                                            {model.name}
+                                        <Button as="div" labelPosition="left" className="model-button">
+                                            <Label
+                                                as="a"
+                                                className={className}
+                                                onClick={() => this.handleLoad(model)}
+                                                basic
+                                            >
+                                                <div className="model-truncate">{model.name}</div>
+                                            </Label>
+                                            <Button icon onClick={() => this.handleDelete(model)}>
+                                                <Icon name="trash" />
+                                            </Button>
                                         </Button>
                                     </Table.Cell>
                                     <Table.Cell>
@@ -204,6 +217,13 @@ const mapDispatchToProps = dispatch => ({
                     console.log("No pron dict to load for this model");
                 }
             });
+    },
+    modelDelete: (modelData) => {
+        dispatch(modelDelete(modelData))
+            .then(response => {
+                console.log("Model deleted", response);
+            })
+            .catch(error => console.log("error", error));
     },
 });
 

@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom";
 import {Button, Grid, Header, Icon, List, Message, Segment, Label, Popup} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
-import {datasetSettings, datasetPrepare, datasetDelete} from "redux/actions/datasetActions";
+import {datasetSettings, datasetPrepare, datasetFilesDelete} from "redux/actions/datasetActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import FileUpload from "./FileUpload";
@@ -23,7 +23,7 @@ class DatasetFiles extends Component {
         var deleteData = new FormData();
 
         deleteData.append("file", file);
-        this.props.datasetDelete(deleteData);
+        this.props.datasetFilesDelete(deleteData);
     }
 
     createFilesList = (files) => files.map(file => (
@@ -196,8 +196,8 @@ const mapDispatchToProps = dispatch => ({
                 history.push(urls.gui.dataset.prepare);
             });
     },
-    datasetDelete: postData => {
-        dispatch(datasetDelete(postData));
+    datasetFilesDelete: postData => {
+        dispatch(datasetFilesDelete(postData));
     },
 });
 

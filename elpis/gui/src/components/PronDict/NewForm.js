@@ -8,7 +8,6 @@ import {pronDictNew} from "redux/actions/pronDictActions";
 import {datasetList} from "redux/actions/datasetActions";
 import urls from "urls";
 
-
 class NewForm extends Component {
     componentDidMount() {
         this.props.datasetList();
@@ -74,7 +73,7 @@ class NewForm extends Component {
                         {currentEngine && datasets.length > 0 &&
                             <Form.Field>
                                 <label>{t("pronDict.new.select")}</label>
-                                <Field component="select" name="dataset_name">
+                                <Field component="select" name="dataset_name" disabled={datasets.length === 0}>
                                     {datasets.map(name =>
                                             (<option key={name} value={name}>{name}</option>))
                                         }

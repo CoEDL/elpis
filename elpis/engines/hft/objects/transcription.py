@@ -57,7 +57,7 @@ class HFTTranscription(BaseTranscription):
         self.build_stage_status(stage_names)
 
     def transcribe(self, on_complete: callable = None) -> None:
-        logger.info('=== Load processor and model')
+        logger.info('==== Load processor and model ====')
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
 
@@ -70,7 +70,7 @@ class HFTTranscription(BaseTranscription):
 
         # Pad input values and return pt tensor
         self._set_stage(PROCESS_INPUT)
-        logger.info('=== Process input')
+        logger.info('==== Process input ====')
         input_values = processor(
             audio_input, sampling_rate=HFTTranscription.SAMPLING_RATE, return_tensors='pt').input_values
         self._set_stage(PROCESS_INPUT, msg='Processed input values')
@@ -88,15 +88,15 @@ class HFTTranscription(BaseTranscription):
         self._set_stage(TRANSCRIPTION, complete=True)
 
         self._set_stage(SAVING)
-        logger.info('=== Save transcription')
+        logger.info('==== Save transcription ====')
         self._save_transcription(transcription)
 
         self._set_stage(SAVING, msg='Saved transcription, generating utterances')
         # Utterances to be used creating elan files
-        logger.info('=== Generate utterances')
+        logger.info('==== Generate utterances ====')
         utterances = self._generate_utterances(
             processor, predicted_ids, input_values, transcription)
-        logger.info('=== Save utterances (elan and text)')
+        logger.info('==== Save utterances (elan and text) ====')
         self._save_utterances(utterances)
 
         self._set_stage(SAVING, complete=True)
@@ -207,7 +207,7 @@ class HFTTranscription(BaseTranscription):
 
         pympi.Elan.to_eaf(self.elan_path, result)
 
-    def prepare_audio(self, audio: FileStorage, on_complete: callable = None):
+    def prepare_audio(self, audio: Path, on_complete: callable = None):
         logger.info(f'=== Prepare audio {audio} {self.audio_file_path}')
         resampler.resample_from_file_storage(audio, self.audio_file_path, HFTModel.SAMPLING_RATE)
         if on_complete is not None:

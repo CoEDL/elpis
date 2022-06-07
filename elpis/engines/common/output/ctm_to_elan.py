@@ -131,7 +131,7 @@ def main() -> None:
     wav_dictionary = wav_scp_to_dictionary(arguments.wav)
     output_directory = Path(arguments.outdir)
 
-    logger.info("==== CTM to Elan args")
+    logger.info("==== CTM to Elan args ====")
     logger.info(f"{segments_dictionary=}")
     logger.info(f"{ctm_dictionary=}")
     logger.info(f"{wav_dictionary=}")

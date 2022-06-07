@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import {Button, Grid, Header, Segment, Table} from "semantic-ui-react";
+import {Button, Grid, Header, Icon, Label, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
-import {pronDictList, pronDictLoad} from "redux/actions/pronDictActions";
+import {pronDictDelete, pronDictList, pronDictLoad} from "redux/actions/pronDictActions";
 import {datasetLoad} from "redux/actions/datasetActions";
 import arraySort from "array-sort";
 import Branding from "../Shared/Branding";
@@ -45,6 +45,13 @@ class PronDictDashboard extends Component {
         pronDictLoad(postData, datasetData);
     }
 
+    handleDelete = values => {
+        const {pronDictDelete} = this.props;
+        const postData = {name: values.name};
+
+        pronDictDelete(postData);
+    }
+
     render() {
         const {t, currentEngine, name, list} = this.props;
         const listArray = Array.from(list.keys());
@@ -69,17 +76,23 @@ class PronDictDashboard extends Component {
                     </Table.Header>
                     <Table.Body>
                         {list.map(pronDict => {
-                            const className = (pronDict.name === name) ? "current" : "";
+                            const className = (pronDict.name === name) ? "pron-dict-label current" : "pron-dict-label";
 
                             return (
                                 <Table.Row key={pronDict.name}>
                                     <Table.Cell>
-                                        <Button
-                                            className={className}
-                                            fluid
-                                            onClick={() => this.handleLoad(pronDict)}
-                                        >
-                                            {pronDict.name}
+                                        <Button as="div" labelPosition="left" className="pron-dict-button">
+                                            <Label
+                                                as="a"
+                                                className={className}
+                                                onClick={() => this.handleLoad(pronDict)}
+                                                basic
+                                            >
+                                                <div className="pron-dict-truncate">{pronDict.name}</div>
+                                            </Label>
+                                            <Button icon onClick={() => this.handleDelete(pronDict)}>
+                                                <Icon name="trash" />
+                                            </Button>
                                         </Button>
                                     </Table.Cell>
                                     <Table.Cell>
@@ -154,6 +167,13 @@ const mapDispatchToProps = dispatch => ({
     pronDictLoad: (pronDictData, datasetData) => {
         dispatch(pronDictLoad(pronDictData))
             .then(() => dispatch(datasetLoad(datasetData)));
+    },
+    pronDictDelete: (pronDictData) => {
+        dispatch(pronDictDelete(pronDictData))
+            .then(response => {
+                console.log("Pron dict deleted", response);
+            })
+            .catch(error => console.log("error", error));
     },
 });
 

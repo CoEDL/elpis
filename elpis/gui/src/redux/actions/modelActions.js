@@ -77,6 +77,41 @@ const modelLoadFailure = error => ({
 });
 
 
+/* * * * * * * * * * * *  DELETE * * * * * * * * * * *  */
+
+export function modelDelete(postData) {
+    const url = baseUrl + urls.api.model.delete;
+    var responseData;
+
+    return async dispatch => {
+        dispatch(modelDeleteStarted());
+        await axios.post(url, postData)
+            .then(response => {
+                responseData = response.data;
+                dispatch(modelDeleteSuccess(response));
+            })
+            .catch(error => {
+                dispatch(modelDeleteFailure(error));
+                throw error;
+            });
+
+        return responseData;
+    };
+}
+
+const modelDeleteStarted = () => ({
+    type: actionTypes.MODEL_DELETE_STARTED,
+});
+const modelDeleteSuccess = response => ({
+    type: actionTypes.MODEL_DELETE_SUCCESS,
+    response: {...response},
+});
+const modelDeleteFailure = error => ({
+    type: actionTypes.MODEL_DELETE_FAILURE,
+    response: {error},
+});
+
+
 /* * * * * * * * * * * *  LIST * * * * * * * * * * *  */
 
 export function modelList() {

@@ -43,11 +43,34 @@ def load():
         data.update({
             "wordlist": wordlist
         })
+    else:
+        dataset.auto_select_importer()
     return jsonify({
         "status": 200,
         "data": data
     })
 
+@bp.route("/delete", methods=['POST'])
+def delete():
+    interface: Interface = app.config['INTERFACE']
+    dsname = request.json['name']
+    # Cascade down, first remove models, then pron_dicts
+    for m in interface.list_models_verbose():
+        if m['dataset_name'] == dsname:
+            interface.remove_model(m['name'])
+    for pd in interface.list_pron_dicts_verbose():
+        if pd['dataset_name'] == dsname:
+            interface.remove_pron_dict(pd['name'])
+    # Then, remove the dataset
+    interface.remove_dataset(dsname)
+    data = {
+        "list": interface.list_datasets(),
+        "name": ""
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 @bp.route("/list", methods=['GET'])
 def list_existing():
@@ -100,7 +123,7 @@ def files(dataset: Dataset):
 
 @bp.route("/files/delete", methods=['POST'])
 @require_dataset
-def delete(dataset: Dataset):
+def files_delete(dataset: Dataset):
     if request.method == 'POST':
         dataset.remove_file(request.form["file"])
         dataset.refresh_ui()
@@ -114,22 +137,26 @@ def delete(dataset: Dataset):
 @bp.route("/import/settings", methods=['GET', 'POST'])
 @require_dataset
 def settings(dataset: Dataset):
-    # Only edit if POST
-    if request.method == 'POST':
-        settings = dataset.importer.get_settings()
-        for key in request.json.keys():
-            if key in settings.keys():
-                dataset.importer.set_setting(key, request.json[key])
-            else:
-                pass # TODO throw an invalid key error here?
-        
+    if dataset.importer is not None:
+        # Only edit if POST
+        if request.method == 'POST':
+            settings = dataset.importer.get_settings()
+            for key in request.json.keys():
+                if key in settings.keys():
+                    dataset.importer.set_setting(key, request.json[key])
+                else:
+                    pass # TODO throw an invalid key error here?
     # Return imports current/updated settings.
-    data = {
-        'settings': dataset.importer.get_settings()
-    }
+        data = {
+            'settings': dataset.importer.get_settings()
+        }
+        return jsonify({
+            "status": 200,
+            "data": data
+        })
     return jsonify({
         "status": 200,
-        "data": data
+        "data": {}
     })
 
 

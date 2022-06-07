@@ -76,6 +76,19 @@ def load():
         "data": data
     })
 
+@bp.route("/delete", methods=['POST'])
+def delete():
+    interface = app.config['INTERFACE']
+    mname = request.json["name"]
+    interface.remove_model(mname)
+    data = {
+        "list": interface.list_models_verbose(),
+        "name": ""
+    }
+    return jsonify({
+        "status": 200,
+        "data": data
+    })
 
 @bp.route("/list", methods=['GET'])
 def list_existing():

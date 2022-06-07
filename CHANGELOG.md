@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [0.97.2] - 2021-12-23
+### ADDED 
+- Delete buttons for datasets, pron dicts and models
+- Minor bug fixes
+
 ## [0.97.1] - 2021-12-08
 ### Changed 
 - 44.1kHz sample rate to 16kHz

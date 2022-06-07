@@ -75,6 +75,10 @@ code {
     background-color: #D3A0F0 !important;
 }
 
+.current {
+    background-color: #D3A0F0 !important;
+}
+
 .ReactVirtualized__Grid__innerScrollContainer {
     max-height: none !important;
     min-height: 100px !important;
@@ -262,22 +266,31 @@ label.pad-right,
     max-width: 300px;
 }
 
-.file-button {
-    width: 100%;
+.file-button, .pron-dict-button {
+    width: 99%;
 }
 
-.file-label {
+.dataset-button {
+    width: 50%;
+}
+
+.model-button {
+    width: 80%;
+}
+
+.file-label, .dataset-label, .pron-dict-label, .model-label {
     /* width: 90%; results in strange behaviour and i don't know why */
     min-width: 90%;
     max-width: 90%;
 }
 
-.file-truncate {
+.file-truncate, .dataset-truncate, .pron-dict-truncate, .model-truncate {
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .training_settings .ui.form tr {
     padding: 0.5em 0;
 }
