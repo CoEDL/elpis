@@ -161,13 +161,12 @@ RUN pip install --upgrade pip
 # Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
 # Override the dep info from requirements.txt so that we can specifiy CUDA version
 # Pin transformers to 4.6.0 because the model class has args code which breaks on later versions
+# Pin protobuf to fix `PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION` error
+RUN pip install protobuf==3.20.*
 RUN pip install transformers==4.6.0 datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
 # Set torch version for CUDA 11
 RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip install tensorboard==2.7.0
-# Pin protobuf
-RUN pip uninstall --yes protobuf
-RUN pip install protobuf==3.20.*
 
 # Cache the pretrained models
 COPY download_wav2vec2.py /root/download_wav2vec2.py
