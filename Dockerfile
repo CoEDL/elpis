@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS=12
+ENV NUM_CPUS=6
 
 ENV TZ=UTC
 
@@ -95,14 +95,12 @@ RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
 
 COPY deps/pa_stable_v19_20111121.tgz /kaldi/tools/pa_stable_v19_20111121.tgz
 
-RUN cd /kaldi/tools && \
-    make -j$NUM_CPUS && \
-    ./install_portaudio.sh && \
-    cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
+RUN cd /kaldi/tools && make -j$NUM_CPUS && ./install_portaudio.sh
+RUN cd /kaldi/src && ./configure --mathlib=ATLAS --shared && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
-    cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
-    cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
+    make depend -j$NUM_CPUS && make -j$NUM_CPUS
+RUN cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS
+RUN cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
