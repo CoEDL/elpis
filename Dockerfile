@@ -165,6 +165,10 @@ RUN pip install transformers==4.6.0 datasets jiwer==2.2.0 lang-trans==0.6.0 libr
 # Set torch version for CUDA 11
 RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip install tensorboard==2.7.0
+# Pin protobuf
+RUN pip uninstall --yes protobuf
+RUN pip install protobuf==3.20.*
+
 # Cache the pretrained models
 COPY download_wav2vec2.py /root/download_wav2vec2.py
 RUN python /root/download_wav2vec2.py
