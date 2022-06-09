@@ -180,7 +180,7 @@ WORKDIR /
 
 RUN echo "===> Install Elpis"
 # Remove `--single-branch` or include `--branch hft` below for development
-RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --branch black_formatting --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip
