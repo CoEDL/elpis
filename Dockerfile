@@ -92,9 +92,7 @@ WORKDIR /
 
 RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi
-
 COPY deps/pa_stable_v19_20111121.tgz /kaldi/tools/pa_stable_v19_20111121.tgz
-
 RUN cd /kaldi/tools && make -j$NUM_CPUS && ./install_portaudio.sh
 RUN cd /kaldi/src && ./configure --mathlib=ATLAS --shared && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
