@@ -21,28 +21,29 @@ from elpis.engines.common.objects.interface import Interface
 from pathlib import Path
 from loguru import logger
 
-DATASET_DIR = '/datasets/abui/transcribed'
-DATASET_NAME = 'ds'
-IMPORTER_METHOD = 'tier_name'
-IMPORTER_VALUE = 'Phrase'
-L2S_PATH = '/datasets/abui/letter_to_sound.txt'
-PRON_DICT_NAME = 'pd'
-MODEL_NAME = 'mx'
-TX_NAME = 'tx'
-INFER_FILE_PATH = '/datasets/abui/untranscribed/audio.wav'
+DATASET_DIR = "/datasets/abui/transcribed"
+DATASET_NAME = "ds"
+IMPORTER_METHOD = "tier_name"
+IMPORTER_VALUE = "Phrase"
+L2S_PATH = "/datasets/abui/letter_to_sound.txt"
+PRON_DICT_NAME = "pd"
+MODEL_NAME = "mx"
+TX_NAME = "tx"
+INFER_FILE_PATH = "/datasets/abui/untranscribed/audio.wav"
 
 # Step 0
 # ======
 # Create a Kaldi interface directory (where all the associated files/objects
 # will be stored).
-elpis = Interface(path=Path('/state/of_origin'), use_existing=True)
+elpis = Interface(path=Path("/state/of_origin"), use_existing=True)
 
 
 # Step 1
 # ======
 # Select Engine
 from elpis.engines import ENGINES
-engine = ENGINES['kaldi']
+
+engine = ENGINES["kaldi"]
 elpis.set_engine(engine)
 
 
@@ -53,8 +54,8 @@ elpis.set_engine(engine)
 if DATASET_NAME not in elpis.list_datasets():
     logger.info("Making new dataset")
     dataset = elpis.new_dataset(DATASET_NAME)
-    dataset.add_directory(DATASET_DIR, extensions=['eaf', 'wav'])
-    dataset.auto_select_importer() # Selects Elan because of eaf file.
+    dataset.add_directory(DATASET_DIR, extensions=["eaf", "wav"])
+    dataset.auto_select_importer()  # Selects Elan because of eaf file.
     dataset.importer.set_setting(IMPORTER_METHOD, IMPORTER_VALUE)
     dataset.process()
 else:
@@ -87,7 +88,7 @@ if MODEL_NAME not in elpis.list_models():
     model.link_dataset(dataset)
     model.link_pron_dict(pron_dict)
     model.build_structure()
-    model.train() # may take a while
+    model.train()  # may take a while
 else:
     logger.info("Use existing model")
     model = elpis.get_model(MODEL_NAME)
