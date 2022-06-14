@@ -38,5 +38,5 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_PYTHON_BLACK: true
-          DEFAULT_BRANCH: dev
+          DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
