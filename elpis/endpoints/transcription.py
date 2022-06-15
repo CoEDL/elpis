@@ -10,86 +10,62 @@ from elpis.engines.common.utilities import hasher
 bp = Blueprint("transcription", __name__, url_prefix="/transcription")
 
 # TODO transcriptions have no name
-@bp.route("/new", methods=['POST'])
+@bp.route("/new", methods=["POST"])
 def new():
-    interface: Interface = app.config['INTERFACE']
+    interface: Interface = app.config["INTERFACE"]
     transcription = interface.new_transcription(hasher.new())
-    model: Model = app.config['CURRENT_MODEL']
+    model: Model = app.config["CURRENT_MODEL"]
     transcription.link(model)
-    app.config['CURRENT_TRANSCRIPTION'] = transcription
-    file = request.files['file']
-    transcription.prepare_audio(file, on_complete=lambda: logger.info('Prepared audio file!'))
-    data = {
-        "status": transcription.status,
-        "originalFilename": file.filename
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    app.config["CURRENT_TRANSCRIPTION"] = transcription
+    file = request.files["file"]
+    transcription.prepare_audio(
+        file, on_complete=lambda: logger.info("Prepared audio file!")
+    )
+    data = {"status": transcription.status, "originalFilename": file.filename}
+    return jsonify({"status": 200, "data": data})
 
 
-@bp.route("/transcribe", methods=['GET'])
+@bp.route("/transcribe", methods=["GET"])
 def transcribe():
-    transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
-    transcription.transcribe(on_complete=lambda: logger.info('Transcribed text!'))
-    data = {
-        "status": transcription.status,
-        "stage_status": transcription.stage_status
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    transcription: Transcription = app.config["CURRENT_TRANSCRIPTION"]
+    transcription.transcribe(on_complete=lambda: logger.info("Transcribed text!"))
+    data = {"status": transcription.status, "stage_status": transcription.stage_status}
+    return jsonify({"status": 200, "data": data})
 
 
-@bp.route("/status", methods=['GET'])
+@bp.route("/status", methods=["GET"])
 def status():
-    transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
+    transcription: Transcription = app.config["CURRENT_TRANSCRIPTION"]
     data = {
         "status": transcription.status,
         "stage_status": transcription.stage_status,
-        "type": transcription.type
+        "type": transcription.type,
     }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    return jsonify({"status": 200, "data": data})
 
 
-@bp.route("/text", methods=['GET'])
+@bp.route("/text", methods=["GET"])
 def text():
-    transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
+    transcription: Transcription = app.config["CURRENT_TRANSCRIPTION"]
     data = {
         "audio_filename": transcription.audio_filename,
-        "text": transcription.text()
+        "text": transcription.text(),
     }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    return jsonify({"status": 200, "data": data})
 
 
-@bp.route("/elan", methods=['GET'])
+@bp.route("/elan", methods=["GET"])
 def elan():
-    transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
+    transcription: Transcription = app.config["CURRENT_TRANSCRIPTION"]
     data = {
         "audio_filename": transcription.audio_filename,
-        "elan": transcription.elan()
+        "elan": transcription.elan(),
     }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    return jsonify({"status": 200, "data": data})
 
 
-@bp.route("/confidence", methods=['GET'])
+@bp.route("/confidence", methods=["GET"])
 def confidence():
-    transcription: Transcription = app.config['CURRENT_TRANSCRIPTION']
-    data = {
-        "confidence": transcription.get_confidence()
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    transcription: Transcription = app.config["CURRENT_TRANSCRIPTION"]
+    data = {"confidence": transcription.get_confidence()}
+    return jsonify({"status": 200, "data": data})
