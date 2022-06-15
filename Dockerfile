@@ -179,8 +179,8 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 WORKDIR /
 
 RUN echo "===> Install Elpis"
-# Remove `--single-branch` or include `--branch hft` below for development
-RUN git clone --branch black_formatting --depth=1 https://github.com/CoEDL/elpis.git
+# Remove `--single-branch` and replace with `--branch <your_branch_name>` below for development
+RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip
