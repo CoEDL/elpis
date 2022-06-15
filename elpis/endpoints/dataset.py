@@ -9,184 +9,149 @@ import os
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
 
-@bp.route("/new", methods=['POST'])
+@bp.route("/new", methods=["POST"])
 def new():
-    interface: Interface = app.config['INTERFACE']
+    interface: Interface = app.config["INTERFACE"]
     try:
-        dataset = interface.new_dataset(request.json['name'])
+        dataset = interface.new_dataset(request.json["name"])
     except InterfaceError as e:
-        return jsonify({
-            "status": 500,
-            "error": e.human_message
-        })
-    app.config['CURRENT_DATASET'] = dataset
-    data = {
-        "state": dataset.config._load()
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+        return jsonify({"status": 500, "error": e.human_message})
+    app.config["CURRENT_DATASET"] = dataset
+    data = {"state": dataset.config._load()}
+    return jsonify({"status": 200, "data": data})
 
 
-@bp.route("/load", methods=['POST'])
+@bp.route("/load", methods=["POST"])
 def load():
-    interface: Interface = app.config['INTERFACE']
-    dataset = interface.get_dataset(request.json['name'])
-    app.config['CURRENT_DATASET'] = dataset
-    data = {
-        "state": dataset.config._load()
-    }
+    interface: Interface = app.config["INTERFACE"]
+    dataset = interface.get_dataset(request.json["name"])
+    app.config["CURRENT_DATASET"] = dataset
+    data = {"state": dataset.config._load()}
     if os.path.exists(dataset.pathto.word_count_json):
         with dataset.pathto.word_count_json.open() as fin:
             wordlist = fin.read()
-        data.update({
-            "wordlist": wordlist
-        })
+        data.update({"wordlist": wordlist})
     else:
         dataset.auto_select_importer()
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    return jsonify({"status": 200, "data": data})
 
-@bp.route("/delete", methods=['POST'])
+
+@bp.route("/delete", methods=["POST"])
 def delete():
-    interface: Interface = app.config['INTERFACE']
-    dsname = request.json['name']
+    interface: Interface = app.config["INTERFACE"]
+    dsname = request.json["name"]
     # Cascade down, first remove models, then pron_dicts
     for m in interface.list_models_verbose():
-        if m['dataset_name'] == dsname:
-            interface.remove_model(m['name'])
+        if m["dataset_name"] == dsname:
+            interface.remove_model(m["name"])
     for pd in interface.list_pron_dicts_verbose():
-        if pd['dataset_name'] == dsname:
-            interface.remove_pron_dict(pd['name'])
+        if pd["dataset_name"] == dsname:
+            interface.remove_pron_dict(pd["name"])
     # Then, remove the dataset
     interface.remove_dataset(dsname)
-    data = {
-        "list": interface.list_datasets(),
-        "name": ""
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    data = {"list": interface.list_datasets(), "name": ""}
+    return jsonify({"status": 200, "data": data})
 
-@bp.route("/list", methods=['GET'])
+
+@bp.route("/list", methods=["GET"])
 def list_existing():
-    interface: Interface = app.config['INTERFACE']
-    data = {
-        "list": interface.list_datasets()
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    interface: Interface = app.config["INTERFACE"]
+    data = {"list": interface.list_datasets()}
+    return jsonify({"status": 200, "data": data})
 
 
 def require_dataset(f):
     def wrapper(*args, **kwargs):
-        dataset: Dataset = app.config['CURRENT_DATASET']
+        dataset: Dataset = app.config["CURRENT_DATASET"]
         if dataset is None:
-            return jsonify({"status": 404,
-                            "data": "No current dataset exists (perhaps create one first)"})
+            return jsonify(
+                {
+                    "status": 404,
+                    "data": "No current dataset exists (perhaps create one first)",
+                }
+            )
         return f(dataset, *args, **kwargs)
+
     wrapper.__name__ = f.__name__
     return wrapper
+
 
 # Handle file uploads. For now, default to the "original" dir.
 # Dataset.add_fp() will check file names, moving corpora files to own dir
 # later we might have a separate GUI widget for corpora files
 # which could have a different route with a different destination.
 # add_fp scans the uploaded files and returns lists of all tier types and tier names for eafs
-@bp.route("/files", methods=['POST'])
+@bp.route("/files", methods=["POST"])
 @require_dataset
 def files(dataset: Dataset):
-    if request.method == 'POST':
+    if request.method == "POST":
         for file in request.files.getlist("file"):
-            dataset.add_fp(fp=file, fname=file.filename, destination='original')
+            dataset.add_fp(fp=file, fname=file.filename, destination="original")
         data = {"files": dataset.files}
         dataset.auto_select_importer()
         if dataset.importer is not None:
             # maybe a comment here will force this file update?
             dataset.validate()
             dataset.refresh_ui()
-            data.update({
-                'settings': dataset.importer.get_settings(),
-                "ui": dataset.importer.get_ui(),
-                "importer_name": dataset.importer.get_name()
-            })
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+            data.update(
+                {
+                    "settings": dataset.importer.get_settings(),
+                    "ui": dataset.importer.get_ui(),
+                    "importer_name": dataset.importer.get_name(),
+                }
+            )
+    return jsonify({"status": 200, "data": data})
 
-@bp.route("/files/delete", methods=['POST'])
+
+@bp.route("/files/delete", methods=["POST"])
 @require_dataset
 def files_delete(dataset: Dataset):
-    if request.method == 'POST':
+    if request.method == "POST":
         dataset.remove_file(request.form["file"])
         dataset.refresh_ui()
         data = {"files": dataset.files}
-    return jsonify({
-        "status": 200,
-        "data": data,
-    })
+    return jsonify(
+        {
+            "status": 200,
+            "data": data,
+        }
+    )
 
 
-@bp.route("/import/settings", methods=['GET', 'POST'])
+@bp.route("/import/settings", methods=["GET", "POST"])
 @require_dataset
 def settings(dataset: Dataset):
     if dataset.importer is not None:
         # Only edit if POST
-        if request.method == 'POST':
+        if request.method == "POST":
             settings = dataset.importer.get_settings()
             for key in request.json.keys():
                 if key in settings.keys():
                     dataset.importer.set_setting(key, request.json[key])
                 else:
-                    pass # TODO throw an invalid key error here?
-    # Return imports current/updated settings.
-        data = {
-            'settings': dataset.importer.get_settings()
-        }
-        return jsonify({
-            "status": 200,
-            "data": data
-        })
-    return jsonify({
-        "status": 200,
-        "data": {}
-    })
+                    pass  # TODO throw an invalid key error here?
+        # Return imports current/updated settings.
+        data = {"settings": dataset.importer.get_settings()}
+        return jsonify({"status": 200, "data": data})
+    return jsonify({"status": 200, "data": {}})
 
 
-@bp.route("/import/ui", methods=['GET', 'POST'])
+@bp.route("/import/ui", methods=["GET", "POST"])
 @require_dataset
 def settings_ui(dataset: Dataset):
-    data = {
-        'ui': dataset.importer.get_ui()
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
-
+    data = {"ui": dataset.importer.get_ui()}
+    return jsonify({"status": 200, "data": data})
 
 
 # TODO prepare endpoint returns file contents as text.
 # Probably nicer to send back JSON data instead
 
 
-@bp.route("/prepare", methods=['POST'])
+@bp.route("/prepare", methods=["POST"])
 @require_dataset
 def prepare(dataset: Dataset):
     dataset.process()
     with dataset.pathto.word_count_json.open() as fin:
         wordlist = fin.read()
-    data = {
-        "wordlist": wordlist
-    }
-    return jsonify({
-        "status": 200,
-        "data": data
-    })
+    data = {"wordlist": wordlist}
+    return jsonify({"status": 200, "data": data})
