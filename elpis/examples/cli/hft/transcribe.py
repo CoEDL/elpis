@@ -65,9 +65,7 @@ def main(model_name: str, infer_path: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Transcribe a file.")
-    parser.add_argument(
-        "--name", default="abui0", type=str, help="Which dataset to use?"
-    )
+    parser.add_argument("--name", default="abui0", type=str, help="Which dataset to use?")
     parser.add_argument(
         "--infer",
         default="/datasets/abui/untranscribed/audio.wav",

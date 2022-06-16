@@ -49,9 +49,7 @@ def main(dataset_name: str, reset: bool):
         logger.info(f"Making new dataset {dataset_name}")
         dataset = elpis.new_dataset(dataset_name)
         logger.info(f"Adding data from {presets[dataset_name]['dataset_dir']}")
-        dataset.add_directory(
-            presets[dataset_name]["dataset_dir"], extensions=["eaf", "wav"]
-        )
+        dataset.add_directory(presets[dataset_name]["dataset_dir"], extensions=["eaf", "wav"])
         logger.info("Select importer")
         dataset.auto_select_importer()  # Selects Elan because of eaf file.
         logger.info("Set setting")
@@ -93,9 +91,7 @@ def main(dataset_name: str, reset: bool):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Prepare a dataset and train a model.")
-    parser.add_argument(
-        "--name", default="abui", type=str, help="Which dataset to use?"
-    )
+    parser.add_argument("--name", default="abui", type=str, help="Which dataset to use?")
     parser.add_argument(
         "--reset",
         action="store_false",
