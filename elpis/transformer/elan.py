@@ -189,9 +189,7 @@ def import_eaf_file(
         if isinstance(tier_order, int):
             try:
                 tier_name = tier_names[tier_order]
-                logger.info(
-                    f"using tier order {tier_order} to get tier name {tier_name}"
-                )
+                logger.info(f"using tier order {tier_order} to get tier name {tier_name}")
             except IndexError:
                 logger.warning("couldn't find a tier")
                 pass

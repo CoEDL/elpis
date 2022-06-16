@@ -135,9 +135,7 @@ class DataTransformer:
         config = self._callback_get_config()
         settings = config["settings"]
         settings[key] = value  # TODO handle error if key is not already in settings.
-        settings_for_callback = copyJSONable(
-            settings
-        )  # TODO handle error if not JSONable
+        settings_for_callback = copyJSONable(settings)  # TODO handle error if not JSONable
         self._settings_change_callback(settings_for_callback)
         config["settings"] = settings
         self._callback_set_config(config)
@@ -187,9 +185,7 @@ class DataTransformerAbstractFactory:
 
         # Ensure only one name exists per DataTransformerAbstractFactory
         if name in self._transformer_factories:
-            raise ValueError(
-                f'DataTransformerAbstractFactory with name "{name}" already exists'
-            )
+            raise ValueError(f'DataTransformerAbstractFactory with name "{name}" already exists')
         self._transformer_factories[name] = self
 
         # Context proxy variables to copy to the instantiated class
@@ -245,9 +241,7 @@ class DataTransformerAbstractFactory:
                 "export context contains settings. Set default context at start of script"
             )
         elif self._default_context_already_set:
-            raise RuntimeError(
-                "Have multiple calls to set_default_context, only allowed one"
-            )
+            raise RuntimeError("Have multiple calls to set_default_context, only allowed one")
         self._default_context_already_set = True
 
         # perform deep copy and ensures JSONability
@@ -294,9 +288,7 @@ class DataTransformerAbstractFactory:
             RuntimeError: if the decorated function does not have three parameters.
         """
         if self._import_directory_callback is not None:
-            raise RuntimeError(
-                "import_directory used, therefore cannot use import_files"
-            )
+            raise RuntimeError("import_directory used, therefore cannot use import_files")
         elif extention in self._import_extension_callbacks:
             raise RuntimeError(
                 f'"{extention}" has already been registered with import_files decorator'
@@ -308,9 +300,7 @@ class DataTransformerAbstractFactory:
             if f.__name__ in self._attributes:
                 raise NameError("bad function name. Already used")
             if f.__name__ in dir(DataTransformer):
-                raise NameError(
-                    "bad function name. Name is attribute of DataTransformer"
-                )
+                raise NameError("bad function name. Name is attribute of DataTransformer")
 
             sig = signature(f)
             if len(sig.parameters) != 5:
@@ -330,9 +320,7 @@ class DataTransformerAbstractFactory:
     def validate_files(self, extention: str):
         # TODO: Docs
         if self._import_directory_callback is not None:
-            raise RuntimeError(
-                "import_directory used, therefore cannot use validate_files"
-            )
+            raise RuntimeError("import_directory used, therefore cannot use validate_files")
         elif extention in self._import_file_validator_callback:
             raise RuntimeError(
                 f'"{extention}" has already been registered with validate_files decorator'
@@ -342,9 +330,7 @@ class DataTransformerAbstractFactory:
             if f.__name__ in self._attributes:
                 raise NameError("bad function name. Already used")
             if f.__name__ in dir(DataTransformer):
-                raise NameError(
-                    "bad function name. Name is attribute of DataTransformer"
-                )
+                raise NameError("bad function name. Name is attribute of DataTransformer")
 
             sig = signature(f)
             if len(sig.parameters) != 1:
@@ -395,9 +381,7 @@ class DataTransformerAbstractFactory:
         if self._import_directory_callback is not None:
             raise RuntimeError("import_directory already specified")
         if len(self._import_extension_callbacks) != 0:
-            raise RuntimeError(
-                "import_files used, therefore cannot use import_directory"
-            )
+            raise RuntimeError("import_files used, therefore cannot use import_directory")
         if f.__name__ in self._attributes:
             raise NameError("bad function name. Already used")
         if f.__name__ in dir(DataTransformer):
@@ -766,9 +750,7 @@ class DataTransformerAbstractFactory:
                 nonlocal import_extension_callbacks
                 nonlocal audio_extention
 
-                extention_to_files: FilteredPathList = _filter_files_by_extention(
-                    collection_path
-                )
+                extention_to_files: FilteredPathList = _filter_files_by_extention(collection_path)
 
                 # process audio
                 if (
@@ -861,9 +843,9 @@ def make_importer(
 ) -> DataTransformer:
     if name not in DataTransformerAbstractFactory._transformer_factories:
         raise ValueError(f'data transformer factory with name "{name}" not found')
-    dtaf: DataTransformerAbstractFactory = (
-        DataTransformerAbstractFactory._transformer_factories[name]
-    )
+    dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[
+        name
+    ]
     if not dtaf.is_import_capable():
         raise ValueError(f'data transformer factory with name "{name}" cannot import')
     dt = dtaf.build_importer(
@@ -890,9 +872,9 @@ def make_exporter(
 ) -> DataTransformer:
     if name not in DataTransformerAbstractFactory._transformer_factories:
         raise ValueError(f'data transformer factory with name "{name}" not found')
-    dtaf: DataTransformerAbstractFactory = (
-        DataTransformerAbstractFactory._transformer_factories[name]
-    )
+    dtaf: DataTransformerAbstractFactory = DataTransformerAbstractFactory._transformer_factories[
+        name
+    ]
     if not dtaf.is_export_capable():
         raise ValueError(f'data transformer factory with name "{name}" cannot export')
     dt = dtaf.build_exporter(
