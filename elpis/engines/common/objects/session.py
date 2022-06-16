@@ -8,6 +8,6 @@ class Session(object):
         self.path = base_path.joinpath(self.hash)
 
     def log(self, stage_name: str, content: str):
-        with open(str(self.path.joinpath('log.txt', 'a'))) as flog:
+        with open(str(self.path.joinpath("log.txt", "a"))) as flog:
             flog.write(f'\n{f" {stage_name} ":=^{80}}\n')
             flog.write(content)
