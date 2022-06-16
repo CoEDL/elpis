@@ -36,6 +36,7 @@ jobs:
       - name: Format Python Files
         uses: github/super-linter@v4
         env:
+          LINTER_RULES_PATH: /
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_PYTHON_BLACK: true
           PYTHON_BLACK_CONFIG_FILE: pyproject.toml
