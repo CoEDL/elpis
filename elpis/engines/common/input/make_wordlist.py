@@ -25,9 +25,11 @@ def save_word_list(word_list: List[str], file_name: str) -> None:
     :param word_list: list of words to write.
     :param file_name: name of file to write word list to.
     """
-    with open(file_name, "w", encoding='utf-8') as f:
+    with open(file_name, "w", encoding="utf-8") as f:
         for word in word_list:
-            f.write(word + "\n",)
+            f.write(
+                word + "\n",
+            )
         logger.info(f"Wrote word list to {file_name}")
 
 
@@ -61,15 +63,18 @@ def extract_additional_words(file_name: str) -> List[str]:
                 new_words = line.strip().split(" ")
                 words += [word for word in new_words]
     else:
-        logger.warning(f"Additional word list file at {file_name} does not exist, skipping!")
+        logger.warning(
+            f"Additional word list file at {file_name} does not exist, skipping!"
+        )
     return words
 
 
-def generate_word_list(transcription_file: str,
-                       output_file: str,
-                       additional_word_list_file: str,
-                       additional_corpus_txt: str
-                       ) -> None:
+def generate_word_list(
+    transcription_file: str,
+    output_file: str,
+    additional_word_list_file: str,
+    additional_corpus_txt: str,
+) -> None:
     """
     Generates the wordlist.txt file used to populate the Kaldi file structure and generate
     the lexicon.txt file.
@@ -112,32 +117,45 @@ def main():
     [-c KALDICORPUS]
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--infile",
-                        type=str,
-                        required=True,
-                        help="The json file containing the transcriptions.")
-    parser.add_argument("-o", "--outfile",
-                        type=str,
-                        required=True,
-                        help="The path of the file to write the word list to.")
-    parser.add_argument("-w", "--additional_word_list_file",
-                        type=str,
-                        required=False,
-                        help="File path to an optional additional word list.")
-    parser.add_argument("-c", "--additional_corpus_txt",
-                        type=str,
-                        help="File path to the corpus.txt .",
-                        required=True)
+    parser.add_argument(
+        "-i",
+        "--infile",
+        type=str,
+        required=True,
+        help="The json file containing the transcriptions.",
+    )
+    parser.add_argument(
+        "-o",
+        "--outfile",
+        type=str,
+        required=True,
+        help="The path of the file to write the word list to.",
+    )
+    parser.add_argument(
+        "-w",
+        "--additional_word_list_file",
+        type=str,
+        required=False,
+        help="File path to an optional additional word list.",
+    )
+    parser.add_argument(
+        "-c",
+        "--additional_corpus_txt",
+        type=str,
+        help="File path to the corpus.txt .",
+        required=True,
+    )
     arguments = parser.parse_args()
 
-    generate_word_list(transcription_file=arguments.infile,
-                       output_file=arguments.outfile,
-                       additional_word_list_file=arguments.additional_word_list_file,
-                       additional_corpus_txt=arguments.additional_corpus_txt
-                       )
+    generate_word_list(
+        transcription_file=arguments.infile,
+        output_file=arguments.outfile,
+        additional_word_list_file=arguments.additional_word_list_file,
+        additional_corpus_txt=arguments.additional_corpus_txt,
+    )
 
     logger.info("Done.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
