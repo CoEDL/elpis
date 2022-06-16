@@ -21,7 +21,7 @@ def extract_words(input_file_name: str) -> List[str]:
     :return: a list of words
     """
     input_tokens = []
-    with open(input_file_name, "r", encoding='utf-8') as input_file:
+    with open(input_file_name, "r", encoding="utf-8") as input_file:
         for line in input_file.readlines():
             token = line.strip()
             if len(token) > 0:
@@ -36,22 +36,24 @@ def extract_sound_mappings(config_file_name: str) -> List[Tuple[str, str]]:
     :return: a list of tuples consisting containing (symbol, sound_equivalent)
     """
     sound_mappings = []
-    with open(config_file_name, "r", encoding='utf-8') as config_file:
+    with open(config_file_name, "r", encoding="utf-8") as config_file:
         for line in config_file.readlines():
-            if line[0] == '#':
+            if line[0] == "#":
                 continue
 
-            mapping = list(filter(None, line.strip().split(' ', 1)))
+            mapping = list(filter(None, line.strip().split(" ", 1)))
 
             if len(mapping) > 1:
                 sound_mappings.append((mapping[0], mapping[1]))
     return sound_mappings
 
 
-def generate_sound_mapping(word: str,
-                           sound_map: List[Tuple[str, str]],
-                           output_file: TextIO,
-                           missing_characters: Set[str]) -> None:
+def generate_sound_mapping(
+    word: str,
+    sound_map: List[Tuple[str, str]],
+    output_file: TextIO,
+    missing_characters: Set[str],
+) -> None:
     """
     Writes the pronunciation mapping for a particular word to the given output file.
     :param word: the word to generate a pronunciation mapping for
@@ -74,16 +76,16 @@ def generate_sound_mapping(word: str,
 
         if not found:
             # unknown sound
-            res.append('(' + token_lower[current_index] + ')')
+            res.append("(" + token_lower[current_index] + ")")
             missing_characters.add(token_lower[current_index])
             current_index += 1
 
-    output_file.write(' '.join(res) + '\n')
+    output_file.write(" ".join(res) + "\n")
 
 
-def generate_pronunciation_dictionary(word_list: str,
-                                      pronunciation_dictionary: str,
-                                      config_file: str) -> None:
+def generate_pronunciation_dictionary(
+    word_list: str, pronunciation_dictionary: str, config_file: str
+) -> None:
     """
     Creates a dictionary of pronunciations based on the provided word list and sound rules.
     :param word_list: the file path to the list of words to add to the pronunciation dictionary
@@ -96,14 +98,16 @@ def generate_pronunciation_dictionary(word_list: str,
 
     missing_characters = set()
 
-    with open(pronunciation_dictionary, "w", encoding='utf-8') as output_file:
-        output_file.write('!SIL sil\n')
-        output_file.write('<UNK> spn\n')
+    with open(pronunciation_dictionary, "w", encoding="utf-8") as output_file:
+        output_file.write("!SIL sil\n")
+        output_file.write("<UNK> spn\n")
         for word in words:
-            generate_sound_mapping(word=word,
-                                   sound_map=sound_map,
-                                   output_file=output_file,
-                                   missing_characters=missing_characters)
+            generate_sound_mapping(
+                word=word,
+                sound_map=sound_map,
+                output_file=output_file,
+                missing_characters=missing_characters,
+            )
 
     for character in missing_characters:
         logger.warning(f"Unexpected character: {character}")
@@ -113,24 +117,25 @@ def generate_pronunciation_dictionary(word_list: str,
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--infile",
-                        type=str,
-                        required=True,
-                        help="")
-    parser.add_argument("-o", "--outfile",
-                        type=str,
-                        required=True,
-                        help="name of the output file")
-    parser.add_argument("-c", "--config",
-                        type=str,
-                        required=True,
-                        help="configuration file with one letter/symbol "
-                             "-> sound mapping in each line")
+    parser.add_argument("-i", "--infile", type=str, required=True, help="")
+    parser.add_argument(
+        "-o", "--outfile", type=str, required=True, help="name of the output file"
+    )
+    parser.add_argument(
+        "-c",
+        "--config",
+        type=str,
+        required=True,
+        help="configuration file with one letter/symbol "
+        "-> sound mapping in each line",
+    )
     arguments = parser.parse_args()
 
-    generate_pronunciation_dictionary(word_list=arguments.infile,
-                                      pronunciation_dictionary=arguments.outfile,
-                                      config_file=arguments.config)
+    generate_pronunciation_dictionary(
+        word_list=arguments.infile,
+        pronunciation_dictionary=arguments.outfile,
+        config_file=arguments.config,
+    )
 
 
 if __name__ == "__main__":
