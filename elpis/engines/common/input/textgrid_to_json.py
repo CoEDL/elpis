@@ -34,17 +34,20 @@ def process_textgrid(input_directory: str) -> List[Dict[str, Union[str, int]]]:
         for filename in files:
             basename, extension = os.path.splitext(filename)
             if filename.endswith(".TextGrid"):
-                text_grid: textgrid.Textgrid = textgrid.openTextgrid(os.path.join(root, filename),
-                                                                     includeEmptyIntervals=False)
+                text_grid: textgrid.Textgrid = textgrid.openTextgrid(
+                    os.path.join(root, filename), includeEmptyIntervals=False
+                )
                 speech_tier: textgrid.TextgridTier = text_grid.tierDict["Speech"]
                 for start, stop, label in speech_tier.entryList:
-                    label_word: str = label.replace('"', '')
-                    intervals.append({
-                        "audio_file_name": os.path.join(".", basename + ".wav"),
-                        "transcript": label_word,
-                        "start_ms": seconds_to_milliseconds(float(start)),
-                        "stop_ms": seconds_to_milliseconds(float(stop))
-                    })
+                    label_word: str = label.replace('"', "")
+                    intervals.append(
+                        {
+                            "audio_file_name": os.path.join(".", basename + ".wav"),
+                            "transcript": label_word,
+                            "start_ms": seconds_to_milliseconds(float(start)),
+                            "stop_ms": seconds_to_milliseconds(float(stop)),
+                        }
+                    )
     return intervals
 
 
@@ -67,9 +70,18 @@ def main() -> None:
     """
 
     parser = argparse.ArgumentParser(
-        description="Search input folder for .TextGrid files and convert to JSON on stdout")
-    parser.add_argument("-i", "--input_dir", help="The input data dir", type=str, default="input/data/")
-    parser.add_argument("-o", "--output_dir", help="Output directory", type=str, default="input/output/tmp")
+        description="Search input folder for .TextGrid files and convert to JSON on stdout"
+    )
+    parser.add_argument(
+        "-i", "--input_dir", help="The input data dir", type=str, default="input/data/"
+    )
+    parser.add_argument(
+        "-o",
+        "--output_dir",
+        help="Output directory",
+        type=str,
+        default="input/output/tmp",
+    )
     arguments = parser.parse_args()
 
     if not os.path.exists(arguments.output_dir):
@@ -84,8 +96,7 @@ def main() -> None:
         outfile_name = os.path.join(name + ".json")
 
     output_json = os.path.join(result_base_name, outfile_name)
-    write_data_to_json_file(data=intervals,
-                            file_name=output_json)
+    write_data_to_json_file(data=intervals, file_name=output_json)
 
 
 if __name__ == "__main__":
