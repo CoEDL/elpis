@@ -32,9 +32,7 @@ class FSObject(ABC):
     ``dir_name`` directory.
     """
 
-    _links = (
-        {}
-    )  # Used for child classes to dynamically link to other objects if applicable.
+    _links = {}  # Used for child classes to dynamically link to other objects if applicable.
 
     # _config_file = '___________.json'
     # Do not uncomment line above, this is an example of how to implement the

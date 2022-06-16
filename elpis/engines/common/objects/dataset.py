@@ -43,9 +43,7 @@ class DSPaths(object):
         self.word_count_json: Path = self.basepath.joinpath("word_count.json")
         self.word_list_txt: Path = self.basepath.joinpath("word_list.txt")
         # \/ user uploaded addional words
-        self.additional_word_list_txt = self.original.joinpath(
-            "additional_word_list.txt"
-        )
+        self.additional_word_list_txt = self.original.joinpath("additional_word_list.txt")
         # \/ compile the uploaded corpora into this single file
         self.corpus_txt = self.cleaned.joinpath("corpus.txt")
 
@@ -76,9 +74,7 @@ class Dataset(FSObject):
     def load(cls, base_path: Path):
         self = super().load(base_path)
         self.pathto = DSPaths(self.path)
-        self.__files = [
-            self.pathto.original.joinpath(path) for path in self.config["files"]
-        ]
+        self.__files = [self.pathto.original.joinpath(path) for path in self.config["files"]]
         # at this point config has the previous state
         self._importer = self.config["importer"]
         temp_state = self._importer
@@ -391,9 +387,7 @@ class Dataset(FSObject):
             additional_corpus_txt=f"{self.pathto.corpus_txt}",
         )
         # make word count
-        annotations: List[Dict[str, str]] = load_json_file(
-            f"{self.pathto.annotation_json}"
-        )
+        annotations: List[Dict[str, str]] = load_json_file(f"{self.pathto.annotation_json}")
         with self.pathto.word_count_json.open(mode="w") as f_word_count:
             wordlist = {}
             for transcription in annotations:
