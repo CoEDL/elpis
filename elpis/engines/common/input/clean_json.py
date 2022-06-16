@@ -102,11 +102,7 @@ def are_words_valid(
         return False
 
     # Exclude utterance if > 10% english
-    if (
-        remove_english
-        and len(clean_words) > 0
-        and english_word_count / len(clean_words) > 0.1
-    ):
+    if remove_english and len(clean_words) > 0 and english_word_count / len(clean_words) > 0.1:
         # logger.debug(round(english_word_count / len(clean_words)), trans, file=sys.stderr)
         return False
 
@@ -305,9 +301,7 @@ def main() -> None:
         action="store_true",
     )
     # TODO add defaults
-    parser.add_argument(
-        "-c", "--punctuation_to_collapse_by", type=str, help="Chars to strip"
-    )
+    parser.add_argument("-c", "--punctuation_to_collapse_by", type=str, help="Chars to strip")
     parser.add_argument(
         "-e",
         "--punctuation_to_explode_by",

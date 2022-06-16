@@ -118,16 +118,13 @@ def generate_pronunciation_dictionary(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infile", type=str, required=True, help="")
-    parser.add_argument(
-        "-o", "--outfile", type=str, required=True, help="name of the output file"
-    )
+    parser.add_argument("-o", "--outfile", type=str, required=True, help="name of the output file")
     parser.add_argument(
         "-c",
         "--config",
         type=str,
         required=True,
-        help="configuration file with one letter/symbol "
-        "-> sound mapping in each line",
+        help="configuration file with one letter/symbol " "-> sound mapping in each line",
     )
     arguments = parser.parse_args()
 
