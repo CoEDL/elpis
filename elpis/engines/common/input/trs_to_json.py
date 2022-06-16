@@ -31,14 +31,19 @@ def conditional_log(condition: bool, text: str) -> None:
 
     if condition:
         if platform.system() == "Windows":
-            sys.stderr.write(text.encode("cp850",
-                                         errors="backslashreplace").decode(sys.stdout.encoding))
+            sys.stderr.write(
+                text.encode("cp850", errors="backslashreplace").decode(
+                    sys.stdout.encoding
+                )
+            )
         else:
             sys.stderr.write(text)
         sys.stderr.flush()
 
 
-def process_trs(file_name: str, verbose_output: bool) -> List[Dict[str, Union[str, float]]]:
+def process_trs(
+    file_name: str, verbose_output: bool
+) -> List[Dict[str, Union[str, float]]]:
 
     """
     Method to process the trs files and return a list of utterances.
@@ -70,8 +75,9 @@ def process_trs(file_name: str, verbose_output: bool) -> List[Dict[str, Union[st
     return utterances
 
 
-def process_turn(wave_name: str, turn_node: ElementTree.Element,
-                 tree: ElementTree.ElementTree) -> List[Dict[str, Union[str, float]]]:
+def process_turn(
+    wave_name: str, turn_node: ElementTree.Element, tree: ElementTree.ElementTree
+) -> List[Dict[str, Union[str, float]]]:
     """
     Helper method to process each turn_node in the .trs file.
 
@@ -85,14 +91,18 @@ def process_turn(wave_name: str, turn_node: ElementTree.Element,
     turn_end: float = float(turn_node.attrib["endTime"])
     speaker_id: str = turn_node.get("speaker", "")
 
-    speaker_name_node: ElementTree.Element = tree.find(".//Speaker[@id='%s']" % speaker_id)
+    speaker_name_node: ElementTree.Element = tree.find(
+        ".//Speaker[@id='%s']" % speaker_id
+    )
     if speaker_name_node is not None:
         speaker_name: str = speaker_name_node.attrib["name"]
     else:
         speaker_name: str = str(uuid.uuid4())
 
-    items: List[Tuple[str, str]] = [(element.attrib["time"], element.tail.strip())
-                                    for element in turn_node.findall("./Sync")]
+    items: List[Tuple[str, str]] = [
+        (element.attrib["time"], element.tail.strip())
+        for element in turn_node.findall("./Sync")
+    ]
     wave_file_name = os.path.join(".", wave_name)
 
     result: List[Dict[str, Union[str, float]]] = []
@@ -104,11 +114,15 @@ def process_turn(wave_name: str, turn_node: ElementTree.Element,
             end_time: float = float(items[i + 1][0])
         else:
             end_time = turn_end
-        result.append({"speaker_id": speaker_name,
-                       "audio_file_name": wave_file_name,
-                       "transcript": transcription_str,
-                       "start_ms": start_time * 1000.0,
-                       "stop_ms": end_time * 1000.0})
+        result.append(
+            {
+                "speaker_id": speaker_name,
+                "audio_file_name": wave_file_name,
+                "transcript": transcription_str,
+                "start_ms": start_time * 1000.0,
+                "stop_ms": end_time * 1000.0,
+            }
+        )
 
     return result
 
@@ -122,38 +136,48 @@ def main() -> None:
     Usage: python3 trs_to_json.py [-h] [-d INPUT_DIRECTORY] [-v] > {OUTPUT_FILE]
     """
 
-    parser = argparse.ArgumentParser(description="A command line utility to convert .trs "
-                                                 "files to .json",
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("-i", "--input_dir",
-                        type=str,
-                        help="Input directory, default='working_dir/input/data'",
-                        default="working_dir/input/data/")
-    parser.add_argument('-v', '--verbose',
-                        type=str,
-                        help='More logging to console.',
-                        action="store_true")
-    parser.add_argument("-o", "--output_json",
-                        type=str,
-                        help="File name to output json",
-                        default="working_dir/input/output/tmp/")
+    parser = argparse.ArgumentParser(
+        description="A command line utility to convert .trs " "files to .json",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "-i",
+        "--input_dir",
+        type=str,
+        help="Input directory, default='working_dir/input/data'",
+        default="working_dir/input/data/",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        type=str,
+        help="More logging to console.",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-o",
+        "--output_json",
+        type=str,
+        help="File name to output json",
+        default="working_dir/input/output/tmp/",
+    )
 
     arguments: argparse.Namespace = parser.parse_args()
 
     if arguments.verbose:
         sys.stderr.write(arguments.input_directory + "\n")
 
-    all_files_in_dir: Set[str] = set(glob.glob(os.path.join(arguments.input_dir, "**"),
-                                               recursive=True))
+    all_files_in_dir: Set[str] = set(
+        glob.glob(os.path.join(arguments.input_dir, "**"), recursive=True)
+    )
     transcript_names: Set[str] = find_files_by_extensions(all_files_in_dir, {"*.trs"})
 
     utterances = []
     for file_name in transcript_names:
         utterances = utterances + process_trs(file_name, arguments.verbose)
 
-    write_data_to_json_file(data=utterances,
-                            file_name=arguments.output_json)
+    write_data_to_json_file(data=utterances, file_name=arguments.output_json)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

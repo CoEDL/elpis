@@ -8,7 +8,7 @@ import librosa
 from werkzeug.datastructures import FileStorage
 
 
-ORIGINAL_SOUND_FILE_DIRECTORY = Path('/tmp/origial_sound_files/')
+ORIGINAL_SOUND_FILE_DIRECTORY = Path("/tmp/origial_sound_files/")
 
 
 def load_audio(file: Path, target_sample_rate: int = None) -> Tuple[np.ndarray, int]:
@@ -24,6 +24,7 @@ def load_audio(file: Path, target_sample_rate: int = None) -> Tuple[np.ndarray, 
             the audio data, and the native sample rate of the file.
     """
     return librosa.load(file, sr=target_sample_rate)
+
 
 def resample_audio(file: Path, destination: Path, target_sample_rate: int) -> None:
     """Writes a resampled audio file to the supplied destination, with a supplied
@@ -47,21 +48,21 @@ def resample_audio(file: Path, destination: Path, target_sample_rate: int) -> No
     sf.write(destination, data, target_sample_rate)
 
 
-def resample_from_file_storage(file: FileStorage, destination: Path, target_sample_rate: int) -> Dict:
-    """ Performs audio resampling from a flask request FileStorage file, and
+def resample_from_file_storage(
+    file: FileStorage, destination: Path, target_sample_rate: int
+) -> Dict:
+    """Performs audio resampling from a flask request FileStorage file, and
     returns some information about the original file.
-    
+
     """
     # Create temporary directory if it hasn't already been created
     ORIGINAL_SOUND_FILE_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
     original = ORIGINAL_SOUND_FILE_DIRECTORY / file.filename
-    with original.open(mode='wb') as fout:
+    with original.open(mode="wb") as fout:
         fout.write(file.read())
 
-    info = {
-        'duration': librosa.get_duration(filename=original)
-    }
+    info = {"duration": librosa.get_duration(filename=original)}
 
     resample_audio(original, destination, target_sample_rate)
     return info

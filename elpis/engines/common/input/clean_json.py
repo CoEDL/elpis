@@ -27,13 +27,15 @@ from typing import Dict, List, Set
 from ..utilities import load_json_file, write_data_to_json_file
 
 
-def clean_utterance(utterance: Dict[str, str],
-                    punctuation_to_collapse_by: str = '',
-                    punctuation_to_explode_by: str = '',
-                    special_cases: set = {None},
-                    translation_tags: set = {None},
-                    remove_english: bool = False,
-                    english_words: set = None) -> (List[str], int):
+def clean_utterance(
+    utterance: Dict[str, str],
+    punctuation_to_collapse_by: str = "",
+    punctuation_to_explode_by: str = "",
+    special_cases: set = {None},
+    translation_tags: set = {None},
+    remove_english: bool = False,
+    english_words: set = None,
+) -> (List[str], int):
     """
     Takes an utterance and cleans it based on the rules established by the provided parameters.
     :param utterance: a dictionary with a "transcript" key-value pair.
@@ -61,9 +63,11 @@ def clean_utterance(utterance: Dict[str, str],
         if word in translation_tags:
             return [], 0
         # Word is ok to use, now clean it
-        word = deal_with_punctuation(text=word,
-                                     punctuation_to_collapse_by=punctuation_to_collapse_by,
-                                     punctuation_to_explode_by=punctuation_to_explode_by)
+        word = deal_with_punctuation(
+            text=word,
+            punctuation_to_collapse_by=punctuation_to_collapse_by,
+            punctuation_to_explode_by=punctuation_to_explode_by,
+        )
         clean_words.append(word)
     return clean_words, english_word_count
 
@@ -78,10 +82,12 @@ def get_english_words() -> Set[str]:
     return set(words.words())
 
 
-def are_words_valid(clean_words: List[str],
-                    english_word_count: int,
-                    remove_english: bool,
-                    use_langid: bool) -> bool:
+def are_words_valid(
+    clean_words: List[str],
+    english_word_count: int,
+    remove_english: bool,
+    use_langid: bool,
+) -> bool:
     """
     Determines whether a list of words is valid based on the provided parameters.
     :param clean_words: a list of clean word strings.
@@ -96,7 +102,11 @@ def are_words_valid(clean_words: List[str],
         return False
 
     # Exclude utterance if > 10% english
-    if remove_english and len(clean_words) > 0 and english_word_count / len(clean_words) > 0.1:
+    if (
+        remove_english
+        and len(clean_words) > 0
+        and english_word_count / len(clean_words) > 0.1
+    ):
         # logger.debug(round(english_word_count / len(clean_words)), trans, file=sys.stderr)
         return False
 
@@ -109,13 +119,15 @@ def are_words_valid(clean_words: List[str],
     return True
 
 
-def clean_json_utterance(utterance: Dict[str, str],
-                         punctuation_to_collapse_by: str = '',
-                         punctuation_to_explode_by: str = '',
-                         special_cases: set = {None},
-                         translation_tags: set = {None},
-                         remove_english: bool = False,
-                         use_langid: bool = False) -> Dict[str, str]:
+def clean_json_utterance(
+    utterance: Dict[str, str],
+    punctuation_to_collapse_by: str = "",
+    punctuation_to_explode_by: str = "",
+    special_cases: set = {None},
+    translation_tags: set = {None},
+    remove_english: bool = False,
+    use_langid: bool = False,
+) -> Dict[str, str]:
     """
     Clean an utterance (Python dictionary) based on the given parameters.
     :param utterance: Python dictionary, must have a 'transcript' key-value.
@@ -137,38 +149,36 @@ def clean_json_utterance(utterance: Dict[str, str],
         english_words = set()
 
     # Clean the text in the dict, returns a list of cleaned words
-    clean_words, english_word_count = \
-        clean_utterance(utterance=utterance,
-                        punctuation_to_collapse_by=punctuation_to_collapse_by,
-                        punctuation_to_explode_by=punctuation_to_explode_by,
-                        special_cases=special_cases,
-                        translation_tags=translation_tags,
-                        remove_english=remove_english,
-                        english_words=english_words
-                        )
+    clean_words, english_word_count = clean_utterance(
+        utterance=utterance,
+        punctuation_to_collapse_by=punctuation_to_collapse_by,
+        punctuation_to_explode_by=punctuation_to_explode_by,
+        special_cases=special_cases,
+        translation_tags=translation_tags,
+        remove_english=remove_english,
+        english_words=english_words,
+    )
 
     # Check that the cleaned words are valid (ie, not null, not English etc)
-    if are_words_valid(clean_words,
-                       english_word_count,
-                       remove_english,
-                       use_langid):
+    if are_words_valid(clean_words, english_word_count, remove_english, use_langid):
         cleaned_transcript = " ".join(clean_words).strip()
     else:
         # TODO is it best to return an empty str here or raise an error?
         cleaned_transcript = ""
 
-    utterance['transcript'] = cleaned_transcript
+    utterance["transcript"] = cleaned_transcript
     return utterance
 
 
-def clean_json_data(json_data: List[Dict[str, str]],
-                    punctuation_to_collapse_by: str = '',
-                    punctuation_to_explode_by: str = '',
-                    special_cases: set = {None},
-                    translation_tags: set = {None},
-                    remove_english: bool = False,
-                    use_langid: bool = False,
-                    ) -> List[Dict[str, str]]:
+def clean_json_data(
+    json_data: List[Dict[str, str]],
+    punctuation_to_collapse_by: str = "",
+    punctuation_to_explode_by: str = "",
+    special_cases: set = {None},
+    translation_tags: set = {None},
+    remove_english: bool = False,
+    use_langid: bool = False,
+) -> List[Dict[str, str]]:
     """
     Clean a list of utterances (Python dictionaries) based on the given parameters.
     :param json_data: List of Python dictionaries, each must have a 'transcript' key-value.
@@ -182,21 +192,25 @@ def clean_json_data(json_data: List[Dict[str, str]],
     """
     json_data_cleaned = []
     for utterance in json_data:
-        utterance_cleaned = clean_json_utterance(utterance,
-                                                 punctuation_to_collapse_by=punctuation_to_collapse_by,
-                                                 punctuation_to_explode_by=punctuation_to_explode_by,
-                                                 special_cases=special_cases,
-                                                 translation_tags=translation_tags,
-                                                 remove_english=remove_english,
-                                                 use_langid=use_langid)
+        utterance_cleaned = clean_json_utterance(
+            utterance,
+            punctuation_to_collapse_by=punctuation_to_collapse_by,
+            punctuation_to_explode_by=punctuation_to_explode_by,
+            special_cases=special_cases,
+            translation_tags=translation_tags,
+            remove_english=remove_english,
+            use_langid=use_langid,
+        )
         json_data_cleaned.append(utterance_cleaned)
     return json_data_cleaned
 
 
-def extract_additional_corpora(additional_corpus: str = '',
-                               corpus_txt: str = '',
-                               punctuation_to_collapse_by: str = '',
-                               punctuation_to_explode_by: str = '') -> None:
+def extract_additional_corpora(
+    additional_corpus: str = "",
+    corpus_txt: str = "",
+    punctuation_to_collapse_by: str = "",
+    punctuation_to_explode_by: str = "",
+) -> None:
     """
     Takes a text file, extracts all sentences and writes them to the main corpus file.
     :param additional_corpus: the path to a plaintext file to extract additional sentences/lines from
@@ -206,30 +220,39 @@ def extract_additional_corpora(additional_corpus: str = '',
     """
     logger.info(f"{corpus_txt=}")
     if os.path.exists(corpus_txt):
-        write_mode = 'a'  # append if already exists
+        write_mode = "a"  # append if already exists
     else:
-        write_mode = 'w'  # make a new file if not
+        write_mode = "w"  # make a new file if not
     with open(corpus_txt, write_mode) as corpus_txt_file:
         if os.path.exists(additional_corpus):
             logger.info(f"Extracting corpus examples from: {additional_corpus}")
-            with open(additional_corpus, "r", encoding="utf-8", ) as file_:
+            with open(
+                additional_corpus,
+                "r",
+                encoding="utf-8",
+            ) as file_:
                 for line in file_.readlines():
                     # clean the text along the way
-                    line = \
-                        deal_with_punctuation(text=line,
-                                              punctuation_to_collapse_by=punctuation_to_collapse_by,
-                                              punctuation_to_explode_by=punctuation_to_explode_by)
-                    if not line.endswith('\n'):
-                        line = line + '\n'
+                    line = deal_with_punctuation(
+                        text=line,
+                        punctuation_to_collapse_by=punctuation_to_collapse_by,
+                        punctuation_to_explode_by=punctuation_to_explode_by,
+                    )
+                    if not line.endswith("\n"):
+                        line = line + "\n"
                     corpus_txt_file.writelines(line)
         else:
-            logger.warning(f"Provided additional text additional_corpus file path invalid: "
-                  f"{additional_corpus}")
+            logger.warning(
+                f"Provided additional text additional_corpus file path invalid: "
+                f"{additional_corpus}"
+            )
 
 
-def deal_with_punctuation(text: str = '',
-                          punctuation_to_collapse_by: str = '',
-                          punctuation_to_explode_by: str = '') -> str:
+def deal_with_punctuation(
+    text: str = "",
+    punctuation_to_collapse_by: str = "",
+    punctuation_to_explode_by: str = "",
+) -> str:
     """
     Removes punctuation from a string
     :param text: original text
@@ -255,27 +278,42 @@ def main() -> None:
     Usage: python3 clean_json.py [--i INFILE] [--o OUTFILE] [-r] [-u]
     """
     parser: ArgumentParser = ArgumentParser()
-    parser.add_argument("-i", "--infile",
-                        type=str,
-                        help="The path to the dirty json file to clean.",
-                        required=True)
-    parser.add_argument("-o", "--outfile",
-                        type=str,
-                        help="The path to the clean json file to write to",
-                        required=True)
-    parser.add_argument("-r", "--remove_english",
-                        help="Remove english-like utterances",
-                        action="store_true")
-    parser.add_argument("-u", "--use_langid",
-                        help="Use langid library to detect English",
-                        action="store_true")
+    parser.add_argument(
+        "-i",
+        "--infile",
+        type=str,
+        help="The path to the dirty json file to clean.",
+        required=True,
+    )
+    parser.add_argument(
+        "-o",
+        "--outfile",
+        type=str,
+        help="The path to the clean json file to write to",
+        required=True,
+    )
+    parser.add_argument(
+        "-r",
+        "--remove_english",
+        help="Remove english-like utterances",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-u",
+        "--use_langid",
+        help="Use langid library to detect English",
+        action="store_true",
+    )
     # TODO add defaults
-    parser.add_argument("-c", "--punctuation_to_collapse_by",
-                        type=str,
-                        help="Chars to strip")
-    parser.add_argument("-e", "--punctuation_to_explode_by",
-                        type=str,
-                        help="Chars to strip and replace with spaces")
+    parser.add_argument(
+        "-c", "--punctuation_to_collapse_by", type=str, help="Chars to strip"
+    )
+    parser.add_argument(
+        "-e",
+        "--punctuation_to_explode_by",
+        type=str,
+        help="Chars to strip and replace with spaces",
+    )
 
     arguments = parser.parse_args()
     dirty_json_data: List[Dict[str, str]] = load_json_file(arguments.infile)
@@ -283,14 +321,15 @@ def main() -> None:
 
     logger.info(f"Filtering dirty json data {arguments.infile}...")
 
-    filtered_data = clean_json_data(json_data=dirty_json_data,
-                                    remove_english=arguments.remove_english,
-                                    use_langid=arguments.use_langid,
-                                    punctuation_to_collapse_by=arguments.punctuation_to_collapse_by,
-                                    punctuation_to_explode_by=arguments.punctuation_to_explode_by)
+    filtered_data = clean_json_data(
+        json_data=dirty_json_data,
+        remove_english=arguments.remove_english,
+        use_langid=arguments.use_langid,
+        punctuation_to_collapse_by=arguments.punctuation_to_collapse_by,
+        punctuation_to_explode_by=arguments.punctuation_to_explode_by,
+    )
 
-    write_data_to_json_file(data=list(filtered_data),
-                            file_name=outfile)
+    write_data_to_json_file(data=list(filtered_data), file_name=outfile)
 
     logger.info(f"Finished! Wrote {str(len(filtered_data))} transcriptions.")
 
