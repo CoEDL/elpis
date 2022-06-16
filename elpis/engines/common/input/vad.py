@@ -6,9 +6,7 @@ import numpy
 from typing import Any, Dict, List, Tuple
 
 
-def get_chunks(
-    audio_path: str, method: str, parameter: float
-) -> List[Tuple[float, float]]:
+def get_chunks(audio_path: str, method: str, parameter: float) -> List[Tuple[float, float]]:
     """
     Chunk voice sections from audio data extracted from an audio path with the chosen method (with its parameter).
 
@@ -40,9 +38,7 @@ def read_audio_path(audio_path: str) -> Dict[str, Any]:
     return {"signal": audio_signal, "rate": sampling_rate, "top db": top_db}
 
 
-def find_best_threshold(
-    audio_data: Dict[str, Any], method: str, parameter: str
-) -> float:
+def find_best_threshold(audio_data: Dict[str, Any], method: str, parameter: str) -> float:
     """
     Find the best threshold of audio data for the chosen method and parameter. For all methods, if the result is higher than top db, it is lowered to the latter.
 
@@ -71,9 +67,7 @@ def find_best_threshold(
             else audio_data["top db"]
         )
     elif method == "threshold":
-        threshold = (
-            parameter if parameter < audio_data["top db"] else audio_data["top db"]
-        )
+        threshold = parameter if parameter < audio_data["top db"] else audio_data["top db"]
     return threshold
 
 
@@ -92,9 +86,7 @@ def get_continuum(
     for index, threshold in enumerate(thresholds):
         timestamps = get_voice_sections(audio_data, threshold)
         durations = [end - begin for begin, end in timestamps]
-        limited_durations = [
-            duration for duration in durations if duration <= max_duration
-        ]
+        limited_durations = [duration for duration in durations if duration <= max_duration]
         values.append(
             {
                 "timestamps": list(timestamps),
@@ -107,9 +99,7 @@ def get_continuum(
     return values
 
 
-def get_voice_sections(
-    audio_data: Dict[str, Any], threshold: float
-) -> List[Tuple[float, float]]:
+def get_voice_sections(audio_data: Dict[str, Any], threshold: float) -> List[Tuple[float, float]]:
     """
     Find the voice sections (in seconds) of an audio data according to a threshold.
 

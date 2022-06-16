@@ -32,18 +32,14 @@ def conditional_log(condition: bool, text: str) -> None:
     if condition:
         if platform.system() == "Windows":
             sys.stderr.write(
-                text.encode("cp850", errors="backslashreplace").decode(
-                    sys.stdout.encoding
-                )
+                text.encode("cp850", errors="backslashreplace").decode(sys.stdout.encoding)
             )
         else:
             sys.stderr.write(text)
         sys.stderr.flush()
 
 
-def process_trs(
-    file_name: str, verbose_output: bool
-) -> List[Dict[str, Union[str, float]]]:
+def process_trs(file_name: str, verbose_output: bool) -> List[Dict[str, Union[str, float]]]:
 
     """
     Method to process the trs files and return a list of utterances.
@@ -91,17 +87,14 @@ def process_turn(
     turn_end: float = float(turn_node.attrib["endTime"])
     speaker_id: str = turn_node.get("speaker", "")
 
-    speaker_name_node: ElementTree.Element = tree.find(
-        ".//Speaker[@id='%s']" % speaker_id
-    )
+    speaker_name_node: ElementTree.Element = tree.find(".//Speaker[@id='%s']" % speaker_id)
     if speaker_name_node is not None:
         speaker_name: str = speaker_name_node.attrib["name"]
     else:
         speaker_name: str = str(uuid.uuid4())
 
     items: List[Tuple[str, str]] = [
-        (element.attrib["time"], element.tail.strip())
-        for element in turn_node.findall("./Sync")
+        (element.attrib["time"], element.tail.strip()) for element in turn_node.findall("./Sync")
     ]
     wave_file_name = os.path.join(".", wave_name)
 

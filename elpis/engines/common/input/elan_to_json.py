@@ -71,9 +71,7 @@ def process_eaf(
     :return: a list of dictionaries, where each dictionary is an annotation
     """
 
-    logger.info(
-        f"processing eaf {input_elan_file} using {tier_order} {tier_type} {tier_name}"
-    )
+    logger.info(f"processing eaf {input_elan_file} using {tier_order} {tier_type} {tier_name}")
 
     # Get paths to files
     input_directory, full_file_name = os.path.split(input_elan_file)
@@ -178,9 +176,7 @@ def main():
     parser.add_argument(
         "-o", "--output_dir", help="Output directory", default="../input/output/tmp/"
     )
-    parser.add_argument(
-        "-t", "--tier", help="Target language tier name", default="Phrase"
-    )
+    parser.add_argument("-t", "--tier", help="Target language tier name", default="Phrase")
     parser.add_argument("-j", "--output_json", help="File path to output json")
     arguments: argparse.Namespace = parser.parse_args()
 
@@ -188,12 +184,8 @@ def main():
     if not os.path.exists(arguments.output_dir):
         os.makedirs(arguments.output_dir)
 
-    all_files_in_directory = set(
-        glob.glob(os.path.join(arguments.input_dir, "**"), recursive=True)
-    )
-    input_elan_files = [
-        file_ for file_ in all_files_in_directory if file_.endswith(".eaf")
-    ]
+    all_files_in_directory = set(glob.glob(os.path.join(arguments.input_dir, "**"), recursive=True))
+    input_elan_files = [file_ for file_ in all_files_in_directory if file_.endswith(".eaf")]
 
     annotations_data = []
 

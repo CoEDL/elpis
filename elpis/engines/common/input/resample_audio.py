@@ -67,8 +67,7 @@ def process_item(sox_arguments: Tuple[int, str, threading.Lock, Set[str], str]) 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="This script will silence a wave file based on "
-        "annotations in an Elan tier "
+        description="This script will silence a wave file based on " "annotations in an Elan tier "
     )
     parser.add_argument(
         "-c",
