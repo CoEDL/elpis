@@ -32,17 +32,17 @@ class BlueprintSetupState(FlaskBlueprintSetupState):
     def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
         if self.url_prefix is not None:
             if rule:
-                rule = f'{self.blueprint.get_full_url_prefix()}{rule}'
+                rule = f"{self.blueprint.get_full_url_prefix()}{rule}"
             else:
                 rule = self.url_prefix
-        options.setdefault('subdomain', self.subdomain)
+        options.setdefault("subdomain", self.subdomain)
         if endpoint is None:
             endpoint = _endpoint_from_view_func(view_func)
         else:
-            endpoint = f'{self.blueprint.get_full_endpoint()}.{endpoint}'
+            endpoint = f"{self.blueprint.get_full_endpoint()}.{endpoint}"
         defaults = self.url_defaults
-        if 'defaults' in options:
-            defaults = dict(defaults, **options.pop('defaults'))
+        if "defaults" in options:
+            defaults = dict(defaults, **options.pop("defaults"))
         self.app.add_url_rule(rule, endpoint, view_func, defaults=defaults, **options)
 
 
@@ -66,7 +66,7 @@ class Blueprint(FlaskBlueprint):
         appended to their paths and endpoints.
         """
         # Setting the parent of a blueprint makes that a child (non-base/root)
-        #   blueprint. 
+        #   blueprint.
         blueprint.parent = self
         self.blueprints.append(blueprint)
 
@@ -92,8 +92,9 @@ class Blueprint(FlaskBlueprint):
 
         if self.has_static_folder:
             state.add_url_rule(
-                self.static_url_path + '/<path:filename>',
-                view_func=self.send_static_file, endpoint='static'
+                self.static_url_path + "/<path:filename>",
+                view_func=self.send_static_file,
+                endpoint="static",
             )
 
         for deferred in self.deferred_functions:
@@ -136,7 +137,7 @@ class Blueprint(FlaskBlueprint):
             # Normally having a dot('.') in the name is naughty and isn't
             # allowed because they can be accessed like attributes, but
             # for this modularity we are breaking this rule.
-            return f'{self.parent.get_full_endpoint()}.{self.name}'
+            return f"{self.parent.get_full_endpoint()}.{self.name}"
         else:
             return self.name
 
@@ -144,9 +145,9 @@ class Blueprint(FlaskBlueprint):
         """
         Recursively build the URL prefix for this blueprint.
         """
-        url_prefix = '' if self.url_prefix is None else self.url_prefix
+        url_prefix = "" if self.url_prefix is None else self.url_prefix
         if self.parent:
-            return f'{self.parent.get_full_url_prefix()}{url_prefix}'
+            return f"{self.parent.get_full_url_prefix()}{url_prefix}"
         else:
             return url_prefix
 
@@ -159,16 +160,20 @@ class Blueprint(FlaskBlueprint):
 
         def export(new_rule, end_point, view_function, route_options):
             if self.is_base_blueprint():
-                if view_function and hasattr(view_function, '__name__'):
-                    assert '.' not in view_function.__name__, "Blueprint view function name should not contain dots"
-                self.record(lambda s:
-                            s.add_url_rule(new_rule, end_point, view_function, **route_options))
+                if view_function and hasattr(view_function, "__name__"):
+                    assert (
+                        "." not in view_function.__name__
+                    ), "Blueprint view function name should not contain dots"
+                self.record(
+                    lambda s: s.add_url_rule(new_rule, end_point, view_function, **route_options)
+                )
             else:
                 # Remove the ability to access the vie_function like a an
                 # attribute because we want a dot('.') in the endpoint name
                 # for syntax sugar.
-                self.record(lambda s:
-                            s.add_url_rule(new_rule, end_point, view_function, **route_options))
+                self.record(
+                    lambda s: s.add_url_rule(new_rule, end_point, view_function, **route_options)
+                )
 
         # prepare child routes now
         for blueprint in self.blueprints:

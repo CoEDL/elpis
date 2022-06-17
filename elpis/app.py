@@ -4,7 +4,7 @@ from .blueprint import Blueprint
 
 class Flask(FlaskBase):
     """Custom app to allow multi-level blueprints."""
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -20,7 +20,4 @@ class Flask(FlaskBase):
             # Deal with custom Blueprint objects
             blueprint.app = self
             blueprint.prepare_routes()
-            blueprint.register_app(
-                lambda bp: super(Flask, self).register_blueprint(bp),
-                self
-            )
+            blueprint.register_app(lambda bp: super(Flask, self).register_blueprint(bp), self)
