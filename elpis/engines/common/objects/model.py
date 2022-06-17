@@ -24,9 +24,7 @@ class Model(FSObject):  # TODO not thread safe
         self.config["stage_status"] = {}
         # TODO check if this is used, all the other things here are config settings
         self.status = "untrained"
-        self.config[
-            "engine_name"
-        ] = None  # use this to set engine if loading a model later
+        self.config["engine_name"] = None  # use this to set engine if loading a model later
         self.config["results"] = None
 
     @classmethod
