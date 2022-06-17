@@ -13,37 +13,39 @@ from . import test_pipeline
 def mock_model(tmpdir_factory):
     base_path = tmpdir_factory.mktemp("pipeline")
     base_path = Path(base_path)
-    if not base_path.joinpath('/state').exists():
-        kaldi = KaldiInterface(f'{base_path}/state')
+    if not base_path.joinpath("/state").exists():
+        kaldi = KaldiInterface(f"{base_path}/state")
 
-        ds = kaldi.new_dataset('dataset_x')
-        ds.add_directory('/recordings/transcribed')
-        ds.select_importer('Elan')
+        ds = kaldi.new_dataset("dataset_x")
+        ds.add_directory("/recordings/transcribed")
+        ds.select_importer("Elan")
         ds.process()
 
-        pd = kaldi.new_pron_dict('pron_dict_y')
+        pd = kaldi.new_pron_dict("pron_dict_y")
         pd.link(ds)
-        pd.set_l2s_path('/recordings/letter_to_sound.txt')
+        pd.set_l2s_path("/recordings/letter_to_sound.txt")
         pd.generate_lexicon()
 
-        m = kaldi.new_model('model_z')
+        m = kaldi.new_model("model_z")
         m.link(ds, pd)
-        m.build_structure() # TODO: remove this line
-        m.train() # may take a while
+        m.build_structure()  # TODO: remove this line
+        m.train()  # may take a while
     else:
-        kaldi = KaldiInterface.load(f'{base_path}/state')
-        m = kaldi.new_model('model_z', use_existing=True)
-    return (kaldi,m)
+        kaldi = KaldiInterface.load(f"{base_path}/state")
+        m = kaldi.new_model("model_z", use_existing=True)
+    return (kaldi, m)
+
 
 def test_new_transcription(tmpdir):
     """
     Check the state of a new transcription.
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    t = kaldi.new_transcription('transcription_w')
+    kaldi = KaldiInterface(f"{tmpdir}/state")
+    t = kaldi.new_transcription("transcription_w")
     assert t.has_been_transcribed == False
     assert t.exporter == None
-    assert t.state == json.loads(f"""
+    assert t.state == json.loads(
+        f"""
     {{
         "name": "transcription_w",
         "hash": "{t.hash}",
@@ -52,7 +54,8 @@ def test_new_transcription(tmpdir):
         "has_been_transcribed": false,
         "exporter": null
     }}
-    """)
+    """
+    )
     return
 
 
@@ -61,8 +64,8 @@ def test_error_when_writing_to_protected_property(tmpdir):
     An error is raised when there is an attempt to write to a protected
     property.
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    t = kaldi.new_transcription('transcription_w')
+    kaldi = KaldiInterface(f"{tmpdir}/state")
+    t = kaldi.new_transcription("transcription_w")
 
     with pytest.raises(AttributeError):
         t.has_been_transcribed = True
@@ -77,11 +80,12 @@ def test_new_transcription_using_override(tmpdir):
     Using override has no effect when the pron dict with the same name does not
     exist.
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    t = kaldi.new_transcription('transcription_w', override=True)
+    kaldi = KaldiInterface(f"{tmpdir}/state")
+    t = kaldi.new_transcription("transcription_w", override=True)
     assert t.has_been_transcribed == False
     assert t.exporter == None
-    assert t.state == json.loads(f"""
+    assert t.state == json.loads(
+        f"""
     {{
         "name": "transcription_w",
         "hash": "{t.hash}",
@@ -90,7 +94,8 @@ def test_new_transcription_using_override(tmpdir):
         "has_been_transcribed": false,
         "exporter": null
     }}
-    """)
+    """
+    )
     return
 
 
@@ -98,8 +103,8 @@ def test_new_transcription_using_use_existing(tmpdir):
     """
     Using the use_existing when an existing transcription does not exist is okay.
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    kaldi.new_transcription('transcription_w', use_existing=True)
+    kaldi = KaldiInterface(f"{tmpdir}/state")
+    kaldi.new_transcription("transcription_w", use_existing=True)
     return
 
 
@@ -108,10 +113,10 @@ def test_existing_transcription_using_override(tmpdir):
     Use override to delete a transcription with the same name and create a totally
     new transcription with the same name.
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    t1 = kaldi.new_transcription('transcription_w')
+    kaldi = KaldiInterface(f"{tmpdir}/state")
+    t1 = kaldi.new_transcription("transcription_w")
     t1_hash = t1.hash
-    t2 = kaldi.new_transcription('transcription_w', override=True)
+    t2 = kaldi.new_transcription("transcription_w", override=True)
     # note t1 can no longer be used
     assert len(kaldi.list_transcriptions()) == 1
     assert t1_hash != t2.hash
@@ -123,10 +128,10 @@ def test_two_new_transcription_with_same_name(tmpdir):
     Trying to create two transcriptions with the same name without override or
     use_existing set to True will produce a ValueError.
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
-    kaldi.new_transcription('transcription_w')
+    kaldi = KaldiInterface(f"{tmpdir}/state")
+    kaldi.new_transcription("transcription_w")
     with pytest.raises(ValueError):
-        kaldi.new_transcription('transcription_w')
+        kaldi.new_transcription("transcription_w")
     return
 
 
@@ -149,9 +154,9 @@ def test_override_and_use_existing(tmpdir):
     """
     Cannot have both the override and use_existing parameters set to True.
     """
-    kaldi = KaldiInterface(f'{tmpdir}/state')
+    kaldi = KaldiInterface(f"{tmpdir}/state")
     with pytest.raises(ValueError):
-        kaldi.new_transcription('transcription_w', override=True, use_existing=True)
+        kaldi.new_transcription("transcription_w", override=True, use_existing=True)
     return
 
 
@@ -160,9 +165,9 @@ def test_linking(mock_model, tmpdir):
     Check state after linking.
     """
     kaldi, m = mock_model
-    t = kaldi.new_transcription('transcription_w')
+    t = kaldi.new_transcription("transcription_w")
     t.link(m)
-    assert t.state['model'] == 'model_z'
+    assert t.state["model"] == "model_z"
     return
 
 
@@ -346,7 +351,7 @@ def test_linking(mock_model, tmpdir):
 #     with pytest.raises(RuntimeError):
 #         t.transcribe_align()
 #     return
-    
+
 
 # def test_exporter_before_transcribe_algin(pipeline_upto_step_4):
 #     """
