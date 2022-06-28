@@ -4,8 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [1.0.1] - 2022-06-28
+### Added
+- Resampling utility
+### Changed
+- Reformat all Python code using Black formatter
+- Clean-up of Dockerfile
+- Caching of port-audio for Kaldi build
+- Clean-up protobuf install in Dockerfile
+
 ## [0.97.2] - 2021-12-23
-### ADDED 
+### Added
 - Delete buttons for datasets, pron dicts and models
 - Minor bug fixes
 
