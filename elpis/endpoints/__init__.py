@@ -4,6 +4,7 @@ from . import dataset
 from . import model
 from . import pron_dict
 from . import transcription
+from . import statistics
 
 
 bp = Blueprint("endpoints", __name__, url_prefix="/api")
@@ -14,6 +15,7 @@ bp.register_blueprint(dataset.bp)
 bp.register_blueprint(pron_dict.bp)
 bp.register_blueprint(model.bp)
 bp.register_blueprint(transcription.bp)
+bp.register_blueprint(statistics.bp)
 
 
 @bp.route("/")

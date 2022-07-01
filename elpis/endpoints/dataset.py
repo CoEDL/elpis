@@ -6,6 +6,8 @@ from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.errors import InterfaceError
 import os
 
+from .utils.wrappers import require_dataset, file_param
+
 bp = Blueprint("dataset", __name__, url_prefix="/dataset")
 
 
@@ -190,3 +192,15 @@ def prepare(dataset: Dataset):
         "status": 200,
         "data": data
     })
+
+
+# Annotations
+@bp.route("/annotations")
+@require_dataset
+@file_param
+def annotations(dataset: Dataset, file_name: str = None):
+    """
+    Returns the annotations for a dataset, or a specified file.
+    """
+    #TODO(jack)
+    pass

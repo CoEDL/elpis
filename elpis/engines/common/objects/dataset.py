@@ -232,6 +232,7 @@ class Dataset(FSObject):
             fout.write(fp.read())
         
         if fname not in self.config['files']:
+            # Append file path to the list of files in the dataset
             self.__files.append(path)
             self.config['files'] = [f'{f.name}' for f in self.__files]
         else:
