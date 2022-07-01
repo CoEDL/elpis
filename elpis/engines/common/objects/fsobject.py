@@ -23,7 +23,7 @@ class FSObject(ABC):
     """
     ..
         "... TODO More docs here ..."
-    
+
     ``_config_file``
     ================
     All classes that inherit from FSObjects should implement a ``_config_file``
@@ -31,26 +31,29 @@ class FSObject(ABC):
     non-volatile properties. The ``_config_file`` file must be located in the
     ``dir_name`` directory.
     """
+
     _links = {}  # Used for child classes to dynamically link to other objects if applicable.
 
     # _config_file = '___________.json'
     # Do not uncomment line above, this is an example of how to implement the
     # _config_file variable in subclasses (classes that inherit this class).
 
-    def __init__(self,
-                 parent_path: Path = None,
-                 dir_name: str = None,
-                 name: str = None,
-                 pre_allocated_hash: str = None):
+    def __init__(
+        self,
+        parent_path: Path = None,
+        dir_name: str = None,
+        name: str = None,
+        pre_allocated_hash: str = None,
+    ):
         # Not allowed to instantiate this base class
         if type(self) == FSObject:
-            raise NotImplementedError('Must inherit FSObject, not instantiate it.')
+            raise NotImplementedError("Must inherit FSObject, not instantiate it.")
 
         # Must have a _config_file variable
         self._config_file
-        
+
         # _config_file must be a JSON file
-        if not self._config_file.endswith('.json'):
+        if not self._config_file.endswith(".json"):
             raise ValueError('_config_file must be a JSON file (ends with ".json")')
 
         # Optional arg: pre_allocated_hash
@@ -67,15 +70,15 @@ class FSObject(ABC):
         self.__path = Path(parent_path).joinpath(dir_name)
         self.path.mkdir(parents=True, exist_ok=True)
         #  if no config, then create it
-        config_file_path = Path(f'{self.__path}/{self._config_file}')
+        config_file_path = Path(f"{self.__path}/{self._config_file}")
         if not config_file_path.exists():
             self.ConfigurationInterface(self)._save({})
-        if 'name' not in self.config._load() or name is not None:
-            self.config['name'] = name
-        if 'hash' not in self.config._load():
-            self.config['hash'] = h
-        if 'date' not in self.config._load():
-            self.config['date'] = str(time.time())
+        if "name" not in self.config._load() or name is not None:
+            self.config["name"] = name
+        if "hash" not in self.config._load():
+            self.config["hash"] = h
+        if "date" not in self.config._load():
+            self.config["date"] = str(time.time())
 
     def _initial_config(self, config):
         self.ConfigurationInterface(self)._save(config)
@@ -91,17 +94,16 @@ class FSObject(ABC):
         self = cls.__new__(cls)
         self.__path = Path(base_path)
         return self
-    
+
     @property
     @abstractmethod
     def _config_file(self) -> str:
-        raise NotImplementedError('no _config_file has been defined for this class')
+        raise NotImplementedError("no _config_file has been defined for this class")
 
     # @property
     # @abstractmethod
     # def state(self) -> dict:
     #     raise NotImplementedError('no state has been defined for this class')
-    
 
     @property
     def path(self) -> Path:
@@ -110,19 +112,20 @@ class FSObject(ABC):
 
     @property
     def name(self) -> str:
-        return self.config['name']
+        return self.config["name"]
+
     # Must change name in the KaldiInterface object.
 
     @property
     def hash(self) -> str:
-        return self.config['hash']
+        return self.config["hash"]
 
     def __hash__(self) -> int:
-        return int(f'0x{self.hash}', 0)
+        return int(f"0x{self.hash}", 0)
 
     @property
     def date(self):
-        return self.config['date']
+        return self.config["date"]
 
     @property
     def config(self):
@@ -145,18 +148,19 @@ class FSObject(ABC):
         'config' attribute/property in the FSObject class like a JSON
         (or dict), since it is interfacing directly with one.
         """
+
         def __init__(self, fsobj):
             self.fsobj = fsobj
 
         def _file_name(self):
-            return getattr(self.fsobj, '_config_file', 'config.json')
+            return getattr(self.fsobj, "_config_file", "config.json")
 
         def _load(self):
-            with open(f'{self.fsobj.path}/{self._file_name()}', 'r') as fin:
+            with open(f"{self.fsobj.path}/{self._file_name()}", "r") as fin:
                 return json.load(fin)
 
         def _save(self, conf):
-            with open(f'{self.fsobj.path}/{self._file_name()}', 'w') as fout:
+            with open(f"{self.fsobj.path}/{self._file_name()}", "w") as fout:
                 return json.dump(conf, fout)
 
         def __getitem__(self, key: str):

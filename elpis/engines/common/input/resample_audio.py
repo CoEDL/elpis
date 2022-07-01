@@ -26,7 +26,13 @@ def join_norm(p1, p2) -> str:
 
 
 def process_item(sox_arguments: Tuple[int, str, threading.Lock, Set[str], str]) -> str:
-    index, input_audio, lock, temporary_directories, parent_temporary_directory = sox_arguments
+    (
+        index,
+        input_audio,
+        lock,
+        temporary_directories,
+        parent_temporary_directory,
+    ) = sox_arguments
 
     input_name = os.path.normpath(input_audio)
 
@@ -42,23 +48,41 @@ def process_item(sox_arguments: Tuple[int, str, threading.Lock, Set[str], str]) 
     temporary_file_name = join_norm(output_directory, "%s.%s" % (base_directory, "wav"))
 
     if not os.path.exists(temporary_file_name):
-        sox_arguments = [SOX_PATH, input_name, "-b", "16", "-c", "1", "-r", "16k", "-t", "wav",
-                         temporary_file_name]
+        sox_arguments = [
+            SOX_PATH,
+            input_name,
+            "-b",
+            "16",
+            "-c",
+            "1",
+            "-r",
+            "16k",
+            "-t",
+            "wav",
+            temporary_file_name,
+        ]
         subprocess.call(sox_arguments)
     return temporary_file_name
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="This script will silence a wave file based on "
-                                                 "annotations in an Elan tier ")
-    parser.add_argument('-c', '--corpus',
-                        help='Directory of audio and eaf files',
-                        type=str,
-                        default='../input/data')
-    parser.add_argument('-o', '--overwrite',
-                        help='Write over existing files',
-                        action="store_true",
-                        default=True)
+    parser = argparse.ArgumentParser(
+        description="This script will silence a wave file based on " "annotations in an Elan tier "
+    )
+    parser.add_argument(
+        "-c",
+        "--corpus",
+        help="Directory of audio and eaf files",
+        type=str,
+        default="../input/data",
+    )
+    parser.add_argument(
+        "-o",
+        "--overwrite",
+        help="Write over existing files",
+        action="store_true",
+        default=True,
+    )
     args = parser.parse_args()
 
     base_directory = args.corpus
@@ -66,13 +90,20 @@ def main() -> None:
     parent_temporary_directory = "tmp"
 
     all_files_in_dir = glob.glob(os.path.join(base_directory, "**"), recursive=True)
-    input_audio = [ file_ for file_ in all_files_in_dir if file_.endswith(".wav")]
+    input_audio = [file_ for file_ in all_files_in_dir if file_.endswith(".wav")]
     process_lock = threading.Lock()
     temporary_directories = set()
 
-    map_arguments = [(index, audio_path, process_lock, temporary_directories,
-                      parent_temporary_directory)
-                     for index, audio_path in enumerate(input_audio)]
+    map_arguments = [
+        (
+            index,
+            audio_path,
+            process_lock,
+            temporary_directories,
+            parent_temporary_directory,
+        )
+        for index, audio_path in enumerate(input_audio)
+    ]
 
     # Multi-Threaded Audio Re-sampling
     with Pool() as pool:

@@ -3,14 +3,15 @@ from pathlib import Path
 
 from elpis.wrappers.objects.interface import KaldiInterface
 
+
 def test_construction(tmpdir):
-    KaldiInterface(f'{tmpdir}/state')
+    KaldiInterface(f"{tmpdir}/state")
 
     # White-box testing
-    path_to_datasets = Path(f'{tmpdir}/state/datasets')
-    path_to_pron_dicts = Path(f'{tmpdir}/state/pron_dicts')
-    path_to_models = Path(f'{tmpdir}/state/models')
-    path_to_transcriptions = Path(f'{tmpdir}/state/transcriptions')
+    path_to_datasets = Path(f"{tmpdir}/state/datasets")
+    path_to_pron_dicts = Path(f"{tmpdir}/state/pron_dicts")
+    path_to_models = Path(f"{tmpdir}/state/models")
+    path_to_transcriptions = Path(f"{tmpdir}/state/transcriptions")
 
     # Creates empty child directories:
     #   datasets/
@@ -29,5 +30,6 @@ def test_construction(tmpdir):
     assert path_to_transcriptions.is_dir()
     assert path_to_transcriptions.exists()
     assert [n for n in path_to_transcriptions.iterdir()] == []
+
 
 # TODO: much more testing here

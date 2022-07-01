@@ -62,7 +62,9 @@ class KaldiInput:
         """
         if speaker_id not in self.speakers:
             self.speakers[speaker_id] = str(uuid.uuid4())  # create speaker id
-            self.speakers_list.append(f"{self.speakers[speaker_id]} \n")  # writing gender # TODO Handle gender here
+            self.speakers_list.append(
+                f"{self.speakers[speaker_id]} \n"
+            )  # writing gender # TODO Handle gender here
         return self.speakers[speaker_id]
 
     def add_recording(self, audio_file: str) -> str:
@@ -77,13 +79,16 @@ class KaldiInput:
             self.recordings_list.append(f"{self.recordings[audio_file]} ./{audio_file}\n")
         return self.recordings[audio_file]
 
-    def add(self, recording_id: str,
-            speaker_id: str,
-            utterance_id: str,
-            start_ms: int,
-            stop_ms: int,
-            transcript: str,
-            silence_markers: bool) -> None:
+    def add(
+        self,
+        recording_id: str,
+        speaker_id: str,
+        utterance_id: str,
+        start_ms: int,
+        stop_ms: int,
+        transcript: str,
+        silence_markers: bool,
+    ) -> None:
         """
         Appends new items to the transcripts, segments, utt2spk and corpus lists.
 
@@ -99,7 +104,9 @@ class KaldiInput:
             self.transcripts_list.append(f"{utterance_id} !SIL {transcript} !SIL\n")
         else:
             self.transcripts_list.append(f"{utterance_id} {transcript} \n")
-        self.segments_list.append(f"{utterance_id} {recording_id} {start_ms/1000.0} {stop_ms/1000.0}\n")
+        self.segments_list.append(
+            f"{utterance_id} {recording_id} {start_ms/1000.0} {stop_ms/1000.0}\n"
+        )
         self.utt2spk_list.append(f"{utterance_id} {speaker_id}\n")
         self.corpus_list.append(f"{transcript}\n")
 
@@ -130,9 +137,7 @@ class KaldiInput:
         self.corpus_txt.close()
 
 
-def extract_transcript(input_set: KaldiInput,
-                       json_transcript: dict,
-                       silence_markers: bool) -> None:
+def extract_transcript(input_set: KaldiInput, json_transcript: dict, silence_markers: bool) -> None:
     """
     Extract a single transcript from json and add its contents to the given output set.
     :param input_set: the set to add the data from the transcript to (e.g. testing or training data)
@@ -154,19 +159,14 @@ def extract_transcript(input_set: KaldiInput,
     speaker_id = input_set.add_speaker(speaker_id)  # add speaker id
     recording_id: str = input_set.add_recording(audio_file)  # add audio file name
     utterance_id: str = speaker_id + "-" + str(uuid.uuid4())  # add utterance id
-    input_set.add(recording_id,
-                  speaker_id,
-                  utterance_id,
-                  start_ms,
-                  stop_ms,
-                  transcript,
-                  silence_markers)
+    input_set.add(
+        recording_id, speaker_id, utterance_id, start_ms, stop_ms, transcript, silence_markers
+    )
 
 
-def create_kaldi_structure(input_json: str,
-                           output_folder: str,
-                           silence_markers: bool,
-                           corpus_txt: str) -> None:
+def create_kaldi_structure(
+    input_json: str, output_folder: str, silence_markers: bool, corpus_txt: str
+) -> None:
     """
     Create a full Kaldi input structure based upon a json list of transcriptions and an optional
     text corpus.
@@ -190,13 +190,17 @@ def create_kaldi_structure(input_json: str,
 
     for i, json_transcript in enumerate(json_transcripts):
         if i % 10 == 0:
-            extract_transcript(input_set=testing_input,
-                               json_transcript=json_transcript,
-                               silence_markers=silence_markers)
+            extract_transcript(
+                input_set=testing_input,
+                json_transcript=json_transcript,
+                silence_markers=silence_markers,
+            )
         else:
-            extract_transcript(input_set=training_input,
-                               json_transcript=json_transcript,
-                               silence_markers=silence_markers)
+            extract_transcript(
+                input_set=training_input,
+                json_transcript=json_transcript,
+                silence_markers=silence_markers,
+            )
 
     if os.path.exists(corpus_txt):
         # Append the corpus text to the training data (it was cleaned in dataset step)
@@ -216,30 +220,35 @@ def main() -> None:
 
     Usage: python3 json_to_kaldi.py -i INPUT_JSON -o OUTPUT_FOLDER [-s] [-c CORPUS_TXT]
     """
-    parser = argparse.ArgumentParser(description="Convert json from stdin to Kaldi input files "
-                                                 "(in output-folder).")
-    parser.add_argument("-i", "--input_json",
-                        type=str,
-                        help="The input json file",
-                        required=True)
-    parser.add_argument("-o", "--output_folder",
-                        type=str,
-                        help="The output folder",
-                        default=os.path.join(".", "data"))
-    parser.add_argument("-s", "--silence_markers",
-                        action="store_true",
-                        help="The input json file",
-                        required=False)
-    parser.add_argument("-c", "--corpus_txt",
-                        type=str,
-                        help="Path to the corpus.txt file to write text examples to",
-                        required=False)
+    parser = argparse.ArgumentParser(
+        description="Convert json from stdin to Kaldi input files " "(in output-folder)."
+    )
+    parser.add_argument("-i", "--input_json", type=str, help="The input json file", required=True)
+    parser.add_argument(
+        "-o",
+        "--output_folder",
+        type=str,
+        help="The output folder",
+        default=os.path.join(".", "data"),
+    )
+    parser.add_argument(
+        "-s", "--silence_markers", action="store_true", help="The input json file", required=False
+    )
+    parser.add_argument(
+        "-c",
+        "--corpus_txt",
+        type=str,
+        help="Path to the corpus.txt file to write text examples to",
+        required=False,
+    )
     arguments = parser.parse_args()
 
-    create_kaldi_structure(input_json=arguments.input_json,
-                           output_folder=arguments.output_folder,
-                           silence_markers=arguments.silence_markers,
-                           corpus_txt=arguments.corpus_txt)
+    create_kaldi_structure(
+        input_json=arguments.input_json,
+        output_folder=arguments.output_folder,
+        silence_markers=arguments.silence_markers,
+        corpus_txt=arguments.corpus_txt,
+    )
 
 
 if __name__ == "__main__":

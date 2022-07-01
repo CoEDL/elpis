@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS=12
+ENV NUM_CPUS=6
 
 ENV TZ=UTC
 
@@ -91,15 +91,14 @@ RUN echo "===> Install Kaldi dependencies" && \
 WORKDIR /
 
 RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
-    git clone -b 5.3 https://github.com/kaldi-asr/kaldi && \
-    cd /kaldi/tools && \
-    make -j$NUM_CPUS && \
-    ./install_portaudio.sh && \
-    cd /kaldi/src && ./configure --mathlib=ATLAS --shared  && \
+    git clone -b 5.3 https://github.com/kaldi-asr/kaldi
+COPY deps/pa_stable_v19_20111121.tgz /kaldi/tools/pa_stable_v19_20111121.tgz
+RUN cd /kaldi/tools && make -j$NUM_CPUS && ./install_portaudio.sh
+RUN cd /kaldi/src && ./configure --mathlib=ATLAS --shared && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
-    make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
-    cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS && \
-    cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
+    make depend -j$NUM_CPUS && make -j$NUM_CPUS
+RUN cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS
+RUN cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
@@ -160,10 +159,13 @@ RUN pip install --upgrade pip
 # Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
 # Override the dep info from requirements.txt so that we can specifiy CUDA version
 # Pin transformers to 4.6.0 because the model class has args code which breaks on later versions
+# Pin protobuf to fix `PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION` error
+RUN pip install protobuf==3.20.*
 RUN pip install transformers==4.6.0 datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
 # Set torch version for CUDA 11
 RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip install tensorboard==2.7.0
+
 # Cache the pretrained models
 COPY download_wav2vec2.py /root/download_wav2vec2.py
 RUN python /root/download_wav2vec2.py
@@ -177,7 +179,7 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 WORKDIR /
 
 RUN echo "===> Install Elpis"
-# Remove `--single-branch` or include `--branch hft` below for development
+# Remove `--single-branch` and replace with `--branch <your_branch_name>` below for development
 RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
