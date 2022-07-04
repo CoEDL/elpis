@@ -32,9 +32,7 @@ def frequency(dataset: Dataset, file_name: str = None):
     """
     data = {}
     if file_name is not None:
-        annotations: List[Dict[str, str]] = load_json_file(
-            f"{dataset.pathto.annotation_json}"
-        )
+        annotations: List[Dict[str, str]] = load_json_file(f"{dataset.pathto.annotation_json}")
         frequency = {}
         for transcription in annotations:
             if transcription["audio_file_name"] == (file_name + ".wav"):
@@ -58,9 +56,7 @@ def graphemes(pron_dict: PronDict, dataset: Dataset, file_name: str = None):
     """
     Returns the frequency of graphemes in the dataset, or for the specified file.
     """
-    annotations: List[Dict[str, str]] = load_json_file(
-        f"{dataset.pathto.annotation_json}"
-    )
+    annotations: List[Dict[str, str]] = load_json_file(f"{dataset.pathto.annotation_json}")
     graphemes = [text for (text, _) in extract_sound_mappings(pron_dict.l2s_path)]
     phrases = []
     if file_name is not None:
@@ -115,20 +111,14 @@ def annotated(dataset: Dataset, file_name: str = None):
     """
     Returns the ratio of annotated to un-annotated for the dataset, or for the specified file.
     """
-    annotations: List[Dict[str, str]] = load_json_file(
-        f"{dataset.pathto.annotation_json}"
-    )
+    annotations: List[Dict[str, str]] = load_json_file(f"{dataset.pathto.annotation_json}")
     annotated_time, total_time = 0, 0
     if file_name is not None:
-        total_time = get_length_of_wav(
-            dataset.pathto.original.joinpath(file_name + ".wav")
-        )
+        total_time = get_length_of_wav(dataset.pathto.original.joinpath(file_name + ".wav"))
         for transcription in annotations:
             if transcription["audio_file_name"] == (file_name + ".wav"):
                 annotated_time += transcription["stop_ms"] - transcription["start_ms"]
-        return jsonify(
-            {"status": 200, "annotated": annotated_time / float(total_time * 1000)}
-        )
+        return jsonify({"status": 200, "annotated": annotated_time / float(total_time * 1000)})
     else:
         for file_name in [f for f in dataset.files if f.endswith(".wav")]:
             total_time += get_length_of_wav(dataset.pathto.original.joinpath(file_name))
@@ -149,9 +139,7 @@ def sankey_word(dataset: Dataset, file_name: str = None):
     """
     Returns an object that can used to generate a sankey graph that shows order of words in the dataset.
     """
-    annotations: List[Dict[str, str]] = load_json_file(
-        f"{dataset.pathto.annotation_json}"
-    )
+    annotations: List[Dict[str, str]] = load_json_file(f"{dataset.pathto.annotation_json}")
     phrases = []
     if file_name is not None:
         phrases = [
@@ -172,9 +160,7 @@ def sankey_grapheme(pron_dict: PronDict, dataset: Dataset, file_name: str = None
     """
     Returns an object that can used to generate a sankey graph that shows order of graphemes in the dataset.
     """
-    annotations: List[Dict[str, str]] = load_json_file(
-        f"{dataset.pathto.annotation_json}"
-    )
+    annotations: List[Dict[str, str]] = load_json_file(f"{dataset.pathto.annotation_json}")
     graphemes = [text for (text, _) in extract_sound_mappings(pron_dict.l2s_path)]
     phrases = []
     if file_name is not None:
@@ -201,9 +187,7 @@ def swarm_plot_files(dataset: Dataset):
     The position being the length of the audio file
     The size being the count of words in the file
     """
-    annotations: List[Dict[str, str]] = load_json_file(
-        f"{dataset.pathto.annotation_json}"
-    )
+    annotations: List[Dict[str, str]] = load_json_file(f"{dataset.pathto.annotation_json}")
     swarm_plot = {}
     id_counter = 0
     for annotation in annotations:
@@ -226,9 +210,7 @@ def swarm_plot_files(dataset: Dataset):
             id_counter += 1
         else:
             swarm_plot[file_name]["count"] += len(annotation["transcript"].split(" "))
-            swarm_plot[file_name]["annotated"] += (
-                annotation["stop_ms"] - annotation["start_ms"]
-            )
+            swarm_plot[file_name]["annotated"] += annotation["stop_ms"] - annotation["start_ms"]
     # Transform annotated values now that we know the total length and total annotated length
     for val in swarm_plot.values():
         print((val["annotated"], val["length"]))
