@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import {Button, Grid, Header, Icon, Segment, Table} from "semantic-ui-react";
+import {Button, Grid, Header, Icon, Segment, Table, Tab} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import arraySort from "array-sort";
@@ -29,7 +29,7 @@ class DatasetPrepare extends Component {
             arraySort(data, clickedColumn, {reverse: false});
         } else {
             this.setState({
-                reverse: ! this.state.reverse,
+                reverse: !this.state.reverse,
             });
             arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
