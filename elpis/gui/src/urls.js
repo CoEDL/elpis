@@ -4,6 +4,7 @@ export default {
             index: "/dataset",
             new: "/dataset/new",
             files: "/dataset/files",
+            visualise: "/dataset/visualise",
             prepare: "/dataset/prepare",
             prepareError: "/dataset/prepare/error",
             punctuation_to_explode_by: "/dataset/punctuation_to_explode_by",
@@ -81,6 +82,15 @@ export default {
             text: "/api/transcription/text",
             elan: "/api/transcription/elan",
             confidence: "/api/transcription/confidence",
+        },
+        statistics: {
+            wordFreq: "/api/statistics/frequency/word",
+            l2sFreq: "/api/statistics/frequency/graphemes",
+            count: "/api/statistics/count",
+            annotated: "/api/statistics/annotated",
+            sankeyWord: "/api/statistics/sankey/word",
+            sankeyGraph: "/api/statistics/sankey/grapheme",
+            swarmplot: "/api/statistics/swarmplot/files",
         },
     },
 };

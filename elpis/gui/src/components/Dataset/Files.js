@@ -16,7 +16,7 @@ class DatasetFiles extends Component {
         const {history, datasetPrepare} = this.props;
 
         datasetPrepare(history);
-        history.push(urls.gui.dataset.prepare);
+        history.push(urls.gui.dataset.visualise);
     }
 
     handleDeleteButton = (file) => {

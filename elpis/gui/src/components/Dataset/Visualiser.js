@@ -64,7 +64,11 @@ class DatasetVisualiser extends Component {
                             {status === "wordlist-prepared" &&
                                 <>
                                     <Tab menu={{secondary: true, pointing: true}} panes={panes} />
-                                    <Button as={Link} to={urls.gui.engine.index}>
+                                    <Button
+                                        as={Link} to={(currentEngine === "kaldi") ?
+                                            urls.gui.pronDict.index :
+                                            urls.gui.model.index}
+                                    > {/** should the else part be urls.gui.engine.index */}
                                         { t("common.nextButton") }
                                     </Button>
                                 </>

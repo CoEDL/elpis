@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import {Button, Grid, Header, Icon, Segment, Table, Tab} from "semantic-ui-react";
+import {ResponsiveBar} from "@nivo/bar";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import arraySort from "array-sort";
@@ -31,7 +32,7 @@ class DatasetPrepare extends Component {
             this.setState({
                 reverse: !this.state.reverse,
             });
-            arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
+            arraySort(data, clickedColumn, {reverse: !this.state.reverse});
         }
     }
 
@@ -115,9 +116,7 @@ class DatasetPrepare extends Component {
                                     <Button
                                         as={Link}
                                         disabled={interactionDisabled}
-                                        to={(currentEngine === "kaldi") ?
-                                            urls.gui.pronDict.index :
-                                            urls.gui.model.index}
+                                        to={urls.gui.dataset.visualise}
                                     >
                                         {t("common.nextButton")}
                                     </Button>
