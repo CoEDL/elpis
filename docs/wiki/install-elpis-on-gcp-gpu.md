@@ -60,7 +60,7 @@ sudo systemctl restart docker
 sudo usermod -aG docker $USER
 sudo chown $USER /var/run/docker.sock
 sudo chmod 666 /var/run/docker.sock
-docker pull coedl/elpis:hft
+docker pull coedl/elpis:latest
 
 # Handy little app to check NVIDIA GPUs stats
 sudo apt -y install nvtop
@@ -72,11 +72,10 @@ git clone https://github.com/CoEDL/elpis.git
 # Will make it easier to copy model files etc out of the container
 mkdir state
 
-# Pull Docker image
-docker pull coedl/elpis:hft
-
 # Make a file which can be detected on next startup and thus skip doing this every time
 touch /etc/startup_installed
+
+echo "done"
 
 ```
 
@@ -89,15 +88,29 @@ Don't use image deploy because this limits OS to container optimised, which prev
 
 
 
-## After starting, ssh to the machine
+## Connect to the machine
+
+View the VM logs to monitor the setup process. After the startup script has completed, SSH to the machine to create a Docker container and start Elpis.
+Replace instance-1 with the name of your VM.
 
 ```
 gcloud init
-gcloud auth login
-gcloud config set project elpis-workshop
 gcloud compute instances list
 gcloud compute ssh instance-1
 ```
+
+
+## Start Elpis
+
+Run this command in the SSH connection to create a Docker container from the latest image, and start Elpis.
+
+```
+docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:latest
+```
+
+---
+
+## Other handy scripts
 
 Refer to the [Handy GCP commands](handy-gcp-commands.md) page for some handy scripts.
 
@@ -115,8 +128,6 @@ sudo mkdir na-elpis && cd na-elpis
 sudo wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1tywUAtOUnAeITxC-YL61I5iTADIipeYS' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1tywUAtOUnAeITxC-YL61I5iTADIipeYS" -O data.zip && rm -rf /tmp/cookies.txt
 
 sudo unzip data.zip
-```
 
-```
-docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-gpu
+docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:latest
 ```
