@@ -23,16 +23,18 @@ For a basic machine, use these settings:
 * Add the script below to the `Management` > `Startup scripts` section
 
 ```shell
-# GPU startup script v0.3
+# GPU startup script v0.6.3
 
-# Check if this has been done before & skip if so
+# Check if this has been done before. Skip driver installation if so, just run Elpis
 if [[ -f /etc/startup_installed ]];
 then
   sudo chmod 666 /var/run/docker.sock
+  # Run Elpis (non-interactive so that Elpis starts automatically)
+  docker run -d --rm --name elpis --gpus all -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
   exit 0;
 fi
 
-
+# Otherwise, install all the things.. then run Elpis
 # Install CUDA
 
 sudo apt install linux-headers-$(uname -r)
@@ -43,7 +45,6 @@ sudo dpkg -i cuda-keyring_1.0-1_all.deb
 sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
 sudo apt update
 sudo apt -y install cuda
-
 
 # Install NVIDIA Container Toolkit
 
@@ -60,7 +61,6 @@ sudo systemctl restart docker
 sudo usermod -aG docker $USER
 sudo chown $USER /var/run/docker.sock
 sudo chmod 666 /var/run/docker.sock
-docker pull coedl/elpis:latest
 
 # Handy little app to check NVIDIA GPUs stats
 sudo apt -y install nvtop
@@ -77,6 +77,8 @@ touch /etc/startup_installed
 
 echo "done"
 
+# Download and run Elpis (non-interactive so that Elpis starts automatically)
+docker run -d --rm --name elpis --gpus all -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
 ```
 
 
