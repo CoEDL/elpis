@@ -115,6 +115,10 @@ class HFTModel(BaseModel):
             run(f"touch {self.run_log_path};")
         logger.add(self.run_log_path)
 
+        state_dict = torch.load(f"/wav2vec2-large-xlsr-indonesian/pytorch_model.bin")
+        state_dict.pop('lm_head.weight')
+        state_dict.pop('lm_head.bias')
+
     @classmethod
     def load(cls, base_path: Path):
         self = super().load(base_path)
@@ -152,7 +156,7 @@ class HFTModel(BaseModel):
             "elpis_data_dir": self.dataset.pathto.basepath.as_posix(),
             "train_size": "0.8",
             "split_seed": "42",
-            "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
+            "model_name_or_path": "/wav2vec2-large-xlsr-indonesian/pytorch_model.bin",
             "output_dir": self.path.joinpath("wav2vec2"),
             "overwrite_output_dir": True,
             "num_train_epochs": int(self.settings["num_train_epochs"]),
@@ -417,6 +421,7 @@ class HFTModel(BaseModel):
             pad_token_id=self.processor.tokenizer.pad_token_id,
             vocab_size=len(self.processor.tokenizer),
             ctc_zero_infinity=True,
+            state_dict=self.state_dict,
         )
 
     def preprocess_dataset(self):
@@ -838,7 +843,12 @@ class ModelArguments:
             "help": "If True, use gradient checkpointing to save memory at the expense of slower backward pass."
         },
     )
-    layerdrop: Optional[float] = field(default=0.0, metadata={"help": "The LayerDrop probability."})
+    layerdrop: Optional[float] = field(
+        default=0.1,
+        metadata={
+            "help": "The LayerDrop probability."
+        },
+    )
 
 
 @dataclass
