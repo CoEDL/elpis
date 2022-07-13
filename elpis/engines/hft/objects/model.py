@@ -408,7 +408,7 @@ class HFTModel(BaseModel):
 
     def get_model(self):
         return Wav2Vec2ForCTC.from_pretrained(
-            "wav2vec2-large-xlsr-indonesian",
+            "/wav2vec2-large-xlsr-indonesian",
             cache_dir=self.model_args.cache_dir,
             activation_dropout=self.model_args.activation_dropout,
             attention_dropout=self.model_args.attention_dropout,
