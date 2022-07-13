@@ -115,9 +115,9 @@ class HFTModel(BaseModel):
             run(f"touch {self.run_log_path};")
         logger.add(self.run_log_path)
 
-        state_dict = torch.load(f"/wav2vec2-large-xlsr-indonesian/pytorch_model.bin")
-        state_dict.pop('lm_head.weight')
-        state_dict.pop('lm_head.bias')
+        self.state_dict = torch.load(f"/wav2vec2-large-xlsr-indonesian/pytorch_model.bin")
+        self.state_dict.pop('lm_head.weight')
+        self.state_dict.pop('lm_head.bias')
 
     @classmethod
     def load(cls, base_path: Path):
