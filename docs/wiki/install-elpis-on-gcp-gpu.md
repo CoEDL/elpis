@@ -23,26 +23,28 @@ For a basic machine, use these settings:
 * Add the script below to the `Management` > `Startup scripts` section
 
 ```shell
-# GPU startup script v0.3
+# GPU startup script v0.6.3
 
-# Check if this has been done before & skip if so
+# Check if this has been done before. Skip driver installation if so, just run Elpis
 if [[ -f /etc/startup_installed ]];
 then
   sudo chmod 666 /var/run/docker.sock
+  # Run Elpis (non-interactive so that Elpis starts automatically)
+  docker run -d --rm --name elpis --gpus all -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
   exit 0;
 fi
 
-
+# Otherwise, install all the things.. then run Elpis
 # Install CUDA
 
 sudo apt install linux-headers-$(uname -r)
 curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
 sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb
+sudo dpkg -i cuda-keyring_1.0-1_all.deb
 sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
 sudo apt update
 sudo apt -y install cuda
-
 
 # Install NVIDIA Container Toolkit
 
@@ -59,7 +61,6 @@ sudo systemctl restart docker
 sudo usermod -aG docker $USER
 sudo chown $USER /var/run/docker.sock
 sudo chmod 666 /var/run/docker.sock
-docker pull coedl/elpis:hft
 
 # Handy little app to check NVIDIA GPUs stats
 sudo apt -y install nvtop
@@ -71,12 +72,13 @@ git clone https://github.com/CoEDL/elpis.git
 # Will make it easier to copy model files etc out of the container
 mkdir state
 
-# Pull Docker image
-docker pull coedl/elpis:hft
-
 # Make a file which can be detected on next startup and thus skip doing this every time
 touch /etc/startup_installed
 
+echo "done"
+
+# Download and run Elpis (non-interactive so that Elpis starts automatically)
+docker run -d --rm --name elpis --gpus all -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
 ```
 
 
@@ -88,15 +90,29 @@ Don't use image deploy because this limits OS to container optimised, which prev
 
 
 
-## After starting, ssh to the machine
+## Connect to the machine
+
+View the VM logs to monitor the setup process. After the startup script has completed, SSH to the machine to create a Docker container and start Elpis.
+Replace instance-1 with the name of your VM.
 
 ```
 gcloud init
-gcloud auth login
-gcloud config set project elpis-workshop
 gcloud compute instances list
 gcloud compute ssh instance-1
 ```
+
+
+## Start Elpis
+
+Run this command in the SSH connection to create a Docker container from the latest image, and start Elpis.
+
+```
+docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:latest
+```
+
+---
+
+## Other handy scripts
 
 Refer to the [Handy GCP commands](handy-gcp-commands.md) page for some handy scripts.
 
@@ -114,8 +130,6 @@ sudo mkdir na-elpis && cd na-elpis
 sudo wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1tywUAtOUnAeITxC-YL61I5iTADIipeYS' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1tywUAtOUnAeITxC-YL61I5iTADIipeYS" -O data.zip && rm -rf /tmp/cookies.txt
 
 sudo unzip data.zip
-```
 
-```
-docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:ben-hft-gpu
+docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:latest
 ```

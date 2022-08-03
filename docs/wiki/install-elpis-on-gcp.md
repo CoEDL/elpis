@@ -35,15 +35,17 @@ Click "Create"
 Paste the following code into the "Startup Script" box
 
 ```
-sudo apt update
-sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-sudo apt update
-sudo apt install ./containerd.io_1.4.3-1_amd64.deb
-sudo apt install -y docker-ce
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y docker-ce
 sudo chmod 666 /var/run/docker.sock
-sudo docker run -d --rm -p 80:5001/tcp coedl/elpis:latest
+mkdir /state
+sudo docker run -d --name elpis -v /state:/state -p 80:5001/tcp coedl/elpis:latest
 ```
 
 Then press "Create"
