@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import {Button, Grid, Header, Message, Segment} from "semantic-ui-react";
+import {Button, Grid, Header, Message, Segment, Tab} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import classNames from "classnames";
@@ -10,9 +10,17 @@ import {pronDictL2S} from "redux/actions/pronDictActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentPronDictName from "./CurrentPronDictName";
+import FrequencyBar from "components/Visualisations/FrequencyBar";
+import SankeyWordOrder from "components/Visualisations/SankeyWordOrder";
 import urls from "urls";
 
 class PronDictL2S extends Component {
+    state = {
+        activeTab: 0,
+    }
+
+    handleTabChange = (e, {activeIndex}) => this.setState({activeTab: activeIndex})
+
     onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
 
@@ -26,7 +34,30 @@ class PronDictL2S extends Component {
     render() {
         const {t, currentEngine, l2s, name} = this.props;
         const interactionDisabled = name ? false : true;
-        const pron = l2s ? <pre>{l2s}</pre> : null;
+        const rawL2s = <pre> { l2s } </pre>;
+        const { 
+            activeTab,
+        } = this.state;
+        const panes = [
+            {
+                menuItem: "File", render: () => <Tab.Pane>{rawL2s}</Tab.Pane>,
+            },
+            {
+                menuItem: "Bar Graph", render: () => 
+                    <Tab.Pane>{<FrequencyBar dataUrl={urls.api.statistics.l2sFreq} />}</Tab.Pane>,
+            },
+            {
+                menuItem: "Sankey Graph", render: () => 
+                    <Tab.Pane>{<SankeyWordOrder dataUrl={urls.api.statistics.sankeyGraph} />}</Tab.Pane>,
+            },
+        ];
+        const pron = l2s ? 
+                    (<Tab
+                        activeIndex={activeTab}
+                        menu={{secondary: true, pointing: true}}
+                        panes={panes}
+                        onTabChange={this.handleTabChange}
+                     />) : null;
 
         return (
             <div>

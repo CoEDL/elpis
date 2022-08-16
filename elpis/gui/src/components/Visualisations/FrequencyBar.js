@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {translate} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import {ResponsiveBar} from "@nivo/bar";
 import {convertToBarData, calculateTickValues} from "./NivoUtils";
 import {Header, Button} from "semantic-ui-react";
@@ -141,7 +141,7 @@ class FrequencyBar extends Component {
                                 left: 60,
                             }}
                         />
-                     </div>)
+                    </div>)
                 )
             );
 
@@ -177,4 +177,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(translate("common")(FrequencyBar));
+export default connect(mapStateToProps)(withTranslation("common")(FrequencyBar));

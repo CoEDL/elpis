@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {translate} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import {getSizeGenerator} from "@nivo/swarmplot";
 import CustomNode from "./CustomFileNodeVisualisation";
 import {Table, Header, List} from "semantic-ui-react";
@@ -58,7 +58,7 @@ class CustomFileList extends Component {
         });
         const fileRows = (dataLoaded && !dataError) ? (
             data.swarmplot.map((node, index) => (
-                <Table.Row>
+                <Table.Row key={index}>
                     <Table.Cell>
                         <svg viewBox="0 0 100 100">
                             <CustomNode
@@ -102,7 +102,7 @@ class CustomFileList extends Component {
                 <Table.Body>
                     { fileRows }
                 </Table.Body>
-            </Table>);
+             </Table>);
         const plot =
             dataError ? (
                 <div>Error Loading Data: {dataError.message}</div>
@@ -146,4 +146,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(translate("common")(CustomFileList));
+export default connect(mapStateToProps)(withTranslation("common")(CustomFileList));

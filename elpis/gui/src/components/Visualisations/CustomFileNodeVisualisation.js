@@ -1,5 +1,5 @@
 import React, {useCallback} from "react";
-import {translate} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import {useOrdinalColorScale} from "@nivo/colors";
 import {usePie} from "@nivo/pie";
 
@@ -85,4 +85,4 @@ const CustomNode = ({
     );
 };
 
-export default (translate("common")(CustomNode));
+export default (withTranslation("common")(CustomNode));

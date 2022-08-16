@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {translate} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import {ResponsiveSankey} from "@nivo/sankey";
 import {Header, List} from "semantic-ui-react";
 import urls from "urls";
@@ -59,7 +59,7 @@ class SankeyWordOrder extends Component {
                                 left: 60,
                             }}
                         />
-                    </div>)
+                     </div>)
                 )
             );
 
@@ -90,4 +90,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(translate("common")(SankeyWordOrder)); 
+export default connect(mapStateToProps)(withTranslation("common")(SankeyWordOrder)); 

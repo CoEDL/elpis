@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {translate} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import {ResponsiveSwarmPlot} from "@nivo/swarmplot";
 import {BasicTooltip} from "@nivo/tooltip";
 import {useTheme} from "@nivo/core";
@@ -74,7 +74,7 @@ class DatasetOverviewSwarmplot extends Component {
                         <List.Item><strong>{Number.parseFloat(node.data.annotated * 100).toFixed(1)} % annotated</strong></List.Item>
                     </List>
                 </span>
-            </div>)
+             </div>)
         );
         const tooltip = (node) => (
             <BasicTooltip
@@ -139,7 +139,7 @@ class DatasetOverviewSwarmplot extends Component {
                             renderNode={props => <CustomNode {...props} />}
                             tooltip={tooltip}
                         />
-                     </div>)
+                    </div>)
                 )
             );
 
@@ -171,4 +171,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(translate("common")(DatasetOverviewSwarmplot));
+export default connect(mapStateToProps)(withTranslation("common")(DatasetOverviewSwarmplot));

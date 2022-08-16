@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {translate} from "react-i18next";
+import {withTranslation} from "react-i18next";
 import {Grid, Segment, Header, Icon, Button, Tab} from "semantic-ui-react";
 import Branding from "components/Shared/Branding";
 import SideNav from "components/Shared/SideNav";
@@ -94,6 +94,6 @@ export default withRouter(
     connect(
         mapStateToProps
     )(
-        translate("common")(DatasetVisualiser)
+        withTranslation("common")(DatasetVisualiser)
     )
 );
