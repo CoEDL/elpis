@@ -15,7 +15,8 @@
         "recordings": {
             "title": "Recordings",
             "files": "Files",
-            "wordlist": "Wordlist"
+            "wordlist": "Wordlist",
+            "visualise": "Visualise"
         },
         "pronunciation": {
             "title": "Pronunciation",

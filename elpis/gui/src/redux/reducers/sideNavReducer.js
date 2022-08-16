@@ -53,6 +53,7 @@ const initialStepModelState = {
 				{done: false, doing: false, enabled: false, title: "navigation.recordings.title", path: urls.gui.dataset.index},
 				{done: false, doing: false, enabled: false, title: "navigation.recordings.files", path: urls.gui.dataset.files},
 				{done: false, doing: false, enabled: false, title: "navigation.recordings.wordlist", path: urls.gui.dataset.prepare},
+				{done: false, doing: false, enabled: false, title: "navigation.recordings.visualise", path: urls.gui.dataset.visualise},
 			],
 			engine_specific: null,
 		},
@@ -92,6 +93,7 @@ const sideNav = (state = initialStepModelState, action) => {
 			return {...state, engine};
 		}
 
+		// eslint-disable-next-line no-fallthrough
 		case actionTypes.APP_SET_CURRENT_STEP: {
 			let currentSubStepIndex = 0;
 			let currentStepName = null;
