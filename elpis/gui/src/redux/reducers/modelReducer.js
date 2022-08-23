@@ -6,7 +6,9 @@ const initState = {
     datasetName: "",
     pronDictName: "",
     results: null,
-    settings: {},
+    settings: {
+        huggingface_model_name: "facebook/wav2vec2-large-xlsr-53",
+    },
     status: "ready",
     stage_status: null,
     log: null,

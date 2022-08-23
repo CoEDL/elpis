@@ -92,6 +92,7 @@ class ModelSettings extends Component {
                                         className="attached"
                                         enableReinitialize
                                         initialValues={{
+                                            huggingface_model_name: "",
                                             word_delimiter_token: settings.word_delimiter_token,
                                             num_train_epochs: settings.num_train_epochs,
                                             min_duration_s: settings.min_duration_s,
@@ -111,7 +112,15 @@ class ModelSettings extends Component {
                                             return errors;
                                         }}
                                         onSubmit={(values) => {
+                                            var is_custom = false;
+
+                                            if (values.huggingface_model_name) {
+                                                is_custom = true;
+                                            }
+
                                             const postData = {settings: {
+                                                is_custom: is_custom,
+                                                huggingface_model_name: values.huggingface_model_name,
                                                 word_delimiter_token: values.word_delimiter_token,
                                                 num_train_epochs: values.num_train_epochs,
                                                 min_duration_s: values.min_duration_s,
@@ -133,6 +142,19 @@ class ModelSettings extends Component {
                                             handleChange,
                                         }) => (
                                             <Form onSubmit={handleChange}>
+                                                <Table>
+                                                    <Table.Body>
+                                                        <Table.Cell collapsing>
+                                                            Model Name
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            <Field
+                                                                name="huggingface_model_name"
+                                                                placeholder=" "
+                                                            />
+                                                        </Table.Cell>
+                                                    </Table.Body>
+                                                </Table>
                                                 <Table>
                                                     <Table.Body>
                                                         <Table.Row key="word_delimiter_token">

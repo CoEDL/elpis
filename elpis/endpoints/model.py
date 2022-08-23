@@ -21,9 +21,7 @@ def run(cmd: str) -> str:
     """Captures stdout/stderr and writes it to a log file, then returns the
     CompleteProcess result object"""
     args = shlex.split(cmd)
-    process = subprocess.run(
-        args, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-    )
+    process = subprocess.run(args, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     return process.stdout
 
 
@@ -91,6 +89,8 @@ def list_existing():
 
 @bp.route("/settings", methods=["POST"])
 def settings():
+    print(request.json["settings"])
+
     def setup(model: Model):
         model.settings = request.json["settings"]
 

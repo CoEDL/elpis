@@ -32,6 +32,7 @@ from transformers import (
     is_apex_available,
     set_seed,
 )
+from huggingface_hub import snapshot_download
 from transformers.trainer_utils import get_last_checkpoint, is_main_process
 
 from elpis.engines.common.objects.command import run
@@ -87,6 +88,8 @@ class HFTModel(BaseModel):
         self.config["status"] = "untrained"
         self.config["results"] = {}
         self.settings = {
+            "uses_custom_model": False,
+            "huggingface_model_name": "facebook/wav2vec2-large-xlsr-53",
             "word_delimiter_token": " ",
             "num_train_epochs": 10,
             "min_duration_s": 0,
@@ -403,6 +406,38 @@ class HFTModel(BaseModel):
         return Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
 
     def get_model(self):
+        if self.settings["uses_custom_model"]:
+            logger.info("==== Loading a custom model ====")
+            # path_to_model = "/elpis/deps/" + self.settings["huggingface_model_name"].split("/")[1]
+
+            logger.info("==== Downloading the custom model from HuggingFace ====")
+            folder_path = snapshot_download(
+                repo_id=self.settings["huggingface_model_name"], cache_dir="/elpis/deps"
+            )
+
+            logger.info(f"==== Loading model from {folder_path} ====")
+            state_dict = torch.load(os.path.join(folder_path, "pytorch_model.bin"))
+            state_dict.pop("lm_head.weight")
+            state_dict.pop("lm_head.bias")
+            logger.info(f"==== Model loaded and modified {folder_path} ====")
+
+            return Wav2Vec2ForCTC.from_pretrained(
+                folder_path,
+                state_dict=state_dict,
+                cache_dir=self.model_args.cache_dir,
+                activation_dropout=self.model_args.activation_dropout,
+                attention_dropout=self.model_args.attention_dropout,
+                hidden_dropout=self.model_args.hidden_dropout,
+                feat_proj_dropout=self.model_args.feat_proj_dropout,
+                mask_time_prob=self.model_args.mask_time_prob,
+                gradient_checkpointing=self.model_args.gradient_checkpointing,
+                layerdrop=self.model_args.layerdrop,
+                ctc_loss_reduction="mean",
+                pad_token_id=self.processor.tokenizer.pad_token_id,
+                vocab_size=len(self.processor.tokenizer),
+                ctc_zero_infinity=True,
+            )
+
         return Wav2Vec2ForCTC.from_pretrained(
             self.model_args.model_name_or_path,
             cache_dir=self.model_args.cache_dir,
