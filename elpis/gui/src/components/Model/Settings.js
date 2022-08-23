@@ -112,14 +112,14 @@ class ModelSettings extends Component {
                                             return errors;
                                         }}
                                         onSubmit={(values) => {
-                                            var is_custom = false;
+                                            var uses_custom_model = false;
 
                                             if (values.huggingface_model_name) {
-                                                is_custom = true;
+                                                uses_custom_model = true;
                                             }
 
                                             const postData = {settings: {
-                                                is_custom: is_custom,
+                                                uses_custom_model: uses_custom_model,
                                                 huggingface_model_name: values.huggingface_model_name,
                                                 word_delimiter_token: values.word_delimiter_token,
                                                 num_train_epochs: values.num_train_epochs,
