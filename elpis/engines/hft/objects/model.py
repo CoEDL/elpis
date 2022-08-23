@@ -2,6 +2,7 @@
 Support for training Hugging Face Transformers (wav2vec2) models.
 """
 import json
+from os.path import isfile
 from loguru import logger
 from pathlib import Path
 import os
@@ -67,6 +68,9 @@ TRAINING_STAGES = [TOKENIZATION, PREPROCESSING, TRAIN, EVALUATION]
 
 UNFINISHED = "untrained"
 FINISHED = "trained"
+
+CACHE_DIR = "/state/huggingface_models/"
+DOWNLOADED_MODELS = CACHE_DIR + "model_path_index.json"
 
 
 def list_field(default=None, metadata=None):
@@ -408,13 +412,33 @@ class HFTModel(BaseModel):
     def get_model(self):
         if self.settings["uses_custom_model"]:
             logger.info("==== Loading a custom model ====")
-            # path_to_model = "/elpis/deps/" + self.settings["huggingface_model_name"].split("/")[1]
+            # Create the model index if it doesn't already exist
+            if not os.path.isfile(DOWNLOADED_MODELS):
+                logger.info("==== Creating custom model index file ====")
+                with open(DOWNLOADED_MODELS, "w") as model_info:
+                    model_info.write(json.dumps({}))
 
-            logger.info("==== Downloading the custom model from HuggingFace ====")
-            folder_path = snapshot_download(
-                repo_id=self.settings["huggingface_model_name"], cache_dir="/elpis/deps"
-            )
+            # Download the current index
+            logger.info("==== Searching for model within index file ====")
+            model_name = self.settings["huggingface_model_name"]
+            with open(DOWNLOADED_MODELS) as model_info:
+                downloaded_models = json.load(model_info)
 
+            # Attempt to find the model name within the index
+            folder_path = downloaded_models.get(model_name, None)
+            if folder_path is None:
+                logger.info("==== Model not found locally :( ====")
+                logger.info("==== Downloading the custom model from HuggingFace ====")
+                folder_path = snapshot_download(
+                    repo_id=self.settings["huggingface_model_name"], cache_dir=CACHE_DIR
+                )
+                logger.info("==== Downloaded custom model ====")
+                # Update the custom model index
+                with open(DOWNLOADED_MODELS, 'w') as model_info:
+                    downloaded_models[model_name] = folder_path
+                    model_info.write(json.dumps(downloaded_models))
+
+            # Load the downloaded model
             logger.info(f"==== Loading model from {folder_path} ====")
             state_dict = torch.load(os.path.join(folder_path, "pytorch_model.bin"))
             state_dict.pop("lm_head.weight")
