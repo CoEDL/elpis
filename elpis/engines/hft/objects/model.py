@@ -440,7 +440,10 @@ class HFTModel(BaseModel):
 
             # Load the downloaded model
             logger.info(f"==== Loading model from {folder_path} ====")
-            state_dict = torch.load(os.path.join(folder_path, "pytorch_model.bin"))
+            pytorch_model = os.path.join(folder_path, "pytorch_model.bin")
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+            state_dict = torch.load(pytorch_model, map_location=device)
             state_dict.pop("lm_head.weight")
             state_dict.pop("lm_head.bias")
             logger.info(f"==== Model loaded and modified {folder_path} ====")
