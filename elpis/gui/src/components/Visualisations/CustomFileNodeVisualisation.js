@@ -1,6 +1,6 @@
 import React, {useCallback} from "react";
 import {withTranslation} from "react-i18next";
-import {useOrdinalColorScale} from "@nivo/colors";
+// import {useOrdinalColorScale} from "@nivo/colors";
 import {usePie} from "@nivo/pie";
 
 function computeAnnotatedArcs(data) {
@@ -15,10 +15,10 @@ const CustomNode = ({
     x,
     y,
     size,
-    scale,
-    color,
-    borderWidth,
-    borderColor,
+    // scale,
+    // color,
+    // borderWidth,
+    // borderColor,
     onMouseEnter,
     onMouseMove,
     onMouseLeave,

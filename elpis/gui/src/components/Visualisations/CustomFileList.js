@@ -37,14 +37,14 @@ class CustomFileList extends Component {
     }
     
     render() {
-        const { 
-            t, 
-            additionalTextFiles, 
-            status, 
-            wordlist, 
-        } = this.props;
+        // const { 
+        //     // t,
+        //     // additionalTextFiles, 
+        //     // status, 
+        //     // wordlist, 
+        // } = this.props;
         const {
-            activeTab,
+            // activeTab,
             dataError,
             dataLoaded,
             data,
@@ -89,27 +89,28 @@ class CustomFileList extends Component {
                 </Table.Row>
             ))) : null;
         const fileTable = 
-            (<Table celled padded>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Visualisation</Table.HeaderCell>
-                        <Table.HeaderCell singleLine>File Name</Table.HeaderCell>
-                        <Table.HeaderCell>Annotated Words</Table.HeaderCell>
-                        <Table.HeaderCell>Annotated %</Table.HeaderCell>
-                        <Table.HeaderCell>Audio Length</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    { fileRows }
-                </Table.Body>
-             </Table>);
+            (
+                <Table celled padded>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell>Visualisation</Table.HeaderCell>
+                            <Table.HeaderCell singleLine>File Name</Table.HeaderCell>
+                            <Table.HeaderCell>Annotated Words</Table.HeaderCell>
+                            <Table.HeaderCell>Annotated %</Table.HeaderCell>
+                            <Table.HeaderCell>Audio Length</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        { fileRows }
+                    </Table.Body>
+                </Table>
+            );
         const plot =
             dataError ? (
                 <div>Error Loading Data: {dataError.message}</div>
             ) : (
                 !dataLoaded ? (
-                    this.fetchData
-                    (<div>Loading Data...</div>)
+                    this.fetchData(<div>Loading Data...</div>)
                 ) : (
                     fileTable
                 )
@@ -119,12 +120,23 @@ class CustomFileList extends Component {
             <div>
                 <div>
                     <Header as="h1">File List</Header>
-                    <p>This is a list of all the files included in the dataset. Specifically it includes interesting stats about the file pairs.</p>
+                    <p>
+                        This is a list of all the files included in the dataset. 
+                        Specifically it includes interesting stats about the file pairs.
+                    </p>
                     <List bulleted>
-                        <List.Item>Visualisation: The graphic generated for a file as seen in the swarmplot visualisation.</List.Item>
+                        <List.Item>
+                            Visualisation: The graphic generated for a file as seen in the swarmplot visualisation.
+                        </List.Item>
                         <List.Item>File Name: File name of the pair the row represents.</List.Item>
-                        <List.Item>Annotated Words: Annotated "words" is the number of space separated "words" in the EAF file for the file pair.</List.Item>
-                        <List.Item>Annotated %: Percentage of the audio file that is annotated. Calculated by taking the summed timespan of annotations and dividing by file length.</List.Item>
+                        <List.Item>
+                            Annotated Words: Annotated &ldquo; words &rdquo; is the number of space separated
+                            &ldquo; words &rdquo; in the EAF file for the file pair.
+                        </List.Item>
+                        <List.Item>
+                            Annotated %: Percentage of the audio file that is annotated. 
+                            Calculated by taking the summed timespan of annotations and dividing by file length.
+                        </List.Item>
                         <List.Item>Annotation Length: Length of annotated audio in seconds.</List.Item>
                         <List.Item>Audio Length: Length of the audio file uploaded in seconds.</List.Item>
                     </List>

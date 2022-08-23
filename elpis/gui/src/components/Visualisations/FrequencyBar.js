@@ -101,53 +101,54 @@ class FrequencyBar extends Component {
                 <div>Error Loading Data: {dataError.message}</div>
             ) : (
                 !dataLoaded ? (
-                    this.fetchData(dataUrl)
-                    (<div>Loading Data...</div>)
+                    this.fetchData(dataUrl)(<div>Loading Data...</div>)
                 ) : (
-                    (<div style={{height: 500}}>
-                        <ResponsiveBar
-                            data={data}
-                            keys={["frequency"]}
-                            indexBy="id"
-                            colors={"#D3A0F0"}
-                            colorBy="index"
-                            gridYValues={tickValues}
-                            valueScale={{ 
-                                type: "linear", 
-                                min: Math.min(...tickValues),
-                                max: Math.max(...tickValues),
-                            }}
-                            axisBottom={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: -45,
-                                legend: "Word",
-                                legendPosition: "middle",
-                                legendOffset: 50,
-                            }}
-                            axisLeft={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                tickValues: tickValues,
-                                legend: "Frequency",
-                                legendPosition: "middle",
-                                legendOffset: -40,
-                            }}
-                            margin={{
-                                top: 50,
-                                right: 50,
-                                bottom: 80,
-                                left: 60,
-                            }}
-                        />
-                    </div>)
+                    (
+                        <div style={{height: 500}}>
+                            <ResponsiveBar
+                                data={data}
+                                keys={["frequency"]}
+                                indexBy="id"
+                                colors={"#D3A0F0"}
+                                colorBy="index"
+                                gridYValues={tickValues}
+                                valueScale={{ 
+                                    type: "linear", 
+                                    min: Math.min(...tickValues),
+                                    max: Math.max(...tickValues),
+                                }}
+                                axisBottom={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: -45,
+                                    legend: "Word",
+                                    legendPosition: "middle",
+                                    legendOffset: 50,
+                                }}
+                                axisLeft={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    tickValues: tickValues,
+                                    legend: "Frequency",
+                                    legendPosition: "middle",
+                                    legendOffset: -40,
+                                }}
+                                margin={{
+                                    top: 50,
+                                    right: 50,
+                                    bottom: 80,
+                                    left: 60,
+                                }}
+                            />
+                        </div>
+                    )
                 )
             );
 
             return (
                 <div>
-                    <Header as="h1">"Word" Frequency Bar Graph</Header>
+                    <Header as="h1">&ldquo;Word&rdquo; Frequency Bar Graph</Header>
                     <div style={{display: "flex"}}>
                         <Button 
                             content="Alphabetical" 

@@ -2,8 +2,8 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import {withTranslation} from "react-i18next";
 import {ResponsiveSankey} from "@nivo/sankey";
-import {Header, List} from "semantic-ui-react";
-import urls from "urls";
+import {Header} from "semantic-ui-react";
+// import urls from "urls";
 
 class SankeyWordOrder extends Component {
     state = {
@@ -36,7 +36,7 @@ class SankeyWordOrder extends Component {
             dataUrl,
         } = this.props;
         const {
-            activeTab,
+            // activeTab,
             dataError,
             dataLoaded,
             data,
@@ -46,20 +46,21 @@ class SankeyWordOrder extends Component {
                 <div>Error Loading Data: {dataError.message}</div>
             ) : (
                 !dataLoaded ? (
-                    this.fetchData(dataUrl)
-                    (<div>Loading Data...</div>)
+                    this.fetchData(dataUrl)(<div>Loading Data...</div>)
                 ) : (
-                    (<div style={{height: 500}}>
-                        <ResponsiveSankey
-                            data={data.sankey}
-                            margin={{
-                                top: 50,
-                                right: 50,
-                                bottom: 80,
-                                left: 60,
-                            }}
-                        />
-                     </div>)
+                    (
+                        <div style={{height: 500}}>
+                            <ResponsiveSankey
+                                data={data.sankey}
+                                margin={{
+                                    top: 50,
+                                    right: 50,
+                                    bottom: 80,
+                                    left: 60,
+                                }}
+                            />
+                        </div>
+                    )
                 )
             );
 

@@ -47,14 +47,14 @@ class DatasetOverviewSwarmplot extends Component {
     }
     
     render() {
-        const { 
-            t, 
-            additionalTextFiles, 
-            status, 
-            wordlist, 
-        } = this.props;
+        // const { 
+        //     t, 
+        //     additionalTextFiles, 
+        //     status, 
+        //     wordlist, 
+        // } = this.props;
         const {
-            activeTab,
+            // activeTab,
             dataError,
             dataLoaded,
             data,
@@ -65,16 +65,26 @@ class DatasetOverviewSwarmplot extends Component {
             maxCount,
         } = this.state;
         const tooltipContent = ({node}) => (() => 
-            (<div style={useTheme().tooltip.basic}>
-                <span>
-                    <strong>{node.id}</strong>
-                    <List value="-" size="tiny">
-                        <List.Item><strong>{Number.parseFloat(node.data.length).toFixed(1)} mins</strong></List.Item>
-                        <List.Item><strong>{node.data.count} words</strong></List.Item>
-                        <List.Item><strong>{Number.parseFloat(node.data.annotated * 100).toFixed(1)} % annotated</strong></List.Item>
-                    </List>
-                </span>
-             </div>)
+            (
+                <div style={useTheme().tooltip.basic}>
+                    <span>
+                        <strong>{node.id}</strong>
+                        <List value="-" size="tiny">
+                            <List.Item>
+                                <strong>
+                                    {Number.parseFloat(node.data.length).toFixed(1)} mins
+                                </strong>
+                            </List.Item>
+                            <List.Item><strong>{node.data.count} words</strong></List.Item>
+                            <List.Item>
+                                <strong>
+                                    {Number.parseFloat(node.data.annotated * 100).toFixed(1)} % annotated
+                                </strong>
+                            </List.Item>
+                        </List>
+                    </span>
+                </div>
+             )
         );
         const tooltip = (node) => (
             <BasicTooltip
@@ -86,60 +96,62 @@ class DatasetOverviewSwarmplot extends Component {
                 <div>Error Loading Data: {dataError.message}</div>
             ) : (
                 !dataLoaded ? (
-                    this.fetchData
-                    (<div>Loading Data...</div>)
+                    this.fetchData(<div>Loading Data...</div>)
                 ) : (
-                    (<div style={{height: 500}}>
-                        <ResponsiveSwarmPlot
-                            data={data.swarmplot}
-                            value = "length"
-                            identity = "file"
-                            label="file"
-                            groups={["Files"]}
-                            size={{
-                                key: "count",
-                                values: [minCount, maxCount],
-                                sizes: [55, 75],
-                            }}
-                            colors={"#D3A0F0"}
-                            spacing={12}
-                            enableGridY={true}
-                            enableGridX={false}
-                            valueScale={{ 
-                                type: "linear", 
-                                min: minLength,
-                                max: maxLength,
-                            }}
-                            gridYValues={tickValues}
-                            axisBottom={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: -45,
-                                legend: "Each node represents a file with sizes relative to the number of annotated words.",
-                                legendPosition: "middle",
-                                legendOffset: 50,
-                            }}
-                            axisLeft={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                tickValues: tickValues,
-                                legend: "Audio Length (seconds)",
-                                legendPosition: "middle",
-                                legendOffset: -40,
-                            }}
-                            axisRight={null}
-                            axisTop={null}
-                            margin={{
-                                top: 50,
-                                right: 50,
-                                bottom: 80,
-                                left: 60,
-                            }}
-                            renderNode={props => <CustomNode {...props} />}
-                            tooltip={tooltip}
-                        />
-                    </div>)
+                    (
+                        <div style={{height: 500}}>
+                            <ResponsiveSwarmPlot
+                                data={data.swarmplot}
+                                value = "length"
+                                identity = "file"
+                                label="file"
+                                groups={["Files"]}
+                                size={{
+                                    key: "count",
+                                    values: [minCount, maxCount],
+                                    sizes: [55, 75],
+                                }}
+                                colors={"#D3A0F0"}
+                                spacing={12}
+                                enableGridY={true}
+                                enableGridX={false}
+                                valueScale={{ 
+                                    type: "linear", 
+                                    min: minLength,
+                                    max: maxLength,
+                                }}
+                                gridYValues={tickValues}
+                                axisBottom={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: -45,
+                                    legend: "Each node represents a file with sizes relative to the number\
+                                     of annotated words.",
+                                    legendPosition: "middle",
+                                    legendOffset: 50,
+                                }}
+                                axisLeft={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    tickValues: tickValues,
+                                    legend: "Audio Length (seconds)",
+                                    legendPosition: "middle",
+                                    legendOffset: -40,
+                                }}
+                                axisRight={null}
+                                axisTop={null}
+                                margin={{
+                                    top: 50,
+                                    right: 50,
+                                    bottom: 80,
+                                    left: 60,
+                                }}
+                                renderNode={props => <CustomNode {...props} />}
+                                tooltip={tooltip}
+                            />
+                        </div>
+                    )
                 )
             );
 
@@ -147,9 +159,16 @@ class DatasetOverviewSwarmplot extends Component {
                 <div>
                     <div>
                         <Header as="h1">File List</Header>
-                        <p>This visualisation gives an overview of the file pairs in the dataset. You can hover over each blob to get the file name if the blob isn't labelled.</p>
+                        <p>
+                            This visualisation gives an overview of the file pairs in the dataset. 
+                            You can hover over each blob to get the file name if the blob isn&lsquo;t labelled.
+                        </p>
                         <List bulleted>
-                            <List.Item>Size: The number of annotated "words" in the file pair. Annotated "words" is the number of space separated "words" in the EAF file for the file pair.</List.Item>
+                            <List.Item>
+                                Size: The number of annotated &ldquo;words&rdquo; in the file pair. 
+                                Annotated &ldquo;words&rdquo; is the number of space separated &ldquo;words&rdquo;
+                                in the EAF file for the file pair.
+                            </List.Item>
                             <List.Item>Vertical Position: Audio length of the file.</List.Item>
                             <List.Item>Internal Pie/Arc: Percentage annotated.</List.Item>
                         </List>
