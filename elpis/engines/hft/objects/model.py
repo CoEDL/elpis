@@ -411,6 +411,9 @@ class HFTModel(BaseModel):
 
     def get_model(self):
         if self.settings["uses_custom_model"]:
+            if not os.path.isdir(CACHE_DIR):
+                os.makedirs(CACHE_DIR)
+
             logger.info("==== Loading a custom model ====")
             # Create the model index if it doesn't already exist
             if not os.path.isfile(DOWNLOADED_MODELS):
@@ -434,7 +437,7 @@ class HFTModel(BaseModel):
                 )
                 logger.info("==== Downloaded custom model ====")
                 # Update the custom model index
-                with open(DOWNLOADED_MODELS, 'w') as model_info:
+                with open(DOWNLOADED_MODELS, "w") as model_info:
                     downloaded_models[model_name] = folder_path
                     model_info.write(json.dumps(downloaded_models))
 

@@ -119,8 +119,11 @@ class HFTTranscription(BaseTranscription):
         Builds and returns pretrained Wav2Vec2 Processor and Model from the project path.
         """
         pretrained_path = Path(self.model.path) / "wav2vec2"
+        logger.info(f"Loading processor from {pretrained_path}")
         processor = Wav2Vec2Processor.from_pretrained(pretrained_path)
+        logger.info(f"Loading model from {pretrained_path}")
         model = Wav2Vec2ForCTC.from_pretrained(pretrained_path)
+        logger.info(f"Returning processor and model from {pretrained_path}")
         return processor, model
 
     def _generate_utterances(
