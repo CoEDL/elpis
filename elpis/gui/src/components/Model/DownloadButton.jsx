@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Button from "semantic-ui-react";
+import { Button, Loader, Segment } from "semantic-ui-react";
 import urls from "urls";
 
 export default function ModelButton() {
@@ -12,9 +12,13 @@ export default function ModelButton() {
   };
 
   return (
-    <div>
+    <Segment>
       <Button>Download Model</Button>
-      {downloading && <p>This will take a long time.</p>}
-    </div>
+      {downloading && (
+        <Loader indeterminate>
+          Zipping and Downloading Model. This may take a long time.
+        </Loader>
+      )}
+    </Segment>
   );
 }
