@@ -23,6 +23,7 @@ import torchaudio
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from transformers import (
+    AutoModel,
     HfArgumentParser,
     Trainer,
     TrainingArguments,
@@ -30,6 +31,8 @@ from transformers import (
     Wav2Vec2FeatureExtractor,
     Wav2Vec2ForCTC,
     Wav2Vec2Processor,
+    AutoModelForCTC,
+    AutoProcessor,
     is_apex_available,
     set_seed,
 )
@@ -51,6 +54,7 @@ if version.parse(torch.__version__) >= version.parse("1.6"):
 
 # Used to reduce training time when debugging
 DEBUG = False
+BASE_MODEL = "facebook/wav2vec2-large-xlsr-53"
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "num_train_epochs": "3",
     "model_name_or_path": "facebook/wav2vec2-base",
@@ -411,65 +415,71 @@ class HFTModel(BaseModel):
 
     def get_model(self):
         if self.settings["uses_custom_model"]:
-            if not os.path.isdir(CACHE_DIR):
-                os.makedirs(CACHE_DIR)
-
             logger.info("==== Loading a custom model ====")
-            # Create the model index if it doesn't already exist
-            if not os.path.isfile(DOWNLOADED_MODELS):
-                logger.info("==== Creating custom model index file ====")
-                with open(DOWNLOADED_MODELS, "w") as model_info:
-                    model_info.write(json.dumps({}))
-
-            # Download the current index
-            logger.info("==== Searching for model within index file ====")
             model_name = self.settings["huggingface_model_name"]
-            with open(DOWNLOADED_MODELS) as model_info:
-                downloaded_models = json.load(model_info)
+            # if not os.path.isdir(CACHE_DIR):
+            #     os.makedirs(CACHE_DIR)
 
-            # Attempt to find the model name within the index
-            folder_path = downloaded_models.get(model_name, None)
-            if folder_path is None:
-                logger.info("==== Model not found locally :( ====")
-                logger.info("==== Downloading the custom model from HuggingFace ====")
-                folder_path = snapshot_download(
-                    repo_id=self.settings["huggingface_model_name"], cache_dir=CACHE_DIR
-                )
-                logger.info("==== Downloaded custom model ====")
-                # Update the custom model index
-                with open(DOWNLOADED_MODELS, "w") as model_info:
-                    downloaded_models[model_name] = folder_path
-                    model_info.write(json.dumps(downloaded_models))
+            # logger.info("==== Loading a custom model ====")
+            # # Create the model index if it doesn't already exist
+            # if not os.path.isfile(DOWNLOADED_MODELS):
+            #     logger.info("==== Creating custom model index file ====")
+            #     with open(DOWNLOADED_MODELS, "w") as model_info:
+            #         model_info.write(json.dumps({}))
 
-            # Load the downloaded model
-            logger.info(f"==== Loading model from {folder_path} ====")
-            pytorch_model = os.path.join(folder_path, "pytorch_model.bin")
-            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            # # Download the current index
+            # logger.info("==== Searching for model within index file ====")
+            # model_name = self.settings["huggingface_model_name"]
+            # with open(DOWNLOADED_MODELS) as model_info:
+            #     downloaded_models = json.load(model_info)
 
-            state_dict = torch.load(pytorch_model, map_location=device)
-            state_dict.pop("lm_head.weight")
-            state_dict.pop("lm_head.bias")
-            logger.info(f"==== Model loaded and modified {folder_path} ====")
+            # # Attempt to find the model name within the index
+            # folder_path = downloaded_models.get(model_name, None)
+            # if folder_path is None:
+            #     logger.info("==== Model not found locally :( ====")
+            #     logger.info("==== Downloading the custom model from HuggingFace ====")
+            #     folder_path = snapshot_download(
+            #         repo_id=self.settings["huggingface_model_name"], cache_dir=CACHE_DIR
+            #     )
+            #     logger.info("==== Downloaded custom model ====")
+            #     # Update the custom model index
+            #     with open(DOWNLOADED_MODELS, "w") as model_info:
+            #         downloaded_models[model_name] = folder_path
+            #         model_info.write(json.dumps(downloaded_models))
 
-            return Wav2Vec2ForCTC.from_pretrained(
-                folder_path,
-                state_dict=state_dict,
-                cache_dir=self.model_args.cache_dir,
-                activation_dropout=self.model_args.activation_dropout,
-                attention_dropout=self.model_args.attention_dropout,
-                hidden_dropout=self.model_args.hidden_dropout,
-                feat_proj_dropout=self.model_args.feat_proj_dropout,
-                mask_time_prob=self.model_args.mask_time_prob,
-                gradient_checkpointing=self.model_args.gradient_checkpointing,
-                layerdrop=self.model_args.layerdrop,
-                ctc_loss_reduction="mean",
-                pad_token_id=self.processor.tokenizer.pad_token_id,
-                vocab_size=len(self.processor.tokenizer),
-                ctc_zero_infinity=True,
-            )
+            # # Load the downloaded model
+            # logger.info(f"==== Loading model from {folder_path} ====")
+            # pytorch_model = os.path.join(folder_path, "pytorch_model.bin")
+            # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        return Wav2Vec2ForCTC.from_pretrained(
-            self.model_args.model_name_or_path,
+            # state_dict = torch.load(pytorch_model, map_location=device)
+            # state_dict.pop("lm_head.weight")
+            # state_dict.pop("lm_head.bias")
+            # logger.info(f"==== Model loaded and modified {folder_path} ====")
+
+            # return AutoModelForCTC.from_pretrained(
+            #     self.settings["huggingface_model_name"],
+            #     state_dict=state_dict,
+            #     cache_dir=self.model_args.cache_dir,
+            #     activation_dropout=self.model_args.activation_dropout,
+            #     attention_dropout=self.model_args.attention_dropout,
+            #     hidden_dropout=self.model_args.hidden_dropout,
+            #     feat_proj_dropout=self.model_args.feat_proj_dropout,
+            #     mask_time_prob=self.model_args.mask_time_prob,
+            #     gradient_checkpointing=self.model_args.gradient_checkpointing,
+            #     layerdrop=self.model_args.layerdrop,
+            #     ctc_loss_reduction="mean",
+            #     pad_token_id=self.processor.tokenizer.pad_token_id,
+            #     vocab_size=len(self.processor.tokenizer),
+            #     ctc_zero_infinity=True,
+            # )
+        else:
+            logger.info("==== Loading the base model ====")
+            model_name = BASE_MODEL
+
+        return AutoModelForCTC.from_pretrained(
+            model_name,
+            # self.model_args.model_name_or_path,
             cache_dir=self.model_args.cache_dir,
             activation_dropout=self.model_args.activation_dropout,
             attention_dropout=self.model_args.attention_dropout,
