@@ -1,10 +1,17 @@
-from typing import Callable, Dict
-from flask import request, current_app as app, jsonify
-from ..blueprint import Blueprint
-from loguru import logger
+import shutil
 import subprocess
-from elpis.engines.common.objects.model import Model
+from pathlib import Path
+from typing import Callable, Dict
+
+from flask import current_app as app
+from flask import jsonify, request, send_file
+from loguru import logger
+
 from elpis.engines.common.errors import InterfaceError
+from elpis.engines.common.objects.model import Model
+from elpis.engines.hft.objects.model import MODEL_PATH, HFTModel
+
+from ..blueprint import Blueprint
 
 MISSING_MODEL_MESSAGE = "No current model exists (perhaps create one first)"
 MISSING_MODEL_RESPONSE = {"status": 404, "data": MISSING_MODEL_MESSAGE}
@@ -139,6 +146,19 @@ def results():
         return jsonify(MISSING_LOG_RESPONSE)
     data = {"results": results}
     return jsonify({"status": 200, "data": data})
+
+
+@bp.route("/download", methods=["GET", "POST"])
+def download():
+    """Downloads the model files to the frontend"""
+    model: HFTModel = app.config["CURRENT_MODEL"]
+    if model is None:
+        return jsonify(MISSING_MODEL_RESPONSE)
+
+    zipped_model_path = Path("/tmp", "model")
+    shutil.make_archive(str(zipped_model_path), "zip", model.path / MODEL_PATH)
+
+    return send_file(zipped_model_path, as_attachment=True, cache_timeout=0)
 
 
 def _model_response(

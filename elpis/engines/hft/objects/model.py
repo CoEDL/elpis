@@ -2,28 +2,31 @@
 Support for training Hugging Face Transformers (wav2vec2) models.
 """
 import json
-from os.path import isfile
-from loguru import logger
-from pathlib import Path
 import os
 import random
 import re
+import string
 import sys
 import time
-import string
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Set, Optional, Union, Callable
-from packaging import version
+from os.path import isfile
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 import datasets
 import numpy as np
-from sklearn.model_selection import train_test_split
 import torch
 import torchaudio
+from huggingface_hub import snapshot_download
+from loguru import logger
+from packaging import version
+from sklearn.model_selection import train_test_split
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from transformers import (
     AutoModel,
+    AutoModelForCTC,
+    AutoProcessor,
     HfArgumentParser,
     Trainer,
     TrainingArguments,
@@ -31,18 +34,14 @@ from transformers import (
     Wav2Vec2FeatureExtractor,
     Wav2Vec2ForCTC,
     Wav2Vec2Processor,
-    AutoModelForCTC,
-    AutoProcessor,
     is_apex_available,
     set_seed,
 )
-from huggingface_hub import snapshot_download
 from transformers.trainer_utils import get_last_checkpoint, is_main_process
 
 from elpis.engines.common.objects.command import run
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.model import Model as BaseModel
-
 
 if is_apex_available():
     from apex import amp
@@ -73,6 +72,7 @@ TRAINING_STAGES = [TOKENIZATION, PREPROCESSING, TRAIN, EVALUATION]
 UNFINISHED = "untrained"
 FINISHED = "trained"
 
+MODEL_PATH = "wav2vec2"
 CACHE_DIR = "/state/huggingface_models/"
 DOWNLOADED_MODELS = CACHE_DIR + "model_path_index.json"
 
@@ -164,7 +164,7 @@ class HFTModel(BaseModel):
             "train_size": "0.8",
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
-            "output_dir": self.path.joinpath("wav2vec2"),
+            "output_dir": self.path.joinpath(MODEL_PATH),
             "overwrite_output_dir": True,
             "num_train_epochs": int(self.settings["num_train_epochs"]),
             "per_device_train_batch_size": int(self.settings["batch_size"]),
