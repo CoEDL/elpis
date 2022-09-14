@@ -153,11 +153,16 @@ def download():
     """Downloads the model files to the frontend"""
     model: HFTModel = app.config["CURRENT_MODEL"]
     if model is None:
+        logger.error("No current model exists")
         return jsonify(MISSING_MODEL_RESPONSE)
 
-    zipped_model_path = Path("/tmp", "model")
-    shutil.make_archive(str(zipped_model_path), "zip", model.path / MODEL_PATH)
-
+    zipped_model_path = Path("/tmp", "model.zip")
+    # zipped_model_path.mkdir(parents=True, exist_ok=True)
+    logger.info(f"Creating zipped model at path: {zipped_model_path}")
+    shutil.make_archive(
+        str(zipped_model_path.parent / zipped_model_path.stem), "zip", model.path / MODEL_PATH
+    )
+    logger.info((f"Zipped model created at path: {zipped_model_path}"))
     return send_file(zipped_model_path, as_attachment=True, cache_timeout=0)
 
 
