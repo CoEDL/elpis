@@ -64,6 +64,23 @@ def extract_additional_words(file_name: str) -> List[str]:
     return words
 
 
+def extract_graphemes(file_name: str) -> List[str]:
+    """
+    Extracts graphemes from a word list file for the purpose of pre-populating a l2s mapping.
+    Naively assumes each grapheme consists of a single character.
+    :param file_name: the name of the word list file to extract graphemes from
+    :return: a list of graphemes 
+    """
+    graphemes = set()
+    if os.path.exists(file_name):
+        with open(file_name) as f:
+            for line in f:
+                graphemes.update({char for char in line.replace("\s", "")})
+    else:
+        print(f"WARNING: Word list file at {file_name} does not exist, skipping!")
+    return graphemes
+    
+
 def generate_word_list(transcription_file: str,
                        output_file: str,
                        additional_word_list_file: str,

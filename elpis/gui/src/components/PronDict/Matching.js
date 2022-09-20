@@ -1,16 +1,26 @@
-import React, {useEffect} from "react";
-import {FieldArray, Formik, Field} from "formik";
-import {Form, Table, Button, Icon, Input} from "semantic-ui-react";
+import React from "react";
+import {FieldArray, Formik, Field, ErrorMessage} from "formik";
+import {Form, Table, Button, Icon, Label, Card} from "semantic-ui-react";
+
+const MatchingError = (message) => {
+    return (
+        <Label basic pointing color='red'>
+            {message}
+        </Label>
+    )
+}
 
 const MatchingL2S = ({props, changeMatchesCallback, interactionDisabled}) => {  
-    // TODO Implement error checking (e.g. spaces in fields)
-
     const {t, l2sPairs} = props;
 
-    const saveMatches = (values) => {
-        console.log(`Values: ${JSON.stringify(values)}`);
-        changeMatchesCallback(values);
-    }
+    const validate = (value) => {
+        let errorMessage;
+        if (/[^\s]+\s+[^\s]+/.test(value)) {
+            errorMessage = t("pronDict.matching.whitespaceErrorMessage");
+            errorMessage = t("pronDict.matching.whitespaceErrorMessage");
+        }
+        return errorMessage;
+    };
 
     return (
         <Formik
@@ -18,9 +28,14 @@ const MatchingL2S = ({props, changeMatchesCallback, interactionDisabled}) => {
             initialValues={{
                 pairs: l2sPairs
             }}
+            onSubmit={(values) => {
+                console.log(`Submitting l2s pairs (${JSON.stringify(values.pairs[0])}...)`);
+                changeMatchesCallback(values);
+            }}
         >
             {({
                 values,
+                handleSubmit,
             }) => (
                 <Form> 
                     <FieldArray name="pairs">
@@ -41,11 +56,19 @@ const MatchingL2S = ({props, changeMatchesCallback, interactionDisabled}) => {
                                     {values.pairs.length > 0 &&
                                         values.pairs.map((letter, index) => (
                                             <Table.Row key={index}>
-                                                <Table.Cell>
-                                                    <Field name={`pairs.${index}.letter`}/>
+                                                <Table.Cell className='matching-table-data'>
+                                                    <Field name={`pairs.${index}.letter`} validate={validate}/>
+                                                    <ErrorMessage
+                                                        name={`pairs.${index}.letter`}
+                                                        render={(msg) => <MatchingError message={msg}/>}
+                                                    />
                                                 </Table.Cell>
-                                                <Table.Cell>
-                                                    <Field name={`pairs.${index}.sound`}/>
+                                                <Table.Cell className='matching-table-data'>
+                                                    <Field name={`pairs.${index}.sound`} validate={validate}/>
+                                                    <ErrorMessage
+                                                        name={`pairs.${index}.sound`}
+                                                        render={(msg) => <MatchingError message={msg}/>}
+                                                    />
                                                 </Table.Cell>
                                                 <Table.Cell textAlign="center">
                                                     <Button icon type="button" disabled={values.pairs.length <= 1} onClick={() => remove(index)}>
@@ -61,9 +84,8 @@ const MatchingL2S = ({props, changeMatchesCallback, interactionDisabled}) => {
                                         <Table.HeaderCell>
                                             <Button
                                                 color="olive"
-                                                onClick={() => {
-                                                    saveMatches(values)
-                                                }}
+                                                type="button"
+                                                onClick={handleSubmit}
                                                 disabled={interactionDisabled}
                                             >
                                                 {t("pronDict.matching.save")}

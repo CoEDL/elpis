@@ -75,7 +75,7 @@ class PronDict(FSObject):
     def build_l2s_file(self, mappings: List[Dict[str, str]]):
         with self.l2s_path.open(mode='w', encoding='utf-8') as l2s_file:
             for pair in mappings:
-                l2s_file.write(f'{pair["letter"]} {pair["sound"]}\n')
+                l2s_file.write(f'{pair["letter"].strip()} {pair["sound".strip()]}\n')
         self.config['l2s'] = True
 
     def get_l2s_content(self):

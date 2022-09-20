@@ -271,3 +271,12 @@ label.pad-right,
 .matching-table {
     margin-bottom: 1rem !important;
 }
+
+.matching-table-data {
+    width: 45%;
+}
+
+.matching-table-error {
+    background-color: rgb(255, 212, 212);
+    padding: 0.5em;
+}
