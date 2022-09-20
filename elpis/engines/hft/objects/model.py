@@ -137,11 +137,15 @@ class HFTModel(BaseModel):
         with open(self.config["run_log_path"]) as logs:
             return logs.read()
 
+    @property
+    def output_dir(self) -> Path:
+        return self.path / MODEL_PATH
+
     def _set_finished_training(self, has_finished: bool) -> None:
         self.status = FINISHED if has_finished else UNFINISHED
 
     def has_been_trained(self):
-        return self.status == "trained"
+        return self.status == FINISHED
 
     def link(self, dataset: Dataset, _pron_dict):
         self.dataset = dataset
@@ -164,7 +168,7 @@ class HFTModel(BaseModel):
             "train_size": "0.8",
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
-            "output_dir": self.path.joinpath(MODEL_PATH),
+            "output_dir": self.output_dir,
             "overwrite_output_dir": True,
             "num_train_epochs": int(self.settings["num_train_epochs"]),
             "per_device_train_batch_size": int(self.settings["batch_size"]),
@@ -210,14 +214,14 @@ class HFTModel(BaseModel):
         """
         last_checkpoint = None
         if (
-            Path(self.training_args.output_dir).is_dir()
+            self.output_dir.is_dir()
             and self.training_args.do_train
             and not self.training_args.overwrite_output_dir
         ):
-            last_checkpoint = get_last_checkpoint(self.training_args.output_dir)
-            if last_checkpoint is None and len(os.listdir(self.training_args.output_dir)) > 0:
+            last_checkpoint = get_last_checkpoint(self.output_dir)
+            if last_checkpoint is None and len(os.listdir(self.output_dir)) > 0:
                 raise ValueError(
-                    f"Output directory ({self.training_args.output_dir}) already exists and is not empty. "
+                    f"Output directory ({self.output_dir}) already exists and is not empty. "
                     "Use --overwrite_output_dir to overcome."
                 )
             elif last_checkpoint is not None:
