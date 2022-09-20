@@ -28,6 +28,14 @@ class ChooseModel extends Component {
         history.push(urls.gui.transcription.new);
     }
 
+    onDrop = (acceptedFiles) => {
+        var formData = new FormData();
+
+        formData.append("file", acceptedFiles[0]);
+        this.props.transcriptionNew(formData);
+        this.setState({uploading: true});
+    }
+
 
     render() {
         const {t, list} = this.props;
@@ -67,6 +75,10 @@ class ChooseModel extends Component {
                                 }
                                 <Link to={urls.gui.engine.index}>
                                     {t("transcription.choose_model.train_new")}
+                                </Link>
+                                <Divider />
+                                <Link to={urls.gui.engine.index}>
+                                    {t("transcription.choose_model.upload_model")}
                                 </Link>
                             </Grid.Column>
                         </Grid.Row>

@@ -6,6 +6,41 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ?
     process.env.REACT_APP_BASEURL :
     "http://" + window.location.host;
 
+/* * * * * * * * * * * *  UPLOAD * * * * * * * * * * *  */
+
+export function modelUpload(postData) {
+    const url = baseUrl + urls.api.transcription.new;
+    const config = {headers: {"content-type": "multipart/form-data"}};
+    var responseData;
+
+    return async dispatch => {
+        dispatch(modelUploadStarted());
+        await axios.post(url, postData, config)
+            .then(response => {
+                responseData = response.data;
+                dispatch(modelUploadSuccess(response));
+            })
+            .catch(error => {
+                dispatch(modelUploadFailure(error));
+                throw error;
+            });
+
+        return responseData;
+    };
+}
+
+const modelUploadStarted = () => ({
+    type: actionTypes.TRANSCRIPTION_NEW_STARTED,
+});
+const modelUploadSuccess = response => ({
+    type: actionTypes.TRANSCRIPTION_NEW_SUCCESS,
+    response: {...response},
+});
+const modelUploadFailure = error => ({
+    type: actionTypes.TRANSCRIPTION_NEW_FAILURE,
+    response: {error},
+});
+
 
 /* * * * * * * * * * * *  NEW * * * * * * * * * * *  */
 
