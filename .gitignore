@@ -7,6 +7,7 @@ __pycache__/
 *.egg-info/
 ./elpis.egg-info/
 .pytest_cache
+.tool-versions
 
 # Node
 package-lock.json
