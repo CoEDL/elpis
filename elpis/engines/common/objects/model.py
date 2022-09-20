@@ -59,6 +59,7 @@ class Model(FSObject):  # TODO not thread safe
 
     @stage_status.setter
     def stage_status(self, status_info: Tuple[str, str]):
+        # Caution: stage_status in the model accepts two args. Transcriber's stage_status accepts three.
         stage, status = status_info
         stage_status = self.config["stage_status"]
         stage_status[stage]["status"] = status
