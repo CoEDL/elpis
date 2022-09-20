@@ -1,24 +1,19 @@
-from loguru import logger
-from pathlib import Path
 import string
 import sys
-from typing import List, Tuple
-from pprint import pprint
 from itertools import groupby
-import elpis.engines.common.utilities.resampling as resampler
+from pathlib import Path
+from pprint import pprint
+from typing import List, Tuple
 
 import pympi
 import torch
-from transformers import (
-    Wav2Vec2ForCTC,
-    Wav2Vec2Processor,
-)
-
-from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
-from elpis.engines.hft.objects.model import HFTModel
-
+from loguru import logger
+from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 from werkzeug.datastructures import FileStorage
 
+import elpis.engines.common.utilities.resampling as resampler
+from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
+from elpis.engines.hft.objects.model import HFTModel
 
 LOAD_AUDIO = "load_audio"
 PROCESS_INPUT = "process_input"
@@ -118,7 +113,7 @@ class HFTTranscription(BaseTranscription):
         """
         Builds and returns pretrained Wav2Vec2 Processor and Model from the project path.
         """
-        pretrained_path = Path(self.model.path) / "wav2vec2"
+        pretrained_path = self.model.output_dir
         logger.info(f"Loading processor from {pretrained_path}")
         processor = Wav2Vec2Processor.from_pretrained(pretrained_path)
         logger.info(f"Loading model from {pretrained_path}")

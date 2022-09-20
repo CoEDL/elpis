@@ -6,10 +6,11 @@ from typing import Callable, Dict
 from flask import current_app as app
 from flask import jsonify, request, send_file
 from loguru import logger
+from werkzeug.utils import secure_filename
 
 from elpis.engines.common.errors import InterfaceError
 from elpis.engines.common.objects.model import Model
-from elpis.engines.hft.objects.model import MODEL_PATH, HFTModel
+from elpis.engines.hft.objects.model import FINISHED, MODEL_PATH, HFTModel
 
 from ..blueprint import Blueprint
 
@@ -159,6 +160,27 @@ def download():
     shutil.make_archive(str(zipped_model_path), "zip", model.path / MODEL_PATH)
 
     return send_file(zipped_model_path, as_attachment=True, cache_timeout=0)
+
+
+@bp.route("/upload", methods=["POST"])
+def upload():
+    interface = app.config["INTERFACE"]
+    try:
+        model: HFTModel = interface.new_model(request.json["name"])
+        logger.info(f"New model created {model.name} {model.hash}")
+    except InterfaceError as e:
+        return jsonify({"status": 500, "error": e.human_message})
+    app.config["CURRENT_MODEL"] = model
+
+    # Save files to model directory
+    for file in request.files.getlist("file"):
+        filename = secure_filename(str(file.filename))
+        file.save(model.output_dir / filename)
+
+    # Update model state
+    model.status = FINISHED
+
+    return jsonify(success=True)
 
 
 def _model_response(
