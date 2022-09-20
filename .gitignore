@@ -39,5 +39,4 @@ docs/_build/
 docs/elpis/*.rst
 elpis-gui/
 venv/
-
-
+build.log
