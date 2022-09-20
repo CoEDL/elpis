@@ -180,7 +180,7 @@ WORKDIR /
 
 RUN echo "===> Install Elpis"
 # Remove `--single-branch` and replace with `--branch <your_branch_name>` below for development
-RUN git clone --single-branch --depth=1 --branch ben-poetry-update https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip
