@@ -15,7 +15,7 @@ numpy = "^1.19.5"
 pydub = "^0.24.1"
 pympi-ling = "^1.70.2"
 requests = "^2.25.1"
-setuptools = "^65.3.0"
+setuptools = "^51.1.1"
 werkzeug = "^1.0.1"
 dict2xml = "^1.7.0"
 llvmlite = "0.37.0"
@@ -30,7 +30,7 @@ psutil = "^5.8.0"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"
 pylint = "^2.6.0"
-wheel = "^0.37.1"
+wheel = "^0.36.2"
 black = "^22.3.0"
 
 [tool.black]

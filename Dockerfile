@@ -148,7 +148,9 @@ RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/mas
 ########################## VENV ########################
 
 WORKDIR /
-RUN pyenv global 3.8.2
+RUN pyenv install 3.8.13
+
+RUN pyenv global 3.8.13
 RUN python -m venv venv
 RUN source venv/bin/activate
 RUN pip install --upgrade pip
@@ -180,10 +182,11 @@ WORKDIR /
 
 RUN echo "===> Install Elpis"
 # Remove `--single-branch` and replace with `--branch <your_branch_name>` below for development
-RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --depth=1 --branch ben-poetry-update https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
-RUN pip install --upgrade pip
+RUN python --version
+RUN python -m pip install --upgrade pip
 RUN pip install poetry && \
     poetry config virtualenvs.create false && \
     poetry install
