@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [1.0.2] - 2022-09-20
+### Changed
+- Fixed white screen of death when uploading a single wav to datasets
+- Fixed HFT failing on first transcription due to it expecting audio.wav name
+- Fixed `yarn watch` for devs
+
 ## [1.0.1] - 2022-06-28
 ### Added
 - Resampling utility
