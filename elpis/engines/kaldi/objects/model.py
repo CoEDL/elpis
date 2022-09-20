@@ -263,7 +263,7 @@ class KaldiModel(BaseModel):  # TODO not thread safe
                         print("stderr", error.stderr, file=file)
                         print("failed", file=file)
                     logger.error(f"Stage {stage} failed")
-                    self.stage_status = (stage, "failed", "", "LOG-C")
+                    self.stage_status = (stage, "failed")
                     break
 
         def run_training_in_background():
