@@ -30,14 +30,14 @@ export function modelUpload(postData) {
 }
 
 const modelUploadStarted = () => ({
-    type: actionTypes.TRANSCRIPTION_NEW_STARTED,
+    type: actionTypes.MODEL_UPLOAD_STARTED,
 });
 const modelUploadSuccess = response => ({
-    type: actionTypes.TRANSCRIPTION_NEW_SUCCESS,
+    type: actionTypes.MODEL_UPLOAD_SUCCESS,
     response: {...response},
 });
 const modelUploadFailure = error => ({
-    type: actionTypes.TRANSCRIPTION_NEW_FAILURE,
+    type: actionTypes.MODEL_UPLOAD_FAILURE,
     response: {error},
 });
 

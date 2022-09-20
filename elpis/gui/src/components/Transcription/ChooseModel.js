@@ -99,6 +99,9 @@ const mapDispatchToProps = dispatch => ({
     _modelList: () => {
         dispatch(modelList());
     },
+    _modelUpload: formData => {
+        // 
+    },
     _modelLoad: (modelData, datasetData, engineName, pronDictData) => {
         dispatch(engineLoad(engineName))
             .then(() => dispatch(modelLoad(modelData)))
