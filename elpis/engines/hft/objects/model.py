@@ -96,6 +96,8 @@ class HFTModel(BaseModel):
         self.config["status"] = "untrained"
         self.config["results"] = {}
         self.settings = {
+            "uses_huggingface_api_key": False,
+            "huggingface_api_token": "",
             "uses_custom_model": False,
             "huggingface_model_name": "facebook/wav2vec2-large-xlsr-53",
             "word_delimiter_token": " ",

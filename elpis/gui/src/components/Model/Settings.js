@@ -92,6 +92,8 @@ class ModelSettings extends Component {
                                         className="attached"
                                         enableReinitialize
                                         initialValues={{
+                                            // This could be a user api key or an organization api key
+                                            huggingface_api_token: "", 
                                             huggingface_model_name: "",
                                             word_delimiter_token: settings.word_delimiter_token,
                                             num_train_epochs: settings.num_train_epochs,
@@ -113,12 +115,19 @@ class ModelSettings extends Component {
                                         }}
                                         onSubmit={(values) => {
                                             var uses_custom_model = false;
+                                            var uses_huggingface_api_key = false;
 
                                             if (values.huggingface_model_name) {
                                                 uses_custom_model = true;
                                             }
 
+                                            if (values.huggingface_api_key) {
+                                                uses_huggingface_api_key = true;
+                                            }
+
                                             const postData = {settings: {
+                                                uses_huggingface_api_key: uses_huggingface_api_key,
+                                                huggingface_api_token: values.huggingface_api_token,
                                                 uses_custom_model: uses_custom_model,
                                                 huggingface_model_name: values.huggingface_model_name,
                                                 word_delimiter_token: values.word_delimiter_token,
@@ -144,15 +153,28 @@ class ModelSettings extends Component {
                                             <Form onSubmit={handleChange}>
                                                 <Table>
                                                     <Table.Body>
-                                                        <Table.Cell collapsing>
-                                                            Model Name
-                                                        </Table.Cell>
-                                                        <Table.Cell>
-                                                            <Field
-                                                                name="huggingface_model_name"
-                                                                placeholder=" "
-                                                            />
-                                                        </Table.Cell>
+                                                        <Table.Row key="huggingface_api_token">
+                                                            <Table.Cell collapsing>
+                                                                Model Name
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    name="huggingface_api_token"
+                                                                    placeholder=" "
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                        <Table.Row>
+                                                            <Table.Cell collapsing>
+                                                                Model Name
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <Field
+                                                                    name="huggingface_model_name"
+                                                                    placeholder=" "
+                                                                />
+                                                            </Table.Cell>
+                                                        </Table.Row>
                                                     </Table.Body>
                                                 </Table>
                                                 <Table>
