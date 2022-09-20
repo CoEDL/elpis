@@ -73,6 +73,7 @@ export default {
             status: "/api/model/status",
             results: "/api/model/results",
             log: "/api/model/log",
+            download: "/api/model/download",
         },
         transcription: {
             new: "/api/transcription/new",
