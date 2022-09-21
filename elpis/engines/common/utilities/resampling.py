@@ -8,7 +8,7 @@ import librosa
 from werkzeug.datastructures import FileStorage
 
 
-ORIGINAL_SOUND_FILE_DIRECTORY = Path("/tmp/origial_sound_files/")
+ORIGINAL_SOUND_FILE_DIRECTORY = Path("/tmp/original_sound_files/")
 
 
 def load_audio(file: Path, target_sample_rate: int = None) -> Tuple[np.ndarray, int]:
