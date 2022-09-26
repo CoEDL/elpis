@@ -31,6 +31,9 @@
     "web-vitals": "^1.0.1",
     "xslt3": "^2.1.0"
   },
+  "engines": {
+    "node": "^15"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
