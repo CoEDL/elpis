@@ -286,8 +286,7 @@ The transcription text may be shown in a range of tones from black to light grey
 ![](assets/latest/145-transcribed-confidence.png)
 
 
-Listen in Elan.
-> If you are using your own audio, rename the audio to `audio.wav`.
+Listen in Elan. You will need to move the audio file into the same location as the Elan file for Elan to link to it.
 
 ![](assets/latest/150-elan.png)
 

@@ -33,7 +33,8 @@ class HFTTranscription(BaseTranscription):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         # Setup paths
-        self.audio_file_path = self.path.joinpath("audio.wav")
+        self.audio_filename = None
+        self.audio_file_path = None
         self.test_labels_path = self.path / "test-labels-path.txt"
         self.text_path = self.path / "one-best-hypothesis.txt"
         self.xml_path = self.path / "transcription.xml"
@@ -193,7 +194,7 @@ class HFTTranscription(BaseTranscription):
         """
         result = pympi.Elan.Eaf(author="elpis")
 
-        result.add_linked_file("audio.wav")
+        result.add_linked_file(self.audio_filename)
         result.add_tier("default")
 
         to_millis = lambda seconds: int(seconds * 1000)
@@ -203,8 +204,11 @@ class HFTTranscription(BaseTranscription):
 
         pympi.Elan.to_eaf(self.elan_path, result)
 
-    def prepare_audio(self, audio: Path, on_complete: callable = None):
-        logger.info(f"=== Prepare audio {audio} {self.audio_file_path}")
+    def prepare_audio(self, audio: FileStorage, on_complete: callable = None):
+        logger.info(f"=== Prepare audio for transcription {audio}")
+        self.audio_filename = audio.filename
+        self.audio_file_path = self.path.joinpath(self.audio_filename)
+
         resampler.resample_from_file_storage(audio, self.audio_file_path, HFTModel.SAMPLING_RATE)
         if on_complete is not None:
             on_complete()

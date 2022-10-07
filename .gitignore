@@ -9,6 +9,8 @@ __pycache__/
 *.egg-info/
 ./elpis.egg-info/
 .pytest_cache
+.tool-versions
+.python-version
 
 # Node
 package-lock.json
@@ -39,5 +41,4 @@ docs/_build/
 docs/elpis/*.rst
 elpis-gui/
 venv/
-
-
+build.log

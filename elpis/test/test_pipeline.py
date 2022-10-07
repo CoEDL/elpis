@@ -92,6 +92,6 @@ def pipeline_upto_step_4(pipeline_upto_step_3):
     # Make a transcription interface and transcribe unseen audio to elan.
     t = kaldi.new_transcription("transcription_w")
     t.link(m)
-    t.transcribe_algin("/recordings/untranscribed/audio.wav")
+    t.transcribe_align("/recordings/untranscribed/audio.wav")
 
     return (kaldi, ds, pd, m, t)
