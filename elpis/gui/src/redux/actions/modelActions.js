@@ -9,7 +9,7 @@ const baseUrl = (process.env.REACT_APP_BASEURL) ?
 /* * * * * * * * * * * *  UPLOAD * * * * * * * * * * *  */
 
 export function modelUpload(postData) {
-    const url = baseUrl + urls.api.transcription.new;
+    const url = baseUrl + urls.api.model.upload;
     const config = {headers: {"content-type": "multipart/form-data"}};
     var responseData;
 
@@ -19,6 +19,9 @@ export function modelUpload(postData) {
             .then(response => {
                 responseData = response.data;
                 dispatch(modelUploadSuccess(response));
+            })
+            .then(() => {
+                dispatch(modelUploadFinished());
             })
             .catch(error => {
                 dispatch(modelUploadFailure(error));
@@ -39,6 +42,16 @@ const modelUploadSuccess = response => ({
 const modelUploadFailure = error => ({
     type: actionTypes.MODEL_UPLOAD_FAILURE,
     response: {error},
+});
+
+export function modelUploadStatusReset() {
+    return async dispatch => {
+        dispatch(modelUploadFinished());
+    };
+}
+
+const modelUploadFinished = () => ({
+    type: actionTypes.MODEL_UPLOAD_UNSTARTED,
 });
 
 

@@ -93,7 +93,9 @@ class NewTranscription extends Component {
     }
 
     render = () => {
-        const {t, currentEngine, filename, list, status, stage_status, confidence, modelName, text} = this.props;
+        const {
+            t, currentEngine, filename, list, status, stage_status, confidence, modelName, text, uploadStatus,
+        } = this.props;
         const {uploading, show_confidence_opacity} = this.state;
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
@@ -101,6 +103,9 @@ class NewTranscription extends Component {
             value: model.name,
             text: model.name,
         }));
+
+        console.log("From New.js: ", uploadStatus);
+
         const loadingIcon = (status === "transcribing") ?
             <Icon name="circle notched" size="big" loading /> :
             null;
@@ -265,6 +270,7 @@ const mapStateToProps = state => {
         elan: state.transcription.elan,
         confidence: state.transcription.confidence,
         currentEngine: state.engine.engine,
+        uploadStatus: state.model.uploadStatus,
     };
 };
 const mapDispatchToProps = dispatch => ({

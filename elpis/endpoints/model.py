@@ -1,4 +1,4 @@
-import shutil
+import shutil, os
 import subprocess
 from pathlib import Path
 from typing import Callable, Dict
@@ -8,6 +8,7 @@ from flask import jsonify, request, send_file
 from loguru import logger
 from werkzeug.utils import secure_filename
 
+from elpis.engines import Interface, ENGINES
 from elpis.engines.common.errors import InterfaceError
 from elpis.engines.common.objects.model import Model
 from elpis.engines.hft.objects.model import FINISHED, MODEL_PATH, HFTModel
@@ -169,23 +170,55 @@ def download():
 
 @bp.route("/upload", methods=["POST"])
 def upload():
-    interface = app.config["INTERFACE"]
+    logger.info("Upload endpoint started")
+    engine = ENGINES["hft"]
+    interface: Interface = app.config["INTERFACE"]
+    interface.set_engine(engine)
+
+    # Save files to model directory
+    zip_file = request.files.getlist("file")[0]
+    filename = secure_filename(str(zip_file.filename))
+
+    if filename == "" or Path(filename).suffix != ".zip":
+        return jsonify({"status": 500, "error": "Invalid filename or not a zip-file"})
+
     try:
-        model: HFTModel = interface.new_model(request.json["name"])
+        model: HFTModel = interface.new_model(Path(filename).stem)
         logger.info(f"New model created {model.name} {model.hash}")
     except InterfaceError as e:
         return jsonify({"status": 500, "error": e.human_message})
     app.config["CURRENT_MODEL"] = model
 
-    # Save files to model directory
-    for file in request.files.getlist("file"):
-        filename = secure_filename(str(file.filename))
-        file.save(model.output_dir / filename)
+    zip_path = model.output_dir / filename
+    logger.info(f"Saving the zipped model at {zip_path}")
+    zip_path.parent.mkdir(parents=True, exist_ok=True)
+
+    zip_file.save(zip_path)
+    shutil.unpack_archive(zip_path, model.output_dir)
+    os.remove(zip_path)
+    logger.info(f"Zipped model unpacked and deleted")
+
+    # Attempts to unpack a zip file if when unzipped, it resolves to a single directory.
+    folder_path = zip_path.parent / zip_path.stem
+    if folder_path.exists and folder_path.is_dir():
+        for file in os.listdir(folder_path):
+            (folder_path / file).rename(folder_path.parent / file)
+        folder_path.rmdir()
 
     # Update model state
     model.status = FINISHED
+    model_list = [
+        {
+            "name": model["name"],
+            "engine_name": model["engine_name"],
+            "status": model["status"],
+            "dataset_name": "UPLOADED_MODEL",
+        }
+        for model in interface.list_models_verbose()
+    ]
 
-    return jsonify(success=True)
+    data = {"name": model.name, "list": model_list}
+    return jsonify({"status": 200, "data": data})
 
 
 def _model_response(

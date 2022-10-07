@@ -74,6 +74,7 @@ export default {
             results: "/api/model/results",
             log: "/api/model/log",
             download: "/api/model/download",
+            upload: "/api/model/upload",
         },
         transcription: {
             new: "/api/transcription/new",
