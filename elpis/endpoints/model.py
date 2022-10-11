@@ -164,8 +164,11 @@ def download():
     shutil.make_archive(
         str(zipped_model_path.parent / zipped_model_path.stem), "zip", model.path / MODEL_PATH
     )
-    logger.info((f"Zipped model created at path: {zipped_model_path}"))
-    return send_file(zipped_model_path, as_attachment=True, cache_timeout=0)
+    logger.info(f"Zipped model created at path: {zipped_model_path}")
+    try:
+        return send_file(zipped_model_path, as_attachment=True, cache_timeout=0)
+    except InterfaceError as e:
+        return jsonify({"status": 500, "error": e.human_message})
 
 
 @bp.route("/upload", methods=["POST"])
