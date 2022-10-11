@@ -21,10 +21,11 @@ Update docs if required with any description of changed functionality. Pushing t
 
 ## Try the code
 
-Test GUI build as a sanity check that the app builds and eslint is happy.
+Test GUI build as a sanity check that the app builds and eslint is happy. You may need to set your local Node to the version required for the GUI. These commands use *asdf* to manage Node version. Information about installing and using *asdf* are [here](https://asdf-vm.com/).
 
 ```
 cd ~/sandbox/elpis/elpis/gui
+asdf local nodejs 15.14.0
 yarn install && yarn build
 ```
 
