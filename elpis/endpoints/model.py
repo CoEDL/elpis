@@ -1,4 +1,5 @@
-import shutil, os
+import os
+import shutil
 import subprocess
 from pathlib import Path
 from typing import Callable, Dict
@@ -8,12 +9,11 @@ from flask import jsonify, request, send_file
 from loguru import logger
 from werkzeug.utils import secure_filename
 
+from elpis.blueprint import Blueprint
 from elpis.engines import Interface, ENGINES
 from elpis.engines.common.errors import InterfaceError
 from elpis.engines.common.objects.model import Model
 from elpis.engines.hft.objects.model import TRAINING_STATUS, MODEL_PATH, HFTModel
-
-from ..blueprint import Blueprint
 
 MISSING_MODEL_MESSAGE = "No current model exists (perhaps create one first)"
 MISSING_MODEL_RESPONSE = {"status": 404, "data": MISSING_MODEL_MESSAGE}
@@ -190,9 +190,9 @@ def upload():
     try:
         model: HFTModel = interface.new_model(Path(filename).stem)
         logger.info(f"New model created {model.name} {model.hash}")
+        app.config["CURRENT_MODEL"] = model
     except InterfaceError as e:
         return jsonify({"status": 500, "error": e.human_message})
-    app.config["CURRENT_MODEL"] = model
 
     zip_path = model.output_dir / filename
     logger.info(f"Saving the zipped model at {zip_path}")

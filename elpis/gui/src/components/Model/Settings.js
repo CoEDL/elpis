@@ -155,7 +155,7 @@ class ModelSettings extends Component {
                                                     <Table.Body>
                                                         <Table.Row key="huggingface_api_token">
                                                             <Table.Cell collapsing>
-                                                                Model Name
+                                                                API Token
                                                             </Table.Cell>
                                                             <Table.Cell>
                                                                 <Field
