@@ -26,8 +26,8 @@ class CurrentModelName extends Component {
                                 {t("pronDict.common.currentPronDictLabel") + dictName}
                                 <br />
                             </>
-                    }
-                        {t("dataset.common.currentDatasetLabel") + datasetName}
+                        }
+                        {datasetName && t("dataset.common.currentDatasetLabel") + datasetName}
                     </Message>
                 }
                 {!currentEngine &&
