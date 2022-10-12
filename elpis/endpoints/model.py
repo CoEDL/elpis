@@ -61,8 +61,10 @@ def new():
 def load():
     interface = app.config["INTERFACE"]
     model = interface.get_model(request.json["name"])
-    app.config["CURRENT_DATASET"] = model.dataset
-    app.config["CURRENT_PRON_DICT"] = model.pron_dict
+    if model.dataset:
+        app.config["CURRENT_DATASET"] = model.dataset
+    if model.pron_dict:
+        app.config["CURRENT_PRON_DICT"] = model.pron_dict
     app.config["CURRENT_MODEL"] = model
     data = {"config": model.config._load(), "log": model.log}
     return jsonify({"status": 200, "data": data})
@@ -215,7 +217,6 @@ def upload():
             "name": model["name"],
             "engine_name": model["engine_name"],
             "status": model["status"],
-            "dataset_name": "UPLOADED_MODEL",
         }
         for model in interface.list_models_verbose()
     ]
