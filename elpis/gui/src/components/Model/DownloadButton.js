@@ -16,7 +16,7 @@ export default function DownloadButton() {
           {downloading && (
               <Loader indeterminate active>
                   {/* TODO Add size of file being downloaded */}
-                  Zipping and Downloading Model. This may take a long time.
+                  Zipping and Downloading Model. This may take some time.
               </Loader>
       )}
       </Segment>

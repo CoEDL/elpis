@@ -103,9 +103,6 @@ class NewTranscription extends Component {
             value: model.name,
             text: model.name,
         }));
-
-        console.log("From New.js: ", uploadStatus);
-
         const loadingIcon = (status === "transcribing") ?
             <Icon name="circle notched" size="big" loading /> :
             null;

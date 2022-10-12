@@ -13,24 +13,28 @@ import Dropzone from "react-dropzone";
 import {fromEvent} from "file-selector";
 import classNames from "classnames";
 
+const UPLOAD_STATUS = {
+	NOT_STARTED: "not_started",
+	STARTED: "started",
+	FINISHED: "finished",
+	ERROR: "error",
+};
+
 class ChooseModel extends Component {
-    componentDidMount() {
-        if (this.props.uploadStatus === "finished") {
+    redirectOnUploadFinish = () => {
+        if (this.props.uploadStatus === UPLOAD_STATUS.FINISHED) {
             this.props._modelUploadFinished();
             this.props.history.push(urls.gui.transcription.new);
         }
+    }
 
+    componentDidMount() {
+        this.redirectOnUploadFinish();
         this.props._modelList();
     }
 
     componentDidUpdate() {
-        console.log("componentDidUpdate outside if statement");
-
-        if (this.props.uploadStatus === "finished") {
-            console.log("componentDidUpdate inside if statement");
-            this.props._modelUploadFinished();
-            this.props.history.push(urls.gui.transcription.new);
-        }
+        this.redirectOnUploadFinish();
     }
 
     handleSelectModel = (model_name) => {
@@ -146,7 +150,7 @@ class ChooseModel extends Component {
                     </Grid>
                 </Segment>
             </div>
-       );
+        );
     }
 }
 
