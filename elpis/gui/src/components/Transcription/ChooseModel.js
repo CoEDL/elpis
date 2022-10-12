@@ -106,12 +106,12 @@ class ChooseModel extends Component {
                                             onDrop={this.onDrop}
                                             getDataTransferItems={evt => fromEvent(evt)}
                                         >
-                                            {({getRootProps, getInputProps}) => {
+                                            {({getRootProps, getInputProps, isDragActive}) => {
                                                     return (
                                                         <div
                                                             {...getRootProps()}
                                                             className={classNames("dropzone", {
-                                                                dropzone_active: true,
+                                                                dropzone_active: isDragActive,
                                                             })}
                                                         >
                                                             <input {...getInputProps()} />

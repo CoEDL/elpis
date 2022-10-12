@@ -94,7 +94,7 @@ class NewTranscription extends Component {
 
     render = () => {
         const {
-            t, currentEngine, filename, list, status, stage_status, confidence, modelName, text, uploadStatus,
+            t, currentEngine, filename, list, status, stage_status, confidence, modelName, text,
         } = this.props;
         const {uploading, show_confidence_opacity} = this.state;
         const listTrained = list.filter(model => model.status === "trained");
