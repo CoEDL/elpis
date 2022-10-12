@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 from elpis.engines import Interface, ENGINES
 from elpis.engines.common.errors import InterfaceError
 from elpis.engines.common.objects.model import Model
-from elpis.engines.hft.objects.model import FINISHED, MODEL_PATH, HFTModel
+from elpis.engines.hft.objects.model import TRAINING_STATUS, MODEL_PATH, HFTModel
 
 from ..blueprint import Blueprint
 
@@ -98,7 +98,7 @@ def list_existing():
 
 @bp.route("/settings", methods=["POST"])
 def settings():
-    print(request.json["settings"])
+    logger.info(request.json["settings"])
 
     def setup(model: Model):
         model.settings = request.json["settings"]
@@ -209,7 +209,7 @@ def upload():
         folder_path.rmdir()
 
     # Update model state
-    model.status = FINISHED
+    model.status = TRAINING_STATUS.trained.name
     model_list = [
         {
             "name": model["name"],

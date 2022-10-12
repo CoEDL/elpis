@@ -8,6 +8,7 @@ import re
 import string
 import sys
 import time
+from enum import Enum
 from dataclasses import dataclass, field
 from os.path import isfile
 from pathlib import Path
@@ -24,9 +25,6 @@ from sklearn.model_selection import train_test_split
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from transformers import (
-    # AutoModel,
-    # AutoModelForCTC,
-    # AutoProcessor,
     HfArgumentParser,
     Trainer,
     TrainingArguments,
@@ -69,8 +67,7 @@ EVALUATION = "evaluation"
 
 TRAINING_STAGES = [TOKENIZATION, PREPROCESSING, TRAIN, EVALUATION]
 
-UNFINISHED = "untrained"
-FINISHED = "trained"
+TRAINING_STATUS = Enum("TRAINING_STATUS", "untrained trained")
 
 MODEL_PATH = "wav2vec2"
 CACHE_DIR = "/state/huggingface_models/"
@@ -144,10 +141,12 @@ class HFTModel(BaseModel):
         return self.path / MODEL_PATH
 
     def _set_finished_training(self, has_finished: bool) -> None:
-        self.status = FINISHED if has_finished else UNFINISHED
+        self.status = (
+            TRAINING_STATUS.trained.name if has_finished else TRAINING_STATUS.untrained.name
+        )
 
     def has_been_trained(self):
-        return self.status == FINISHED
+        return self.status == TRAINING_STATUS.trained.name
 
     def link(self, dataset: Dataset, _pron_dict):
         self.dataset = dataset
@@ -420,9 +419,23 @@ class HFTModel(BaseModel):
         return Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
 
     def get_model(self):
+        args = []
+        kwargs = {
+            "cache_dir": self.model_args.cache_dir,
+            "activation_dropout": self.model_args.activation_dropout,
+            "attention_dropout": self.model_args.attention_dropout,
+            "hidden_dropout": self.model_args.hidden_dropout,
+            "feat_proj_dropout": self.model_args.feat_proj_dropout,
+            "mask_time_prob": self.model_args.mask_time_prob,
+            "gradient_checkpointing": self.model_args.gradient_checkpointing,
+            "layerdrop": self.model_args.layerdrop,
+            "ctc_loss_reduction": "mean",
+            "pad_token_id": self.processor.tokenizer.pad_token_id,
+            "vocab_size": len(self.processor.tokenizer),
+            "ctc_zero_infinity": True,
+        }
         if self.settings["uses_custom_model"]:
-            # logger.info("==== Loading a custom model ====")
-            # model_name = self.settings["huggingface_model_name"]
+            logger.info("==== Loading a custom model ====")
             if not os.path.isdir(CACHE_DIR):
                 os.makedirs(CACHE_DIR)
 
@@ -462,43 +475,15 @@ class HFTModel(BaseModel):
             state_dict.pop("lm_head.weight")
             state_dict.pop("lm_head.bias")
             logger.info(f"==== Model loaded and modified {folder_path} ====")
+            args = [folder_path]
+            kwargs["state_dict"] = state_dict
+        else:
+            args = [self.model_args.model_name_or_path]
 
-            return Wav2Vec2ForCTC.from_pretrained(
-                folder_path,  # self.settings["huggingface_model_name"],
-                state_dict=state_dict,
-                cache_dir=self.model_args.cache_dir,
-                activation_dropout=self.model_args.activation_dropout,
-                attention_dropout=self.model_args.attention_dropout,
-                hidden_dropout=self.model_args.hidden_dropout,
-                feat_proj_dropout=self.model_args.feat_proj_dropout,
-                mask_time_prob=self.model_args.mask_time_prob,
-                gradient_checkpointing=self.model_args.gradient_checkpointing,
-                layerdrop=self.model_args.layerdrop,
-                ctc_loss_reduction="mean",
-                pad_token_id=self.processor.tokenizer.pad_token_id,
-                vocab_size=len(self.processor.tokenizer),
-                ctc_zero_infinity=True,
-            )
-        # else:
-        #     logger.info("==== Loading the base model ====")
-        #     model_name = BASE_MODEL
+            logger.info("==== Loading the base model ====")
+            model_name = BASE_MODEL
 
-        return Wav2Vec2ForCTC.from_pretrained(
-            # model_name,
-            self.model_args.model_name_or_path,
-            cache_dir=self.model_args.cache_dir,
-            activation_dropout=self.model_args.activation_dropout,
-            attention_dropout=self.model_args.attention_dropout,
-            hidden_dropout=self.model_args.hidden_dropout,
-            feat_proj_dropout=self.model_args.feat_proj_dropout,
-            mask_time_prob=self.model_args.mask_time_prob,
-            gradient_checkpointing=self.model_args.gradient_checkpointing,
-            layerdrop=self.model_args.layerdrop,
-            ctc_loss_reduction="mean",
-            pad_token_id=self.processor.tokenizer.pad_token_id,
-            vocab_size=len(self.processor.tokenizer),
-            ctc_zero_infinity=True,
-        )
+        return Wav2Vec2ForCTC.from_pretrained(*args, **kwargs)
 
     def preprocess_dataset(self):
         logger.info("==== Preprocessing Dataset ====")
