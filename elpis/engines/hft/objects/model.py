@@ -457,8 +457,15 @@ class HFTModel(BaseModel):
             if folder_path is None:
                 logger.info("==== Model not found locally :( ====")
                 logger.info("==== Downloading the custom model from HuggingFace ====")
+                download_arguments = {
+                    "cache_dir": CACHE_DIR,
+                }
+                if self.settings["uses_huggingface_api_key"]:
+                    download_arguments["use_auth_token"] = self.settings["huggingface_api_token"]
+                logger.info(self.settings["uses_huggingface_api_key"])
+                logger.info(download_arguments)
                 folder_path = snapshot_download(
-                    repo_id=self.settings["huggingface_model_name"], cache_dir=CACHE_DIR
+                    self.settings["huggingface_model_name"], **download_arguments
                 )
                 logger.info("==== Downloaded custom model ====")
                 # Update the custom model index
@@ -471,18 +478,22 @@ class HFTModel(BaseModel):
             pytorch_model = os.path.join(folder_path, "pytorch_model.bin")
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-            state_dict = torch.load(pytorch_model, map_location=device)
-            state_dict.pop("lm_head.weight")
-            state_dict.pop("lm_head.bias")
-            logger.info(f"==== Model loaded and modified {folder_path} ====")
+            try:
+                state_dict = torch.load(pytorch_model, map_location=device)
+                state_dict.pop("lm_head.weight")
+                state_dict.pop("lm_head.bias")
+                logger.info(f"==== Model loaded and modified {folder_path} ====")
+                kwargs["state_dict"] = state_dict
+            except:
+                logger.info("This is not a fine-tuned model. Switching to default behaviour.")
             args = [folder_path]
-            kwargs["state_dict"] = state_dict
         else:
+            logger.info("==== Loading the base/default model ====")
             args = [self.model_args.model_name_or_path]
 
-            logger.info("==== Loading the base model ====")
-            model_name = BASE_MODEL
-
+        logger.info(self.model_args.model_name_or_path)
+        logger.info(args)
+        logger.info(kwargs)
         return Wav2Vec2ForCTC.from_pretrained(*args, **kwargs)
 
     def preprocess_dataset(self):
