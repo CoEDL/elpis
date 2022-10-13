@@ -121,7 +121,7 @@ class ModelSettings extends Component {
                                                 uses_custom_model = true;
                                             }
 
-                                            if (values.huggingface_api_key) {
+                                            if (values.huggingface_api_token) {
                                                 uses_huggingface_api_key = true;
                                             }
 
