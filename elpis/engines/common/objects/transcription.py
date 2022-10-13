@@ -49,6 +49,7 @@ class Transcription(FSObject):
 
     @stage_status.setter
     def stage_status(self, vals: Tuple[str, str, str]):
+        # Caution: stage_status in the transcriber accepts three args. Model's stage_status only accepts two.
         stage, status, message = vals
         stage_status = self.config["stage_status"]
         stage_status[stage]["status"] = status
