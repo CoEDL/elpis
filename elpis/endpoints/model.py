@@ -161,7 +161,6 @@ def download():
         return jsonify(MISSING_MODEL_RESPONSE)
 
     zipped_model_path = Path("/tmp", "model.zip")
-    # zipped_model_path.mkdir(parents=True, exist_ok=True)
     logger.info(f"Creating zipped model at path: {zipped_model_path}")
     shutil.make_archive(
         str(zipped_model_path.parent / zipped_model_path.stem), "zip", model.path / MODEL_PATH

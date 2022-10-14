@@ -491,9 +491,6 @@ class HFTModel(BaseModel):
             logger.info("==== Loading the base/default model ====")
             args = [self.model_args.model_name_or_path]
 
-        logger.info(self.model_args.model_name_or_path)
-        logger.info(args)
-        logger.info(kwargs)
         return Wav2Vec2ForCTC.from_pretrained(*args, **kwargs)
 
     def preprocess_dataset(self):
