@@ -177,12 +177,18 @@ const mapDispatchToProps = dispatch => ({
     },
     modelLoad: (modelData, datasetData, pronDictData) => {
         dispatch(modelLoad(modelData))
-            .then(() => dispatch(datasetLoad(datasetData)))
+            .then(() => {
+                if (datasetData.name) {
+                    return dispatch(datasetLoad(datasetData));
+                } else {
+                    console.log("No dataset to load for this model.");
+                }
+            })
             .then(() => {
                 if (pronDictData.name) {
                     return dispatch(pronDictLoad(pronDictData));
                 } else {
-                    console.log("No pron dict to load for this model");
+                    console.log("No pron dict to load for this model.");
                 }
             });
     },

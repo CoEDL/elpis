@@ -6,6 +6,7 @@ import {modelResults} from "redux/actions/modelActions";
 import Branding from "../Shared/Branding";
 import SideNav from "../Shared/SideNav";
 import CurrentModelName from "./CurrentModelName";
+import DownloadButton from "./DownloadButton";
 
 class ModelResults extends Component {
     componentDidMount() {
@@ -107,8 +108,10 @@ class ModelResults extends Component {
                                 resultsEl
                             }
                         </Grid.Column>
-
                     </Grid>
+                    {currentEngine && name && currentEngine === "hft" &&
+                        <DownloadButton />
+                    }
                 </Segment>
             </div>
         );
