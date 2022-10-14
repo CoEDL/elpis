@@ -93,7 +93,9 @@ class NewTranscription extends Component {
     }
 
     render = () => {
-        const {t, currentEngine, filename, list, status, stage_status, confidence, modelName, text} = this.props;
+        const {
+            t, currentEngine, filename, list, status, stage_status, confidence, modelName, text,
+        } = this.props;
         const {uploading, show_confidence_opacity} = this.state;
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
@@ -265,6 +267,7 @@ const mapStateToProps = state => {
         elan: state.transcription.elan,
         confidence: state.transcription.confidence,
         currentEngine: state.engine.engine,
+        uploadStatus: state.model.uploadStatus,
     };
 };
 const mapDispatchToProps = dispatch => ({
@@ -293,9 +296,13 @@ const mapDispatchToProps = dispatch => ({
     modelLoad: (modelData, datasetData, engineName, pronDictData) => {
         dispatch(engineLoad(engineName))
             .then(()=> dispatch(modelLoad(modelData)))
-            .then(() => dispatch(datasetLoad(datasetData)))
             .then(() => {
-                if (pronDictData && pronDictData["name"]) {
+                if (datasetData.name) {
+                    dispatch(datasetLoad(datasetData));
+                }
+            })
+            .then(() => {
+                if (pronDictData.name) {
                     dispatch(pronDictLoad(pronDictData));
                 }
             });

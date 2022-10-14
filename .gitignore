@@ -1,4 +1,6 @@
+.tool-versions
 # Python
+deps/
 ./env/
 venv_test/
 *.pyc

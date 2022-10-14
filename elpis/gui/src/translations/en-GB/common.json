@@ -245,7 +245,7 @@
         },
         "choose_model":{
             "title": "Choose a model to use for transcribing",
-            "import_model": "Import a model (coming soon)",
+            "upload_model": "Upload a model (from a zip file)",
             "use_existing": "Choose an existing model",
             "no_models_found": "No models found. ",
             "train_new": "Train a new model"

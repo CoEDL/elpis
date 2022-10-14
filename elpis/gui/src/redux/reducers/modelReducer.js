@@ -1,13 +1,22 @@
 import * as actionTypes from "../actionTypes/modelActionTypes";
 
+const UPLOAD_STATUS = {
+	NOT_STARTED: "not_started",
+	STARTED: "started",
+	FINISHED: "finished",
+	ERROR: "error",
+};
 const initState = {
     modelList: [],
     name: "",
     datasetName: "",
     pronDictName: "",
     results: null,
-    settings: {},
+    settings: {
+        huggingface_model_name: "facebook/wav2vec2-large-xlsr-53",
+    },
     status: "ready",
+    uploadStatus: UPLOAD_STATUS.NOT_STARTED,
     stage_status: null,
     log: null,
 };
@@ -113,7 +122,25 @@ const model = (state = initState, action) => {
 
                 return {...state};
             }
-        
+        case actionTypes.MODEL_UPLOAD_SUCCESS:
+            ({data, status} = action.response.data);
+            console.log(data, status);
+
+            // Return a new state that updates the modelList and uploadStatus
+            // with the name of the uploaded model
+            if (status === 200) {
+                return {...state, uploadStatus: UPLOAD_STATUS.FINISHED, name: data.name, modelList: data.list};
+            } else {
+                console.log(data);
+
+                return {...state};
+            }
+        case actionTypes.MODEL_UPLOAD_UNSTARTED:
+            return {...state, uploadStatus: UPLOAD_STATUS.NOT_STARTED};
+        case actionTypes.MODEL_UPLOAD_FAILURE:
+            return {...state, uploadStatus: UPLOAD_STATUS.ERROR};
+        case actionTypes.MODEL_UPLOAD_STARTED:
+            return {...state, uploadStatus: UPLOAD_STATUS.STARTED};
         case actionTypes.MODEL_STATUS_FAILURE:
         case actionTypes.MODEL_TRAIN_FAILURE:
             return {...state, status: "error"};

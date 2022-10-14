@@ -2,23 +2,26 @@
 Support for training Hugging Face Transformers (wav2vec2) models.
 """
 import json
-from loguru import logger
-from pathlib import Path
 import os
 import random
 import re
+import string
 import sys
 import time
-import string
+from enum import Enum
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Set, Optional, Union, Callable
-from packaging import version
+from os.path import isfile
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 import datasets
 import numpy as np
-from sklearn.model_selection import train_test_split
 import torch
 import torchaudio
+from huggingface_hub import snapshot_download
+from loguru import logger
+from packaging import version
+from sklearn.model_selection import train_test_split
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 from transformers import (
@@ -38,7 +41,6 @@ from elpis.engines.common.objects.command import run
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.model import Model as BaseModel
 
-
 if is_apex_available():
     from apex import amp
 
@@ -49,6 +51,7 @@ if version.parse(torch.__version__) >= version.parse("1.6"):
 
 # Used to reduce training time when debugging
 DEBUG = False
+BASE_MODEL = "facebook/wav2vec2-large-xlsr-53"
 QUICK_TRAIN_BUILD_ARGUMENTS = {
     "num_train_epochs": "3",
     "model_name_or_path": "facebook/wav2vec2-base",
@@ -64,8 +67,11 @@ EVALUATION = "evaluation"
 
 TRAINING_STAGES = [TOKENIZATION, PREPROCESSING, TRAIN, EVALUATION]
 
-UNFINISHED = "untrained"
-FINISHED = "trained"
+TRAINING_STATUS = Enum("TRAINING_STATUS", "untrained trained")
+
+MODEL_PATH = "wav2vec2"
+CACHE_DIR = "/state/huggingface_models/"
+DOWNLOADED_MODELS = CACHE_DIR + "model_path_index.json"
 
 
 def list_field(default=None, metadata=None):
@@ -87,6 +93,10 @@ class HFTModel(BaseModel):
         self.config["status"] = "untrained"
         self.config["results"] = {}
         self.settings = {
+            "uses_huggingface_api_key": False,
+            "huggingface_api_token": "",
+            "uses_custom_model": False,
+            "huggingface_model_name": "facebook/wav2vec2-large-xlsr-53",
             "word_delimiter_token": " ",
             "num_train_epochs": 10,
             "min_duration_s": 0,
@@ -126,11 +136,17 @@ class HFTModel(BaseModel):
         with open(self.config["run_log_path"]) as logs:
             return logs.read()
 
+    @property
+    def output_dir(self) -> Path:
+        return self.path / MODEL_PATH
+
     def _set_finished_training(self, has_finished: bool) -> None:
-        self.status = FINISHED if has_finished else UNFINISHED
+        self.status = (
+            TRAINING_STATUS.trained.name if has_finished else TRAINING_STATUS.untrained.name
+        )
 
     def has_been_trained(self):
-        return self.status == "trained"
+        return self.status == TRAINING_STATUS.trained.name
 
     def link(self, dataset: Dataset, _pron_dict):
         self.dataset = dataset
@@ -153,7 +169,7 @@ class HFTModel(BaseModel):
             "train_size": "0.8",
             "split_seed": "42",
             "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
-            "output_dir": self.path.joinpath("wav2vec2"),
+            "output_dir": self.output_dir,
             "overwrite_output_dir": True,
             "num_train_epochs": int(self.settings["num_train_epochs"]),
             "per_device_train_batch_size": int(self.settings["batch_size"]),
@@ -199,14 +215,14 @@ class HFTModel(BaseModel):
         """
         last_checkpoint = None
         if (
-            Path(self.training_args.output_dir).is_dir()
+            self.output_dir.is_dir()
             and self.training_args.do_train
             and not self.training_args.overwrite_output_dir
         ):
-            last_checkpoint = get_last_checkpoint(self.training_args.output_dir)
-            if last_checkpoint is None and len(os.listdir(self.training_args.output_dir)) > 0:
+            last_checkpoint = get_last_checkpoint(self.output_dir)
+            if last_checkpoint is None and len(os.listdir(self.output_dir)) > 0:
                 raise ValueError(
-                    f"Output directory ({self.training_args.output_dir}) already exists and is not empty. "
+                    f"Output directory ({self.output_dir}) already exists and is not empty. "
                     "Use --overwrite_output_dir to overcome."
                 )
             elif last_checkpoint is not None:
@@ -403,21 +419,79 @@ class HFTModel(BaseModel):
         return Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
 
     def get_model(self):
-        return Wav2Vec2ForCTC.from_pretrained(
-            self.model_args.model_name_or_path,
-            cache_dir=self.model_args.cache_dir,
-            activation_dropout=self.model_args.activation_dropout,
-            attention_dropout=self.model_args.attention_dropout,
-            hidden_dropout=self.model_args.hidden_dropout,
-            feat_proj_dropout=self.model_args.feat_proj_dropout,
-            mask_time_prob=self.model_args.mask_time_prob,
-            gradient_checkpointing=self.model_args.gradient_checkpointing,
-            layerdrop=self.model_args.layerdrop,
-            ctc_loss_reduction="mean",
-            pad_token_id=self.processor.tokenizer.pad_token_id,
-            vocab_size=len(self.processor.tokenizer),
-            ctc_zero_infinity=True,
-        )
+        args = []
+        kwargs = {
+            "cache_dir": self.model_args.cache_dir,
+            "activation_dropout": self.model_args.activation_dropout,
+            "attention_dropout": self.model_args.attention_dropout,
+            "hidden_dropout": self.model_args.hidden_dropout,
+            "feat_proj_dropout": self.model_args.feat_proj_dropout,
+            "mask_time_prob": self.model_args.mask_time_prob,
+            "gradient_checkpointing": self.model_args.gradient_checkpointing,
+            "layerdrop": self.model_args.layerdrop,
+            "ctc_loss_reduction": "mean",
+            "pad_token_id": self.processor.tokenizer.pad_token_id,
+            "vocab_size": len(self.processor.tokenizer),
+            "ctc_zero_infinity": True,
+        }
+        if self.settings["uses_custom_model"]:
+            logger.info("==== Loading a custom model ====")
+            if not os.path.isdir(CACHE_DIR):
+                os.makedirs(CACHE_DIR)
+
+            logger.info("==== Loading a custom model ====")
+            # Create the model index if it doesn't already exist
+            if not os.path.isfile(DOWNLOADED_MODELS):
+                logger.info("==== Creating custom model index file ====")
+                with open(DOWNLOADED_MODELS, "w") as model_info:
+                    model_info.write(json.dumps({}))
+
+            # Download the current index
+            logger.info("==== Searching for model within index file ====")
+            model_name = self.settings["huggingface_model_name"]
+            with open(DOWNLOADED_MODELS) as model_info:
+                downloaded_models = json.load(model_info)
+
+            # Attempt to find the model name within the index
+            folder_path = downloaded_models.get(model_name, None)
+            if folder_path is None:
+                logger.info("==== Model not found locally :( ====")
+                logger.info("==== Downloading the custom model from HuggingFace ====")
+                download_arguments = {
+                    "cache_dir": CACHE_DIR,
+                }
+                if self.settings["uses_huggingface_api_key"]:
+                    download_arguments["use_auth_token"] = self.settings["huggingface_api_token"]
+                logger.info(self.settings["uses_huggingface_api_key"])
+                logger.info(download_arguments)
+                folder_path = snapshot_download(
+                    self.settings["huggingface_model_name"], **download_arguments
+                )
+                logger.info("==== Downloaded custom model ====")
+                # Update the custom model index
+                with open(DOWNLOADED_MODELS, "w") as model_info:
+                    downloaded_models[model_name] = folder_path
+                    model_info.write(json.dumps(downloaded_models))
+
+            # Load the downloaded model
+            logger.info(f"==== Loading model from {folder_path} ====")
+            pytorch_model = os.path.join(folder_path, "pytorch_model.bin")
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+            try:
+                state_dict = torch.load(pytorch_model, map_location=device)
+                state_dict.pop("lm_head.weight")
+                state_dict.pop("lm_head.bias")
+                logger.info(f"==== Model loaded and modified {folder_path} ====")
+                kwargs["state_dict"] = state_dict
+            except:
+                logger.info("This is not a fine-tuned model. Switching to default behaviour.")
+            args = [folder_path]
+        else:
+            logger.info("==== Loading the base/default model ====")
+            args = [self.model_args.model_name_or_path]
+
+        return Wav2Vec2ForCTC.from_pretrained(*args, **kwargs)
 
     def preprocess_dataset(self):
         logger.info("==== Preprocessing Dataset ====")
