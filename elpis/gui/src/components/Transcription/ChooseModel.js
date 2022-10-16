@@ -68,6 +68,7 @@ class ChooseModel extends Component {
             return (
                 <Button key={index} onClick={() => this.handleSelectModel(model.name)}>
                     {model.name}
+                    <span className="engine-name">({model.engine_name})</span>
                 </Button>
             );
         });
