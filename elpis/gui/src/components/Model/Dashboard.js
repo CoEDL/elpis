@@ -64,7 +64,7 @@ class ModelDashboard extends Component {
 
         if (list_sorted.length > 0) {
             listEl = (
-                <Table celled  unstackable>
+                <Table celled unstackable>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell
