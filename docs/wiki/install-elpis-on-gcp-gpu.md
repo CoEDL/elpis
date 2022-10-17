@@ -2,6 +2,8 @@
 
 If this is your first time using Elpis on Google Cloud, follow the steps on the [Setup Google Cloud account](setup-google-cloud-account.md) page. 
 
+This document will go through a process of enabling the network access required to view training progress with Tensorboard, and detail the steps to start a machine running Elpis.  
+
 
 ## Enable network access 
 
@@ -12,6 +14,7 @@ Sign in to the console. If you have multiple projects, choose the one you want t
 In the left hand navigation menu, go to "VPC network > Firewall". Click "Create Firewall Rule" (blue button at the top of the page).
 
 Use the following settings, then click Create. This will create a rule which our machine can use to enable browser traffic to reach the Tensorboard. 
+
 * Name: tensorboard
 * Direction of traffic: Ingress
 * Target tags (make sure this is lowercase, and all one word): tensorboard
@@ -20,7 +23,7 @@ Use the following settings, then click Create. This will create a rule which our
 * TCP: 6006
 
 
-## Create a Virtual Machine 
+## Create a Virtual Machine and run Elpis
 
 Go to the `Compute Engine > VM instances` page.
 
@@ -36,10 +39,10 @@ To run Elpis, create an instance with the following settings. These resources wi
 
 Scroll down to the Boot disk section. Change the boot disk to use the following settings.
 
-Operating system: Ubuntu
-Versin: Ubuntu 20.04 LTS z86/64
-Boot disk type: Standard persistent disk 
-Size (GB): 300
+* Operating system: Ubuntu
+* Version: Ubuntu 20.04 LTS z86/64
+* Boot disk type: Standard persistent disk 
+* Size (GB): 300
 
 Scroll down to the "Firewall" settings. Tick `Allow http traffic`
 
@@ -47,9 +50,12 @@ Click "Advanced options" to open that section.
 
 Click "Networking" to open that section.
 
-* Type `tensorboard` in the `Network tags` field. This will allow the virtual machine to use the tensorboard firewall rule we created earlier. 
+Type `tensorboard` in the `Network tags` field. This will allow the virtual machine to use the Tensorboard firewall rule we created earlier. 
 
-Scroll down and click on `Management`, and paste the following code into the `Automation Startup script` section. This code will install all the required software, download Elpis to the VM, and start Elpis.  
+Scroll down and click on `Management`, and paste the following code into the `Automation Startup script` section. This code will install all the required software, download Elpis to the VM, and start Elpis. 
+
+Note that we install this way, and not using image deploy because image deploy limits the OS to "container optimised", which prevents use of `--gpus all` docker run flag. To use `--gpus all` flag, we need to install specific version of nvidia drivers, not container optimised.
+ 
 
 ```shell
 # GPU startup script v0.6.3
@@ -114,54 +120,18 @@ This startup script will only run the first time the VM starts, to reduce the in
 
 Then, scroll to the bottom of the page and click "Create". The page will redirect to the virtual machine list, and show the status of the machine starting up. 
 
-After the machine starts, it can take up to 15 minutes for everything in the startup script to be installed. Wait 15 minutes or so, and then  
+After the machine starts, it can take up to 15 minutes for everything in the startup script to be installed. Wait 15 minutes or so, and then copy the External IP address. 
+
+Open a browser. In the browser's location field, type `http://` and paste the IP address. It should end up looking like `http://34.125.96.234`. Then press `enter/return` to go to your Elpis machine. 
 
 
 
+## Adding projects (optional)
 
+Later, you may wish to add a new project to separate the usage of services across different experiments or activities. 
 
+Click the project list in the top blue menu. In the popup, click "New Project".
 
-## Connect to the machine
+On the New Project screen, add a project name and press "Create".
 
-View the VM logs to monitor the setup process. After the startup script has completed, SSH to the machine to create a Docker container and start Elpis.
-Replace instance-1 with the name of your VM.
-
-```
-gcloud init
-gcloud compute instances list
-gcloud compute ssh instance-1
-```
-
-
-## Start Elpis
-
-Run this command in the SSH connection to create a Docker container from the latest image, and start Elpis.
-
-```
-docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:latest
-```
-
----
-
-## Other handy scripts
-
-Refer to the [Handy GCP commands](handy-gcp-commands.md) page for some handy scripts.
-
-Note, we don't use image deploy because this limits OS to container optimised, which prevents use of `--gpus all` docker run flag. To use `--gpus all` flag, we need to install specific version of nvidia drivers, not container optimised.
-
-## Optionally, download and share data into the container
-
-This may be helpful if you write a python file to run Elpis in the container and avoid the GUI.
-
-Use the tool on [this page](https://angelov.ai/post/2020/wget-files-from-gdrive/) to create a wget command.
-
-```
-cd /
-sudo mkdir na-elpis && cd na-elpis
-
-sudo wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1tywUAtOUnAeITxC-YL61I5iTADIipeYS' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1tywUAtOUnAeITxC-YL61I5iTADIipeYS" -O data.zip && rm -rf /tmp/cookies.txt
-
-sudo unzip data.zip
-
-docker run --gpus all --name elpis -v /na-elpis:/na-elpis --rm -it -p 80:5001/tcp coedl/elpis:latest
-```
+When the project has been created, you will be prompted to select it. Having done that, the page will show the project's Dashboard. 

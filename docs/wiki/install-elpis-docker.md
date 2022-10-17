@@ -29,7 +29,7 @@ docker run --rm -p 5001:5001/tcp coedl/elpis:latest
 
 If this is the first time you have run the command, you should see a message "Unable to find image 'coedl/elpis:latest' locally". All this means is that Docker has looked to see if there's a local copy of the Docker image, and couldn't find one. It will then start to download the image in a series of "layers". Each layer will go through a process of Waiting and Pulling (pulling involves Downloading and Extracting). When all layers are complete, Docker will create a container from the image and start Elpis in the container.
 
-When you see a message about the server running, open `http://0.0.0.0:5001` in a browser.
+When you see a message about the server running, open `http://0.0.0.0:5001` in a browser. If you are on a Windows machine, try `http://localhost:5001` instead. 
 
 ![Docker running](assets/elpis-workshop-with-docker/command-2-latest.png)
 
@@ -39,4 +39,4 @@ You should see the Elpis interface. It might look a little different to this, de
 ![Docker welcome screen](assets/elpis-workshop-with-docker/10-welcome-latest.png)
 
 
-With Elpis going, follow the steps in the [Elpis online workshop](elpis-workshop.html).
+With Elpis going, follow the steps in the [Elpis workshop guide](elpis-workshop.md).

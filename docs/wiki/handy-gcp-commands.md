@@ -1,23 +1,30 @@
 # Handy GCP commands
 
+Follow [these instructions](https://cloud.google.com/sdk/docs/install) to install the `gcloud` tool.
 
-## Use screen to run in background 
 
-SSH to GCP instance.
+## Connect to a virtual machine
+
+Use `gcloud` to connect from a local terminal to a Google Cloud Platform virtual machine. `gcloud init` will authorise gcloud to use your credentials to access your account. Then we will list the available machines, and make an SSH connection to one. Change `instance-1` in the code below to match the name of the machine you want to connect to.
+```
+gcloud init
+gcloud compute instances list
+gcloud compute ssh instance-1
+```
+
+
+## Using screen
+
+Using screen will avoid long-running training processes from terminating due to network connection failures between your machine and the VM.
 
 Start screen.
 ```
 screen
 ```
 
-Run Docker container.
-```
-docker run --gpus all -it -p 80:5000/tcp --entrypoint /bin/zsh coedl/elpis:ben-hft-gpu
-```
+Do things, e.g. run a Docker container...
 
-Do things...
-
-Then,  
+Then detach or reattach after a network failure.  
 * `Ctrl-a` + `Ctrl-d` to detach from the screen  
 * `screen -ls` to list screens  
 * `screen -r` to reattach  
@@ -29,27 +36,26 @@ SSH to GCP instance.
 
 Get into the docker container.
 ```
-docker exec -it $(docker ps -q) zsh
-cd /state/models
+docker exec -it elpis zsh
+cd /state/of_origin/models
 ls
 tar -cvf model.tar HASH_DIR_NAME
 ```
 
 Keep that Docker container running, and in another SSH terminal, copy from the container to the host.
 ```
-docker cp $(docker ps -q):/state/models/model.tar .
+docker cp elpis:/state/of_origin/models/model.tar .
 ```
 
 Copy from the host to the local machine (do this in a local terminal window).
 ```
-gcloud compute scp instance-3:~/model.tar ~/Downloads/model.tar
+gcloud compute scp instance-1:~/model.tar ~/Downloads/model.tar
 ```
 
 Otherwise, could share state dir from host into docker and save a few steps...
 
 
-
-## Setting SSH key
+## Fixing SSH key
 
 To fix `Remote Host changed` error, delete these files from your local machine.
 ```shell
@@ -63,23 +69,3 @@ Then recreate them. Start the VM in the browser interface. Login and generate ne
 gcloud auth login
 gcloud compute ssh --zone "us-central1-c" "instance-3"  --tunnel-through-iap --project "elpis-workshop"
 ``` 
-
-
-
-## Viewing Tensorboard on GCP
-
-Connect to the tensorboard that shows train loss (currently in the HFT branch).
-
-
-Do this once for your GCP account:
-* Add a Firewall rule in `GCP > VPC networks > Firewall` for TCP port `6006` using a tagname `firewall`.
-
-
-Then, for your VM instances:
-* Include the `firewall` tagname in the list of VM Network tags.
-* Start the VM and connect to it. `gcloud compute ssh instance-3`
-* Start Docker and expose the 6006 port. `docker run --gpus all -it -p 80:5001/tcp -p 6006:6006/tcp --entrypoint /bin/zsh coedl/elpis:hft`
-* Run Tensorboard with host arg. `tensorboard --logdir=/state/models/MODEL-HASH/runs --port 6006 --host=0.0.0.0`
-* Browse to the machine's IP address, on http. `http://34.132.91.225:6006`
-
-If the page isn't connecting, check that you aren't on a VPN which could be blocking the port.
