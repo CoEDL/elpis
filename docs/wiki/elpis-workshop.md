@@ -241,7 +241,7 @@ Here you can adjust settings which affect the tool's performance.
 
 If you are using the Kaldi model, you can set the "n-gram" value. A unigram (1) value will train the model on each word. A trigram (3) value with train the model by words with their neighbours.
 
-For HFT models, if you are trying Elpis out on your own computer, change the default settings to the following. These lower settings will reduce the amount of memory required to train. 
+For HFT models, if you are trying Elpis out on your own computer, change the default settings to the following. These lower settings will reduce the amount of memory required for training. 
 * Number of epochs: 1
 * Min duration: 1
 * Max duration: 10

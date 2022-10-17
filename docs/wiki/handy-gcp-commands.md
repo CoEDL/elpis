@@ -3,9 +3,9 @@
 Follow [these instructions](https://cloud.google.com/sdk/docs/install) to install the `gcloud` tool.
 
 
-## Connect to a virtual machine
+## Connect to a Virtual Machine
 
-Use `gcloud` to connect from a local terminal to a Google Cloud Platform virtual machine. `gcloud init` will authorise gcloud to use your credentials to access your account. Then we will list the available machines, and make an SSH connection to one. Change `instance-1` in the code below to match the name of the machine you want to connect to.
+Use `gcloud` to connect from a local terminal to a Google Cloud Platform Virtual Machine. `gcloud init` will authorise gcloud to use your credentials to access your account. Then we will list the available machines, and make an SSH connection to one. Change `instance-1` in the code below to match the name of the machine you want to connect to.
 ```
 gcloud init
 gcloud compute instances list
@@ -55,16 +55,20 @@ gcloud compute scp instance-1:~/model.tar ~/Downloads/model.tar
 Otherwise, could share state dir from host into docker and save a few steps...
 
 
-## Fixing SSH key
+## Fixing the SSH Key
 
-To fix `Remote Host changed` error, delete these files from your local machine.
+When making an SSH connection using gcloud, you may receive a `Remote Host changed` error. This can be fixed by regenerating some files on your computer.
+
+Use the Google Cloud Console in your browser to check that the VM is running.
+
+Delete these files from your computer.
 ```shell
 ~/.ssh/google_compute_engine
 ~/.ssh/google_compute_engine.pub
 ~/.ssh/google_compute_known_hosts
 ```
 
-Then recreate them. Start the VM in the browser interface. Login and generate new SSH keys.
+Run these commands on your computer to authorise you and generate new SSH keys. Replace the zone, instance and project names to suit your situation.
 ```shell
 gcloud auth login
 gcloud compute ssh --zone "us-central1-c" "instance-3"  --tunnel-through-iap --project "elpis-workshop"
