@@ -38,13 +38,13 @@ docker build --tag elpis-latest-test .
 ```
 
 
-Check that app runs with the new image. This isn't mounting any local repos in so it's a good way to check that the image is self-contained. 
+Check that app runs with the new image. This isn't mounting any local repos in, so it's a good way to check that the image is self-contained. 
 
 ```
-docker run --rm -p 5001:5001/tcp elpis-latest-test
+docker run --rm --name elpis -p 5001:5001/tcp elpis-latest-test
 ```
 
-Open `http://0.0.0.0:5001` in a browser, and do train and test with at least a [toy corpus](https://github.com/CoEDL/toy-corpora). For Kaldi, use the Abui toy corpus. The Na toy corpus may be more suitable for checking the HFT engine.
+Open `http://0.0.0.0:5001` in a browser (or, try `http://localhost:5001` if that doesn't work), and do train and test with at least a [toy corpus](https://github.com/CoEDL/toy-corpora). For Kaldi, use the Abui toy corpus. The Na toy corpus may be more suitable for checking the HFT engine.
 
 If it's all good, retag the image with the coedl org and push it to the Docker Hub
 

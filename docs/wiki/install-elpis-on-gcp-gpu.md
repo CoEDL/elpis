@@ -126,6 +126,7 @@ After the machine starts, it can take up to 15 minutes for everything in the sta
 
 Open a browser. In the browser's location field, type `http://` and paste the IP address. It should end up looking like `http://34.125.96.234`. Then press `enter/return` to go to your Elpis machine. 
 
+With Elpis going, follow the steps in the [Elpis workshop guide](elpis-workshop.md).
 
 
 ## Adding projects (optional)
