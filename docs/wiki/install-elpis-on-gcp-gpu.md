@@ -4,6 +4,8 @@ If this is your first time using Elpis on Google Cloud, follow the steps on the 
 
 This document will go through a process of enabling the network access required to view training progress with Tensorboard, and detail the steps to start a machine running Elpis.  
 
+When you have finished using Elpis on a GCP virtual machine, make sure you stop it to prevent ongoing costs. 
+
 
 ## Enable network access 
 

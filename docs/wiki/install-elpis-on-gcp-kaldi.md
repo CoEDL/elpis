@@ -2,6 +2,8 @@
 
 If this is your first time using Elpis on Google Cloud, follow the steps on the [Setup Google Cloud account](setup-google-cloud-account.md) page. 
 
+When you have finished using Elpis on a GCP virtual machine, make sure you stop it to prevent ongoing costs.
+
 
 ## Create a Virtual Machine 
 
