@@ -39,9 +39,9 @@ docker run --rm -it \
     --name elpis \
     -p 5001:5001/tcp \
     -p 6006:6006/tcp \
-	-v ~/sandbox/state:/state \  
-	-v ~/sandbox/elpis:/elpis \  
-	--entrypoint zsh coedl/elpis:latest
+    -v ~/sandbox/state:/state \  
+    -v ~/sandbox/elpis:/elpis \  
+    --entrypoint zsh coedl/elpis:latest
 ```
 
 Run this command to start the Elpis interface.
