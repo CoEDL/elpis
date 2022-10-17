@@ -542,6 +542,8 @@ class HFTModel(BaseModel):
     def prepare_speech(self):
         logger.info("==== Preparing Speech ====")
         speech = {}
+        temp_start = []
+        temp_end = []
         audio_paths = set()
         rejected_count = 0
 
@@ -578,7 +580,7 @@ class HFTModel(BaseModel):
                     logger.info(
                         f"Resample from {sample_rate} to {HFTModel.SAMPLING_RATE} | "
                         f"{os.path.basename(path).rjust(20)} | "
-                        f"{str(start_ms/1000).rjust(15)} : {str(stop_ms/1000).ljust(15)} | "
+                        f"{str(start_ms / 1000).rjust(15)} : {str(stop_ms / 1000).ljust(15)} | "
                         f"{str(start_frame).rjust(15)} : {str(end_frame).ljust(15)}"
                     )
                     resampler = torchaudio.transforms.Resample(sample_rate, HFTModel.SAMPLING_RATE)
@@ -587,6 +589,8 @@ class HFTModel(BaseModel):
                 # i.e. don't use the audio file path as the key
                 unique_key = f"{path}{start_ms}{stop_ms}"
                 speech[unique_key] = speech_array.squeeze().numpy()
+                temp_start.append(start_ms)
+                temp_end.append(stop_ms)
                 # For debugging/ checking dataset, generate an audio file for listening
                 # torchaudio.save(self.tmp_audio_path.joinpath(os.path.basename(path)), speech_array, HFTModel.SAMPLING_RATE)
             else:
@@ -595,7 +599,7 @@ class HFTModel(BaseModel):
 
         # Remove rejected speech by filtering on speech matching length the required conditions
         self.hft_dataset = self.hft_dataset.filter(
-            lambda x: f"{path}{start_ms}{stop_ms}" in speech.keys()
+            lambda x: x["start_ms"] in temp_start and x["stop_ms"] in temp_end
         )
         logger.info(
             f"{rejected_count} files removed due to number of frames, zero wav or too short"
