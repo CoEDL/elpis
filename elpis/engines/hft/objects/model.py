@@ -569,11 +569,11 @@ class HFTModel(BaseModel):
             )
             # Check that frames exceeds number of characters, wav file is not all zeros, and duration between min, max
             if (
-                    int(audio_metadata.num_frames) >= len(text)
-                    and speech_array.count_nonzero()
-                    and float(self.settings["min_duration_s"])
-                    < dur_ms / 1000
-                    < float(self.settings["max_duration_s"])
+                int(audio_metadata.num_frames) >= len(text)
+                and speech_array.count_nonzero()
+                and float(self.settings["min_duration_s"])
+                < dur_ms / 1000
+                < float(self.settings["max_duration_s"])
             ):
                 # Resample if required
                 if sample_rate != HFTModel.SAMPLING_RATE:
