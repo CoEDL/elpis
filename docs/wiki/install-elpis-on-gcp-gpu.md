@@ -1,26 +1,55 @@
 # Install Elpis on Google Cloud with GPU
 
-If needed, do the "Setup you account" steps on the [Install Elpis on Google Cloud](install-elpis-on-gcp.md) wiki page. 
+If this is your first time using Elpis on Google Cloud, follow the steps on the [Setup Google Cloud account](setup-google-cloud-account.md) page. 
+
+
+## Enable network access 
+
+Elpis uses Tensorboard to display training progress and plots. To enable us to view the Tensorboard page, we need to add a "firewall rule" in the Cloud console. 
+
+Sign in to the console. If you have multiple projects, choose the one you want to work with.
+
+In the left hand navigation menu, go to "VPC network > Firewall". Click "Create Firewall Rule" (blue button at the top of the page).
+
+Use the following settings, then click Create. This will create a rule which our machine can use to enable browser traffic to reach the Tensorboard. 
+* Name: tensorboard
+* Direction of traffic: Ingress
+* Target tags (make sure this is lowercase, and all one word): tensorboard
+* Source IPv4 ranges: 0.0.0.0/0
+* Protocols and ports: Specified protocols and ports
+* TCP: 6006
 
 
 ## Create a Virtual Machine 
 
-The type of machine you can create depends on the quotas you have access to. 
+Go to the `Compute Engine > VM instances` page.
 
-[GPU quotas](https://console.cloud.google.com/iam-admin/quotas?authuser=2&project=elpis-workshop&folder&organizationId&metric=GPUs%20(all%20regions)&location=GLOBAL)
+To run Elpis, create an instance with the following settings. These resources will be adequate for a small amount of data, but may need to be increased depending on the quantity of your data. This configuration would cost approximately $600 to run all day, every day, for a month.
 
-[all quotas](https://console.cloud.google.com/iam-admin/quotas?authuser=2&project=elpis-workshop)
+* Name: Give your instance a meaningful name, perhaps the name of the language you are training with.
+* Region and zone: These can be left as is, or change to a location near you if required. Note that different regions may have different GPU options.
+* Machine family: GPU
+* GPU-type: NVIDIA T4
+* Number of GPUs: 1
+* Machine-type: n1-standard-16 (16 vCPUs, 60 GB memory)
 
-For a basic machine, use these settings:
-* GPU
-* N1 series
-* n1-standard-16 (16 vCPUs, 60 GB memory)
-* 1 x NVIDIA Tesla T4 (approx $600/month)
 
-* Standard persistent disk Ubuntu 20.04 approx 300GB
-* Allow http traffic
-* Add `tensorboard` to the `Networking, Disks, Security, Management, Sole-tenancy` > `Networking` > `Network tags` section
-* Add the script below to the `Management` > `Startup scripts` section
+Scroll down to the Boot disk section. Change the boot disk to use the following settings.
+
+Operating system: Ubuntu
+Versin: Ubuntu 20.04 LTS z86/64
+Boot disk type: Standard persistent disk 
+Size (GB): 300
+
+Scroll down to the "Firewall" settings. Tick `Allow http traffic`
+
+Click "Advanced options" to open that section.
+
+Click "Networking" to open that section.
+
+* Type `tensorboard` in the `Network tags` field. This will allow the virtual machine to use the tensorboard firewall rule we created earlier. 
+
+Scroll down and click on `Management`, and paste the following code into the `Automation Startup script` section. This code will install all the required software, download Elpis to the VM, and start Elpis.  
 
 ```shell
 # GPU startup script v0.6.3
@@ -81,11 +110,13 @@ echo "done"
 docker run -d --rm --name elpis --gpus all -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
 ```
 
-
 This startup script will only run the first time the VM starts, to reduce the instance load time on subsequent restarts.
 
+Then, scroll to the bottom of the page and click "Create". The page will redirect to the virtual machine list, and show the status of the machine starting up. 
 
-Don't use image deploy because this limits OS to container optimised, which prevents use of `--gpus all` docker run flag. To use `--gpus all` flag, we need to install specific version of nvidia drivers, not container optimised.
+After the machine starts, it can take up to 15 minutes for everything in the startup script to be installed. Wait 15 minutes or so, and then  
+
+
 
 
 
@@ -116,6 +147,7 @@ docker run --gpus all --name elpis --rm -it -p 80:5001/tcp coedl/elpis:latest
 
 Refer to the [Handy GCP commands](handy-gcp-commands.md) page for some handy scripts.
 
+Note, we don't use image deploy because this limits OS to container optimised, which prevents use of `--gpus all` docker run flag. To use `--gpus all` flag, we need to install specific version of nvidia drivers, not container optimised.
 
 ## Optionally, download and share data into the container
 

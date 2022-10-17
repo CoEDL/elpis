@@ -1,26 +1,11 @@
 # Install Elpis on Google Cloud for Kaldi
 
-
-## Setup your account
-
-Create an account at [Google Cloud](https://cloud.google.com).
-
-When you have signed in, go to the [Getting Started](https://console.cloud.google.com/getting-started) page. Set your country and agree to the Terms of Service, then press "Agree and Continue".
-
-You should land on the Console Home screen.
-
-Make a new project using the CREATE PROJECT link. Later, you can create new projects from the "Select a Project" option in the blue top bar.
-
-On the New Project screen, add a Project Name and press "Create".
-
-When the project has been created, the console will show the project's Dashboard. 
-
-To add a server to the project, open the left side Navigation Menu and select "Compute Engine". Then select "VM Instances". If this is the first time your Google account has used Cloud Platform you may be offered a free trial! If so, go through the process of signing up for it. Otherwise, you may need to add billing details to access VM instances (TODO add more info about that). You will need to enter credit card details during the free trial opt-in process, but you won't be billed unless you turn on Automatic Billing.
+If this is your first time using Elpis on Google Cloud, follow the steps on the [Setup Google Cloud account](setup-google-cloud-account.md) page. 
 
 
 ## Create a Virtual Machine 
 
-Now that your account has free trial or billing set up, the VM instances page should show "Create" and "Import" buttons.
+Go to the `Compute Engine > VM Instances` page.
 
 Click "Create"
 
