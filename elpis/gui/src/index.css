@@ -347,3 +347,8 @@ label.pad-right,
 .ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
     background-color: grey;
 }
+
+.engine-name {
+    font-style: italic;
+    margin-left: 0.5em;
+}
