@@ -44,7 +44,7 @@ Check that Elpis runs with the new image. The regular `docker run ...` [command]
 docker run --rm --name elpis -p 5001:5001/tcp -p 6006:6006/tcp elpis-latest-test
 ```
 
-Open `http://0.0.0.0:5001` in a browser (or, try [http://localhost:5001](http://localhost:5001) if that doesn't work), and do train and test with at least a [toy corpus](https://github.com/CoEDL/toy-corpora). For Kaldi, use the Abui toy corpus. The Na toy corpus may be more suitable for checking the HFT engine.
+Open [http://0.0.0.0:5001](http://0.0.0.0:5001) in a browser (or, try [http://localhost:5001](http://localhost:5001) if that doesn't work), and do train and test with at least a [toy corpus](https://github.com/CoEDL/toy-corpora). For Kaldi, use the Abui toy corpus. The Na toy corpus may be more suitable for checking the HFT engine.
 
 If it's all good, retag the image with the coedl org and push it to the Docker Hub
 

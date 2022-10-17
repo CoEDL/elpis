@@ -49,7 +49,7 @@ After the zip file has downloaded, unzip it to create a folder somewhere handy (
 
 - We will provide a list of servers on the workshop day.
 - Get an address from the list.
-- If you are using Elpis in Docker on your own computer, the address will be `0.0.0.0:5001` (or, if that doesn't work try `localhost:5001`).
+- If you are using Elpis in Docker on your own computer, the address will be [http://0.0.0.0:5001](http://0.0.0.0:5001) (or, if that doesn't work try [http://localhost:5001](http://localhost:5001)).
 - Open a new web browser (Chrome or Firefox).
 - Paste the address into the location bar.
 - Press Enter/Return to start Elpis.
