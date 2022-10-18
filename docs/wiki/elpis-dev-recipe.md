@@ -35,10 +35,13 @@ yarn install && yarn watch
 Run the Elpis Docker image. Mount your local repositories into the container. Leave out the mounts you aren't actively developing. Thus you get to use the venv in the Docker container, don't need to set up your own, avoiding version issues.
 
 ```shell
-docker run --rm -it -p 5001:5001/tcp \
-	-v ~/sandbox/state:/state \  
-	-v ~/sandbox/elpis:/elpis \  
-	--entrypoint zsh coedl/elpis:latest
+docker run --rm -it \
+    --name elpis \
+    -p 5001:5001/tcp \
+    -p 6006:6006/tcp \
+    -v ~/sandbox/state:/state \  
+    -v ~/sandbox/elpis:/elpis \  
+    --entrypoint zsh coedl/elpis:latest
 ```
 
 Run this command to start the Elpis interface.

@@ -1,26 +1,13 @@
 # Install Elpis on Google Cloud for Kaldi
 
+If this is your first time using Elpis on Google Cloud, follow the steps on the [Setup Google Cloud account](setup-google-cloud-account.md) page. 
 
-## Setup your account
-
-Create an account at [Google Cloud](https://cloud.google.com).
-
-When you have signed in, go to the [Getting Started](https://console.cloud.google.com/getting-started) page. Set your country and agree to the Terms of Service, then press "Agree and Continue".
-
-You should land on the Console Home screen.
-
-Make a new project using the CREATE PROJECT link. Later, you can create new projects from the "Select a Project" option in the blue top bar.
-
-On the New Project screen, add a Project Name and press "Create".
-
-When the project has been created, the console will show the project's Dashboard. 
-
-To add a server to the project, open the left side Navigation Menu and select "Compute Engine". Then select "VM Instances". If this is the first time your Google account has used Cloud Platform you may be offered a free trial! If so, go through the process of signing up for it. Otherwise, you may need to add billing details to access VM instances (TODO add more info about that). You will need to enter credit card details during the free trial opt-in process, but you won't be billed unless you turn on Automatic Billing.
+When you have finished using Elpis on a GCP virtual machine, make sure you stop it to prevent ongoing costs.
 
 
 ## Create a Virtual Machine 
 
-Now that your account has free trial or billing set up, the VM instances page should show "Create" and "Import" buttons.
+Go to the `Compute Engine > VM Instances` page.
 
 Click "Create"
 
@@ -50,7 +37,7 @@ sudo docker run -d --name elpis -v /state:/state -p 80:5001/tcp coedl/elpis:late
 
 Then press "Create"
 
-It will take between 15 to 30 minutes for the machine to start up and install all the software. 
+It will take between 15 and 30 minutes for the machine to start up and install all the software. 
 
 
 ## For multiple machines
@@ -66,28 +53,3 @@ gcloud compute instance-groups managed create elpis-group \
   --template "elpis-medium-template" \
   --size 2
   ```
-
-
-## To inspect logs on GCP instances
-
-Get their details (name, IP address)
-```shell
-gcloud compute instances list
-```
-
-SSH to an instance
-```shell
-gcloud compute ssh --project "elpis-workshop" --zone "us-central1-a" "elpis-group-p9t1"
-```
-
-Check if the image has started yet
-```shell
-docker ps
-```
-
-Interact and view logs etc (may not need sudo)
-```shell
-sudo docker exec -it $(sudo docker ps -q) bash
-```
-
-[See notes for accessing logs.](viewing-elpis-training-log-file.md)
