@@ -49,7 +49,7 @@ After the zip file has downloaded, unzip it to create a folder somewhere handy (
 
 - We will provide a list of servers on the workshop day.
 - Get an address from the list.
-- If you are using Elpis in Docker on your own computer, the address will be `0.0.0.0:5001`
+- If you are using Elpis in Docker on your own computer, the address will be [http://0.0.0.0:5001](http://0.0.0.0:5001) (or, if that doesn't work try [http://localhost:5001](http://localhost:5001)).
 - Open a new web browser (Chrome or Firefox).
 - Paste the address into the location bar.
 - Press Enter/Return to start Elpis.
@@ -237,7 +237,16 @@ Now our training files have been prepared, we can start a new training session. 
 
 ## Settings
 
-Here you can adjust settings which affect the tool's performance. A unigram (1) value will train the model on each word. A trigram (3) value with train the model by words with their neighbours.
+Here you can adjust settings which affect the tool's performance. 
+
+If you are using the Kaldi model, you can set the "n-gram" value. A unigram (1) value will train the model on each word. A trigram (3) value with train the model by words with their neighbours.
+
+For HFT models, if you are trying Elpis out on your own computer, change the default settings to the following. These lower settings will reduce the amount of memory required for training. 
+* Number of epochs: 1
+* Min duration: 1
+* Max duration: 10
+* Batch size: 1
+* For testing purposes, select "Debug using a subset of the data" if you have a lot of data. This will use a small sample of your training data to try it out.
 
 ![](assets/latest/80-model-settings.png)
 
