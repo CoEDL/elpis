@@ -1,4 +1,4 @@
-# Installing Elpis with Docker
+# Installing Elpis on your own computer
 
 Elpis can be installed with Docker, a virtual computer running on **your** computer. To use this version of Elpis, you first need to install Docker.
 
