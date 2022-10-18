@@ -71,5 +71,5 @@ Delete these files from your computer.
 Run these commands on your computer to authorise you and generate new SSH keys. Replace the zone, instance and project names to suit your situation.
 ```shell
 gcloud auth login
-gcloud compute ssh --zone "us-central1-c" "instance-3"  --tunnel-through-iap --project "elpis-workshop"
+gcloud compute ssh --zone "us-central1-c" "instance-1"  --tunnel-through-iap --project "elpis-workshop"
 ``` 
