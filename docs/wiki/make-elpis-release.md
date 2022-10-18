@@ -38,7 +38,7 @@ docker build --tag elpis-latest-test .
 ```
 
 
-Check that Elpis runs with the new image. The regular `docker run ...` [command](elpis-dev-recipe.md), used when developing, mounts a local state directory and a local copy of the Elpis repository for developer convenience. The following command doesn't mount a state directory or local copy of the Elpis repository. This ensures the docker container doesn't unintentionally include other libraries which may have been installed locally during development. 
+Check that Elpis runs with the new image. The regular `docker run ...` [command](elpis-dev-recipe.md), used when developing, mounts a local state directory and a local copy of the Elpis repository for developer convenience. The following command doesn't mount a state directory or local copy of the Elpis repository. This ensures the Docker container doesn't unintentionally include other libraries which may have been installed locally during development. 
 
 ```
 docker run --rm --name elpis -p 5001:5001/tcp -p 6006:6006/tcp elpis-latest-test
