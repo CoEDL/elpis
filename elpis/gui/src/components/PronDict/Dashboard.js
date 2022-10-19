@@ -16,7 +16,7 @@ class PronDictDashboard extends Component {
     state = {
         column: null,
         reverse: false,
-    }
+    };
 
     componentDidMount() {
         this.props.pronDictList();
@@ -35,7 +35,7 @@ class PronDictDashboard extends Component {
             this.setState({reverse: ! this.state.reverse});
             arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
-    }
+    };
 
     handleLoad = values => {
         const {pronDictLoad} = this.props;
@@ -43,14 +43,14 @@ class PronDictDashboard extends Component {
         const datasetData = {name: values.dataset_name};
 
         pronDictLoad(postData, datasetData);
-    }
+    };
 
     handleDelete = values => {
         const {pronDictDelete} = this.props;
         const postData = {name: values.name};
 
         pronDictDelete(postData);
-    }
+    };
 
     render() {
         const {t, currentEngine, name, list} = this.props;

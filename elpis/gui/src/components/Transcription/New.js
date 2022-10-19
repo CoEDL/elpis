@@ -26,9 +26,9 @@ class NewTranscription extends Component {
     state = {
         uploading: false,
         show_confidence_opacity: true,
-    }
+    };
 
-    statusInterval = null
+    statusInterval = null;
 
     componentDidMount() {
         this.props.modelList();
@@ -36,7 +36,7 @@ class NewTranscription extends Component {
 
     triggerStatusCheck = () => {
         this.statusInterval = setInterval(this.doStatusCheck, 1000);
-    }
+    };
 
     doStatusCheck = () => {
         const {status} = this.props;
@@ -46,13 +46,13 @@ class NewTranscription extends Component {
         if (status === "transcribed") {
             clearInterval(this.statusInterval);
         }
-    }
+    };
 
     handleTranscribe = () => {
         // pass in the status check function
         // so we can fire it in .then after the dispatch is done
         this.props.transcriptionTranscribe(this.triggerStatusCheck);
-    }
+    };
 
     handleDownloadText = () => {
         const {filename, text} = this.props;
@@ -60,14 +60,14 @@ class NewTranscription extends Component {
         const text_file_name = file_basename + ".txt";
 
         downloadjs(text, text_file_name, "text/txt");
-    }
+    };
 
     handleDownloadElan = () => {
         const {filename, elan} = this.props;
         const file_basename = filename.split(".").slice(0, -1).join(".");
 
         downloadjs(elan, file_basename + ".eaf", "text/xml");
-    }
+    };
 
     onDrop = (acceptedFiles) => {
         var formData = new FormData();
@@ -75,7 +75,7 @@ class NewTranscription extends Component {
         formData.append("file", acceptedFiles[0]);
         this.props.transcriptionNew(formData);
         this.setState({uploading: true});
-    }
+    };
 
     handleSelectModel = (e, {value}) => {
         const {list, modelLoad} = this.props;
@@ -86,11 +86,11 @@ class NewTranscription extends Component {
         const pronDictData = {name: selectedModel[0].pron_dict_name};
 
         modelLoad(modelData, datasetData, engineName, pronDictData);
-    }
+    };
     
     handleOpacityToggle = (e, data) => {
         this.setState({show_confidence_opacity: data.checked});
-    }
+    };
 
     render = () => {
         const {
@@ -253,7 +253,7 @@ class NewTranscription extends Component {
                 </Segment>
             </div>
         );
-    }
+    };
 }
 
 const mapStateToProps = state => {

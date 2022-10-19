@@ -21,7 +21,7 @@ class PronDictL2S extends Component {
 
         formData.append("file", acceptedFiles[0]);
         pronDictL2S(formData);
-    }
+    };
 
     render() {
         const {t, currentEngine, l2s, name} = this.props;

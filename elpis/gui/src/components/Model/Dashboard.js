@@ -17,7 +17,7 @@ class ModelDashboard extends Component {
     state = {
         column: null,
         reverse: false,
-    }
+    };
 
     componentDidMount() {
         this.props.modelList();
@@ -36,7 +36,7 @@ class ModelDashboard extends Component {
             this.setState({reverse: ! this.state.reverse});
             arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
-    }
+    };
 
     handleLoad = values => {
         const {modelLoad} = this.props;
@@ -45,14 +45,14 @@ class ModelDashboard extends Component {
         const pronDictData = {name: values.pron_dict_name};
 
         modelLoad(modelData, datasetData, pronDictData);
-    }
+    };
 
     handleDelete = values => {
         const {modelDelete} = this.props;
         const modelData = {name: values.name};
 
         modelDelete(modelData);
-    }
+    };
 
     render() {
         const {t, engine, engineHumanNames, name, list} = this.props;
