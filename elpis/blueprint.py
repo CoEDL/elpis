@@ -1,6 +1,6 @@
 from flask import Blueprint as FlaskBlueprint
 from flask.blueprints import BlueprintSetupState as FlaskBlueprintSetupState
-from flask.helpers import _endpoint_from_view_func
+from flask.scaffold import _endpoint_from_view_func
 
 
 # This Blueprint implementaion extends the Flask Blueprint by allowing
