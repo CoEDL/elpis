@@ -14,21 +14,21 @@ class PronDictLexicon extends Component {
         const {lexicon} = this.props;
 
         if (!lexicon) this.generateLexicon();
-    }
+    };
 
     generateLexicon = () => {
         this.props.pronDictBuildLexicon();
-    }
+    };
 
     saveLexicon = () => {
         const data = {lexicon: this.props.lexicon};
 
         this.props.pronDictSaveLexicon(data);
-    }
+    };
 
     handleChange = (event) => {
         this.props.pronDictUpdateLexicon({lexicon: event.target.value});
-    }
+    };
 
     render() {
         const {t, currentEngine, lexicon, name} = this.props;

@@ -12,7 +12,7 @@ class StepBranding extends Component {
     reset = () => {
         this.props._configReset();
         window.location.href = "/";
-    }
+    };
 
     render() {
         const {t, dev_mode, currentEngine, engineHumanNames} = this.props;

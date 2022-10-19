@@ -26,7 +26,7 @@ class ChooseModel extends Component {
             this.props._modelUploadFinished();
             this.props.history.push(urls.gui.transcription.new);
         }
-    }
+    };
 
     componentDidMount() {
         this.redirectOnUploadFinish();
@@ -47,7 +47,7 @@ class ChooseModel extends Component {
 
         _modelLoad(modelData, datasetData, engineName, pronDictData);
         history.push(urls.gui.transcription.new);
-    }
+    };
 
     onDrop = (acceptedFiles) => {
         var formData = new FormData();
@@ -55,7 +55,7 @@ class ChooseModel extends Component {
         formData.append("file", acceptedFiles[0]);
         this.props._modelUpload(formData);
         this.setState({uploadStatus: "started"});
-    }
+    };
 
 
     render() {

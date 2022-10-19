@@ -13,7 +13,7 @@ class DatasetPrepare extends Component {
     state = {
         column: null,
         reverse: false,
-    }
+    };
 
     componentDidMount() {
     }
@@ -33,7 +33,7 @@ class DatasetPrepare extends Component {
             });
             arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
-    }
+    };
 
     render() {
         const {t, additionalTextFiles, currentEngine, name, status, wordlist} = this.props;

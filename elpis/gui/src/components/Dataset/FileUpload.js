@@ -17,7 +17,7 @@ class FileUpload extends Component {
             formData.append("file", file);
         });
         this.props.datasetFiles(formData);
-    }
+    };
 
     render() {
         const {t, name} = this.props;
