@@ -128,8 +128,9 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
-# Add node 15, yarn and xml-js
-RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get update && apt-get install -y nodejs build-essential && \
+# Add node 18, yarn and xml-js
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get update && \
+    apt-get install -y nodejs build-essential && \
     npm install -g npm \
     hash -d npm \
     npm install -g xml-js yarn
@@ -178,9 +179,10 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 WORKDIR /
 
+
 RUN echo "===> Install Elpis"
 # Remove `--single-branch` and replace with `--branch <your_branch_name>` below for development
-RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --branch ben-deps-update --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip
