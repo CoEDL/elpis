@@ -1,9 +1,5 @@
-from ..blueprint import Blueprint
-from flask import current_app as app, jsonify, request
+from flask import Blueprint, current_app as app, jsonify, request
 from elpis.engines import Interface, ENGINES
-import shutil
-import os
-import glob
 
 bp = Blueprint("config", __name__, url_prefix="/config")
 

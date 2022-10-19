@@ -4,7 +4,7 @@ from loguru import logger
 
 from flask import redirect
 from . import endpoints
-from .app import Flask
+from flask import Flask
 from elpis.engines import Interface
 from pathlib import Path
 from requests import get
@@ -32,7 +32,7 @@ def create_app(test_config=None):
     else:
         # Setup static resources
         # create and configure the app
-        # auto detect for yarn watch or yarn build
+        # autodetect for yarn watch or yarn build
         static_dir_watch = "/js"
         static_dir_build = "/static"
         if "js" in os.listdir(GUI_BUILD_DIR):
@@ -41,13 +41,9 @@ def create_app(test_config=None):
         else:
             static_dir = static_dir_build
 
-        # if os.environ.get('FLASK_ENV') == 'production':
-        #     static_dir = static_dir_build
-        # else:
-        #     static_dir = static_dir_watch
         logger.info(f"using static_dir: {static_dir}")
-        # Create a custom Flask instance defined in the app.py file. Same as a
-        # normal Flask class but with a specialised blueprint function.
+
+        # Create a Flask instance.
         app = Flask(
             __name__,
             instance_relative_config=True,

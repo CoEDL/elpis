@@ -1,6 +1,4 @@
-from flask import request, make_response
-from ..blueprint import Blueprint
-from flask import current_app as app, jsonify
+from flask import Blueprint, current_app as app, jsonify, request, make_response
 from elpis.engines import Interface
 from elpis.engines.common.objects.pron_dict import PronDict
 from elpis.engines.common.errors import InterfaceError

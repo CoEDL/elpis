@@ -1,5 +1,4 @@
-from flask import request, current_app as app, jsonify
-from ..blueprint import Blueprint
+from flask import Blueprint, current_app as app, jsonify, request
 from loguru import logger
 
 from elpis.engines import Interface

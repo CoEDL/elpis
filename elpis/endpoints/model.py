@@ -4,12 +4,10 @@ import subprocess
 from pathlib import Path
 from typing import Callable, Dict
 
-from flask import current_app as app
-from flask import jsonify, request, send_file
+from flask import Blueprint, current_app as app, jsonify, request, send_file
 from loguru import logger
 from werkzeug.utils import secure_filename
 
-from elpis.blueprint import Blueprint
 from elpis.engines import Interface, ENGINES
 from elpis.engines.common.errors import InterfaceError
 from elpis.engines.common.objects.model import Model
