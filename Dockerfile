@@ -182,7 +182,7 @@ WORKDIR /
 
 RUN echo "===> Install Elpis"
 # Remove `--single-branch` and replace with `--branch <your_branch_name>` below for development
-RUN git clone --single-branch --branch ben-deps-update --depth=1 https://github.com/CoEDL/elpis.git
+RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
 
 WORKDIR /elpis
 RUN pip install --upgrade pip
@@ -207,25 +207,23 @@ RUN ln -s /timit-elan /datasets/timit
 ########################## RUN THE APP ##########################
 
 # ENV vars for interactive running
-RUN echo "export FLASK_ENV=development" >> ~/.zshrc
 RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 WORKDIR /elpis
 RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
 RUN echo "export PATH=$PATH:${POETRY_PATH}/bin:/kaldi/src/bin/" >> ~/.zshrc
-RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5001\"" >> ~/.zshrc
+RUN echo "alias run=\"poetry run flask --debug run --host=0.0.0.0 --port=5001\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # ENV vars for non-interactive running
-ENV FLASK_ENV='development'
 ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
 WORKDIR /elpis
 
-ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0", "--port", "5001"]
+ENTRYPOINT ["poetry", "run", "flask", "--debug", "run", "--host", "0.0.0.0", "--port", "5001"]
 
 # 5001 is for the Flask server
 EXPOSE 5001
