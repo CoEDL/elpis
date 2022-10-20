@@ -1,6 +1,4 @@
-from flask import request
-from ..blueprint import Blueprint
-from flask import current_app as app, jsonify
+from flask import Blueprint, current_app as app, jsonify, request
 from elpis.engines import Interface
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.errors import InterfaceError

@@ -13,9 +13,9 @@ import SankeyWordOrder from "components/Visualisations/SankeyWordOrder";
 import CustomFileList from "components/Visualisations/CustomFileList";
 
 class DatasetVisualiser extends Component {
-    handleViewChange = (e) => this.setState({activeTab: e.target.value})
+    handleViewChange = (e) => this.setState({activeTab: e.target.value});
 
-    handleTabChange = (_e, {activeIndex}) => this.setState({activeTab: activeIndex})
+    handleTabChange = (_e, {activeIndex}) => this.setState({activeTab: activeIndex});
     
     render() {
         const {t, status} = this.props;
@@ -68,7 +68,7 @@ class DatasetVisualiser extends Component {
                                         as={Link} to={(this.props.currentEngine === "kaldi") ?
                                             urls.gui.pronDict.index :
                                             urls.gui.model.index}
-                                    > {/** should the else part be urls.gui.engine.index */}
+                                    >
                                         { t("common.nextButton") }
                                     </Button>
                                 </>

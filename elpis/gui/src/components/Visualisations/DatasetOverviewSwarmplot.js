@@ -15,7 +15,7 @@ class DatasetOverviewSwarmplot extends Component {
         dataError: false,
         dataLoaded: false,
         data: 0,
-    }
+    };
 
     fetchData = () => {
         fetch(urls.api.statistics.swarmplot)
@@ -44,7 +44,7 @@ class DatasetOverviewSwarmplot extends Component {
                     });
                 }
             );
-    }
+    };
     
     render() {
         // const { 

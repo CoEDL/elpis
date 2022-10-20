@@ -1,6 +1,6 @@
 {
   "name": "elpis-gui",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
@@ -21,6 +21,7 @@
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-http-backend": "^1.2.0",
     "invariant": "^2.2.4",
+    "nodemon": "^2.0.19",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.1",
@@ -28,7 +29,7 @@
     "react-redux": "^7.2.3",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.1",
     "react-scroll-to-bottom": "^4.2.0",
     "react-timeout": "^2.0.1",
     "redux": "^4.0.5",
@@ -39,7 +40,7 @@
     "xslt3": "^2.1.0"
   },
   "engines": {
-    "node": "^15"
+    "node": "^18"
   },
   "scripts": {
     "start": "react-scripts start",

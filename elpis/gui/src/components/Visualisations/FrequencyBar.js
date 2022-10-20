@@ -13,7 +13,7 @@ class FrequencyBar extends Component {
         data: 0,
         sortType: "id",
         reverse: false,
-    }
+    };
 
     handleSort = (sortBy, data) => () => {
         const {sortType} = this.state;
@@ -32,7 +32,7 @@ class FrequencyBar extends Component {
             });
             arraySort(data, sortBy, {reverse: !this.state.reverse});
         }
-    }
+    };
 
     fetchData = (url) => () => {
         fetch(url)
@@ -60,7 +60,7 @@ class FrequencyBar extends Component {
                     });
                 }
             );
-    }
+    };
 
     frequencyIcon = () => {
         if (this.state.sortType !== "frequency") {
@@ -72,7 +72,7 @@ class FrequencyBar extends Component {
                 return "sort amount up";
             }
         }
-    }
+    };
 
     alphabeticalIcon = () => {
         if (this.state.sortType !== "id") {
@@ -84,7 +84,7 @@ class FrequencyBar extends Component {
                 return "sort alphabet down";
             }
         }
-    }
+    };
     
     render() {
         const {

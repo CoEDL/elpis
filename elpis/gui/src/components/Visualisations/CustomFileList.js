@@ -12,7 +12,7 @@ class CustomFileList extends Component {
         dataError: false,
         dataLoaded: false,
         data: 0,
-    }
+    };
 
     fetchData = () => {
         fetch(urls.api.statistics.swarmplot)
@@ -34,7 +34,7 @@ class CustomFileList extends Component {
                     });
                 }
             );
-    }
+    };
     
     render() {
         // const { 

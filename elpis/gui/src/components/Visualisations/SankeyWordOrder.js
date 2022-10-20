@@ -10,7 +10,7 @@ class SankeyWordOrder extends Component {
         dataError: false,
         dataLoaded: false,
         data: 0,
-    }
+    };
 
     fetchData = (url) => () => {
         fetch(url)
@@ -29,7 +29,7 @@ class SankeyWordOrder extends Component {
                     });
                 }
             );
-    }
+    };
 
     render() {
         const { 

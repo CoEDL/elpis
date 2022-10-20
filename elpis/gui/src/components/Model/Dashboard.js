@@ -17,7 +17,7 @@ class ModelDashboard extends Component {
     state = {
         column: null,
         reverse: false,
-    }
+    };
 
     componentDidMount() {
         this.props.modelList();
@@ -36,7 +36,7 @@ class ModelDashboard extends Component {
             this.setState({reverse: ! this.state.reverse});
             arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
-    }
+    };
 
     handleLoad = values => {
         const {modelLoad} = this.props;
@@ -45,14 +45,14 @@ class ModelDashboard extends Component {
         const pronDictData = {name: values.pron_dict_name};
 
         modelLoad(modelData, datasetData, pronDictData);
-    }
+    };
 
     handleDelete = values => {
         const {modelDelete} = this.props;
         const modelData = {name: values.name};
 
         modelDelete(modelData);
-    }
+    };
 
     render() {
         const {t, engine, engineHumanNames, name, list} = this.props;
@@ -64,7 +64,7 @@ class ModelDashboard extends Component {
 
         if (list_sorted.length > 0) {
             listEl = (
-                <Table sortable celled fixed unstackable>
+                <Table celled unstackable>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell
@@ -74,28 +74,11 @@ class ModelDashboard extends Component {
                                 Name
                             </Table.HeaderCell>
                             <Table.HeaderCell
+                                collapsing
                                 sorted={column === "engine_name" ? direction : null}
                                 onClick={this.handleSort("engine_name", list)}
                             >
-                                Type
-                            </Table.HeaderCell>
-                            <Table.HeaderCell
-                                sorted={column === "dataset_name" ? direction : null}
-                                onClick={this.handleSort("dataset_name", list)}
-                            >
-                                Recordings
-                            </Table.HeaderCell>
-                            <Table.HeaderCell
-                                sorted={column === "pron_dict_name" ? direction : null}
-                                onClick={this.handleSort("pron_dict_name", list)}
-                            >
-                                Pronunciation Dictionaries
-                            </Table.HeaderCell>
-                            <Table.HeaderCell
-                                sorted={column === "results" ? direction : null}
-                                onClick={this.handleSort("results.comparison_val", list)}
-                            >
-                                Results
+                                &nbsp;
                             </Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -120,26 +103,11 @@ class ModelDashboard extends Component {
                                             </Button>
                                         </Button>
                                     </Table.Cell>
-                                    <Table.Cell>
-                                        {engineHumanNames[model.engine_name]}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {model.dataset_name}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {model.pron_dict_name}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {model.results && model.results.per &&
-                                            <>
-                                                {model.results.per} (PER)
-                                            </>
-                                        }
-                                        {model.results && model.results.wer &&
-                                            <>
-                                                {model.results.wer} (WER)
-                                            </>
-                                        }
+                                    <Table.Cell collapsing>
+                                        Type: {engineHumanNames[model.engine_name]}<br />
+                                        {model.dataset_name && <> Dataset: {model.dataset_name}<br /></>}
+                                        {model.pron_dict_name && <> Pronunciation: {model.pron_dict_name}<br /></>}
+                                        {model.results.eval_wer && <> WER: {model.results.eval_wer}<br /></>}
                                     </Table.Cell>
                                 </Table.Row>
                             );
@@ -209,12 +177,18 @@ const mapDispatchToProps = dispatch => ({
     },
     modelLoad: (modelData, datasetData, pronDictData) => {
         dispatch(modelLoad(modelData))
-            .then(() => dispatch(datasetLoad(datasetData)))
+            .then(() => {
+                if (datasetData.name) {
+                    return dispatch(datasetLoad(datasetData));
+                } else {
+                    console.log("No dataset to load for this model.");
+                }
+            })
             .then(() => {
                 if (pronDictData.name) {
                     return dispatch(pronDictLoad(pronDictData));
                 } else {
-                    console.log("No pron dict to load for this model");
+                    console.log("No pron dict to load for this model.");
                 }
             });
     },

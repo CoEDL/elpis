@@ -17,9 +17,9 @@ import urls from "urls";
 class PronDictL2S extends Component {
     state = {
         activeTab: 0,
-    }
+    };
 
-    handleTabChange = (e, {activeIndex}) => this.setState({activeTab: activeIndex})
+    handleTabChange = (e, {activeIndex}) => this.setState({activeTab: activeIndex});
 
     onDrop = (acceptedFiles) => {
         console.log("files dropped:", acceptedFiles);
@@ -29,7 +29,7 @@ class PronDictL2S extends Component {
 
         formData.append("file", acceptedFiles[0]);
         pronDictL2S(formData);
-    }
+    };
 
     render() {
         const {t, currentEngine, l2s, name} = this.props;

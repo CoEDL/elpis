@@ -15,7 +15,7 @@ class DatasetDashboard extends Component {
     state = {
         column: null,
         reverse: false,
-    }
+    };
 
     componentDidMount() {
         this.props.datasetList();
@@ -34,21 +34,21 @@ class DatasetDashboard extends Component {
             this.setState({reverse: ! this.state.reverse});
             arraySort(data, clickedColumn, {reverse: ! this.state.reverse});
         }
-    }
+    };
 
     handleLoad = name => {
         const {datasetLoad} = this.props;
         const postData = {name: name};
 
         datasetLoad(postData);
-    }
+    };
 
     handleDelete = name => {
         const {datasetDelete} = this.props;
         const postData = {name: name};
 
         datasetDelete(postData);
-    }
+    };
 
     render() {
         const {t, currentEngine, name, list} = this.props;

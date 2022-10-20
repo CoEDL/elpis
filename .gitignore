@@ -1,3 +1,4 @@
+.tool-versions
 # Python
 ./env/
 venv_test/

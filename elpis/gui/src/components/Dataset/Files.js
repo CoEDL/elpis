@@ -17,14 +17,14 @@ class DatasetFiles extends Component {
 
         datasetPrepare(history);
         history.push(urls.gui.dataset.visualise);
-    }
+    };
 
     handleDeleteButton = (file) => {
         var deleteData = new FormData();
 
         deleteData.append("file", file);
         this.props.datasetFilesDelete(deleteData);
-    }
+    };
 
     createFilesList = (files) => files.map(file => (
         <List.Item key={file}>

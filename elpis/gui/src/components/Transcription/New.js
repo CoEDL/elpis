@@ -26,9 +26,9 @@ class NewTranscription extends Component {
     state = {
         uploading: false,
         show_confidence_opacity: true,
-    }
+    };
 
-    statusInterval = null
+    statusInterval = null;
 
     componentDidMount() {
         this.props.modelList();
@@ -36,7 +36,7 @@ class NewTranscription extends Component {
 
     triggerStatusCheck = () => {
         this.statusInterval = setInterval(this.doStatusCheck, 1000);
-    }
+    };
 
     doStatusCheck = () => {
         const {status} = this.props;
@@ -46,13 +46,13 @@ class NewTranscription extends Component {
         if (status === "transcribed") {
             clearInterval(this.statusInterval);
         }
-    }
+    };
 
     handleTranscribe = () => {
         // pass in the status check function
         // so we can fire it in .then after the dispatch is done
         this.props.transcriptionTranscribe(this.triggerStatusCheck);
-    }
+    };
 
     handleDownloadText = () => {
         const {filename, text} = this.props;
@@ -60,14 +60,14 @@ class NewTranscription extends Component {
         const text_file_name = file_basename + ".txt";
 
         downloadjs(text, text_file_name, "text/txt");
-    }
+    };
 
     handleDownloadElan = () => {
         const {filename, elan} = this.props;
         const file_basename = filename.split(".").slice(0, -1).join(".");
 
         downloadjs(elan, file_basename + ".eaf", "text/xml");
-    }
+    };
 
     onDrop = (acceptedFiles) => {
         var formData = new FormData();
@@ -75,7 +75,7 @@ class NewTranscription extends Component {
         formData.append("file", acceptedFiles[0]);
         this.props.transcriptionNew(formData);
         this.setState({uploading: true});
-    }
+    };
 
     handleSelectModel = (e, {value}) => {
         const {list, modelLoad} = this.props;
@@ -86,14 +86,16 @@ class NewTranscription extends Component {
         const pronDictData = {name: selectedModel[0].pron_dict_name};
 
         modelLoad(modelData, datasetData, engineName, pronDictData);
-    }
+    };
     
     handleOpacityToggle = (e, data) => {
         this.setState({show_confidence_opacity: data.checked});
-    }
+    };
 
     render = () => {
-        const {t, currentEngine, filename, list, status, stage_status, confidence, modelName, text} = this.props;
+        const {
+            t, currentEngine, filename, list, status, stage_status, confidence, modelName, text,
+        } = this.props;
         const {uploading, show_confidence_opacity} = this.state;
         const listTrained = list.filter(model => model.status === "trained");
         const listOptions = listTrained.map(model => ({
@@ -251,7 +253,7 @@ class NewTranscription extends Component {
                 </Segment>
             </div>
         );
-    }
+    };
 }
 
 const mapStateToProps = state => {
@@ -265,6 +267,7 @@ const mapStateToProps = state => {
         elan: state.transcription.elan,
         confidence: state.transcription.confidence,
         currentEngine: state.engine.engine,
+        uploadStatus: state.model.uploadStatus,
     };
 };
 const mapDispatchToProps = dispatch => ({
@@ -293,9 +296,13 @@ const mapDispatchToProps = dispatch => ({
     modelLoad: (modelData, datasetData, engineName, pronDictData) => {
         dispatch(engineLoad(engineName))
             .then(()=> dispatch(modelLoad(modelData)))
-            .then(() => dispatch(datasetLoad(datasetData)))
             .then(() => {
-                if (pronDictData && pronDictData["name"]) {
+                if (datasetData.name) {
+                    dispatch(datasetLoad(datasetData));
+                }
+            })
+            .then(() => {
+                if (pronDictData.name) {
                     dispatch(pronDictLoad(pronDictData));
                 }
             });
