@@ -170,7 +170,7 @@ COPY download_wav2vec2.py /root/download_wav2vec2.py
 RUN python /root/download_wav2vec2.py
 
 # Script for checking that updated transformers and torch libraries work.
-COPY hft_test.py test.py
+COPY deps/hft_test.py test.py
 
 
 ########################## ELPIS INSTALLATION ########################
