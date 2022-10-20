@@ -3,8 +3,7 @@ import json
 from typing import Dict, List
 
 from flask import request, make_response
-from ..blueprint import Blueprint
-from flask import current_app as app, jsonify
+from flask import current_app as app, jsonify, Blueprint
 from elpis.engines.common.objects.dataset import Dataset
 from elpis.engines.common.objects.pron_dict import PronDict
 from elpis.engines.common.errors import InterfaceError
