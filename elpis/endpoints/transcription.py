@@ -1,5 +1,4 @@
-from flask import request, current_app as app, jsonify
-from ..blueprint import Blueprint
+from flask import Blueprint, current_app as app, jsonify, request
 from loguru import logger
 
 from elpis.engines import Interface
@@ -18,9 +17,7 @@ def new():
     transcription.link(model)
     app.config["CURRENT_TRANSCRIPTION"] = transcription
     file = request.files["file"]
-    transcription.prepare_audio(
-        file, on_complete=lambda: logger.info("Prepared audio file!")
-    )
+    transcription.prepare_audio(file, on_complete=lambda: logger.info("Prepared audio file!"))
     data = {"status": transcription.status, "originalFilename": file.filename}
     return jsonify({"status": 200, "data": data})
 

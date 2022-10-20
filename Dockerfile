@@ -128,8 +128,9 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
-# Add node 15, yarn and xml-js
-RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get update && apt-get install -y nodejs build-essential && \
+# Add node 18, yarn and xml-js
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get update && \
+    apt-get install -y nodejs build-essential && \
     npm install -g npm \
     hash -d npm \
     npm install -g xml-js yarn
@@ -178,6 +179,7 @@ ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralp
 
 WORKDIR /
 
+
 RUN echo "===> Install Elpis"
 # Remove `--single-branch` and replace with `--branch <your_branch_name>` below for development
 RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
@@ -205,25 +207,23 @@ RUN ln -s /timit-elan /datasets/timit
 ########################## RUN THE APP ##########################
 
 # ENV vars for interactive running
-RUN echo "export FLASK_ENV=development" >> ~/.zshrc
 RUN echo "export FLASK_APP=elpis" >> ~/.zshrc
 RUN echo "export LC_ALL=C.UTF-8" >> ~/.zshrc
 RUN echo "export LANG=C.UTF-8" >> ~/.zshrc
 WORKDIR /elpis
 RUN echo "export POETRY_PATH=$(poetry env info -p)" >> ~/.zshrc
 RUN echo "export PATH=$PATH:${POETRY_PATH}/bin:/kaldi/src/bin/" >> ~/.zshrc
-RUN echo "alias run=\"poetry run flask run --host=0.0.0.0 --port=5001\"" >> ~/.zshrc
+RUN echo "alias run=\"poetry run flask --debug run --host=0.0.0.0 --port=5001\"" >> ~/.zshrc
 RUN cat ~/.zshrc >> ~/.bashrc
 
 # ENV vars for non-interactive running
-ENV FLASK_ENV='development'
 ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
 WORKDIR /elpis
 
-ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0", "--port", "5001"]
+ENTRYPOINT ["poetry", "run", "flask", "--debug", "run", "--host", "0.0.0.0", "--port", "5001"]
 
 # 5001 is for the Flask server
 EXPOSE 5001

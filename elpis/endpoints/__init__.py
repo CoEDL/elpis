@@ -1,4 +1,4 @@
-from ..blueprint import Blueprint
+from flask import Blueprint
 from . import config
 from . import dataset
 from . import model

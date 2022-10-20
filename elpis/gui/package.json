@@ -22,7 +22,7 @@
     "react-redux": "^7.2.3",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.1",
     "react-scroll-to-bottom": "^4.2.0",
     "react-timeout": "^2.0.1",
     "redux": "^4.0.5",
@@ -33,7 +33,7 @@
     "xslt3": "^2.1.0"
   },
   "engines": {
-    "node": "^15"
+    "node": "^18"
   },
   "scripts": {
     "start": "react-scripts start",
