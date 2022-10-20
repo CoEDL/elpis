@@ -78,7 +78,7 @@ class SankeyWordOrder extends Component {
                         { plot }
                     </div>
                 </div>
-        );
+            );
     }
 }
 

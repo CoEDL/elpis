@@ -73,7 +73,7 @@ class ChooseModel extends Component {
                     </Grid>
                 </Segment>
             </div>
-       );
+        );
     }
 }
 

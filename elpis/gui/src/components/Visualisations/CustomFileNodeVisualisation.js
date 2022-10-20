@@ -44,6 +44,9 @@ const CustomNode = ({
         sortByValue: true,
     });
 
+    console.log(arcs);
+    console.log(arcGenerator);
+
     return (
         <g transform={`translate(${x},${y})`}>
             <circle 

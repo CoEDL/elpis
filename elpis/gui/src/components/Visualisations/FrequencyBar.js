@@ -165,7 +165,7 @@ class FrequencyBar extends Component {
                     </div>
                     { plot }
                 </div>
-        );
+            );
     }
 }
 

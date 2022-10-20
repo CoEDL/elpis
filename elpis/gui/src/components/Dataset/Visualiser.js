@@ -65,7 +65,7 @@ class DatasetVisualiser extends Component {
                                 <>
                                     <Tab menu={{secondary: true, pointing: true}} panes={panes} />
                                     <Button
-                                        as={Link} to={(currentEngine === "kaldi") ?
+                                        as={Link} to={(this.props.currentEngine === "kaldi") ?
                                             urls.gui.pronDict.index :
                                             urls.gui.model.index}
                                     > {/** should the else part be urls.gui.engine.index */}
@@ -87,6 +87,8 @@ const mapStateToProps = state => {
         wordlist: state.dataset.wordlist,
         additionalTextFiles: state.dataset.additionalTextFiles,
         status: state.dataset.status,
+        currentEngine: state.engine.engine,
+
     };
 };
 

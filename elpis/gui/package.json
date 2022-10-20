@@ -9,7 +9,7 @@
     "@nivo/core": "^0.79.0",
     "@nivo/pie": "^0.79.1",
     "@nivo/sankey": "^0.79.1",
-    "@nivo/swarmplot": "^0.79.1",
+    "@nivo/swarmplot": "^0.80.0",
     "@nivo/tooltip": "^0.79.0",
     "array-sort": "^1.0.0",
     "axios": "^0.21.1",

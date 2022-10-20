@@ -177,7 +177,7 @@ class DatasetOverviewSwarmplot extends Component {
                         { plot }
                     </div>
                 </div>
-        );
+            );
     }
 }
 
