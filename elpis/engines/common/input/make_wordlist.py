@@ -63,9 +63,7 @@ def extract_additional_words(file_name: str) -> List[str]:
                 new_words = line.strip().split(" ")
                 words += [word for word in new_words]
     else:
-        logger.warning(
-            f"Additional word list file at {file_name} does not exist, skipping!"
-        )
+        logger.warning(f"Additional word list file at {file_name} does not exist, skipping!")
     return words
 
 

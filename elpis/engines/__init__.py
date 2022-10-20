@@ -9,6 +9,7 @@ from elpis.engines.kaldi.objects.transcription import KaldiTranscription
 from elpis.engines.hft.objects.model import HFTModel
 from elpis.engines.hft.objects.transcription import HFTTranscription
 
+
 class Engine(ABC):
     def __init__(self, model: Type[Model], transcription: Type[Transcription]):
         self._model = model
