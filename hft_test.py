@@ -34,7 +34,9 @@ minds = minds.cast_column("audio", Audio(sampling_rate=16_000))
 def prepare_dataset(batch):
     audio = batch["audio"]
 
-    batch["input_values"] = processor(audio["array"], sampling_rate=audio["sampling_rate"]).input_values[0]
+    batch["input_values"] = processor(
+        audio["array"], sampling_rate=audio["sampling_rate"]
+    ).input_values[0]
     batch["input_length"] = len(batch["input_values"])
 
     with processor.as_target_processor():
@@ -51,7 +53,9 @@ class DataCollatorCTCWithPadding:
     processor: AutoProcessor
     padding: Union[bool, str] = True
 
-    def __call__(self, features: List[Dict[str, Union[List[int], torch.Tensor]]]) -> Dict[str, torch.Tensor]:
+    def __call__(
+        self, features: List[Dict[str, Union[List[int], torch.Tensor]]]
+    ) -> Dict[str, torch.Tensor]:
         # split inputs and labels since they have to be of different lengths and need
         # different padding methods
         input_features = [{"input_values": feature["input_values"]} for feature in features]
@@ -59,7 +63,9 @@ class DataCollatorCTCWithPadding:
 
         batch = self.processor.pad(input_features, padding=self.padding, return_tensors="pt")
 
-        labels_batch = self.processor.pad(labels=label_features, padding=self.padding, return_tensors="pt")
+        labels_batch = self.processor.pad(
+            labels=label_features, padding=self.padding, return_tensors="pt"
+        )
 
         # replace padding with -100 to ignore loss correctly
         labels = labels_batch["input_ids"].masked_fill(labels_batch.attention_mask.ne(1), -100)
