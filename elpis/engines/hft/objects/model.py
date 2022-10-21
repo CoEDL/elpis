@@ -427,7 +427,6 @@ class HFTModel(BaseModel):
             "hidden_dropout": self.model_args.hidden_dropout,
             "feat_proj_dropout": self.model_args.feat_proj_dropout,
             "mask_time_prob": self.model_args.mask_time_prob,
-            "gradient_checkpointing": self.model_args.gradient_checkpointing,
             "layerdrop": self.model_args.layerdrop,
             "ctc_loss_reduction": "mean",
             "pad_token_id": self.processor.tokenizer.pad_token_id,
@@ -910,12 +909,6 @@ class ModelArguments:
             "vectors will be masked along the time axis. This is only relevant if ``apply_spec_augment is True``."
         },
     )
-    gradient_checkpointing: Optional[bool] = field(
-        default=True,
-        metadata={
-            "help": "If True, use gradient checkpointing to save memory at the expense of slower backward pass."
-        },
-    )
     layerdrop: Optional[float] = field(default=0.0, metadata={"help": "The LayerDrop probability."})
 
 
@@ -938,29 +931,9 @@ class DataTrainingArguments:
         default=42,
         metadata={"help": "The random seed used to create the train/dev/test splits."},
     )
-    dataset_config_name: Optional[str] = field(
-        default=None,
-        metadata={
-            "help": "The configuration name of the dataset to use (via the datasets library)."
-        },
-    )
-    train_split_name: Optional[str] = field(
-        default="train+validation",
-        metadata={
-            "help": 'The name of the training data set split to use (via the datasets library). Defaults to "train"'
-        },
-    )
-    overwrite_cache: bool = field(
-        default=False,
-        metadata={"help": "Overwrite the cached preprocessed datasets or not."},
-    )
     preprocessing_num_workers: Optional[int] = field(
         default=None,
         metadata={"help": "The number of processes to use for the preprocessing."},
-    )
-    chars_to_ignore: List[str] = list_field(
-        default=[",", "?", ".", "!", "-", ";", ":", '""', "%", """, """, "�"],
-        metadata={"help": "A list of characters to remove from the transcripts."},
     )
 
 
@@ -1055,7 +1028,7 @@ class CTCTrainer(Trainer):
         model.train()
         inputs = self._prepare_inputs(inputs)
 
-        if self.use_amp:
+        if self.use_cuda_amp:
             with autocast():
                 loss = self.compute_loss(model, inputs)
         else:
@@ -1074,7 +1047,7 @@ class CTCTrainer(Trainer):
         if self.args.gradient_accumulation_steps > 1:
             loss = loss / self.args.gradient_accumulation_steps
 
-        if self.use_amp:
+        if self.use_cuda_amp:
             self.scaler.scale(loss).backward()
         elif self.use_apex:
             with amp.scale_loss(loss, self.optimizer) as scaled_loss:
