@@ -25,6 +25,7 @@ RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install
     libatlas-base-dev \
     libglib2.0-dev \
     libjson-c-dev \
+    libsndfile1-dev \
     libtool-bin \
     libssl-dev \
     libsqlite3-dev \
@@ -51,7 +52,7 @@ ENV LANG="C.UTF-8" \
     PYENV_ROOT="/opt/pyenv" \
     PYENV_SHELL="zsh"
 
-RUN echo "===> Install pyenv Python 3.8" && \
+RUN echo "===> Install pyenv Python 3.10" && \
     git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT && \
     echo 'export PYENV_ROOT="/opt/pyenv"' >> ~/.zshrc && \
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc && \
@@ -59,7 +60,7 @@ RUN echo "===> Install pyenv Python 3.8" && \
     eval "$(pyenv init -)" && \
     cat ~/.zshrc && \
     /bin/bash -c "source ~/.zshrc" && \
-    pyenv install 3.8.2 && \
+    pyenv install 3.10.0 && \
     rm -rf /tmp/*
 
 
@@ -149,7 +150,7 @@ RUN sh -c "$(wget -O- https://raw.githubusercontent.com/deluan/zsh-in-docker/mas
 ########################## VENV ########################
 
 WORKDIR /
-RUN pyenv global 3.8.2
+RUN pyenv global 3.10.0
 RUN python -m venv venv
 RUN source venv/bin/activate
 RUN pip install --upgrade pip
@@ -158,18 +159,18 @@ RUN pip install --upgrade pip
 ########################## HF Transformers INSTALLATION #########################
 
 # Install deps using pip rather than poetry mainly because poetry doesn't have -f support for the +cu111 version details
-# Override the dep info from requirements.txt so that we can specifiy CUDA version
-# Pin transformers to 4.6.0 because the model class has args code which breaks on later versions
-# Pin protobuf to fix `PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION` error
-RUN pip install protobuf==3.20.*
-RUN pip install transformers==4.6.0 datasets jiwer==2.2.0 lang-trans==0.6.0 librosa==0.8.0
-# Set torch version for CUDA 11
-RUN pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
-RUN pip install tensorboard==2.7.0
+# Poetry does have a way to handle torch install now, change to doing it with Poetry sometime in the future :p
+RUN pip install protobuf
+RUN pip install transformers==4.23.1 datasets jiwer==2.5.1 lang-trans==0.6.0 librosa==0.9.2
+RUN pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
+RUN pip install tensorboard==2.10.1
 
 # Cache the pretrained models
 COPY download_wav2vec2.py /root/download_wav2vec2.py
 RUN python /root/download_wav2vec2.py
+
+# Script for checking that updated transformers and torch libraries work.
+COPY elpis/test/hft_test.py hft_test.py
 
 
 ########################## ELPIS INSTALLATION ########################
@@ -178,8 +179,6 @@ RUN python /root/download_wav2vec2.py
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new /uuid
 
 WORKDIR /
-
-
 RUN echo "===> Install Elpis"
 # Remove `--single-branch` and replace with `--branch <your_branch_name>` below for development
 RUN git clone --single-branch --depth=1 https://github.com/CoEDL/elpis.git
@@ -220,6 +219,7 @@ RUN cat ~/.zshrc >> ~/.bashrc
 ENV FLASK_APP='elpis'
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
+
 
 WORKDIR /elpis
 
