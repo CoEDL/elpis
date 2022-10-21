@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
-## [1.0.4] - 2022-10-17
+## [1.0.5] - 2022-10-21
+Changes:
+- Updated dependencies, including Python version, Transformers, PyTorch, most packages.
+- Minor changes to HFT model class in response to Transformers Trainer update.
 
+## [1.0.4] - 2022-10-17
 Added feature that allows:
 - locally downloading models trained using Elpis.
 - downloading fine-tuned or pre-trained models from [HuggingFace](https://huggingface.co/) which can then be further fine-tuned on particular user datasets.
@@ -18,7 +22,6 @@ Changes:
 Documentation updates:
 - Added documentation regarding starting a GCP account, billing, APIs and quotas setup.
 - Cleaning up of existing documentation.
-
 
 ## [1.0.3] - 2022-09-21
 ### Changed
