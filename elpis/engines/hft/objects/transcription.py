@@ -4,6 +4,7 @@ from itertools import groupby
 from pathlib import Path
 from pprint import pprint
 from typing import List, Tuple
+from enum import Enum
 
 import pympi
 import torch
@@ -15,15 +16,9 @@ import elpis.engines.common.utilities.resampling as resampler
 from elpis.engines.common.objects.transcription import Transcription as BaseTranscription
 from elpis.engines.hft.objects.model import HFTModel
 
-LOAD_MODEL = "load_model"
-LOAD_AUDIO = "load_audio"
-TRANSCRIPTION = "transcription"
-SAVING = "saving"
 
-STAGES = [LOAD_MODEL, LOAD_AUDIO, TRANSCRIPTION, SAVING]
-
-FINISHED = "transcribed"
-UNFINISHED = "transcribing"
+STAGES = Enum("STAGES_ENUM", "load_model load_audio transcription saving")
+TRANSCRIPTION_STATUS = Enum("TRANSCRIPTION_STATUS", "transcribed transcribing")
 
 
 class HFTTranscription(BaseTranscription):
@@ -41,27 +36,27 @@ class HFTTranscription(BaseTranscription):
         self.elan_path = self.path / "transcription.eaf"
         self.model: HFTModel
 
-        self.index_prefixed_stages = [f"{i}_{stage}" for (i, stage) in enumerate(STAGES)]
-        stage_labels = [string.capwords(stage).replace("_", " ") for stage in STAGES]
+        self.index_prefixed_stages = [f"{i}_{stage.name}" for (i, stage) in enumerate(STAGES)]
+        stage_labels = [string.capwords(stage.name).replace("_", " ") for stage in STAGES]
 
         stage_names = {file: name for (file, name) in zip(self.index_prefixed_stages, stage_labels)}
         self.build_stage_status(stage_names)
 
     def transcribe(self, on_complete: callable = None) -> None:
-        self._set_stage(LOAD_MODEL)
+        self._set_stage(STAGES.load_model.name)
         logger.info("==== Load model ====")
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
-        self._set_stage(LOAD_MODEL, complete=True)
+        self._set_stage(STAGES.load_model.name, complete=True)
 
-        self._set_stage(LOAD_AUDIO)
+        self._set_stage(STAGES.load_audio.name)
         logger.info("=== Load audio")
         audio_input, _ = resampler.load_audio(
             self.audio_file_path, target_sample_rate=HFTTranscription.SAMPLING_RATE
         )
-        self._set_stage(LOAD_AUDIO, complete=True)
+        self._set_stage(STAGES.load_audio.name, complete=True)
 
-        self._set_stage(TRANSCRIPTION)
+        self._set_stage(STAGES.transcription.name)
         logger.info("=== Inference pipeline")
         pipe = pipeline(
             "automatic-speech-recognition",
@@ -71,17 +66,17 @@ class HFTTranscription(BaseTranscription):
         )
         transcription = pipe(audio_input, chunk_length_s=10, return_timestamps="word")
         logger.info(transcription["text"])
-        self._set_stage(TRANSCRIPTION, complete=True)
+        self._set_stage(STAGES.transcription.name, complete=True)
 
-        self._set_stage(SAVING, msg="Saving transcription text")
+        self._set_stage(STAGES.saving.name, msg="Saving transcription text")
         logger.info("==== Save transcription text ====")
         self._save_transcription(transcription["text"])
 
-        self._set_stage(SAVING, msg="Saving utterances in Elan format")
+        self._set_stage(STAGES.saving.name, msg="Saving utterances in Elan format")
         logger.info("==== Save utterances in Elan format ====")
         self._save_utterances(transcription["chunks"])
 
-        self._set_stage(SAVING, complete=True)
+        self._set_stage(STAGES.saving.name, complete=True)
         self._set_finished_transcription(True)
         if on_complete is not None:
             on_complete()
@@ -145,14 +140,20 @@ class HFTTranscription(BaseTranscription):
             on_complete()
 
     def _set_finished_transcription(self, has_finished: bool) -> None:
-        self.status = FINISHED if has_finished else UNFINISHED
+        self.status = (
+            TRANSCRIPTION_STATUS.transcribed.name
+            if has_finished
+            else TRANSCRIPTION_STATUS.transcribing.name
+        )
 
     def _set_stage(self, stage: str, complete: bool = False, msg: str = "") -> None:
         """
-        Updates the stage to one of the constants specified within STAGES
+        Updates the stage status for display in the GUI.
+        self.stage combines the stage index (for ease of sorting in the GUI) with the stage name, eg 0_load_model
         """
         status = "complete" if complete else "in-progress"
-        if stage in STAGES:
-            index = STAGES.index(stage)
-            self.stage = self.index_prefixed_stages[index]
-            self.stage_status = self.stage, status, msg
+
+        for (i, stage_) in enumerate(STAGES):
+            if stage == stage_.name:
+                self.stage = self.index_prefixed_stages[i]
+                self.stage_status = self.stage, status, msg
