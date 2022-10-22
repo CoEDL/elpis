@@ -17,11 +17,10 @@ from elpis.engines.hft.objects.model import HFTModel
 
 LOAD_MODEL = "load_model"
 LOAD_AUDIO = "load_audio"
-PROCESS_INPUT = "process_input"
 TRANSCRIPTION = "transcription"
 SAVING = "saving"
 
-STAGES = [LOAD_MODEL, LOAD_AUDIO, PROCESS_INPUT, TRANSCRIPTION, SAVING]
+STAGES = [LOAD_MODEL, LOAD_AUDIO, TRANSCRIPTION, SAVING]
 
 FINISHED = "transcribed"
 UNFINISHED = "transcribing"
