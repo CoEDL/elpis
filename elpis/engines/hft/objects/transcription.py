@@ -121,7 +121,6 @@ class HFTTranscription(BaseTranscription):
         result.add_tier("default")
         to_millis = lambda seconds: int(seconds * 1000)
         for utterance in utterances:
-            print(utterance)
             word = utterance["text"]
             start, end = (
                 to_millis(utterance["timestamp"][0]),
