@@ -44,20 +44,20 @@ class HFTTranscription(BaseTranscription):
 
     def transcribe(self, on_complete: callable = None) -> None:
         self._set_stage(STAGES.load_model.name)
-        logger.info("==== Load model ====")
+        logger.info("=== Load model ===")
         self._set_finished_transcription(False)
         processor, model = self._get_wav2vec2_requirements()
         self._set_stage(STAGES.load_model.name, complete=True)
 
         self._set_stage(STAGES.load_audio.name)
-        logger.info("=== Load audio")
+        logger.info("=== Load audio ===")
         audio_input, _ = resampler.load_audio(
             self.audio_file_path, target_sample_rate=HFTTranscription.SAMPLING_RATE
         )
         self._set_stage(STAGES.load_audio.name, complete=True)
 
         self._set_stage(STAGES.transcription.name)
-        logger.info("=== Inference pipeline")
+        logger.info("=== Inference pipeline ===")
         pipe = pipeline(
             "automatic-speech-recognition",
             model=model,
@@ -69,11 +69,11 @@ class HFTTranscription(BaseTranscription):
         self._set_stage(STAGES.transcription.name, complete=True)
 
         self._set_stage(STAGES.saving.name, msg="Saving transcription text")
-        logger.info("==== Save transcription text ====")
+        logger.info("=== Save transcription text ===")
         self._save_transcription(transcription["text"])
 
         self._set_stage(STAGES.saving.name, msg="Saving utterances in Elan format")
-        logger.info("==== Save utterances in Elan format ====")
+        logger.info("=== Save utterances in Elan format ===")
         self._save_utterances(transcription["chunks"])
 
         self._set_stage(STAGES.saving.name, complete=True)
@@ -130,7 +130,7 @@ class HFTTranscription(BaseTranscription):
         pympi.Elan.to_eaf(self.elan_path, result)
 
     def prepare_audio(self, audio: FileStorage, on_complete: callable = None):
-        logger.info(f"=== Prepare audio for transcription {audio}")
+        logger.info(f"=== Prepare audio for transcription {audio} ===")
         self.audio_filename = audio.filename
         self.audio_file_path = self.path.joinpath(self.audio_filename)
 
