@@ -183,12 +183,10 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
         // Construct table
         let table = (
             <Table celled striped key={groupIndex++} className="settings">
-                {header === null
-? null
-: (
-    <Table.Header>
-        {header}
-    </Table.Header>
+                {header === null ? null : (
+                    <Table.Header>
+                        {header}
+                    </Table.Header>
                 )}
                 <Table.Body>
                     {settingRows}

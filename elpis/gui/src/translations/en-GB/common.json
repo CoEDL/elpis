@@ -278,6 +278,7 @@
             },
             "hft": {
                 "stages": {
+                    "Load model": "Load model",
                     "Load audio": "Load audio",
                     "Process input": "Process input",
                     "Transcription": "Transcription",

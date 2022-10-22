@@ -21,7 +21,7 @@ PROCESS_INPUT = "process_input"
 TRANSCRIPTION = "transcription"
 SAVING = "saving"
 
-STAGES = [LOAD_AUDIO, PROCESS_INPUT, TRANSCRIPTION, SAVING]
+STAGES = [LOAD_MODEL, LOAD_AUDIO, PROCESS_INPUT, TRANSCRIPTION, SAVING]
 
 FINISHED = "transcribed"
 UNFINISHED = "transcribing"
@@ -152,7 +152,7 @@ class HFTTranscription(BaseTranscription):
         """
         Updates the stage to one of the constants specified within STAGES
         """
-        status = "completed" if complete else "in-progress"
+        status = "complete" if complete else "in-progress"
         if stage in STAGES:
             index = STAGES.index(stage)
             self.stage = self.index_prefixed_stages[index]

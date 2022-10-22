@@ -217,6 +217,15 @@
                     "monophoneTraining": "Entraînement des monophones",
                     "triphoneTraining": "Entraînement des triphones"
                 }
+            },
+            "hft": {
+                "stages": {
+                    "Load model": "Charger le modèle",
+                    "Load audio": "Charger le son",
+                    "Process input": "Préparation sonore",
+                    "Transcription": "Transcription",
+                    "Saving": "Enregistrer"
+                }
             }
         }
     },

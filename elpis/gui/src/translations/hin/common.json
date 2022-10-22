@@ -275,6 +275,15 @@
                     "textgridConversion": "टेक्स्टग्रिड को ELAN में परिवर्तित करना",
                     "ctmOutput": "सीटीएम आउटपुट"
                 }
+            },
+            "hft": {
+                "stages": {
+                    "Load model": "लोड मॉडल",
+                    "Load audio": "ऑडियो लोड करें",
+                    "Process input": "प्रक्रिया इनपुट",
+                    "Transcription": "प्रतिलेखन",
+                    "Saving": "सहेजें"
+                }
             }
         }
     },
