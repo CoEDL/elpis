@@ -27,7 +27,6 @@ FINISHED = "transcribed"
 UNFINISHED = "transcribing"
 
 
-
 class HFTTranscription(BaseTranscription):
 
     SAMPLING_RATE = 16_000
@@ -65,10 +64,12 @@ class HFTTranscription(BaseTranscription):
 
         self._set_stage(TRANSCRIPTION)
         logger.info("=== Inference pipeline")
-        pipe = pipeline("automatic-speech-recognition",
-                        model=model,
-                        tokenizer=processor.tokenizer,
-                        feature_extractor=processor.feature_extractor)
+        pipe = pipeline(
+            "automatic-speech-recognition",
+            model=model,
+            tokenizer=processor.tokenizer,
+            feature_extractor=processor.feature_extractor,
+        )
         transcription = pipe(audio_input, chunk_length_s=10, return_timestamps="word")
         logger.info(transcription["text"])
         self._set_stage(TRANSCRIPTION, complete=True)
@@ -128,7 +129,10 @@ class HFTTranscription(BaseTranscription):
         for utterance in utterances:
             print(utterance)
             word = utterance["text"]
-            start, end = to_millis(utterance["timestamp"][0]), to_millis(utterance["timestamp"][1]) + 1
+            start, end = (
+                to_millis(utterance["timestamp"][0]),
+                to_millis(utterance["timestamp"][1]) + 1,
+            )
             result.add_annotation(id_tier="default", start=start, end=end, value=word)
         pympi.Elan.to_eaf(self.elan_path, result)
 
