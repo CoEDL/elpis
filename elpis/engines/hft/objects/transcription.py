@@ -65,12 +65,10 @@ class HFTTranscription(BaseTranscription):
 
         self._set_stage(TRANSCRIPTION)
         logger.info("=== Inference pipeline")
-        access_token = "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"
         pipe = pipeline("automatic-speech-recognition",
                         model=model,
                         tokenizer=processor.tokenizer,
-                        feature_extractor=processor.feature_extractor,
-                        use_auth_token=access_token)
+                        feature_extractor=processor.feature_extractor)
         transcription = pipe(audio_input, chunk_length_s=10, return_timestamps="word")
         logger.info(transcription["text"])
         self._set_stage(TRANSCRIPTION, complete=True)
@@ -104,13 +102,11 @@ class HFTTranscription(BaseTranscription):
         """
         Builds and returns pretrained Wav2Vec2 Processor and Model from the project path.
         """
-        # pretrained_path = self.model.output_dir
-        pretrained_path = "elpis/FYTM_cv_all"
-        access_token = "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"
+        pretrained_path = self.model.output_dir
         logger.info(f"Loading processor from {pretrained_path}")
-        processor = Wav2Vec2Processor.from_pretrained(pretrained_path, use_auth_token=access_token)
+        processor = Wav2Vec2Processor.from_pretrained(pretrained_path)
         logger.info(f"Loading model from {pretrained_path}")
-        model = Wav2Vec2ForCTC.from_pretrained(pretrained_path, use_auth_token=access_token)
+        model = Wav2Vec2ForCTC.from_pretrained(pretrained_path)
         logger.info(f"Returning processor and model from {pretrained_path}")
         return processor, model
 
