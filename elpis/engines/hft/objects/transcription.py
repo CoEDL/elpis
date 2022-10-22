@@ -8,7 +8,7 @@ from typing import List, Tuple
 import pympi
 import torch
 from loguru import logger
-from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor, pipeline, AutoTokenizer
+from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor, pipeline
 from werkzeug.datastructures import FileStorage
 
 import elpis.engines.common.utilities.resampling as resampler
