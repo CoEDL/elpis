@@ -145,7 +145,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                         break;
 
                         case "select": {
-                            let options = []
+                            let options = [];
 
                             // Build options
                             data.options.forEach(v => {
