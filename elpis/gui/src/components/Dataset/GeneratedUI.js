@@ -107,8 +107,9 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                 let data = ui["data"][ui_name];
 
                 if (data.shown) {
-                    let label = (data.display_name !== null) ? data.display_name : ui_name;
                     // Switch input type based on ui specification
+                    let label = data.display_name ? data.display_name : ui_name;
+                    let label_i18n = t("model.generated.elan." + currentBlock + "." + label);
                     let dataEntryElement;
 
                     switch (data.ui_format) {
@@ -123,7 +124,7 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                                 />
                             );
                         }
-                            break;
+                        break;
 
                         case "textarea": {
                             dataEntryElement = (
@@ -135,20 +136,26 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                                 />
                             );
                         }
-                            break;
+                        break;
 
                         case "int": {
                             // TODO
                             dataEntryElement = <Input type="number" />;
                         }
-                            break;
+                        break;
 
                         case "select": {
-                            let options = [];
+                            let options = []
 
                             // Build options
                             data.options.forEach(v => {
-                                options.push({key: v, value: v, text: v});
+                                // use translations for Selection Mechanism (['tier_name', 'tier_type', 'tier_order'])
+                                // but not for other things
+                                let option_label = data.options.includes("tier_name") ?
+                                    t("model.generated.elan." + currentBlock + "." + v) :
+                                    v;
+
+                                options.push({key: v, value: v, text: option_label});
                             });
                             // TODO: add a onChange that dispatches the setting (do this for int and string as well)
                             dataEntryElement = (
@@ -162,16 +169,18 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
                                 />
                             );
                         }
-                            break;
+                        break;
                     }
 
                     // Construct row for individual setting
                     let row = (
                         <Table.Row key={ui_name}>
                             <Table.Cell collapsing>
-                                {t("model.generated.elan." + currentBlock + "." + label)}
+                                {label_i18n}
                             </Table.Cell>
-                            <Table.Cell>{dataEntryElement}</Table.Cell>
+                            <Table.Cell>
+                                {dataEntryElement}
+                            </Table.Cell>
                         </Table.Row>
                     );
 
@@ -183,12 +192,10 @@ const GeneratedUI = ({props, settings, ui, changeSettingsCallback}) => {
         // Construct table
         let table = (
             <Table celled striped key={groupIndex++} className="settings">
-                {header === null
-? null
-: (
-    <Table.Header>
-        {header}
-    </Table.Header>
+                {header === null ? null : (
+                    <Table.Header>
+                        {header}
+                    </Table.Header>
                 )}
                 <Table.Body>
                     {settingRows}

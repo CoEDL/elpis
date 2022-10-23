@@ -199,7 +199,10 @@
                     "selectionMechanism": "Selection Mechanism",
                     "name": "Tier name",
                     "type": "Tier type",
-                    "order": "Tier order"
+                    "order": "Tier order",
+                    "tier_name": "Tier name",
+                    "tier_type": "Tier type",
+                    "tier_order": "Tier order"
                 },
                 "punctuation": {
                     "title": "Punctuation",
@@ -278,6 +281,7 @@
             },
             "hft": {
                 "stages": {
+                    "Load model": "Load model",
                     "Load audio": "Load audio",
                     "Process input": "Process input",
                     "Transcription": "Transcription",

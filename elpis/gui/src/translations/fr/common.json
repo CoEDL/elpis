@@ -190,7 +190,10 @@
                     "selectionMechanism": "Mécanisme de sélection",
                     "name": "Nom d’échelon",
                     "type": "Type d’échelon",
-                    "order": "Ordre d’échelon"
+                    "order": "Ordre d’échelon",
+                    "tier_name": "Nom d’échelon",
+                    "tier_type": "Type d’échelon",
+                    "tier_order": "Ordre d’échelon"
                 },
                 "punctuation": {
                     "title": "Ponctuation",
@@ -216,6 +219,15 @@
                     "modelCreation": "Création du modèle linguistique",
                     "monophoneTraining": "Entraînement des monophones",
                     "triphoneTraining": "Entraînement des triphones"
+                }
+            },
+            "hft": {
+                "stages": {
+                    "Load model": "Charger le modèle",
+                    "Load audio": "Charger le son",
+                    "Process input": "Préparation sonore",
+                    "Transcription": "Transcription",
+                    "Saving": "Enregistrer"
                 }
             }
         }
