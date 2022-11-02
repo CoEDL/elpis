@@ -165,7 +165,7 @@ def download():
     )
     logger.info(f"Zipped model created at path: {zipped_model_path}")
     try:
-        return send_file(zipped_model_path, as_attachment=True, cache_timeout=0)
+        return send_file(zipped_model_path, as_attachment=True, max_age=None)
     except InterfaceError as e:
         return jsonify({"status": 500, "error": e.human_message})
 
