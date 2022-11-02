@@ -22,7 +22,7 @@ copyright = "2022, The University of Queensland"
 author = "Ben Foley, Nicholas Lambourne, Nay San, Matthew Low, Harry Keightley, Aviral Jain"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0.5"
+release = "1.0.6"
 
 master_doc = "index"
 # -- General configuration ---------------------------------------------------

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).  
 Date is year-month-day format.
 
+## [1.0.6] - 2022-11-03
+Changes:
+- Fix model download bug due to change in Flask
+
 ## [1.0.5] - 2022-10-21
 Changes:
 - Updated dependencies, including Python version, Transformers, PyTorch, most packages.
