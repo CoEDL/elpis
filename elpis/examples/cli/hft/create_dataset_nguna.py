@@ -60,7 +60,7 @@ def main(dataset_name: str, reset: bool):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Prepare a dataset.")
-    parser.add_argument("--name", default="abui", type=str, help="Which dataset to use?")
+    parser.add_argument("--name", default="nguna", type=str, help="Which dataset to use?")
     parser.add_argument(
         "--reset",
         action="store_false",
