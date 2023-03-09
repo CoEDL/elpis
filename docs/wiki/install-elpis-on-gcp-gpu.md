@@ -60,14 +60,14 @@ Note that we install this way, and not using image deploy because image deploy l
  
 
 ```shell
-# GPU startup script v0.6.3
+# GPU startup script v0.6.4
 
 # Check if this has been done before. Skip driver installation if so, just run Elpis
 if [[ -f /etc/startup_installed ]];
 then
   sudo chmod 666 /var/run/docker.sock
   # Run Elpis (non-interactive so that Elpis starts automatically)
-  docker run -d --rm --name elpis --gpus all -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
+  docker run -d --rm --name elpis --gpus all -v /state:/state -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
   exit 0;
 fi
 
@@ -115,7 +115,7 @@ touch /etc/startup_installed
 echo "done"
 
 # Download and run Elpis (non-interactive so that Elpis starts automatically)
-docker run -d --rm --name elpis --gpus all -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
+docker run -d --rm --name elpis --gpus all -v /state:/state -p 80:5001/tcp -p 6006:6006/tcp coedl/elpis:latest
 ```
 
 This startup script will only run the first time the VM starts, to reduce the instance load time on subsequent restarts.
