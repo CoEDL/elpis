@@ -101,6 +101,7 @@ RUN cd /kaldi/src && ./configure --mathlib=ATLAS --shared && \
 RUN cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 RUN cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 
+COPY deps/liblbfgs-1.10.tar /kaldi/tools/liblbfgs-1.10.tar
 COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 
 WORKDIR /kaldi/tools
@@ -108,6 +109,7 @@ WORKDIR /kaldi/tools
 RUN apt-get install gawk && \
     chmod +x extras/* && \
     ./extras/install_liblbfgs.sh && \
+    ./extras/install_irstlm.sh && \
     ./extras/install_srilm.sh && \
     chmod +x env.sh && \
     source ./env.sh
