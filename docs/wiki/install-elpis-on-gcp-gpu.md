@@ -42,7 +42,7 @@ To run Elpis, create an instance with the following settings. These resources wi
 Scroll down to the Boot disk section. Change the boot disk to use the following settings.
 
 * Operating system: Ubuntu
-* Version: Ubuntu 20.04 LTS z86/64
+* Version: Ubuntu 20.04 LTS x86/64
 * Boot disk type: Standard persistent disk 
 * Size (GB): 300
 
