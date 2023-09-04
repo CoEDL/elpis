@@ -2,12 +2,12 @@
 
 To build an image locally, use this command.
 ```
-docker build --tag IMAGE_NAME .
+docker build --platform linux/amd64 --tag IMAGE_NAME .
 ```
 
 For example,
 ```
-docker build --tag coedl/elpis:latest --tag coedl/elpis:0.96.8 .
+docker build --platform linux/amd64 --tag coedl/elpis:latest --tag coedl/elpis:0.96.8 .
 ```
 
 After building, push to the hub. Login first
