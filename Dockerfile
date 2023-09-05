@@ -86,14 +86,17 @@ RUN echo "===> Install Kaldi dependencies" && \
     apt-get update && apt-get install -y \
     sox \
     graphviz \
-    ghostscript\
-    ffmpeg
+    ghostscript \
+    ffmpeg \
+    gawk
 
 WORKDIR /
 
 RUN echo "===> Install Kaldi (pinned at version 5.3)"  && \
     git clone -b 5.3 https://github.com/kaldi-asr/kaldi
 COPY deps/pa_stable_v19_20111121.tgz /kaldi/tools/pa_stable_v19_20111121.tgz
+COPY deps/liblbfgs-1.10.tar.gz /kaldi/tools/liblbfgs-1.10.tar.gz
+COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
 RUN cd /kaldi/tools && make -j$NUM_CPUS && ./install_portaudio.sh
 RUN cd /kaldi/src && ./configure --mathlib=ATLAS --shared && \
     sed -i '/-g # -O0 -DKALDI_PARANOID/c\-O3 -DNDEBUG' kaldi.mk && \
@@ -101,17 +104,11 @@ RUN cd /kaldi/src && ./configure --mathlib=ATLAS --shared && \
 RUN cd /kaldi/src/online2 && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 RUN cd /kaldi/src/online2bin && make depend -j$NUM_CPUS && make -j$NUM_CPUS
 
-COPY deps/liblbfgs-1.10.tar /kaldi/tools/liblbfgs-1.10.tar
-COPY deps/srilm-1.7.2.tar.gz /kaldi/tools/srilm.tgz
-
 WORKDIR /kaldi/tools
-
-RUN apt-get install gawk && \
-    chmod +x extras/* && \
-    ./extras/install_liblbfgs.sh && \
-    ./extras/install_irstlm.sh && \
-    ./extras/install_srilm.sh && \
-    chmod +x env.sh && \
+RUN chmod +x extras/*
+RUN ./extras/install_liblbfgs.sh
+RUN ./extras/install_srilm.sh
+RUN chmod +x env.sh && \
     source ./env.sh
 
 RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
@@ -132,11 +129,22 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     mv jq-linux64 /usr/local/bin/jq
 
 # Add node 18, yarn and xml-js
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get update && \
-    apt-get install -y nodejs build-essential && \
-    npm install -g npm \
+RUN set -uex; \
+    apt-get update; \
+    apt-get install -y ca-certificates curl gnupg; \
+    mkdir -p /etc/apt/keyrings; \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+     | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
+    NODE_MAJOR=18; \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
+     > /etc/apt/sources.list.d/nodesource.list; \
+    apt-get update; \
+    apt-get install nodejs -y;
+
+RUN npm install -g npm \
     hash -d npm \
     npm install -g xml-js yarn
+
 
 # Clean up package manager
 RUN apt-get clean autoclean
