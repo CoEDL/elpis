@@ -7,9 +7,12 @@ FROM ubuntu:20.04
 
 ########################## BEGIN INSTALLATION #########################
 
-ENV NUM_CPUS=6
+ENV NUM_CPUS=1
 
 ENV TZ=UTC
+
+# Clean up package manager
+RUN apt-get clean autoclean
 
 RUN export DEBIAN_FRONTEND="noninteractive" && apt-get update && apt-get install -y --fix-missing \
     autoconf \
@@ -66,6 +69,9 @@ RUN echo "===> Install pyenv Python 3.10" && \
 
 ########################## KALDI INSTALLATION #########################
 
+# Clean up package manager
+RUN apt-get clean autoclean
+
 RUN echo "===> Install Python 2.7 for Kaldi" && \
     add-apt-repository universe && \
     apt-get update && apt-get install -y  \
@@ -111,10 +117,13 @@ RUN ./extras/install_srilm.sh
 RUN chmod +x env.sh && \
     source ./env.sh
 
-RUN apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
+RUN apt-get update && apt-get install -y libssl-dev libsqlite3-dev libbz2-dev
 
 
 ########################## DEV HELPERS INSTALLATION ####################
+
+# Clean up package manager
+RUN apt-get clean autoclean
 
 WORKDIR /tmp
 
@@ -144,7 +153,6 @@ RUN set -uex; \
 RUN npm install -g npm \
     hash -d npm \
     npm install -g xml-js yarn
-
 
 # Clean up package manager
 RUN apt-get clean autoclean
