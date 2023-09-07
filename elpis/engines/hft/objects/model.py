@@ -757,6 +757,7 @@ class HFTModel(BaseModel):
             # TODO move model off the GPU
             # to free up space remove reference to it?
             logger.info("=== BEN Training done")
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
             if device == "cuda":
                 logger.info(f"=== BEN Moving model off device: {device}.")
                 self.hft_model.to("cpu")
