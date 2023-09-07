@@ -49,6 +49,8 @@ class HFTTranscription(BaseTranscription):
         processor, model = self._get_wav2vec2_requirements()
         self._set_stage(STAGES.load_model.name, complete=True)
 
+        # TODO move to GPU if available
+
         self._set_stage(STAGES.load_audio.name)
         logger.info("=== Load audio ===")
         audio_input, _ = resampler.load_audio(
@@ -58,11 +60,16 @@ class HFTTranscription(BaseTranscription):
 
         self._set_stage(STAGES.transcription.name)
         logger.info("=== Inference pipeline ===")
+
+        # Use GPU if available. -1 is CPU
+        device = "0" if torch.cuda.is_available() else "-1"
+
         pipe = pipeline(
             "automatic-speech-recognition",
             model=model,
             tokenizer=processor.tokenizer,
             feature_extractor=processor.feature_extractor,
+            device=device
         )
         transcription = pipe(audio_input, chunk_length_s=10, return_timestamps="word")
         logger.info(transcription["text"])
@@ -78,6 +85,9 @@ class HFTTranscription(BaseTranscription):
 
         self._set_stage(STAGES.saving.name, complete=True)
         self._set_finished_transcription(True)
+
+        # TODO move model off GPU
+
         if on_complete is not None:
             on_complete()
 

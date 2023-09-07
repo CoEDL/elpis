@@ -754,6 +754,12 @@ class HFTModel(BaseModel):
             trainer.save_metrics(TRAIN, metrics)
             trainer.save_state()
 
+            # TODO move model off the GPU
+            # to free up space remove reference to it?
+            if device == "cuda":
+                logger.info(f"Moving model off device: {device}.")
+                self.hft_model.to("cpu")
+
         self._set_stage(TRAIN, complete=True)
 
         # 4. Evaluation
