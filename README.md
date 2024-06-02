@@ -28,7 +28,7 @@ an academic setting, please cite it appropriately as follows:
 Maxwell-Smith, Z., Nash, D., Olsson, O., Richards, M., San, N., Stoakes, H., Thieberger, N. & Wiles,
 J. (2018). Building Speech Recognition Systems for Language Documentation: The CoEDL Endangered
 Language Pipeline and Inference System (Elpis). In S. S. Agrawal (Ed.), *The 6th Intl. Workshop on Spoken
-Language Technologies for Under-Resourced Languages (SLTU)* (pp. 200–204). Available on https://www.isca-speech.org/archive/SLTU_2018/pdfs/Ben.pdf.
+Language Technologies for Under-Resourced Languages (SLTU)* (pp. 200–204). Available on https://www.isca-archive.org/sltu_2018/foley18_sltu.pdf.
 
 
 <p align="center">
